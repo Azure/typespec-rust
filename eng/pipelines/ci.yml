@@ -21,10 +21,13 @@ jobs:
     strategy:
       matrix:
         Linux:
-          vm.image: "ubuntu-22.04"
+          image: $(LINUXNEXTVMIMAGE)
+          pool: $(LINUXPOOL)
 
     pool:
-      vmImage: "$(vm.image)"
+      name: $(pool)
+      image: "$(image)"
+      os: linux
 
     steps:
       - template: ../steps/set-env.yaml
