@@ -10,7 +10,7 @@ steps:
 
   - task: Cache@2
     inputs:
-      key: 'pnpm | "$(Agent.OS)" | pnpm-lock.yaml'
+      key: 'pnpm | "$(Agent.OS)" | $(TypeSpecRustPkgDir)/pnpm-lock.yaml'
       path: ${{ parameters.pnpmStorePath }}
     displayName: Cache pnpm store
 
