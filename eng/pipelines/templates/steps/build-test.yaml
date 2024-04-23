@@ -3,6 +3,7 @@ steps:
       pnpm install
       pnpm build
     displayName: "Build Emitter Sources"
+    workingDirectory: $(TypeSpecRustPkgDir)
 
   - script: |
       pnpm run eslint
@@ -11,6 +12,7 @@ steps:
 
   - script: pnpm run test-ci
     displayName: Run TypeScript Tests
+    workingDirectory: $(TypeSpecRustPkgDir)
 
   - task: PublishTestResults@2
     inputs:
@@ -20,6 +22,7 @@ steps:
 
   - script: pnpm run merge-coverage
     displayName: Merge code coverage
+    workingDirectory: $(TypeSpecRustPkgDir)
 
   - task: PublishCodeCoverageResults@2
     inputs:
