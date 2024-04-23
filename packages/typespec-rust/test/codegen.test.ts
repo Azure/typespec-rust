@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import * as rust from '../src/codemodel/codemodel.js';
+import * as rust from '../src/codemodel/index.js';
 import { generateCargoTomlFile } from '../src/codegen/cargotoml.js';
 import { strictEqual } from 'assert';
 import { describe, it } from 'vitest';
