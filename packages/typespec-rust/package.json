@@ -21,7 +21,6 @@
     "build": "tsc -p .",
     "eslint-fix": "eslint . --fix --ext .ts",
     "eslint": "eslint . --ext .ts",
-    "merge-coverage": "c8 report --reporter=cobertura --reporter=text",
     "test": "vitest run",
     "test-ci": "vitest run --coverage --reporter=junit --reporter=default --no-file-parallelism",
     "watch": "tsc -p . --watch"
