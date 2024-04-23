@@ -5,7 +5,7 @@
 
 import { EmitContext } from '@typespec/compiler';
 import { RustEmitterOptions } from '../lib.js';
-import * as rust from '../codemodel/codemodel.js';
+import * as rust from '../codemodel/index.js';
 
 export function tcgcToCrate(context: EmitContext<RustEmitterOptions>): rust.Crate {
   const crate = new rust.Crate(context.options['crate-name'], context.options['crate-version']);

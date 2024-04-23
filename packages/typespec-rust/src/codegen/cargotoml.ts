@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import * as rust from '../codemodel/codemodel.js';
+import * as rust from '../codemodel/index.js';
 
 export function generateCargoTomlFile(crate: rust.Crate): string {
   let content = `[package]\nname = "${crate.name}"\nversion = "${crate.version}"\nedition.workspace = true\n`;

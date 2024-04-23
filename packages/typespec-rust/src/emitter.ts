@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as codegen from './codegen/codegen.js';
+import * as codegen from './codegen/index.js';
 import { tcgcToCrate } from './tcgcadapter/adapter.js';
 import { RustEmitterOptions } from './lib.js';
 import { existsSync } from 'fs';
