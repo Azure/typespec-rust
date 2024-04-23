@@ -3,6 +3,7 @@ steps:
       pnpm install
       pnpm build
     displayName: "Build Emitter Sources"
+    workingDirectory: $(TypeSpecRustPkgDir)
 
   - script: |
       pnpm run eslint
@@ -11,6 +12,7 @@ steps:
 
   - script: pnpm run test-ci
     displayName: Run TypeScript Tests
+    workingDirectory: $(TypeSpecRustPkgDir)
 
   - task: PublishTestResults@2
     inputs:
@@ -18,10 +20,7 @@ steps:
       testResultsFiles: $(TypeSpecRustPkgDir)/test-results.xml
       failTaskOnFailedTests: true
 
-  - script: pnpm run merge-coverage
-    displayName: Merge code coverage
-
   - task: PublishCodeCoverageResults@2
     inputs:
-      summaryFileLocation: $(TypeSpecRustPkgDir)/coverage/cobertura-coverage.xml
+      summaryFileLocation: $(TypeSpecRustPkgDir)/coverage/tmp/cobertura-coverage.xml
     displayName: Publish code coverage
