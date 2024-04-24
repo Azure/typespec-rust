@@ -26,7 +26,6 @@ steps:
     displayName: Publish code coverage
 
   - script: |
-      ls -lR ../node_modules/@typespec
       pnpm run tspcompile --verbose
       git add -A .
       git diff --staged -w 1>&2
