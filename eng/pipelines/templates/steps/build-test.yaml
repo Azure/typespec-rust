@@ -24,3 +24,11 @@ steps:
     inputs:
       summaryFileLocation: $(TypeSpecRustPkgDir)/coverage/tmp/cobertura-coverage.xml
     displayName: Publish code coverage
+
+  - script: |
+      pnpm run tspcompile --verbose
+      git add -A .
+      git diff --staged -w 1>&2
+    displayName: "Regenerate Cadl Tests"
+    workingDirectory: $(TypeSpecRustPkgDir)/test
+    failOnStderr: true

@@ -404,3 +404,6 @@ FodyWeavers.xsd
 *.sln.iml
 
 **/dist/*
+
+# cadl-ranch test results
+cadl-ranch-coverage.json

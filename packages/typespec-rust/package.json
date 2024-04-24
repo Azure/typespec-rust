@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "description": "TypeSpec emitter for Rust SDKs",
   "type": "module",
-  "main": "dist/typespec-rust/src/index.js",
+  "main": "dist/index.js",
   "exports": {
-    ".": "./dist/typespec-rust/src/index.js"
+    ".": "./dist/index.js"
   },
-  "tspMain": "dist/typespec-rust/src/index.js",
+  "tspMain": "dist/index.js",
   "directories": {
     "doc": "docs"
   },
@@ -15,6 +15,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
+    "cadl-ranch": "node .scripts/cadl-ranch.js",
     "clean": "ver > nul 2>&1 nul && npm run --silent clean-cmd || npm run --silent clean-bash",
     "clean-cmd": "if exist dist rmdir /s /q dist && exit 0 || exit 0 ",
     "clean-bash": "rm nul && rm -rf dist && exit 0 || exit 0",
@@ -23,6 +24,7 @@
     "eslint": "eslint . --ext .ts",
     "test": "vitest run",
     "test-ci": "vitest run --coverage --reporter=junit --reporter=default --no-file-parallelism",
+    "tspcompile": "node .scripts/tspcompile.js",
     "watch": "tsc -p . --watch"
   },
   "files": [
