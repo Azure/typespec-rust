@@ -407,3 +407,5 @@ FodyWeavers.xsd
 
 # cadl-ranch test results
 cadl-ranch-coverage.json
+
+packages/typespec-rust/test/target/
