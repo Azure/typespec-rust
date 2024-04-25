@@ -1,0 +1,9 @@
+# Default
+* @jhendrixMSFT @RickWinter @HeathS
+
+# codegen (autorest and typespec)
+/packages/typespec-rust       @jhendrixMSFT @RickWinter @HeathS
+
+# Git Hub bot rules
+/.github/CODEOWNERS   @jhendrixMSFT @RickWinter @HeathS @jsquire @ronniegeraghty
+/.github/fabricbot.json  @jsquire @ronniegeraghty
