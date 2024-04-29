@@ -1,0 +1,10 @@
+[workspace]
+members = ["./cadlranch/**/src/.."]
+resolver = "2"
+
+[workspace.package]
+authors = ["Microsoft"]
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/azure/autorest.rust"
+rust-version = "1.76"
