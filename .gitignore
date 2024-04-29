@@ -409,3 +409,5 @@ FodyWeavers.xsd
 cadl-ranch-coverage.json
 
 packages/typespec-rust/test/target/
+
+Cargo.lock
