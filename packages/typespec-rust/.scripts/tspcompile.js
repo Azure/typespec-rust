@@ -150,6 +150,10 @@ function generate(crate, input, outputDir, additionalArgs) {
       exec(command, function(error, stdout, stderr) {
         // print any output or error from the tsp compile command
         logResult(error, stdout, stderr);
+        // format on success
+        if (error === null && stderr === '') {
+          execSync('cargo fmt --all -- --emit files', { cwd: fullOutputDir });
+        }
       });
     } catch (err) {
       console.error(err.output.toString());

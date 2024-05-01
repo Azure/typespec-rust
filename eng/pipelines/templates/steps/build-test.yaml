@@ -32,3 +32,11 @@ steps:
     displayName: "Regenerate Cadl Tests"
     workingDirectory: $(TypeSpecRustPkgDir)/test
     failOnStderr: true
+
+  - pwsh: |
+      cargo build
+      if ($LASTEXITCODE) {
+        exit $LASTEXITCODE
+      }
+    displayName: "Compile Tests"
+    workingDirectory: $(TypeSpecRustPkgDir)/test

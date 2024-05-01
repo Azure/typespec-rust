@@ -28,3 +28,12 @@ steps:
       echo "Pnpm:"
       pnpm -v
     displayName: "Log tool versions used"
+
+  - script: |
+      set -e
+      curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal --default-toolchain stable
+      echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
+      rustc --version
+      cargo --version
+      rustup --version
+    displayName: "Install Rust"
