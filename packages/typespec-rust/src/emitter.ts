@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from './codegen/index.js';
-import { tcgcToCrate } from './tcgcadapter/adapter.js';
+import { Adapter } from './tcgcadapter/adapter.js';
 import { RustEmitterOptions } from './lib.js';
 import { existsSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
@@ -12,13 +12,28 @@ import { EmitContext } from '@typespec/compiler';
 import 'source-map-support/register.js';
 
 export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
-  const crate = tcgcToCrate(context);
+  const adapter = new Adapter(context);
+  const crate = adapter.tcgcToCrate();
+
   await mkdir(context.emitterOutputDir, {recursive: true});
 
   // don't overwrite an existing Cargo.toml file
   const cargoTomlFile = `${context.emitterOutputDir}/Cargo.toml`;
   if (!existsSync(cargoTomlFile)) {
-    const cargoToml = codegen.generateCargoTomlFile(crate);
+    const cargoToml = codegen.emitCargoToml(crate);
     writeFile(cargoTomlFile, cargoToml);
   }
+
+  writeToGeneratedDir(context.emitterOutputDir, 'mod.rs', codegen.emitMod(crate));
+
+  const models = codegen.emitModels(crate);
+  if (models.length > 0) {
+    await writeToGeneratedDir(context.emitterOutputDir, 'models.rs', models);
+  }
+}
+
+async function writeToGeneratedDir(outDir: string, filename: string, content: string): Promise<void> {
+  const srcGen = `${outDir}/src/generated`;
+  await mkdir(srcGen, {recursive: true});
+  writeFile(`${srcGen}/${filename}`, content);
 }
