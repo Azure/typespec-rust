@@ -23,7 +23,7 @@ export function formatDocComment(docs?: string): string {
   if (!docs) {
     return '';
   }
-  return codegen.comment(docs, '// ', undefined, 120) + '\n';
+  return codegen.comment(docs, '/// ', undefined, 120) + '\n';
 }
 
 // returns 'pub ' prefix as required
