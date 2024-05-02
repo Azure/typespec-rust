@@ -1,0 +1,84 @@
+/*---------------------------------------------------------------------------------------------
+*  Copyright (c) Microsoft Corporation. All rights reserved.
+*  Licensed under the MIT License. See License.txt in the project root for license information.
+*--------------------------------------------------------------------------------------------*/
+
+// Type defines a type within the Rust type system
+export type Type = ScalarType | StringType | Struct;
+
+// ScalarTypeKind defines the supported Rust scalar type names
+export type ScalarTypeKind = 'bool' | 'f32' | 'f64' | 'i8' | 'i16' | 'i32' | 'i64';
+
+// ScalarType is a Rust scalar type
+export interface ScalarType {
+  kind: ScalarTypeKind;
+}
+
+// StringType is a Rust string
+export interface StringType {
+  kind: 'String';
+}
+
+// Struct is a Rust struct type definition
+export interface Struct {
+  kind: 'struct';
+
+  // the name of the struct
+  name: string;
+
+  // the provided doc string emitted as code comments
+  docs?: string;
+
+  // indicates if the struct should be public
+  pub: boolean;
+
+  // fields contains the fields within the struct
+  fields: Array<StructField>;
+}
+
+// StructField is a field definition within a struct
+export interface StructField {
+  // the name of the field
+  name: string;
+
+  // the provided doc string emitted as code comments
+  docs?: string;
+
+  // indicates if the field should be public
+  pub: boolean;
+
+  // the field's underlying type
+  type: Type;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+export class ScalarType implements ScalarType {
+  constructor(kind: ScalarTypeKind) {
+    this.kind = kind;
+  }
+}
+
+export class StringType implements StringType {
+  constructor() {
+    this.kind = 'String';
+  }
+}
+
+export class Struct implements Struct {
+  constructor(name: string, pub: boolean) {
+    this.kind = 'struct';
+    this.name = name;
+    this.pub = pub;
+    this.fields = new Array<StructField>();
+  }
+}
+
+export class StructField implements StructField {
+  constructor(name: string, pub: boolean, type: Type) {
+    this.name = name;
+    this.pub = pub;
+    this.type = type;
+  }
+}

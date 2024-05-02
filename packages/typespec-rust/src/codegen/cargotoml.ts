@@ -5,7 +5,8 @@
 
 import * as rust from '../codemodel/index.js';
 
-export function generateCargoTomlFile(crate: rust.Crate): string {
+// emits the Cargo.toml file for this crate
+export function emitCargoToml(crate: rust.Crate): string {
   let content = `[package]\nname = "${crate.name}"\nversion = "${crate.version}"\nedition.workspace = true\n`;
   if (crate.dependencies.length > 0) {
     content += '\n[dependencies]\n';

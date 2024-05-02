@@ -3,5 +3,14 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-export * from './crate.js';
-export * from './types.js';
+import * as helpers from './helpers.js';
+import * as rust from '../codemodel/index.js';
+
+// emits the mod.rs file
+export function emitMod(crate: rust.Crate): string {
+  let content = helpers.contentPreamble();
+  if (crate.structs.length > 0) {
+    content += 'pub mod models;\n';
+  }
+  return content;
+}
