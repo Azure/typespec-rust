@@ -15,7 +15,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   const adapter = new Adapter(context);
   const crate = adapter.tcgcToCrate();
 
-  await mkdir(context.emitterOutputDir, {recursive: true});
+  await mkdir(`${context.emitterOutputDir}/src`, {recursive: true});
 
   // don't overwrite an existing Cargo.toml file
   const cargoTomlFile = `${context.emitterOutputDir}/Cargo.toml`;
@@ -23,6 +23,11 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
     const cargoToml = codegen.emitCargoToml(crate);
     writeFile(cargoTomlFile, cargoToml);
   }
+
+  // TODO: this will overwrite an existing lib.rs file.
+  // we will likely need to support merging generated content with a preexisting lib.rs
+  // https://github.com/Azure/autorest.rust/issues/20
+  writeFile(`${context.emitterOutputDir}/src/lib.rs`, codegen.emitLib(crate));
 
   writeToGeneratedDir(context.emitterOutputDir, 'mod.rs', codegen.emitMod(crate));
 

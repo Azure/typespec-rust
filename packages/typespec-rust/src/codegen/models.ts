@@ -19,7 +19,7 @@ export function emitModels(crate: rust.Crate): string {
     content += `${helpers.emitPub(struct.pub)}struct ${struct.name} {\n`;
 
     for (const field of struct.fields) {
-      content += `${helpers.indent(1)}${helpers.emitPub(field.pub)}${field.name}: Option<${helpers.getTypeDeclaration(field.type)}>\n`;
+      content += `${helpers.indent(1)}${helpers.emitPub(field.pub)}${field.name}: Option<${helpers.getTypeDeclaration(field.type)}>,\n`;
     }
 
     content += '}\n\n';
