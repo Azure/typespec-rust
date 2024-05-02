@@ -21,7 +21,6 @@ const cadlRanch = {
   //'cadl_oauth2': ['authentication/oauth2'],
   //'cadl_unionauth': ['authentication/union'],
   //'cadl_access': ['azure/client-generator-core/access'],
-  //'cadl_flatten': ['azure/client-generator-core/flatten'],
   //'cadl_coreusage': ['azure/client-generator-core/usage'],
   //'cadl_basic': ['azure/core/basic'],
   //'cadl_lrorpc': ['azure/core/lro/rpc'],
@@ -60,7 +59,8 @@ const cadlRanch = {
   //'cadl_dictionary': ['type/dictionary'],
   //'cadl_extensible': ['type/enum/extensible'],
   //'cadl_fixed': ['type/enum/fixed'],
-  //'cadl_empty': ['type/model/empty', 'single-client=true'],
+  'cadl_empty': ['type/model/empty'],
+  'cadl_flatten': ['type/model/flatten'],
   //'cadl_enumdisc': ['type/model/inheritance/enum-discriminator'],
   //'cadl_nodisc': ['type/model/inheritance/not-discriminated'],
   //'cadl_recursive': ['type/model/inheritance/recursive'],
@@ -152,7 +152,7 @@ function generate(crate, input, outputDir, additionalArgs) {
         logResult(error, stdout, stderr);
         // format on success
         if (error === null && stderr === '') {
-          execSync('cargo fmt --all -- --emit files', { cwd: fullOutputDir });
+          execSync('cargo fmt --all -- --emit files', { cwd: fullOutputDir, encoding: 'ascii' });
         }
       });
     } catch (err) {

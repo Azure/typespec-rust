@@ -4,5 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 export * from './cargotoml.js';
+export * from './lib.js';
 export * from './mod.js';
 export * from './models.js';
