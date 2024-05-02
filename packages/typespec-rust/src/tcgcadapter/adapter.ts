@@ -33,6 +33,10 @@ export class Adapter {
   tcgcToCrate(): rust.Crate {
     this.adaptTypes();
     this.crate.sortContent();
+
+    if (this.crate.structs.length > 0) {
+      this.crate.dependencies.push(new rust.CrateDependency('serde'));
+    }
     return this.crate;
   }
 
@@ -70,7 +74,7 @@ export class Adapter {
     const fieldType = this.getType(property.type);
     // snake-case the field name
     const parts = codegen.deconstruct(property.name);
-    const structField = new rust.StructField(parts.join('_'), true, fieldType);
+    const structField = new rust.StructField(parts.join('_'), property.name, true, fieldType);
     structField.docs = property.description;
     return structField;
   }

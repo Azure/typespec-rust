@@ -13,12 +13,19 @@ export function emitModels(crate: rust.Crate): string {
   }
 
   let content = helpers.contentPreamble();
+  content += 'use serde::{Deserialize, Serialize};\n';
+
+  // extra new-line after all use statements
+  content += '\n';
 
   for (const struct of crate.structs) {
     content += helpers.formatDocComment(struct.docs);
+    content += '#[derive(Clone, Default, Deserialize, Serialize)]\n';
+    content += '#[non_exhaustive]';
     content += `${helpers.emitPub(struct.pub)}struct ${struct.name} {\n`;
 
     for (const field of struct.fields) {
+      content += `${helpers.indent(1)}#[serde(rename = "${field.serde}")]\n`;
       content += `${helpers.indent(1)}${helpers.emitPub(field.pub)}${field.name}: Option<${helpers.getTypeDeclaration(field.type)}>,\n`;
     }
 

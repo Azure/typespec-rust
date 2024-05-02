@@ -41,6 +41,9 @@ export interface StructField {
   // the name of the field
   name: string;
 
+  // the name of the field over the wire
+  serde: string;
+
   // the provided doc string emitted as code comments
   docs?: string;
 
@@ -76,8 +79,9 @@ export class Struct implements Struct {
 }
 
 export class StructField implements StructField {
-  constructor(name: string, pub: boolean, type: Type) {
+  constructor(name: string, serde: string, pub: boolean, type: Type) {
     this.name = name;
+    this.serde = serde;
     this.pub = pub;
     this.type = type;
   }

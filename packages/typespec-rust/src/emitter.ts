@@ -6,7 +6,6 @@
 import * as codegen from './codegen/index.js';
 import { Adapter } from './tcgcadapter/adapter.js';
 import { RustEmitterOptions } from './lib.js';
-import { existsSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
 import { EmitContext } from '@typespec/compiler';
 import 'source-map-support/register.js';
@@ -17,12 +16,10 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
 
   await mkdir(`${context.emitterOutputDir}/src`, {recursive: true});
 
-  // don't overwrite an existing Cargo.toml file
-  const cargoTomlFile = `${context.emitterOutputDir}/Cargo.toml`;
-  if (!existsSync(cargoTomlFile)) {
-    const cargoToml = codegen.emitCargoToml(crate);
-    writeFile(cargoTomlFile, cargoToml);
-  }
+  // TODO: don't overwrite an existing Cargo.toml file
+  // will likely need to merge existing Cargo.toml file with generated content
+  // https://github.com/Azure/autorest.rust/issues/22
+  writeFile(`${context.emitterOutputDir}/Cargo.toml`, codegen.emitCargoToml(crate));
 
   // TODO: this will overwrite an existing lib.rs file.
   // we will likely need to support merging generated content with a preexisting lib.rs
