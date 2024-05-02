@@ -47,3 +47,15 @@ export function getTypeDeclaration(type: rust.Type): string {
       return type.name;
   }
 }
+
+// indent returns four spaces per indentation level.
+// level is one-based.
+export function indent(level: number): string {
+  // four spaces per indent level
+  const indentation = '    ';
+  let indent = indentation;
+  for (let i = 1; i < level; ++i) {
+    indent += indentation;
+  }
+  return indent;
+}
