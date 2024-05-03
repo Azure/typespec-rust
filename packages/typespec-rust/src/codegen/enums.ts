@@ -13,23 +13,30 @@ export function emitEnums(crate: rust.Crate): string {
   }
 
   let content = helpers.contentPreamble();
-  content += 'use serde::{Deserialize, Serialize};\n\n';
+  content += helpers.UseSerDe;
+
+  // extra new-line after all use statements
+  content += '\n';
 
   for (const rustEnum of crate.enums) {
     content += helpers.formatDocComment(rustEnum.docs);
     // only derive Copy for fixed enums
-    content += `#[derive(Clone, ${rustEnum.extensible ? '' : 'Copy, '}Debug, Deserialize, Serialize)]\n`;
-    content += '#[non_exhaustive]\n';
+    content += helpers.annotationDerive(!rustEnum.extensible, 'Debug');
+    content += helpers.AnnotationNonExhaustive;
     content += `${helpers.emitPub(rustEnum.pub)}enum ${rustEnum.name} {\n`;
 
     for (const value of rustEnum.values) {
-      content += `${helpers.indent(1)}#[serde(rename = "${value.value}")]\n`;
+      if (value.name !== value.value) {
+        // only emit the serde annotation when the names aren't equal
+        content += `${helpers.indent(1)}#[serde(rename = "${value.value}")]\n`;
+      }
       content += `${helpers.indent(1)}${value.name},\n`;
     }
 
     if (rustEnum.extensible) {
       content += `${helpers.indent(1)}#[serde(untagged)]\n`;
       // TODO: hard-coded String type
+      // https://github.com/Azure/autorest.rust/issues/25
       content += `${helpers.indent(1)}UnknownValue(String),\n`;
     }
     content += '}\n\n';

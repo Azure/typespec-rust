@@ -9,9 +9,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct ChildFlattenModel {
-    #[serde(rename = "properties")]
     pub properties: Option<ChildModel>,
-    #[serde(rename = "summary")]
     pub summary: Option<String>,
 }
 
@@ -19,9 +17,7 @@ pub struct ChildFlattenModel {
 #[derive(Clone, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct ChildModel {
-    #[serde(rename = "age")]
     pub age: Option<bool>,
-    #[serde(rename = "description")]
     pub description: Option<String>,
 }
 
@@ -29,9 +25,7 @@ pub struct ChildModel {
 #[derive(Clone, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct FlattenModel {
-    #[serde(rename = "name")]
     pub name: Option<String>,
-    #[serde(rename = "properties")]
     pub properties: Option<ChildModel>,
 }
 
@@ -39,8 +33,6 @@ pub struct FlattenModel {
 #[derive(Clone, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct NestedFlattenModel {
-    #[serde(rename = "name")]
     pub name: Option<String>,
-    #[serde(rename = "properties")]
     pub properties: Option<ChildFlattenModel>,
 }

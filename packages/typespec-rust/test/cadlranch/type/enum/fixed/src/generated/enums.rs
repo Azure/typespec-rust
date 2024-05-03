@@ -8,18 +8,11 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 #[non_exhaustive]
 pub enum DaysOfWeekEnum {
-    #[serde(rename = "Friday")]
     Friday,
-    #[serde(rename = "Monday")]
     Monday,
-    #[serde(rename = "Saturday")]
     Saturday,
-    #[serde(rename = "Sunday")]
     Sunday,
-    #[serde(rename = "Thursday")]
     Thursday,
-    #[serde(rename = "Tuesday")]
     Tuesday,
-    #[serde(rename = "Wednesday")]
     Wednesday,
 }

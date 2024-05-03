@@ -13,19 +13,22 @@ export function emitModels(crate: rust.Crate): string {
   }
 
   let content = helpers.contentPreamble();
-  content += 'use serde::{Deserialize, Serialize};\n';
+  content += helpers.UseSerDe;
 
   // extra new-line after all use statements
   content += '\n';
 
   for (const model of crate.models) {
     content += helpers.formatDocComment(model.docs);
-    content += '#[derive(Clone, Default, Deserialize, Serialize)]\n';
-    content += '#[non_exhaustive]';
+    content += helpers.annotationDerive(false, 'Default');
+    content += helpers.AnnotationNonExhaustive;
     content += `${helpers.emitPub(model.pub)}struct ${model.name} {\n`;
 
     for (const field of model.fields) {
-      content += `${helpers.indent(1)}#[serde(rename = "${field.serde}")]\n`;
+      if (field.name !== field.serde) {
+        // only emit the serde annotation when the names aren't equal
+        content += `${helpers.indent(1)}#[serde(rename = "${field.serde}")]\n`;
+      }
       content += `${helpers.indent(1)}${helpers.emitPub(field.pub)}${field.name}: Option<${helpers.getTypeDeclaration(field.type)}>,\n`;
     }
 

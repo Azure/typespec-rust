@@ -13,6 +13,10 @@ const headerText = `// Copyright (c) Microsoft Corporation. All rights reserved.
 
 `;
 
+export const AnnotationNonExhaustive = '#[non_exhaustive]\n';
+
+export const UseSerDe = 'use serde::{Deserialize, Serialize};\n';
+
 // returns the content preamble common to all emitted files
 export function contentPreamble(): string {
   return headerText;
@@ -60,4 +64,9 @@ export function indent(level: number): string {
     indent += indentation;
   }
   return indent;
+}
+
+// emits the derive annotation with the specified and standard values
+export function annotationDerive(copy: boolean, dd: 'Debug' | 'Default'): string {
+  return `#[derive(Clone, ${copy ? 'Copy, ' : ''}${dd}, Deserialize, Serialize)]\n`;
 }
