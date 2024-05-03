@@ -17,7 +17,7 @@ pub struct ChildFlattenModel {
 #[derive(Clone, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct ChildModel {
-    pub age: Option<bool>,
+    pub age: Option<i32>,
     pub description: Option<String>,
 }
 
