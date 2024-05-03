@@ -34,7 +34,7 @@ export class Adapter {
     this.adaptTypes();
     this.crate.sortContent();
 
-    if (this.crate.models.length > 0) {
+    if (this.crate.enums.length > 0 || this.crate.models.length > 0) {
       this.crate.dependencies.push(new rust.CrateDependency('serde'));
     }
     return this.crate;
@@ -42,15 +42,36 @@ export class Adapter {
 
   // converts all tcgc types to their Rust type equivalent
   private adaptTypes() {
+    for (const sdkEnum of this.ctx.experimental_sdkPackage.enums) {
+      const rustEnum = this.getEnum(sdkEnum);
+      this.crate.enums.push(rustEnum);
+    }
+
     for (const model of this.ctx.experimental_sdkPackage.models) {
       const rustModel = this.getModel(model);
       this.crate.models.push(rustModel);
-
-      for (const property of model.properties) {
-        const modelField = this.getModelField(property);
-        rustModel.fields.push(modelField);
-      }
     }
+  }
+
+  // converts a tcgc enum to a Rust enum
+  private getEnum(sdkEnum: tcgc.SdkEnumType): rust.Enum {
+    const enumName = codegen.capitalize(sdkEnum.name);
+    let rustEnum = this.types.get(enumName);
+    if (rustEnum) {
+      return <rust.Enum>rustEnum;
+    }
+
+    // first create all of the enum values
+    const values = new Array<rust.EnumValue>();
+    for (const value of sdkEnum.values) {
+      const rustEnumValue = new rust.EnumValue(codegen.capitalize(value.name), value.value);
+      values.push(rustEnumValue);
+    }
+
+    rustEnum = new rust.Enum(enumName, isPub(sdkEnum.access), values, !sdkEnum.isFixed);
+    this.types.set(enumName, rustEnum);
+
+    return rustEnum;
   }
 
   // converts a tcgc model to a Rust model
@@ -63,9 +84,15 @@ export class Adapter {
     if (rustModel) {
       return <rust.Model>rustModel;
     }
-    rustModel = new rust.Model(modelName, model.access !== 'internal');
+    rustModel = new rust.Model(modelName, isPub(model.access));
     rustModel.docs = model.description;
     this.types.set(modelName, rustModel);
+
+    for (const property of model.properties) {
+      const structField = this.getModelField(property);
+      rustModel.fields.push(structField);
+    }
+
     return rustModel;
   }
 
@@ -115,4 +142,8 @@ export class Adapter {
         throw new Error(`unhandled tcgc type ${type.kind}`);
     }
   }
+}
+
+function isPub(access?: tcgc.AccessFlags): boolean {
+  return access !== 'internal';
 }

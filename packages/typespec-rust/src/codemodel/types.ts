@@ -4,7 +4,39 @@
 *--------------------------------------------------------------------------------------------*/
 
 // Type defines a type within the Rust type system
-export type Type = Model | ScalarType | StringType | Struct;
+export type Type = Enum | Model | ScalarType | StringType | Struct;
+
+// Enum is a Rust enum type.
+export interface Enum {
+  kind: 'enum';
+
+  // the name of the enum type
+  name: string;
+
+  // the provided doc string emitted as code comments
+  docs?: string;
+
+  // indicates if the enum and its values should be public
+  pub: boolean;
+
+  // one or more values for the enum
+  values: Array<EnumValue>;
+
+  // indicates if the enum is extensible or not
+  extensible: boolean;
+}
+
+// EnumValue is an enum value for a specific Enum<T>
+export interface EnumValue {
+  // the name of the enum value
+  name: string;
+
+  // the provided doc string emitted as code comments
+  docs?: string;
+
+  // the value used in SerDe operations
+  value: number | string;
+}
 
 // Model is a Rust struct that participates in serde
 export interface Model extends StructBase {
@@ -93,6 +125,23 @@ interface StructFieldBase {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+export class Enum implements Enum {
+  constructor(name: string, pub: boolean, values: Array<EnumValue>, extensible: boolean) {
+    this.kind = 'enum';
+    this.name = name;
+    this.pub = pub;
+    this.values = values;
+    this.extensible = extensible;
+  }
+}
+
+export class EnumValue implements EnumValue {
+  constructor(name: string, value: number | string) {
+    this.name = name;
+    this.value = value;
+  }
+}
 
 export class Model implements Model {
   constructor(name: string, pub: boolean) {
