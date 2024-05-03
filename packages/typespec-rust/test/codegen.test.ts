@@ -12,15 +12,36 @@ import { describe, it } from 'vitest';
 describe('typespec-rust: codegen', () => {
   describe('generateCargoTomlFile', () => {
     it('default Cargo.toml file', async () => {
+      const expected = '[package]\n' +
+        'name = "test_crate"\n' +
+        'version = "1.2.3"\n' +
+        'authors.workspace = true\n' +
+        'edition.workspace = true\n' +
+        'license.workspace = true\n' +
+        'repository.workspace = true\n' +
+        'rust-version.workspace = true\n';
+
       const cargoToml = codegen.emitCargoToml(new rust.Crate('test_crate', '1.2.3', 'azure-arm'));
-      strictEqual(cargoToml, '[package]\nname = "test_crate"\nversion = "1.2.3"\nedition.workspace = true\n');
+      strictEqual(cargoToml, expected);
     });
 
     it('default Cargo.toml file with dependencies', async () => {
+      const expected =   '[package]\n' +
+        'name = "test_crate"\n' +
+        'version = "1.2.3"\n' +
+        'authors.workspace = true\n' +
+        'edition.workspace = true\n' +
+        'license.workspace = true\n' +
+        'repository.workspace = true\n' +
+        'rust-version.workspace = true\n' +
+        '\n' +
+        '[dependencies]\n' +
+        'azure_core = { workspace = true }\n';
+
       const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
       crate.dependencies.push(new rust.CrateDependency('azure_core'));
       const cargoToml = codegen.emitCargoToml(crate);
-      strictEqual(cargoToml, '[package]\nname = "test_crate"\nversion = "1.2.3"\nedition.workspace = true\n\n[dependencies]\nazure_core = { workspace = true }\n');
+      strictEqual(cargoToml, expected);
     });
   });
 
