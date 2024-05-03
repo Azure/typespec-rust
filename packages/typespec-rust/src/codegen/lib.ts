@@ -12,9 +12,16 @@ export function emitLib(crate: rust.Crate): string {
   content += 'mod generated;\n\n';
 
   let closeModels = false;
-  if (crate.models.length > 0) {
+  if (crate.enums.length > 0 || crate.models.length > 0) {
     closeModels = true;
     content += 'pub mod models {\n';
+  }
+
+  if (crate.enums.length > 0) {
+    content += `${helpers.indent(1)}pub use crate::generated::enums::*;\n`;
+  }
+
+  if (crate.models.length > 0) {
     content += `${helpers.indent(1)}pub use crate::generated::models::*;\n`;
   }
 
