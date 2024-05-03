@@ -113,6 +113,7 @@ export class Adapter {
       if (scalar) {
         return <rust.Scalar>scalar;
       }
+
       let scalarKind: rust.ScalarKind;
       switch (kind) {
         case 'boolean':
@@ -137,6 +138,7 @@ export class Adapter {
           scalarKind = 'i8';
           break;
       }
+
       scalar = new rust.Scalar(scalarKind);
       this.types.set(kind, scalar);
       return scalar;
