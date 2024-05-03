@@ -43,6 +43,7 @@ export function getTypeDeclaration(type: rust.Type): string {
     case 'i64':
     case 'i8':
       return type.kind;
+    case 'model':
     case 'struct':
       return type.name;
   }

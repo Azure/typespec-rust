@@ -9,7 +9,7 @@ import * as rust from '../codemodel/index.js';
 // emits the mod.rs file
 export function emitMod(crate: rust.Crate): string {
   let content = helpers.contentPreamble();
-  if (crate.structs.length > 0) {
+  if (crate.models.length > 0) {
     content += 'pub mod models;\n';
   }
   return content;

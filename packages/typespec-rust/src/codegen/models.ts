@@ -8,7 +8,7 @@ import * as rust from '../codemodel/index.js';
 
 // emits the models.rs file for this crate
 export function emitModels(crate: rust.Crate): string {
-  if (crate.structs.length === 0) {
+  if (crate.models.length === 0) {
     return '';
   }
 
@@ -18,13 +18,13 @@ export function emitModels(crate: rust.Crate): string {
   // extra new-line after all use statements
   content += '\n';
 
-  for (const struct of crate.structs) {
-    content += helpers.formatDocComment(struct.docs);
+  for (const model of crate.models) {
+    content += helpers.formatDocComment(model.docs);
     content += '#[derive(Clone, Default, Deserialize, Serialize)]\n';
     content += '#[non_exhaustive]';
-    content += `${helpers.emitPub(struct.pub)}struct ${struct.name} {\n`;
+    content += `${helpers.emitPub(model.pub)}struct ${model.name} {\n`;
 
-    for (const field of struct.fields) {
+    for (const field of model.fields) {
       content += `${helpers.indent(1)}#[serde(rename = "${field.serde}")]\n`;
       content += `${helpers.indent(1)}${helpers.emitPub(field.pub)}${field.name}: Option<${helpers.getTypeDeclaration(field.type)}>,\n`;
     }

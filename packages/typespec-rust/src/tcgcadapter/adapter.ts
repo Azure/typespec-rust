@@ -34,7 +34,7 @@ export class Adapter {
     this.adaptTypes();
     this.crate.sortContent();
 
-    if (this.crate.structs.length > 0) {
+    if (this.crate.models.length > 0) {
       this.crate.dependencies.push(new rust.CrateDependency('serde'));
     }
     return this.crate;
@@ -43,40 +43,40 @@ export class Adapter {
   // converts all tcgc types to their Rust type equivalent
   private adaptTypes() {
     for (const model of this.ctx.experimental_sdkPackage.models) {
-      const struct = this.getStruct(model);
-      this.crate.structs.push(struct);
+      const rustModel = this.getModel(model);
+      this.crate.models.push(rustModel);
 
       for (const property of model.properties) {
-        const structField = this.getStructField(property);
-        struct.fields.push(structField);
+        const modelField = this.getModelField(property);
+        rustModel.fields.push(modelField);
       }
     }
   }
 
-  // converts a tcgc model to a Rust struct
-  private getStruct(model: tcgc.SdkModelType): rust.Struct {
+  // converts a tcgc model to a Rust model
+  private getModel(model: tcgc.SdkModelType): rust.Model {
     if (model.name.length === 0) {
       throw new Error('unnamed model'); // TODO: this might no longer be an issue
     }
-    const structName = codegen.capitalize(model.name);
-    let struct = this.types.get(structName);
-    if (struct) {
-      return <rust.Struct>struct;
+    const modelName = codegen.capitalize(model.name);
+    let rustModel = this.types.get(modelName);
+    if (rustModel) {
+      return <rust.Model>rustModel;
     }
-    struct = new rust.Struct(structName, model.access !== 'internal');
-    struct.docs = model.description;
-    this.types.set(structName, struct);
-    return struct;
+    rustModel = new rust.Model(modelName, model.access !== 'internal');
+    rustModel.docs = model.description;
+    this.types.set(modelName, rustModel);
+    return rustModel;
   }
 
-  // converts a tcgc model property to a struct field
-  private getStructField(property: tcgc.SdkModelPropertyType): rust.StructField {
+  // converts a tcgc model property to a model field
+  private getModelField(property: tcgc.SdkModelPropertyType): rust.ModelField {
     const fieldType = this.getType(property.type);
     // snake-case the field name
     const parts = codegen.deconstruct(property.name);
-    const structField = new rust.StructField(parts.join('_'), property.name, true, fieldType);
-    structField.docs = property.description;
-    return structField;
+    const modelField = new rust.ModelField(parts.join('_'), property.name, true, fieldType);
+    modelField.docs = property.description;
+    return modelField;
   }
 
   // converts a tcgc type to a Rust type
@@ -101,7 +101,7 @@ export class Adapter {
       case 'int8':
         return getScalarType(type.kind);
       case 'model':
-        return this.getStruct(type);
+        return this.getModel(type);
       case 'string': {
         let stringType = this.types.get(type.kind);
         if (stringType) {
