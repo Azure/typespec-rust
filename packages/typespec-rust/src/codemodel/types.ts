@@ -26,7 +26,7 @@ export interface Enum {
   extensible: boolean;
 }
 
-// EnumValue is an enum value for a specific Enum<T>
+// EnumValue is an enum value for a specific Enum
 export interface EnumValue {
   // the name of the enum value
   name: string;
