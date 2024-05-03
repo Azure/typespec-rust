@@ -20,8 +20,8 @@ export interface Crate {
   // the Crates on which this Crate depends
   dependencies: Array<CrateDependency>;
 
-  // structs contains all of the structs for this crate. can be empty
-  structs: Array<types.Struct>;
+  // models contains all of the models for this crate. can be empty
+  models: Array<types.Model>;
 }
 
 // ServiceType defines the possible service types
@@ -44,7 +44,7 @@ export class Crate implements Crate {
     this.version = version;
     this.type = type;
     this.dependencies = new Array<CrateDependency>();
-    this.structs = new Array<types.Struct>();
+    this.models = new Array<types.Model>();
   }
 
   sortContent(): void {
@@ -53,9 +53,9 @@ export class Crate implements Crate {
     };
 
     this.dependencies.sort((a: CrateDependency, b: CrateDependency) => { return sortAscending(a.name, b.name); });
-    this.structs.sort((a: types.Struct, b: types.Struct) => { return sortAscending(a.name, b.name); });
-    for (const struct of this.structs) {
-      struct.fields.sort((a: types.StructField, b: types.StructField) => { return sortAscending(a.name, b.name); });
+    this.models.sort((a: types.Model, b: types.Model) => { return sortAscending(a.name, b.name); });
+    for (const model of this.models) {
+      model.fields.sort((a: types.ModelField, b: types.ModelField) => { return sortAscending(a.name, b.name); });
     }
   }
 }
