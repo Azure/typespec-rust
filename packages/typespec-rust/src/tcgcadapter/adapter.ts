@@ -127,6 +127,8 @@ export class Adapter {
       case 'int64':
       case 'int8':
         return getScalarType(type.kind);
+      case 'enum':
+        return this.getEnum(type);
       case 'model':
         return this.getModel(type);
       case 'string': {
