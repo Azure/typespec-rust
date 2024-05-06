@@ -47,9 +47,9 @@ describe('typespec-rust: codegen', () => {
 
   describe('helpers', () => {
     it('annotationDerive', async () => {
-      strictEqual(helpers.annotationDerive(), '#[derive(Clone, Deserialize, Serialize)]\n');
-      strictEqual(helpers.annotationDerive('Copy'), '#[derive(Clone, Copy, Deserialize, Serialize)]\n');
-      strictEqual(helpers.annotationDerive('', 'Copy'), '#[derive(Clone, Copy, Deserialize, Serialize)]\n');
+      strictEqual(helpers.annotationDerive(), '#[derive(Clone, Debug, Deserialize, Serialize)]\n');
+      strictEqual(helpers.annotationDerive('Copy'), '#[derive(Clone, Copy, Debug, Deserialize, Serialize)]\n');
+      strictEqual(helpers.annotationDerive('', 'Copy'), '#[derive(Clone, Copy, Debug, Deserialize, Serialize)]\n');
     });
 
     it('emitPub', async () => {

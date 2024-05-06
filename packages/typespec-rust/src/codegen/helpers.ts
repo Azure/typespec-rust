@@ -68,7 +68,7 @@ export function indent(level: number): string {
 
 // emits the derive annotation with the standard and any additional values
 export function annotationDerive(...extra: Array<string>): string {
-  const derive = new Array<string>('Clone', 'Deserialize', 'Serialize');
+  const derive = new Array<string>('Clone', 'Debug', 'Deserialize', 'Serialize');
   // remove any empty values
   extra = extra.filter(entry => entry.trim() !== '');
   derive.push(...extra);

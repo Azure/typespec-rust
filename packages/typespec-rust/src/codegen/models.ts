@@ -20,7 +20,7 @@ export function emitModels(crate: rust.Crate): string {
 
   for (const model of crate.models) {
     content += helpers.formatDocComment(model.docs);
-    content += helpers.annotationDerive('Debug', 'Default');
+    content += helpers.annotationDerive('Default');
     content += helpers.AnnotationNonExhaustive;
     content += `${helpers.emitPub(model.pub)}struct ${model.name} {\n`;
 
