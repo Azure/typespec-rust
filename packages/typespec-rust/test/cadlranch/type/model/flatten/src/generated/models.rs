@@ -6,7 +6,7 @@
 use serde::{Deserialize, Serialize};
 
 /// This is the child model to be flattened. And it has flattened property as well.
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct ChildFlattenModel {
     pub properties: Option<ChildModel>,
@@ -14,7 +14,7 @@ pub struct ChildFlattenModel {
 }
 
 /// This is the child model to be flattened.
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct ChildModel {
     pub age: Option<i32>,
@@ -22,7 +22,7 @@ pub struct ChildModel {
 }
 
 /// This is the model with one level of flattening.
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct FlattenModel {
     pub name: Option<String>,
@@ -30,7 +30,7 @@ pub struct FlattenModel {
 }
 
 /// This is the model with two levels of flattening.
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct NestedFlattenModel {
     pub name: Option<String>,

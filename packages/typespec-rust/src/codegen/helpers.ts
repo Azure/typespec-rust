@@ -66,7 +66,12 @@ export function indent(level: number): string {
   return indent;
 }
 
-// emits the derive annotation with the specified and standard values
-export function annotationDerive(copy: boolean, dd: 'Debug' | 'Default'): string {
-  return `#[derive(Clone, ${copy ? 'Copy, ' : ''}${dd}, Deserialize, Serialize)]\n`;
+// emits the derive annotation with the standard and any additional values
+export function annotationDerive(...extra: Array<string>): string {
+  const derive = new Array<string>('Clone', 'Deserialize', 'Serialize');
+  // remove any empty values
+  extra = extra.filter(entry => entry.trim() !== '');
+  derive.push(...extra);
+  derive.sort();
+  return `#[derive(${derive.join(', ')})]\n`;
 }

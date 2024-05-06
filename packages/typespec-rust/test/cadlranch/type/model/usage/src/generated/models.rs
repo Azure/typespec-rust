@@ -6,7 +6,7 @@
 use serde::{Deserialize, Serialize};
 
 /// Record used both as operation parameter and return type
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct InputOutputRecord {
     #[serde(rename = "requiredProp")]
@@ -14,7 +14,7 @@ pub struct InputOutputRecord {
 }
 
 /// Record used in operation parameters
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct InputRecord {
     #[serde(rename = "requiredProp")]
@@ -22,7 +22,7 @@ pub struct InputRecord {
 }
 
 /// Record used in operation return type
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct OutputRecord {
     #[serde(rename = "requiredProp")]

@@ -6,16 +6,16 @@
 use serde::{Deserialize, Serialize};
 
 /// Empty model used in operation parameters
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct EmptyInput {}
 
 /// Empty model used in both parameter and return type
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct EmptyInputOutput {}
 
 /// Empty model used in operation return type
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct EmptyOutput {}

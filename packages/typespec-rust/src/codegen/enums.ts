@@ -21,7 +21,7 @@ export function emitEnums(crate: rust.Crate): string {
   for (const rustEnum of crate.enums) {
     content += helpers.formatDocComment(rustEnum.docs);
     // only derive Copy for fixed enums
-    content += helpers.annotationDerive(!rustEnum.extensible, 'Debug');
+    content += helpers.annotationDerive(!rustEnum.extensible ? 'Copy' : '', 'Debug', 'PartialEq');
     content += helpers.AnnotationNonExhaustive;
     content += `${helpers.emitPub(rustEnum.pub)}enum ${rustEnum.name} {\n`;
 
