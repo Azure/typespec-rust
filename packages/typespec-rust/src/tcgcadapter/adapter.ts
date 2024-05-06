@@ -108,14 +108,40 @@ export class Adapter {
 
   // converts a tcgc type to a Rust type
   private getType(type: tcgc.SdkType): rust.Type {
-    const getScalarType = (kind: 'boolean' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8'): rust.ScalarType => {
-      let scalarType = this.types.get(kind);
-      if (scalarType) {
-        return <rust.ScalarType>scalarType;
+    const getScalar = (kind: 'boolean' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8'): rust.Scalar => {
+      let scalar = this.types.get(kind);
+      if (scalar) {
+        return <rust.Scalar>scalar;
       }
-      scalarType = new rust.ScalarType('bool');
-      this.types.set(kind, scalarType);
-      return scalarType;
+
+      let scalarKind: rust.ScalarKind;
+      switch (kind) {
+        case 'boolean':
+          scalarKind = 'bool';
+          break;
+        case 'float32':
+          scalarKind = 'f32';
+          break;
+        case 'float64':
+          scalarKind = 'f64';
+          break;
+        case 'int16':
+          scalarKind = 'i16';
+          break;
+        case 'int32':
+          scalarKind = 'i32';
+          break;
+        case 'int64':
+          scalarKind = 'i64';
+          break;
+        case 'int8':
+          scalarKind = 'i8';
+          break;
+      }
+
+      scalar = new rust.Scalar(scalarKind);
+      this.types.set(kind, scalar);
+      return scalar;
     };
 
     switch (type.kind) {
@@ -126,7 +152,7 @@ export class Adapter {
       case 'int32':
       case 'int64':
       case 'int8':
-        return getScalarType(type.kind);
+        return getScalar(type.kind);
       case 'enum':
         return this.getEnum(type);
       case 'model':

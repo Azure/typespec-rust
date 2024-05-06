@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 // Type defines a type within the Rust type system
-export type Type = Enum | Model | ScalarType | StringType | Struct;
+export type Type = Enum | Model | Scalar | StringType | Struct;
 
 // Enum is a Rust enum type.
 export interface Enum {
@@ -52,12 +52,12 @@ export interface ModelField extends StructFieldBase {
   serde: string;
 }
 
-// ScalarTypeKind defines the supported Rust scalar type names
-export type ScalarTypeKind = 'bool' | 'f32' | 'f64' | 'i8' | 'i16' | 'i32' | 'i64';
+// ScalarKind defines the supported Rust scalar type names
+export type ScalarKind = 'bool' | 'f32' | 'f64' | 'i8' | 'i16' | 'i32' | 'i64';
 
-// ScalarType is a Rust scalar type
-export interface ScalarType {
-  kind: ScalarTypeKind;
+// Scalar is a Rust scalar type
+export interface Scalar {
+  kind: ScalarKind;
 }
 
 // StringType is a Rust string
@@ -161,8 +161,8 @@ export class ModelField implements ModelField {
   }
 }
 
-export class ScalarType implements ScalarType {
-  constructor(kind: ScalarTypeKind) {
+export class Scalar implements Scalar {
+  constructor(kind: ScalarKind) {
     this.kind = kind;
   }
 }
