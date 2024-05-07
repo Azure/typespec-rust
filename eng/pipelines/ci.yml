@@ -19,10 +19,10 @@ extends:
   parameters:
     Use1ESOfficial: false
     stages:
-      - stage: "TypeSpec_Rust_CI"
+      - stage: TypeSpec_Rust_CI
         jobs:
-          - job: "TypeSpec_Rust_CI"
-            displayName: "Run TypeSpec Rust CI Checks"
+          - job: TypeSpec_Rust_CI
+            displayName: Run TypeSpec Rust CI Checks
 
             variables:
               - template: /eng/pipelines/templates/variables/image.yml

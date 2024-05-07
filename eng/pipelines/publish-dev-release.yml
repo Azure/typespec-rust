@@ -35,4 +35,4 @@ extends:
                   if ($LASTEXITCODE) { exit $LASTEXITCODE }
                   exit 0
                   # npx publish-release --token $(azuresdk-github-pat) --repo autorest.rust --owner azure --name "TypeSpec emitter for Rust v$currentVersion" --tag v$currentVersion --notes='Beta version of TypeSpec emitter for Rust SDKs' --prerelease --editRelease false --assets azure-tools-typespec-rust-$currentVersion.tgz --target_commitish $(Build.SourceBranchName);
-                displayName: "Publish Dev Release"
+                displayName: Publish Dev Release
