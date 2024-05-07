@@ -2,12 +2,12 @@ steps:
   - script: |
       pnpm install
       pnpm build
-    displayName: "Build Emitter Sources"
+    displayName: Build Emitter Sources
     workingDirectory: $(TypeSpecRustPkgDir)
 
   - script: |
       pnpm run eslint
-    displayName: "Run Lint"
+    displayName: Run Lint
     workingDirectory: $(TypeSpecRustPkgDir)
 
   - script: pnpm run test-ci
@@ -29,14 +29,11 @@ steps:
       pnpm run tspcompile --verbose
       git add -A .
       git diff --staged -w 1>&2
-    displayName: "Regenerate Cadl Tests"
+    displayName: Regenerate Cadl Tests
     workingDirectory: $(TypeSpecRustPkgDir)/test
     failOnStderr: true
 
   - pwsh: |
       cargo build
-      if ($LASTEXITCODE) {
-        exit $LASTEXITCODE
-      }
-    displayName: "Compile Tests"
+    displayName: Compile Tests
     workingDirectory: $(TypeSpecRustPkgDir)/test
