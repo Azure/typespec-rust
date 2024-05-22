@@ -1,5 +1,5 @@
 [workspace]
-members = ["./cadlranch/**/src/.."]
+members = ["./cadlranch/**/src/..", "azure_core"]
 resolver = "2"
 
 [workspace.package]
@@ -10,4 +10,5 @@ repository = "https://github.com/azure/autorest.rust"
 rust-version = "1.76"
 
 [workspace.dependencies]
+azure_core = { path = "./azure_core" }
 serde = { version = "1.0", features = ["derive"] }
