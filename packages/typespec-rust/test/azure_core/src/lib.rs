@@ -22,6 +22,12 @@ impl ClientMethodOptions {
     }
 }
 
+impl Clone for ClientMethodOptions {
+    fn clone(&self) -> Self {
+        unimplemented!();
+    }
+}
+
 pub trait ClientMethodOptionsBuilder {
     fn with_context(self, _context: &Context) -> Self
     where

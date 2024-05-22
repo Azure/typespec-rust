@@ -7,7 +7,7 @@ use azure_core::{
     ClientMethodOptions, ClientMethodOptionsBuilder, Context, Response, Result,
 };
 
-use crate::enums::DaysOfWeekExtensibleEnum;
+use crate::models::DaysOfWeekExtensibleEnum;
 
 pub struct ExtensibleString;
 
@@ -21,7 +21,7 @@ impl ExtensibleString {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct GetKnownValueMethodOptions {
     options: ClientMethodOptions,
 }
@@ -32,7 +32,7 @@ impl GetKnownValueMethodOptions {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct PutKnownValueMethodOptions {
     options: ClientMethodOptions,
 }
@@ -56,8 +56,8 @@ pub mod builders {
             }
         }
 
-        pub fn build(self) -> GetKnownValueMethodOptions {
-            self.options
+        pub fn build(&self) -> GetKnownValueMethodOptions {
+            self.options.clone()
         }
     }
 
@@ -79,8 +79,8 @@ pub mod builders {
             }
         }
 
-        pub fn build(self) -> PutKnownValueMethodOptions {
-            self.options
+        pub fn build(&self) -> PutKnownValueMethodOptions {
+            self.options.clone()
         }
     }
 

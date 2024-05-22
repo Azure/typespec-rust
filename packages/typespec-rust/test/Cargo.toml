@@ -1,5 +1,8 @@
 [workspace]
-members = ["./cadlranch/**/src/..", "azure_core"]
+members = [
+    "./cadlranch/**/src/..",
+    "azure_core",
+]
 resolver = "2"
 
 [workspace.package]
