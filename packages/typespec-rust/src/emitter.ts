@@ -7,6 +7,7 @@ import * as codegen from './codegen/index.js';
 import { Adapter } from './tcgcadapter/adapter.js';
 import { RustEmitterOptions } from './lib.js';
 import { mkdir, writeFile } from 'fs/promises';
+import * as path from 'path';
 import { EmitContext } from '@typespec/compiler';
 import 'source-map-support/register.js';
 
@@ -37,10 +38,18 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   if (enums.length > 0) {
     await writeToGeneratedDir(context.emitterOutputDir, 'enums.rs', enums);
   }
+
+  const clientFiles = codegen.emitClients(crate);
+  for (const clientFile of clientFiles) {
+    await writeToGeneratedDir(context.emitterOutputDir, clientFile.name, clientFile.content, 'clients');
+  }
 }
 
-async function writeToGeneratedDir(outDir: string, filename: string, content: string): Promise<void> {
-  const srcGen = `${outDir}/src/generated`;
+async function writeToGeneratedDir(outDir: string, filename: string, content: string, subdir?: string): Promise<void> {
+  let srcGen = `${outDir}/src/generated`;
+  if (subdir) {
+    srcGen = path.join(srcGen, subdir);
+  }
   await mkdir(srcGen, {recursive: true});
   writeFile(`${srcGen}/${filename}`, content);
 }

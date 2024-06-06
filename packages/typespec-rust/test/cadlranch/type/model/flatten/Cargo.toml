@@ -8,4 +8,5 @@ repository.workspace = true
 rust-version.workspace = true
 
 [dependencies]
+azure_core = { workspace = true }
 serde = { workspace = true }

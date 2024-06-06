@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 export * from './cargotoml.js';
+export * from './clients.js';
 export * from './enums.js';
 export * from './lib.js';
 export * from './mod.js';

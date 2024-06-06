@@ -3,6 +3,7 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import * as client from './client.js';
 import * as types from './types.js';
 
 // Crate is a Rust crate
@@ -25,6 +26,9 @@ export interface Crate {
 
   // models contains all of the models for this crate. can be empty
   models: Array<types.Model>;
+
+  // clients contains all the clients for this crate. can be empty
+  clients: Array<client.Client>;
 }
 
 // ServiceType defines the possible service types
@@ -49,6 +53,7 @@ export class Crate implements Crate {
     this.dependencies = new Array<CrateDependency>();
     this.enums = new Array<types.Enum>();
     this.models = new Array<types.Model>();
+    this.clients = new Array<client.Client>();
   }
 
   sortContent(): void {

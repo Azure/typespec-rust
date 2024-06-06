@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 // Type defines a type within the Rust type system
-export type Type = Enum | Model | Scalar | StringType | Struct;
+export type Type = Enum | Empty | ExternalType | Generic | Literal | Model | Option | Scalar | StringType | Struct;
 
 // Enum is a Rust enum type.
 export interface Enum {
@@ -38,6 +38,43 @@ export interface EnumValue {
   value: number | string;
 }
 
+// Empty is the empty type (i.e. "()")
+export interface Empty {
+  kind: 'empty';
+}
+
+// ExternalType is a type defined in a different crate
+export interface ExternalType {
+  kind: 'external';
+
+  // the crate that defines the type
+  crate: string;
+
+  // the name of the type
+  name: string;
+}
+
+// Generic is a generic type instantiation, e.g. Foo<i32>
+export interface Generic {
+  kind: 'generic';
+
+  // the name of the generic type
+  name: string;
+
+  // the generic type params in the requisite order
+  types: Array<Type>;
+
+  // the use statement required to bring the type into scope
+  use?: string;
+}
+
+// Literal is a literal value (e.g. a string "foo")
+export interface Literal {
+  kind: 'literal';
+
+  value: boolean | null | number | string;
+}
+
 // Model is a Rust struct that participates in serde
 export interface Model extends StructBase {
   kind: 'model';
@@ -50,6 +87,20 @@ export interface Model extends StructBase {
 export interface ModelField extends StructFieldBase {
   // the name of the field over the wire
   serde: string;
+}
+
+// OptionType defines the possible generic type params for Option<T>
+export type OptionType = Enum | ExternalType | Generic | Model | Scalar | StringType | Struct;
+
+// Option is a Rust Option<T>
+export interface Option {
+  kind: 'option';
+
+  // the generic type param
+  type: OptionType;
+
+  // indicates if the type is by reference
+  ref: boolean;
 }
 
 // ScalarKind defines the supported Rust scalar type names
@@ -68,6 +119,9 @@ export interface StringType {
 // Struct is a Rust struct type definition
 export interface Struct extends StructBase {
   kind: 'struct';
+
+  // the provided doc string emitted as code comments
+  docs?: string;
 
   // fields contains the fields within the struct
   fields: Array<StructField>;
@@ -89,6 +143,7 @@ export interface StructField {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// base types
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // base type for models and structs
@@ -131,6 +186,9 @@ export class Enum implements Enum {
     this.kind = 'enum';
     this.name = name;
     this.pub = pub;
+    if (values.length < 1) {
+      throw new Error('must provide at least one enum value');
+    }
     this.values = values;
     this.extensible = extensible;
   }
@@ -139,6 +197,39 @@ export class Enum implements Enum {
 export class EnumValue implements EnumValue {
   constructor(name: string, value: number | string) {
     this.name = name;
+    this.value = value;
+  }
+}
+
+export class Empty implements Empty {
+  constructor() {
+    this.kind = 'empty';
+  }
+}
+
+export class ExternalType implements ExternalType {
+  constructor(crate: string, name: string) {
+    this.kind = 'external';
+    this.crate = crate;
+    this.name = name;
+  }
+}
+
+export class Generic implements Generic {
+  constructor(name: string, types: Array<Type>, use?: string) {
+    this.kind = 'generic';
+    this.name = name;
+    if (types.length < 1) {
+      throw new Error('must provide at least one generic type parameter type');
+    }
+    this.types = types;
+    this.use = use;
+  }
+}
+
+export class Literal implements Literal {
+  constructor(value: boolean | null | number | string) {
+    this.kind = 'literal';
     this.value = value;
   }
 }
@@ -158,6 +249,14 @@ export class ModelField implements ModelField {
     this.serde = serde;
     this.pub = pub;
     this.type = type;
+  }
+}
+
+export class Option implements Option {
+  constructor(type: OptionType, ref: boolean) {
+    this.kind = 'option';
+    this.type = type;
+    this.ref = ref;
   }
 }
 

@@ -9,7 +9,11 @@ import * as rust from '../codemodel/index.js';
 // emits the lib.rs file
 export function emitLib(crate: rust.Crate): string {
   let content = helpers.contentPreamble();
-  content += 'mod generated;\npub use generated::*;\n\n';
+  content += 'mod generated;\n\n';
+
+  if (crate.clients.length > 0) {
+    content += 'pub use crate::generated::clients::*;\n\n';
+  }
 
   let closeModels = false;
   if (crate.enums.length > 0 || crate.models.length > 0) {

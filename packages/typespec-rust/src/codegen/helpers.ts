@@ -38,6 +38,21 @@ export function emitPub(pub: boolean): string {
 // returns the type declaration string for the specified Rust type
 export function getTypeDeclaration(type: rust.Type): string {
   switch (type.kind) {
+    case 'empty':
+      return '()';
+    case 'external':
+      return type.name;
+    case 'generic': {
+      const typeParams = new Array<string>();
+      for (const typep of type.types) {
+        typeParams.push(getTypeDeclaration(typep));
+      }
+      return `${type.name}<${typeParams.join(', ')}>`;
+    }
+    case 'literal':
+      return `${type.value}`;
+    case 'option':
+      return `Option<${type.ref ? '&' : ''}${getTypeDeclaration(type.type)}>`;
     case 'String':
     case 'bool':
     case 'f32':
@@ -74,4 +89,9 @@ export function annotationDerive(...extra: Array<string>): string {
   derive.push(...extra);
   derive.sort();
   return `#[derive(${derive.join(', ')})]\n`;
+}
+
+// used to sort strings in ascending order
+export function sortAscending(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
 }

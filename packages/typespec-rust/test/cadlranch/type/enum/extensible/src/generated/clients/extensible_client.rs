@@ -5,7 +5,9 @@
 
 use crate::extensible_string::ExtensibleString;
 
-pub struct ExtensibleClient;
+pub struct ExtensibleClient {
+    endpoint: String,
+}
 
 impl ExtensibleClient {
     pub fn get_extensible_string_client(&self) -> ExtensibleString {

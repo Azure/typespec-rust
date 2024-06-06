@@ -29,7 +29,7 @@ export function emitModels(crate: rust.Crate): string {
         // only emit the serde annotation when the names aren't equal
         content += `${helpers.indent(1)}#[serde(rename = "${field.serde}")]\n`;
       }
-      content += `${helpers.indent(1)}${helpers.emitPub(field.pub)}${field.name}: Option<${helpers.getTypeDeclaration(field.type)}>,\n`;
+      content += `${helpers.indent(1)}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
     }
 
     content += '}\n\n';

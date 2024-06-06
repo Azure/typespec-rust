@@ -7,12 +7,21 @@ use azure_core::{ClientMethodOptions, ClientMethodOptionsBuilder, Context, Respo
 
 use crate::models::DaysOfWeekExtensibleEnum;
 
-pub struct ExtensibleString;
+pub struct ExtensibleString {
+    endpoint: String,
+}
 
 impl ExtensibleString {
     pub async fn get_known_value(
         &self,
-        _options: Option<&GetKnownValueMethodOptions>,
+        _options: Option<&ExtensibleStringGetKnownValueOptions>,
+    ) -> Result<Response<DaysOfWeekExtensibleEnum>> {
+        unimplemented!();
+    }
+
+    pub async fn get_unknown_value(
+        &self,
+        _options: Option<&ExtensibleStringGetUnknownValueOptions>,
     ) -> Result<Response<DaysOfWeekExtensibleEnum>> {
         unimplemented!();
     }
@@ -20,78 +29,153 @@ impl ExtensibleString {
     pub async fn put_known_value(
         &self,
         _body: DaysOfWeekExtensibleEnum,
-        _options: Option<&PutKnownValueMethodOptions>,
+        _options: Option<&ExtensibleStringPutKnownValueOptions>,
+    ) -> Result<()> {
+        unimplemented!();
+    }
+
+    pub async fn put_unknown_value(
+        &self,
+        _body: DaysOfWeekExtensibleEnum,
+        _options: Option<&ExtensibleStringPutUnknownValueOptions>,
     ) -> Result<()> {
         unimplemented!();
     }
 }
 
 #[derive(Clone, Debug, Default)]
-pub struct GetKnownValueMethodOptions {
-    options: ClientMethodOptions,
+pub struct ExtensibleStringGetKnownValueOptions {
+    method_options: ClientMethodOptions,
 }
 
-impl GetKnownValueMethodOptions {
-    pub fn builder() -> builders::GetKnownValueMethodOptionsBuilder {
-        builders::GetKnownValueMethodOptionsBuilder::new()
+impl ExtensibleStringGetKnownValueOptions {
+    pub fn builder() -> builders::ExtensibleStringGetKnownValueOptionsBuilder {
+        builders::ExtensibleStringGetKnownValueOptionsBuilder::new()
     }
 }
 
 #[derive(Clone, Debug, Default)]
-pub struct PutKnownValueMethodOptions {
-    options: ClientMethodOptions,
+pub struct ExtensibleStringGetUnknownValueOptions {
+    method_options: ClientMethodOptions,
 }
 
-impl PutKnownValueMethodOptions {
-    pub fn builder() -> builders::PutKnownValueMethodOptionsBuilder {
-        builders::PutKnownValueMethodOptionsBuilder::new()
+impl ExtensibleStringGetUnknownValueOptions {
+    pub fn builder() -> builders::ExtensibleStringGetUnknownValueOptionsBuilder {
+        builders::ExtensibleStringGetUnknownValueOptionsBuilder::new()
     }
 }
 
+#[derive(Clone, Debug, Default)]
+pub struct ExtensibleStringPutKnownValueOptions {
+    method_options: ClientMethodOptions,
+}
+
+impl ExtensibleStringPutKnownValueOptions {
+    pub fn builder() -> builders::ExtensibleStringPutKnownValueOptionsBuilder {
+        builders::ExtensibleStringPutKnownValueOptionsBuilder::new()
+    }
+}
+
+#[derive(Clone, Debug, Default)]
+pub struct ExtensibleStringPutUnknownValueOptions {
+    method_options: ClientMethodOptions,
+}
+
+impl ExtensibleStringPutUnknownValueOptions {
+    pub fn builder() -> builders::ExtensibleStringPutUnknownValueOptionsBuilder {
+        builders::ExtensibleStringPutUnknownValueOptionsBuilder::new()
+    }
+}
 pub mod builders {
     use super::*;
-    pub struct GetKnownValueMethodOptionsBuilder {
-        options: GetKnownValueMethodOptions,
+    pub struct ExtensibleStringGetKnownValueOptionsBuilder {
+        options: ExtensibleStringGetKnownValueOptions,
     }
 
-    impl GetKnownValueMethodOptionsBuilder {
+    impl ExtensibleStringGetKnownValueOptionsBuilder {
         pub(super) fn new() -> Self {
             Self {
-                options: GetKnownValueMethodOptions::default(),
+                options: ExtensibleStringGetKnownValueOptions::default(),
             }
         }
 
-        pub fn build(&self) -> GetKnownValueMethodOptions {
+        pub fn build(&self) -> ExtensibleStringGetKnownValueOptions {
             self.options.clone()
         }
     }
 
-    impl ClientMethodOptionsBuilder for GetKnownValueMethodOptionsBuilder {
+    impl ClientMethodOptionsBuilder for ExtensibleStringGetKnownValueOptionsBuilder {
         fn with_context(mut self, context: &Context) -> Self {
-            self.options.options.set_context(context);
+            self.options.method_options.set_context(context);
             self
         }
     }
 
-    pub struct PutKnownValueMethodOptionsBuilder {
-        options: PutKnownValueMethodOptions,
+    pub struct ExtensibleStringGetUnknownValueOptionsBuilder {
+        options: ExtensibleStringGetUnknownValueOptions,
     }
 
-    impl PutKnownValueMethodOptionsBuilder {
+    impl ExtensibleStringGetUnknownValueOptionsBuilder {
         pub(super) fn new() -> Self {
             Self {
-                options: PutKnownValueMethodOptions::default(),
+                options: ExtensibleStringGetUnknownValueOptions::default(),
             }
         }
 
-        pub fn build(&self) -> PutKnownValueMethodOptions {
+        pub fn build(&self) -> ExtensibleStringGetUnknownValueOptions {
             self.options.clone()
         }
     }
 
-    impl ClientMethodOptionsBuilder for PutKnownValueMethodOptionsBuilder {
+    impl ClientMethodOptionsBuilder for ExtensibleStringGetUnknownValueOptionsBuilder {
         fn with_context(mut self, context: &Context) -> Self {
-            self.options.options.set_context(context);
+            self.options.method_options.set_context(context);
+            self
+        }
+    }
+
+    pub struct ExtensibleStringPutKnownValueOptionsBuilder {
+        options: ExtensibleStringPutKnownValueOptions,
+    }
+
+    impl ExtensibleStringPutKnownValueOptionsBuilder {
+        pub(super) fn new() -> Self {
+            Self {
+                options: ExtensibleStringPutKnownValueOptions::default(),
+            }
+        }
+
+        pub fn build(&self) -> ExtensibleStringPutKnownValueOptions {
+            self.options.clone()
+        }
+    }
+
+    impl ClientMethodOptionsBuilder for ExtensibleStringPutKnownValueOptionsBuilder {
+        fn with_context(mut self, context: &Context) -> Self {
+            self.options.method_options.set_context(context);
+            self
+        }
+    }
+
+    pub struct ExtensibleStringPutUnknownValueOptionsBuilder {
+        options: ExtensibleStringPutUnknownValueOptions,
+    }
+
+    impl ExtensibleStringPutUnknownValueOptionsBuilder {
+        pub(super) fn new() -> Self {
+            Self {
+                options: ExtensibleStringPutUnknownValueOptions::default(),
+            }
+        }
+
+        pub fn build(&self) -> ExtensibleStringPutUnknownValueOptions {
+            self.options.clone()
+        }
+    }
+
+    impl ClientMethodOptionsBuilder for ExtensibleStringPutUnknownValueOptionsBuilder {
+        fn with_context(mut self, context: &Context) -> Self {
+            self.options.method_options.set_context(context);
             self
         }
     }
