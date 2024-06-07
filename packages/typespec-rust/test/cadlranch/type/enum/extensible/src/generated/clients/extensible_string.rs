@@ -86,6 +86,7 @@ impl ExtensibleStringPutUnknownValueOptions {
         builders::ExtensibleStringPutUnknownValueOptionsBuilder::new()
     }
 }
+
 pub mod builders {
     use super::*;
     pub struct ExtensibleStringGetKnownValueOptionsBuilder {

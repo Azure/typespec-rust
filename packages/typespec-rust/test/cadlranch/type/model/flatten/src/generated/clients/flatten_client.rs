@@ -50,6 +50,7 @@ impl FlattenClientPutNestedFlattenModelOptions {
         builders::FlattenClientPutNestedFlattenModelOptionsBuilder::new()
     }
 }
+
 pub mod builders {
     use super::*;
     pub struct FlattenClientPutFlattenModelOptionsBuilder {

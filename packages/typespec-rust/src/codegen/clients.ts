@@ -93,6 +93,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
 
     let pubModBuilders = '';
     if (needBuilders) {
+      body += '\n';
       pubModBuilders = createPubModBuilders(client, use);
     }
 

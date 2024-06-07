@@ -68,6 +68,7 @@ impl EmptyClientPostRoundTripEmptyOptions {
         builders::EmptyClientPostRoundTripEmptyOptionsBuilder::new()
     }
 }
+
 pub mod builders {
     use super::*;
     pub struct EmptyClientPutEmptyOptionsBuilder {

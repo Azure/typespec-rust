@@ -279,6 +279,7 @@ export class Adapter {
         switch (param.kind) {
           case 'credential':
             // skip this for now as we don't generate client constructors
+            // TODO: https://github.com/Azure/autorest.rust/issues/32
             continue;
           case 'endpoint':
             // this will either be a single endpoint param or templated host

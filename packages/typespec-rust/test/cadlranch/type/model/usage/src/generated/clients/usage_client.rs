@@ -68,6 +68,7 @@ impl UsageClientInputAndOutputOptions {
         builders::UsageClientInputAndOutputOptionsBuilder::new()
     }
 }
+
 pub mod builders {
     use super::*;
     pub struct UsageClientInputOptionsBuilder {

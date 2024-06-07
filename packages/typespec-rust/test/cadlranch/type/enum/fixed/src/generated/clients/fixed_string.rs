@@ -68,6 +68,7 @@ impl FixedStringPutUnknownValueOptions {
         builders::FixedStringPutUnknownValueOptionsBuilder::new()
     }
 }
+
 pub mod builders {
     use super::*;
     pub struct FixedStringGetKnownValueOptionsBuilder {
