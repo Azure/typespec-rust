@@ -16,7 +16,7 @@ pub struct FlattenClient {
 impl FlattenClient {
     pub async fn put_flatten_model(
         &self,
-        input: RequestContent<FlattenModel>,
+        content: RequestContent<FlattenModel>,
         options: Option<FlattenClientPutFlattenModelOptions>,
     ) -> Result<Response<FlattenModel>> {
         unimplemented!();
@@ -24,7 +24,7 @@ impl FlattenClient {
 
     pub async fn put_nested_flatten_model(
         &self,
-        input: RequestContent<NestedFlattenModel>,
+        content: RequestContent<NestedFlattenModel>,
         options: Option<FlattenClientPutNestedFlattenModelOptions>,
     ) -> Result<Response<NestedFlattenModel>> {
         unimplemented!();

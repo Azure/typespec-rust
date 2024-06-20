@@ -30,7 +30,7 @@ impl ExtensibleString {
 
     pub async fn put_known_value(
         &self,
-        body: RequestContent<DaysOfWeekExtensibleEnum>,
+        content: RequestContent<DaysOfWeekExtensibleEnum>,
         options: Option<ExtensibleStringPutKnownValueOptions>,
     ) -> Result<()> {
         unimplemented!();
@@ -38,7 +38,7 @@ impl ExtensibleString {
 
     pub async fn put_unknown_value(
         &self,
-        body: RequestContent<DaysOfWeekExtensibleEnum>,
+        content: RequestContent<DaysOfWeekExtensibleEnum>,
         options: Option<ExtensibleStringPutUnknownValueOptions>,
     ) -> Result<()> {
         unimplemented!();

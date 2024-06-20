@@ -382,7 +382,8 @@ export class Adapter {
     let adaptedParam: rust.MethodParameter;
     switch (param.kind) {
       case 'body':
-        adaptedParam = new rust.BodyParameter(param.name, paramLoc, this.getTypeForBodyParam(param.type));
+        // for body params, the param name is hard-coded
+        adaptedParam = new rust.BodyParameter(paramLoc, this.getTypeForBodyParam(param.type));
         break;
       case 'header':
         adaptedParam = new rust.HeaderParameter(param.name, param.serializedName, paramLoc, this.getTypeForHeaderParam(param.type));

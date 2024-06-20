@@ -23,7 +23,7 @@ impl FixedString {
 
     pub async fn put_known_value(
         &self,
-        body: RequestContent<DaysOfWeekEnum>,
+        content: RequestContent<DaysOfWeekEnum>,
         options: Option<FixedStringPutKnownValueOptions>,
     ) -> Result<()> {
         unimplemented!();
@@ -31,7 +31,7 @@ impl FixedString {
 
     pub async fn put_unknown_value(
         &self,
-        body: RequestContent<DaysOfWeekEnum>,
+        content: RequestContent<DaysOfWeekEnum>,
         options: Option<FixedStringPutUnknownValueOptions>,
     ) -> Result<()> {
         unimplemented!();
