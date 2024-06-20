@@ -15,14 +15,14 @@ impl EmptyClient {
     pub async fn put_empty(
         &self,
         input: EmptyInput,
-        options: Option<&EmptyClientPutEmptyOptions>,
+        options: Option<EmptyClientPutEmptyOptions>,
     ) -> Result<()> {
         unimplemented!();
     }
 
     pub async fn get_empty(
         &self,
-        options: Option<&EmptyClientGetEmptyOptions>,
+        options: Option<EmptyClientGetEmptyOptions>,
     ) -> Result<Response<EmptyOutput>> {
         unimplemented!();
     }
@@ -30,7 +30,7 @@ impl EmptyClient {
     pub async fn post_round_trip_empty(
         &self,
         body: EmptyInputOutput,
-        options: Option<&EmptyClientPostRoundTripEmptyOptions>,
+        options: Option<EmptyClientPostRoundTripEmptyOptions>,
     ) -> Result<Response<EmptyInputOutput>> {
         unimplemented!();
     }

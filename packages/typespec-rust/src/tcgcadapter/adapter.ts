@@ -326,7 +326,7 @@ export class Adapter {
     methodOptionsStruct.fields.push(new rust.StructField('method_options', false, new rust.ExternalType('azure_core', 'ClientMethodOptions')));
     switch (method.kind) {
       case 'basic':
-        rustMethod = new rust.AsyncMethod(snakeCaseName(method.name), rustClient, isPub(method.access), new rust.MethodOptions(methodOptionsStruct, true));
+        rustMethod = new rust.AsyncMethod(snakeCaseName(method.name), rustClient, isPub(method.access), new rust.MethodOptions(methodOptionsStruct, false));
         break;
       default:
         throw new Error(`method kind ${method.kind} NYI`);

@@ -15,7 +15,7 @@ impl FlattenClient {
     pub async fn put_flatten_model(
         &self,
         input: FlattenModel,
-        options: Option<&FlattenClientPutFlattenModelOptions>,
+        options: Option<FlattenClientPutFlattenModelOptions>,
     ) -> Result<Response<FlattenModel>> {
         unimplemented!();
     }
@@ -23,7 +23,7 @@ impl FlattenClient {
     pub async fn put_nested_flatten_model(
         &self,
         input: NestedFlattenModel,
-        options: Option<&FlattenClientPutNestedFlattenModelOptions>,
+        options: Option<FlattenClientPutNestedFlattenModelOptions>,
     ) -> Result<Response<NestedFlattenModel>> {
         unimplemented!();
     }

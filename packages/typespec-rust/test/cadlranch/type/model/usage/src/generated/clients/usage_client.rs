@@ -15,14 +15,14 @@ impl UsageClient {
     pub async fn input(
         &self,
         input: InputRecord,
-        options: Option<&UsageClientInputOptions>,
+        options: Option<UsageClientInputOptions>,
     ) -> Result<()> {
         unimplemented!();
     }
 
     pub async fn output(
         &self,
-        options: Option<&UsageClientOutputOptions>,
+        options: Option<UsageClientOutputOptions>,
     ) -> Result<Response<OutputRecord>> {
         unimplemented!();
     }
@@ -30,7 +30,7 @@ impl UsageClient {
     pub async fn input_and_output(
         &self,
         body: InputOutputRecord,
-        options: Option<&UsageClientInputAndOutputOptions>,
+        options: Option<UsageClientInputAndOutputOptions>,
     ) -> Result<Response<InputOutputRecord>> {
         unimplemented!();
     }
