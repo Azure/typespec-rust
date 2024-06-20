@@ -16,7 +16,7 @@ pub struct UsageClient {
 impl UsageClient {
     pub async fn input(
         &self,
-        content: RequestContent<InputRecord>,
+        input: RequestContent<InputRecord>,
         options: Option<UsageClientInputOptions>,
     ) -> Result<()> {
         unimplemented!();
@@ -31,7 +31,7 @@ impl UsageClient {
 
     pub async fn input_and_output(
         &self,
-        content: RequestContent<InputOutputRecord>,
+        body: RequestContent<InputOutputRecord>,
         options: Option<UsageClientInputAndOutputOptions>,
     ) -> Result<Response<InputOutputRecord>> {
         unimplemented!();

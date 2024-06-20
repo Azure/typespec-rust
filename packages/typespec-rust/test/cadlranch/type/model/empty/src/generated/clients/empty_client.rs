@@ -16,7 +16,7 @@ pub struct EmptyClient {
 impl EmptyClient {
     pub async fn put_empty(
         &self,
-        content: RequestContent<EmptyInput>,
+        input: RequestContent<EmptyInput>,
         options: Option<EmptyClientPutEmptyOptions>,
     ) -> Result<()> {
         unimplemented!();
@@ -31,7 +31,7 @@ impl EmptyClient {
 
     pub async fn post_round_trip_empty(
         &self,
-        content: RequestContent<EmptyInputOutput>,
+        body: RequestContent<EmptyInputOutput>,
         options: Option<EmptyClientPostRoundTripEmptyOptions>,
     ) -> Result<Response<EmptyInputOutput>> {
         unimplemented!();

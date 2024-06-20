@@ -144,8 +144,8 @@ export class AsyncMethod extends HTTPMethodBase implements AsyncMethod {
 }
 
 export class BodyParameter extends HTTPParameterBase implements BodyParameter {
-  constructor(location: ParameterLocation, type: types.RequestContent) {
-    super('content', location, type);
+  constructor(name: string, location: ParameterLocation, type: types.RequestContent) {
+    super(name, location, type);
   }
 }
 
