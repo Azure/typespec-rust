@@ -14,23 +14,23 @@ pub struct UsageClient {
 impl UsageClient {
     pub async fn input(
         &self,
-        _input: InputRecord,
-        _options: Option<&UsageClientInputOptions>,
+        input: InputRecord,
+        options: Option<&UsageClientInputOptions>,
     ) -> Result<()> {
         unimplemented!();
     }
 
     pub async fn output(
         &self,
-        _options: Option<&UsageClientOutputOptions>,
+        options: Option<&UsageClientOutputOptions>,
     ) -> Result<Response<OutputRecord>> {
         unimplemented!();
     }
 
     pub async fn input_and_output(
         &self,
-        _body: InputOutputRecord,
-        _options: Option<&UsageClientInputAndOutputOptions>,
+        body: InputOutputRecord,
+        options: Option<&UsageClientInputAndOutputOptions>,
     ) -> Result<Response<InputOutputRecord>> {
         unimplemented!();
     }

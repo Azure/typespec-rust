@@ -14,16 +14,16 @@ pub struct FlattenClient {
 impl FlattenClient {
     pub async fn put_flatten_model(
         &self,
-        _input: FlattenModel,
-        _options: Option<&FlattenClientPutFlattenModelOptions>,
+        input: FlattenModel,
+        options: Option<&FlattenClientPutFlattenModelOptions>,
     ) -> Result<Response<FlattenModel>> {
         unimplemented!();
     }
 
     pub async fn put_nested_flatten_model(
         &self,
-        _input: NestedFlattenModel,
-        _options: Option<&FlattenClientPutNestedFlattenModelOptions>,
+        input: NestedFlattenModel,
+        options: Option<&FlattenClientPutNestedFlattenModelOptions>,
     ) -> Result<Response<NestedFlattenModel>> {
         unimplemented!();
     }

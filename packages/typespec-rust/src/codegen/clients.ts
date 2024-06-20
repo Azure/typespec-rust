@@ -127,12 +127,10 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
       continue;
     }
     use.addForType(param.type);
-    // TODO: remove leading underscore once param is used
-    paramsSig.push(`_${param.name}: ${formatParamTypeName(param)}`);
+    paramsSig.push(`${param.name}: ${formatParamTypeName(param)}`);
   }
   if (method.kind !== 'clientaccessor') {
-    // TODO: remove leading underscore once param is used
-    paramsSig.push(`_options: ${helpers.getTypeDeclaration(method.options)}`);
+    paramsSig.push(`options: ${helpers.getTypeDeclaration(method.options)}`);
   }
   return paramsSig.join(', ');
 }

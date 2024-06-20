@@ -14,23 +14,23 @@ pub struct EmptyClient {
 impl EmptyClient {
     pub async fn put_empty(
         &self,
-        _input: EmptyInput,
-        _options: Option<&EmptyClientPutEmptyOptions>,
+        input: EmptyInput,
+        options: Option<&EmptyClientPutEmptyOptions>,
     ) -> Result<()> {
         unimplemented!();
     }
 
     pub async fn get_empty(
         &self,
-        _options: Option<&EmptyClientGetEmptyOptions>,
+        options: Option<&EmptyClientGetEmptyOptions>,
     ) -> Result<Response<EmptyOutput>> {
         unimplemented!();
     }
 
     pub async fn post_round_trip_empty(
         &self,
-        _body: EmptyInputOutput,
-        _options: Option<&EmptyClientPostRoundTripEmptyOptions>,
+        body: EmptyInputOutput,
+        options: Option<&EmptyClientPostRoundTripEmptyOptions>,
     ) -> Result<Response<EmptyInputOutput>> {
         unimplemented!();
     }

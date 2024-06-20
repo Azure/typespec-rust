@@ -14,30 +14,30 @@ pub struct ExtensibleString {
 impl ExtensibleString {
     pub async fn get_known_value(
         &self,
-        _options: Option<&ExtensibleStringGetKnownValueOptions>,
+        options: Option<&ExtensibleStringGetKnownValueOptions>,
     ) -> Result<Response<DaysOfWeekExtensibleEnum>> {
         unimplemented!();
     }
 
     pub async fn get_unknown_value(
         &self,
-        _options: Option<&ExtensibleStringGetUnknownValueOptions>,
+        options: Option<&ExtensibleStringGetUnknownValueOptions>,
     ) -> Result<Response<DaysOfWeekExtensibleEnum>> {
         unimplemented!();
     }
 
     pub async fn put_known_value(
         &self,
-        _body: DaysOfWeekExtensibleEnum,
-        _options: Option<&ExtensibleStringPutKnownValueOptions>,
+        body: DaysOfWeekExtensibleEnum,
+        options: Option<&ExtensibleStringPutKnownValueOptions>,
     ) -> Result<()> {
         unimplemented!();
     }
 
     pub async fn put_unknown_value(
         &self,
-        _body: DaysOfWeekExtensibleEnum,
-        _options: Option<&ExtensibleStringPutUnknownValueOptions>,
+        body: DaysOfWeekExtensibleEnum,
+        options: Option<&ExtensibleStringPutUnknownValueOptions>,
     ) -> Result<()> {
         unimplemented!();
     }

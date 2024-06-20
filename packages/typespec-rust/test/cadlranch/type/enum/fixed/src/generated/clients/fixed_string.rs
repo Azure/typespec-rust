@@ -14,23 +14,23 @@ pub struct FixedString {
 impl FixedString {
     pub async fn get_known_value(
         &self,
-        _options: Option<&FixedStringGetKnownValueOptions>,
+        options: Option<&FixedStringGetKnownValueOptions>,
     ) -> Result<Response<DaysOfWeekEnum>> {
         unimplemented!();
     }
 
     pub async fn put_known_value(
         &self,
-        _body: DaysOfWeekEnum,
-        _options: Option<&FixedStringPutKnownValueOptions>,
+        body: DaysOfWeekEnum,
+        options: Option<&FixedStringPutKnownValueOptions>,
     ) -> Result<()> {
         unimplemented!();
     }
 
     pub async fn put_unknown_value(
         &self,
-        _body: DaysOfWeekEnum,
-        _options: Option<&FixedStringPutUnknownValueOptions>,
+        body: DaysOfWeekEnum,
+        options: Option<&FixedStringPutUnknownValueOptions>,
     ) -> Result<()> {
         unimplemented!();
     }
