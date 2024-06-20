@@ -7,7 +7,7 @@ use azure_core::{
     ClientMethodOptions, ClientMethodOptionsBuilder, Context, RequestContent, Response, Result,
 };
 
-use crate::models::{EmptyInputOutput, EmptyOutput};
+use crate::models::{EmptyInput, EmptyInputOutput, EmptyOutput};
 
 pub struct EmptyClient {
     endpoint: String,

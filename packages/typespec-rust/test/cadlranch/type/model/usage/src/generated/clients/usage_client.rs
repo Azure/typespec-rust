@@ -7,7 +7,7 @@ use azure_core::{
     ClientMethodOptions, ClientMethodOptionsBuilder, Context, RequestContent, Response, Result,
 };
 
-use crate::models::{InputOutputRecord, OutputRecord};
+use crate::models::{InputOutputRecord, InputRecord, OutputRecord};
 
 pub struct UsageClient {
     endpoint: String,

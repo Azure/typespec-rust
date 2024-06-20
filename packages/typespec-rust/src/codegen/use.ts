@@ -66,6 +66,7 @@ export class Use {
         break;
       case 'requestContet':
         this.addType('azure_core', 'RequestContent');
+        this.addForType(type.type);
         break;
     }
   }
