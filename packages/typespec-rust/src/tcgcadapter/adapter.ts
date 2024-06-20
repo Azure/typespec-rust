@@ -185,7 +185,7 @@ export class Adapter {
     return literalType;
   }
 
-  private getTypeForBodyParam(type: tcgc.SdkType): rust.BodyType {
+  private getTypeForBodyParam(type: tcgc.SdkType): rust.RequestContent {
     const bodyParamType = this.getType(type);
     switch (bodyParamType.kind) {
       case 'String':
@@ -198,7 +198,7 @@ export class Adapter {
       case 'i64':
       case 'i8':
       case 'model':
-        return bodyParamType;
+        return new rust.RequestContent(bodyParamType);
       default:
         throw new Error(`unsupported body param type ${bodyParamType.kind}`);
     }

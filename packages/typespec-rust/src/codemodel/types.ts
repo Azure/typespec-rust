@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 // Type defines a type within the Rust type system
-export type Type = Enum | Empty | ExternalType | Generic | Literal | Model | Option | Scalar | StringType | Struct;
+export type Type = Enum | Empty | ExternalType | Generic | Literal | Model | Option | RequestContent | Scalar | StringType | Struct;
 
 // Enum is a Rust enum type.
 export interface Enum {
@@ -101,6 +101,16 @@ export interface Option {
 
   // indicates if the type is by reference
   ref: boolean;
+}
+
+// RequestContentType defines the possible generic type params for RequestContent<T>
+export type RequestContentType = Enum | Model | Scalar | StringType;
+
+// RequestContent is a Rust RequestContent<T> from azure_core
+export interface RequestContent {
+  kind: 'requestContet';
+
+  type: RequestContentType;
 }
 
 // ScalarKind defines the supported Rust scalar type names
@@ -257,6 +267,13 @@ export class Option implements Option {
     this.kind = 'option';
     this.type = type;
     this.ref = ref;
+  }
+}
+
+export class RequestContent implements RequestContent {
+  constructor(type: RequestContentType) {
+    this.kind = 'requestContet';
+    this.type = type;
   }
 }
 

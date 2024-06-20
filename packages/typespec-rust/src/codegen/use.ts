@@ -63,6 +63,10 @@ export class Use {
       case 'enum':
       case 'model':
         this.addType('crate::models', type.name);
+        break;
+      case 'requestContet':
+        this.addType('azure_core', 'RequestContent');
+        break;
     }
   }
 

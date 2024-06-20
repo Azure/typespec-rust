@@ -70,7 +70,7 @@ export interface BodyParameter extends HTTPParameterBase {
   kind: 'body';
 
   // the type of the body param
-  type: BodyType;
+  type: types.RequestContent;
 }
 
 // HeaderType is the possible types for a HeaderParameter
@@ -144,7 +144,7 @@ export class AsyncMethod extends HTTPMethodBase implements AsyncMethod {
 }
 
 export class BodyParameter extends HTTPParameterBase implements BodyParameter {
-  constructor(name: string, location: ParameterLocation, type: BodyType) {
+  constructor(name: string, location: ParameterLocation, type: types.RequestContent) {
     super(name, location, type);
   }
 }

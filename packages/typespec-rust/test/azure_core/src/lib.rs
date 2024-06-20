@@ -2,10 +2,12 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use bytes::Bytes;
 use std::{
     any::{Any, TypeId},
     collections::HashMap,
     fmt::Debug,
+    marker::PhantomData,
     ops::{Deref, DerefMut},
     rc::Rc,
 };
@@ -94,6 +96,25 @@ impl std::error::Error for Error {
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
+
+#[derive(Debug, Clone)]
+pub struct RequestContent<T> {
+    body: Bytes,
+    _phantom: PhantomData<T>,
+}
+
+impl<T> RequestContent<T> {
+    pub fn body(&self) -> &Bytes {
+        &self.body
+    }
+
+    pub fn from(bytes: Vec<u8>) -> Self {
+        Self {
+            body: Bytes::from(bytes),
+            _phantom: PhantomData,
+        }
+    }
+}
 
 #[derive(Debug)]
 pub struct Response<T> {
