@@ -12,6 +12,9 @@ use std::{
     rc::Rc,
 };
 
+#[derive(Clone, Debug, Default)]
+pub struct ClientOptions;
+
 #[derive(Debug, Default)]
 pub struct ClientMethodOptions {
     context: Context,

@@ -34,7 +34,38 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
     }
     body += '}\n\n'; // end client
 
+    if (client.constructable) {
+      body += '#[derive(Clone, Debug)]\n';
+      body += `pub struct ${client.constructable.options.type.name}`;
+      if (client.constructable.options.type.fields.length > 0) {
+        body += ' {\n';
+        for (const field of client.constructable.options.type.fields) {
+          use.addForType(field.type);
+          body += `${helpers.indent(1)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+        }
+        body += '}\n\n'; // end client options
+      } else {
+        body += ';\n\n';
+      }
+    }
+
     body += `impl ${client.name} {\n`;
+
+    if (client.constructable) {
+      // this is an instantiable client, so we need to emit client options and constructors
+      use.addType('azure_core', 'Result');
+
+      for (let i = 0; i < client.constructable.constructors.length; ++i) {
+        const constructor = client.constructable.constructors[i];
+        body += `${helpers.indent(1)}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.parameters, client.constructable.options, use)}) -> Result<Self> {\n`;
+        body += `${helpers.indent(2)}unimplemented!();\n`;
+        body += `${helpers.indent(1)}}\n`; // end constructor
+
+        if (i + 1 < client.constructable.constructors.length) {
+          body += '\n';
+        }
+      }
+    }
 
     for (let i = 0; i < client.methods.length; ++i) {
       const method = client.methods[i];
@@ -116,6 +147,16 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
   clientFiles.push({name: 'mod.rs', content: content});
 
   return clientFiles;
+}
+
+function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: rust.ClientOptions, use: Use): string {
+  const paramsSig = new Array<string>();
+  for (const param of params) {
+    use.addForType(param.type);
+    paramsSig.push(`${param.name}: ${helpers.getTypeDeclaration(param.type)}`);
+  }
+  paramsSig.push(`options: ${helpers.getTypeDeclaration(options)}`);
+  return paramsSig.join(', ');
 }
 
 function getMethodParamsSig(method: rust.MethodType, use: Use): string {

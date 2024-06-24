@@ -16,6 +16,9 @@ export interface Client {
   // the provided doc string emitted as code comments
   docs?: string;
 
+  // contains info for instantiable clients
+  constructable?: ClientConstruction;
+
   // fields contains the ctor parameters that are
   // persisted as fields on the client type. note that
   // not all ctor params might be persisted.
@@ -26,6 +29,28 @@ export interface Client {
 
   // the parent client in a hierarchical client
   parent?: Client;
+}
+
+// ClientConstruction contains data for instantiable clients.
+export interface ClientConstruction {
+  // the client options type used in the constructors
+  options: ClientOptions;
+
+  // the constructor functions for a client.
+  constructors: Array<Constructor>;
+}
+
+// ClientOptions is the struct containing optional client params
+export interface ClientOptions extends types.Option {
+  type: types.Struct;
+}
+
+// represents a client constructor function
+export interface Constructor {
+  name: string;
+
+  // the modeled parameters. at minimum, an endpoint param
+  parameters: Array<ClientParameter>;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -167,6 +192,26 @@ export class ClientAccessor extends method.Method<Client> implements ClientAcces
   }
 }
 
+export class ClientConstruction implements ClientConstruction {
+  constructor(options: ClientOptions) {
+    this.options = options;
+    this.constructors = new Array<Constructor>();
+  }
+}
+
+export class ClientOptions extends types.Option implements ClientOptions {
+  constructor(type: types.Struct) {
+    super(type, false);
+  }
+}
+
+export class Constructor implements Constructor {
+  constructor(name: string) {
+    this.name = name;
+    this.parameters = new Array<ClientParameter>();
+  }
+}
+
 export class HeaderParameter extends HTTPParameterBase implements HeaderParameter {
   constructor(name: string, header: string, location: ParameterLocation, type: HeaderType) {
     super(name, location, type);
@@ -181,8 +226,8 @@ export class MethodOptions extends types.Option implements MethodOptions {
 }
 
 export class URIParameter extends HTTPParameterBase implements URIParameter {
-  constructor(name: string, location: ParameterLocation) {
-    super(name, location, new types.StringType());
+  constructor(name: string, location: ParameterLocation, type: types.Type) {
+    super(name, location, type);
     this.kind = 'uri';
   }
 }

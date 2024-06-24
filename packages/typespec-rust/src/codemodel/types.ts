@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 // Type defines a type within the Rust type system
-export type Type = Enum | Empty | ExternalType | Generic | Literal | Model | Option | RequestContent | Scalar | StringType | Struct;
+export type Type = Enum | Empty | ExternalType | Generic | ImplTrait | Literal | Model | Option | RequestContent | Scalar | StringSlice | StringType | Struct;
 
 // Enum is a Rust enum type.
 export interface Enum {
@@ -68,6 +68,17 @@ export interface Generic {
   use?: string;
 }
 
+// ImplTrait is the Rust syntax for "a concrete type that implements this trait"
+export interface ImplTrait {
+  kind: 'implTrait';
+
+  // the name of the trait
+  name: string;
+
+  // the type on which the trait is implemented
+  type: Type;
+}
+
 // Literal is a literal value (e.g. a string "foo")
 export interface Literal {
   kind: 'literal';
@@ -119,6 +130,11 @@ export type ScalarKind = 'bool' | 'f32' | 'f64' | 'i8' | 'i16' | 'i32' | 'i64';
 // Scalar is a Rust scalar type
 export interface Scalar {
   kind: ScalarKind;
+}
+
+// StringSlice is a Rust string slice
+export interface StringSlice {
+  kind: 'str';
 }
 
 // StringType is a Rust string
@@ -237,6 +253,14 @@ export class Generic implements Generic {
   }
 }
 
+export class ImplTrait implements ImplTrait {
+  constructor(name: string, type: Type) {
+    this.kind = 'implTrait';
+    this.name = name;
+    this.type = type;
+  }
+}
+
 export class Literal implements Literal {
   constructor(value: boolean | null | number | string) {
     this.kind = 'literal';
@@ -280,6 +304,12 @@ export class RequestContent implements RequestContent {
 export class Scalar implements Scalar {
   constructor(kind: ScalarKind) {
     this.kind = kind;
+  }
+}
+
+export class StringSlice implements StringSlice {
+  constructor() {
+    this.kind = 'str';
   }
 }
 

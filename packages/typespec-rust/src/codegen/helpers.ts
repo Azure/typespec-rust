@@ -49,6 +49,8 @@ export function getTypeDeclaration(type: rust.Type): string {
       }
       return `${type.name}<${typeParams.join(', ')}>`;
     }
+    case 'implTrait':
+      return `impl ${type.name}<${getTypeDeclaration(type.type)}>`;
     case 'literal':
       return `${type.value}`;
     case 'option':
@@ -56,6 +58,7 @@ export function getTypeDeclaration(type: rust.Type): string {
     case 'requestContet':
       return `RequestContent<${getTypeDeclaration(type.type)}>`;
     case 'String':
+    case 'str':
     case 'bool':
     case 'f32':
     case 'f64':

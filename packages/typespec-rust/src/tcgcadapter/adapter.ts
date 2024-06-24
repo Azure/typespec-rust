@@ -275,28 +275,31 @@ export class Adapter {
 
     // anything other than public means non-instantiable client
     if (client.initialization.access === 'public') {
+      const clientOptionsStruct = new rust.Struct(`${rustClient.name}Options`, true);
+      clientOptionsStruct.fields.push(new rust.StructField('client_options', false, new rust.ExternalType('azure_core', 'ClientOptions')));
+      rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
+      // NOTE: per tcgc convention, if there is no param of kind credential
+      // it means that the client doesn't require any kind of authentication.
+      // HOWEVER, if there *is* a credential param, then the client *does not*
+      // automatically support unauthenticated requests. a credential with
+      // the noAuth scheme indicates support for unauthenticated requests.
+      const constructor = new rust.Constructor('with_no_credential');
       for (const param of client.initialization.properties) {
         switch (param.kind) {
           case 'credential':
-            // skip this for now as we don't generate client constructors
-            // TODO: https://github.com/Azure/autorest.rust/issues/32
-            continue;
+            throw new Error('client credential params NYI');
           case 'endpoint':
-            // this will either be a single endpoint param or templated host
-            if (param.type.templateArguments.length === 0) {
-              // single endpoint param
-              rustClient.fields.push(new rust.URIParameter(param.name, 'client'));
-            } else {
-              throw new Error('templated host NYI');
-              // templated host params
-              //for (const templateArg of param.type.templateArguments) {
-              //}
-            }
+            // for Rust, we always require a complete endpoint param, templated
+            // endpoints, e.g. https://{something}.contoso.com isn't supported.
+            // note that the types of the param and the field are slightly different
+            constructor.parameters.push(new rust.URIParameter(param.name, 'client', new rust.ImplTrait('AsRef', new rust.StringSlice())));
+            rustClient.fields.push(new rust.URIParameter(param.name, 'client', new rust.StringType()));
             break;
           case 'method':
             throw new Error('client method params NYI');
         }
       }
+      rustClient.constructable.constructors.push(constructor);
     } else if (parent) {
       // this is a sub-client. it will share the fields of the parent.
       // NOTE: we must propagate parant params before a potential recursive call
