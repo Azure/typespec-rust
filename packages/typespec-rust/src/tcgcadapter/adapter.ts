@@ -156,7 +156,7 @@ export class Adapter {
         return anyType;
       }
       case 'array': {
-        const keyName = recursiveKeyName('array', type.valueType);
+        const keyName = recursiveKeyName(type.kind, type.valueType);
         let vectorType = this.types.get(keyName);
         if (vectorType) {
           return vectorType;
@@ -190,7 +190,7 @@ export class Adapter {
         return stringType;
       }
       case 'utcDateTime': {
-        const keyName = `utcDateTime-${type.encode}`;
+        const keyName = `${type.kind}-${type.encode}`;
         let timeType = this.types.get(keyName);
         if (timeType) {
           return timeType;
