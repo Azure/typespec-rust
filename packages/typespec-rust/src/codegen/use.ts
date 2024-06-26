@@ -79,6 +79,8 @@ export class Use {
 
     let content = '';
 
+    const indentation = new helpers.indentation();
+
     // sort by module name, then sort types if more than one type
     const sortedMods = this.uses.sort((a: moduleTypes, b: moduleTypes) => { return helpers.sortAscending(a.module, b.module); });
     for (const sortedMod of sortedMods) {
@@ -87,7 +89,7 @@ export class Use {
       } else {
         const sortedTypes = sortedMod.types.sort((a: string, b: string) => { return helpers.sortAscending(a, b); });
         content += `use ${sortedMod.module}::{\n`;
-        content += `${helpers.indent(1)}${sortedTypes.join(', ')}`;
+        content += `${indentation.get()}${sortedTypes.join(', ')}`;
         content += ',\n};\n\n';
       }
     }

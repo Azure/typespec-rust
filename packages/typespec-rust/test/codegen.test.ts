@@ -58,10 +58,13 @@ describe('typespec-rust: codegen', () => {
     });
 
     it('indent', async () => {
-      strictEqual(helpers.indent(0), '    ');
-      strictEqual(helpers.indent(1), '    ');
-      strictEqual(helpers.indent(2), '        ');
-      strictEqual(helpers.indent(3), '            ');
+      const indentation = new helpers.indentation();
+      strictEqual(indentation.get(), '    ');
+      strictEqual(indentation.push().get(), '        ');
+      strictEqual(indentation.push().get(), '            ');
+      strictEqual(indentation.pop().get(), '        ');
+      strictEqual(indentation.pop().get(), '    ');
+      strictEqual(indentation.get(), '    ');
     });
   });
 });

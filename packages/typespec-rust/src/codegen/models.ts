@@ -18,6 +18,8 @@ export function emitModels(crate: rust.Crate): string {
   // extra new-line after all use statements
   content += '\n';
 
+  const indentation = new helpers.indentation();
+
   for (const model of crate.models) {
     content += helpers.formatDocComment(model.docs);
     content += helpers.annotationDerive('Default');
@@ -27,9 +29,9 @@ export function emitModels(crate: rust.Crate): string {
     for (const field of model.fields) {
       if (field.name !== field.serde) {
         // only emit the serde annotation when the names aren't equal
-        content += `${helpers.indent(1)}#[serde(rename = "${field.serde}")]\n`;
+        content += `${indentation.get()}#[serde(rename = "${field.serde}")]\n`;
       }
-      content += `${helpers.indent(1)}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+      content += `${indentation.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
     }
 
     content += '}\n\n';

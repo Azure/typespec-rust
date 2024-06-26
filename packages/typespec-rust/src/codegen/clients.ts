@@ -26,11 +26,12 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
   // emit the clients, one file per client
   for (const client of crate.clients) {
     const use = new Use();
+    const indentation = new helpers.indentation();
 
     let body = `pub struct ${client.name} {\n`;
     for (const field of client.fields) {
       use.addForType(field.type);
-      body += `${helpers.indent(1)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+      body += `${indentation.get()}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
     }
     body += '}\n\n'; // end client
 
@@ -41,7 +42,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
         body += ' {\n';
         for (const field of client.constructable.options.type.fields) {
           use.addForType(field.type);
-          body += `${helpers.indent(1)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+          body += `${indentation.get()}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
         }
         body += '}\n\n'; // end client options
       } else {
@@ -57,9 +58,9 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
 
       for (let i = 0; i < client.constructable.constructors.length; ++i) {
         const constructor = client.constructable.constructors[i];
-        body += `${helpers.indent(1)}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.parameters, client.constructable.options, use)}) -> Result<Self> {\n`;
-        body += `${helpers.indent(2)}unimplemented!();\n`;
-        body += `${helpers.indent(1)}}\n`; // end constructor
+        body += `${indentation.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.parameters, client.constructable.options, use)}) -> Result<Self> {\n`;
+        body += `${indentation.push().get()}unimplemented!();\n`;
+        body += `${indentation.pop().get()}}\n`; // end constructor
 
         if (i + 1 < client.constructable.constructors.length) {
           body += '\n';
@@ -81,9 +82,9 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
           returnType = method.returns.name;
           break;
       }
-      body += `${helpers.indent(1)}${helpers.emitPub(method.pub)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
-      body += `${helpers.indent(2)}unimplemented!();\n`;
-      body += `${helpers.indent(1)}}\n`; // end method
+      body += `${indentation.get()}${helpers.emitPub(method.pub)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
+      body += `${indentation.push().get()}unimplemented!();\n`;
+      body += `${indentation.pop().get()}}\n`; // end method
       if (i + 1 < client.methods.length) {
         body += '\n';
       }
@@ -107,14 +108,14 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       body += `${helpers.emitPub(method.pub)}struct ${method.options.type.name} {\n`;
       for (const field of method.options.type.fields) {
         use.addForType(field.type);
-        body += `${helpers.indent(1)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+        body += `${indentation.get()}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
       }
       body += '}\n\n'; // end options
 
       body += `impl ${method.options.type.name} {\n`;
-      body += `${helpers.indent(1)}pub fn builder() -> builders::${getOptionsBuilderTypeName(method.options)} {\n`;
-      body += `${helpers.indent(2)}builders::${getOptionsBuilderTypeName(method.options)}::new()`;
-      body += `${helpers.indent(1)}}\n`; // end builder()
+      body += `${indentation.get()}pub fn builder() -> builders::${getOptionsBuilderTypeName(method.options)} {\n`;
+      body += `${indentation.push().get()}builders::${getOptionsBuilderTypeName(method.options)}::new()`;
+      body += `${indentation.pop().get()}}\n`; // end builder()
       body += '}\n'; // end options impl
 
       if (i + 1 < client.methods.length) {
@@ -193,10 +194,12 @@ function formatParamTypeName(param: rust.Parameter | rust.Self): string {
 }
 
 function createPubModBuilders(client: rust.Client, use: Use): string {
+  const indentation = new helpers.indentation();
+
   use.addTypes('azure_core', ['ClientMethodOptionsBuilder', 'Context']);
 
   let body = 'pub mod builders {\n';
-  body += `${helpers.indent(1)}use super::*;\n`;
+  body += `${indentation.get()}use super::*;\n`;
 
   for (let i = 0; i < client.methods.length; ++i) {
     const method = client.methods[i];
@@ -206,32 +209,32 @@ function createPubModBuilders(client: rust.Client, use: Use): string {
 
     const optionsBuilderTypeName = getOptionsBuilderTypeName(method.options);
 
-    body += `${helpers.indent(1)}pub struct ${optionsBuilderTypeName} {\n`;
-    body += `${helpers.indent(2)}options: ${method.options.type.name},\n`;
-    body += `${helpers.indent(1)}}\n\n`; // end struct
+    body += `${indentation.get()}pub struct ${optionsBuilderTypeName} {\n`;
+    body += `${indentation.push().get()}options: ${method.options.type.name},\n`;
+    body += `${indentation.pop().get()}}\n\n`; // end struct
 
-    body += `${helpers.indent(1)}impl ${optionsBuilderTypeName} {\n`;
+    body += `${indentation.get()}impl ${optionsBuilderTypeName} {\n`;
 
-    body += `${helpers.indent(2)}pub(super) fn new() -> Self {\n`;
-    body += `${helpers.indent(3)}Self {\n`;
-    body += `${helpers.indent(4)}options: ${method.options.type.name}::default(),\n`;
-    body += `${helpers.indent(3)}}\n`;
-    body += `${helpers.indent(2)}}\n\n`; // end new()
+    body += `${indentation.push().get()}pub(super) fn new() -> Self {\n`;
+    body += `${indentation.push().get()}Self {\n`;
+    body += `${indentation.push().get()}options: ${method.options.type.name}::default(),\n`;
+    body += `${indentation.pop().get()}}\n`;
+    body += `${indentation.pop().get()}}\n\n`; // end new()
 
-    body += `${helpers.indent(2)}pub fn build(&self) -> ${method.options.type.name} {\n`;
-    body += `${helpers.indent(3)}self.options.clone()\n`;
-    body += `${helpers.indent(2)}}\n`;// end build()
+    body += `${indentation.get()}pub fn build(&self) -> ${method.options.type.name} {\n`;
+    body += `${indentation.push().get()}self.options.clone()\n`;
+    body += `${indentation.pop().get()}}\n`;// end build()
 
-    body += `${helpers.indent(1)}}\n\n`; // end impl
+    body += `${indentation.pop().get()}}\n\n`; // end impl
 
-    body += `${helpers.indent(1)}impl ClientMethodOptionsBuilder for ${optionsBuilderTypeName} {\n`;
+    body += `${indentation.get()}impl ClientMethodOptionsBuilder for ${optionsBuilderTypeName} {\n`;
 
-    body += `${helpers.indent(2)}fn with_context(mut self, context: &Context) -> Self {\n`;
-    body += `${helpers.indent(3)}self.options.${getClientMethodOptionsFieldName(method.options)}.set_context(context);\n`;
-    body += `${helpers.indent(3)}self\n`;
-    body += `${helpers.indent(2)}}\n`; // end with_context
+    body += `${indentation.push().get()}fn with_context(mut self, context: &Context) -> Self {\n`;
+    body += `${indentation.push().get()}self.options.${getClientMethodOptionsFieldName(method.options)}.set_context(context);\n`;
+    body += `${indentation.get()}self\n`;
+    body += `${indentation.pop().get()}}\n`; // end with_context
 
-    body += `${helpers.indent(1)}}\n`; // end ClientMethodOptionsBuilder impl
+    body += `${indentation.pop().get()}}\n`; // end ClientMethodOptionsBuilder impl
 
     if (i + 1 < client.methods.length) {
       body += '\n';
