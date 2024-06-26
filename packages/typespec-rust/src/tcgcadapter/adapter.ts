@@ -114,32 +114,32 @@ export class Adapter {
         return <rust.Scalar>scalar;
       }
 
-      let scalarKind: rust.ScalarKind;
+      let scalarType: rust.ScalarType;
       switch (kind) {
         case 'boolean':
-          scalarKind = 'bool';
+          scalarType = 'bool';
           break;
         case 'float32':
-          scalarKind = 'f32';
+          scalarType = 'f32';
           break;
         case 'float64':
-          scalarKind = 'f64';
+          scalarType = 'f64';
           break;
         case 'int16':
-          scalarKind = 'i16';
+          scalarType = 'i16';
           break;
         case 'int32':
-          scalarKind = 'i32';
+          scalarType = 'i32';
           break;
         case 'int64':
-          scalarKind = 'i64';
+          scalarType = 'i64';
           break;
         case 'int8':
-          scalarKind = 'i8';
+          scalarType = 'i8';
           break;
       }
 
-      scalar = new rust.Scalar(scalarKind);
+      scalar = new rust.Scalar(scalarType);
       this.types.set(kind, scalar);
       return scalar;
     };
@@ -189,14 +189,8 @@ export class Adapter {
     const bodyParamType = this.getType(type);
     switch (bodyParamType.kind) {
       case 'String':
-      case 'bool':
+      case 'scalar':
       case 'enum':
-      case 'f32':
-      case 'f64':
-      case 'i16':
-      case 'i32':
-      case 'i64':
-      case 'i8':
       case 'model':
         return new rust.RequestContent(bodyParamType);
       default:
@@ -208,13 +202,8 @@ export class Adapter {
     const headerParamType = this.getType(type);
     switch (headerParamType.kind) {
       case 'String':
+      case 'scalar':
       case 'enum':
-      case 'f32':
-      case 'f64':
-      case 'i16':
-      case 'i32':
-      case 'i64':
-      case 'i8':
       case 'literal':
         return headerParamType;
       default:

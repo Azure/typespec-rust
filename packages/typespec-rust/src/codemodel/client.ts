@@ -87,9 +87,6 @@ export type ClientParameter = URIParameter;
 // MethodParameter defines the possible method parameter types
 export type MethodParameter = BodyParameter | HeaderParameter | URIParameter;
 
-// BodyType is the possible types for a BodyParameter
-export type BodyType = types.Enum | types.Model | types.Scalar | types.StringType;
-
 // BodyParameter is a param that's passed via the HTTP request body
 export interface BodyParameter extends HTTPParameterBase {
   kind: 'body';

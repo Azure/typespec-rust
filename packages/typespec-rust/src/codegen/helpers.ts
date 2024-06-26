@@ -59,14 +59,9 @@ export function getTypeDeclaration(type: rust.Type): string {
       return `RequestContent<${getTypeDeclaration(type.type)}>`;
     case 'String':
     case 'str':
-    case 'bool':
-    case 'f32':
-    case 'f64':
-    case 'i16':
-    case 'i32':
-    case 'i64':
-    case 'i8':
       return type.kind;
+    case 'scalar':
+      return type.type;
     case 'enum':
     case 'model':
     case 'struct':

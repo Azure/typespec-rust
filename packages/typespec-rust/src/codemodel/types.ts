@@ -124,12 +124,14 @@ export interface RequestContent {
   type: RequestContentType;
 }
 
-// ScalarKind defines the supported Rust scalar type names
-export type ScalarKind = 'bool' | 'f32' | 'f64' | 'i8' | 'i16' | 'i32' | 'i64';
+// ScalarType defines the supported Rust scalar type names
+export type ScalarType = 'bool' | 'f32' | 'f64' | 'i8' | 'i16' | 'i32' | 'i64';
 
 // Scalar is a Rust scalar type
 export interface Scalar {
-  kind: ScalarKind;
+  kind: 'scalar';
+
+  type: ScalarType;
 }
 
 // StringSlice is a Rust string slice
@@ -302,8 +304,9 @@ export class RequestContent implements RequestContent {
 }
 
 export class Scalar implements Scalar {
-  constructor(kind: ScalarKind) {
-    this.kind = kind;
+  constructor(type: ScalarType) {
+    this.kind = 'scalar';
+    this.type = type;
   }
 }
 
