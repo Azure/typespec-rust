@@ -451,6 +451,9 @@ function recursiveKeyName(root: string, obj: tcgc.SdkType): string {
     case 'utcDateTime':
       return `${root}-${obj.encode}`;
     case 'duration':
+      // TODO: this should be: return `${root}-duration-${obj.encode}`;
+      // as it is now, it treats the duration as a String
+      // https://github.com/Azure/autorest.rust/issues/41
       return `${root}-${obj.wireType.kind}`;
     case 'model':
       return `${root}-${obj.name}`;
