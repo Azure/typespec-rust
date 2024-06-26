@@ -18,6 +18,8 @@ export function emitEnums(crate: rust.Crate): string {
   // extra new-line after all use statements
   content += '\n';
 
+  const indentation = new helpers.indentation();
+
   for (const rustEnum of crate.enums) {
     content += helpers.formatDocComment(rustEnum.docs);
     // only derive Copy for fixed enums
@@ -28,16 +30,16 @@ export function emitEnums(crate: rust.Crate): string {
     for (const value of rustEnum.values) {
       if (value.name !== value.value) {
         // only emit the serde annotation when the names aren't equal
-        content += `${helpers.indent(1)}#[serde(rename = "${value.value}")]\n`;
+        content += `${indentation.get()}#[serde(rename = "${value.value}")]\n`;
       }
-      content += `${helpers.indent(1)}${value.name},\n`;
+      content += `${indentation.get()}${value.name},\n`;
     }
 
     if (rustEnum.extensible) {
-      content += `${helpers.indent(1)}#[serde(untagged)]\n`;
+      content += `${indentation.get()}#[serde(untagged)]\n`;
       // TODO: hard-coded String type
       // https://github.com/Azure/autorest.rust/issues/25
-      content += `${helpers.indent(1)}UnknownValue(String),\n`;
+      content += `${indentation.get()}UnknownValue(String),\n`;
     }
     content += '}\n\n';
   }

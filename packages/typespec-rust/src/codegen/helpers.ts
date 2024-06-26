@@ -74,16 +74,40 @@ export function getTypeDeclaration(type: rust.Type): string {
   }
 }
 
-// indent returns four spaces per indentation level.
-// level is one-based.
-export function indent(level: number): string {
-  // four spaces per indent level
-  const indentation = '    ';
-  let indent = indentation;
-  for (let i = 1; i < level; ++i) {
-    indent += indentation;
+// four spaces per indent level
+const oneIndentation = '    ';
+
+// helper for managing indentation levels
+export class indentation {
+  private level: number;
+  constructor() {
+    // level is one-based.
+    this.level = 1;
   }
-  return indent;
+
+  // returns spaces for the current indentation level
+  get(): string {
+    let indent = oneIndentation;
+    for (let i = 1; i < this.level; ++i) {
+      indent += oneIndentation;
+    }
+    return indent;
+  }
+
+  // increments the indentation level
+  push(): indentation {
+    ++this.level;
+    return this;
+  }
+
+  // decrements the indentation level
+  pop(): indentation {
+    --this.level;
+    if (this.level < 1) {
+      throw new Error('indentation stack underflow');
+    }
+    return this;
+  }
 }
 
 // emits the derive annotation with the standard and any additional values
