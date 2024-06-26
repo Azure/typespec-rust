@@ -3,8 +3,10 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import { Crate, CrateDependency } from './crate.js';
+
 // Type defines a type within the Rust type system
-export type Type = Enum | Empty | ExternalType | Generic | ImplTrait | Literal | Model | Option | RequestContent | Scalar | StringSlice | StringType | Struct;
+export type Type = Enum | Empty | ExternalType | Generic | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Scalar | StringSlice | StringType | Struct | Vector;
 
 // Enum is a Rust enum type.
 export interface Enum {
@@ -44,14 +46,8 @@ export interface Empty {
 }
 
 // ExternalType is a type defined in a different crate
-export interface ExternalType {
+export interface ExternalType extends External {
   kind: 'external';
-
-  // the crate that defines the type
-  crate: string;
-
-  // the name of the type
-  name: string;
 }
 
 // Generic is a generic type instantiation, e.g. Foo<i32>
@@ -79,6 +75,11 @@ export interface ImplTrait {
   type: Type;
 }
 
+// JsonValue is a raw JSON value
+export interface JsonValue extends External {
+  kind: 'jsonValue';
+}
+
 // Literal is a literal value (e.g. a string "foo")
 export interface Literal {
   kind: 'literal';
@@ -100,6 +101,16 @@ export interface ModelField extends StructFieldBase {
   serde: string;
 }
 
+// DateTimeEncoding is the wire format of the date/time
+export type DateTimeEncoding = 'rfc3339' | 'rfc7231' | 'unixTimestamp';
+
+// OffsetDateTime is a Rust time::OffsetDateTime type
+export interface OffsetDateTime extends External {
+  kind: 'offsetDateTime';
+
+  encoding: DateTimeEncoding;
+}
+
 // OptionType defines the possible generic type params for Option<T>
 export type OptionType = Enum | ExternalType | Generic | Model | Scalar | StringType | Struct;
 
@@ -115,10 +126,10 @@ export interface Option {
 }
 
 // RequestContentType defines the possible generic type params for RequestContent<T>
-export type RequestContentType = Enum | Model | Scalar | StringType;
+export type RequestContentType = Enum | Model | Scalar | StringType | Vector;
 
 // RequestContent is a Rust RequestContent<T> from azure_core
-export interface RequestContent {
+export interface RequestContent extends External {
   kind: 'requestContet';
 
   type: RequestContentType;
@@ -168,9 +179,34 @@ export interface StructField {
   type: Type;
 }
 
+// Vector is a Rust Vec<T>
+export interface Vector {
+  kind: 'vector';
+
+  // the generic type param
+  type: Type;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // base types
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// External is a type defined in a different crate
+export interface External {
+  // the crate that defines the type
+  crate: string;
+
+  // the name of the type
+  name: string;
+}
+
+export class External implements External {
+  constructor(crate: Crate, crateName: string, typeName: string) {
+    crate.addDependency(new CrateDependency(crateName));
+    this.crate = crateName;
+    this.name = typeName;
+  }
+}
 
 // base type for models and structs
 interface StructBase {
@@ -233,11 +269,10 @@ export class Empty implements Empty {
   }
 }
 
-export class ExternalType implements ExternalType {
-  constructor(crate: string, name: string) {
+export class ExternalType extends External implements ExternalType {
+  constructor(crate: Crate, crateName: string, typeName: string) {
+    super(crate, crateName, typeName);
     this.kind = 'external';
-    this.crate = crate;
-    this.name = name;
   }
 }
 
@@ -258,6 +293,13 @@ export class ImplTrait implements ImplTrait {
     this.kind = 'implTrait';
     this.name = name;
     this.type = type;
+  }
+}
+
+export class JsonValue extends External implements JsonValue {
+  constructor(crate: Crate) {
+    super(crate, 'serde_json', 'Value');
+    this.kind = 'jsonValue';
   }
 }
 
@@ -286,6 +328,14 @@ export class ModelField implements ModelField {
   }
 }
 
+export class OffsetDateTime extends External implements OffsetDateTime {
+  constructor(crate: Crate, encoding: DateTimeEncoding) {
+    super(crate, 'time', 'OffsetDateTime');
+    this.kind = 'offsetDateTime';
+    this.encoding = encoding;
+  }
+}
+
 export class Option implements Option {
   constructor(type: OptionType, ref: boolean) {
     this.kind = 'option';
@@ -294,8 +344,9 @@ export class Option implements Option {
   }
 }
 
-export class RequestContent implements RequestContent {
-  constructor(type: RequestContentType) {
+export class RequestContent extends External implements RequestContent {
+  constructor(crate: Crate, type: RequestContentType) {
+    super(crate, 'azure_core', 'RequestContent');
     this.kind = 'requestContet';
     this.type = type;
   }
@@ -332,6 +383,13 @@ export class StructField implements StructField {
   constructor(name: string, pub: boolean, type: Type) {
     this.name = name;
     this.pub = pub;
+    this.type = type;
+  }
+}
+
+export class Vector implements Vector {
+  constructor(type: Type) {
+    this.kind = 'vector';
     this.type = type;
   }
 }

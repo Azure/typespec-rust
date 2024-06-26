@@ -16,3 +16,5 @@ rust-version = "1.76"
 azure_core = { path = "./azure_core" }
 bytes = { version = "1.5.0" }
 serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0.118" }
+time = { version = "0.3.36" }

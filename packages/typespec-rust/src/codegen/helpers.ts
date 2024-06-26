@@ -40,8 +40,6 @@ export function getTypeDeclaration(type: rust.Type): string {
   switch (type.kind) {
     case 'empty':
       return '()';
-    case 'external':
-      return type.name;
     case 'generic': {
       const typeParams = new Array<string>();
       for (const typep of type.types) {
@@ -56,7 +54,7 @@ export function getTypeDeclaration(type: rust.Type): string {
     case 'option':
       return `Option<${type.ref ? '&' : ''}${getTypeDeclaration(type.type)}>`;
     case 'requestContet':
-      return `RequestContent<${getTypeDeclaration(type.type)}>`;
+      return `${type.name}<${getTypeDeclaration(type.type)}>`;
     case 'String':
     case 'str':
     case 'bool':
@@ -68,9 +66,14 @@ export function getTypeDeclaration(type: rust.Type): string {
     case 'i8':
       return type.kind;
     case 'enum':
+    case 'external':
+    case 'jsonValue':
     case 'model':
+    case 'offsetDateTime':
     case 'struct':
       return type.name;
+    case 'vector':
+      return `Vec<${getTypeDeclaration(type.type)}>`;
   }
 }
 

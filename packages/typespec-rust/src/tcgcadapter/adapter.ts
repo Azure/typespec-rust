@@ -34,11 +34,12 @@ export class Adapter {
   tcgcToCrate(): rust.Crate {
     this.adaptTypes();
     this.adaptClients();
-    this.crate.sortContent();
 
     if (this.crate.enums.length > 0 || this.crate.models.length > 0) {
-      this.crate.dependencies.push(new rust.CrateDependency('serde'));
+      this.crate.addDependency(new rust.CrateDependency('serde'));
     }
+
+    this.crate.sortContent();
     return this.crate;
   }
 
@@ -145,6 +146,25 @@ export class Adapter {
     };
 
     switch (type.kind) {
+      case 'any': {
+        let anyType = this.types.get(type.kind);
+        if (anyType) {
+          return anyType;
+        }
+        anyType = new rust.JsonValue(this.crate);
+        this.types.set(type.kind, anyType);
+        return anyType;
+      }
+      case 'array': {
+        const keyName = recursiveKeyName('array', type.valueType);
+        let vectorType = this.types.get(keyName);
+        if (vectorType) {
+          return vectorType;
+        }
+        vectorType = new rust.Vector(this.getType(type.valueType));
+        this.types.set(keyName, vectorType);
+        return vectorType;
+      }
       case 'constant':
         return this.getLiteral(type);
       case 'boolean':
@@ -168,6 +188,16 @@ export class Adapter {
         stringType = new rust.StringType();
         this.types.set(type.kind, stringType);
         return stringType;
+      }
+      case 'utcDateTime': {
+        const keyName = `utcDateTime-${type.encode}`;
+        let timeType = this.types.get(keyName);
+        if (timeType) {
+          return timeType;
+        }
+        timeType = new rust.OffsetDateTime(this.crate, type.encode);
+        this.types.set(keyName, timeType);
+        return timeType;
       }
       default:
         throw new Error(`unhandled tcgc type ${type.kind}`);
@@ -198,7 +228,8 @@ export class Adapter {
       case 'i64':
       case 'i8':
       case 'model':
-        return new rust.RequestContent(bodyParamType);
+      case 'vector':
+        return new rust.RequestContent(this.crate, bodyParamType);
       default:
         throw new Error(`unsupported body param type ${bodyParamType.kind}`);
     }
@@ -234,10 +265,6 @@ export class Adapter {
       if (client.initialization.access === 'public') {
         this.recursiveAdaptClient(client);
       }
-    }
-
-    if (this.crate.clients.length > 0) {
-      this.crate.dependencies.push(new rust.CrateDependency('azure_core'));
     }
   }
 
@@ -276,7 +303,7 @@ export class Adapter {
     // anything other than public means non-instantiable client
     if (client.initialization.access === 'public') {
       const clientOptionsStruct = new rust.Struct(`${rustClient.name}Options`, true);
-      clientOptionsStruct.fields.push(new rust.StructField('client_options', false, new rust.ExternalType('azure_core', 'ClientOptions')));
+      clientOptionsStruct.fields.push(new rust.StructField('client_options', false, new rust.ExternalType(this.crate, 'azure_core', 'ClientOptions')));
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
       // NOTE: per tcgc convention, if there is no param of kind credential
       // it means that the client doesn't require any kind of authentication.
@@ -326,7 +353,7 @@ export class Adapter {
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
     let rustMethod: rust.AsyncMethod;
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(method.name)}Options`, true);
-    methodOptionsStruct.fields.push(new rust.StructField('method_options', false, new rust.ExternalType('azure_core', 'ClientMethodOptions')));
+    methodOptionsStruct.fields.push(new rust.StructField('method_options', false, new rust.ExternalType(this.crate, 'azure_core', 'ClientMethodOptions')));
     switch (method.kind) {
       case 'basic':
         rustMethod = new rust.AsyncMethod(snakeCaseName(method.name), rustClient, isPub(method.access), new rust.MethodOptions(methodOptionsStruct, false));
@@ -408,3 +435,30 @@ function snakeCaseName(name: string): string {
 }
 
 type OperationParamType = tcgc.SdkBodyParameter | tcgc.SdkHeaderParameter | tcgc.SdkPathParameter | tcgc.SdkQueryParameter;
+
+function recursiveKeyName(root: string, obj: tcgc.SdkType): string {
+  switch (obj.kind) {
+    case 'array':
+      return recursiveKeyName(`${root}-array`, obj.valueType);
+    case 'enum':
+      return `${root}-${obj.name}`;
+    case 'enumvalue':
+      return `${root}-${obj.enumType.name}-${obj.value}`;
+    case 'dict':
+      return recursiveKeyName(`${root}-dict`, obj.valueType);
+    case 'plainDate':
+      return `${root}-plainDate`;
+    case 'utcDateTime':
+      return `${root}-${obj.encode}`;
+    case 'duration':
+      return `${root}-${obj.wireType.kind}`;
+    case 'model':
+      return `${root}-${obj.name}`;
+    case 'nullable':
+      return recursiveKeyName(root, obj.type);
+    case 'plainTime':
+      return `${root}-plainTime`;
+    default:
+      return `${root}-${obj.kind}`;
+  }
+}

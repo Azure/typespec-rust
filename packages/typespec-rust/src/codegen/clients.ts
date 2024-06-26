@@ -62,7 +62,8 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
         body += `${indentation.push().get()}unimplemented!();\n`;
         body += `${indentation.pop().get()}}\n`; // end constructor
 
-        if (i + 1 < client.constructable.constructors.length) {
+        // ensure extra new-line between ctors and/or client methods
+        if (i + 1 < client.constructable.constructors.length || client.methods.length > 0) {
           body += '\n';
         }
       }

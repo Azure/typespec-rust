@@ -26,6 +26,7 @@ impl FlattenClient {
     ) -> Result<Self> {
         unimplemented!();
     }
+
     pub async fn put_flatten_model(
         &self,
         input: RequestContent<FlattenModel>,

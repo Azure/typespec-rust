@@ -49,9 +49,6 @@ export class Use {
         this.addType(`crate::${mod}`, type.name);
         break;
       }
-      case 'external':
-        this.addType(type.crate, type.name);
-        break;
       case 'generic':
         if (type.use) {
           this.addType(type.use, type.name);
@@ -65,9 +62,16 @@ export class Use {
         this.addType('crate::models', type.name);
         break;
       case 'requestContet':
-        this.addType('azure_core', 'RequestContent');
+        this.addType(type.crate, type.name);
         this.addForType(type.type);
         break;
+      case 'vector':
+        this.addForType(type.type);
+        break;
+      default:
+        if ((<rust.External>type).crate !== undefined && (<rust.External>type).name !== undefined) {
+          this.addType((<rust.External>type).crate, (<rust.External>type).name);
+        }
     }
   }
 

@@ -23,6 +23,7 @@ impl ExtensibleClient {
     ) -> Result<Self> {
         unimplemented!();
     }
+
     pub fn get_extensible_string_client(&self) -> ExtensibleString {
         unimplemented!();
     }
