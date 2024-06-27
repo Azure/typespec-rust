@@ -167,6 +167,16 @@ export class Adapter {
       }
       case 'constant':
         return this.getLiteral(type);
+      case 'dict': {
+        const keyName = recursiveKeyName(type.kind, type.valueType);
+        let hashmapType = this.types.get(keyName);
+        if (hashmapType) {
+          return hashmapType;
+        }
+        hashmapType = new rust.HashMap(this.getType(type.valueType));
+        this.types.set(keyName, hashmapType);
+        return hashmapType;
+      }
       case 'boolean':
       case 'float32':
       case 'float64':
@@ -219,9 +229,10 @@ export class Adapter {
     const bodyParamType = this.getType(type);
     switch (bodyParamType.kind) {
       case 'String':
-      case 'scalar':
+      case 'hashmap':
       case 'enum':
       case 'model':
+      case 'scalar':
       case 'vector':
         return new rust.RequestContent(this.crate, bodyParamType);
       default:

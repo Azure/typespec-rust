@@ -6,7 +6,7 @@
 import { Crate, CrateDependency } from './crate.js';
 
 // Type defines a type within the Rust type system
-export type Type = Enum | Empty | ExternalType | Generic | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Scalar | StringSlice | StringType | Struct | Vector;
+export type Type = Enum | Empty | ExternalType | Generic | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Scalar | StringSlice | StringType | Struct | Vector;
 
 // Enum is a Rust enum type.
 export interface Enum {
@@ -62,6 +62,19 @@ export interface Generic {
 
   // the use statement required to bring the type into scope
   use?: string;
+}
+
+// HashMap is a Rust HashMap<K, V>
+// K is always a String
+export interface HashMap extends StdType {
+  kind: 'hashmap';
+
+  // the V generic type param
+  type: Type;
+
+  name: 'HashMap';
+
+  use: 'std::collections';
 }
 
 // ImplTrait is the Rust syntax for "a concrete type that implements this trait"
@@ -126,7 +139,7 @@ export interface Option {
 }
 
 // RequestContentType defines the possible generic type params for RequestContent<T>
-export type RequestContentType = Enum | Model | Scalar | StringType | Vector;
+export type RequestContentType = Enum | HashMap | Model | Scalar | StringType | Vector;
 
 // RequestContent is a Rust RequestContent<T> from azure_core
 export interface RequestContent extends External {
@@ -210,6 +223,15 @@ export class External implements External {
   }
 }
 
+// StdType is a type in the standard library that's not in the prelude set.
+export interface StdType {
+  // the name of the type
+  name: string;
+
+  // the using statement to bring it into scope
+  use: string;
+}
+
 // base type for models and structs
 interface StructBase {
   kind: 'model' | 'struct';
@@ -287,6 +309,15 @@ export class Generic implements Generic {
     }
     this.types = types;
     this.use = use;
+  }
+}
+
+export class HashMap implements HashMap {
+  constructor(type: Type) {
+    this.kind = 'hashmap';
+    this.type = type;
+    this.name = 'HashMap';
+    this.use = 'std::collections';
   }
 }
 

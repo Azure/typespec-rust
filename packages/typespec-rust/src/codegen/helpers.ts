@@ -15,8 +15,6 @@ const headerText = `// Copyright (c) Microsoft Corporation. All rights reserved.
 
 export const AnnotationNonExhaustive = '#[non_exhaustive]\n';
 
-export const UseSerDe = 'use serde::{Deserialize, Serialize};\n';
-
 // returns the content preamble common to all emitted files
 export function contentPreamble(): string {
   return headerText;
@@ -47,6 +45,8 @@ export function getTypeDeclaration(type: rust.Type): string {
       }
       return `${type.name}<${typeParams.join(', ')}>`;
     }
+    case 'hashmap':
+      return `${type.name}<String, ${getTypeDeclaration(type.type)}>`;
     case 'implTrait':
       return `impl ${type.name}<${getTypeDeclaration(type.type)}>`;
     case 'literal':
