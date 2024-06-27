@@ -56,7 +56,7 @@ const cadlRanch = {
   //'cadl_repeatability': ['special-headers/repeatability'],
   //'cadl_specialwords': ['special-words'],
   'cadl_array': ['type/array'],
-  //'cadl_dictionary': ['type/dictionary'],
+  'cadl_dictionary': ['type/dictionary'],
   'cadl_extensible': ['type/enum/extensible'],
   'cadl_fixed': ['type/enum/fixed'],
   'cadl_empty': ['type/model/empty'],

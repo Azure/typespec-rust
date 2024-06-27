@@ -13,10 +13,7 @@ export function emitEnums(crate: rust.Crate): string {
   }
 
   let content = helpers.contentPreamble();
-  content += helpers.UseSerDe;
-
-  // extra new-line after all use statements
-  content += '\n';
+  content += 'use serde::{Deserialize, Serialize};\n\n';
 
   const indentation = new helpers.indentation();
 

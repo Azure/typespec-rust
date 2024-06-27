@@ -10,9 +10,15 @@ import * as rust from '../codemodel/index.js';
 // used to generate use statements
 export class Use {
   private uses: Array<moduleTypes>;
+  private scope?: 'models';
 
-  constructor() {
+  // scope indicates a scope in which use statements are constructed.
+  // e.g. 'models' indicates we're "in" the crate::models scope so there's
+  // no need to add a use statement for types in crate::models
+  // no scope will add all using statements as required.
+  constructor(scope?: 'models') {
     this.uses = new Array<moduleTypes>();
+    this.scope = scope;
   }
 
   // adds the specified module and type if not already in the list
@@ -59,12 +65,15 @@ export class Use {
         break;
       case 'enum':
       case 'model':
-        this.addType('crate::models', type.name);
+        if (this.scope !== 'models') {
+          this.addType('crate::models', type.name);
+        }
         break;
       case 'requestContent':
         this.addType(type.crate, type.name);
         this.addForType(type.type);
         break;
+      case 'hashmap':
       case 'vector':
         this.addForType(type.type);
         break;
@@ -72,6 +81,10 @@ export class Use {
         if ((<rust.External>type).crate !== undefined && (<rust.External>type).name !== undefined) {
           this.addType((<rust.External>type).crate, (<rust.External>type).name);
         }
+    }
+
+    if (type.kind !== 'client' && (<rust.StdType>type).name !== undefined && (<rust.StdType>type).use !== undefined) {
+      this.addType((<rust.StdType>type).use, (<rust.StdType>type).name);
     }
   }
 

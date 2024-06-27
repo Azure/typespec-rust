@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import * as helpers from './helpers.js';
+import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
 // emits the models.rs file for this crate
@@ -12,30 +13,33 @@ export function emitModels(crate: rust.Crate): string {
     return '';
   }
 
-  let content = helpers.contentPreamble();
-  content += helpers.UseSerDe;
-
-  // extra new-line after all use statements
-  content += '\n';
+  const use = new Use('models');
+  use.addTypes('serde', ['Deserialize', 'Serialize']);
 
   const indentation = new helpers.indentation();
 
+  let body = '';
   for (const model of crate.models) {
-    content += helpers.formatDocComment(model.docs);
-    content += helpers.annotationDerive('Default');
-    content += helpers.AnnotationNonExhaustive;
-    content += `${helpers.emitPub(model.pub)}struct ${model.name} {\n`;
+    body += helpers.formatDocComment(model.docs);
+    body += helpers.annotationDerive('Default');
+    body += helpers.AnnotationNonExhaustive;
+    body += `${helpers.emitPub(model.pub)}struct ${model.name} {\n`;
 
     for (const field of model.fields) {
       if (field.name !== field.serde) {
         // only emit the serde annotation when the names aren't equal
-        content += `${indentation.get()}#[serde(rename = "${field.serde}")]\n`;
+        body += `${indentation.get()}#[serde(rename = "${field.serde}")]\n`;
       }
-      content += `${indentation.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+      use.addForType(field.type);
+      body += `${indentation.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
     }
 
-    content += '}\n\n';
+    body += '}\n\n';
   }
+
+  let content = helpers.contentPreamble();
+  content += use.text();
+  content += body;
 
   return content;
 }
