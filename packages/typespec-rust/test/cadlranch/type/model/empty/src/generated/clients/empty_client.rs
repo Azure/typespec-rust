@@ -26,6 +26,7 @@ impl EmptyClient {
     ) -> Result<Self> {
         unimplemented!();
     }
+
     pub async fn put_empty(
         &self,
         input: RequestContent<EmptyInput>,

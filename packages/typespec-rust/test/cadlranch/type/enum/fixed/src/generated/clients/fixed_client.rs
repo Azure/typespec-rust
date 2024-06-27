@@ -23,6 +23,7 @@ impl FixedClient {
     ) -> Result<Self> {
         unimplemented!();
     }
+
     pub fn get_fixed_string_client(&self) -> FixedString {
         unimplemented!();
     }

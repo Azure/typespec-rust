@@ -56,6 +56,15 @@ export class Crate implements Crate {
     this.clients = new Array<client.Client>();
   }
 
+  addDependency(dependency: CrateDependency): void {
+    for (const dep of this.dependencies) {
+      if (dep.name === dependency.name) {
+        return;
+      }
+    }
+    this.dependencies.push(dependency);
+  }
+
   sortContent(): void {
     const sortAscending = function(a: string, b: string): number {
       return a < b ? -1 : a > b ? 1 : 0;

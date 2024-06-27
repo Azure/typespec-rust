@@ -26,6 +26,7 @@ impl UsageClient {
     ) -> Result<Self> {
         unimplemented!();
     }
+
     pub async fn input(
         &self,
         input: RequestContent<InputRecord>,
