@@ -61,7 +61,7 @@ export class Use {
       case 'model':
         this.addType('crate::models', type.name);
         break;
-      case 'requestContet':
+      case 'requestContent':
         this.addType(type.crate, type.name);
         this.addForType(type.type);
         break;

@@ -130,7 +130,7 @@ export type RequestContentType = Enum | Model | Scalar | StringType | Vector;
 
 // RequestContent is a Rust RequestContent<T> from azure_core
 export interface RequestContent extends External {
-  kind: 'requestContet';
+  kind: 'requestContent';
 
   type: RequestContentType;
 }
@@ -347,7 +347,7 @@ export class Option implements Option {
 export class RequestContent extends External implements RequestContent {
   constructor(crate: Crate, type: RequestContentType) {
     super(crate, 'azure_core', 'RequestContent');
-    this.kind = 'requestContet';
+    this.kind = 'requestContent';
     this.type = type;
   }
 }

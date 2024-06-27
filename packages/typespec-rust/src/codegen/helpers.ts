@@ -53,7 +53,7 @@ export function getTypeDeclaration(type: rust.Type): string {
       return `${type.value}`;
     case 'option':
       return `Option<${type.ref ? '&' : ''}${getTypeDeclaration(type.type)}>`;
-    case 'requestContet':
+    case 'requestContent':
       return `${type.name}<${getTypeDeclaration(type.type)}>`;
     case 'String':
     case 'str':
