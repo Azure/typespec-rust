@@ -55,36 +55,28 @@ export class Use {
         this.addType(`crate::${mod}`, type.name);
         break;
       }
-      case 'generic':
-        if (type.use) {
-          this.addType(type.use, type.name);
-        }
-        for (const t of type.types) {
-          this.addForType(t);
-        }
-        break;
       case 'enum':
       case 'model':
         if (this.scope !== 'models') {
           this.addType('crate::models', type.name);
         }
         break;
+      case 'option':
       case 'requestContent':
-        this.addType(type.crate, type.name);
-        this.addForType(type.type);
-        break;
+      case 'response':
+      case 'result':
       case 'hashmap':
       case 'vector':
         this.addForType(type.type);
         break;
-      default:
-        if ((<rust.External>type).crate !== undefined && (<rust.External>type).name !== undefined) {
-          this.addType((<rust.External>type).crate, (<rust.External>type).name);
-        }
     }
 
-    if (type.kind !== 'client' && (<rust.StdType>type).name !== undefined && (<rust.StdType>type).use !== undefined) {
-      this.addType((<rust.StdType>type).use, (<rust.StdType>type).name);
+    if (type.kind !== 'client') {
+      if ((<rust.StdType>type).name !== undefined && (<rust.StdType>type).use !== undefined) {
+        this.addType((<rust.StdType>type).use, (<rust.StdType>type).name);
+      } else if ((<rust.External>type).crate !== undefined && (<rust.External>type).name !== undefined) {
+        this.addType((<rust.External>type).crate, (<rust.External>type).name);
+      }
     }
   }
 

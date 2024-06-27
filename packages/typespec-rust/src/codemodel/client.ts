@@ -95,9 +95,6 @@ export interface BodyParameter extends HTTPParameterBase {
   type: types.RequestContent;
 }
 
-// HeaderType is the possible types for a HeaderParameter
-export type HeaderType = types.Enum | types.Literal | types.Scalar | types.StringType;
-
 // HeaderParameter is a param that goes in a HTTP header
 export interface HeaderParameter extends HTTPParameterBase {
   kind: 'header';
@@ -106,7 +103,8 @@ export interface HeaderParameter extends HTTPParameterBase {
   header: string;
 
   // the type of the header param
-  type: HeaderType;
+  // note that not all types are applicable
+  type: types.Type;
 }
 
 // MethodOptions is the struct containing optional method params
@@ -134,7 +132,7 @@ interface HTTPMethodBase extends method.Method<types.Type> {
   options: MethodOptions;
 
   // the type returned by the method
-  returns: types.Type;
+  returns: types.Result;
 }
 
 interface HTTPParameterBase extends method.Parameter {
@@ -210,9 +208,18 @@ export class Constructor implements Constructor {
 }
 
 export class HeaderParameter extends HTTPParameterBase implements HeaderParameter {
-  constructor(name: string, header: string, location: ParameterLocation, type: HeaderType) {
-    super(name, location, type);
-    this.header = header;
+  constructor(name: string, header: string, location: ParameterLocation, type: types.Type) {
+    switch (type.kind) {
+      case 'String':
+      case 'enum':
+      case 'literal':
+      case 'scalar':
+        super(name, location, type);
+        this.header = header;
+        break;
+      default:
+        throw new Error(`unsupported header paramter type kind ${type.kind}`);
+    }
   }
 }
 

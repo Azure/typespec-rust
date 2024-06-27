@@ -6,7 +6,7 @@
 import { Crate, CrateDependency } from './crate.js';
 
 // Type defines a type within the Rust type system
-export type Type = Enum | Empty | ExternalType | Generic | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Scalar | StringSlice | StringType | Struct | Vector;
+export type Type = Enum | Empty | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | Vector;
 
 // Enum is a Rust enum type.
 export interface Enum {
@@ -48,20 +48,6 @@ export interface Empty {
 // ExternalType is a type defined in a different crate
 export interface ExternalType extends External {
   kind: 'external';
-}
-
-// Generic is a generic type instantiation, e.g. Foo<i32>
-export interface Generic {
-  kind: 'generic';
-
-  // the name of the generic type
-  name: string;
-
-  // the generic type params in the requisite order
-  types: Array<Type>;
-
-  // the use statement required to bring the type into scope
-  use?: string;
 }
 
 // HashMap is a Rust HashMap<K, V>
@@ -124,28 +110,42 @@ export interface OffsetDateTime extends External {
   encoding: DateTimeEncoding;
 }
 
-// OptionType defines the possible generic type params for Option<T>
-export type OptionType = Enum | ExternalType | Generic | Model | Scalar | StringType | Struct;
-
 // Option is a Rust Option<T>
 export interface Option {
   kind: 'option';
 
   // the generic type param
-  type: OptionType;
+  // note that not all types are applicable
+  type: Type;
 
   // indicates if the type is by reference
   ref: boolean;
 }
 
-// RequestContentType defines the possible generic type params for RequestContent<T>
-export type RequestContentType = Enum | HashMap | Model | Scalar | StringType | Vector;
-
 // RequestContent is a Rust RequestContent<T> from azure_core
 export interface RequestContent extends External {
   kind: 'requestContent';
 
-  type: RequestContentType;
+  // the generic type param
+  // note that not all types are applicable
+  type: Type;
+}
+
+// Response is a Rust Response<T> from azure_core
+export interface Response extends External {
+  kind: 'response';
+
+  // the generic type param
+  // note that not all types are applicable
+  type: Type;
+}
+
+// Result is a Rust Result<T> from azure_core
+export interface Result extends External {
+  kind: 'result';
+
+  // the generic type param
+  type: Empty | Response;
 }
 
 // ScalarType defines the supported Rust scalar type names
@@ -300,18 +300,6 @@ export class ExternalType extends External implements ExternalType {
   }
 }
 
-export class Generic implements Generic {
-  constructor(name: string, types: Array<Type>, use?: string) {
-    this.kind = 'generic';
-    this.name = name;
-    if (types.length < 1) {
-      throw new Error('must provide at least one generic type parameter type');
-    }
-    this.types = types;
-    this.use = use;
-  }
-}
-
 export class HashMap implements HashMap {
   constructor(type: Type) {
     this.kind = 'hashmap';
@@ -370,17 +358,70 @@ export class OffsetDateTime extends External implements OffsetDateTime {
 }
 
 export class Option implements Option {
-  constructor(type: OptionType, ref: boolean) {
-    this.kind = 'option';
-    this.type = type;
-    this.ref = ref;
+  constructor(type: Type, ref: boolean) {
+    switch (type.kind) {
+      case 'String':
+      case 'enum':
+      case 'external':
+      case 'hashmap':
+      case 'model':
+      case 'scalar':
+      case 'struct':
+      case 'vector':
+        this.kind = 'option';
+        this.type = type;
+        this.ref = ref;
+        break;
+      default:
+        throw new Error(`unsupported Option generic type param kind ${type.kind}`);
+    }
   }
 }
 
 export class RequestContent extends External implements RequestContent {
-  constructor(crate: Crate, type: RequestContentType) {
-    super(crate, 'azure_core', 'RequestContent');
-    this.kind = 'requestContent';
+  constructor(crate: Crate, type: Type) {
+    switch (type.kind) {
+      case 'String':
+      case 'enum':
+      case 'hashmap':
+      case 'model':
+      case 'scalar':
+      case 'vector':
+        super(crate, 'azure_core', 'RequestContent');
+        this.kind = 'requestContent';
+        this.type = type;
+        break;
+      default:
+        throw new Error(`unsupported RequestContent generic type param kind ${type.kind}`);
+    }
+  }
+}
+
+export class Response extends External implements Response {
+  constructor(crate: Crate, type: Type) {
+    switch (type.kind) {
+      case 'String':
+      case 'enum':
+      case 'hashmap':
+      case 'jsonValue':
+      case 'model':
+      case 'offsetDateTime':
+      case 'scalar':
+      case 'vector':
+        super(crate, 'azure_core', 'Response');
+        this.kind = 'response';
+        this.type = type;
+        break;
+      default:
+        throw new Error(`unsupported Response generic type param kind ${type.kind}`);
+    }
+  }
+}
+
+export class Result extends External implements Result {
+  constructor(crate: Crate, type: Empty | Response) {
+    super(crate, 'azure_core', 'Result');
+    this.kind = 'result';
     this.type = type;
   }
 }

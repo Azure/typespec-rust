@@ -38,13 +38,6 @@ export function getTypeDeclaration(type: rust.Type): string {
   switch (type.kind) {
     case 'empty':
       return '()';
-    case 'generic': {
-      const typeParams = new Array<string>();
-      for (const typep of type.types) {
-        typeParams.push(getTypeDeclaration(typep));
-      }
-      return `${type.name}<${typeParams.join(', ')}>`;
-    }
     case 'hashmap':
       return `${type.name}<String, ${getTypeDeclaration(type.type)}>`;
     case 'implTrait':
@@ -54,6 +47,8 @@ export function getTypeDeclaration(type: rust.Type): string {
     case 'option':
       return `Option<${type.ref ? '&' : ''}${getTypeDeclaration(type.type)}>`;
     case 'requestContent':
+    case 'response':
+    case 'result':
       return `${type.name}<${getTypeDeclaration(type.type)}>`;
     case 'String':
     case 'str':

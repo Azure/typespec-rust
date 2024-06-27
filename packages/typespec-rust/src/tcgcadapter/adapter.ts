@@ -101,7 +101,7 @@ export class Adapter {
 
   // converts a tcgc model property to a model field
   private getModelField(property: tcgc.SdkModelPropertyType): rust.ModelField {
-    const fieldType = new rust.Generic('Option', new Array<rust.Type>(this.getType(property.type)));
+    const fieldType = new rust.Option(this.getType(property.type), false);
     const modelField = new rust.ModelField(snakeCaseName(property.name), property.name, true, fieldType);
     modelField.docs = property.description;
     return modelField;
@@ -223,34 +223,6 @@ export class Adapter {
     literalType = new rust.Literal(constType.value);
     this.types.set(literalKey, literalType);
     return literalType;
-  }
-
-  private getTypeForBodyParam(type: tcgc.SdkType): rust.RequestContent {
-    const bodyParamType = this.getType(type);
-    switch (bodyParamType.kind) {
-      case 'String':
-      case 'hashmap':
-      case 'enum':
-      case 'model':
-      case 'scalar':
-      case 'vector':
-        return new rust.RequestContent(this.crate, bodyParamType);
-      default:
-        throw new Error(`unsupported body param type ${bodyParamType.kind}`);
-    }
-  }
-
-  private getTypeForHeaderParam(type: tcgc.SdkType): rust.HeaderType {
-    const headerParamType = this.getType(type);
-    switch (headerParamType.kind) {
-      case 'String':
-      case 'scalar':
-      case 'enum':
-      case 'literal':
-        return headerParamType;
-      default:
-        throw new Error(`unsupported header param type ${headerParamType.kind}`);
-    }
   }
 
   // converts all tcgc clients and their methods into Rust clients/methods
@@ -400,11 +372,11 @@ export class Adapter {
 
     let returnType: rust.Type;
     if (method.response.type) {
-      returnType = new rust.Generic('Response', [this.getType(method.response.type)], 'azure_core');
+      returnType = new rust.Response(this.crate, this.getType(method.response.type));
     } else {
       returnType = new rust.Empty();
     }
-    rustMethod.returns = new rust.Generic('Result', [returnType], 'azure_core');
+    rustMethod.returns = new rust.Result(this.crate, returnType);
   }
 
   private adaptMethodParameter(param: OperationParamType): rust.MethodParameter {
@@ -412,10 +384,10 @@ export class Adapter {
     let adaptedParam: rust.MethodParameter;
     switch (param.kind) {
       case 'body':
-        adaptedParam = new rust.BodyParameter(param.name, paramLoc, this.getTypeForBodyParam(param.type));
+        adaptedParam = new rust.BodyParameter(param.name, paramLoc, new rust.RequestContent(this.crate, this.getType(param.type)));
         break;
       case 'header':
-        adaptedParam = new rust.HeaderParameter(param.name, param.serializedName, paramLoc, this.getTypeForHeaderParam(param.type));
+        adaptedParam = new rust.HeaderParameter(param.name, param.serializedName, paramLoc, this.getType(param.type));
         break;
       default:
         throw new Error(`param kind ${param.kind} NYI`);
