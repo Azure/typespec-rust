@@ -6,7 +6,7 @@
 import { Crate, CrateDependency } from './crate.js';
 
 // Type defines a type within the Rust type system
-export type Type = Enum | Empty | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | Vector;
+export type Type = Enum | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | Unit | Vector;
 
 // Enum is a Rust enum type.
 export interface Enum {
@@ -38,11 +38,6 @@ export interface EnumValue {
 
   // the value used in SerDe operations
   value: number | string;
-}
-
-// Empty is the empty type (i.e. "()")
-export interface Empty {
-  kind: 'empty';
 }
 
 // ExternalType is a type defined in a different crate
@@ -145,7 +140,7 @@ export interface Result extends External {
   kind: 'result';
 
   // the generic type param
-  type: Empty | Response;
+  type: Response | Unit;
 }
 
 // ScalarType defines the supported Rust scalar type names
@@ -192,6 +187,11 @@ export interface StructField {
 
   // the field's underlying type
   type: Type;
+}
+
+// Unit is the unit type (i.e. "()")
+export interface Unit {
+  kind: 'unit';
 }
 
 // Vector is a Rust Vec<T>
@@ -284,12 +284,6 @@ export class EnumValue implements EnumValue {
   constructor(name: string, value: number | string) {
     this.name = name;
     this.value = value;
-  }
-}
-
-export class Empty implements Empty {
-  constructor() {
-    this.kind = 'empty';
   }
 }
 
@@ -419,7 +413,7 @@ export class Response extends External implements Response {
 }
 
 export class Result extends External implements Result {
-  constructor(crate: Crate, type: Empty | Response) {
+  constructor(crate: Crate, type: Response | Unit) {
     super(crate, 'azure_core', 'Result');
     this.kind = 'result';
     this.type = type;
@@ -459,6 +453,12 @@ export class StructField implements StructField {
     this.name = name;
     this.pub = pub;
     this.type = type;
+  }
+}
+
+export class Unit implements Unit {
+  constructor() {
+    this.kind = 'unit';
   }
 }
 

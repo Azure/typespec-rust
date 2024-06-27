@@ -374,7 +374,7 @@ export class Adapter {
     if (method.response.type) {
       returnType = new rust.Response(this.crate, this.getType(method.response.type));
     } else {
-      returnType = new rust.Empty();
+      returnType = new rust.Unit();
     }
     rustMethod.returns = new rust.Result(this.crate, returnType);
   }
