@@ -43,6 +43,9 @@ export interface EnumValue {
 // ExternalType is a type defined in a different crate
 export interface ExternalType extends External {
   kind: 'external';
+
+  // indicates if the type includes a lifetime annotation
+  lifetime?: Lifetime;
 }
 
 // HashMap is a Rust HashMap<K, V>
@@ -72,6 +75,11 @@ export interface ImplTrait {
 // JsonValue is a raw JSON value
 export interface JsonValue extends External {
   kind: 'jsonValue';
+}
+
+// Lifetime is a Rust lifetime name.
+export interface Lifetime {
+  name: string;
 }
 
 // Literal is a literal value (e.g. a string "foo")
@@ -247,6 +255,9 @@ interface StructBase {
 
   // fields contains the fields within the struct
   fields: Array<StructFieldBase>;
+
+  // indicates if the type includes a lifetime annotation
+  lifetime?: Lifetime;
 }
 
 // base type for model and struct fields
@@ -315,6 +326,12 @@ export class JsonValue extends External implements JsonValue {
   constructor(crate: Crate) {
     super(crate, 'serde_json', 'Value');
     this.kind = 'jsonValue';
+  }
+}
+
+export class Lifetime implements Lifetime {
+  constructor(name: string) {
+    this.name = `'${name}`;
   }
 }
 

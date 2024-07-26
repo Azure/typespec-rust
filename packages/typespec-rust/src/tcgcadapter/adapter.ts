@@ -324,8 +324,12 @@ export class Adapter {
   // converts method into a rust.Method for the specified rust.Client
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
     let rustMethod: rust.AsyncMethod;
+    const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(method.name)}Options`, true);
-    methodOptionsStruct.fields.push(new rust.StructField('method_options', false, new rust.ExternalType(this.crate, 'azure_core', 'ClientMethodOptions')));
+    methodOptionsStruct.lifetime = optionsLifetime;
+    const clientMethodOptions = new rust.ExternalType(this.crate, 'azure_core', 'ClientMethodOptions');
+    clientMethodOptions.lifetime = optionsLifetime;
+    methodOptionsStruct.fields.push(new rust.StructField('method_options', false, clientMethodOptions));
     switch (method.kind) {
       case 'basic':
         rustMethod = new rust.AsyncMethod(snakeCaseName(method.name), rustClient, isPub(method.access), new rust.MethodOptions(methodOptionsStruct, false));
