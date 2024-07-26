@@ -15,6 +15,8 @@ const headerText = `// Copyright (c) Microsoft Corporation. All rights reserved.
 
 export const AnnotationNonExhaustive = '#[non_exhaustive]\n';
 
+export const AnonymousLiftimeAnnotation = '<\'_>';
+
 // returns the content preamble common to all emitted files
 export function contentPreamble(): string {
   return headerText;
@@ -34,36 +36,43 @@ export function emitPub(pub: boolean): string {
 }
 
 // returns the type declaration string for the specified Rust type
-export function getTypeDeclaration(type: rust.Type): string {
+export function getTypeDeclaration(type: rust.Type, withAnonymousLifetime?: boolean): string {
   switch (type.kind) {
     case 'hashmap':
-      return `${type.name}<String, ${getTypeDeclaration(type.type)}>`;
+      return `${type.name}<String, ${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'implTrait':
-      return `impl ${type.name}<${getTypeDeclaration(type.type)}>`;
+      return `impl ${type.name}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'literal':
       return `${type.value}`;
     case 'option':
-      return `Option<${type.ref ? '&' : ''}${getTypeDeclaration(type.type)}>`;
+      return `Option<${type.ref ? '&' : ''}${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'requestContent':
     case 'response':
     case 'result':
-      return `${type.name}<${getTypeDeclaration(type.type)}>`;
+      return `${type.name}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'String':
     case 'str':
       return type.kind;
     case 'scalar':
       return type.type;
     case 'enum':
-    case 'external':
     case 'jsonValue':
-    case 'model':
     case 'offsetDateTime':
-    case 'struct':
       return type.name;
+    case 'external':
+    case 'model':
+    case 'struct':
+      if (!type.lifetime) {
+        return type.name;
+      } else if (withAnonymousLifetime === true) {
+        // this type has a lifetime but we don't want its name
+        return `${type.name}${AnonymousLiftimeAnnotation}`;
+      }
+      return `${type.name}${getGenericLifetimeAnnotation(type.lifetime)}`;
     case 'unit':
       return '()';      
     case 'vector':
-      return `Vec<${getTypeDeclaration(type.type)}>`;
+      return `Vec<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
   }
 }
 
@@ -116,4 +125,9 @@ export function annotationDerive(...extra: Array<string>): string {
 // used to sort strings in ascending order
 export function sortAscending(a: string, b: string): number {
   return a < b ? -1 : a > b ? 1 : 0;
+}
+
+// returns the generic lifetime annotation string for lifetime (e.g. <'a>)
+export function getGenericLifetimeAnnotation(lifetime: rust.Lifetime): string {
+  return `<${lifetime.name}>`;
 }
