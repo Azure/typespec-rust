@@ -36,7 +36,7 @@ export function emitPub(pub: boolean): string {
 }
 
 // returns the type declaration string for the specified Rust type
-export function getTypeDeclaration(type: rust.Type, withAnonymousLifetime?: boolean): string {
+export function getTypeDeclaration(type: rust.Type, withAnonymousLifetime = false): string {
   switch (type.kind) {
     case 'hashmap':
       return `${type.name}<String, ${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
@@ -64,7 +64,7 @@ export function getTypeDeclaration(type: rust.Type, withAnonymousLifetime?: bool
     case 'struct':
       if (!type.lifetime) {
         return type.name;
-      } else if (withAnonymousLifetime === true) {
+      } else if (withAnonymousLifetime) {
         // this type has a lifetime but we don't want its name
         return `${type.name}${AnonymousLiftimeAnnotation}`;
       }
