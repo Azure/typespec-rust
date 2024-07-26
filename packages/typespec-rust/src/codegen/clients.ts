@@ -251,7 +251,7 @@ function getOptionsBuilderTypeName(option: rust.MethodOptions, withLifetime: tru
   if (!withLifetime || !option.type.lifetime) {
     return `${option.type.name}Builder`;
   } else if (withLifetime === 'anonymous') {
-    return `${option.type.name}Builder${helpers.AnonymousLiftimeAnnotation}`;  
+    return `${option.type.name}Builder${helpers.AnonymousLifetimeAnnotation}`;  
   }
   return `${option.type.name}Builder${helpers.getGenericLifetimeAnnotation(option.type.lifetime)}`;
 }

@@ -15,7 +15,7 @@ const headerText = `// Copyright (c) Microsoft Corporation. All rights reserved.
 
 export const AnnotationNonExhaustive = '#[non_exhaustive]\n';
 
-export const AnonymousLiftimeAnnotation = '<\'_>';
+export const AnonymousLifetimeAnnotation = '<\'_>';
 
 // returns the content preamble common to all emitted files
 export function contentPreamble(): string {
@@ -66,7 +66,7 @@ export function getTypeDeclaration(type: rust.Type, withAnonymousLifetime = fals
         return type.name;
       } else if (withAnonymousLifetime) {
         // this type has a lifetime but we don't want its name
-        return `${type.name}${AnonymousLiftimeAnnotation}`;
+        return `${type.name}${AnonymousLifetimeAnnotation}`;
       }
       return `${type.name}${getGenericLifetimeAnnotation(type.lifetime)}`;
     case 'unit':
