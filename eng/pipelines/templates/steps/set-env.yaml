@@ -16,7 +16,7 @@ steps:
 
   - script: |
       corepack enable
-      corepack prepare pnpm@latest-8 --activate
+      corepack prepare pnpm@latest-9 --activate
     displayName: Install pnpm
 
   - script: pnpm config set store-dir ${{ parameters.pnpmStorePath }}
