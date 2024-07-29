@@ -45,12 +45,12 @@ export class Adapter {
 
   // converts all tcgc types to their Rust type equivalent
   private adaptTypes(): void {
-    for (const sdkEnum of this.ctx.experimental_sdkPackage.enums) {
+    for (const sdkEnum of this.ctx.sdkPackage.enums) {
       const rustEnum = this.getEnum(sdkEnum);
       this.crate.enums.push(rustEnum);
     }
 
-    for (const model of this.ctx.experimental_sdkPackage.models) {
+    for (const model of this.ctx.sdkPackage.models) {
       const rustModel = this.getModel(model);
       this.crate.models.push(rustModel);
     }
@@ -227,7 +227,7 @@ export class Adapter {
 
   // converts all tcgc clients and their methods into Rust clients/methods
   private adaptClients(): void {
-    for (const client of this.ctx.experimental_sdkPackage.clients) {
+    for (const client of this.ctx.sdkPackage.clients) {
       if (client.methods.length === 0) {
         // skip generating empty clients
         continue;
