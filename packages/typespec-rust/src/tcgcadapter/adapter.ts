@@ -376,7 +376,19 @@ export class Adapter {
 
     let returnType: rust.Type;
     if (method.response.type) {
-      returnType = new rust.Response(this.crate, this.getType(method.response.type));
+      // search the HTTP responses for the corresponding type so we can determine the wire format
+      let format: rust.SerDeFormat | undefined;
+      for (const httpResp of method.operation.responses.values()) {
+        if (!httpResp.type || !httpResp.defaultContentType || httpResp.type.kind !== method.response.type.kind) {
+          continue;
+        }
+        format = this.adaptSerDeFormat(httpResp.defaultContentType);
+        break;
+      }
+      if (!format) {
+        throw new Error(`didn't find HTTP response for kind ${method.response.type.kind} in method ${method.name}`);
+      }
+      returnType = new rust.Response(this.crate, this.getType(method.response.type), format);
     } else {
       returnType = new rust.Unit();
     }
@@ -387,9 +399,10 @@ export class Adapter {
     const paramLoc = param.onClient ? 'client' : 'method';
     let adaptedParam: rust.MethodParameter;
     switch (param.kind) {
-      case 'body':
-        adaptedParam = new rust.BodyParameter(param.name, paramLoc, new rust.RequestContent(this.crate, this.getType(param.type)));
+      case 'body': {
+        adaptedParam = new rust.BodyParameter(param.name, paramLoc, new rust.RequestContent(this.crate, this.getType(param.type), this.adaptSerDeFormat(param.defaultContentType)));
         break;
+      }
       case 'header':
         adaptedParam = new rust.HeaderParameter(param.name, param.serializedName, paramLoc, this.getType(param.type));
         break;
@@ -399,6 +412,16 @@ export class Adapter {
 
     adaptedParam.docs = param.description;
     return adaptedParam;
+  }
+
+  private adaptSerDeFormat(contentType: string): rust.SerDeFormat {
+    switch (contentType) {
+      case 'application/json':
+        this.crate.addDependency(new rust.CrateDependency('serde_json'));
+        return 'json';
+      default:
+        throw new Error(`unhandled contentType ${contentType}`);
+    }
   }
 }
 

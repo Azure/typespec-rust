@@ -132,6 +132,9 @@ export interface RequestContent extends External {
   // the generic type param
   // note that not all types are applicable
   type: Type;
+
+  // the wire format of the request body
+  format: SerDeFormat;
 }
 
 // Response is a Rust Response<T> from azure_core
@@ -141,6 +144,9 @@ export interface Response extends External {
   // the generic type param
   // note that not all types are applicable
   type: Type;
+
+  // the wire format of the response body
+  format: SerDeFormat;
 }
 
 // Result is a Rust Result<T> from azure_core
@@ -160,6 +166,9 @@ export interface Scalar {
 
   type: ScalarType;
 }
+
+// SerDeFormat indicates the wire format for request and response bodies
+export type SerDeFormat = 'json';
 
 // StringSlice is a Rust string slice
 export interface StringSlice {
@@ -390,7 +399,7 @@ export class Option implements Option {
 }
 
 export class RequestContent extends External implements RequestContent {
-  constructor(crate: Crate, type: Type) {
+  constructor(crate: Crate, type: Type, format: SerDeFormat) {
     switch (type.kind) {
       case 'String':
       case 'enum':
@@ -405,11 +414,12 @@ export class RequestContent extends External implements RequestContent {
       default:
         throw new Error(`unsupported RequestContent generic type param kind ${type.kind}`);
     }
+    this.format = format;
   }
 }
 
 export class Response extends External implements Response {
-  constructor(crate: Crate, type: Type) {
+  constructor(crate: Crate, type: Type, format: SerDeFormat) {
     switch (type.kind) {
       case 'String':
       case 'enum':
@@ -426,6 +436,7 @@ export class Response extends External implements Response {
       default:
         throw new Error(`unsupported Response generic type param kind ${type.kind}`);
     }
+    this.format = format;
   }
 }
 
