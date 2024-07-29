@@ -377,12 +377,12 @@ export class Adapter {
     let returnType: rust.Type;
     if (method.response.type) {
       // search the HTTP responses for the corresponding type so we can determine the wire format
-      let format: rust.SerDeFormat | undefined;
+      let format: rust.SerdeFormat | undefined;
       for (const httpResp of method.operation.responses.values()) {
         if (!httpResp.type || !httpResp.defaultContentType || httpResp.type.kind !== method.response.type.kind) {
           continue;
         }
-        format = this.adaptSerDeFormat(httpResp.defaultContentType);
+        format = this.adaptSerdeFormat(httpResp.defaultContentType);
         break;
       }
       if (!format) {
@@ -400,7 +400,7 @@ export class Adapter {
     let adaptedParam: rust.MethodParameter;
     switch (param.kind) {
       case 'body': {
-        adaptedParam = new rust.BodyParameter(param.name, paramLoc, new rust.RequestContent(this.crate, this.getType(param.type), this.adaptSerDeFormat(param.defaultContentType)));
+        adaptedParam = new rust.BodyParameter(param.name, paramLoc, new rust.RequestContent(this.crate, this.getType(param.type), this.adaptSerdeFormat(param.defaultContentType)));
         break;
       }
       case 'header':
@@ -414,7 +414,7 @@ export class Adapter {
     return adaptedParam;
   }
 
-  private adaptSerDeFormat(contentType: string): rust.SerDeFormat {
+  private adaptSerdeFormat(contentType: string): rust.SerdeFormat {
     switch (contentType) {
       case 'application/json':
         this.crate.addDependency(new rust.CrateDependency('serde_json'));

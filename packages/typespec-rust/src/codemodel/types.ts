@@ -134,7 +134,7 @@ export interface RequestContent extends External {
   type: Type;
 
   // the wire format of the request body
-  format: SerDeFormat;
+  format: SerdeFormat;
 }
 
 // Response is a Rust Response<T> from azure_core
@@ -146,7 +146,7 @@ export interface Response extends External {
   type: Type;
 
   // the wire format of the response body
-  format: SerDeFormat;
+  format: SerdeFormat;
 }
 
 // Result is a Rust Result<T> from azure_core
@@ -167,9 +167,9 @@ export interface Scalar {
   type: ScalarType;
 }
 
-// SerDeFormat indicates the wire format for request and response bodies
+// SerdeFormat indicates the wire format for request and response bodies
 // TODO: Add 'xml' https://github.com/Azure/autorest.rust/issues/8
-export type SerDeFormat = 'json';
+export type SerdeFormat = 'json';
 
 // StringSlice is a Rust string slice
 export interface StringSlice {
@@ -400,7 +400,7 @@ export class Option implements Option {
 }
 
 export class RequestContent extends External implements RequestContent {
-  constructor(crate: Crate, type: Type, format: SerDeFormat) {
+  constructor(crate: Crate, type: Type, format: SerdeFormat) {
     switch (type.kind) {
       case 'String':
       case 'enum':
@@ -420,7 +420,7 @@ export class RequestContent extends External implements RequestContent {
 }
 
 export class Response extends External implements Response {
-  constructor(crate: Crate, type: Type, format: SerDeFormat) {
+  constructor(crate: Crate, type: Type, format: SerdeFormat) {
     switch (type.kind) {
       case 'String':
       case 'enum':
