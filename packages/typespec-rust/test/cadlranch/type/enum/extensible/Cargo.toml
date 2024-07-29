@@ -12,6 +12,3 @@ async-std = { workspace = true }
 azure_core = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-
-[dev-dependencies]
-async-std = { workspace = true }
