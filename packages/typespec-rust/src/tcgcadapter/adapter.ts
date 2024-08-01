@@ -37,6 +37,11 @@ export class Adapter {
 
     if (this.crate.enums.length > 0 || this.crate.models.length > 0) {
       this.crate.addDependency(new rust.CrateDependency('serde'));
+      if (this.crate.clients.length > 0) {
+        // required for TryFrom<Response<T>> impl
+        // only required if there are clients
+        this.crate.addDependency(new rust.CrateDependency('async-std'));
+      }
     }
 
     this.crate.sortContent();

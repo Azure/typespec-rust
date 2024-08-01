@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as codegen from './codegen/index.js';
+import { CodeGenerator } from './codegen/codeGenerator.js';
 import { Adapter } from './tcgcadapter/adapter.js';
 import { RustEmitterOptions } from './lib.js';
 import { mkdir, writeFile } from 'fs/promises';
@@ -17,29 +17,31 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
 
   await mkdir(`${context.emitterOutputDir}/src`, {recursive: true});
 
+  const codegen = new CodeGenerator(crate);
+
   // TODO: don't overwrite an existing Cargo.toml file
   // will likely need to merge existing Cargo.toml file with generated content
   // https://github.com/Azure/autorest.rust/issues/22
-  writeFile(`${context.emitterOutputDir}/Cargo.toml`, codegen.emitCargoToml(crate));
+  writeFile(`${context.emitterOutputDir}/Cargo.toml`, codegen.emitCargoToml());
 
   // TODO: this will overwrite an existing lib.rs file.
   // we will likely need to support merging generated content with a preexisting lib.rs
   // https://github.com/Azure/autorest.rust/issues/20
-  writeFile(`${context.emitterOutputDir}/src/lib.rs`, codegen.emitLib(crate));
+  writeFile(`${context.emitterOutputDir}/src/lib.rs`, codegen.emitLib());
 
-  writeToGeneratedDir(context.emitterOutputDir, 'mod.rs', codegen.emitMod(crate));
+  writeToGeneratedDir(context.emitterOutputDir, 'mod.rs', codegen.emitMod());
 
-  const models = codegen.emitModels(crate);
+  const models = codegen.emitModels();
   if (models.length > 0) {
     await writeToGeneratedDir(context.emitterOutputDir, 'models.rs', models);
   }
 
-  const enums = codegen.emitEnums(crate);
+  const enums = codegen.emitEnums();
   if (enums.length > 0) {
     await writeToGeneratedDir(context.emitterOutputDir, 'enums.rs', enums);
   }
 
-  const clientFiles = codegen.emitClients(crate);
+  const clientFiles = codegen.emitClients();
   for (const clientFile of clientFiles) {
     await writeToGeneratedDir(context.emitterOutputDir, clientFile.name, clientFile.content, 'clients');
   }

@@ -63,7 +63,9 @@ export type MethodType = AsyncMethod | ClientAccessor;
 // AsyncMethod is an async Rust method
 export interface AsyncMethod extends HTTPMethodBase {
   kind: 'async';
-  // will fill in as more functionality comes online
+
+  // the params passed to the method (excluding self). can be empty
+  params: Array<MethodParameter>;
 }
 
 // ClientAccessor is a method that returns a sub-client instance.
@@ -166,6 +168,7 @@ export class AsyncMethod extends HTTPMethodBase implements AsyncMethod {
 export class BodyParameter extends HTTPParameterBase implements BodyParameter {
   constructor(name: string, location: ParameterLocation, type: types.RequestContent) {
     super(name, location, type);
+    this.kind = 'body';
   }
 }
 
@@ -215,6 +218,7 @@ export class HeaderParameter extends HTTPParameterBase implements HeaderParamete
       case 'literal':
       case 'scalar':
         super(name, location, type);
+        this.kind = 'header';
         this.header = header;
         break;
       default:
