@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import * as rust from '../src/codemodel/index.js';
-import * as codegen from '../src/codegen/index.js';
+import { CodeGenerator } from '../src/codegen/codeGenerator.js';
 import * as helpers from '../src/codegen/helpers.js';
 import { strictEqual } from 'assert';
 import { describe, it } from 'vitest';
@@ -21,7 +21,8 @@ describe('typespec-rust: codegen', () => {
         'repository.workspace = true\n' +
         'rust-version.workspace = true\n';
 
-      const cargoToml = codegen.emitCargoToml(new rust.Crate('test_crate', '1.2.3', 'azure-arm'));
+      const codegen = new CodeGenerator(new rust.Crate('test_crate', '1.2.3', 'azure-arm'));
+      const cargoToml = codegen.emitCargoToml();
       strictEqual(cargoToml, expected);
     });
 
@@ -40,7 +41,8 @@ describe('typespec-rust: codegen', () => {
 
       const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
       crate.dependencies.push(new rust.CrateDependency('azure_core'));
-      const cargoToml = codegen.emitCargoToml(crate);
+      const codegen = new CodeGenerator(crate);
+      const cargoToml = codegen.emitCargoToml();
       strictEqual(cargoToml, expected);
     });
   });
