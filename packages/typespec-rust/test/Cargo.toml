@@ -13,7 +13,7 @@ rust-version = "1.76"
 
 [workspace.dependencies]
 async-std = { version = "1.12.0", features = ["attributes", "tokio1"] }
-azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", branch = "feature/track2", commit = "7d89e4eb3ff2ac86755de3ebbd48152c4e7b4039" }
+azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", branch = "feature/track2", commit = "7d89e4eb3ff2ac86755de3ebbd48152c4e7b4039", features = ["enable_reqwest"] }
 bytes = { version = "1.5.0" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0.118" }
