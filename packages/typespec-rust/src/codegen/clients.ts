@@ -333,7 +333,8 @@ function getClientAccessorMethodBody(indentation: helpers.indentation, clientAcc
   for (const field of clientAccessor.returns.fields) {
     if (field.kind === 'uri' ) {
       endpointFieldName = field.name;
-      break;
+    } else if (endpointFieldName) {
+      throw new Error(`found multiple URI fields in client ${clientAccessor.returns.name} which is unexpected`);
     }
   }
   if (!endpointFieldName) {
