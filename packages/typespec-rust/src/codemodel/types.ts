@@ -6,7 +6,7 @@
 import { Crate, CrateDependency } from './crate.js';
 
 // Type defines a type within the Rust type system
-export type Type = Enum | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | Unit | Vector;
+export type Type = Enum | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | Unit | Url | Vector;
 
 // Enum is a Rust enum type.
 export interface Enum {
@@ -210,6 +210,11 @@ export interface StructField {
 // Unit is the unit type (i.e. "()")
 export interface Unit {
   kind: 'unit';
+}
+
+// Url is an azure_core::Url type
+export interface Url extends External {
+  kind: 'Url';
 }
 
 // Vector is a Rust Vec<T>
@@ -488,6 +493,13 @@ export class StructField implements StructField {
 export class Unit implements Unit {
   constructor() {
     this.kind = 'unit';
+  }
+}
+
+export class Url extends External implements Url {
+  constructor(crate: Crate) {
+    super(crate, 'azure_core', 'Url');
+    this.kind = 'Url';
   }
 }
 

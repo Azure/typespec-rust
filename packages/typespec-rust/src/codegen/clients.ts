@@ -33,6 +33,8 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       use.addForType(field.type);
       body += `${indentation.get()}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
     }
+    use.addType('azure_core', 'Pipeline');
+    body += `${indentation.get()}pipeline: Pipeline,\n`;
     body += '}\n\n'; // end client
 
     if (client.constructable) {
@@ -59,7 +61,21 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       for (let i = 0; i < client.constructable.constructors.length; ++i) {
         const constructor = client.constructable.constructors[i];
         body += `${indentation.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.parameters, client.constructable.options, use)}) -> Result<Self> {\n`;
-        body += `${indentation.push().get()}unimplemented!();\n`;
+        // by convention, the endpoint param is always the first ctor param
+        const endpointParamName = constructor.parameters[0].name;
+        body += `${indentation.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName}.as_ref())?;\n`;
+        body += `${indentation.get()}${endpointParamName}.query_pairs_mut().clear();\n`;
+        body += `${indentation.get()}let options = options.unwrap_or_default();\n`;
+        body += `${indentation.get()}Ok(Self {\n`;
+        body += `${indentation.push().get()}${endpointParamName},\n`;
+        body += `${indentation.get()}pipeline: Pipeline::new(\n`;
+        body += `${indentation.push().get()}option_env!("CARGO_PKG_NAME"),\n`;
+        body += `${indentation.get()}option_env!("CARGO_PKG_VERSION"),\n`;
+        body += `${indentation.get()}options.client_options,\n`;
+        body += `${indentation.get()}Vec::default(),\n`;
+        body += `${indentation.get()}Vec::default(),\n`;
+        body += `${indentation.pop().get()}),\n`; // end Pipeline::new
+        body += `${indentation.pop().get()}})\n`; // end Ok
         body += `${indentation.pop().get()}}\n`; // end constructor
 
         // ensure extra new-line between ctors and/or client methods
@@ -92,6 +108,17 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
     }
 
     body += '}\n\n'; // end client impl
+
+    if (client.constructable) {
+      // emit default trait impl for client options type
+      body += `impl Default for ${client.constructable.options.type.name} {\n`;
+      body += `${indentation.get()}fn default() -> Self {\n`;
+      body += `${indentation.push().get()}Self {\n`;
+      body += `${indentation.push().get()}client_options: ClientOptions::default(),\n`;
+      body += `${indentation.pop().get()}}\n`;
+      body += `${indentation.pop().get()}}\n`;
+      body += '}\n\n'; // end impl
+    }
 
     // builders aren't needed if there are only client accessors
     let needBuilders = false;

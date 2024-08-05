@@ -52,6 +52,7 @@ export function getTypeDeclaration(type: rust.Type, withAnonymousLifetime = fals
       return `${type.name}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'String':
     case 'str':
+    case 'Url':
       return type.kind;
     case 'scalar':
       return type.type;

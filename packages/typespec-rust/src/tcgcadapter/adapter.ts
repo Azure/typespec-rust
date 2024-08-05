@@ -297,7 +297,7 @@ export class Adapter {
             // endpoints, e.g. https://{something}.contoso.com isn't supported.
             // note that the types of the param and the field are slightly different
             constructor.parameters.push(new rust.URIParameter(param.name, 'client', new rust.ImplTrait('AsRef', new rust.StringSlice())));
-            rustClient.fields.push(new rust.URIParameter(param.name, 'client', new rust.StringType()));
+            rustClient.fields.push(new rust.URIParameter(param.name, 'client', new rust.Url(this.crate)));
             break;
           case 'method':
             throw new Error('client method params NYI');
