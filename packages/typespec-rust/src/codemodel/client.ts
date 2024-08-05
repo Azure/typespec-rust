@@ -27,6 +27,9 @@ export interface Client {
   // all the methods for this client
   methods: Array<MethodType>;
 
+  // indicates if the client includes a lifetime annotation
+  lifetime?: types.Lifetime;
+
   // the parent client in a hierarchical client
   parent?: Client;
 }

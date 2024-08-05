@@ -309,6 +309,15 @@ export class Adapter {
       // NOTE: we must propagate parant params before a potential recursive call
       // to create a child client that will need to inherit our client params.
       rustClient.fields = parent.fields;
+
+      // sub-clients require a lifetime annotation as they will hold references
+      // to the parent's endpoint and pipeline fields. propagate any existing
+      // lifetime annotation, else create one for the sub-client.
+      if (parent.lifetime) {
+        rustClient.lifetime = parent.lifetime;
+      } else {
+        rustClient.lifetime = new rust.Lifetime('a');
+      }
     } else {
       throw new Error(`uninstantiable client ${client.name} has no parent`);
     }

@@ -9,12 +9,12 @@ use azure_core::builders::ClientMethodOptionsBuilder;
 
 use time::OffsetDateTime;
 
-pub struct ArrayDatetimeValue {
-    endpoint: Url,
-    pipeline: Pipeline,
+pub struct ArrayDatetimeValue<'a> {
+    pub(in crate::generated::clients) endpoint: &'a Url,
+    pub(in crate::generated::clients) pipeline: &'a Pipeline,
 }
 
-impl ArrayDatetimeValue {
+impl<'a> ArrayDatetimeValue<'a> {
     pub async fn get(
         &self,
         options: Option<ArrayDatetimeValueGetOptions<'_>>,

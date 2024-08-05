@@ -38,7 +38,10 @@ impl ExtensibleClient {
     }
 
     pub fn get_extensible_string_client(&self) -> ExtensibleString {
-        unimplemented!();
+        ExtensibleString {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 }
 

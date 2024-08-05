@@ -9,12 +9,12 @@ use azure_core::builders::ClientMethodOptionsBuilder;
 
 use crate::models::DaysOfWeekExtensibleEnum;
 
-pub struct ExtensibleString {
-    endpoint: Url,
-    pipeline: Pipeline,
+pub struct ExtensibleString<'a> {
+    pub(in crate::generated::clients) endpoint: &'a Url,
+    pub(in crate::generated::clients) pipeline: &'a Pipeline,
 }
 
-impl ExtensibleString {
+impl<'a> ExtensibleString<'a> {
     pub async fn get_known_value(
         &self,
         options: Option<ExtensibleStringGetKnownValueOptions<'_>>,

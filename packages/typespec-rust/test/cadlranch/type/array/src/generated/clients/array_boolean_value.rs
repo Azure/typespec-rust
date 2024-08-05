@@ -7,12 +7,12 @@ use azure_core::{ClientMethodOptions, Context, Pipeline, RequestContent, Respons
 
 use azure_core::builders::ClientMethodOptionsBuilder;
 
-pub struct ArrayBooleanValue {
-    endpoint: Url,
-    pipeline: Pipeline,
+pub struct ArrayBooleanValue<'a> {
+    pub(in crate::generated::clients) endpoint: &'a Url,
+    pub(in crate::generated::clients) pipeline: &'a Pipeline,
 }
 
-impl ArrayBooleanValue {
+impl<'a> ArrayBooleanValue<'a> {
     pub async fn get(
         &self,
         options: Option<ArrayBooleanValueGetOptions<'_>>,

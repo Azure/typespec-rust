@@ -64,59 +64,101 @@ impl ArrayClient {
     }
 
     pub fn get_array_int32_value_client(&self) -> ArrayInt32Value {
-        unimplemented!();
+        ArrayInt32Value {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_int64_value_client(&self) -> ArrayInt64Value {
-        unimplemented!();
+        ArrayInt64Value {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_boolean_value_client(&self) -> ArrayBooleanValue {
-        unimplemented!();
+        ArrayBooleanValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_string_value_client(&self) -> ArrayStringValue {
-        unimplemented!();
+        ArrayStringValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_float32_value_client(&self) -> ArrayFloat32Value {
-        unimplemented!();
+        ArrayFloat32Value {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_datetime_value_client(&self) -> ArrayDatetimeValue {
-        unimplemented!();
+        ArrayDatetimeValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_duration_value_client(&self) -> ArrayDurationValue {
-        unimplemented!();
+        ArrayDurationValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_unknown_value_client(&self) -> ArrayUnknownValue {
-        unimplemented!();
+        ArrayUnknownValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_model_value_client(&self) -> ArrayModelValue {
-        unimplemented!();
+        ArrayModelValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_nullable_float_value_client(&self) -> ArrayNullableFloatValue {
-        unimplemented!();
+        ArrayNullableFloatValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_nullable_int32_value_client(&self) -> ArrayNullableInt32Value {
-        unimplemented!();
+        ArrayNullableInt32Value {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_nullable_boolean_value_client(&self) -> ArrayNullableBooleanValue {
-        unimplemented!();
+        ArrayNullableBooleanValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_nullable_string_value_client(&self) -> ArrayNullableStringValue {
-        unimplemented!();
+        ArrayNullableStringValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_array_nullable_model_value_client(&self) -> ArrayNullableModelValue {
-        unimplemented!();
+        ArrayNullableModelValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 }
 

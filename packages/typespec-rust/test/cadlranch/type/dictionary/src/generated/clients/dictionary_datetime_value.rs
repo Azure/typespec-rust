@@ -11,12 +11,12 @@ use std::collections::HashMap;
 
 use time::OffsetDateTime;
 
-pub struct DictionaryDatetimeValue {
-    endpoint: Url,
-    pipeline: Pipeline,
+pub struct DictionaryDatetimeValue<'a> {
+    pub(in crate::generated::clients) endpoint: &'a Url,
+    pub(in crate::generated::clients) pipeline: &'a Pipeline,
 }
 
-impl DictionaryDatetimeValue {
+impl<'a> DictionaryDatetimeValue<'a> {
     pub async fn get(
         &self,
         options: Option<DictionaryDatetimeValueGetOptions<'_>>,

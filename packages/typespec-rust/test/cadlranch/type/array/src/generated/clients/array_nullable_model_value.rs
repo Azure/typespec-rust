@@ -9,12 +9,12 @@ use azure_core::builders::ClientMethodOptionsBuilder;
 
 use crate::models::InnerModel;
 
-pub struct ArrayNullableModelValue {
-    endpoint: Url,
-    pipeline: Pipeline,
+pub struct ArrayNullableModelValue<'a> {
+    pub(in crate::generated::clients) endpoint: &'a Url,
+    pub(in crate::generated::clients) pipeline: &'a Pipeline,
 }
 
-impl ArrayNullableModelValue {
+impl<'a> ArrayNullableModelValue<'a> {
     pub async fn get(
         &self,
         options: Option<ArrayNullableModelValueGetOptions<'_>>,
