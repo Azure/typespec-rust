@@ -57,9 +57,9 @@ const cadlRanch = {
   //'cadl_specialwords': ['special-words'],
   //'cadl_array': ['type/array'], needs tests
   //'cadl_dictionary': ['type/dictionary'], needs tests
-  //'cadl_extensible': ['type/enum/extensible'], needs tests
+  'cadl_extensible': ['type/enum/extensible'],
   'cadl_fixed': ['type/enum/fixed'],
-  'cadl_empty': ['type/model/empty'],
+  //'cadl_empty': ['type/model/empty'], needs tests
   //'cadl_flatten': ['type/model/flatten'], needs tests
   //'cadl_enumdisc': ['type/model/inheritance/enum-discriminator'],
   //'cadl_nodisc': ['type/model/inheritance/not-discriminated'],
