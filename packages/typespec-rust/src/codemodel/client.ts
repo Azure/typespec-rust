@@ -60,6 +60,9 @@ export interface Constructor {
 // methods
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+// HTTPMethod defines the possible HTTP verbs in a request
+export type HTTPMethod = 'delete' | 'get' | 'head' | 'patch' | 'post' | 'put';
+
 // Method defines the possible method types
 export type MethodType = AsyncMethod | ClientAccessor;
 
@@ -138,6 +141,12 @@ interface HTTPMethodBase extends method.Method<types.Type> {
 
   // the type returned by the method
   returns: types.Result;
+
+  // the HTTP verb used for the request
+  httpMethod: HTTPMethod;
+
+  // the HTTP path for the request
+  httpPath: string;
 }
 
 interface HTTPParameterBase extends method.Parameter {
@@ -145,8 +154,10 @@ interface HTTPParameterBase extends method.Parameter {
 }
 
 class HTTPMethodBase extends method.Method<types.Type> implements HTTPMethodBase {
-  constructor(name: string, pub: boolean, impl: string, self: method.Self) {
+  constructor(name: string, httpMethod: HTTPMethod, httpPath: string, pub: boolean, impl: string, self: method.Self) {
     super(name, pub, impl, self);
+    this.httpMethod = httpMethod;
+    this.httpPath = httpPath;
   }
 }
 
@@ -160,8 +171,8 @@ class HTTPParameterBase extends method.Parameter {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class AsyncMethod extends HTTPMethodBase implements AsyncMethod {
-  constructor(name: string, client: Client, pub: boolean, options: MethodOptions) {
-    super(name, pub, client.name, new method.Self(false, true));
+  constructor(name: string, client: Client, pub: boolean, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+    super(name, httpMethod, httpPath, pub, client.name, new method.Self(false, true));
     this.kind = 'async';
     this.params = new Array<MethodParameter>();
     this.options = options;

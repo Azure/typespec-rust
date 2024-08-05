@@ -106,7 +106,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
         case 'async':
           returnType = helpers.getTypeDeclaration(method.returns);
           methodBody = (indentation: helpers.indentation): string => {
-            return getAsyncMethodBody(indentation, method);
+            return getAsyncMethodBody(indentation, use, client, method);
           };
           break;
         case 'clientaccessor':
@@ -325,27 +325,73 @@ function getLifetimeName(type: rust.Struct): string {
   return ' ';
 }
 
-function getClientAccessorMethodBody(indentation: helpers.indentation, clientAccessor: rust.ClientAccessor): string {
-  let body = `${clientAccessor.returns.name} {\n`;
+function getEndpointFieldName(client: rust.Client): string {
   // find the endpoint field. it's the only one that's
   // a URI. the name will be uniform across clients
   let endpointFieldName: string | undefined;
-  for (const field of clientAccessor.returns.fields) {
+  for (const field of client.fields) {
     if (field.kind === 'uri' ) {
       endpointFieldName = field.name;
     } else if (endpointFieldName) {
-      throw new Error(`found multiple URI fields in client ${clientAccessor.returns.name} which is unexpected`);
+      throw new Error(`found multiple URI fields in client ${client.name} which is unexpected`);
     }
   }
   if (!endpointFieldName) {
-    throw new Error(`didn't find URI field for client ${clientAccessor.returns.name}`);
+    throw new Error(`didn't find URI field for client ${client.name}`);
   }
+  return endpointFieldName;
+}
+
+function getClientAccessorMethodBody(indentation: helpers.indentation, clientAccessor: rust.ClientAccessor): string {
+  let body = `${clientAccessor.returns.name} {\n`;
+  const endpointFieldName = getEndpointFieldName(clientAccessor.returns);
   body += `${indentation.push().get()}${endpointFieldName}: &self.${endpointFieldName},\n`;
   body += `${indentation.get()}pipeline: &self.pipeline,\n`;
   body += `${indentation.pop().get()}}`;
   return body;
 }
 
-function getAsyncMethodBody(indentation: helpers.indentation, asyncMethod: rust.AsyncMethod): string {
-  return 'unimplemented!();';
+function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
+  use.addTypes('azure_core', ['AsClientMethodOptions', 'Method', 'Request']);
+  let body = `${indentation.get()}let options = options.unwrap_or_default();\n`;
+  body += `${indentation.get()}let mut ctx = options.method_options.context();\n`;
+  body += `${indentation.get()}let mut url = self.${getEndpointFieldName(client)}.clone();\n`;
+  body += `${indentation.get()}url.set_path("${method.httpPath}");\n`;
+  body += `${indentation.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
+
+  const headerParams = new Array<rust.HeaderParameter>();
+  for (const param of method.params) {
+    if (param.kind === 'header') {
+      headerParams.push(param);
+    }
+  }
+  headerParams.sort((a: rust.HeaderParameter, b: rust.HeaderParameter) => { return helpers.sortAscending(a.header, b.header); });
+  for (const headerParam of headerParams) {
+    let paramValue = headerParam.name;
+    if (headerParam.type.kind === 'literal') {
+      paramValue = `"${headerParam.type.value}"`;
+    }
+    body += `${indentation.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${paramValue});\n`;
+  }
+
+  const bodyParam = getBodyParameter(method);
+  if (bodyParam) {
+    body += `${indentation.get()}request.set_body(${bodyParam.name});\n`;
+  }
+
+  body += `${indentation.get()}self.pipeline.send(&mut ctx, &mut request).await\n`;
+  return body;
+}
+
+function getBodyParameter(method: rust.AsyncMethod): rust.BodyParameter | undefined {
+  let bodyParam: rust.BodyParameter | undefined;
+  for (const param of method.params) {
+    if (param.kind === 'body') {
+      if (bodyParam) {
+        throw new Error(`method ${method.name} has multiple body parameters`);
+      }
+      bodyParam = param;
+    }
+  }
+  return bodyParam;
 }

@@ -145,8 +145,10 @@ export interface Response extends External {
   // note that not all types are applicable
   type: Type;
 
-  // the wire format of the response body
-  format: SerdeFormat;
+  // the wire format of the response body.
+  // if the response doesn't return a body (i.e. Unit)
+  // the format will be undefined.
+  format?: SerdeFormat;
 }
 
 // Result is a Rust Result<T> from azure_core
@@ -425,7 +427,7 @@ export class RequestContent extends External implements RequestContent {
 }
 
 export class Response extends External implements Response {
-  constructor(crate: Crate, type: Type, format: SerdeFormat) {
+  constructor(crate: Crate, type: Type, format?: SerdeFormat) {
     switch (type.kind) {
       case 'String':
       case 'enum':
@@ -434,6 +436,7 @@ export class Response extends External implements Response {
       case 'model':
       case 'offsetDateTime':
       case 'scalar':
+      case 'unit':
       case 'vector':
         super(crate, 'azure_core', 'Response');
         this.kind = 'response';

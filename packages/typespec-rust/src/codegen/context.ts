@@ -34,6 +34,9 @@ export class Context {
         }
 
         if (method.returns.type.kind === 'response' && (method.returns.type.type.kind === 'enum' || method.returns.type.type.kind === 'model')) {
+          if (!method.returns.type.format) {
+            throw new Error(`method ${client.name}.${method.name} returns a body but no format was specified`);
+          }
           this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.type), method.returns.type.format);
         }
       }

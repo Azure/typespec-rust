@@ -219,6 +219,17 @@ export class Adapter {
     }
   }
 
+  private getUnitType(): rust.Unit {
+    const typeKey = 'rust-unit';
+    let unitType = this.types.get(typeKey);
+    if (unitType) {
+      return <rust.Unit>unitType;
+    }
+    unitType = new rust.Unit();
+    this.types.set(typeKey, unitType);
+    return unitType;
+  }
+
   private getLiteral(constType: tcgc.SdkConstantType): rust.Literal {
     const literalKey = `literal-${constType.value}`;
     let literalType = this.types.get(literalKey);
@@ -341,12 +352,17 @@ export class Adapter {
     const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(method.name)}Options`, true);
     methodOptionsStruct.lifetime = optionsLifetime;
+
     const clientMethodOptions = new rust.ExternalType(this.crate, 'azure_core', 'ClientMethodOptions');
     clientMethodOptions.lifetime = optionsLifetime;
     methodOptionsStruct.fields.push(new rust.StructField('method_options', false, clientMethodOptions));
+
+    const httpMethod = method.operation.verb;
+    const httpPath = method.operation.path;
+
     switch (method.kind) {
       case 'basic':
-        rustMethod = new rust.AsyncMethod(snakeCaseName(method.name), rustClient, isPub(method.access), new rust.MethodOptions(methodOptionsStruct, false));
+        rustMethod = new rust.AsyncMethod(snakeCaseName(method.name), rustClient, isPub(method.access), new rust.MethodOptions(methodOptionsStruct, false), httpMethod, httpPath);
         break;
       default:
         throw new Error(`method kind ${method.kind} NYI`);
@@ -404,7 +420,7 @@ export class Adapter {
       }
       returnType = new rust.Response(this.crate, this.getType(method.response.type), format);
     } else {
-      returnType = new rust.Unit();
+      returnType = new rust.Response(this.crate, this.getUnitType());
     }
     rustMethod.returns = new rust.Result(this.crate, returnType);
   }

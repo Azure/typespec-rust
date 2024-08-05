@@ -55,17 +55,17 @@ const cadlRanch = {
   //'cadl_condreq': ['special-headers/conditional-request'],
   //'cadl_repeatability': ['special-headers/repeatability'],
   //'cadl_specialwords': ['special-words'],
-  'cadl_array': ['type/array'],
-  'cadl_dictionary': ['type/dictionary'],
-  'cadl_extensible': ['type/enum/extensible'],
+  //'cadl_array': ['type/array'], needs tests
+  //'cadl_dictionary': ['type/dictionary'], needs tests
+  //'cadl_extensible': ['type/enum/extensible'], needs tests
   'cadl_fixed': ['type/enum/fixed'],
   'cadl_empty': ['type/model/empty'],
-  'cadl_flatten': ['type/model/flatten'],
+  //'cadl_flatten': ['type/model/flatten'], needs tests
   //'cadl_enumdisc': ['type/model/inheritance/enum-discriminator'],
   //'cadl_nodisc': ['type/model/inheritance/not-discriminated'],
   //'cadl_recursive': ['type/model/inheritance/recursive'],
   //'cadl_singledisc': ['type/model/inheritance/single-discriminator'],
-  'cadl_usage': ['type/model/usage'],
+  //'cadl_usage': ['type/model/usage'], needs tests
   //'cadl_visibility': ['type/model/visibility'],
   //'cadl_addlprops': ['type/property/additional-properties'],
   //'cadl_nullable': ['type/property/nullable'],
