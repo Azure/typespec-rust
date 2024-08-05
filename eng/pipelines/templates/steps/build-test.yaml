@@ -37,3 +37,11 @@ steps:
       cargo build
     displayName: Compile Tests
     workingDirectory: $(TypeSpecRustPkgDir)/test
+
+  - pwsh: |
+      pnpm cadl-ranch --start
+      cargo test
+      pnpm cadl-ranch --stop
+    displayName: "Run cadl-ranch Tests"
+    timeoutInMinutes: 10
+    workingDirectory: $(System.DefaultWorkingDirectory)/packages/typespec-rust/test/cadlranch

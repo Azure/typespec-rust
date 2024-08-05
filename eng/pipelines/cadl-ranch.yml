@@ -1,0 +1,26 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - packages/typespec-rust/test/cadlranch
+pr: none
+
+variables:
+  - name: cadl-ranch
+    value: $(System.DefaultWorkingDirectory)/packages/typespec-rust/node_modules/@azure-tools/cadl-ranch/node_modules/.bin/cadl-ranch
+
+steps:
+  - template: /eng/pipelines/templates/steps/set-env.yaml
+
+  - template: /eng/pipelines/templates/steps/build-test.yaml
+
+  - task: AzureCLI@2
+    displayName: Upload CADL Ranch Test Coverage
+    inputs:
+      azureSubscription: "Cadl Ranch Storage"
+      scriptType: "bash"
+      scriptLocation: "inlineScript"
+      inlineScript: $(cadl-ranch) upload-coverage --generatorName rust --storageAccountName azuresdkcadlranch --generatorVersion $(node -p -e "require('package.json').version") --generatorMode azure
+      workingDirectory: $(System.DefaultWorkingDirectory)/packages/typespec-rust
