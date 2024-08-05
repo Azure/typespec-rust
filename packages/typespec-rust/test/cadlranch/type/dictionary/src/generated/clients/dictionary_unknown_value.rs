@@ -11,12 +11,12 @@ use serde_json::Value;
 
 use std::collections::HashMap;
 
-pub struct DictionaryUnknownValue {
-    endpoint: Url,
-    pipeline: Pipeline,
+pub struct DictionaryUnknownValue<'a> {
+    pub(in crate::generated::clients) endpoint: &'a Url,
+    pub(in crate::generated::clients) pipeline: &'a Pipeline,
 }
 
-impl DictionaryUnknownValue {
+impl<'a> DictionaryUnknownValue<'a> {
     pub async fn get(
         &self,
         options: Option<DictionaryUnknownValueGetOptions<'_>>,

@@ -38,7 +38,10 @@ impl FixedClient {
     }
 
     pub fn get_fixed_string_client(&self) -> FixedString {
-        unimplemented!();
+        FixedString {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 }
 

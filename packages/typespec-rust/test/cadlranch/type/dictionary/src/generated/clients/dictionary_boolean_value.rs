@@ -9,12 +9,12 @@ use azure_core::builders::ClientMethodOptionsBuilder;
 
 use std::collections::HashMap;
 
-pub struct DictionaryBooleanValue {
-    endpoint: Url,
-    pipeline: Pipeline,
+pub struct DictionaryBooleanValue<'a> {
+    pub(in crate::generated::clients) endpoint: &'a Url,
+    pub(in crate::generated::clients) pipeline: &'a Pipeline,
 }
 
-impl DictionaryBooleanValue {
+impl<'a> DictionaryBooleanValue<'a> {
     pub async fn get(
         &self,
         options: Option<DictionaryBooleanValueGetOptions<'_>>,

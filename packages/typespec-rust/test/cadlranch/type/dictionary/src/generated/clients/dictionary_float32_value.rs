@@ -9,12 +9,12 @@ use azure_core::builders::ClientMethodOptionsBuilder;
 
 use std::collections::HashMap;
 
-pub struct DictionaryFloat32Value {
-    endpoint: Url,
-    pipeline: Pipeline,
+pub struct DictionaryFloat32Value<'a> {
+    pub(in crate::generated::clients) endpoint: &'a Url,
+    pub(in crate::generated::clients) pipeline: &'a Pipeline,
 }
 
-impl DictionaryFloat32Value {
+impl<'a> DictionaryFloat32Value<'a> {
     pub async fn get(
         &self,
         options: Option<DictionaryFloat32ValueGetOptions<'_>>,

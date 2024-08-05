@@ -58,47 +58,80 @@ impl DictionaryClient {
     }
 
     pub fn get_dictionary_int32_value_client(&self) -> DictionaryInt32Value {
-        unimplemented!();
+        DictionaryInt32Value {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_dictionary_int64_value_client(&self) -> DictionaryInt64Value {
-        unimplemented!();
+        DictionaryInt64Value {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_dictionary_boolean_value_client(&self) -> DictionaryBooleanValue {
-        unimplemented!();
+        DictionaryBooleanValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_dictionary_string_value_client(&self) -> DictionaryStringValue {
-        unimplemented!();
+        DictionaryStringValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_dictionary_float32_value_client(&self) -> DictionaryFloat32Value {
-        unimplemented!();
+        DictionaryFloat32Value {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_dictionary_datetime_value_client(&self) -> DictionaryDatetimeValue {
-        unimplemented!();
+        DictionaryDatetimeValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_dictionary_duration_value_client(&self) -> DictionaryDurationValue {
-        unimplemented!();
+        DictionaryDurationValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_dictionary_unknown_value_client(&self) -> DictionaryUnknownValue {
-        unimplemented!();
+        DictionaryUnknownValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_dictionary_model_value_client(&self) -> DictionaryModelValue {
-        unimplemented!();
+        DictionaryModelValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_dictionary_recursive_model_value_client(&self) -> DictionaryRecursiveModelValue {
-        unimplemented!();
+        DictionaryRecursiveModelValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 
     pub fn get_dictionary_nullable_float_value_client(&self) -> DictionaryNullableFloatValue {
-        unimplemented!();
+        DictionaryNullableFloatValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
     }
 }
 

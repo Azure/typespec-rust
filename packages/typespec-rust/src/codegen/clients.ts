@@ -28,13 +28,24 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
     const use = new Use();
     const indentation = new helpers.indentation();
 
-    let body = `pub struct ${client.name} {\n`;
+    let pubInClients = '';
+    if (!client.constructable) {
+      // the constructable client will need access to these fields
+      pubInClients = 'pub(in crate::generated::clients) ';
+    }
+
+    let refWithLifetime = '';
+    if (client.lifetime) {
+      refWithLifetime = `&${client.lifetime.name} `;
+    }
+
+    let body = `pub struct ${client.name}${getLifetimeAnnotation(client)}{\n`;
     for (const field of client.fields) {
       use.addForType(field.type);
-      body += `${indentation.get()}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+      body += `${indentation.get()}${pubInClients}${field.name}: ${refWithLifetime}${helpers.getTypeDeclaration(field.type)},\n`;
     }
     use.addType('azure_core', 'Pipeline');
-    body += `${indentation.get()}pipeline: Pipeline,\n`;
+    body += `${indentation.get()}${pubInClients}pipeline: ${refWithLifetime}Pipeline,\n`;
     body += '}\n\n'; // end client
 
     if (client.constructable) {
@@ -52,7 +63,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       }
     }
 
-    body += `impl ${client.name} {\n`;
+    body += `impl${getLifetimeAnnotation(client)} ${client.name}${getLifetimeAnnotation(client)}{\n`;
 
     if (client.constructable) {
       // this is an instantiable client, so we need to emit client options and constructors
@@ -89,18 +100,25 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       const method = client.methods[i];
       let returnType: string;
       let async = 'async ';
+      let methodBody: (indentation: helpers.indentation) => string;
       use.addForType(method.returns);
       switch (method.kind) {
         case 'async':
           returnType = helpers.getTypeDeclaration(method.returns);
+          methodBody = (indentation: helpers.indentation): string => {
+            return getAsyncMethodBody(indentation, method);
+          };
           break;
         case 'clientaccessor':
           async = '';
           returnType = method.returns.name;
+          methodBody = (indentation: helpers.indentation): string => {
+            return getClientAccessorMethodBody(indentation, method);
+          };
           break;
       }
       body += `${indentation.get()}${helpers.emitPub(method.pub)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
-      body += `${indentation.push().get()}unimplemented!();\n`;
+      body += `${indentation.push().get()}${methodBody(indentation)}\n`;
       body += `${indentation.pop().get()}}\n`; // end method
       if (i + 1 < client.methods.length) {
         body += '\n';
@@ -293,7 +311,7 @@ function getClientMethodOptionsFieldName(option: rust.MethodOptions): string {
   throw new Error(`didn't find ClientMethodOptions field in ${option.type.name}`);
 }
 
-function getLifetimeAnnotation(type: rust.Struct): string {
+function getLifetimeAnnotation(type: rust.Client | rust.Struct): string {
   if (type.lifetime) {
     return `${helpers.getGenericLifetimeAnnotation(type.lifetime)} `;
   }
@@ -305,4 +323,28 @@ function getLifetimeName(type: rust.Struct): string {
     return `${type.lifetime.name} `;
   }
   return ' ';
+}
+
+function getClientAccessorMethodBody(indentation: helpers.indentation, clientAccessor: rust.ClientAccessor): string {
+  let body = `${clientAccessor.returns.name} {\n`;
+  // find the endpoint field. it's the only one that's
+  // a URI. the name will be uniform across clients
+  let endpointFieldName: string | undefined;
+  for (const field of clientAccessor.returns.fields) {
+    if (field.kind === 'uri' ) {
+      endpointFieldName = field.name;
+      break;
+    }
+  }
+  if (!endpointFieldName) {
+    throw new Error(`didn't find URI field for client ${clientAccessor.returns.name}`);
+  }
+  body += `${indentation.push().get()}${endpointFieldName}: &self.${endpointFieldName},\n`;
+  body += `${indentation.get()}pipeline: &self.pipeline,\n`;
+  body += `${indentation.pop().get()}}`;
+  return body;
+}
+
+function getAsyncMethodBody(indentation: helpers.indentation, asyncMethod: rust.AsyncMethod): string {
+  return 'unimplemented!();';
 }

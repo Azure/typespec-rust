@@ -11,12 +11,12 @@ use crate::models::InnerModel;
 
 use std::collections::HashMap;
 
-pub struct DictionaryRecursiveModelValue {
-    endpoint: Url,
-    pipeline: Pipeline,
+pub struct DictionaryRecursiveModelValue<'a> {
+    pub(in crate::generated::clients) endpoint: &'a Url,
+    pub(in crate::generated::clients) pipeline: &'a Pipeline,
 }
 
-impl DictionaryRecursiveModelValue {
+impl<'a> DictionaryRecursiveModelValue<'a> {
     pub async fn get(
         &self,
         options: Option<DictionaryRecursiveModelValueGetOptions<'_>>,

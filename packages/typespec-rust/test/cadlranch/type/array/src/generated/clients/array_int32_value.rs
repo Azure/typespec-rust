@@ -7,12 +7,12 @@ use azure_core::{ClientMethodOptions, Context, Pipeline, RequestContent, Respons
 
 use azure_core::builders::ClientMethodOptionsBuilder;
 
-pub struct ArrayInt32Value {
-    endpoint: Url,
-    pipeline: Pipeline,
+pub struct ArrayInt32Value<'a> {
+    pub(in crate::generated::clients) endpoint: &'a Url,
+    pub(in crate::generated::clients) pipeline: &'a Pipeline,
 }
 
-impl ArrayInt32Value {
+impl<'a> ArrayInt32Value<'a> {
     pub async fn get(
         &self,
         options: Option<ArrayInt32ValueGetOptions<'_>>,
