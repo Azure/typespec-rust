@@ -28,6 +28,6 @@ if (switches.length === 0) {
   throw new Error('missing arg: [--start] [--stop]');
 }
 
-const cmdLine = toolsModRoot + 'cadl-ranch/node_modules/.bin/cadl-ranch ' + switches.join(' ');
+const cmdLine = 'npx cadl-ranch ' + switches.join(' ');
 console.log(cmdLine);
 execSync(cmdLine, execSyncOptions);
