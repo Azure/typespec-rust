@@ -65,7 +65,7 @@ const cadlRanch = {
   //'cadl_nodisc': ['type/model/inheritance/not-discriminated'],
   //'cadl_recursive': ['type/model/inheritance/recursive'],
   //'cadl_singledisc': ['type/model/inheritance/single-discriminator'],
-  //'cadl_usage': ['type/model/usage'], needs tests
+  'cadl_usage': ['type/model/usage'],
   //'cadl_visibility': ['type/model/visibility'],
   //'cadl_addlprops': ['type/property/additional-properties'],
   //'cadl_nullable': ['type/property/nullable'],
