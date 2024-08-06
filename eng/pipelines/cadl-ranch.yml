@@ -8,8 +8,8 @@ trigger:
 pr: none
 
 variables:
-  - name: cadl-ranch
-    value: $(System.DefaultWorkingDirectory)/packages/typespec-rust/node_modules/@azure-tools/cadl-ranch/node_modules/.bin/cadl-ranch
+  - name: TypeSpecRustPkgDir
+    value: $(System.DefaultWorkingDirectory)/packages/typespec-rust
 
 steps:
   - template: /eng/pipelines/templates/steps/set-env.yaml
@@ -22,5 +22,5 @@ steps:
       azureSubscription: "Cadl Ranch Storage"
       scriptType: "bash"
       scriptLocation: "inlineScript"
-      inlineScript: $(cadl-ranch) upload-coverage --generatorName rust --storageAccountName azuresdkcadlranch --generatorVersion $(node -p -e "require('package.json').version") --generatorMode azure
-      workingDirectory: $(System.DefaultWorkingDirectory)/packages/typespec-rust
+      inlineScript: npx cadl-ranch upload-coverage --generatorName rust --storageAccountName azuresdkcadlranch --generatorVersion $(node -p -e "require('package.json').version") --generatorMode azure
+      workingDirectory: $(TypeSpecRustPkgDir)
