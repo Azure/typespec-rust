@@ -60,7 +60,7 @@ const cadlRanch = {
   'cadl_extensible': ['type/enum/extensible'],
   'cadl_fixed': ['type/enum/fixed'],
   'cadl_empty': ['type/model/empty'],
-  //'cadl_flatten': ['type/model/flatten'], needs tests
+  'cadl_flatten': ['type/model/flatten'],
   //'cadl_enumdisc': ['type/model/inheritance/enum-discriminator'],
   //'cadl_nodisc': ['type/model/inheritance/not-discriminated'],
   //'cadl_recursive': ['type/model/inheritance/recursive'],
