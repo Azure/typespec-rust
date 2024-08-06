@@ -40,8 +40,10 @@ steps:
 
   - pwsh: |
       pnpm cadl-ranch --start
-      cargo test
+      cargo test --no-fail-fast
+      $code = $LASTEXITCODE
       pnpm cadl-ranch --stop
+      exit $code
     displayName: "Run cadl-ranch Tests"
     timeoutInMinutes: 10
     workingDirectory: $(System.DefaultWorkingDirectory)/packages/typespec-rust/test/cadlranch
