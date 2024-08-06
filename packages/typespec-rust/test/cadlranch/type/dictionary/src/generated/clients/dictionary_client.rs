@@ -57,36 +57,8 @@ impl DictionaryClient {
         })
     }
 
-    pub fn get_dictionary_int32_value_client(&self) -> DictionaryInt32Value {
-        DictionaryInt32Value {
-            endpoint: &self.endpoint,
-            pipeline: &self.pipeline,
-        }
-    }
-
-    pub fn get_dictionary_int64_value_client(&self) -> DictionaryInt64Value {
-        DictionaryInt64Value {
-            endpoint: &self.endpoint,
-            pipeline: &self.pipeline,
-        }
-    }
-
     pub fn get_dictionary_boolean_value_client(&self) -> DictionaryBooleanValue {
         DictionaryBooleanValue {
-            endpoint: &self.endpoint,
-            pipeline: &self.pipeline,
-        }
-    }
-
-    pub fn get_dictionary_string_value_client(&self) -> DictionaryStringValue {
-        DictionaryStringValue {
-            endpoint: &self.endpoint,
-            pipeline: &self.pipeline,
-        }
-    }
-
-    pub fn get_dictionary_float32_value_client(&self) -> DictionaryFloat32Value {
-        DictionaryFloat32Value {
             endpoint: &self.endpoint,
             pipeline: &self.pipeline,
         }
@@ -106,8 +78,22 @@ impl DictionaryClient {
         }
     }
 
-    pub fn get_dictionary_unknown_value_client(&self) -> DictionaryUnknownValue {
-        DictionaryUnknownValue {
+    pub fn get_dictionary_float32_value_client(&self) -> DictionaryFloat32Value {
+        DictionaryFloat32Value {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
+    }
+
+    pub fn get_dictionary_int32_value_client(&self) -> DictionaryInt32Value {
+        DictionaryInt32Value {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
+    }
+
+    pub fn get_dictionary_int64_value_client(&self) -> DictionaryInt64Value {
+        DictionaryInt64Value {
             endpoint: &self.endpoint,
             pipeline: &self.pipeline,
         }
@@ -120,6 +106,13 @@ impl DictionaryClient {
         }
     }
 
+    pub fn get_dictionary_nullable_float_value_client(&self) -> DictionaryNullableFloatValue {
+        DictionaryNullableFloatValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
+    }
+
     pub fn get_dictionary_recursive_model_value_client(&self) -> DictionaryRecursiveModelValue {
         DictionaryRecursiveModelValue {
             endpoint: &self.endpoint,
@@ -127,8 +120,15 @@ impl DictionaryClient {
         }
     }
 
-    pub fn get_dictionary_nullable_float_value_client(&self) -> DictionaryNullableFloatValue {
-        DictionaryNullableFloatValue {
+    pub fn get_dictionary_string_value_client(&self) -> DictionaryStringValue {
+        DictionaryStringValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
+    }
+
+    pub fn get_dictionary_unknown_value_client(&self) -> DictionaryUnknownValue {
+        DictionaryUnknownValue {
             endpoint: &self.endpoint,
             pipeline: &self.pipeline,
         }

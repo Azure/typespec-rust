@@ -79,6 +79,10 @@ export class Crate implements Crate {
     for (const model of this.models) {
       model.fields.sort((a: types.ModelField, b: types.ModelField) => { return sortAscending(a.name, b.name); });
     }
+    this.clients.sort((a: client.Client, b: client.Client) => { return sortAscending(a.name, b.name); });
+    for (const client of this.clients) {
+      client.methods.sort((a: client.MethodType, b: client.MethodType) => { return sortAscending(a.name, b.name); });
+    }
   }
 }
 

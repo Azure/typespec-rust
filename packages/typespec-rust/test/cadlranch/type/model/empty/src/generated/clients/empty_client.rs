@@ -41,14 +41,6 @@ impl EmptyClient {
         })
     }
 
-    pub async fn put_empty(
-        &self,
-        input: RequestContent<EmptyInput>,
-        options: Option<EmptyClientPutEmptyOptions<'_>>,
-    ) -> Result<()> {
-        unimplemented!();
-    }
-
     pub async fn get_empty(
         &self,
         options: Option<EmptyClientGetEmptyOptions<'_>>,
@@ -63,6 +55,14 @@ impl EmptyClient {
     ) -> Result<Response<EmptyInputOutput>> {
         unimplemented!();
     }
+
+    pub async fn put_empty(
+        &self,
+        input: RequestContent<EmptyInput>,
+        options: Option<EmptyClientPutEmptyOptions<'_>>,
+    ) -> Result<()> {
+        unimplemented!();
+    }
 }
 
 impl Default for EmptyClientOptions {
@@ -70,17 +70,6 @@ impl Default for EmptyClientOptions {
         Self {
             client_options: ClientOptions::default(),
         }
-    }
-}
-
-#[derive(Clone, Debug, Default)]
-pub struct EmptyClientPutEmptyOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> EmptyClientPutEmptyOptions<'a> {
-    pub fn builder() -> builders::EmptyClientPutEmptyOptionsBuilder<'a> {
-        builders::EmptyClientPutEmptyOptionsBuilder::new()
     }
 }
 
@@ -106,31 +95,19 @@ impl<'a> EmptyClientPostRoundTripEmptyOptions<'a> {
     }
 }
 
+#[derive(Clone, Debug, Default)]
+pub struct EmptyClientPutEmptyOptions<'a> {
+    method_options: ClientMethodOptions<'a>,
+}
+
+impl<'a> EmptyClientPutEmptyOptions<'a> {
+    pub fn builder() -> builders::EmptyClientPutEmptyOptionsBuilder<'a> {
+        builders::EmptyClientPutEmptyOptionsBuilder::new()
+    }
+}
+
 pub mod builders {
     use super::*;
-    pub struct EmptyClientPutEmptyOptionsBuilder<'a> {
-        options: EmptyClientPutEmptyOptions<'a>,
-    }
-
-    impl EmptyClientPutEmptyOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: EmptyClientPutEmptyOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> EmptyClientPutEmptyOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for EmptyClientPutEmptyOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
     pub struct EmptyClientGetEmptyOptionsBuilder<'a> {
         options: EmptyClientGetEmptyOptions<'a>,
     }
@@ -171,6 +148,29 @@ pub mod builders {
     }
 
     impl<'a> ClientMethodOptionsBuilder<'a> for EmptyClientPostRoundTripEmptyOptionsBuilder<'a> {
+        fn with_context(mut self, context: &'a Context) -> Self {
+            self.options.method_options.set_context(context);
+            self
+        }
+    }
+
+    pub struct EmptyClientPutEmptyOptionsBuilder<'a> {
+        options: EmptyClientPutEmptyOptions<'a>,
+    }
+
+    impl EmptyClientPutEmptyOptionsBuilder<'_> {
+        pub(super) fn new() -> Self {
+            Self {
+                options: EmptyClientPutEmptyOptions::default(),
+            }
+        }
+
+        pub fn build(&self) -> EmptyClientPutEmptyOptions {
+            self.options.clone()
+        }
+    }
+
+    impl<'a> ClientMethodOptionsBuilder<'a> for EmptyClientPutEmptyOptionsBuilder<'a> {
         fn with_context(mut self, context: &'a Context) -> Self {
             self.options.method_options.set_context(context);
             self

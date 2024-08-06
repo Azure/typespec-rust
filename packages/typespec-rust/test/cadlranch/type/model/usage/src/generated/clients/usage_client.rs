@@ -49,18 +49,18 @@ impl UsageClient {
         unimplemented!();
     }
 
-    pub async fn output(
-        &self,
-        options: Option<UsageClientOutputOptions<'_>>,
-    ) -> Result<Response<OutputRecord>> {
-        unimplemented!();
-    }
-
     pub async fn input_and_output(
         &self,
         body: RequestContent<InputOutputRecord>,
         options: Option<UsageClientInputAndOutputOptions<'_>>,
     ) -> Result<Response<InputOutputRecord>> {
+        unimplemented!();
+    }
+
+    pub async fn output(
+        &self,
+        options: Option<UsageClientOutputOptions<'_>>,
+    ) -> Result<Response<OutputRecord>> {
         unimplemented!();
     }
 }
@@ -85,17 +85,6 @@ impl<'a> UsageClientInputOptions<'a> {
 }
 
 #[derive(Clone, Debug, Default)]
-pub struct UsageClientOutputOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> UsageClientOutputOptions<'a> {
-    pub fn builder() -> builders::UsageClientOutputOptionsBuilder<'a> {
-        builders::UsageClientOutputOptionsBuilder::new()
-    }
-}
-
-#[derive(Clone, Debug, Default)]
 pub struct UsageClientInputAndOutputOptions<'a> {
     method_options: ClientMethodOptions<'a>,
 }
@@ -103,6 +92,17 @@ pub struct UsageClientInputAndOutputOptions<'a> {
 impl<'a> UsageClientInputAndOutputOptions<'a> {
     pub fn builder() -> builders::UsageClientInputAndOutputOptionsBuilder<'a> {
         builders::UsageClientInputAndOutputOptionsBuilder::new()
+    }
+}
+
+#[derive(Clone, Debug, Default)]
+pub struct UsageClientOutputOptions<'a> {
+    method_options: ClientMethodOptions<'a>,
+}
+
+impl<'a> UsageClientOutputOptions<'a> {
+    pub fn builder() -> builders::UsageClientOutputOptionsBuilder<'a> {
+        builders::UsageClientOutputOptionsBuilder::new()
     }
 }
 
@@ -131,29 +131,6 @@ pub mod builders {
         }
     }
 
-    pub struct UsageClientOutputOptionsBuilder<'a> {
-        options: UsageClientOutputOptions<'a>,
-    }
-
-    impl UsageClientOutputOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: UsageClientOutputOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> UsageClientOutputOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for UsageClientOutputOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
     pub struct UsageClientInputAndOutputOptionsBuilder<'a> {
         options: UsageClientInputAndOutputOptions<'a>,
     }
@@ -171,6 +148,29 @@ pub mod builders {
     }
 
     impl<'a> ClientMethodOptionsBuilder<'a> for UsageClientInputAndOutputOptionsBuilder<'a> {
+        fn with_context(mut self, context: &'a Context) -> Self {
+            self.options.method_options.set_context(context);
+            self
+        }
+    }
+
+    pub struct UsageClientOutputOptionsBuilder<'a> {
+        options: UsageClientOutputOptions<'a>,
+    }
+
+    impl UsageClientOutputOptionsBuilder<'_> {
+        pub(super) fn new() -> Self {
+            Self {
+                options: UsageClientOutputOptions::default(),
+            }
+        }
+
+        pub fn build(&self) -> UsageClientOutputOptions {
+            self.options.clone()
+        }
+    }
+
+    impl<'a> ClientMethodOptionsBuilder<'a> for UsageClientOutputOptionsBuilder<'a> {
         fn with_context(mut self, context: &'a Context) -> Self {
             self.options.method_options.set_context(context);
             self

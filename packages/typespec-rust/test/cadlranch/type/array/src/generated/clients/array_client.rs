@@ -63,36 +63,8 @@ impl ArrayClient {
         })
     }
 
-    pub fn get_array_int32_value_client(&self) -> ArrayInt32Value {
-        ArrayInt32Value {
-            endpoint: &self.endpoint,
-            pipeline: &self.pipeline,
-        }
-    }
-
-    pub fn get_array_int64_value_client(&self) -> ArrayInt64Value {
-        ArrayInt64Value {
-            endpoint: &self.endpoint,
-            pipeline: &self.pipeline,
-        }
-    }
-
     pub fn get_array_boolean_value_client(&self) -> ArrayBooleanValue {
         ArrayBooleanValue {
-            endpoint: &self.endpoint,
-            pipeline: &self.pipeline,
-        }
-    }
-
-    pub fn get_array_string_value_client(&self) -> ArrayStringValue {
-        ArrayStringValue {
-            endpoint: &self.endpoint,
-            pipeline: &self.pipeline,
-        }
-    }
-
-    pub fn get_array_float32_value_client(&self) -> ArrayFloat32Value {
-        ArrayFloat32Value {
             endpoint: &self.endpoint,
             pipeline: &self.pipeline,
         }
@@ -112,8 +84,22 @@ impl ArrayClient {
         }
     }
 
-    pub fn get_array_unknown_value_client(&self) -> ArrayUnknownValue {
-        ArrayUnknownValue {
+    pub fn get_array_float32_value_client(&self) -> ArrayFloat32Value {
+        ArrayFloat32Value {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
+    }
+
+    pub fn get_array_int32_value_client(&self) -> ArrayInt32Value {
+        ArrayInt32Value {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
+    }
+
+    pub fn get_array_int64_value_client(&self) -> ArrayInt64Value {
+        ArrayInt64Value {
             endpoint: &self.endpoint,
             pipeline: &self.pipeline,
         }
@@ -121,6 +107,13 @@ impl ArrayClient {
 
     pub fn get_array_model_value_client(&self) -> ArrayModelValue {
         ArrayModelValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
+    }
+
+    pub fn get_array_nullable_boolean_value_client(&self) -> ArrayNullableBooleanValue {
+        ArrayNullableBooleanValue {
             endpoint: &self.endpoint,
             pipeline: &self.pipeline,
         }
@@ -140,8 +133,8 @@ impl ArrayClient {
         }
     }
 
-    pub fn get_array_nullable_boolean_value_client(&self) -> ArrayNullableBooleanValue {
-        ArrayNullableBooleanValue {
+    pub fn get_array_nullable_model_value_client(&self) -> ArrayNullableModelValue {
+        ArrayNullableModelValue {
             endpoint: &self.endpoint,
             pipeline: &self.pipeline,
         }
@@ -154,8 +147,15 @@ impl ArrayClient {
         }
     }
 
-    pub fn get_array_nullable_model_value_client(&self) -> ArrayNullableModelValue {
-        ArrayNullableModelValue {
+    pub fn get_array_string_value_client(&self) -> ArrayStringValue {
+        ArrayStringValue {
+            endpoint: &self.endpoint,
+            pipeline: &self.pipeline,
+        }
+    }
+
+    pub fn get_array_unknown_value_client(&self) -> ArrayUnknownValue {
+        ArrayUnknownValue {
             endpoint: &self.endpoint,
             pipeline: &self.pipeline,
         }
