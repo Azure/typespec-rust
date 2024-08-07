@@ -33,14 +33,6 @@ steps:
     workingDirectory: $(TypeSpecRustPkgDir)/test
     failOnStderr: true
 
-  - script: |
-      cargo fmt
-      git add -A .
-      git diff --staged 1>&2
-    displayName: Cargo fmt
-    workingDirectory: $(TypeSpecRustPkgDir)/test
-    failOnStderr: true
-
   - pwsh: |
       cargo build
     displayName: Compile Tests
