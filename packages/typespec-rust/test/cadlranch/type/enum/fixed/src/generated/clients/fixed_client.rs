@@ -5,7 +5,7 @@
 
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 
-use crate::fixed_string::FixedString;
+use crate::generated::clients::fixed_string::FixedString;
 
 pub struct FixedClient {
     endpoint: Url,

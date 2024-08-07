@@ -5,7 +5,7 @@
 
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 
-use crate::extensible_string::ExtensibleString;
+use crate::generated::clients::extensible_string::ExtensibleString;
 
 pub struct ExtensibleClient {
     endpoint: Url,
