@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use cadl_flatten::flatten_client::FlattenClient;
-use cadl_flatten::models::{ ChildFlattenModel, ChildModel, FlattenModel, NestedFlattenModel };
+use cadl_flatten::models::{ChildFlattenModel, ChildModel, FlattenModel, NestedFlattenModel};
 
 #[async_std::test]
 async fn put_flatten_model() {
