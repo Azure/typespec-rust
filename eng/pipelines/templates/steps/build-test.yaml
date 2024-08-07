@@ -28,7 +28,7 @@ steps:
   - script: |
       pnpm run tspcompile --verbose
       git add -A .
-      git diff --staged -w 1>&2
+      git diff --staged 1>&2
     displayName: Regenerate Cadl Tests
     workingDirectory: $(TypeSpecRustPkgDir)/test
     failOnStderr: true
@@ -36,7 +36,7 @@ steps:
   - script: |
       cargo fmt
       git add -A .
-      git diff --staged -w 1>&2
+      git diff --staged 1>&2
     displayName: Cargo fmt
     workingDirectory: $(TypeSpecRustPkgDir)/test
     failOnStderr: true
