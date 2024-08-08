@@ -12,7 +12,7 @@ import { EmitContext } from '@typespec/compiler';
 import 'source-map-support/register.js';
 
 export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
-  const adapter = new Adapter(context);
+  const adapter = await Adapter.create(context);
   const crate = adapter.tcgcToCrate();
 
   await mkdir(`${context.emitterOutputDir}/src`, {recursive: true});

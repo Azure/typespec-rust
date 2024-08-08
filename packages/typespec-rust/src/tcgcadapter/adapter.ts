@@ -12,22 +12,27 @@ import * as rust from '../codemodel/index.js';
 
 // Adapter converts the tcgc code model to a Rust Crate
 export class Adapter {
+  static async create(context: EmitContext<RustEmitterOptions>): Promise<Adapter> {
+    const ctx = await tcgc.createSdkContext(context);
+    return new Adapter(ctx, context.options);
+  }
+
   private readonly crate: rust.Crate;
   private readonly ctx: tcgc.SdkContext;
 
   // cache of adapted types
   private readonly types: Map<string, rust.Type>;
 
-  constructor(context: EmitContext<RustEmitterOptions>) {
+  private constructor(ctx: tcgc.SdkContext, options: RustEmitterOptions) {
     this.types = new Map<string, rust.Type>();
-    this.ctx = tcgc.createSdkContext(context);
+    this.ctx = ctx;
 
     let serviceType: rust.ServiceType = 'data-plane';
     if (this.ctx.arm === true) {
       serviceType = 'azure-arm';
     }
 
-    this.crate = new rust.Crate(context.options['crate-name'], context.options['crate-version'], serviceType);
+    this.crate = new rust.Crate(options['crate-name'], options['crate-version'], serviceType);
   }
 
   // performs all the steps to convert tcgc to a crate
