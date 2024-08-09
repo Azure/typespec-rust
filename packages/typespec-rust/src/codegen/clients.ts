@@ -100,6 +100,9 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       const method = client.methods[i];
       let returnType: string;
       let async = 'async ';
+      // NOTE: when methodBody is called, the starting indentation
+      // will be correct for the current scope, so there's no need
+      // for the callee to indent right away.
       let methodBody: (indentation: helpers.indentation) => string;
       use.addForType(method.returns);
       switch (method.kind) {
