@@ -353,10 +353,29 @@ function getClientAccessorMethodBody(indentation: helpers.indentation, clientAcc
 
 function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
   use.addTypes('azure_core', ['AsClientMethodOptions', 'Method', 'Request']);
-  let body = `${indentation.get()}let options = options.unwrap_or_default();\n`;
+  let body = 'let options = options.unwrap_or_default();\n';
   body += `${indentation.get()}let mut ctx = options.method_options.context();\n`;
   body += `${indentation.get()}let mut url = self.${getEndpointFieldName(client)}.clone();\n`;
-  body += `${indentation.get()}url.set_path("${method.httpPath}");\n`;
+
+  const pathParams = new Array<rust.PathParameter>();
+  for (const param of method.params) {
+    if (param.kind === 'path') {
+      pathParams.push(param);
+    }
+  }
+  pathParams.sort((a: rust.PathParameter, b: rust.PathParameter) => { return helpers.sortAscending(a.segment, b.segment); });
+
+  let path = `"${method.httpPath}"`;
+  if (pathParams.length > 0) {
+    // we have path params that need to have their segments replaced with the param values
+    body += `${indentation.get()}let mut path = String::from(${path});\n`;
+    for (const pathParam of pathParams) {
+      body += `${indentation.get()}path = path.replace("{${pathParam.segment}}", &${pathParam.name});\n`;
+    }
+    path = '&path';
+  }
+
+  body += `${indentation.get()}url.set_path(${path});\n`;
   body += `${indentation.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
 
   const headerParams = new Array<rust.HeaderParameter>();
