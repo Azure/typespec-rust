@@ -39,8 +39,8 @@ impl ExtensibleClient {
 
     pub fn get_extensible_string_client(&self) -> ExtensibleString {
         ExtensibleString {
-            endpoint: &self.endpoint,
-            pipeline: &self.pipeline,
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
         }
     }
 }

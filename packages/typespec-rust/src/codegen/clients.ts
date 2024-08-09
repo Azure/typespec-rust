@@ -34,18 +34,13 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       pubInClients = 'pub(in crate::generated::clients) ';
     }
 
-    let refWithLifetime = '';
-    if (client.lifetime) {
-      refWithLifetime = `&${client.lifetime.name} `;
-    }
-
-    let body = `pub struct ${client.name}${getLifetimeAnnotation(client)}{\n`;
+    let body = `pub struct ${client.name} {\n`;
     for (const field of client.fields) {
       use.addForType(field.type);
-      body += `${indentation.get()}${pubInClients}${field.name}: ${refWithLifetime}${helpers.getTypeDeclaration(field.type)},\n`;
+      body += `${indentation.get()}${pubInClients}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
     }
     use.addType('azure_core', 'Pipeline');
-    body += `${indentation.get()}${pubInClients}pipeline: ${refWithLifetime}Pipeline,\n`;
+    body += `${indentation.get()}${pubInClients}pipeline: Pipeline,\n`;
     body += '}\n\n'; // end client
 
     if (client.constructable) {
@@ -63,7 +58,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       }
     }
 
-    body += `impl${getLifetimeAnnotation(client)} ${client.name}${getLifetimeAnnotation(client)}{\n`;
+    body += `impl ${client.name} {\n`;
 
     if (client.constructable) {
       // this is an instantiable client, so we need to emit client options and constructors
@@ -314,7 +309,7 @@ function getClientMethodOptionsFieldName(option: rust.MethodOptions): string {
   throw new Error(`didn't find ClientMethodOptions field in ${option.type.name}`);
 }
 
-function getLifetimeAnnotation(type: rust.Client | rust.Struct): string {
+function getLifetimeAnnotation(type: rust.Struct): string {
   if (type.lifetime) {
     return `${helpers.getGenericLifetimeAnnotation(type.lifetime)} `;
   }
@@ -348,8 +343,8 @@ function getEndpointFieldName(client: rust.Client): string {
 function getClientAccessorMethodBody(indentation: helpers.indentation, clientAccessor: rust.ClientAccessor): string {
   let body = `${clientAccessor.returns.name} {\n`;
   const endpointFieldName = getEndpointFieldName(clientAccessor.returns);
-  body += `${indentation.push().get()}${endpointFieldName}: &self.${endpointFieldName},\n`;
-  body += `${indentation.get()}pipeline: &self.pipeline,\n`;
+  body += `${indentation.push().get()}${endpointFieldName}: self.${endpointFieldName}.clone(),\n`;
+  body += `${indentation.get()}pipeline: self.pipeline.clone(),\n`;
   body += `${indentation.pop().get()}}`;
   return body;
 }

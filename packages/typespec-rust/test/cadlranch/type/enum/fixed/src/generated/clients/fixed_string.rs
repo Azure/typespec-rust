@@ -12,12 +12,12 @@ use azure_core::builders::ClientMethodOptionsBuilder;
 
 use crate::models::DaysOfWeekEnum;
 
-pub struct FixedString<'a> {
-    pub(in crate::generated::clients) endpoint: &'a Url,
-    pub(in crate::generated::clients) pipeline: &'a Pipeline,
+pub struct FixedString {
+    pub(in crate::generated::clients) endpoint: Url,
+    pub(in crate::generated::clients) pipeline: Pipeline,
 }
 
-impl<'a> FixedString<'a> {
+impl FixedString {
     pub async fn get_known_value(
         &self,
         options: Option<FixedStringGetKnownValueOptions<'_>>,
