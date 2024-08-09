@@ -6,6 +6,7 @@
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
 import { EmitContext } from '@typespec/compiler';
+import * as helpers from './helpers.js';
 import { RustEmitterOptions } from '../lib.js';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as rust from '../codemodel/index.js';
@@ -77,7 +78,7 @@ export class Adapter {
     // first create all of the enum values
     const values = new Array<rust.EnumValue>();
     for (const value of sdkEnum.values) {
-      const rustEnumValue = new rust.EnumValue(codegen.capitalize(value.name), value.value);
+      const rustEnumValue = new rust.EnumValue(helpers.fixUpEnumValueName(value.name), value.value);
       values.push(rustEnumValue);
     }
 
@@ -175,6 +176,20 @@ export class Adapter {
         this.types.set(keyName, vectorType);
         return vectorType;
       }
+      case 'bytes': {
+        let encoding: rust.BytesEncoding = 'std';
+        if (type.encode === 'base64url') {
+          encoding = 'url';
+        }
+        const keyName = `encodedBytes-${encoding}`;
+        let encodedBytesType = this.types.get(keyName);
+        if (encodedBytesType) {
+          return encodedBytesType;
+        }
+        encodedBytesType = new rust.EncodedBytes(encoding);
+        this.types.set(keyName, encodedBytesType);
+        return encodedBytesType;
+      }
       case 'constant':
         return this.getLiteral(type);
       case 'dict': {
@@ -208,6 +223,15 @@ export class Adapter {
         stringType = new rust.StringType();
         this.types.set(type.kind, stringType);
         return stringType;
+      }
+      case 'url': {
+        let urlType = this.types.get(type.kind);
+        if (urlType) {
+          return urlType;
+        }
+        urlType = new rust.Url(this.crate);
+        this.types.set(type.kind, urlType);
+        return urlType;
       }
       case 'utcDateTime': {
         const keyName = `${type.kind}-${type.encode}`;
@@ -307,7 +331,8 @@ export class Adapter {
       for (const param of client.initialization.properties) {
         switch (param.kind) {
           case 'credential':
-            throw new Error('client credential params NYI');
+            // TODO: https://github.com/Azure/autorest.rust/issues/57
+            continue;
           case 'endpoint':
             // for Rust, we always require a complete endpoint param, templated
             // endpoints, e.g. https://{something}.contoso.com isn't supported.
@@ -316,7 +341,8 @@ export class Adapter {
             rustClient.fields.push(new rust.URIParameter(param.name, 'client', new rust.Url(this.crate)));
             break;
           case 'method':
-            throw new Error('client method params NYI');
+            // TODO: handle api-version
+            continue;
         }
       }
       rustClient.constructable.constructors.push(constructor);
@@ -369,6 +395,9 @@ export class Adapter {
       case 'basic':
         rustMethod = new rust.AsyncMethod(snakeCaseName(method.name), rustClient, isPub(method.access), new rust.MethodOptions(methodOptionsStruct, false), httpMethod, httpPath);
         break;
+      case 'paging':
+        // TODO: https://github.com/Azure/autorest.rust/issues/60
+        return;
       default:
         throw new Error(`method kind ${method.kind} NYI`);
     }
@@ -439,10 +468,23 @@ export class Adapter {
         break;
       }
       case 'header':
+        if (param.collectionFormat) {
+          // TODO: https://github.com/Azure/autorest.rust/issues/58
+          throw new Error('header collection param nyi');
+        }
         adaptedParam = new rust.HeaderParameter(param.name, param.serializedName, paramLoc, this.getType(param.type));
         break;
-      default:
-        throw new Error(`param kind ${param.kind} NYI`);
+      case 'path':
+        adaptedParam = new rust.PathParameter(param.name, param.serializedName, paramLoc, this.getType(param.type), param.urlEncode);
+        break;
+      case 'query':
+        if (param.collectionFormat) {
+          // TODO: https://github.com/Azure/autorest.rust/issues/58
+          throw new Error('query collection param nyi');
+        }
+        // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
+        adaptedParam = new rust.QueryParameter(param.name, param.serializedName, paramLoc, this.getType(param.type), true);
+        break;
     }
 
     adaptedParam.docs = param.description;

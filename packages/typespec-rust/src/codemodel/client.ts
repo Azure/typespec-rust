@@ -93,7 +93,7 @@ export type ParameterLocation = 'client' | 'method';
 export type ClientParameter = URIParameter;
 
 // MethodParameter defines the possible method parameter types
-export type MethodParameter = BodyParameter | HeaderParameter | URIParameter;
+export type MethodParameter = BodyParameter | HeaderParameter | PathParameter | QueryParameter | URIParameter;
 
 // BodyParameter is a param that's passed via the HTTP request body
 export interface BodyParameter extends HTTPParameterBase {
@@ -118,6 +118,36 @@ export interface HeaderParameter extends HTTPParameterBase {
 // MethodOptions is the struct containing optional method params
 export interface MethodOptions extends types.Option {
   type: types.Struct;
+}
+
+// PathParameter is a param that goes in the HTTP path
+export interface PathParameter extends HTTPParameterBase {
+  kind: 'path';
+
+  // the segment name to be replaced with the param's value
+  segment: string;
+
+  // the type of the path param
+  // note that not all types are applicable
+  type: types.Type;
+
+  // indicates if the path parameter should be URL encoded
+  encoded: boolean;
+}
+
+// QueryParameter is a param that goes in the HTTP query string
+export interface QueryParameter extends HTTPParameterBase {
+  kind: 'query';
+
+  // key is the query param's key name
+  key: string;
+
+  // the type of the query param
+  // note that not all types are applicable
+  type: types.Type;
+
+  // indicates if the query parameter should be URL encoded
+  encoded: boolean;
 }
 
 // URIParameter is a full (i.e. non-templated) URI param
@@ -244,6 +274,44 @@ export class HeaderParameter extends HTTPParameterBase implements HeaderParamete
 export class MethodOptions extends types.Option implements MethodOptions {
   constructor(type: types.Struct, ref: boolean) {
     super(type, ref);
+  }
+}
+
+export class PathParameter extends HTTPParameterBase implements PathParameter {
+  constructor(name: string, segment: string, location: ParameterLocation, type: types.Type, encoded: boolean) {
+    switch (type.kind) {
+      case 'String':
+      case 'enum':
+      case 'literal':
+      case 'offsetDateTime':
+      case 'scalar':
+        super(name, location, type);
+        this.kind = 'path';
+        this.segment = segment;
+        this.encoded = encoded;
+        break;
+      default:
+        throw new Error(`unsupported query paramter type kind ${type.kind}`);
+    }
+  }
+}
+
+export class QueryParameter extends HTTPParameterBase implements QueryParameter {
+  constructor(name: string, key: string, location: ParameterLocation, type: types.Type, encoded: boolean) {
+    switch (type.kind) {
+      case 'String':
+      case 'enum':
+      case 'literal':
+      case 'offsetDateTime':
+      case 'scalar':
+        super(name, location, type);
+        this.kind = 'query';
+        this.key = key;
+        this.encoded = encoded;
+        break;
+      default:
+        throw new Error(`unsupported query paramter type kind ${type.kind}`);
+    }
   }
 }
 

@@ -56,6 +56,8 @@ export class Use {
         break;
       }
       case 'enum':
+        this.addType('crate::models', type.name);
+        break;
       case 'model':
         if (this.scope !== 'models') {
           this.addType('crate::models', type.name);
