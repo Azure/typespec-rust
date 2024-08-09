@@ -39,8 +39,8 @@ impl FixedClient {
 
     pub fn get_fixed_string_client(&self) -> FixedString {
         FixedString {
-            endpoint: &self.endpoint,
-            pipeline: &self.pipeline,
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
         }
     }
 }
