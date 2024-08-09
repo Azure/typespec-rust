@@ -27,12 +27,17 @@ export function emitModels(crate: rust.Crate, context: Context): string {
     body += `${helpers.emitPub(model.pub)}struct ${model.name} {\n`;
 
     for (const field of model.fields) {
+      use.addForType(field.type);
+      body += helpers.formatDocComment(field.docs);
       if (field.name !== field.serde) {
         // only emit the serde annotation when the names aren't equal
         body += `${indentation.get()}#[serde(rename = "${field.serde}")]\n`;
       }
-      use.addForType(field.type);
-      body += `${indentation.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+
+      // TODO: omit skip_serializing_if if we need to send explicit JSON null
+      // https://github.com/Azure/autorest.rust/issues/78
+      body += `${indentation.get()}#[serde(skip_serializing_if = "Option::is_none")]\n`;
+      body += `${indentation.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
     }
 
     body += '}\n\n';

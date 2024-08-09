@@ -47,8 +47,8 @@ impl KeyVaultClient {
 
     pub async fn backup_secret(
         &self,
-        apiVersion: String,
-        secretName: String,
+        api_version: String,
+        secret_name: String,
         options: Option<KeyVaultClientBackupSecretOptions<'_>>,
     ) -> Result<Response<BackupSecretResult>> {
         let options = options.unwrap_or_default();
@@ -62,8 +62,8 @@ impl KeyVaultClient {
 
     pub async fn delete_secret(
         &self,
-        apiVersion: String,
-        secretName: String,
+        api_version: String,
+        secret_name: String,
         options: Option<KeyVaultClientDeleteSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecretBundle>> {
         let options = options.unwrap_or_default();
@@ -77,8 +77,8 @@ impl KeyVaultClient {
 
     pub async fn get_deleted_secret(
         &self,
-        apiVersion: String,
-        secretName: String,
+        api_version: String,
+        secret_name: String,
         options: Option<KeyVaultClientGetDeletedSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecretBundle>> {
         let options = options.unwrap_or_default();
@@ -92,9 +92,9 @@ impl KeyVaultClient {
 
     pub async fn get_secret(
         &self,
-        apiVersion: String,
-        secretName: String,
-        secretVersion: String,
+        api_version: String,
+        secret_name: String,
+        secret_version: String,
         options: Option<KeyVaultClientGetSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
         let options = options.unwrap_or_default();
@@ -108,8 +108,8 @@ impl KeyVaultClient {
 
     pub async fn purge_deleted_secret(
         &self,
-        apiVersion: String,
-        secretName: String,
+        api_version: String,
+        secret_name: String,
         options: Option<KeyVaultClientPurgeDeletedSecretOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -123,8 +123,8 @@ impl KeyVaultClient {
 
     pub async fn recover_deleted_secret(
         &self,
-        apiVersion: String,
-        secretName: String,
+        api_version: String,
+        secret_name: String,
         options: Option<KeyVaultClientRecoverDeletedSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
         let options = options.unwrap_or_default();
@@ -138,7 +138,7 @@ impl KeyVaultClient {
 
     pub async fn restore_secret(
         &self,
-        apiVersion: String,
+        api_version: String,
         parameters: RequestContent<SecretRestoreParameters>,
         options: Option<KeyVaultClientRestoreSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
@@ -155,8 +155,8 @@ impl KeyVaultClient {
 
     pub async fn set_secret(
         &self,
-        apiVersion: String,
-        secretName: String,
+        api_version: String,
+        secret_name: String,
         parameters: RequestContent<SecretSetParameters>,
         options: Option<KeyVaultClientSetSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
@@ -173,9 +173,9 @@ impl KeyVaultClient {
 
     pub async fn update_secret(
         &self,
-        apiVersion: String,
-        secretName: String,
-        secretVersion: String,
+        api_version: String,
+        secret_name: String,
+        secret_version: String,
         parameters: RequestContent<SecretUpdateParameters>,
         options: Option<KeyVaultClientUpdateSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {

@@ -13,7 +13,10 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct ChildFlattenModel {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub properties: Option<ChildModel>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub summary: Option<String>,
 }
 
@@ -21,7 +24,10 @@ pub struct ChildFlattenModel {
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct ChildModel {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub age: Option<i32>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
 }
 
@@ -29,7 +35,10 @@ pub struct ChildModel {
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct FlattenModel {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub properties: Option<ChildModel>,
 }
 
@@ -37,7 +46,10 @@ pub struct FlattenModel {
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct NestedFlattenModel {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub properties: Option<ChildFlattenModel>,
 }
 

@@ -14,6 +14,7 @@ use serde::{Deserialize, Serialize};
 #[non_exhaustive]
 pub struct InputOutputRecord {
     #[serde(rename = "requiredProp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub required_prop: Option<String>,
 }
 
@@ -22,6 +23,7 @@ pub struct InputOutputRecord {
 #[non_exhaustive]
 pub struct InputRecord {
     #[serde(rename = "requiredProp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub required_prop: Option<String>,
 }
 
@@ -30,6 +32,7 @@ pub struct InputRecord {
 #[non_exhaustive]
 pub struct OutputRecord {
     #[serde(rename = "requiredProp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub required_prop: Option<String>,
 }
 
