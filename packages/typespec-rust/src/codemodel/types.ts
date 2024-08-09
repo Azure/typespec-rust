@@ -6,7 +6,18 @@
 import { Crate, CrateDependency } from './crate.js';
 
 // Type defines a type within the Rust type system
-export type Type = Enum | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | Unit | Url | Vector;
+export type Type = EncodedBytes | Enum | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | Unit | Url | Vector;
+
+// BytesEncoding defines the possible types of base64-encoding.
+export type BytesEncoding = 'std' | 'url';
+
+// EncodedBytes is a Rust Vec<u8> that's base64-encoded.
+export interface EncodedBytes {
+  kind: 'encodedBytes';
+
+  // indicates what kind of base64-encoding to use
+  encoding: BytesEncoding;
+}
 
 // Enum is a Rust enum type.
 export interface Enum {
@@ -295,6 +306,13 @@ interface StructFieldBase {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+export class EncodedBytes implements EncodedBytes {
+  constructor(encoding: BytesEncoding) {
+    this.kind = 'encodedBytes';
+    this.encoding = encoding;
+  }
+}
+
 export class Enum implements Enum {
   constructor(name: string, pub: boolean, values: Array<EnumValue>, extensible: boolean) {
     this.kind = 'enum';
@@ -389,12 +407,15 @@ export class Option implements Option {
   constructor(type: Type, ref: boolean) {
     switch (type.kind) {
       case 'String':
+      case 'encodedBytes':
       case 'enum':
       case 'external':
       case 'hashmap':
       case 'model':
+      case 'offsetDateTime':
       case 'scalar':
       case 'struct':
+      case 'Url':
       case 'vector':
         this.kind = 'option';
         this.type = type;

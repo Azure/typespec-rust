@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "./cadlranch/**/src/..",
+    "./security/**/src/..",
 ]
 resolver = "2"
 

@@ -38,6 +38,8 @@ export function emitPub(pub: boolean): string {
 // returns the type declaration string for the specified Rust type
 export function getTypeDeclaration(type: rust.Type, withAnonymousLifetime = false): string {
   switch (type.kind) {
+    case 'encodedBytes':
+      return 'Vec<u8>';
     case 'hashmap':
       return `${type.name}<String, ${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'implTrait':

@@ -105,6 +105,9 @@ function should_generate(name) {
   return true
 }
 
+const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrests';
+generate('keyvault_secrets', keyvault_secrets, 'test/security/keyvault_secrets');
+
 for (const crate in cadlRanch) {
   const values = cadlRanch[crate];
   let additionalArgs;
