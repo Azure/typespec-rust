@@ -206,18 +206,8 @@ export interface Struct extends StructBase {
 }
 
 // StructField is a field definition within a struct
-export interface StructField {
-  // the name of the field
-  name: string;
-
-  // the provided doc string emitted as code comments
-  docs?: string;
-
-  // indicates if the field should be public
-  pub: boolean;
-
-  // the field's underlying type
-  type: Type;
+export interface StructField extends StructFieldBase {
+  // no additional fields at present
 }
 
 // Unit is the unit type (i.e. "()")
@@ -301,6 +291,9 @@ interface StructFieldBase {
 
   // the field's underlying type
   type: Type;
+
+  // the value to use when emitting a Default impl for the containing struct
+  defaultValue?: string;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

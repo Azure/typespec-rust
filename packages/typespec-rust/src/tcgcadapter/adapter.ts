@@ -24,8 +24,12 @@ export class Adapter {
   // cache of adapted types
   private readonly types: Map<string, rust.Type>;
 
+  // cache of adapted client method params
+  private readonly clientMethodParams: Map<string, rust.MethodParameter>;
+
   private constructor(ctx: tcgc.SdkContext, options: RustEmitterOptions) {
     this.types = new Map<string, rust.Type>();
+    this.clientMethodParams = new Map<string, rust.MethodParameter>();
     this.ctx = ctx;
 
     let serviceType: rust.ServiceType = 'data-plane';
@@ -325,7 +329,9 @@ export class Adapter {
     // anything other than public means non-instantiable client
     if (client.initialization.access === 'public') {
       const clientOptionsStruct = new rust.Struct(`${rustClient.name}Options`, true);
-      clientOptionsStruct.fields.push(new rust.StructField('client_options', false, new rust.ExternalType(this.crate, 'azure_core', 'ClientOptions')));
+      const clientOptionsField = new rust.StructField('client_options', false, new rust.ExternalType(this.crate, 'azure_core', 'ClientOptions'));
+      clientOptionsField.defaultValue = 'ClientOptions::default()';
+      clientOptionsStruct.fields.push(clientOptionsField);
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
       // NOTE: per tcgc convention, if there is no param of kind credential
       // it means that the client doesn't require any kind of authentication.
@@ -342,12 +348,31 @@ export class Adapter {
             // for Rust, we always require a complete endpoint param, templated
             // endpoints, e.g. https://{something}.contoso.com isn't supported.
             // note that the types of the param and the field are slightly different
-            constructor.parameters.push(new rust.URIParameter(param.name, 'client', new rust.ImplTrait('AsRef', new rust.StringSlice())));
-            rustClient.fields.push(new rust.URIParameter(param.name, 'client', new rust.Url(this.crate)));
+            constructor.parameters.push(new rust.ClientParameter(param.name, new rust.ImplTrait('AsRef', new rust.StringSlice())));
+            rustClient.fields.push(new rust.ClientParameter(param.name, new rust.Url(this.crate)));
             break;
-          case 'method':
-            // TODO: handle api-version
-            continue;
+          case 'method': {
+            // this is a client param that's used in method bodies (e.g. api-version but can be others)
+            if (!param.isApiVersionParam) {
+              // TODO: https://github.com/Azure/autorest.rust/issues/90
+              throw new Error('client method params other than api-version NYI');
+            }
+
+            if (!param.clientDefaultValue) {
+              // TODO: https://github.com/Azure/autorest.rust/issues/90
+              throw new Error('required client method params NYI');
+            }
+
+            // we expose the api-version param as a String
+            const paramName = snakeCaseName(param.name);
+            rustClient.fields.push(new rust.ClientParameter(paramName, new rust.StringType()));
+
+            // client-side default value makes the param optional
+            const apiVersionField = new rust.StructField(paramName, false, new rust.StringType());
+            apiVersionField.defaultValue = `String::from("${param.clientDefaultValue}")`;
+            clientOptionsStruct.fields.push(apiVersionField);
+            break;
+          }
         }
       }
       rustClient.constructable.constructors.push(constructor);
@@ -457,6 +482,15 @@ export class Adapter {
 
   private adaptMethodParameter(param: OperationParamType): rust.MethodParameter {
     const paramLoc = param.onClient ? 'client' : 'method';
+
+    // if this is a client method param, check if we've already adapted it
+    if (paramLoc === 'client') {
+      const clientMethodParam = this.clientMethodParams.get(param.name);
+      if (clientMethodParam) {
+        return clientMethodParam;
+      }
+    }
+
     const paramName = snakeCaseName(param.name);
     let adaptedParam: rust.MethodParameter;
     switch (param.kind) {
@@ -485,6 +519,11 @@ export class Adapter {
     }
 
     adaptedParam.docs = param.description;
+
+    if (paramLoc === 'client') {
+      this.clientMethodParams.set(param.name, adaptedParam);
+    }
+
     return adaptedParam;
   }
 

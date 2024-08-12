@@ -21,7 +21,8 @@ export interface Client {
 
   // fields contains the ctor parameters that are
   // persisted as fields on the client type. note that
-  // not all ctor params might be persisted.
+  // not all ctor params might be persisted, and not
+  // all fields are ctor params.
   fields: Array<ClientParameter>;
 
   // all the methods for this client
@@ -51,6 +52,15 @@ export interface Constructor {
 
   // the modeled parameters. at minimum, an endpoint param
   parameters: Array<ClientParameter>;
+}
+
+// ClientParameter is a Rust client parameter
+export interface ClientParameter {
+  // the name of the parameter
+  name: string;
+
+  // the type of the client parameter
+  type: types.Type;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,11 +96,8 @@ export interface ClientAccessor extends method.Method<Client> {
 // ParameterLocation indicates where the value of the param originates
 export type ParameterLocation = 'client' | 'method';
 
-// ClientParameter defines the possible client parameter types
-export type ClientParameter = URIParameter;
-
 // MethodParameter defines the possible method parameter types
-export type MethodParameter = BodyParameter | HeaderParameter | PathParameter | QueryParameter | URIParameter;
+export type MethodParameter = BodyParameter | HeaderParameter | PathParameter | QueryParameter;
 
 // BodyParameter is a param that's passed via the HTTP request body
 export interface BodyParameter extends HTTPParameterBase {
@@ -147,14 +154,6 @@ export interface QueryParameter extends HTTPParameterBase {
   encoded: boolean;
 }
 
-// URIParameter is a full (i.e. non-templated) URI param
-export interface URIParameter extends HTTPParameterBase {
-  kind: 'uri';
-
-  // URI params are passed as strings
-  type: types.StringType;
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // base types
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -191,6 +190,7 @@ class HTTPMethodBase extends method.Method<types.Type> implements HTTPMethodBase
 class HTTPParameterBase extends method.Parameter {
   constructor(name: string, location: ParameterLocation, type: types.Type) {
     super(name, type);
+    this.location = location;
   }
 }
 
@@ -241,6 +241,13 @@ export class ClientConstruction implements ClientConstruction {
 export class ClientOptions extends types.Option implements ClientOptions {
   constructor(type: types.Struct) {
     super(type, false);
+  }
+}
+
+export class ClientParameter implements ClientParameter {
+  constructor(name: string, type: types.Type) {
+    this.name = name;
+    this.type = type;
   }
 }
 
@@ -309,12 +316,5 @@ export class QueryParameter extends HTTPParameterBase implements QueryParameter 
       default:
         throw new Error(`unsupported query paramter type kind ${type.kind}`);
     }
-  }
-}
-
-export class URIParameter extends HTTPParameterBase implements URIParameter {
-  constructor(name: string, location: ParameterLocation, type: types.Type) {
-    super(name, location, type);
-    this.kind = 'uri';
   }
 }

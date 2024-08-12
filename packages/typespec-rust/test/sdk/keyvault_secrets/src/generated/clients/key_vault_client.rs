@@ -16,12 +16,14 @@ use crate::models::{
 };
 
 pub struct KeyVaultClient {
+    api_version: String,
     endpoint: Url,
     pipeline: Pipeline,
 }
 
 #[derive(Clone, Debug)]
 pub struct KeyVaultClientOptions {
+    api_version: String,
     client_options: ClientOptions,
 }
 
@@ -34,6 +36,7 @@ impl KeyVaultClient {
         endpoint.query_pairs_mut().clear();
         let options = options.unwrap_or_default();
         Ok(Self {
+            api_version: options.api_version,
             endpoint,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
@@ -47,7 +50,6 @@ impl KeyVaultClient {
 
     pub async fn backup_secret(
         &self,
-        api_version: String,
         secret_name: String,
         options: Option<KeyVaultClientBackupSecretOptions<'_>>,
     ) -> Result<Response<BackupSecretResult>> {
@@ -57,6 +59,8 @@ impl KeyVaultClient {
         let mut path = String::from("/secrets/{secretName}/backup");
         path = path.replace("{secretName}", &secret_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -64,7 +68,6 @@ impl KeyVaultClient {
 
     pub async fn delete_secret(
         &self,
-        api_version: String,
         secret_name: String,
         options: Option<KeyVaultClientDeleteSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecretBundle>> {
@@ -74,6 +77,8 @@ impl KeyVaultClient {
         let mut path = String::from("/secrets/{secretName}");
         path = path.replace("{secretName}", &secret_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -81,7 +86,6 @@ impl KeyVaultClient {
 
     pub async fn get_deleted_secret(
         &self,
-        api_version: String,
         secret_name: String,
         options: Option<KeyVaultClientGetDeletedSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecretBundle>> {
@@ -91,6 +95,8 @@ impl KeyVaultClient {
         let mut path = String::from("/deletedsecrets/{secretName}");
         path = path.replace("{secretName}", &secret_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -98,7 +104,6 @@ impl KeyVaultClient {
 
     pub async fn get_secret(
         &self,
-        api_version: String,
         secret_name: String,
         secret_version: String,
         options: Option<KeyVaultClientGetSecretOptions<'_>>,
@@ -110,6 +115,8 @@ impl KeyVaultClient {
         path = path.replace("{secretName}", &secret_name);
         path = path.replace("{secretVersion}", &secret_version);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -117,7 +124,6 @@ impl KeyVaultClient {
 
     pub async fn purge_deleted_secret(
         &self,
-        api_version: String,
         secret_name: String,
         options: Option<KeyVaultClientPurgeDeletedSecretOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -127,6 +133,8 @@ impl KeyVaultClient {
         let mut path = String::from("/deletedsecrets/{secretName}");
         path = path.replace("{secretName}", &secret_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -134,7 +142,6 @@ impl KeyVaultClient {
 
     pub async fn recover_deleted_secret(
         &self,
-        api_version: String,
         secret_name: String,
         options: Option<KeyVaultClientRecoverDeletedSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
@@ -144,6 +151,8 @@ impl KeyVaultClient {
         let mut path = String::from("/deletedsecrets/{secretName}/recover");
         path = path.replace("{secretName}", &secret_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -151,7 +160,6 @@ impl KeyVaultClient {
 
     pub async fn restore_secret(
         &self,
-        api_version: String,
         parameters: RequestContent<SecretRestoreParameters>,
         options: Option<KeyVaultClientRestoreSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
@@ -159,6 +167,8 @@ impl KeyVaultClient {
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         url.set_path("/secrets/restore");
+        url.query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -168,7 +178,6 @@ impl KeyVaultClient {
 
     pub async fn set_secret(
         &self,
-        api_version: String,
         secret_name: String,
         parameters: RequestContent<SecretSetParameters>,
         options: Option<KeyVaultClientSetSecretOptions<'_>>,
@@ -179,6 +188,8 @@ impl KeyVaultClient {
         let mut path = String::from("/secrets/{secretName}");
         path = path.replace("{secretName}", &secret_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -188,7 +199,6 @@ impl KeyVaultClient {
 
     pub async fn update_secret(
         &self,
-        api_version: String,
         secret_name: String,
         secret_version: String,
         parameters: RequestContent<SecretUpdateParameters>,
@@ -201,6 +211,8 @@ impl KeyVaultClient {
         path = path.replace("{secretName}", &secret_name);
         path = path.replace("{secretVersion}", &secret_version);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -212,6 +224,7 @@ impl KeyVaultClient {
 impl Default for KeyVaultClientOptions {
     fn default() -> Self {
         Self {
+            api_version: String::from("7.6-preview.2"),
             client_options: ClientOptions::default(),
         }
     }

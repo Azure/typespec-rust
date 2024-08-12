@@ -73,7 +73,18 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
         body += `${indentation.get()}${endpointParamName}.query_pairs_mut().clear();\n`;
         body += `${indentation.get()}let options = options.unwrap_or_default();\n`;
         body += `${indentation.get()}Ok(Self {\n`;
-        body += `${indentation.push().get()}${endpointParamName},\n`;
+
+        // propagate any client option fields to the client initializer
+        indentation.push();
+        for (const field of client.constructable.options.type.fields) {
+          if (helpers.getTypeDeclaration(field.type) === 'ClientOptions') {
+            // azure_core::ClientOptions is passed to Pipeline::new so skip it
+            continue;
+          }
+          body += `${indentation.get()}${field.name}: options.${field.name},\n`;
+        }
+
+        body += `${indentation.get()}${endpointParamName},\n`;
         body += `${indentation.get()}pipeline: Pipeline::new(\n`;
         body += `${indentation.push().get()}option_env!("CARGO_PKG_NAME"),\n`;
         body += `${indentation.get()}option_env!("CARGO_PKG_VERSION"),\n`;
@@ -130,7 +141,13 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       body += `impl Default for ${client.constructable.options.type.name} {\n`;
       body += `${indentation.get()}fn default() -> Self {\n`;
       body += `${indentation.push().get()}Self {\n`;
-      body += `${indentation.push().get()}client_options: ClientOptions::default(),\n`;
+      indentation.push();
+      for (const field of client.constructable.options.type.fields) {
+        if (!field.defaultValue) {
+          throw new Error(`missing default value for struct field ${client.constructable.options.type.name}.${field.name}`);
+        }
+        body += `${indentation.get()}${field.name}: ${field.defaultValue},\n`;
+      }
       body += `${indentation.pop().get()}}\n`;
       body += `${indentation.pop().get()}}\n`;
       body += '}\n\n'; // end impl
@@ -212,8 +229,12 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
       // literal params are embedded directly in the code (e.g. accept header param)
       continue;
     }
-    use.addForType(param.type);
-    paramsSig.push(`${param.name}: ${formatParamTypeName(param)}`);
+
+    // don't add client params to the method param sig
+    if (method.kind !== 'clientaccessor' && (<rust.MethodParameter>param).location === 'method') {
+      use.addForType(param.type);
+      paramsSig.push(`${param.name}: ${formatParamTypeName(param)}`);
+    }
   }
   if (method.kind !== 'clientaccessor') {
     paramsSig.push(`options: ${helpers.getTypeDeclaration(method.options, true)}`);
@@ -325,13 +346,13 @@ function getLifetimeName(type: rust.Struct): string {
 
 function getEndpointFieldName(client: rust.Client): string {
   // find the endpoint field. it's the only one that's
-  // a URI. the name will be uniform across clients
+  // a Url. the name will be uniform across clients
   let endpointFieldName: string | undefined;
   for (const field of client.fields) {
-    if (field.kind === 'uri' ) {
+    if (field.type.kind === 'Url' ) {
       endpointFieldName = field.name;
     } else if (endpointFieldName) {
-      throw new Error(`found multiple URI fields in client ${client.name} which is unexpected`);
+      throw new Error(`found multiple URL fields in client ${client.name} which is unexpected`);
     }
   }
   if (!endpointFieldName) {
@@ -355,13 +376,26 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
   body += `${indentation.get()}let mut ctx = options.method_options.context();\n`;
   body += `${indentation.get()}let mut url = self.${getEndpointFieldName(client)}.clone();\n`;
 
+  // collect and sort all the header/path/query params
+  const headerParams = new Array<rust.HeaderParameter>();
   const pathParams = new Array<rust.PathParameter>();
+  const queryParams = new Array<rust.QueryParameter>();
   for (const param of method.params) {
-    if (param.kind === 'path') {
-      pathParams.push(param);
+    switch (param.kind) {
+      case 'header':
+        headerParams.push(param);
+        break;
+      case 'path':
+        pathParams.push(param);
+        break;
+      case 'query':
+        queryParams.push(param);
+        break;
     }
   }
+  headerParams.sort((a: rust.HeaderParameter, b: rust.HeaderParameter) => { return helpers.sortAscending(a.header, b.header); });
   pathParams.sort((a: rust.PathParameter, b: rust.PathParameter) => { return helpers.sortAscending(a.segment, b.segment); });
+  queryParams.sort((a: rust.QueryParameter, b: rust.QueryParameter) => { return helpers.sortAscending(a.key, b.key); });
 
   let path = `"${method.httpPath}"`;
   if (pathParams.length > 0) {
@@ -374,21 +408,15 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
   }
 
   body += `${indentation.get()}url.set_path(${path});\n`;
+
+  for (const queryParam of queryParams) {
+    body += `${indentation.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderQueryParamValue(queryParam)});\n`;
+  }
+
   body += `${indentation.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
 
-  const headerParams = new Array<rust.HeaderParameter>();
-  for (const param of method.params) {
-    if (param.kind === 'header') {
-      headerParams.push(param);
-    }
-  }
-  headerParams.sort((a: rust.HeaderParameter, b: rust.HeaderParameter) => { return helpers.sortAscending(a.header, b.header); });
   for (const headerParam of headerParams) {
-    let paramValue = headerParam.name;
-    if (headerParam.type.kind === 'literal') {
-      paramValue = `"${headerParam.type.value}"`;
-    }
-    body += `${indentation.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${paramValue});\n`;
+    body += `${indentation.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderQueryParamValue(headerParam)});\n`;
   }
 
   const bodyParam = getBodyParameter(method);
@@ -411,4 +439,21 @@ function getBodyParameter(method: rust.AsyncMethod): rust.BodyParameter | undefi
     }
   }
   return bodyParam;
+}
+
+function getHeaderQueryParamValue(param: rust.HeaderParameter | rust.QueryParameter): string {
+  let paramName = '';
+  if (param.location === 'client') {
+    paramName = 'self.';
+  }
+  switch (param.type.kind) {
+    case 'String':
+      paramName += param.name;
+      break;
+    case 'literal':
+      return `"${param.type.value}"`;
+    default:
+      throw new Error(`unhandled ${param.kind} param type kind ${param.type.kind}`);
+  }
+  return paramName;
 }
