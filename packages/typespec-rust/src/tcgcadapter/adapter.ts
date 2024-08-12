@@ -57,6 +57,11 @@ export class Adapter {
   // converts all tcgc types to their Rust type equivalent
   private adaptTypes(): void {
     for (const sdkEnum of this.ctx.sdkPackage.enums) {
+      if (sdkEnum.usage === tcgc.UsageFlags.ApiVersionEnum) {
+        // we skip generating the enums for API
+        // versions as we expose it as a String
+        continue;
+      }
       const rustEnum = this.getEnum(sdkEnum);
       this.crate.enums.push(rustEnum);
     }

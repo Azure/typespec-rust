@@ -22,12 +22,3 @@ pub enum DeletionRecoveryLevel {
     #[serde(untagged)]
     UnknownValue(String),
 }
-
-#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[non_exhaustive]
-pub enum Versions {
-    #[serde(rename = "7.6-preview.1")]
-    V7Dot6Preview1,
-    #[serde(rename = "7.6-preview.2")]
-    V7Dot6Preview2,
-}
