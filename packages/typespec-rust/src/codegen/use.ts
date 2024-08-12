@@ -52,8 +52,7 @@ export class Use {
     switch (type.kind) {
       case 'client': {
         const mod = codegen.deconstruct(type.name).join('_');
-        // non-instantiable clients aren't public, so we need the fully-qualified namespace
-        this.addType(`crate::${type.constructable ? '' : 'generated::clients::'}${mod}`, type.name);
+        this.addType(`crate::${mod}`, type.name);
         break;
       }
       case 'enum':

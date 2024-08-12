@@ -10,3 +10,5 @@ pub use crate::generated::clients::*;
 pub mod models {
     pub use crate::generated::models::*;
 }
+
+pub use flatten_client::FlattenClient;

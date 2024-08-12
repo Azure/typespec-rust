@@ -2,7 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use cadl_extensible::extensible_client::ExtensibleClient;
+use cadl_extensible::ExtensibleClient;
 use cadl_extensible::models::DaysOfWeekExtensibleEnum;
 
 #[async_std::test]

@@ -180,15 +180,14 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
 
     const clientMod = codegen.deconstruct(client.name).join('_');
     clientFiles.push({name: `${clientMod}.rs`, content: content});
-    // only make the instantiable clients public
-    clientMods.push(`${client.constructable ? 'pub ' : ''}mod ${clientMod}`);
+    clientMods.push(clientMod);
   }
 
   // now emit the mod.rs file for the clients
   let content = helpers.contentPreamble();
   const sortedMods = clientMods.sort((a: string, b: string) => { return helpers.sortAscending(a, b); });
   for (const clientMod of sortedMods) {
-    content += `${clientMod};\n`;
+    content += `pub mod ${clientMod};\n`;
   }
   clientFiles.push({name: 'mod.rs', content: content});
 

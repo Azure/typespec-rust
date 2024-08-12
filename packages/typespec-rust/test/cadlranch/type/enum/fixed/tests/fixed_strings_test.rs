@@ -2,7 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use cadl_fixed::fixed_client::FixedClient;
+use cadl_fixed::FixedClient;
 use cadl_fixed::models::DaysOfWeekEnum;
 
 #[async_std::test]

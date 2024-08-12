@@ -10,3 +10,5 @@ pub use crate::generated::clients::*;
 pub mod models {
     pub use crate::generated::enums::*;
 }
+
+pub use extensible_client::ExtensibleClient;
