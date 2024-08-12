@@ -2,8 +2,8 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use cadl_extensible::ExtensibleClient;
 use cadl_extensible::models::DaysOfWeekExtensibleEnum;
+use cadl_extensible::ExtensibleClient;
 
 #[async_std::test]
 async fn get_known_value() {

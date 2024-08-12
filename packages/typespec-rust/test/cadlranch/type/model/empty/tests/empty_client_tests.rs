@@ -2,8 +2,8 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use cadl_empty::EmptyClient;
 use cadl_empty::models::{EmptyInput, EmptyInputOutput, EmptyOutput};
+use cadl_empty::EmptyClient;
 
 #[async_std::test]
 async fn get_empty() {

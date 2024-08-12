@@ -2,8 +2,8 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use cadl_fixed::FixedClient;
 use cadl_fixed::models::DaysOfWeekEnum;
+use cadl_fixed::FixedClient;
 
 #[async_std::test]
 async fn get_known_value() {
