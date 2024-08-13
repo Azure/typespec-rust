@@ -97,6 +97,7 @@ impl<'a> FixedStringPutUnknownValueOptions<'a> {
 
 pub mod builders {
     use super::*;
+
     pub struct FixedStringGetKnownValueOptionsBuilder<'a> {
         options: FixedStringGetKnownValueOptions<'a>,
     }

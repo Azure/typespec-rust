@@ -45,10 +45,36 @@ impl ExtensibleClient {
     }
 }
 
+impl ExtensibleClientOptions {
+    pub fn builder() -> builders::ExtensibleClientOptionsBuilder {
+        builders::ExtensibleClientOptionsBuilder::new()
+    }
+}
+
 impl Default for ExtensibleClientOptions {
     fn default() -> Self {
         Self {
             client_options: ClientOptions::default(),
+        }
+    }
+}
+
+pub mod builders {
+    use super::*;
+
+    pub struct ExtensibleClientOptionsBuilder {
+        options: ExtensibleClientOptions,
+    }
+
+    impl ExtensibleClientOptionsBuilder {
+        pub(super) fn new() -> Self {
+            Self {
+                options: ExtensibleClientOptions::default(),
+            }
+        }
+
+        pub fn build(&self) -> ExtensibleClientOptions {
+            self.options.clone()
         }
     }
 }

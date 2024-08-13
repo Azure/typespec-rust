@@ -87,6 +87,12 @@ impl UsageClient {
     }
 }
 
+impl UsageClientOptions {
+    pub fn builder() -> builders::UsageClientOptionsBuilder {
+        builders::UsageClientOptionsBuilder::new()
+    }
+}
+
 impl Default for UsageClientOptions {
     fn default() -> Self {
         Self {
@@ -130,6 +136,23 @@ impl<'a> UsageClientOutputOptions<'a> {
 
 pub mod builders {
     use super::*;
+
+    pub struct UsageClientOptionsBuilder {
+        options: UsageClientOptions,
+    }
+
+    impl UsageClientOptionsBuilder {
+        pub(super) fn new() -> Self {
+            Self {
+                options: UsageClientOptions::default(),
+            }
+        }
+
+        pub fn build(&self) -> UsageClientOptions {
+            self.options.clone()
+        }
+    }
+
     pub struct UsageClientInputOptionsBuilder<'a> {
         options: UsageClientInputOptions<'a>,
     }

@@ -221,6 +221,12 @@ impl KeyVaultClient {
     }
 }
 
+impl KeyVaultClientOptions {
+    pub fn builder() -> builders::KeyVaultClientOptionsBuilder {
+        builders::KeyVaultClientOptionsBuilder::new()
+    }
+}
+
 impl Default for KeyVaultClientOptions {
     fn default() -> Self {
         Self {
@@ -331,6 +337,28 @@ impl<'a> KeyVaultClientUpdateSecretOptions<'a> {
 
 pub mod builders {
     use super::*;
+
+    pub struct KeyVaultClientOptionsBuilder {
+        options: KeyVaultClientOptions,
+    }
+
+    impl KeyVaultClientOptionsBuilder {
+        pub(super) fn new() -> Self {
+            Self {
+                options: KeyVaultClientOptions::default(),
+            }
+        }
+
+        pub fn build(&self) -> KeyVaultClientOptions {
+            self.options.clone()
+        }
+
+        pub fn with_api_version(mut self, api_version: impl Into<String>) -> Self {
+            self.options.api_version = api_version.into();
+            self
+        }
+    }
+
     pub struct KeyVaultClientBackupSecretOptionsBuilder<'a> {
         options: KeyVaultClientBackupSecretOptions<'a>,
     }

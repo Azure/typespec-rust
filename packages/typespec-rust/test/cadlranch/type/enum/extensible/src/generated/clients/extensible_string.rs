@@ -121,6 +121,7 @@ impl<'a> ExtensibleStringPutUnknownValueOptions<'a> {
 
 pub mod builders {
     use super::*;
+
     pub struct ExtensibleStringGetKnownValueOptionsBuilder<'a> {
         options: ExtensibleStringGetKnownValueOptions<'a>,
     }

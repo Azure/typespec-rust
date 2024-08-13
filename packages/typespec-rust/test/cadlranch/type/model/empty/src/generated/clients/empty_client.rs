@@ -87,6 +87,12 @@ impl EmptyClient {
     }
 }
 
+impl EmptyClientOptions {
+    pub fn builder() -> builders::EmptyClientOptionsBuilder {
+        builders::EmptyClientOptionsBuilder::new()
+    }
+}
+
 impl Default for EmptyClientOptions {
     fn default() -> Self {
         Self {
@@ -130,6 +136,23 @@ impl<'a> EmptyClientPutEmptyOptions<'a> {
 
 pub mod builders {
     use super::*;
+
+    pub struct EmptyClientOptionsBuilder {
+        options: EmptyClientOptions,
+    }
+
+    impl EmptyClientOptionsBuilder {
+        pub(super) fn new() -> Self {
+            Self {
+                options: EmptyClientOptions::default(),
+            }
+        }
+
+        pub fn build(&self) -> EmptyClientOptions {
+            self.options.clone()
+        }
+    }
+
     pub struct EmptyClientGetEmptyOptionsBuilder<'a> {
         options: EmptyClientGetEmptyOptions<'a>,
     }

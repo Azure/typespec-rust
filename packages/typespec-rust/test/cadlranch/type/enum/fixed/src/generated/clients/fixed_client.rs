@@ -45,10 +45,36 @@ impl FixedClient {
     }
 }
 
+impl FixedClientOptions {
+    pub fn builder() -> builders::FixedClientOptionsBuilder {
+        builders::FixedClientOptionsBuilder::new()
+    }
+}
+
 impl Default for FixedClientOptions {
     fn default() -> Self {
         Self {
             client_options: ClientOptions::default(),
+        }
+    }
+}
+
+pub mod builders {
+    use super::*;
+
+    pub struct FixedClientOptionsBuilder {
+        options: FixedClientOptions,
+    }
+
+    impl FixedClientOptionsBuilder {
+        pub(super) fn new() -> Self {
+            Self {
+                options: FixedClientOptions::default(),
+            }
+        }
+
+        pub fn build(&self) -> FixedClientOptions {
+            self.options.clone()
         }
     }
 }

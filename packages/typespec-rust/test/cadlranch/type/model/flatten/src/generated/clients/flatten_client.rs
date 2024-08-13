@@ -75,6 +75,12 @@ impl FlattenClient {
     }
 }
 
+impl FlattenClientOptions {
+    pub fn builder() -> builders::FlattenClientOptionsBuilder {
+        builders::FlattenClientOptionsBuilder::new()
+    }
+}
+
 impl Default for FlattenClientOptions {
     fn default() -> Self {
         Self {
@@ -107,6 +113,23 @@ impl<'a> FlattenClientPutNestedFlattenModelOptions<'a> {
 
 pub mod builders {
     use super::*;
+
+    pub struct FlattenClientOptionsBuilder {
+        options: FlattenClientOptions,
+    }
+
+    impl FlattenClientOptionsBuilder {
+        pub(super) fn new() -> Self {
+            Self {
+                options: FlattenClientOptions::default(),
+            }
+        }
+
+        pub fn build(&self) -> FlattenClientOptions {
+            self.options.clone()
+        }
+    }
+
     pub struct FlattenClientPutFlattenModelOptionsBuilder<'a> {
         options: FlattenClientPutFlattenModelOptions<'a>,
     }
