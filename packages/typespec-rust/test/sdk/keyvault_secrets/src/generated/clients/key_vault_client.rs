@@ -53,14 +53,14 @@ impl KeyVaultClient {
 
     pub async fn backup_secret(
         &self,
-        secret_name: String,
+        secret_name: impl Into<String>,
         options: Option<KeyVaultClientBackupSecretOptions<'_>>,
     ) -> Result<Response<BackupSecretResult>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/secrets/{secretName}/backup");
-        path = path.replace("{secretName}", &secret_name);
+        path = path.replace("{secretName}", &secret_name.into());
         url.set_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -71,14 +71,14 @@ impl KeyVaultClient {
 
     pub async fn delete_secret(
         &self,
-        secret_name: String,
+        secret_name: impl Into<String>,
         options: Option<KeyVaultClientDeleteSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecretBundle>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/secrets/{secretName}");
-        path = path.replace("{secretName}", &secret_name);
+        path = path.replace("{secretName}", &secret_name.into());
         url.set_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -89,14 +89,14 @@ impl KeyVaultClient {
 
     pub async fn get_deleted_secret(
         &self,
-        secret_name: String,
+        secret_name: impl Into<String>,
         options: Option<KeyVaultClientGetDeletedSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecretBundle>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/deletedsecrets/{secretName}");
-        path = path.replace("{secretName}", &secret_name);
+        path = path.replace("{secretName}", &secret_name.into());
         url.set_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -107,16 +107,16 @@ impl KeyVaultClient {
 
     pub async fn get_secret(
         &self,
-        secret_name: String,
-        secret_version: String,
+        secret_name: impl Into<String>,
+        secret_version: impl Into<String>,
         options: Option<KeyVaultClientGetSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/secrets/{secretName}/{secretVersion}");
-        path = path.replace("{secretName}", &secret_name);
-        path = path.replace("{secretVersion}", &secret_version);
+        path = path.replace("{secretName}", &secret_name.into());
+        path = path.replace("{secretVersion}", &secret_version.into());
         url.set_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -127,14 +127,14 @@ impl KeyVaultClient {
 
     pub async fn purge_deleted_secret(
         &self,
-        secret_name: String,
+        secret_name: impl Into<String>,
         options: Option<KeyVaultClientPurgeDeletedSecretOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/deletedsecrets/{secretName}");
-        path = path.replace("{secretName}", &secret_name);
+        path = path.replace("{secretName}", &secret_name.into());
         url.set_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -145,14 +145,14 @@ impl KeyVaultClient {
 
     pub async fn recover_deleted_secret(
         &self,
-        secret_name: String,
+        secret_name: impl Into<String>,
         options: Option<KeyVaultClientRecoverDeletedSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/deletedsecrets/{secretName}/recover");
-        path = path.replace("{secretName}", &secret_name);
+        path = path.replace("{secretName}", &secret_name.into());
         url.set_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -181,7 +181,7 @@ impl KeyVaultClient {
 
     pub async fn set_secret(
         &self,
-        secret_name: String,
+        secret_name: impl Into<String>,
         parameters: RequestContent<SecretSetParameters>,
         options: Option<KeyVaultClientSetSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
@@ -189,7 +189,7 @@ impl KeyVaultClient {
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/secrets/{secretName}");
-        path = path.replace("{secretName}", &secret_name);
+        path = path.replace("{secretName}", &secret_name.into());
         url.set_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -202,8 +202,8 @@ impl KeyVaultClient {
 
     pub async fn update_secret(
         &self,
-        secret_name: String,
-        secret_version: String,
+        secret_name: impl Into<String>,
+        secret_version: impl Into<String>,
         parameters: RequestContent<SecretUpdateParameters>,
         options: Option<KeyVaultClientUpdateSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
@@ -211,8 +211,8 @@ impl KeyVaultClient {
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/secrets/{secretName}/{secretVersion}");
-        path = path.replace("{secretName}", &secret_name);
-        path = path.replace("{secretVersion}", &secret_version);
+        path = path.replace("{secretName}", &secret_name.into());
+        path = path.replace("{secretVersion}", &secret_version.into());
         url.set_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);

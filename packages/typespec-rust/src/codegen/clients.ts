@@ -312,8 +312,15 @@ function createPubModBuilders(client: rust.Client, use: Use): string {
     body += emitNewFunction(indentation, clientOptionsType);
     body += emitBuildMethod(indentation, clientOptionsType);
     for (const field of getClientOptionsFields(client.constructable.options)) {
-      body += `\n${indentation.get()}pub fn with_${field.name}(mut self, ${field.name}: impl Into<${helpers.getTypeDeclaration(field.type)}>) -> Self {\n`;
-      body += `${indentation.push().get()}self.options.${field.name} = ${field.name}.into();\n`;
+      let typeName = helpers.getTypeDeclaration(field.type);
+      let into = '';
+      if (field.type.kind === 'String') {
+        // for Strings, we define these as "impl Into<String>" so that passing a str will just work
+        typeName = `impl Into<${typeName}>`;
+        into = '.into()';
+      }
+      body += `\n${indentation.get()}pub fn with_${field.name}(mut self, ${field.name}: ${typeName}) -> Self {\n`;
+      body += `${indentation.push().get()}self.options.${field.name} = ${field.name}${into};\n`;
       body += `${indentation.get()}self\n`;
       body += `${indentation.pop().get()}}\n`;
     }
@@ -463,7 +470,7 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
     // we have path params that need to have their segments replaced with the param values
     body += `${indentation.get()}let mut path = String::from(${path});\n`;
     for (const pathParam of pathParams) {
-      body += `${indentation.get()}path = path.replace("{${pathParam.segment}}", &${pathParam.name});\n`;
+      body += `${indentation.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(pathParam)});\n`;
     }
     path = '&path';
   }
@@ -471,13 +478,13 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
   body += `${indentation.get()}url.set_path(${path});\n`;
 
   for (const queryParam of queryParams) {
-    body += `${indentation.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderQueryParamValue(queryParam)});\n`;
+    body += `${indentation.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(queryParam)});\n`;
   }
 
   body += `${indentation.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
 
   for (const headerParam of headerParams) {
-    body += `${indentation.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderQueryParamValue(headerParam)});\n`;
+    body += `${indentation.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(headerParam)});\n`;
   }
 
   const bodyParam = getBodyParameter(method);
@@ -502,7 +509,7 @@ function getBodyParameter(method: rust.AsyncMethod): rust.BodyParameter | undefi
   return bodyParam;
 }
 
-function getHeaderQueryParamValue(param: rust.HeaderParameter | rust.QueryParameter): string {
+function getHeaderPathQueryParamValue(param: rust.HeaderParameter | rust.PathParameter | rust.QueryParameter): string {
   let paramName = '';
   if (param.location === 'client') {
     paramName = 'self.';
@@ -511,6 +518,9 @@ function getHeaderQueryParamValue(param: rust.HeaderParameter | rust.QueryParame
     case 'String':
       paramName += param.name;
       break;
+    case 'implTrait':
+      // only done for method params so no need to include paramName prefix
+      return `${param.name}.into()`;
     case 'literal':
       return `"${param.type.value}"`;
     default:
