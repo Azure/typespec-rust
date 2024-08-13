@@ -260,18 +260,10 @@ export class Constructor implements Constructor {
 
 export class HeaderParameter extends HTTPParameterBase implements HeaderParameter {
   constructor(name: string, header: string, location: ParameterLocation, type: types.Type) {
-    switch (type.kind) {
-      case 'String':
-      case 'enum':
-      case 'literal':
-      case 'scalar':
-        super(name, location, type);
-        this.kind = 'header';
-        this.header = header;
-        break;
-      default:
-        throw new Error(`unsupported header paramter type kind ${type.kind}`);
-    }
+    validateHeaderPathQueryParamKind(type, 'header');
+    super(name, location, type);
+    this.kind = 'header';
+    this.header = header;
   }
 }
 
@@ -283,38 +275,36 @@ export class MethodOptions extends types.Option implements MethodOptions {
 
 export class PathParameter extends HTTPParameterBase implements PathParameter {
   constructor(name: string, segment: string, location: ParameterLocation, type: types.Type, encoded: boolean) {
-    switch (type.kind) {
-      case 'String':
-      case 'enum':
-      case 'literal':
-      case 'offsetDateTime':
-      case 'scalar':
-        super(name, location, type);
-        this.kind = 'path';
-        this.segment = segment;
-        this.encoded = encoded;
-        break;
-      default:
-        throw new Error(`unsupported query paramter type kind ${type.kind}`);
-    }
+    validateHeaderPathQueryParamKind(type, 'path');
+    super(name, location, type);
+    this.kind = 'path';
+    this.segment = segment;
+    this.encoded = encoded;
   }
 }
 
 export class QueryParameter extends HTTPParameterBase implements QueryParameter {
   constructor(name: string, key: string, location: ParameterLocation, type: types.Type, encoded: boolean) {
-    switch (type.kind) {
-      case 'String':
-      case 'enum':
-      case 'literal':
-      case 'offsetDateTime':
-      case 'scalar':
-        super(name, location, type);
-        this.kind = 'query';
-        this.key = key;
-        this.encoded = encoded;
-        break;
-      default:
-        throw new Error(`unsupported query paramter type kind ${type.kind}`);
-    }
+    validateHeaderPathQueryParamKind(type, 'query');
+    super(name, location, type);
+    this.kind = 'query';
+    this.key = key;
+    this.encoded = encoded;
+  }
+}
+
+function validateHeaderPathQueryParamKind(type: types.Type, paramKind: string) {
+  switch (type.kind) {
+    case 'String':
+    case 'enum':
+    case 'literal':
+    case 'offsetDateTime':
+    case 'scalar':
+      break;
+    case 'implTrait':
+      validateHeaderPathQueryParamKind(type.type, paramKind);
+      break;
+    default:
+      throw new Error(`unsupported ${paramKind} paramter type kind ${type.kind}`);
   }
 }

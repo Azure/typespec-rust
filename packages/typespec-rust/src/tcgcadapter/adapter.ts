@@ -492,10 +492,16 @@ export class Adapter {
     }
 
     const paramName = snakeCaseName(param.name);
+    let paramType = this.getType(param.type);
+    if (paramLoc === 'method' && paramType.kind === 'String') {
+      // for Strings, we define these as "impl Into<String>" so that passing a str will just work
+      paramType = new rust.ImplTrait('Into', paramType);
+    }
+
     let adaptedParam: rust.MethodParameter;
     switch (param.kind) {
       case 'body': {
-        adaptedParam = new rust.BodyParameter(paramName, paramLoc, new rust.RequestContent(this.crate, this.getType(param.type), this.adaptSerdeFormat(param.defaultContentType)));
+        adaptedParam = new rust.BodyParameter(paramName, paramLoc, new rust.RequestContent(this.crate, paramType, this.adaptSerdeFormat(param.defaultContentType)));
         break;
       }
       case 'header':
@@ -503,10 +509,10 @@ export class Adapter {
           // TODO: https://github.com/Azure/autorest.rust/issues/58
           throw new Error('header collection param nyi');
         }
-        adaptedParam = new rust.HeaderParameter(paramName, param.serializedName, paramLoc, this.getType(param.type));
+        adaptedParam = new rust.HeaderParameter(paramName, param.serializedName, paramLoc, paramType);
         break;
       case 'path':
-        adaptedParam = new rust.PathParameter(paramName, param.serializedName, paramLoc, this.getType(param.type), param.urlEncode);
+        adaptedParam = new rust.PathParameter(paramName, param.serializedName, paramLoc, paramType, param.urlEncode);
         break;
       case 'query':
         if (param.collectionFormat) {
@@ -514,7 +520,7 @@ export class Adapter {
           throw new Error('query collection param nyi');
         }
         // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
-        adaptedParam = new rust.QueryParameter(paramName, param.serializedName, paramLoc, this.getType(param.type), true);
+        adaptedParam = new rust.QueryParameter(paramName, param.serializedName, paramLoc, paramType, true);
         break;
     }
 
