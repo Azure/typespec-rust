@@ -131,11 +131,12 @@ pub struct SecretAttributes {
     pub enabled: Option<bool>,
 
     /// Expiry date in UTC.
+    #[serde(rename = "exp")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub expires: Option<OffsetDateTime>,
 
     /// Not before date in UTC.
-    #[serde(rename = "notBefore")]
+    #[serde(rename = "nbf")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub not_before: Option<OffsetDateTime>,
 
@@ -240,7 +241,7 @@ pub struct SecretListResult {
 #[non_exhaustive]
 pub struct SecretRestoreParameters {
     /// The backup blob associated with a secret bundle.
-    #[serde(rename = "secretBundleBackup")]
+    #[serde(rename = "value")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub secret_bundle_backup: Option<Vec<u8>>,
 }
@@ -255,7 +256,7 @@ pub struct SecretSetParameters {
     pub content_type: Option<String>,
 
     /// The secret management attributes.
-    #[serde(rename = "secretAttributes")]
+    #[serde(rename = "attributes")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub secret_attributes: Option<SecretAttributes>,
 
@@ -278,7 +279,7 @@ pub struct SecretUpdateParameters {
     pub content_type: Option<String>,
 
     /// The secret management attributes.
-    #[serde(rename = "secretAttributes")]
+    #[serde(rename = "attributes")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub secret_attributes: Option<SecretAttributes>,
 

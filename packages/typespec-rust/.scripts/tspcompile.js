@@ -46,7 +46,7 @@ const cadlRanch = {
   //'cadl_pageable': ['payload/pageable'],
   //'cadl_srvdrivenold': ['resiliency/srv-driven/old.tsp'],
   //'cadl_srvdrivennew': ['resiliency/srv-driven'],
-  //'cadl_json': ['serialization/encoded-name/json'],
+  'cadl_jsonencodedname': ['serialization/encoded-name/json'],
   //'cadl_multiple': ['server/path/multiple'],
   //'cadl_single': ['server/path/single'],
   //'cadl_unversioned': ['server/versions/not-versioned'],

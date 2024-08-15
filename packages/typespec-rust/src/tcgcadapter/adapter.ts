@@ -112,6 +112,10 @@ export class Adapter {
     this.types.set(modelName, rustModel);
 
     for (const property of model.properties) {
+      if (property.kind !== 'property') {
+        // TODO: https://github.com/Azure/autorest.rust/issues/96
+        throw new Error(`model property kind ${property.kind} NYI`);
+      }
       const structField = this.getModelField(property);
       rustModel.fields.push(structField);
     }
@@ -120,9 +124,9 @@ export class Adapter {
   }
 
   // converts a tcgc model property to a model field
-  private getModelField(property: tcgc.SdkModelPropertyType): rust.ModelField {
+  private getModelField(property: tcgc.SdkBodyModelPropertyType): rust.ModelField {
     const fieldType = new rust.Option(this.getType(property.type), false);
-    const modelField = new rust.ModelField(snakeCaseName(property.name), property.name, true, fieldType);
+    const modelField = new rust.ModelField(snakeCaseName(property.name), property.serializedName, true, fieldType);
     modelField.docs = property.description;
     return modelField;
   }
