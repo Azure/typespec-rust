@@ -61,7 +61,7 @@ export class Adapter {
   // converts all tcgc types to their Rust type equivalent
   private adaptTypes(): void {
     for (const sdkEnum of this.ctx.sdkPackage.enums) {
-      if (sdkEnum.usage === tcgc.UsageFlags.ApiVersionEnum) {
+      if ((sdkEnum.usage & tcgc.UsageFlags.ApiVersionEnum) === tcgc.UsageFlags.ApiVersionEnum) {
         // we skip generating the enums for API
         // versions as we expose it as a String
         continue;
@@ -333,22 +333,61 @@ export class Adapter {
       clientOptionsField.defaultValue = 'ClientOptions::default()';
       clientOptionsStruct.fields.push(clientOptionsField);
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
+
       // NOTE: per tcgc convention, if there is no param of kind credential
       // it means that the client doesn't require any kind of authentication.
       // HOWEVER, if there *is* a credential param, then the client *does not*
       // automatically support unauthenticated requests. a credential with
       // the noAuth scheme indicates support for unauthenticated requests.
-      const constructor = new rust.Constructor('with_no_credential');
+
+      // bit flags for auth types
+      enum AuthTypes {
+        Default = 0, // unspecified
+        NoAuth  = 1, // explicit NoAuth
+        WithAut = 2, // explicit credential
+      }
+
+      let authType = AuthTypes.Default;
+
+      const ctorParams = new Array<rust.ClientParameter>();
       for (const param of client.initialization.properties) {
         switch (param.kind) {
           case 'credential':
-            // TODO: https://github.com/Azure/autorest.rust/issues/57
-            continue;
+            switch (param.type.kind) {
+              case 'credential':
+                switch (param.type.scheme.type) {
+                  case 'noAuth':
+                    authType |= AuthTypes.NoAuth;
+                    break;
+                  case 'oauth2': {
+                    authType |= AuthTypes.WithAut;
+                    if (param.type.scheme.flows.length === 0) {
+                      throw new Error(`no flows defined for credential type ${param.type.scheme.type}`);
+                    }
+                    const scopes = new Array<string>();
+                    for (const scope of param.type.scheme.flows[0].scopes) {
+                      scopes.push(scope.value);
+                    }
+                    const ctorTokenCredential = new rust.Constructor('new');
+                    ctorTokenCredential.parameters.push(new rust.ClientParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes))));
+                    rustClient.constructable.constructors.push(ctorTokenCredential);
+                    break;
+                  }
+                  default:
+                    // TODO: https://github.com/Azure/autorest.rust/issues/57
+                    throw new Error(`credential scheme type ${param.type.scheme.type} NYI`);
+                }
+                break;
+              case 'union':
+                // TODO: https://github.com/Azure/autorest.rust/issues/57
+                throw new Error('credential unions NYI');
+            }
+            break;
           case 'endpoint':
             // for Rust, we always require a complete endpoint param, templated
             // endpoints, e.g. https://{something}.contoso.com isn't supported.
             // note that the types of the param and the field are slightly different
-            constructor.parameters.push(new rust.ClientParameter(param.name, new rust.ImplTrait('AsRef', new rust.StringSlice())));
+            ctorParams.push(new rust.ClientParameter(param.name, new rust.ImplTrait('AsRef', new rust.StringSlice())));
             rustClient.fields.push(new rust.ClientParameter(param.name, new rust.Url(this.crate)));
             break;
           case 'method': {
@@ -375,7 +414,18 @@ export class Adapter {
           }
         }
       }
-      rustClient.constructable.constructors.push(constructor);
+
+      if (authType === AuthTypes.Default || (authType & AuthTypes.NoAuth) === AuthTypes.NoAuth) {
+        const ctorWithNoCredential = new rust.Constructor('with_no_credential');
+        rustClient.constructable.constructors.push(ctorWithNoCredential);
+      }
+
+      // propagate ctor params to all client ctors
+      for (const constructor of rustClient.constructable.constructors) {
+        constructor.parameters.push(...ctorParams);
+        // ensure param order of endpoint, credential, other
+        helpers.sortClientParameters(constructor.parameters);
+      }
     } else if (parent) {
       // this is a sub-client. it will share the fields of the parent.
       // NOTE: we must propagate parant params before a potential recursive call

@@ -38,6 +38,8 @@ export function emitPub(pub: boolean): string {
 // returns the type declaration string for the specified Rust type
 export function getTypeDeclaration(type: rust.Type, withAnonymousLifetime = false): string {
   switch (type.kind) {
+    case 'arc':
+      return `${type.name}<dyn ${getTypeDeclaration(type.type)}>`;
     case 'encodedBytes':
       return 'Vec<u8>';
     case 'hashmap':
@@ -61,6 +63,7 @@ export function getTypeDeclaration(type: rust.Type, withAnonymousLifetime = fals
     case 'enum':
     case 'jsonValue':
     case 'offsetDateTime':
+    case 'tokenCredential':
       return type.name;
     case 'external':
     case 'model':

@@ -50,6 +50,8 @@ export class Use {
   // adds the specified type if not already in the list
   addForType(type: rust.Client | rust.Type): void {
     switch (type.kind) {
+      case 'arc':
+        return this.addForType(type.type);
       case 'client': {
         const mod = codegen.deconstruct(type.name).join('_');
         this.addType(`crate::${mod}`, type.name);
@@ -77,7 +79,11 @@ export class Use {
       if ((<rust.StdType>type).name !== undefined && (<rust.StdType>type).use !== undefined) {
         this.addType((<rust.StdType>type).use, (<rust.StdType>type).name);
       } else if ((<rust.External>type).crate !== undefined && (<rust.External>type).name !== undefined) {
-        this.addType((<rust.External>type).crate, (<rust.External>type).name);
+        let module = (<rust.External>type).crate;
+        if ((<rust.External>type).namespace) {
+          module += `::${(<rust.External>type).namespace}`;
+        }
+        this.addType(module, (<rust.External>type).name);
       }
     }
   }

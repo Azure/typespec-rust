@@ -9,6 +9,8 @@ use azure_core::{
     Url,
 };
 
+use azure_core::auth::TokenCredential;
+
 use azure_core::builders::{ClientMethodOptionsBuilder, ClientOptionsBuilder};
 
 use crate::models::{
@@ -31,8 +33,9 @@ pub struct KeyVaultClientOptions {
 }
 
 impl KeyVaultClient {
-    pub fn with_no_credential(
+    pub fn new(
         endpoint: impl AsRef<str>,
+        credential: Arc<dyn TokenCredential>,
         options: Option<KeyVaultClientOptions>,
     ) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;

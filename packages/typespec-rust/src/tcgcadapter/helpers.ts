@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
+import * as rust from '../codemodel/index.js';
 
 // fixes up enum names to follow Rust conventions
 export function fixUpEnumValueName(name: string): string {
@@ -37,4 +38,15 @@ export function fixUpEnumValueName(name: string): string {
   }
 
   return name;
+}
+
+// sorts client params so they're in the order, endpoint, [credential], other
+export function sortClientParameters(params: Array<rust.ClientParameter>): void {
+  params.sort((a: rust.ClientParameter, b: rust.ClientParameter): number => {
+    if (a.name === 'endpoint' || (a.name === 'credential' && b.name !== 'endpoint')) {
+      // endpoint always comes first, followed by credential (if applicable)
+      return -1;
+    }
+    return 0;
+  });
 }

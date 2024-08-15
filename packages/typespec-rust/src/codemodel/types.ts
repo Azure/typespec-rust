@@ -6,7 +6,16 @@
 import { Crate, CrateDependency } from './crate.js';
 
 // Type defines a type within the Rust type system
-export type Type = EncodedBytes | Enum | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | Unit | Url | Vector;
+export type Type = Arc | EncodedBytes | Enum | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
+
+// Arc is a std::sync::Arc<T>
+export interface Arc extends StdType {
+  kind: 'arc';
+
+  // the generic type param
+  // note that not all types are applicable
+  type: Type;
+}
 
 // BytesEncoding defines the possible types of base64-encoding.
 export type BytesEncoding = 'std' | 'url';
@@ -66,10 +75,6 @@ export interface HashMap extends StdType {
 
   // the V generic type param
   type: Type;
-
-  name: 'HashMap';
-
-  use: 'std::collections';
 }
 
 // ImplTrait is the Rust syntax for "a concrete type that implements this trait"
@@ -210,6 +215,14 @@ export interface StructField extends StructFieldBase {
   // no additional fields at present
 }
 
+// TokenCredential is an azure_core::TokenCredential parameter
+export interface TokenCredential extends External {
+  kind: 'tokenCredential';
+
+  // the scopes to include for the credential
+  scopes: Array<string>;
+}
+
 // Unit is the unit type (i.e. "()")
 export interface Unit {
   kind: 'unit';
@@ -221,6 +234,7 @@ export interface Url extends External {
 }
 
 // Vector is a Rust Vec<T>
+// since Vec<T> is in the prelude set, it doesn't need to extend StdType
 export interface Vector {
   kind: 'vector';
 
@@ -239,13 +253,17 @@ export interface External {
 
   // the name of the type
   name: string;
+
+  // namespace within the crate where the type is defined (e.g. foo, foo::bar)
+  namespace?: string;
 }
 
 export class External implements External {
-  constructor(crate: Crate, crateName: string, typeName: string) {
+  constructor(crate: Crate, crateName: string, typeName: string, namespace?: string) {
     crate.addDependency(new CrateDependency(crateName));
     this.crate = crateName;
     this.name = typeName;
+    this.namespace = namespace;
   }
 }
 
@@ -256,6 +274,13 @@ export interface StdType {
 
   // the using statement to bring it into scope
   use: string;
+}
+
+export class StdType implements StdType {
+  constructor(name: string, use: string) {
+    this.name = name;
+    this.use = use;
+  }
 }
 
 // base type for models and structs
@@ -299,6 +324,14 @@ interface StructFieldBase {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+export class Arc extends StdType implements Arc {
+  constructor(type: Type) {
+    super('Arc', 'std::sync');
+    this.kind = 'arc';
+    this.type = type;
+  }
+}
+
 export class EncodedBytes implements EncodedBytes {
   constructor(encoding: BytesEncoding) {
     this.kind = 'encodedBytes';
@@ -333,12 +366,11 @@ export class ExternalType extends External implements ExternalType {
   }
 }
 
-export class HashMap implements HashMap {
+export class HashMap extends StdType implements HashMap {
   constructor(type: Type) {
+    super('HashMap', 'std::collections');
     this.kind = 'hashmap';
     this.type = type;
-    this.name = 'HashMap';
-    this.use = 'std::collections';
   }
 }
 
@@ -504,6 +536,17 @@ export class StructField implements StructField {
     this.name = name;
     this.pub = pub;
     this.type = type;
+  }
+}
+
+export class TokenCredential extends External implements TokenCredential {
+  constructor(crate: Crate, scopes: Array<string>) {
+    if (scopes.length === 0) {
+      throw new Error('scopes must contain at least one entry');
+    }
+    super(crate, 'azure_core', 'TokenCredential', 'auth');
+    this.kind = 'tokenCredential';
+    this.scopes = scopes;
   }
 }
 
