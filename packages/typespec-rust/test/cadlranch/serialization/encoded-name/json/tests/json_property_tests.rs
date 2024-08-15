@@ -18,5 +18,9 @@ async fn send() {
     let mut model = JsonEncodedNameModel::default();
     model.default_name = Some(true);
     let req = model.try_into().unwrap();
-    let _resp = client.get_json_property_client().send(req, None).await.unwrap();
+    let _resp = client
+        .get_json_property_client()
+        .send(req, None)
+        .await
+        .unwrap();
 }
