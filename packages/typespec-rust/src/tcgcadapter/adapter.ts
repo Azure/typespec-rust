@@ -7,6 +7,7 @@ import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
 import { EmitContext } from '@typespec/compiler';
 import * as helpers from './helpers.js';
+import * as naming from './naming.js';
 import { RustEmitterOptions } from '../lib.js';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as rust from '../codemodel/index.js';
@@ -126,7 +127,7 @@ export class Adapter {
   // converts a tcgc model property to a model field
   private getModelField(property: tcgc.SdkBodyModelPropertyType): rust.ModelField {
     const fieldType = new rust.Option(this.getType(property.type), false);
-    const modelField = new rust.ModelField(snakeCaseName(property.name), property.serializedName, true, fieldType);
+    const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, true, fieldType);
     modelField.docs = property.description;
     return modelField;
   }
@@ -468,7 +469,7 @@ export class Adapter {
 
     switch (method.kind) {
       case 'basic':
-        rustMethod = new rust.AsyncMethod(snakeCaseName(method.name), rustClient, isPub(method.access), new rust.MethodOptions(methodOptionsStruct, false), httpMethod, httpPath);
+        rustMethod = new rust.AsyncMethod(naming.getEscapedReservedName(snakeCaseName(method.name), 'fn'), rustClient, isPub(method.access), new rust.MethodOptions(methodOptionsStruct, false), httpMethod, httpPath);
         break;
       case 'paging':
         // TODO: https://github.com/Azure/autorest.rust/issues/60
@@ -545,7 +546,7 @@ export class Adapter {
       }
     }
 
-    const paramName = snakeCaseName(param.name);
+    const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
     let paramType = this.getType(param.type);
     if (paramLoc === 'method' && paramType.kind === 'String') {
       // for Strings, we define these as "impl Into<String>" so that passing a str will just work

@@ -54,7 +54,7 @@ const cadlRanch = {
   //'cadl_clientreqid': ['special-headers/client-request-id'],
   //'cadl_condreq': ['special-headers/conditional-request'],
   //'cadl_repeatability': ['special-headers/repeatability'],
-  //'cadl_specialwords': ['special-words'],
+  'cadl_specialwords': ['special-words'],
   //'cadl_array': ['type/array'], needs tests
   //'cadl_dictionary': ['type/dictionary'], needs tests
   'cadl_extensible': ['type/enum/extensible'],
