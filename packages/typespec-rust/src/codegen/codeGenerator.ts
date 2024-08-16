@@ -24,8 +24,8 @@ export class CodeGenerator {
   }
 
   // returns the contents for the Cargo.toml file
-  emitCargoToml(): string {
-    return emitCargoToml(this.crate);
+  emitCargoToml(cargoToml?: string): string {
+    return emitCargoToml(this.crate, cargoToml);
   }
 
   // returns an array of all client files and their content.
