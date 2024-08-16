@@ -48,7 +48,7 @@ const cadlRanch = {
   //'cadl_srvdrivennew': ['resiliency/srv-driven'],
   'cadl_jsonencodedname': ['serialization/encoded-name/json'],
   //'cadl_multiple': ['server/path/multiple'],
-  //'cadl_single': ['server/path/single'],
+  'cadl_singlepath': ['server/path/single'],
   //'cadl_unversioned': ['server/versions/not-versioned'],
   //'cadl_versioned': ['server/versions/versioned'],
   //'cadl_clientreqid': ['special-headers/client-request-id'],
