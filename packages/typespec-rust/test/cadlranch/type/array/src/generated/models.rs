@@ -9,6 +9,10 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]
 pub struct InnerModel {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub children: Option<Vec<InnerModel>>,
+
+    /// Required string property
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub property: Option<String>,
 }
