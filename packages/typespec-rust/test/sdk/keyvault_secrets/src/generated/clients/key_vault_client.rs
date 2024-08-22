@@ -5,8 +5,7 @@
 
 use azure_core::{
     AsClientMethodOptions, ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Policy,
-    Request, RequestContent, Response, Result, RetryOptions, TelemetryOptions, TransportOptions,
-    Url,
+    Request, RequestContent, Response, Result, RetryOptions, TransportOptions, Url,
 };
 
 use azure_core::auth::TokenCredential;
@@ -267,15 +266,6 @@ impl ClientOptionsBuilder for KeyVaultClientOptions {
         Self: Sized,
     {
         self.client_options.set_retry(retry);
-        self
-    }
-
-    fn with_telemetry<P>(mut self, telemetry: P) -> Self
-    where
-        P: Into<TelemetryOptions>,
-        Self: Sized,
-    {
-        self.client_options.set_telemetry(telemetry);
         self
     }
 

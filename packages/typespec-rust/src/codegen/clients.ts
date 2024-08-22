@@ -257,7 +257,7 @@ function formatParamTypeName(param: rust.Parameter | rust.Self): string {
 
 function createClientOptionsBuilderImpl(indentation: helpers.indentation, options: rust.ClientOptions, use: Use): string {
   use.addType('azure_core::builders', 'ClientOptionsBuilder');
-  use.addTypes('azure_core', ['Policy', 'RetryOptions', 'TelemetryOptions', 'TransportOptions']);
+  use.addTypes('azure_core', ['Policy', 'RetryOptions', /*'TelemetryOptions', */'TransportOptions']);
   use.addType('std::sync', 'Arc');
 
   const emitWithMethod = function(indentation: helpers.indentation, name: string, into: string): string {
@@ -273,7 +273,8 @@ function createClientOptionsBuilderImpl(indentation: helpers.indentation, option
   implBuilder += emitWithMethod(indentation, 'per_call_policies', 'Vec<Arc<dyn Policy>>');
   implBuilder += emitWithMethod(indentation, 'per_try_policies', 'Vec<Arc<dyn Policy>>');
   implBuilder += emitWithMethod(indentation, 'retry', 'RetryOptions');
-  implBuilder += emitWithMethod(indentation, 'telemetry', 'TelemetryOptions');
+  // TODO: https://github.com/Azure/azure-sdk-for-rust/issues/1753
+  //implBuilder += emitWithMethod(indentation, 'telemetry', 'TelemetryOptions');
   implBuilder += emitWithMethod(indentation, 'transport', 'TransportOptions');
   implBuilder += '}\n\n';
   return implBuilder;
