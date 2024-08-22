@@ -71,6 +71,11 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
         const endpointParamName = constructor.parameters[0].name;
         body += `${indentation.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName}.as_ref())?;\n`;
         body += `${indentation.get()}${endpointParamName}.query_pairs_mut().clear();\n`;
+        // if there's a credential param, create the necessary auth policy
+        const authPolicy = getAuthPolicy(constructor, use);
+        if (authPolicy) {
+          body += `${indentation.get()}${authPolicy}\n`;
+        }
         body += `${indentation.get()}let options = options.unwrap_or_default();\n`;
         body += `${indentation.get()}Ok(Self {\n`;
 
@@ -86,7 +91,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
         body += `${indentation.get()}option_env!("CARGO_PKG_VERSION"),\n`;
         body += `${indentation.get()}options.client_options,\n`;
         body += `${indentation.get()}Vec::default(),\n`;
-        body += `${indentation.get()}Vec::default(),\n`;
+        body += `${indentation.get()}${authPolicy ? 'vec![auth_policy]' : 'Vec::default()'},\n`;
         body += `${indentation.pop().get()}),\n`; // end Pipeline::new
         body += `${indentation.pop().get()}})\n`; // end Ok
         body += `${indentation.pop().get()}}\n`; // end constructor
@@ -237,6 +242,22 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
     paramsSig.push(`options: ${helpers.getTypeDeclaration(method.options, true)}`);
   }
   return paramsSig.join(', ');
+}
+
+// creates the auth policy if the ctor contains a credential param.
+// the policy will be named auth_policy.
+function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
+  for (const param of ctor.parameters) {
+    if (param.type.kind === 'arc' && param.type.type.kind === 'tokenCredential') {
+      use.addType('azure_core', 'BearerTokenCredentialPolicy');
+      const scopes = new Array<string>();
+      for (const scope of param.type.type.scopes) {
+        scopes.push(`"${scope}"`);
+      }
+      return `let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(credential, vec![${scopes.join(', ')}]));`;
+    }
+  }
+  return undefined;
 }
 
 function formatParamTypeName(param: rust.Parameter | rust.Self): string {
