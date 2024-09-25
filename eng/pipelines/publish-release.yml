@@ -36,6 +36,6 @@ extends:
                 parameters:
                   PackagePath: "typespec-rust"
                   PackageFileName: "azure-tools-typespec-rust"
-                  ReleaseName: "Autorest for Rust v$currentVersion"
-                  ReleaseNotes: "Autorest for Rust track 2"
+                  ReleaseName: "TypeSpec emitter for Rust v$currentVersion"
+                  ReleaseNotes: "TypeSpec emitter for Rust track 2"
                   PublishDevVersion: ${{ parameters.publish_dev }}
