@@ -37,5 +37,5 @@ extends:
                   PackagePath: "typespec-rust"
                   PackageFileName: "azure-tools-typespec-rust"
                   ReleaseName: "TypeSpec emitter for Rust v$currentVersion"
-                  ReleaseNotes: "TypeSpec emitter for Rust track 2"
+                  ReleaseNotes: "TypeSpec emitter for Rust"
                   PublishDevVersion: ${{ parameters.publish_dev }}
