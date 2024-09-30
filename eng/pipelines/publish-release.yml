@@ -27,7 +27,6 @@ extends:
 
           steps:
             - template: /eng/pipelines/templates/steps/set-env.yaml
-
             - template: /eng/pipelines/templates/steps/build-test.yaml
             - template: /eng/pipelines/templates/steps/publish-release.yaml
               parameters:
