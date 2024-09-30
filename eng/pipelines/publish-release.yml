@@ -6,10 +6,6 @@ parameters:
   displayName: 'Publish Dev Release only'
   type: boolean
   default: true
-- name: release_autorestrust
-  displayName: '@autorest/rust'
-  type: boolean
-  default: false
 
 extends: 
   template: /eng/pipelines/templates/stages/1es-redirect.yml
@@ -19,6 +15,8 @@ extends:
 
       variables: 
         - template: /eng/pipelines/templates/variables/image.yml
+        - name: TypeSpecRustPkgDir
+          value: $(System.DefaultWorkingDirectory)/packages/typespec-rust
 
       jobs:
         - job: Release 
@@ -30,12 +28,11 @@ extends:
           steps:
             - template: /eng/pipelines/templates/steps/set-env.yaml
 
-            - ${{ if eq(parameters.release_autorestrust, true) }}:
-              - template: /eng/pipelines/templates/steps/build-test.yaml
-              - template: /eng/pipelines/templates/steps/publish-release.yaml
-                parameters:
-                  PackagePath: "typespec-rust"
-                  PackageFileName: "azure-tools-typespec-rust"
-                  ReleaseName: "TypeSpec emitter for Rust v$currentVersion"
-                  ReleaseNotes: "TypeSpec emitter for Rust"
-                  PublishDevVersion: ${{ parameters.publish_dev }}
+            - template: /eng/pipelines/templates/steps/build-test.yaml
+            - template: /eng/pipelines/templates/steps/publish-release.yaml
+              parameters:
+                PackagePath: "typespec-rust"
+                PackageFileName: "azure-tools-typespec-rust"
+                ReleaseName: "TypeSpec emitter for Rust v$currentVersion"
+                ReleaseNotes: "TypeSpec emitter for Rust"
+                PublishDevVersion: ${{ parameters.publish_dev }}
