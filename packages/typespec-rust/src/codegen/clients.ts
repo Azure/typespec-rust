@@ -554,12 +554,21 @@ function getHeaderPathQueryParamValue(param: HeaderParamType | rust.PathParamete
     if (param.format === 'multi') {
       throw new Error('multi should have been handled outside getHeaderPathQueryParamValue');
     }
-    return `${param.name}.join("${getCollectionDelimiter(param.format)}")`;
+    if (param.type.type.kind === 'String') {
+      return `${param.name}.join("${getCollectionDelimiter(param.format)}")`;
+    }
+    // convert the items to strings
+    return `${param.name}.iter().map(|i| i.to_string()).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
   }
 
   switch (param.type.kind) {
     case 'String':
       paramName += param.name;
+      break;
+    case 'enum':
+    case 'offsetDateTime':
+    case 'scalar':
+      paramName += `${param.name}.to_string()`;
       break;
     case 'implTrait':
       // only done for method params so no need to include paramName prefix

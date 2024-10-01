@@ -396,7 +396,7 @@ export class Adapter {
                 break;
               case 'union':
                 // TODO: https://github.com/Azure/typespec-rust/issues/57
-                throw new Error('credential unions NYI');
+                continue;
             }
             break;
           case 'endpoint':

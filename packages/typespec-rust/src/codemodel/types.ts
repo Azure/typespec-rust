@@ -466,6 +466,7 @@ export class RequestContent extends External implements RequestContent {
   constructor(crate: Crate, type: Type, format: SerdeFormat) {
     switch (type.kind) {
       case 'String':
+      case 'encodedBytes':
       case 'enum':
       case 'hashmap':
       case 'model':
@@ -486,6 +487,7 @@ export class Response extends External implements Response {
   constructor(crate: Crate, type: Type, format?: SerdeFormat) {
     switch (type.kind) {
       case 'String':
+      case 'encodedBytes':
       case 'enum':
       case 'hashmap':
       case 'jsonValue':
