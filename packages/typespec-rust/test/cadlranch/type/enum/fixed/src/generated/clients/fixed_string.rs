@@ -18,6 +18,7 @@ pub struct FixedString {
 }
 
 impl FixedString {
+    /// getKnownValue
     pub async fn get_known_value(
         &self,
         options: Option<FixedStringGetKnownValueOptions<'_>>,
@@ -31,6 +32,7 @@ impl FixedString {
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
+    /// putKnownValue
     pub async fn put_known_value(
         &self,
         body: RequestContent<DaysOfWeekEnum>,
@@ -46,6 +48,7 @@ impl FixedString {
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
+    /// putUnknownValue
     pub async fn put_unknown_value(
         &self,
         body: RequestContent<DaysOfWeekEnum>,

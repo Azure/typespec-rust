@@ -50,3 +50,19 @@ export function sortClientParameters(params: Array<rust.ClientParameter>): void 
     return 0;
   });
 }
+
+// gets the doc comment string based on the summary and doc strings
+export function getDocComment(summary?: string, doc?: string): string | undefined {
+  if (!summary && !doc) {
+    return undefined;
+  }
+
+  let docs = '';
+  if (summary) {
+    docs = summary;
+  }
+  if (doc) {
+    docs += `\n${doc}`;
+  }
+  return docs;
+}

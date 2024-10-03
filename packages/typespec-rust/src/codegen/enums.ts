@@ -28,6 +28,7 @@ export function emitEnums(crate: rust.Crate, context: Context): string {
     body += `${helpers.emitPub(rustEnum.pub)}enum ${rustEnum.name} {\n`;
 
     for (const value of rustEnum.values) {
+      body += helpers.formatDocComment(value.docs);
       if (value.name !== value.value) {
         // only emit the serde annotation when the names aren't equal
         body += `${indentation.get()}#[serde(rename = "${value.value}")]\n`;

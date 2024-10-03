@@ -118,6 +118,15 @@ pub struct DeletedSecretItem {
     pub tags: Option<HashMap<String, String>>,
 }
 
+/// The key vault error exception.
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[non_exhaustive]
+pub struct KeyVaultError {
+    /// The key vault server error.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<Error>,
+}
+
 /// The secret management attributes.
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[non_exhaustive]

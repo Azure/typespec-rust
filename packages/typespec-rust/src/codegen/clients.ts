@@ -127,6 +127,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
           };
           break;
       }
+      body += `${indentation.get()}${helpers.formatDocComment(method.docs)}`;
       body += `${indentation.get()}${helpers.emitPub(method.pub)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
       body += `${indentation.push().get()}${methodBody(indentation)}\n`;
       body += `${indentation.pop().get()}}\n`; // end method

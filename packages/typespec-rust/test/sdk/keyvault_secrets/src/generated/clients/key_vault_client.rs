@@ -58,6 +58,10 @@ impl KeyVaultClient {
         })
     }
 
+    /// Backs up the specified secret.
+    /// Requests that a backup of the specified secret be downloaded to the client. All
+    /// versions of the secret will be downloaded. This operation requires the
+    /// secrets/backup permission.
     pub async fn backup_secret(
         &self,
         secret_name: impl Into<String>,
@@ -76,6 +80,10 @@ impl KeyVaultClient {
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
+    /// Deletes a secret from a specified key vault.
+    /// The DELETE operation applies to any secret stored in Azure Key Vault. DELETE
+    /// cannot be applied to an individual version of a secret. This operation requires
+    /// the secrets/delete permission.
     pub async fn delete_secret(
         &self,
         secret_name: impl Into<String>,
@@ -94,6 +102,9 @@ impl KeyVaultClient {
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
+    /// Gets the specified deleted secret.
+    /// The Get Deleted Secret operation returns the specified deleted secret along
+    /// with its attributes. This operation requires the secrets/get permission.
     pub async fn get_deleted_secret(
         &self,
         secret_name: impl Into<String>,
@@ -112,6 +123,9 @@ impl KeyVaultClient {
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
+    /// Get a specified secret from a given key vault.
+    /// The GET operation is applicable to any secret stored in Azure Key Vault. This
+    /// operation requires the secrets/get permission.
     pub async fn get_secret(
         &self,
         secret_name: impl Into<String>,
@@ -132,6 +146,10 @@ impl KeyVaultClient {
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
+    /// Permanently deletes the specified secret.
+    /// The purge deleted secret operation removes the secret permanently, without the
+    /// possibility of recovery. This operation can only be enabled on a soft-delete
+    /// enabled vault. This operation requires the secrets/purge permission.
     pub async fn purge_deleted_secret(
         &self,
         secret_name: impl Into<String>,
@@ -150,6 +168,10 @@ impl KeyVaultClient {
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
+    /// Recovers the deleted secret to the latest version.
+    /// Recovers the deleted secret in the specified vault. This operation can only be
+    /// performed on a soft-delete enabled vault. This operation requires the
+    /// secrets/recover permission.
     pub async fn recover_deleted_secret(
         &self,
         secret_name: impl Into<String>,
@@ -168,6 +190,9 @@ impl KeyVaultClient {
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
+    /// Restores a backed up secret to a vault.
+    /// Restores a backed up secret, and all its versions, to a vault. This operation
+    /// requires the secrets/restore permission.
     pub async fn restore_secret(
         &self,
         parameters: RequestContent<SecretRestoreParameters>,
@@ -186,6 +211,10 @@ impl KeyVaultClient {
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
+    /// Sets a secret in a specified key vault.
+    /// The SET operation adds a secret to the Azure Key Vault. If the named secret
+    /// already exists, Azure Key Vault creates a new version of that secret. This
+    /// operation requires the secrets/set permission.
     pub async fn set_secret(
         &self,
         secret_name: impl Into<String>,
@@ -207,6 +236,11 @@ impl KeyVaultClient {
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
+    /// Updates the attributes associated with a specified secret in a given key vault.
+    /// The UPDATE operation changes specified attributes of an existing stored secret.
+    /// Attributes that are not specified in the request are left unchanged. The value
+    /// of a secret itself cannot be changed. This operation requires the secrets/set
+    /// permission.
     pub async fn update_secret(
         &self,
         secret_name: impl Into<String>,
