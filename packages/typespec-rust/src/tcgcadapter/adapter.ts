@@ -114,7 +114,8 @@ export class Adapter {
       return <rust.Model>rustModel;
     }
     rustModel = new rust.Model(modelName, isPub(model.access));
-    rustModel.docs = helpers.getDocComment(model.summary, model.doc);
+    rustModel.docs.summary = model.summary;
+    rustModel.docs.description = model.doc;
     this.types.set(modelName, rustModel);
 
     for (const property of model.properties) {
@@ -133,7 +134,8 @@ export class Adapter {
   private getModelField(property: tcgc.SdkBodyModelPropertyType): rust.ModelField {
     const fieldType = new rust.Option(this.getType(property.type), false);
     const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, true, fieldType);
-    modelField.docs = helpers.getDocComment(property.summary, property.doc);
+    modelField.docs.summary = property.summary;
+    modelField.docs.description = property.doc;
     return modelField;
   }
 
@@ -333,7 +335,8 @@ export class Adapter {
     }
 
     const rustClient = new rust.Client(clientName);
-    rustClient.docs = helpers.getDocComment(client.summary, client.doc);
+    rustClient.docs.summary = client.summary;
+    rustClient.docs.description = client.doc;
     rustClient.parent = parent;
 
     // anything other than public means non-instantiable client
@@ -483,7 +486,8 @@ export class Adapter {
         throw new Error(`method kind ${method.kind} NYI`);
     }
 
-    rustMethod.docs = helpers.getDocComment(method.summary, method.doc);
+    rustMethod.docs.summary = method.summary;
+    rustMethod.docs.description = method.doc;
     rustClient.methods.push(rustMethod);
 
     // stuff all of the operation parameters into one array for easy traversal
@@ -515,7 +519,8 @@ export class Adapter {
         adaptedParam = this.adaptMethodParameter(opParam);
       }
 
-      adaptedParam.docs = helpers.getDocComment(param.summary, param.doc);
+      adaptedParam.docs.summary = param.summary;
+      adaptedParam.docs.description = param.doc;
       rustMethod.params.push(adaptedParam);
 
       // remove the opParam we just processed
@@ -529,7 +534,8 @@ export class Adapter {
     for (const opParam of allOpParams) {
       if (opParam.onClient) {
         const adaptedParam = this.adaptMethodParameter(opParam);
-        adaptedParam.docs = helpers.getDocComment(opParam.summary, opParam.doc);
+        adaptedParam.docs.summary = opParam.summary;
+        adaptedParam.docs.description = opParam.doc;
         rustMethod.params.push(adaptedParam);
       }
     }
@@ -599,7 +605,8 @@ export class Adapter {
         break;
     }
 
-    adaptedParam.docs = helpers.getDocComment(param.summary, param.doc);
+    adaptedParam.docs.summary = param.summary;
+    adaptedParam.docs.description = param.doc;
 
     if (paramLoc === 'client') {
       this.clientMethodParams.set(param.name, adaptedParam);

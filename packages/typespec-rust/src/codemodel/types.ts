@@ -5,6 +5,15 @@
 
 import { Crate, CrateDependency } from './crate.js';
 
+// Docs contains the values used in doc comment generation.
+export interface Docs {
+  // the high level summary
+  summary?: string;
+
+  // detailed description
+  description?: string;
+}
+
 // Type defines a type within the Rust type system
 export type Type = Arc | EncodedBytes | Enum | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
 
@@ -35,8 +44,8 @@ export interface Enum {
   // the name of the enum type
   name: string;
 
-  // the provided doc string emitted as code comments
-  docs?: string;
+  // any docs for the type
+  docs: Docs;
 
   // indicates if the enum and its values should be public
   pub: boolean;
@@ -53,8 +62,8 @@ export interface EnumValue {
   // the name of the enum value
   name: string;
 
-  // the provided doc string emitted as code comments
-  docs?: string;
+  // any docs for the value
+  docs: Docs;
 
   // the value used in SerDe operations
   value: number | string;
@@ -203,9 +212,6 @@ export interface StringType {
 export interface Struct extends StructBase {
   kind: 'struct';
 
-  // the provided doc string emitted as code comments
-  docs?: string;
-
   // fields contains the fields within the struct
   fields: Array<StructField>;
 }
@@ -290,8 +296,8 @@ interface StructBase {
   // the name of the struct
   name: string;
 
-  // the provided doc string emitted as code comments
-  docs?: string;
+  // any docs for the type
+  docs: Docs;
 
   // indicates if the struct should be public
   pub: boolean;
@@ -308,8 +314,8 @@ interface StructFieldBase {
   // the name of the field
   name: string;
 
-  // the provided doc string emitted as code comments
-  docs?: string;
+  // any docs for the field
+  docs: Docs;
 
   // indicates if the field should be public
   pub: boolean;
@@ -349,6 +355,7 @@ export class Enum implements Enum {
     }
     this.values = values;
     this.extensible = extensible;
+    this.docs = {};
   }
 }
 
@@ -356,6 +363,7 @@ export class EnumValue implements EnumValue {
   constructor(name: string, value: number | string) {
     this.name = name;
     this.value = value;
+    this.docs = {};
   }
 }
 
@@ -408,6 +416,7 @@ export class Model implements Model {
     this.name = name;
     this.pub = pub;
     this.fields = new Array<ModelField>();
+    this.docs = {};
   }
 }
 
@@ -417,6 +426,7 @@ export class ModelField implements ModelField {
     this.serde = serde;
     this.pub = pub;
     this.type = type;
+    this.docs = {};
   }
 }
 
@@ -528,6 +538,7 @@ export class Struct implements Struct {
     this.name = name;
     this.pub = pub;
     this.fields = new Array<StructField>();
+    this.docs = {};
   }
 }
 
@@ -536,6 +547,7 @@ export class StructField implements StructField {
     this.name = name;
     this.pub = pub;
     this.type = type;
+    this.docs = {};
   }
 }
 

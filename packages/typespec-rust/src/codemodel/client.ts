@@ -13,8 +13,8 @@ export interface Client {
   // the name of the client
   name: string;
 
-  // the provided doc string emitted as code comments
-  docs?: string;
+  // any docs for the client
+  docs: types.Docs;
 
   // contains info for instantiable clients
   constructable?: ClientConstruction;
@@ -184,6 +184,7 @@ class HTTPMethodBase extends method.Method<types.Type> implements HTTPMethodBase
     super(name, pub, impl, self);
     this.httpMethod = httpMethod;
     this.httpPath = httpPath;
+    this.docs = {};
   }
 }
 
@@ -191,6 +192,7 @@ class HTTPParameterBase extends method.Parameter {
   constructor(name: string, location: ParameterLocation, type: types.Type) {
     super(name, type);
     this.location = location;
+    this.docs = {};
   }
 }
 
@@ -219,6 +221,7 @@ export class Client implements Client {
     this.name = name;
     this.fields = new Array<ClientParameter>();
     this.methods = new Array<MethodType>();
+    this.docs = {};
   }
 }
 

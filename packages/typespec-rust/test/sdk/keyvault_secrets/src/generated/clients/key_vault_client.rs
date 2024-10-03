@@ -59,6 +59,7 @@ impl KeyVaultClient {
     }
 
     /// Backs up the specified secret.
+    ///
     /// Requests that a backup of the specified secret be downloaded to the client. All
     /// versions of the secret will be downloaded. This operation requires the
     /// secrets/backup permission.
@@ -81,6 +82,7 @@ impl KeyVaultClient {
     }
 
     /// Deletes a secret from a specified key vault.
+    ///
     /// The DELETE operation applies to any secret stored in Azure Key Vault. DELETE
     /// cannot be applied to an individual version of a secret. This operation requires
     /// the secrets/delete permission.
@@ -103,6 +105,7 @@ impl KeyVaultClient {
     }
 
     /// Gets the specified deleted secret.
+    ///
     /// The Get Deleted Secret operation returns the specified deleted secret along
     /// with its attributes. This operation requires the secrets/get permission.
     pub async fn get_deleted_secret(
@@ -124,6 +127,7 @@ impl KeyVaultClient {
     }
 
     /// Get a specified secret from a given key vault.
+    ///
     /// The GET operation is applicable to any secret stored in Azure Key Vault. This
     /// operation requires the secrets/get permission.
     pub async fn get_secret(
@@ -147,6 +151,7 @@ impl KeyVaultClient {
     }
 
     /// Permanently deletes the specified secret.
+    ///
     /// The purge deleted secret operation removes the secret permanently, without the
     /// possibility of recovery. This operation can only be enabled on a soft-delete
     /// enabled vault. This operation requires the secrets/purge permission.
@@ -169,6 +174,7 @@ impl KeyVaultClient {
     }
 
     /// Recovers the deleted secret to the latest version.
+    ///
     /// Recovers the deleted secret in the specified vault. This operation can only be
     /// performed on a soft-delete enabled vault. This operation requires the
     /// secrets/recover permission.
@@ -191,6 +197,7 @@ impl KeyVaultClient {
     }
 
     /// Restores a backed up secret to a vault.
+    ///
     /// Restores a backed up secret, and all its versions, to a vault. This operation
     /// requires the secrets/restore permission.
     pub async fn restore_secret(
@@ -212,6 +219,7 @@ impl KeyVaultClient {
     }
 
     /// Sets a secret in a specified key vault.
+    ///
     /// The SET operation adds a secret to the Azure Key Vault. If the named secret
     /// already exists, Azure Key Vault creates a new version of that secret. This
     /// operation requires the secrets/set permission.
@@ -237,6 +245,7 @@ impl KeyVaultClient {
     }
 
     /// Updates the attributes associated with a specified secret in a given key vault.
+    ///
     /// The UPDATE operation changes specified attributes of an existing stored secret.
     /// Attributes that are not specified in the request are left unchanged. The value
     /// of a secret itself cannot be changed. This operation requires the secrets/set

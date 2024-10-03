@@ -10,8 +10,8 @@ export interface Method<T> {
   // the name of the method
   name: string;
 
-  // the provided doc string emitted as code comments
-  docs?: string;
+  // any docs for the method
+  docs: types.Docs;
 
   // indicates if the method should be public
   pub: boolean;
@@ -34,8 +34,8 @@ export interface Parameter {
   // the name of the parameter
   name: string;
 
-  // the provided doc string emitted as code comments
-  docs?: string;
+  // any docs for the parameter
+  docs: types.Docs;
 
   // the parameter's type
   type: types.Type;
@@ -68,6 +68,7 @@ export class Method<T> implements Method<T> {
     this.impl = impl;
     this.self = self;
     this.params = new Array<Parameter>();
+    this.docs = {};
   }
 }
 
@@ -77,6 +78,7 @@ export class Parameter implements Parameter {
     this.type = type;
     this.mut = false;
     this.ref = false;
+    this.docs = {};
   }
 }
 

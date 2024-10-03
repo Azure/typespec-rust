@@ -23,11 +23,24 @@ export function contentPreamble(): string {
 }
 
 // formats doc comments if available
-export function formatDocComment(docs?: string): string {
-  if (!docs) {
+export function formatDocComment(docs: rust.Docs): string {
+  if (!docs.summary && !docs.description) {
     return '';
   }
-  return codegen.comment(docs, '/// ', undefined, 120) + '\n';
+
+  let docStr = '';
+  if (docs.summary) {
+    docStr = codegen.comment(docs.summary, '/// ', undefined, 120) + '\n';
+  }
+
+  if (docs.description) {
+    if (docs.summary) {
+      docStr += '///\n';
+    }
+    docStr += codegen.comment(docs.description, '/// ', undefined, 120) + '\n';
+  }
+
+  return docStr;
 }
 
 // returns 'pub ' prefix as required
