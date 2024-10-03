@@ -72,6 +72,11 @@ export class Adapter {
     }
 
     for (const model of this.ctx.sdkPackage.models) {
+      if (model.usage === tcgc.UsageFlags.Error) {
+        // if the model is purely used for errors then
+        // skip it as we use azure_core::Error.
+        continue;
+      }
       const rustModel = this.getModel(model);
       this.crate.models.push(rustModel);
     }
