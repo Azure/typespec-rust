@@ -28,6 +28,6 @@
     "types": ["node"],
     "useUnknownInCatchVariables": false
   },
-  "include": ["src/**/*"],
+  "include": ["vitest.config.ts", "src/**/*", "test/**/*.ts"],
   "exclude": ["dist", "resources", "node_modules", "**/*.d.ts", "generated"]
 }
