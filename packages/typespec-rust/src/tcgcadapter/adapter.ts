@@ -51,8 +51,6 @@ export class Adapter {
     }
 
     if (this.crate.clients.length > 0) {
-      // until https://github.com/Azure/autorest.rust/issues/22 is fixed
-      // we always need this dependency for tests so always include it
       this.crate.addDependency(new rust.CrateDependency('async-std'));
     }
 
