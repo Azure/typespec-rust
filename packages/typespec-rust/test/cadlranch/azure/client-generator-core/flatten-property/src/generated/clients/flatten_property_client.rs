@@ -14,20 +14,20 @@ use crate::models::{FlattenModel, NestedFlattenModel};
 
 use std::sync::Arc;
 
-pub struct FlattenClient {
+pub struct FlattenPropertyClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
 #[derive(Clone, Debug)]
-pub struct FlattenClientOptions {
+pub struct FlattenPropertyClientOptions {
     client_options: ClientOptions,
 }
 
-impl FlattenClient {
+impl FlattenPropertyClient {
     pub fn with_no_credential(
         endpoint: impl AsRef<str>,
-        options: Option<FlattenClientOptions>,
+        options: Option<FlattenPropertyClientOptions>,
     ) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;
         endpoint.query_pairs_mut().clear();
@@ -47,12 +47,12 @@ impl FlattenClient {
     pub async fn put_flatten_model(
         &self,
         input: RequestContent<FlattenModel>,
-        options: Option<FlattenClientPutFlattenModelOptions<'_>>,
+        options: Option<FlattenPropertyClientPutFlattenModelOptions<'_>>,
     ) -> Result<Response<FlattenModel>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        url.set_path("/type/model/flatten/flattenModel");
+        url.set_path("/azure/client-generator-core/flatten-property/flattenModel");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -63,12 +63,12 @@ impl FlattenClient {
     pub async fn put_nested_flatten_model(
         &self,
         input: RequestContent<NestedFlattenModel>,
-        options: Option<FlattenClientPutNestedFlattenModelOptions<'_>>,
+        options: Option<FlattenPropertyClientPutNestedFlattenModelOptions<'_>>,
     ) -> Result<Response<NestedFlattenModel>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        url.set_path("/type/model/flatten/nestedFlattenModel");
+        url.set_path("/azure/client-generator-core/flatten-property/nestedFlattenModel");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -77,13 +77,13 @@ impl FlattenClient {
     }
 }
 
-impl FlattenClientOptions {
-    pub fn builder() -> builders::FlattenClientOptionsBuilder {
-        builders::FlattenClientOptionsBuilder::new()
+impl FlattenPropertyClientOptions {
+    pub fn builder() -> builders::FlattenPropertyClientOptionsBuilder {
+        builders::FlattenPropertyClientOptionsBuilder::new()
     }
 }
 
-impl Default for FlattenClientOptions {
+impl Default for FlattenPropertyClientOptions {
     fn default() -> Self {
         Self {
             client_options: ClientOptions::default(),
@@ -91,7 +91,7 @@ impl Default for FlattenClientOptions {
     }
 }
 
-impl ClientOptionsBuilder for FlattenClientOptions {
+impl ClientOptionsBuilder for FlattenPropertyClientOptions {
     fn with_per_call_policies<P>(mut self, per_call_policies: P) -> Self
     where
         P: Into<Vec<Arc<dyn Policy>>>,
@@ -130,86 +130,88 @@ impl ClientOptionsBuilder for FlattenClientOptions {
 }
 
 #[derive(Clone, Debug, Default)]
-pub struct FlattenClientPutFlattenModelOptions<'a> {
+pub struct FlattenPropertyClientPutFlattenModelOptions<'a> {
     method_options: ClientMethodOptions<'a>,
 }
 
-impl<'a> FlattenClientPutFlattenModelOptions<'a> {
-    pub fn builder() -> builders::FlattenClientPutFlattenModelOptionsBuilder<'a> {
-        builders::FlattenClientPutFlattenModelOptionsBuilder::new()
+impl<'a> FlattenPropertyClientPutFlattenModelOptions<'a> {
+    pub fn builder() -> builders::FlattenPropertyClientPutFlattenModelOptionsBuilder<'a> {
+        builders::FlattenPropertyClientPutFlattenModelOptionsBuilder::new()
     }
 }
 
 #[derive(Clone, Debug, Default)]
-pub struct FlattenClientPutNestedFlattenModelOptions<'a> {
+pub struct FlattenPropertyClientPutNestedFlattenModelOptions<'a> {
     method_options: ClientMethodOptions<'a>,
 }
 
-impl<'a> FlattenClientPutNestedFlattenModelOptions<'a> {
-    pub fn builder() -> builders::FlattenClientPutNestedFlattenModelOptionsBuilder<'a> {
-        builders::FlattenClientPutNestedFlattenModelOptionsBuilder::new()
+impl<'a> FlattenPropertyClientPutNestedFlattenModelOptions<'a> {
+    pub fn builder() -> builders::FlattenPropertyClientPutNestedFlattenModelOptionsBuilder<'a> {
+        builders::FlattenPropertyClientPutNestedFlattenModelOptionsBuilder::new()
     }
 }
 
 pub mod builders {
     use super::*;
 
-    pub struct FlattenClientOptionsBuilder {
-        options: FlattenClientOptions,
+    pub struct FlattenPropertyClientOptionsBuilder {
+        options: FlattenPropertyClientOptions,
     }
 
-    impl FlattenClientOptionsBuilder {
+    impl FlattenPropertyClientOptionsBuilder {
         pub(super) fn new() -> Self {
             Self {
-                options: FlattenClientOptions::default(),
+                options: FlattenPropertyClientOptions::default(),
             }
         }
 
-        pub fn build(&self) -> FlattenClientOptions {
+        pub fn build(&self) -> FlattenPropertyClientOptions {
             self.options.clone()
         }
     }
 
-    pub struct FlattenClientPutFlattenModelOptionsBuilder<'a> {
-        options: FlattenClientPutFlattenModelOptions<'a>,
+    pub struct FlattenPropertyClientPutFlattenModelOptionsBuilder<'a> {
+        options: FlattenPropertyClientPutFlattenModelOptions<'a>,
     }
 
-    impl FlattenClientPutFlattenModelOptionsBuilder<'_> {
+    impl FlattenPropertyClientPutFlattenModelOptionsBuilder<'_> {
         pub(super) fn new() -> Self {
             Self {
-                options: FlattenClientPutFlattenModelOptions::default(),
+                options: FlattenPropertyClientPutFlattenModelOptions::default(),
             }
         }
 
-        pub fn build(&self) -> FlattenClientPutFlattenModelOptions {
+        pub fn build(&self) -> FlattenPropertyClientPutFlattenModelOptions {
             self.options.clone()
         }
     }
 
-    impl<'a> ClientMethodOptionsBuilder<'a> for FlattenClientPutFlattenModelOptionsBuilder<'a> {
+    impl<'a> ClientMethodOptionsBuilder<'a> for FlattenPropertyClientPutFlattenModelOptionsBuilder<'a> {
         fn with_context(mut self, context: &'a Context) -> Self {
             self.options.method_options.set_context(context);
             self
         }
     }
 
-    pub struct FlattenClientPutNestedFlattenModelOptionsBuilder<'a> {
-        options: FlattenClientPutNestedFlattenModelOptions<'a>,
+    pub struct FlattenPropertyClientPutNestedFlattenModelOptionsBuilder<'a> {
+        options: FlattenPropertyClientPutNestedFlattenModelOptions<'a>,
     }
 
-    impl FlattenClientPutNestedFlattenModelOptionsBuilder<'_> {
+    impl FlattenPropertyClientPutNestedFlattenModelOptionsBuilder<'_> {
         pub(super) fn new() -> Self {
             Self {
-                options: FlattenClientPutNestedFlattenModelOptions::default(),
+                options: FlattenPropertyClientPutNestedFlattenModelOptions::default(),
             }
         }
 
-        pub fn build(&self) -> FlattenClientPutNestedFlattenModelOptions {
+        pub fn build(&self) -> FlattenPropertyClientPutNestedFlattenModelOptions {
             self.options.clone()
         }
     }
 
-    impl<'a> ClientMethodOptionsBuilder<'a> for FlattenClientPutNestedFlattenModelOptionsBuilder<'a> {
+    impl<'a> ClientMethodOptionsBuilder<'a>
+        for FlattenPropertyClientPutNestedFlattenModelOptionsBuilder<'a>
+    {
         fn with_context(mut self, context: &'a Context) -> Self {
             self.options.method_options.set_context(context);
             self

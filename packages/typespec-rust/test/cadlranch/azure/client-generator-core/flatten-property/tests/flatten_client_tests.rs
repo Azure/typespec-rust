@@ -2,12 +2,12 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use cadl_flatten::models::{ChildFlattenModel, ChildModel, FlattenModel, NestedFlattenModel};
-use cadl_flatten::FlattenClient;
+use cadl_flattenproperty::models::{ChildFlattenModel, ChildModel, FlattenModel, NestedFlattenModel};
+use cadl_flattenproperty::FlattenPropertyClient;
 
 #[async_std::test]
 async fn put_flatten_model() {
-    let client = FlattenClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let client = FlattenPropertyClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut child_model = ChildModel::default();
     child_model.age = Some(10);
     child_model.description = Some(String::from("bar"));
@@ -25,7 +25,7 @@ async fn put_flatten_model() {
 
 #[async_std::test]
 async fn put_nested_flatten_model() {
-    let client = FlattenClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let client = FlattenPropertyClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut child_model = ChildModel::default();
     child_model.age = Some(10);
     child_model.description = Some(String::from("test"));
