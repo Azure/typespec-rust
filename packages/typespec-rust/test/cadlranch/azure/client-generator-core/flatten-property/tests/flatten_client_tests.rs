@@ -2,7 +2,9 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use cadl_flattenproperty::models::{ChildFlattenModel, ChildModel, FlattenModel, NestedFlattenModel};
+use cadl_flattenproperty::models::{
+    ChildFlattenModel, ChildModel, FlattenModel, NestedFlattenModel,
+};
 use cadl_flattenproperty::FlattenPropertyClient;
 
 #[async_std::test]
