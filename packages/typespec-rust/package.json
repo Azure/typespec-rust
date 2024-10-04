@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "description": "TypeSpec emitter for Rust SDKs",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/src/index.js"
   },
-  "tspMain": "dist/index.js",
+  "tspMain": "dist/src/index.js",
   "directories": {
     "doc": "docs"
   },
@@ -28,7 +28,7 @@
     "watch": "tsc -p . --watch"
   },
   "files": [
-    "dist/**",
+    "dist/src/**",
     "!dist/test/**"
   ],
   "repository": {

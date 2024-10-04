@@ -28,6 +28,8 @@ rules:
   "@typescript-eslint/no-angle-bracket-type-assertion": "off"
   "@typescript-eslint/explicit-module-boundary-types": "off"
   "@typescript-eslint/no-non-null-assertion": "off"
+  "@typescript-eslint/no-floating-promises":
+    - error
   "require-atomic-updates": "off"
   "@typescript-eslint/consistent-type-assertions":
     - error

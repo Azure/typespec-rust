@@ -102,15 +102,16 @@ export class Use {
     const sortedMods = this.uses.sort((a: moduleTypes, b: moduleTypes) => { return helpers.sortAscending(a.module, b.module); });
     for (const sortedMod of sortedMods) {
       if (sortedMod.types.length === 1) {
-        content += `use ${sortedMod.module}::${sortedMod.types[0]};\n\n`;
+        content += `use ${sortedMod.module}::${sortedMod.types[0]};\n`;
       } else {
         const sortedTypes = sortedMod.types.sort((a: string, b: string) => { return helpers.sortAscending(a, b); });
         content += `use ${sortedMod.module}::{\n`;
         content += `${indentation.get()}${sortedTypes.join(', ')}`;
-        content += ',\n};\n\n';
+        content += ',\n};\n';
       }
     }
 
+    content += '\n';
     return content;
   }
 }

@@ -22,14 +22,14 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   // TODO: don't overwrite an existing Cargo.toml file
   // will likely need to merge existing Cargo.toml file with generated content
   // https://github.com/Azure/autorest.rust/issues/22
-  writeFile(`${context.emitterOutputDir}/Cargo.toml`, codegen.emitCargoToml());
+  await writeFile(`${context.emitterOutputDir}/Cargo.toml`, codegen.emitCargoToml());
 
   // TODO: this will overwrite an existing lib.rs file.
   // we will likely need to support merging generated content with a preexisting lib.rs
   // https://github.com/Azure/autorest.rust/issues/20
-  writeFile(`${context.emitterOutputDir}/src/lib.rs`, codegen.emitLib());
+  await writeFile(`${context.emitterOutputDir}/src/lib.rs`, codegen.emitLib());
 
-  writeToGeneratedDir(context.emitterOutputDir, 'mod.rs', codegen.emitMod());
+  await writeToGeneratedDir(context.emitterOutputDir, 'mod.rs', codegen.emitMod());
 
   const models = codegen.emitModels();
   if (models.length > 0) {
@@ -53,5 +53,5 @@ async function writeToGeneratedDir(outDir: string, filename: string, content: st
     srcGen = path.join(srcGen, subdir);
   }
   await mkdir(srcGen, {recursive: true});
-  writeFile(`${srcGen}/${filename}`, content);
+  await writeFile(`${srcGen}/${filename}`, content);
 }
