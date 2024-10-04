@@ -461,6 +461,9 @@ function getClientAccessorMethodBody(indentation: helpers.indentation, clientAcc
   return body;
 }
 
+type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderParameter;
+type QueryParamType = rust.QueryCollectionParameter | rust.QueryParameter;
+
 function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
   use.addTypes('azure_core', ['AsClientMethodOptions', 'Method', 'Request']);
   let body = 'let options = options.unwrap_or_default();\n';
@@ -468,25 +471,27 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
   body += `${indentation.get()}let mut url = self.${getEndpointFieldName(client)}.clone();\n`;
 
   // collect and sort all the header/path/query params
-  const headerParams = new Array<rust.HeaderParameter>();
+  const headerParams = new Array<HeaderParamType>();
   const pathParams = new Array<rust.PathParameter>();
-  const queryParams = new Array<rust.QueryParameter>();
+  const queryParams = new Array<QueryParamType>();
   for (const param of method.params) {
     switch (param.kind) {
       case 'header':
+      case 'headerCollection':
         headerParams.push(param);
         break;
       case 'path':
         pathParams.push(param);
         break;
       case 'query':
+      case 'queryCollection':
         queryParams.push(param);
         break;
     }
   }
-  headerParams.sort((a: rust.HeaderParameter, b: rust.HeaderParameter) => { return helpers.sortAscending(a.header, b.header); });
+  headerParams.sort((a: HeaderParamType, b: HeaderParamType) => { return helpers.sortAscending(a.header, b.header); });
   pathParams.sort((a: rust.PathParameter, b: rust.PathParameter) => { return helpers.sortAscending(a.segment, b.segment); });
-  queryParams.sort((a: rust.QueryParameter, b: rust.QueryParameter) => { return helpers.sortAscending(a.key, b.key); });
+  queryParams.sort((a: QueryParamType, b: QueryParamType) => { return helpers.sortAscending(a.key, b.key); });
 
   let path = `"${method.httpPath}"`;
   if (pathParams.length > 0) {
@@ -501,7 +506,14 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
   body += `${indentation.get()}url.set_path(${path});\n`;
 
   for (const queryParam of queryParams) {
-    body += `${indentation.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(queryParam)});\n`;
+    if (queryParam.kind === 'queryCollection' && queryParam.format === 'multi') {
+      const valueVar = queryParam.name[0];
+      body += `${indentation.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
+      body += `${indentation.push().get()}url.query_pairs_mut().append_pair("${queryParam.key}", ${valueVar});\n`;
+      body += `${indentation.pop().get()}}\n`;
+    } else {
+      body += `${indentation.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(queryParam)});\n`;
+    }
   }
 
   body += `${indentation.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
@@ -532,11 +544,19 @@ function getBodyParameter(method: rust.AsyncMethod): rust.BodyParameter | undefi
   return bodyParam;
 }
 
-function getHeaderPathQueryParamValue(param: rust.HeaderParameter | rust.PathParameter | rust.QueryParameter): string {
+function getHeaderPathQueryParamValue(param: HeaderParamType | rust.PathParameter | QueryParamType): string {
   let paramName = '';
   if (param.location === 'client') {
     paramName = 'self.';
   }
+
+  if (param.kind === 'headerCollection' || param.kind === 'queryCollection') {
+    if (param.format === 'multi') {
+      throw new Error('multi should have been handled outside getHeaderPathQueryParamValue');
+    }
+    return `${param.name}.join("${getCollectionDelimiter(param.format)}")`;
+  }
+
   switch (param.type.kind) {
     case 'String':
       paramName += param.name;
@@ -549,5 +569,21 @@ function getHeaderPathQueryParamValue(param: rust.HeaderParameter | rust.PathPar
     default:
       throw new Error(`unhandled ${param.kind} param type kind ${param.type.kind}`);
   }
+
   return paramName;
+}
+
+function getCollectionDelimiter(format: rust.CollectionFormat): string {
+  switch (format) {
+    case 'csv':
+      return ',';
+    case 'pipes':
+      return '|';
+    case 'ssv':
+      return ' ';
+    case 'tsv':
+      return '\t';
+    default:
+      throw new Error(`unhandled collection format ${format}`);
+  }
 }

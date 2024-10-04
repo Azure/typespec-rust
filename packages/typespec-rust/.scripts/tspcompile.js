@@ -38,7 +38,7 @@ const cadlRanch = {
   //'cadl_datetime': ['encode/datetime'],
   //'cadl_duration': ['encode/duration'],
   //'cadl_bodyoptional': ['parameters/body-optionality'],
-  //'cadl_collectionfmt': ['parameters/collection-format'],
+  'cadl_collectionfmt': ['parameters/collection-format'],
   //'cadl_spread': ['parameters/spread'],
   //'cadl_contentneg': ['payload/content-negotiation'],
   //'cadl_jmergepatch': ['payload/json-merge-patch'],

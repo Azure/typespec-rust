@@ -48,11 +48,12 @@ export class Adapter {
 
     if (this.crate.enums.length > 0 || this.crate.models.length > 0) {
       this.crate.addDependency(new rust.CrateDependency('serde'));
-      if (this.crate.clients.length > 0) {
-        // required for TryFrom<Response<T>> impl
-        // only required if there are clients
-        this.crate.addDependency(new rust.CrateDependency('async-std'));
-      }
+    }
+
+    if (this.crate.clients.length > 0) {
+      // until https://github.com/Azure/autorest.rust/issues/22 is fixed
+      // we always need this dependency for tests so always include it
+      this.crate.addDependency(new rust.CrateDependency('async-std'));
     }
 
     this.crate.sortContent();
@@ -587,21 +588,43 @@ export class Adapter {
       }
       case 'header':
         if (param.collectionFormat) {
-          // TODO: https://github.com/Azure/autorest.rust/issues/58
-          throw new Error('header collection param nyi');
+          if (paramType.kind !== 'vector') {
+            throw new Error(`unexpected kind ${paramType.kind} for HeaderCollectionParameter`);
+          }
+          let format: rust.CollectionFormat;
+          switch (param.collectionFormat) {
+            case 'csv':
+            case 'simple':
+              format = 'csv';
+              break;
+            case 'pipes':
+            case 'ssv':
+            case 'tsv':
+              format = param.collectionFormat;
+              break;
+            default:
+              throw new Error(`unexpected format ${param.collectionFormat} for HeaderCollectionParameter`);
+          }
+          adaptedParam = new rust.HeaderCollectionParameter(paramName, param.serializedName, paramLoc, paramType, format);
+        } else {
+          adaptedParam = new rust.HeaderParameter(paramName, param.serializedName, paramLoc, paramType);
         }
-        adaptedParam = new rust.HeaderParameter(paramName, param.serializedName, paramLoc, paramType);
         break;
       case 'path':
         adaptedParam = new rust.PathParameter(paramName, param.serializedName, paramLoc, paramType, param.urlEncode);
         break;
       case 'query':
         if (param.collectionFormat) {
-          // TODO: https://github.com/Azure/autorest.rust/issues/58
-          throw new Error('query collection param nyi');
+          const format = param.collectionFormat === 'simple' ? 'csv' : (param.collectionFormat === 'form' ? 'multi' : param.collectionFormat);
+          if (paramType.kind !== 'vector') {
+            throw new Error(`unexpected kind ${paramType.kind} for QueryCollectionParameter`);
+          }
+          // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
+          adaptedParam = new rust.QueryCollectionParameter(paramName, param.serializedName, paramLoc, paramType, true, format);
+        } else {
+          // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
+          adaptedParam = new rust.QueryParameter(paramName, param.serializedName, paramLoc, paramType, true);
         }
-        // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
-        adaptedParam = new rust.QueryParameter(paramName, param.serializedName, paramLoc, paramType, true);
         break;
     }
 

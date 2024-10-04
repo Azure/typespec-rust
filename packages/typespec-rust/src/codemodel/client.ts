@@ -93,11 +93,17 @@ export interface ClientAccessor extends method.Method<Client> {
 // parameters
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+// CollectionFormat indicates how a collection is formatted on the wire
+export type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes';
+
+// ExtendedCollectionFormat includes additional formats
+export type ExtendedCollectionFormat = CollectionFormat | 'multi';
+
 // ParameterLocation indicates where the value of the param originates
 export type ParameterLocation = 'client' | 'method';
 
 // MethodParameter defines the possible method parameter types
-export type MethodParameter = BodyParameter | HeaderParameter | PathParameter | QueryParameter;
+export type MethodParameter = BodyParameter | HeaderCollectionParameter | HeaderParameter | PathParameter | QueryCollectionParameter | QueryParameter;
 
 // BodyParameter is a param that's passed via the HTTP request body
 export interface BodyParameter extends HTTPParameterBase {
@@ -105,6 +111,20 @@ export interface BodyParameter extends HTTPParameterBase {
 
   // the type of the body param
   type: types.RequestContent;
+}
+
+// HeaderCollectionParameter is a param that goes in a HTTP header
+export interface HeaderCollectionParameter extends HTTPParameterBase {
+  kind: 'headerCollection';
+
+  // the header in the HTTP request
+  header: string;
+
+  // the collection of header param values
+  type: types.Vector;
+
+  // the format of the collection
+  format: CollectionFormat;
 }
 
 // HeaderParameter is a param that goes in a HTTP header
@@ -137,6 +157,23 @@ export interface PathParameter extends HTTPParameterBase {
 
   // indicates if the path parameter should be URL encoded
   encoded: boolean;
+}
+
+// QueryCollectionParameter is a param that goes in the HTTP query string
+export interface QueryCollectionParameter extends HTTPParameterBase {
+  kind: 'queryCollection';
+
+  // key is the query param's key name
+  key: string;
+
+  // the collection of query param values
+  type: types.Vector;
+
+  // indicates if the query parameter should be URL encoded
+  encoded: boolean;
+
+  // the format of the collection
+  format: ExtendedCollectionFormat;
 }
 
 // QueryParameter is a param that goes in the HTTP query string
@@ -261,6 +298,16 @@ export class Constructor implements Constructor {
   }
 }
 
+export class HeaderCollectionParameter extends HTTPParameterBase implements HeaderCollectionParameter {
+  constructor(name: string, header: string, location: ParameterLocation, type: types.Vector, format: CollectionFormat) {
+    validateHeaderPathQueryParamKind(type, 'headerCollection');
+    super(name, location, type);
+    this.kind = 'headerCollection';
+    this.header = header;
+    this.format = format;
+  }
+}
+
 export class HeaderParameter extends HTTPParameterBase implements HeaderParameter {
   constructor(name: string, header: string, location: ParameterLocation, type: types.Type) {
     validateHeaderPathQueryParamKind(type, 'header');
@@ -286,6 +333,17 @@ export class PathParameter extends HTTPParameterBase implements PathParameter {
   }
 }
 
+export class QueryCollectionParameter extends HTTPParameterBase implements QueryCollectionParameter {
+  constructor(name: string, key: string, location: ParameterLocation, type: types.Vector, encoded: boolean, format: ExtendedCollectionFormat) {
+    validateHeaderPathQueryParamKind(type.type, 'queryCollection');
+    super(name, location, type);
+    this.kind = 'queryCollection';
+    this.key = key;
+    this.encoded = encoded;
+    this.format = format;
+  }
+}
+
 export class QueryParameter extends HTTPParameterBase implements QueryParameter {
   constructor(name: string, key: string, location: ParameterLocation, type: types.Type, encoded: boolean) {
     validateHeaderPathQueryParamKind(type, 'query');
@@ -303,11 +361,14 @@ function validateHeaderPathQueryParamKind(type: types.Type, paramKind: string) {
     case 'literal':
     case 'offsetDateTime':
     case 'scalar':
-      break;
+      return;
     case 'implTrait':
       validateHeaderPathQueryParamKind(type.type, paramKind);
-      break;
-    default:
-      throw new Error(`unsupported ${paramKind} paramter type kind ${type.kind}`);
+      return;
+    case 'vector':
+      if (paramKind.endsWith('Collection')) {
+        return;
+      }
   }
+  throw new Error(`unsupported ${paramKind} paramter type kind ${type.kind}`);
 }
