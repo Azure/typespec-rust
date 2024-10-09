@@ -34,16 +34,16 @@ importers:
         specifier: 0.37.4
         version: 0.37.4(@azure-tools/cadl-ranch-expect@0.15.4(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))(@typespec/rest@0.60.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1)))(@typespec/versioning@0.60.1(@typespec/compiler@0.60.1)))(@azure-tools/typespec-azure-core@0.46.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))(@typespec/rest@0.60.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))))(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))(@typespec/rest@0.60.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1)))(@typespec/versioning@0.60.1(@typespec/compiler@0.60.1))(@typespec/xml@0.60.0(@typespec/compiler@0.60.1))
       '@azure-tools/typespec-autorest':
-        specifier: 0.46.0
+        specifier: '>=0.46.0 <1.0.0'
         version: 0.46.0(7nwtlg3hlaxiezooecsts3tzhq)
       '@azure-tools/typespec-azure-core':
-        specifier: ^0.46.0
+        specifier: '>=0.46.0 <1.0.0'
         version: 0.46.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))(@typespec/rest@0.60.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1)))
       '@azure-tools/typespec-azure-resource-manager':
-        specifier: 0.46.1
+        specifier: '>=0.46.1 <1.0.0'
         version: 0.46.1(@azure-tools/typespec-azure-core@0.46.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))(@typespec/rest@0.60.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))))(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))(@typespec/openapi@0.60.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1)))(@typespec/rest@0.60.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1)))(@typespec/versioning@0.60.1(@typespec/compiler@0.60.1))
       '@azure-tools/typespec-client-generator-core':
-        specifier: 0.46.2
+        specifier: '>=0.46.2 <1.0.0'
         version: 0.46.2(@azure-tools/typespec-azure-core@0.46.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))(@typespec/rest@0.60.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))))(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))(@typespec/openapi@0.60.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1)))(@typespec/rest@0.60.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1)))(@typespec/versioning@0.60.1(@typespec/compiler@0.60.1))
       '@types/js-yaml':
         specifier: ~4.0.9
@@ -58,22 +58,22 @@ importers:
         specifier: ~4.1.1
         version: 4.1.1(eslint@6.6.0)(typescript@5.1.6)
       '@typespec/compiler':
-        specifier: ^0.60.1
+        specifier: '>=0.60.1 <1.0.0'
         version: 0.60.1
       '@typespec/http':
-        specifier: ^0.60.0
+        specifier: '>=0.60.0 <1.0.0'
         version: 0.60.0(@typespec/compiler@0.60.1)
       '@typespec/openapi':
-        specifier: ~0.60.0
+        specifier: '>=0.60.0 <1.0.0'
         version: 0.60.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))
       '@typespec/rest':
-        specifier: ^0.60.0
+        specifier: '>=0.60.0 <1.0.0'
         version: 0.60.0(@typespec/compiler@0.60.1)(@typespec/http@0.60.0(@typespec/compiler@0.60.1))
       '@typespec/versioning':
-        specifier: ^0.60.1
+        specifier: '>=0.60.1 <1.0.0'
         version: 0.60.1(@typespec/compiler@0.60.1)
       '@typespec/xml':
-        specifier: ^0.60.0
+        specifier: '>=0.60.0 <1.0.0'
         version: 0.60.0(@typespec/compiler@0.60.1)
       '@vitest/coverage-v8':
         specifier: ^1.6.0
@@ -2793,7 +2793,7 @@ snapshots:
   '@babel/code-frame@7.24.7':
     dependencies:
       '@babel/highlight': 7.24.7
-      picocolors: 1.0.1
+      picocolors: 1.1.0
 
   '@babel/helper-string-parser@7.24.8': {}
 
@@ -2804,7 +2804,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.7
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.0.1
+      picocolors: 1.1.0
 
   '@babel/parser@7.24.8':
     dependencies:
