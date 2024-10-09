@@ -21,12 +21,12 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
 
   // TODO: don't overwrite an existing Cargo.toml file
   // will likely need to merge existing Cargo.toml file with generated content
-  // https://github.com/Azure/autorest.rust/issues/22
+  // https://github.com/Azure/typespec-rust/issues/22
   await writeFile(`${context.emitterOutputDir}/Cargo.toml`, codegen.emitCargoToml());
 
   // TODO: this will overwrite an existing lib.rs file.
   // we will likely need to support merging generated content with a preexisting lib.rs
-  // https://github.com/Azure/autorest.rust/issues/20
+  // https://github.com/Azure/typespec-rust/issues/20
   await writeFile(`${context.emitterOutputDir}/src/lib.rs`, codegen.emitLib());
 
   await writeToGeneratedDir(context.emitterOutputDir, 'mod.rs', codegen.emitMod());

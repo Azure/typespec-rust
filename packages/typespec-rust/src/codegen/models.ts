@@ -35,7 +35,7 @@ export function emitModels(crate: rust.Crate, context: Context): string {
       }
 
       // TODO: omit skip_serializing_if if we need to send explicit JSON null
-      // https://github.com/Azure/autorest.rust/issues/78
+      // https://github.com/Azure/typespec-rust/issues/78
       body += `${indentation.get()}#[serde(skip_serializing_if = "Option::is_none")]\n`;
       body += `${indentation.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
     }

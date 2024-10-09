@@ -119,7 +119,7 @@ export class Adapter {
 
     for (const property of model.properties) {
       if (property.kind !== 'property') {
-        // TODO: https://github.com/Azure/autorest.rust/issues/96
+        // TODO: https://github.com/Azure/typespec-rust/issues/96
         throw new Error(`model property kind ${property.kind} NYI`);
       }
       const structField = this.getModelField(property);
@@ -386,12 +386,12 @@ export class Adapter {
                     break;
                   }
                   default:
-                    // TODO: https://github.com/Azure/autorest.rust/issues/57
+                    // TODO: https://github.com/Azure/typespec-rust/issues/57
                     throw new Error(`credential scheme type ${param.type.scheme.type} NYI`);
                 }
                 break;
               case 'union':
-                // TODO: https://github.com/Azure/autorest.rust/issues/57
+                // TODO: https://github.com/Azure/typespec-rust/issues/57
                 throw new Error('credential unions NYI');
             }
             break;
@@ -405,12 +405,12 @@ export class Adapter {
           case 'method': {
             // this is a client param that's used in method bodies (e.g. api-version but can be others)
             if (!param.isApiVersionParam) {
-              // TODO: https://github.com/Azure/autorest.rust/issues/90
+              // TODO: https://github.com/Azure/typespec-rust/issues/90
               throw new Error('client method params other than api-version NYI');
             }
 
             if (!param.clientDefaultValue) {
-              // TODO: https://github.com/Azure/autorest.rust/issues/90
+              // TODO: https://github.com/Azure/typespec-rust/issues/90
               throw new Error('required client method params NYI');
             }
 
@@ -479,7 +479,7 @@ export class Adapter {
         rustMethod = new rust.AsyncMethod(naming.getEscapedReservedName(snakeCaseName(method.name), 'fn'), rustClient, isPub(method.access), new rust.MethodOptions(methodOptionsStruct, false), httpMethod, httpPath);
         break;
       case 'paging':
-        // TODO: https://github.com/Azure/autorest.rust/issues/60
+        // TODO: https://github.com/Azure/typespec-rust/issues/60
         return;
       default:
         throw new Error(`method kind ${method.kind} NYI`);
@@ -674,7 +674,7 @@ function recursiveKeyName(root: string, obj: tcgc.SdkType): string {
     case 'duration':
       // TODO: this should be: return `${root}-duration-${obj.encode}`;
       // as it is now, it treats the duration as a String
-      // https://github.com/Azure/autorest.rust/issues/41
+      // https://github.com/Azure/typespec-rust/issues/41
       return `${root}-${obj.wireType.kind}`;
     case 'model':
       return `${root}-${obj.name}`;

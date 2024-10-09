@@ -33,7 +33,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Azure/autorest.rust.git"
+    "url": "git+https://github.com/Azure/typespec-rust.git"
   },
   "keywords": [
     "cadl",
@@ -44,10 +44,10 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Azure/autorest.rust/issues"
+    "url": "https://github.com/Azure/typespec-rust/issues"
   },
-  "homepage": "https://github.com/Azure/autorest.rust#readme",
-  "readme": "https://github.com/Azure/autorest.rust/blob/main/readme.md",
+  "homepage": "https://github.com/Azure/typespec-rust#readme",
+  "readme": "https://github.com/Azure/typespec-rust/blob/main/readme.md",
   "devDependencies": {
     "@azure-tools/cadl-ranch": "~0.14.6",
     "@azure-tools/cadl-ranch-expect": "~0.15.4",
