@@ -22,7 +22,7 @@ steps:
       }
       npx publish-release `
         --token $(azuresdk-github-pat) `
-        --repo autorest.rust `
+        --repo typespec-rust `
         --owner azure `
         --name "${{ parameters.ReleaseName }}" `
         --tag v$currentVersion `

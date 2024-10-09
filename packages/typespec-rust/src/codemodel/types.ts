@@ -195,7 +195,7 @@ export interface Scalar {
 }
 
 // SerdeFormat indicates the wire format for request and response bodies
-// TODO: Add 'xml' https://github.com/Azure/autorest.rust/issues/8
+// TODO: Add 'xml' https://github.com/Azure/typespec-rust/issues/8
 export type SerdeFormat = 'json';
 
 // StringSlice is a Rust string slice

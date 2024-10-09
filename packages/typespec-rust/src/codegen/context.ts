@@ -25,7 +25,7 @@ export class Context {
 
         // TODO: this doesn't handle the case where a method sends/receives a HashMap<T>
         // or Vec<T> where T is an enum or model type.
-        // https://github.com/Azure/autorest.rust/issues/65
+        // https://github.com/Azure/typespec-rust/issues/65
 
         for (const param of method.params) {
           if (param.kind === 'body' && (param.type.type.kind === 'enum' || param.type.type.kind === 'model')) {

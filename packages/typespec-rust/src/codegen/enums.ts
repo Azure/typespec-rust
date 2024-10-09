@@ -39,7 +39,7 @@ export function emitEnums(crate: rust.Crate, context: Context): string {
     if (rustEnum.extensible) {
       body += `${indentation.get()}#[serde(untagged)]\n`;
       // TODO: hard-coded String type
-      // https://github.com/Azure/autorest.rust/issues/25
+      // https://github.com/Azure/typespec-rust/issues/25
       body += `${indentation.get()}UnknownValue(String),\n`;
     }
     body += '}\n\n';
