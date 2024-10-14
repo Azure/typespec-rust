@@ -7,8 +7,8 @@ use crate::models::{
     BackupSecretResult, DeletedSecretBundle, SecretBundle, SecretRestoreParameters,
     SecretSetParameters, SecretUpdateParameters,
 };
-use azure_core::auth::TokenCredential;
 use azure_core::builders::{ClientMethodOptionsBuilder, ClientOptionsBuilder};
+use azure_core::credentials::TokenCredential;
 use azure_core::{
     AsClientMethodOptions, BearerTokenCredentialPolicy, ClientMethodOptions, ClientOptions,
     Context, Method, Pipeline, Policy, Request, RequestContent, Response, Result, RetryOptions,

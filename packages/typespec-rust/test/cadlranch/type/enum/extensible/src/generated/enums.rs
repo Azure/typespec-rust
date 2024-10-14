@@ -5,21 +5,18 @@
 
 use async_std::task::block_on;
 use azure_core::{RequestContent, Response};
-use serde::{Deserialize, Serialize};
+use typespec_client_core::{create_enum, create_extensible_enum};
 
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[non_exhaustive]
-pub enum DaysOfWeekExtensibleEnum {
-    Friday,
-    Monday,
-    Saturday,
-    Sunday,
-    Thursday,
-    Tuesday,
-    Wednesday,
-    #[serde(untagged)]
-    UnknownValue(String),
-}
+create_extensible_enum!(
+    DaysOfWeekExtensibleEnum,
+    (Friday, "Friday"),
+    (Monday, "Monday"),
+    (Saturday, "Saturday"),
+    (Sunday, "Sunday"),
+    (Thursday, "Thursday"),
+    (Tuesday, "Tuesday"),
+    (Wednesday, "Wednesday")
+);
 
 impl TryFrom<DaysOfWeekExtensibleEnum> for RequestContent<DaysOfWeekExtensibleEnum> {
     type Error = azure_core::Error;

@@ -50,6 +50,10 @@ export class Adapter {
       this.crate.addDependency(new rust.CrateDependency('serde'));
     }
 
+    if (this.crate.enums.length > 0) {
+      this.crate.addDependency(new rust.CrateDependency('typespec_client_core'));
+    }
+
     if (this.crate.clients.length > 0) {
       this.crate.addDependency(new rust.CrateDependency('async-std'));
     }

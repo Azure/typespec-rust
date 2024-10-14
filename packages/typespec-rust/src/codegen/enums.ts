@@ -15,34 +15,42 @@ export function emitEnums(crate: rust.Crate, context: Context): string {
   }
 
   const use = new Use('models');
-  use.addTypes('serde', ['Deserialize', 'Serialize']);
+  // note that create_extensible_enum uses create_enum, so it will always be used
+  use.addType('typespec_client_core', 'create_enum');
 
   const indentation = new helpers.indentation();
 
   let body = '';
   for (const rustEnum of crate.enums) {
-    body += helpers.formatDocComment(rustEnum.docs);
-    // only derive Copy for fixed enums
-    body += helpers.annotationDerive(!rustEnum.extensible ? 'Copy' : '', 'Eq', 'PartialEq');
-    body += helpers.AnnotationNonExhaustive;
-    body += `${helpers.emitPub(rustEnum.pub)}enum ${rustEnum.name} {\n`;
-
-    for (const value of rustEnum.values) {
-      body += helpers.formatDocComment(value.docs);
-      if (value.name !== value.value) {
-        // only emit the serde annotation when the names aren't equal
-        body += `${indentation.get()}#[serde(rename = "${value.value}")]\n`;
-      }
-      body += `${indentation.get()}${value.name},\n`;
+    let enumType = 'create_enum';
+    if (rustEnum.extensible) {
+      use.addType('typespec_client_core', 'create_extensible_enum');
+      enumType = 'create_extensible_enum';
     }
 
-    if (rustEnum.extensible) {
-      body += `${indentation.get()}#[serde(untagged)]\n`;
+    body += `${enumType}!(\n`;
+    const docs = helpers.formatDocComment(rustEnum.docs);
+    if (docs.length > 0) {
+      body += `${indentation.get()}#[doc = ${docs}]\n`;
+    }
+    body += `${indentation.get()}${rustEnum.name},\n`;
+
+    for (let i = 0; i < rustEnum.values.length; ++i) {
+      const value = rustEnum.values[i];
+      const docs = helpers.formatDocComment(value.docs);
+      if (docs.length > 0) {
+        body += `${indentation.get()}#[doc = ${docs}]\n`;
+      }
       // TODO: hard-coded String type
       // https://github.com/Azure/typespec-rust/issues/25
-      body += `${indentation.get()}UnknownValue(String),\n`;
+      body += `${indentation.get()}(${value.name}, "${value.value}")`;
+      if (i + 1 < rustEnum.values.length) {
+        body += ',';
+      }
+      body += '\n';
     }
-    body += '}\n\n';
+
+    body += ');\n\n'; // end enum macro
   }
 
   // emit TryFrom as required

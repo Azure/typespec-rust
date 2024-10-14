@@ -556,7 +556,7 @@ export class TokenCredential extends External implements TokenCredential {
     if (scopes.length === 0) {
       throw new Error('scopes must contain at least one entry');
     }
-    super(crate, 'azure_core', 'TokenCredential', 'auth');
+    super(crate, 'azure_core', 'TokenCredential', 'credentials');
     this.kind = 'tokenCredential';
     this.scopes = scopes;
   }
