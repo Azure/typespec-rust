@@ -31,7 +31,7 @@ export function emitEnums(crate: rust.Crate, context: Context): string {
     body += `${enumType}!(\n`;
     const docs = helpers.formatDocComment(rustEnum.docs);
     if (docs.length > 0) {
-      body += `${indentation.get()}#[doc = ${docs}]\n`;
+      body += `${indentation.get()}#[doc = r#"${docs}"#]\n`;
     }
     body += `${indentation.get()}${rustEnum.name},\n`;
 
@@ -39,7 +39,7 @@ export function emitEnums(crate: rust.Crate, context: Context): string {
       const value = rustEnum.values[i];
       const docs = helpers.formatDocComment(value.docs);
       if (docs.length > 0) {
-        body += `${indentation.get()}#[doc = ${docs}]\n`;
+        body += `${indentation.get()}#[doc = r#"${docs}"#]\n`;
       }
       // TODO: hard-coded String type
       // https://github.com/Azure/typespec-rust/issues/25
