@@ -6,6 +6,8 @@
 
 ### Bugs Fixed
 
+* Add necessary calls to `to_string()` for header/path/query params.
+
 ### Features Added
 
 ### Other Changes
