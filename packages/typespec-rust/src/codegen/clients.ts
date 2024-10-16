@@ -233,8 +233,8 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
       continue;
     }
 
-    // don't add client params to the method param sig
-    if (method.kind !== 'clientaccessor' && (<rust.MethodParameter>param).location === 'method') {
+    // don't add client or optional params to the method param sig
+    if (method.kind !== 'clientaccessor' && (<rust.MethodParameter>param).location === 'method' && !(<rust.MethodParameter>param).optional) {
       use.addForType(param.type);
       paramsSig.push(`${param.name}: ${formatParamTypeName(param)}`);
     }
@@ -369,6 +369,25 @@ function createPubModBuilders(client: rust.Client, use: Use): string {
     body += `${indentation.get()}impl ${getOptionsBuilderTypeName(method.options, 'anonymous')} {\n`;
     body += emitNewFunction(indentation, method.options);
     body += emitBuildMethod(indentation, method.options);
+
+    for (const option of method.options.type.fields) {
+      if (option.type.kind === 'external' && option.type.name === 'ClientMethodOptions') {
+        // skip for now until lifetime annotations are worked out
+        continue;
+      }
+
+      let optionType = option.type;
+      if (optionType.kind === 'option') {
+        // unwrap the Option<T> to get the T
+        optionType = optionType.type;
+      }
+
+      body += `\n${indentation.get()}pub fn with_${option.name}(mut self, ${option.name}: ${helpers.getTypeDeclaration(optionType)}) -> Self {\n`;
+      body += `${indentation.push().get()}self.options.${option.name} = Some(${option.name});\n`;
+      body += `${indentation.get()}self\n`;
+      body += `${indentation.pop().get()}}\n`;
+    }
+
     body += `${indentation.pop().get()}}\n\n`; // end impl
 
     body += `${indentation.get()}impl${getLifetimeAnnotation(method.options.type)}ClientMethodOptionsBuilder${getLifetimeAnnotation(method.options.type)}for ${optionsBuilderTypeName} {\n`;
@@ -466,7 +485,8 @@ type QueryParamType = rust.QueryCollectionParameter | rust.QueryParameter;
 
 function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
   use.addTypes('azure_core', ['AsClientMethodOptions', 'Method', 'Request']);
-  let body = 'let options = options.unwrap_or_default();\n';
+  const unwrappedOptionsVarName = 'options';
+  let body = `let ${unwrappedOptionsVarName} = options.unwrap_or_default();\n`;
   body += `${indentation.get()}let mut ctx = options.method_options.context();\n`;
   body += `${indentation.get()}let mut url = self.${getEndpointFieldName(client)}.clone();\n`;
 
@@ -493,6 +513,20 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
   pathParams.sort((a: rust.PathParameter, b: rust.PathParameter) => { return helpers.sortAscending(a.segment, b.segment); });
   queryParams.sort((a: QueryParamType, b: QueryParamType) => { return helpers.sortAscending(a.key, b.key); });
 
+  // for optional params, by convention, we'll create a local named param.name.
+  // setter MUST reference by param.name so it works for optional and required params.
+  const getParamValueHelper = function(param: rust.MethodParameter, setter: () => string): string {
+    if (param.optional) {
+      // optional params are in the unwrapped options local var
+      let op = `${indentation.get()}if let Some(${param.name}) = ${unwrappedOptionsVarName}.${param.name} {\n`;
+      indentation.push();
+      op += setter();
+      op += `${indentation.pop().get()}}\n`;
+      return op;
+    }
+    return setter();
+  };
+
   let path = `"${method.httpPath}"`;
   if (pathParams.length > 0) {
     // we have path params that need to have their segments replaced with the param values
@@ -507,24 +541,33 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
 
   for (const queryParam of queryParams) {
     if (queryParam.kind === 'queryCollection' && queryParam.format === 'multi') {
-      const valueVar = queryParam.name[0];
-      body += `${indentation.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
-      body += `${indentation.push().get()}url.query_pairs_mut().append_pair("${queryParam.key}", ${valueVar});\n`;
-      body += `${indentation.pop().get()}}\n`;
+      body += getParamValueHelper(queryParam, () => {
+        const valueVar = queryParam.name[0];
+        let text = `${indentation.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
+        text += `${indentation.push().get()}url.query_pairs_mut().append_pair("${queryParam.key}", ${valueVar});\n`;
+        text += `${indentation.pop().get()}}\n`;
+        return text;
+      });
     } else {
-      body += `${indentation.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(queryParam)});\n`;
+      body += getParamValueHelper(queryParam, () => {
+        return `${indentation.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(queryParam)});\n`;
+      });
     }
   }
 
   body += `${indentation.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
 
   for (const headerParam of headerParams) {
-    body += `${indentation.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(headerParam)});\n`;
+    body += getParamValueHelper(headerParam, () => {
+      return `${indentation.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(headerParam)});\n`;
+    });
   }
 
   const bodyParam = getBodyParameter(method);
   if (bodyParam) {
-    body += `${indentation.get()}request.set_body(${bodyParam.name});\n`;
+    body += getParamValueHelper(bodyParam, () => {
+      return `${indentation.get()}request.set_body(${bodyParam.name});\n`;
+    });
   }
 
   body += `${indentation.get()}self.pipeline.send(&mut ctx, &mut request).await\n`;

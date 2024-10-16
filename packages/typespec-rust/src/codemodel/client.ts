@@ -214,6 +214,9 @@ interface HTTPMethodBase extends method.Method<types.Type> {
 
 interface HTTPParameterBase extends method.Parameter {
   location: ParameterLocation;
+
+  // optional params go in the method's MethodOptions type
+  optional: boolean;
 }
 
 class HTTPMethodBase extends method.Method<types.Type> implements HTTPMethodBase {
@@ -226,9 +229,10 @@ class HTTPMethodBase extends method.Method<types.Type> implements HTTPMethodBase
 }
 
 class HTTPParameterBase extends method.Parameter {
-  constructor(name: string, location: ParameterLocation, type: types.Type) {
+  constructor(name: string, location: ParameterLocation, optional: boolean, type: types.Type) {
     super(name, type);
     this.location = location;
+    this.optional = optional;
     this.docs = {};
   }
 }
@@ -246,8 +250,8 @@ export class AsyncMethod extends HTTPMethodBase implements AsyncMethod {
 }
 
 export class BodyParameter extends HTTPParameterBase implements BodyParameter {
-  constructor(name: string, location: ParameterLocation, type: types.RequestContent) {
-    super(name, location, type);
+  constructor(name: string, location: ParameterLocation, optional: boolean, type: types.RequestContent) {
+    super(name, location, optional, type);
     this.kind = 'body';
   }
 }
@@ -299,9 +303,9 @@ export class Constructor implements Constructor {
 }
 
 export class HeaderCollectionParameter extends HTTPParameterBase implements HeaderCollectionParameter {
-  constructor(name: string, header: string, location: ParameterLocation, type: types.Vector, format: CollectionFormat) {
+  constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.Vector, format: CollectionFormat) {
     validateHeaderPathQueryParamKind(type, 'headerCollection');
-    super(name, location, type);
+    super(name, location, optional, type);
     this.kind = 'headerCollection';
     this.header = header;
     this.format = format;
@@ -309,9 +313,9 @@ export class HeaderCollectionParameter extends HTTPParameterBase implements Head
 }
 
 export class HeaderParameter extends HTTPParameterBase implements HeaderParameter {
-  constructor(name: string, header: string, location: ParameterLocation, type: types.Type) {
+  constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.Type) {
     validateHeaderPathQueryParamKind(type, 'header');
-    super(name, location, type);
+    super(name, location, optional, type);
     this.kind = 'header';
     this.header = header;
   }
@@ -324,9 +328,9 @@ export class MethodOptions extends types.Option implements MethodOptions {
 }
 
 export class PathParameter extends HTTPParameterBase implements PathParameter {
-  constructor(name: string, segment: string, location: ParameterLocation, type: types.Type, encoded: boolean) {
+  constructor(name: string, segment: string, location: ParameterLocation, optional: boolean, type: types.Type, encoded: boolean) {
     validateHeaderPathQueryParamKind(type, 'path');
-    super(name, location, type);
+    super(name, location, optional, type);
     this.kind = 'path';
     this.segment = segment;
     this.encoded = encoded;
@@ -334,9 +338,9 @@ export class PathParameter extends HTTPParameterBase implements PathParameter {
 }
 
 export class QueryCollectionParameter extends HTTPParameterBase implements QueryCollectionParameter {
-  constructor(name: string, key: string, location: ParameterLocation, type: types.Vector, encoded: boolean, format: ExtendedCollectionFormat) {
+  constructor(name: string, key: string, location: ParameterLocation, optional: boolean, type: types.Vector, encoded: boolean, format: ExtendedCollectionFormat) {
     validateHeaderPathQueryParamKind(type.type, 'queryCollection');
-    super(name, location, type);
+    super(name, location, optional, type);
     this.kind = 'queryCollection';
     this.key = key;
     this.encoded = encoded;
@@ -345,9 +349,9 @@ export class QueryCollectionParameter extends HTTPParameterBase implements Query
 }
 
 export class QueryParameter extends HTTPParameterBase implements QueryParameter {
-  constructor(name: string, key: string, location: ParameterLocation, type: types.Type, encoded: boolean) {
+  constructor(name: string, key: string, location: ParameterLocation, optional: boolean, type: types.Type, encoded: boolean) {
     validateHeaderPathQueryParamKind(type, 'query');
-    super(name, location, type);
+    super(name, location, optional, type);
     this.kind = 'query';
     this.key = key;
     this.encoded = encoded;

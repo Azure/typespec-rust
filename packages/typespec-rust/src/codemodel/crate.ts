@@ -86,6 +86,12 @@ export class Crate implements Crate {
       if (client.constructable) {
         client.constructable.options.type.fields.sort((a: types.StructField, b: types.StructField) => { return sortAscending(a.name, b.name); });
       }
+      for (const method of client.methods) {
+        if (method.kind === 'clientaccessor') {
+          continue;
+        }
+        method.options.type.fields.sort((a: types.StructField, b: types.StructField) => { return sortAscending(a.name, b.name); });
+      }
     }
   }
 }

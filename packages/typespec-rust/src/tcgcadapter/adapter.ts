@@ -526,6 +526,10 @@ export class Adapter {
       adaptedParam.docs.description = param.doc;
       rustMethod.params.push(adaptedParam);
 
+      if (adaptedParam.optional) {
+        rustMethod.options.type.fields.push(new rust.StructField(adaptedParam.name, false, new rust.Option(adaptedParam.type, false)));
+      }
+
       // remove the opParam we just processed
       allOpParams = allOpParams.filter((v: OperationParamType) => {
         return v !== opParam;
@@ -577,7 +581,7 @@ export class Adapter {
 
     const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
     let paramType = this.getType(param.type);
-    if (paramLoc === 'method' && paramType.kind === 'String') {
+    if (paramLoc === 'method' && paramType.kind === 'String' && !param.optional) {
       // for Strings, we define these as "impl Into<String>" so that passing a str will just work
       paramType = new rust.ImplTrait('Into', paramType);
     }
@@ -585,7 +589,7 @@ export class Adapter {
     let adaptedParam: rust.MethodParameter;
     switch (param.kind) {
       case 'body': {
-        adaptedParam = new rust.BodyParameter(paramName, paramLoc, new rust.RequestContent(this.crate, paramType, this.adaptSerdeFormat(param.defaultContentType)));
+        adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, paramType, this.adaptSerdeFormat(param.defaultContentType)));
         break;
       }
       case 'header':
@@ -607,13 +611,13 @@ export class Adapter {
             default:
               throw new Error(`unexpected format ${param.collectionFormat} for HeaderCollectionParameter`);
           }
-          adaptedParam = new rust.HeaderCollectionParameter(paramName, param.serializedName, paramLoc, paramType, format);
+          adaptedParam = new rust.HeaderCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, format);
         } else {
-          adaptedParam = new rust.HeaderParameter(paramName, param.serializedName, paramLoc, paramType);
+          adaptedParam = new rust.HeaderParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
         }
         break;
       case 'path':
-        adaptedParam = new rust.PathParameter(paramName, param.serializedName, paramLoc, paramType, param.urlEncode);
+        adaptedParam = new rust.PathParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.urlEncode);
         break;
       case 'query':
         if (param.collectionFormat) {
@@ -622,10 +626,10 @@ export class Adapter {
             throw new Error(`unexpected kind ${paramType.kind} for QueryCollectionParameter`);
           }
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
-          adaptedParam = new rust.QueryCollectionParameter(paramName, param.serializedName, paramLoc, paramType, true, format);
+          adaptedParam = new rust.QueryCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, format);
         } else {
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
-          adaptedParam = new rust.QueryParameter(paramName, param.serializedName, paramLoc, paramType, true);
+          adaptedParam = new rust.QueryParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true);
         }
         break;
     }
@@ -643,6 +647,7 @@ export class Adapter {
   private adaptSerdeFormat(contentType: string): rust.SerdeFormat {
     switch (contentType) {
       case 'application/json':
+      case 'application/merge-patch+json':
         this.crate.addDependency(new rust.CrateDependency('serde_json'));
         return 'json';
       default:

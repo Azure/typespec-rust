@@ -448,6 +448,7 @@ export class Option implements Option {
       case 'hashmap':
       case 'model':
       case 'offsetDateTime':
+      case 'requestContent':
       case 'scalar':
       case 'struct':
       case 'Url':

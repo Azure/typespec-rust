@@ -41,7 +41,7 @@ const cadlRanch = {
   'cadl_collectionfmt': ['parameters/collection-format'],
   //'cadl_spread': ['parameters/spread'],
   //'cadl_contentneg': ['payload/content-negotiation'],
-  //'cadl_jmergepatch': ['payload/json-merge-patch'],
+  'cadl_jmergepatch': ['payload/json-merge-patch'],
   //'cadl_mediatype': ['payload/media-type'],
   //'cadl_multipart': ['payload/multipart'],
   //'cadl_pageable': ['payload/pageable'],
@@ -107,6 +107,9 @@ function should_generate(name) {
 
 const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrests';
 generate('keyvault_secrets', keyvault_secrets, 'test/sdk/keyvault_secrets');
+
+const blob_storage = pkgRoot + 'test/tsp/Microsoft.BlobStorage';
+generate('blob_storage', blob_storage, 'test/sdk/blob_storage');
 
 for (const crate in cadlRanch) {
   const values = cadlRanch[crate];

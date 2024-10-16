@@ -4,6 +4,8 @@
 
 ### Breaking Changes
 
+* Optional client method parameters are now in the method's options type and their associated builder methods have been added.
+
 ### Bugs Fixed
 
 * Add necessary calls to `to_string()` for header/path/query params.
