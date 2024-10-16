@@ -19,4 +19,4 @@ bytes = { version = "1.5.0" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0.118" }
 time = { version = "0.3.36" }
-typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "64a1b195a770ea8086027a9f074e900e874835d2", features = ["reqwest"] }
+typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "64a1b195a770ea8086027a9f074e900e874835d2", features = ["derive", "reqwest"] }

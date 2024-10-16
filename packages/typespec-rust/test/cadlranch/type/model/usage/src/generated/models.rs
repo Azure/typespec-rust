@@ -6,9 +6,10 @@
 use async_std::task::block_on;
 use azure_core::{RequestContent, Response};
 use serde::{Deserialize, Serialize};
+use typespec_client_core::Model;
 
 /// Record used both as operation parameter and return type
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct InputOutputRecord {
     #[serde(rename = "requiredProp")]
@@ -17,7 +18,7 @@ pub struct InputOutputRecord {
 }
 
 /// Record used in operation parameters
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct InputRecord {
     #[serde(rename = "requiredProp")]
@@ -26,7 +27,7 @@ pub struct InputRecord {
 }
 
 /// Record used in operation return type
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct OutputRecord {
     #[serde(rename = "requiredProp")]
