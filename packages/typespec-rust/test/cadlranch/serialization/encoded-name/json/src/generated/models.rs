@@ -6,8 +6,9 @@
 use async_std::task::block_on;
 use azure_core::{RequestContent, Response};
 use serde::{Deserialize, Serialize};
+use typespec_client_core::Model;
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct JsonEncodedNameModel {
     /// Pass in true

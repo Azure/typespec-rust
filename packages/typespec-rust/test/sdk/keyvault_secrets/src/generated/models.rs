@@ -9,9 +9,10 @@ use azure_core::{RequestContent, Response, Url};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use time::OffsetDateTime;
+use typespec_client_core::Model;
 
 /// The backup secret result, containing the backup blob.
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct BackupSecretResult {
     /// The backup blob containing the backed up secret.
@@ -21,7 +22,7 @@ pub struct BackupSecretResult {
 
 /// A Deleted Secret consisting of its previous id, attributes and its tags, as
 /// well as information on when it will be purged.
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct DeletedSecretBundle {
     /// The secret management attributes.
@@ -72,7 +73,7 @@ pub struct DeletedSecretBundle {
 }
 
 /// The deleted secret item containing metadata about the deleted secret.
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct DeletedSecretItem {
     /// The secret management attributes.
@@ -114,7 +115,7 @@ pub struct DeletedSecretItem {
 }
 
 /// The secret management attributes.
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct SecretAttributes {
     /// Creation time in UTC.
@@ -155,7 +156,7 @@ pub struct SecretAttributes {
 }
 
 /// A secret consisting of a value, id and its attributes.
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct SecretBundle {
     /// The secret management attributes.
@@ -191,7 +192,7 @@ pub struct SecretBundle {
 }
 
 /// The secret item containing secret metadata.
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct SecretItem {
     /// The secret management attributes.
@@ -218,7 +219,7 @@ pub struct SecretItem {
 }
 
 /// The secret list result.
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct SecretListResult {
     /// The link to the next page of items
@@ -232,7 +233,7 @@ pub struct SecretListResult {
 }
 
 /// The secret restore parameters.
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct SecretRestoreParameters {
     /// The backup blob associated with a secret bundle.
@@ -242,7 +243,7 @@ pub struct SecretRestoreParameters {
 }
 
 /// The secret set parameters.
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct SecretSetParameters {
     /// Type of the secret value such as a password.
@@ -265,7 +266,7 @@ pub struct SecretSetParameters {
 }
 
 /// The secret update parameters.
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct SecretUpdateParameters {
     /// Type of the secret value such as a password.

@@ -6,19 +6,20 @@
 use async_std::task::block_on;
 use azure_core::{RequestContent, Response};
 use serde::{Deserialize, Serialize};
+use typespec_client_core::Model;
 
 /// Empty model used in operation parameters
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct EmptyInput {}
 
 /// Empty model used in both parameter and return type
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct EmptyInputOutput {}
 
 /// Empty model used in operation return type
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct EmptyOutput {}
 

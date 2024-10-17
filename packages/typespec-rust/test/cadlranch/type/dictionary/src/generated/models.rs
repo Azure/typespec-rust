@@ -5,9 +5,10 @@
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use typespec_client_core::Model;
 
 /// Dictionary inner model
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct InnerModel {
     #[serde(skip_serializing_if = "Option::is_none")]

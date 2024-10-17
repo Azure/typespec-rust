@@ -13,3 +13,4 @@ azure_core = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 time = { workspace = true }
+typespec_client_core = { workspace = true }

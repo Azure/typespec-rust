@@ -10,6 +10,8 @@
 
 ### Features Added
 
+* Models now derive `typespec_client_core::Model`.
+
 ### Other Changes
 
 * Use macros from `typespec_client_core` for creating enums.

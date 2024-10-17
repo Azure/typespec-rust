@@ -16,13 +16,14 @@ export function emitModels(crate: rust.Crate, context: Context): string {
 
   const use = new Use('models');
   use.addTypes('serde', ['Deserialize', 'Serialize']);
+  use.addType('typespec_client_core', 'Model');
 
   const indentation = new helpers.indentation();
 
   let body = '';
   for (const model of crate.models) {
     body += helpers.formatDocComment(model.docs);
-    body += helpers.annotationDerive('Default');
+    body += helpers.annotationDerive('Default', 'Model');
     body += helpers.AnnotationNonExhaustive;
     body += `${helpers.emitPub(model.pub)}struct ${model.name} {\n`;
 
