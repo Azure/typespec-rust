@@ -11,8 +11,8 @@ import * as rust from '../codemodel/index.js';
 // It's an implementation detail of CodeGenerator and isn't intended
 // for use outside of that class.
 export class Context {
-  private readonly tryFromForRequestTypes = new Map<string, rust.SerdeFormat>();
-  private readonly tryFromResponseTypes = new Map<string, rust.SerdeFormat>();
+  private readonly tryFromForRequestTypes = new Map<string, rust.BodyFormat>();
+  private readonly tryFromResponseTypes = new Map<string, rust.BodyFormat>();
 
   constructor(crate: rust.Crate) {
     // enumerate all client methods, looking for enum and model

@@ -123,6 +123,11 @@ export class Adapter {
 
     for (const property of model.properties) {
       if (property.kind !== 'property') {
+        if (property.type.kind === 'constant') {
+          // typical case is content-type header.
+          // we don't need to emit this as a field so skip it.
+          continue;
+        }
         // TODO: https://github.com/Azure/typespec-rust/issues/96
         throw new Error(`model property kind ${property.kind} NYI`);
       }
@@ -550,18 +555,31 @@ export class Adapter {
     let returnType: rust.Type;
     if (method.response.type) {
       // search the HTTP responses for the corresponding type so we can determine the wire format
-      let format: rust.SerdeFormat | undefined;
+      let format: rust.BodyFormat | undefined;
       for (const httpResp of method.operation.responses.values()) {
         if (!httpResp.type || !httpResp.defaultContentType || httpResp.type.kind !== method.response.type.kind) {
           continue;
         }
-        format = this.adaptSerdeFormat(httpResp.defaultContentType);
+        format = this.adaptBodyFormat(httpResp.defaultContentType);
         break;
       }
+
       if (!format) {
         throw new Error(`didn't find HTTP response for kind ${method.response.type.kind} in method ${method.name}`);
       }
-      returnType = new rust.Response(this.crate, this.getType(method.response.type), format);
+
+      // until https://github.com/Azure/typespec-azure/issues/614 is resolved
+      // we have to look at the format to determine if the response is a streaming
+      // binary response. at present, it's represented as a base-64 encoded byte
+      // array which is clearly wrong.
+      let respType: rust.Type;
+      if (format === 'binary') {
+        respType = this.getUnitType();
+      } else {
+        respType = this.getType(method.response.type);
+      }
+
+      returnType = new rust.Response(this.crate, respType, format);
     } else {
       returnType = new rust.Response(this.crate, this.getUnitType());
     }
@@ -589,7 +607,7 @@ export class Adapter {
     let adaptedParam: rust.MethodParameter;
     switch (param.kind) {
       case 'body': {
-        adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, paramType, this.adaptSerdeFormat(param.defaultContentType)));
+        adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, paramType, this.adaptBodyFormat(param.defaultContentType)));
         break;
       }
       case 'header':
@@ -644,15 +662,19 @@ export class Adapter {
     return adaptedParam;
   }
 
-  private adaptSerdeFormat(contentType: string): rust.SerdeFormat {
-    switch (contentType) {
-      case 'application/json':
-      case 'application/merge-patch+json':
-        this.crate.addDependency(new rust.CrateDependency('serde_json'));
-        return 'json';
-      default:
-        throw new Error(`unhandled contentType ${contentType}`);
+  private adaptBodyFormat(contentType: string): rust.BodyFormat {
+    // we only recognize/support JSON, text, and XML content types, so assume anything else is binary
+    // NOTE: we check XML before text in order to support text/xml
+    let bodyFormat: rust.BodyFormat = 'binary';
+    if (contentType.match(/json/i)) {
+      this.crate.addDependency(new rust.CrateDependency('serde_json'));
+      bodyFormat = 'json';
+    } else if (contentType.match(/xml/i)) {
+      throw new Error(`unhandled contentType ${contentType}`);
+    } else if (contentType.match(/text/i)) {
+      throw new Error(`unhandled contentType ${contentType}`);
     }
+    return bodyFormat;
   }
 }
 
