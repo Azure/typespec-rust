@@ -5,7 +5,7 @@
 
 use crate::models::DeletionRecoveryLevel;
 use async_std::task::block_on;
-use azure_core::{RequestContent, Response, Url};
+use azure_core::{RequestContent, Response, Result, Url};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use time::OffsetDateTime;
@@ -286,7 +286,7 @@ pub struct SecretUpdateParameters {
 
 impl TryFrom<Response<BackupSecretResult>> for BackupSecretResult {
     type Error = azure_core::Error;
-    fn try_from(value: Response<BackupSecretResult>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<BackupSecretResult>) -> Result<Self> {
         let f = || value.into_body().json::<BackupSecretResult>();
         let r = block_on(f())?;
         Ok(r)
@@ -295,7 +295,7 @@ impl TryFrom<Response<BackupSecretResult>> for BackupSecretResult {
 
 impl TryFrom<Response<DeletedSecretBundle>> for DeletedSecretBundle {
     type Error = azure_core::Error;
-    fn try_from(value: Response<DeletedSecretBundle>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<DeletedSecretBundle>) -> Result<Self> {
         let f = || value.into_body().json::<DeletedSecretBundle>();
         let r = block_on(f())?;
         Ok(r)
@@ -304,7 +304,7 @@ impl TryFrom<Response<DeletedSecretBundle>> for DeletedSecretBundle {
 
 impl TryFrom<Response<SecretBundle>> for SecretBundle {
     type Error = azure_core::Error;
-    fn try_from(value: Response<SecretBundle>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<SecretBundle>) -> Result<Self> {
         let f = || value.into_body().json::<SecretBundle>();
         let r = block_on(f())?;
         Ok(r)
@@ -313,21 +313,21 @@ impl TryFrom<Response<SecretBundle>> for SecretBundle {
 
 impl TryFrom<SecretRestoreParameters> for RequestContent<SecretRestoreParameters> {
     type Error = azure_core::Error;
-    fn try_from(value: SecretRestoreParameters) -> Result<Self, Self::Error> {
+    fn try_from(value: SecretRestoreParameters) -> Result<Self> {
         Ok(RequestContent::from(serde_json::to_vec(&value)?))
     }
 }
 
 impl TryFrom<SecretSetParameters> for RequestContent<SecretSetParameters> {
     type Error = azure_core::Error;
-    fn try_from(value: SecretSetParameters) -> Result<Self, Self::Error> {
+    fn try_from(value: SecretSetParameters) -> Result<Self> {
         Ok(RequestContent::from(serde_json::to_vec(&value)?))
     }
 }
 
 impl TryFrom<SecretUpdateParameters> for RequestContent<SecretUpdateParameters> {
     type Error = azure_core::Error;
-    fn try_from(value: SecretUpdateParameters) -> Result<Self, Self::Error> {
+    fn try_from(value: SecretUpdateParameters) -> Result<Self> {
         Ok(RequestContent::from(serde_json::to_vec(&value)?))
     }
 }
