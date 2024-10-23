@@ -51,12 +51,12 @@ export class Context {
       return '';
     }
 
-    use.addType('azure_core', 'RequestContent');
+    use.addTypes('azure_core', ['RequestContent', 'Result']);
 
     const indent = new helpers.indentation();
     let content = `impl TryFrom<${helpers.getTypeDeclaration(type)}> for RequestContent<${helpers.getTypeDeclaration(type)}> {\n`;
     content += `${indent.get()}type Error = azure_core::Error;\n`;
-    content += `${indent.get()}fn try_from(value: ${helpers.getTypeDeclaration(type)}) -> Result<Self, Self::Error> {\n`;
+    content += `${indent.get()}fn try_from(value: ${helpers.getTypeDeclaration(type)}) -> Result<Self> {\n`;
     content += `${indent.push().get()}Ok(RequestContent::from(serde_${format}::to_vec(&value)?))\n`;
     content += `${indent.pop().get()}}\n`;
     content += '}\n\n';
@@ -71,13 +71,13 @@ export class Context {
       return '';
     }
 
-    use.addType('azure_core', 'Response');
+    use.addTypes('azure_core', ['Response', 'Result']);
     use.addType('async_std::task', 'block_on');
 
     const indent = new helpers.indentation();
     let content = `impl TryFrom<Response<${helpers.getTypeDeclaration(type)}>> for ${helpers.getTypeDeclaration(type)} {\n`;
     content += `${indent.get()}type Error = azure_core::Error;\n`;
-    content += `${indent.get()}fn try_from(value: Response<${helpers.getTypeDeclaration(type)}>) -> Result<Self, Self::Error> {\n`;
+    content += `${indent.get()}fn try_from(value: Response<${helpers.getTypeDeclaration(type)}>) -> Result<Self> {\n`;
     content += `${indent.push().get()}let f = || value.into_body().${format}::<${helpers.getTypeDeclaration(type)}>();\n`;
     content += `${indent.get()}let r = block_on(f())?;\n`;
     content += `${indent.get()}Ok(r)\n`;

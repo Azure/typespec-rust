@@ -9,7 +9,7 @@ use crate::models::{
     QueryRequestTypeSqlOnly, QueryType, RehydratePriority,
 };
 use async_std::task::block_on;
-use azure_core::{RequestContent, Response};
+use azure_core::{RequestContent, Response, Result};
 use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 use typespec_client_core::Model;
@@ -1128,14 +1128,14 @@ pub struct UserDelegationKey {
 
 impl TryFrom<BlobTags> for RequestContent<BlobTags> {
     type Error = azure_core::Error;
-    fn try_from(value: BlobTags) -> Result<Self, Self::Error> {
+    fn try_from(value: BlobTags) -> Result<Self> {
         Ok(RequestContent::from(serde_json::to_vec(&value)?))
     }
 }
 
 impl TryFrom<Response<BlobTags>> for BlobTags {
     type Error = azure_core::Error;
-    fn try_from(value: Response<BlobTags>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<BlobTags>) -> Result<Self> {
         let f = || value.into_body().json::<BlobTags>();
         let r = block_on(f())?;
         Ok(r)
@@ -1144,14 +1144,14 @@ impl TryFrom<Response<BlobTags>> for BlobTags {
 
 impl TryFrom<BlockLookupList> for RequestContent<BlockLookupList> {
     type Error = azure_core::Error;
-    fn try_from(value: BlockLookupList) -> Result<Self, Self::Error> {
+    fn try_from(value: BlockLookupList) -> Result<Self> {
         Ok(RequestContent::from(serde_json::to_vec(&value)?))
     }
 }
 
 impl TryFrom<Response<BlockLookupList>> for BlockLookupList {
     type Error = azure_core::Error;
-    fn try_from(value: Response<BlockLookupList>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<BlockLookupList>) -> Result<Self> {
         let f = || value.into_body().json::<BlockLookupList>();
         let r = block_on(f())?;
         Ok(r)
@@ -1160,7 +1160,7 @@ impl TryFrom<Response<BlockLookupList>> for BlockLookupList {
 
 impl TryFrom<Response<FilterBlobSegment>> for FilterBlobSegment {
     type Error = azure_core::Error;
-    fn try_from(value: Response<FilterBlobSegment>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<FilterBlobSegment>) -> Result<Self> {
         let f = || value.into_body().json::<FilterBlobSegment>();
         let r = block_on(f())?;
         Ok(r)
@@ -1169,14 +1169,14 @@ impl TryFrom<Response<FilterBlobSegment>> for FilterBlobSegment {
 
 impl TryFrom<KeyInfo> for RequestContent<KeyInfo> {
     type Error = azure_core::Error;
-    fn try_from(value: KeyInfo) -> Result<Self, Self::Error> {
+    fn try_from(value: KeyInfo) -> Result<Self> {
         Ok(RequestContent::from(serde_json::to_vec(&value)?))
     }
 }
 
 impl TryFrom<Response<ListBlobsFlatSegmentResponse>> for ListBlobsFlatSegmentResponse {
     type Error = azure_core::Error;
-    fn try_from(value: Response<ListBlobsFlatSegmentResponse>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<ListBlobsFlatSegmentResponse>) -> Result<Self> {
         let f = || value.into_body().json::<ListBlobsFlatSegmentResponse>();
         let r = block_on(f())?;
         Ok(r)
@@ -1185,7 +1185,7 @@ impl TryFrom<Response<ListBlobsFlatSegmentResponse>> for ListBlobsFlatSegmentRes
 
 impl TryFrom<Response<ListBlobsHierarchySegmentResponse>> for ListBlobsHierarchySegmentResponse {
     type Error = azure_core::Error;
-    fn try_from(value: Response<ListBlobsHierarchySegmentResponse>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<ListBlobsHierarchySegmentResponse>) -> Result<Self> {
         let f = || {
             value
                 .into_body()
@@ -1198,7 +1198,7 @@ impl TryFrom<Response<ListBlobsHierarchySegmentResponse>> for ListBlobsHierarchy
 
 impl TryFrom<Response<ListContainersSegmentResponse>> for ListContainersSegmentResponse {
     type Error = azure_core::Error;
-    fn try_from(value: Response<ListContainersSegmentResponse>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<ListContainersSegmentResponse>) -> Result<Self> {
         let f = || value.into_body().json::<ListContainersSegmentResponse>();
         let r = block_on(f())?;
         Ok(r)
@@ -1207,7 +1207,7 @@ impl TryFrom<Response<ListContainersSegmentResponse>> for ListContainersSegmentR
 
 impl TryFrom<Response<PageList>> for PageList {
     type Error = azure_core::Error;
-    fn try_from(value: Response<PageList>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<PageList>) -> Result<Self> {
         let f = || value.into_body().json::<PageList>();
         let r = block_on(f())?;
         Ok(r)
@@ -1216,21 +1216,21 @@ impl TryFrom<Response<PageList>> for PageList {
 
 impl TryFrom<QueryRequest> for RequestContent<QueryRequest> {
     type Error = azure_core::Error;
-    fn try_from(value: QueryRequest) -> Result<Self, Self::Error> {
+    fn try_from(value: QueryRequest) -> Result<Self> {
         Ok(RequestContent::from(serde_json::to_vec(&value)?))
     }
 }
 
 impl TryFrom<StorageServiceProperties> for RequestContent<StorageServiceProperties> {
     type Error = azure_core::Error;
-    fn try_from(value: StorageServiceProperties) -> Result<Self, Self::Error> {
+    fn try_from(value: StorageServiceProperties) -> Result<Self> {
         Ok(RequestContent::from(serde_json::to_vec(&value)?))
     }
 }
 
 impl TryFrom<Response<StorageServiceProperties>> for StorageServiceProperties {
     type Error = azure_core::Error;
-    fn try_from(value: Response<StorageServiceProperties>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<StorageServiceProperties>) -> Result<Self> {
         let f = || value.into_body().json::<StorageServiceProperties>();
         let r = block_on(f())?;
         Ok(r)
@@ -1239,7 +1239,7 @@ impl TryFrom<Response<StorageServiceProperties>> for StorageServiceProperties {
 
 impl TryFrom<Response<StorageServiceStats>> for StorageServiceStats {
     type Error = azure_core::Error;
-    fn try_from(value: Response<StorageServiceStats>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<StorageServiceStats>) -> Result<Self> {
         let f = || value.into_body().json::<StorageServiceStats>();
         let r = block_on(f())?;
         Ok(r)
@@ -1248,7 +1248,7 @@ impl TryFrom<Response<StorageServiceStats>> for StorageServiceStats {
 
 impl TryFrom<Response<UserDelegationKey>> for UserDelegationKey {
     type Error = azure_core::Error;
-    fn try_from(value: Response<UserDelegationKey>) -> Result<Self, Self::Error> {
+    fn try_from(value: Response<UserDelegationKey>) -> Result<Self> {
         let f = || value.into_body().json::<UserDelegationKey>();
         let r = block_on(f())?;
         Ok(r)
