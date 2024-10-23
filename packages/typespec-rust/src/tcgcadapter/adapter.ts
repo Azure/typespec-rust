@@ -337,8 +337,7 @@ export class Adapter {
       clientName = parent.name.substring(0, parent.name.length - 6) + clientName;
     }
 
-    // only add the Client suffix to instantiable clients
-    if (!clientName.match(/Client$/) && !parent) {
+    if (!clientName.match(/Client$/)) {
       clientName += 'Client';
     }
 
@@ -459,7 +458,7 @@ export class Adapter {
     for (const method of client.methods) {
       if (method.kind === 'clientaccessor') {
         const subClient = this.recursiveAdaptClient(method.response, rustClient);
-        rustClient.methods.push(new rust.ClientAccessor(`get_${snakeCaseName(subClient.name)}_client`, rustClient, subClient));
+        rustClient.methods.push(new rust.ClientAccessor(`get_${snakeCaseName(subClient.name)}`, rustClient, subClient));
       } else {
         this.adaptMethod(method, rustClient);
       }
