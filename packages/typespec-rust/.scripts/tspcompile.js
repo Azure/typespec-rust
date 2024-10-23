@@ -40,7 +40,7 @@ const cadlRanch = {
   //'cadl_bodyoptional': ['parameters/body-optionality'],
   'cadl_collectionfmt': ['parameters/collection-format'],
   //'cadl_spread': ['parameters/spread'],
-  //'cadl_contentneg': ['payload/content-negotiation'],
+  'cadl_contentneg': ['payload/content-negotiation'],
   'cadl_jmergepatch': ['payload/json-merge-patch'],
   //'cadl_mediatype': ['payload/media-type'],
   //'cadl_multipart': ['payload/multipart'],
