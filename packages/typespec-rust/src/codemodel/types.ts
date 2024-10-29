@@ -145,9 +145,6 @@ export interface Option {
   // the generic type param
   // note that not all types are applicable
   type: Type;
-
-  // indicates if the type is by reference
-  ref: boolean;
 }
 
 // RequestContent is a Rust RequestContent<T> from azure_core
@@ -439,7 +436,7 @@ export class OffsetDateTime extends External implements OffsetDateTime {
 }
 
 export class Option implements Option {
-  constructor(type: Type, ref: boolean) {
+  constructor(type: Type) {
     switch (type.kind) {
       case 'String':
       case 'encodedBytes':
@@ -455,7 +452,6 @@ export class Option implements Option {
       case 'vector':
         this.kind = 'option';
         this.type = type;
-        this.ref = ref;
         break;
       default:
         throw new Error(`unsupported Option generic type param kind ${type.kind}`);

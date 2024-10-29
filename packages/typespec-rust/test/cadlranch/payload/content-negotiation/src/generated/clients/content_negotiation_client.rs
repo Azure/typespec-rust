@@ -21,7 +21,7 @@ pub struct ContentNegotiationClientOptions {
 
 impl ContentNegotiationClient {
     pub fn with_no_credential(
-        endpoint: impl AsRef<str>,
+        endpoint: &str,
         options: Option<ContentNegotiationClientOptions>,
     ) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;

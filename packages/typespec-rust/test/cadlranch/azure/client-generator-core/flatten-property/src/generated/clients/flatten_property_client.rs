@@ -23,7 +23,7 @@ pub struct FlattenPropertyClientOptions {
 
 impl FlattenPropertyClient {
     pub fn with_no_credential(
-        endpoint: impl AsRef<str>,
+        endpoint: &str,
         options: Option<FlattenPropertyClientOptions>,
     ) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;

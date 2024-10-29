@@ -61,6 +61,9 @@ export interface ClientParameter {
 
   // the type of the client parameter
   type: types.Type;
+
+  // indicates if the parameter is a reference. defaults to false
+  ref: boolean;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -284,14 +287,15 @@ export class ClientConstruction implements ClientConstruction {
 
 export class ClientOptions extends types.Option implements ClientOptions {
   constructor(type: types.Struct) {
-    super(type, false);
+    super(type);
   }
 }
 
 export class ClientParameter implements ClientParameter {
-  constructor(name: string, type: types.Type) {
+  constructor(name: string, type: types.Type, ref?: boolean) {
     this.name = name;
     this.type = type;
+    this.ref = ref ? ref : false;
   }
 }
 
@@ -322,8 +326,8 @@ export class HeaderParameter extends HTTPParameterBase implements HeaderParamete
 }
 
 export class MethodOptions extends types.Option implements MethodOptions {
-  constructor(type: types.Struct, ref: boolean) {
-    super(type, ref);
+  constructor(type: types.Struct) {
+    super(type);
   }
 }
 

@@ -23,7 +23,7 @@ pub struct JsonMergePatchClientOptions {
 
 impl JsonMergePatchClient {
     pub fn with_no_credential(
-        endpoint: impl AsRef<str>,
+        endpoint: &str,
         options: Option<JsonMergePatchClientOptions>,
     ) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;

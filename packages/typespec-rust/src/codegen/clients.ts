@@ -218,7 +218,7 @@ function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: r
   const paramsSig = new Array<string>();
   for (const param of params) {
     use.addForType(param.type);
-    paramsSig.push(`${param.name}: ${helpers.getTypeDeclaration(param.type)}`);
+    paramsSig.push(`${param.name}: ${param.ref ? '&' : ''}${helpers.getTypeDeclaration(param.type)}`);
   }
   paramsSig.push(`options: ${helpers.getTypeDeclaration(options)}`);
   return paramsSig.join(', ');

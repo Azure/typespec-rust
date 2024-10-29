@@ -20,6 +20,7 @@
 
 * Use macros from `typespec_client_core` for creating enums.
 * `TryFrom` implementations return an `azure_core::Result` instead of `std::result::Result`.
+* Client parameters of type `impl AsRef<str>` have been changed to `&str`.
 
 ## 0.1.0 (2024-10-10)
 

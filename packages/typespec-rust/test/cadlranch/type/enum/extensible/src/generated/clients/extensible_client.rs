@@ -20,7 +20,7 @@ pub struct ExtensibleClientOptions {
 
 impl ExtensibleClient {
     pub fn with_no_credential(
-        endpoint: impl AsRef<str>,
+        endpoint: &str,
         options: Option<ExtensibleClientOptions>,
     ) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;

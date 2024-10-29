@@ -30,7 +30,7 @@ pub struct DictionaryClientOptions {
 
 impl DictionaryClient {
     pub fn with_no_credential(
-        endpoint: impl AsRef<str>,
+        endpoint: &str,
         options: Option<DictionaryClientOptions>,
     ) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;

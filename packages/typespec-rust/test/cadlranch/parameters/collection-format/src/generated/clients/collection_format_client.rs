@@ -21,7 +21,7 @@ pub struct CollectionFormatClientOptions {
 
 impl CollectionFormatClient {
     pub fn with_no_credential(
-        endpoint: impl AsRef<str>,
+        endpoint: &str,
         options: Option<CollectionFormatClientOptions>,
     ) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;

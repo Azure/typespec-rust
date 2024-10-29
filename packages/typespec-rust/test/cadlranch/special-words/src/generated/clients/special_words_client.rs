@@ -23,7 +23,7 @@ pub struct SpecialWordsClientOptions {
 
 impl SpecialWordsClient {
     pub fn with_no_credential(
-        endpoint: impl AsRef<str>,
+        endpoint: &str,
         options: Option<SpecialWordsClientOptions>,
     ) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;
