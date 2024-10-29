@@ -24,18 +24,18 @@ impl BlobBlobClient {
     /// and full metadata.
     pub async fn abort_copy_from_url(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        copy_id: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        copy_id: String,
+        version: String,
         options: Option<BlobBlobClientAbortCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=copy&copyid");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -46,29 +46,29 @@ impl BlobBlobClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-copy-id", copy_id.into());
+        request.insert_header("x-ms-copy-id", copy_id);
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn acquire_lease(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         duration: i32,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobBlobClientAcquireLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=lease&acquire");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -98,24 +98,24 @@ impl BlobBlobClient {
         if let Some(proposed_lease_id) = options.proposed_lease_id {
             request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn break_lease(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version: String,
         options: Option<BlobBlobClientBreakLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=lease&break");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -144,25 +144,25 @@ impl BlobBlobClient {
         if let Some(break_period) = options.break_period {
             request.insert_header("x-ms-lease-break-period", break_period.to_string());
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn change_lease(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        lease_id: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        lease_id: String,
+        version: String,
         options: Option<BlobBlobClientChangeLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=lease&change");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -188,11 +188,11 @@ impl BlobBlobClient {
         if let Some(if_tags) = options.if_tags {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        request.insert_header("x-ms-lease-id", lease_id.into());
+        request.insert_header("x-ms-lease-id", lease_id);
         if let Some(proposed_lease_id) = options.proposed_lease_id {
             request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -200,18 +200,18 @@ impl BlobBlobClient {
     /// copy is complete.
     pub async fn copy_from_url(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        copy_source: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        copy_source: String,
+        version: String,
         options: Option<BlobBlobClientCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=copy&sync");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -237,7 +237,7 @@ impl BlobBlobClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-copy-source", copy_source.into());
+        request.insert_header("x-ms-copy-source", copy_source);
         if let Some(copy_source_authorization) = options.copy_source_authorization {
             request.insert_header("x-ms-copy-source-authorization", copy_source_authorization);
         }
@@ -292,24 +292,24 @@ impl BlobBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Create Snapshot operation creates a read-only snapshot of a blob
     pub async fn create_snapshot(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version: String,
         options: Option<BlobBlobClientCreateSnapshotOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=snapshot");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -350,7 +350,7 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -365,18 +365,18 @@ impl BlobBlobClient {
     /// causes the service to return an HTTP status code of 404 (ResourceNotFound).
     pub async fn delete(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version_id: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version_id: String,
+        version: String,
         options: Option<BlobBlobClientDeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(blob_delete_type) = options.blob_delete_type {
             url.query_pairs_mut()
@@ -403,7 +403,7 @@ impl BlobBlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", if_unmodified_since.to_string());
         }
-        request.insert_header("versionid", version_id.into());
+        request.insert_header("versionid", version_id);
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
@@ -416,24 +416,24 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Delete Immutability Policy operation deletes the immutability policy on the blob.
     pub async fn delete_immutability_policy(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version: String,
         options: Option<BlobBlobClientDeleteImmutabilityPolicyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=immutabilityPolicies");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -444,7 +444,7 @@ impl BlobBlobClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -452,18 +452,18 @@ impl BlobBlobClient {
     /// call Download to read a snapshot.
     pub async fn download(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version_id: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version_id: String,
+        version: String,
         options: Option<BlobBlobClientDownloadOptions<'_>>,
     ) -> Result<Response<Vec<u8>>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
@@ -486,7 +486,7 @@ impl BlobBlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", if_unmodified_since.to_string());
         }
-        request.insert_header("versionid", version_id.into());
+        request.insert_header("versionid", version_id);
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
@@ -517,31 +517,31 @@ impl BlobBlobClient {
         if let Some(range_content_md5) = options.range_content_md5 {
             request.insert_header("x-ms-range-get-content-md5", range_content_md5.to_string());
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// Returns the sku name and account kind
     pub async fn get_account_info(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version: String,
         options: Option<BlobBlobClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?restype=account&comp=properties");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -549,18 +549,18 @@ impl BlobBlobClient {
     /// blob. It does not return the content of the blob.
     pub async fn get_properties(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version_id: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version_id: String,
+        version: String,
         options: Option<BlobBlobClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
@@ -579,7 +579,7 @@ impl BlobBlobClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", if_unmodified_since.to_string());
         }
-        request.insert_header("versionid", version_id.into());
+        request.insert_header("versionid", version_id);
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
@@ -598,25 +598,25 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Get Blob Tags operation enables users to get tags on a blob.
     pub async fn get_tags(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version_id: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version_id: String,
+        version: String,
         options: Option<BlobBlobClientGetTagsOptions<'_>>,
     ) -> Result<Response<BlobTags>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/{containerName}/{blob}?comp=tags");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
@@ -627,7 +627,7 @@ impl BlobBlobClient {
         }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        request.insert_header("versionid", version_id.into());
+        request.insert_header("versionid", version_id);
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
@@ -637,7 +637,7 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -645,17 +645,17 @@ impl BlobBlobClient {
     pub async fn query(
         &self,
         query_request: RequestContent<QueryRequest>,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version: String,
         options: Option<BlobBlobClientQueryOptions<'_>>,
     ) -> Result<Response<Vec<u8>>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/{containerName}/{blob}?comp=query");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
@@ -697,7 +697,7 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         request.set_body(query_request);
         self.pipeline.send(&mut ctx, &mut request).await
     }
@@ -705,18 +705,18 @@ impl BlobBlobClient {
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn release_lease(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        lease_id: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        lease_id: String,
+        version: String,
         options: Option<BlobBlobClientReleaseLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=lease&release");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -742,26 +742,26 @@ impl BlobBlobClient {
         if let Some(if_tags) = options.if_tags {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        request.insert_header("x-ms-lease-id", lease_id.into());
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-lease-id", lease_id);
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn renew_lease(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        lease_id: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        lease_id: String,
+        version: String,
         options: Option<BlobBlobClientRenewLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=lease&renew");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -787,27 +787,27 @@ impl BlobBlobClient {
         if let Some(if_tags) = options.if_tags {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        request.insert_header("x-ms-lease-id", lease_id.into());
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-lease-id", lease_id);
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// "Set the expiration time of a blob"
     pub async fn set_expiry(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         expiry_options: BlobExpiryOptions,
-        expires_on: impl Into<String>,
-        version: impl Into<String>,
+        expires_on: String,
+        version: String,
         options: Option<BlobBlobClientSetExpiryOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=expiry");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
@@ -815,25 +815,25 @@ impl BlobBlobClient {
             request.insert_header("x-ms-client-request-id", request_id);
         }
         request.insert_header("x-ms-expiry-option", expiry_options.to_string());
-        request.insert_header("x-ms-expiry-time", expires_on.into());
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-expiry-time", expires_on);
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Set HTTP Headers operation sets system properties on the blob.
     pub async fn set_http_headers(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version: String,
         options: Option<BlobBlobClientSetHttpHeadersOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=properties&SetHTTPHeaders");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -880,24 +880,24 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// "Set the immutability policy of a blob"
     pub async fn set_immutability_policy(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version: String,
         options: Option<BlobBlobClientSetImmutabilityPolicyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=immutabilityPolicies");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -923,25 +923,25 @@ impl BlobBlobClient {
                 immutability_policy_expiry,
             );
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Set Legal Hold operation sets a legal hold on the blob.
     pub async fn set_legal_hold(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         legal_hold: bool,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobBlobClientSetLegalHoldOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=legalhold");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -953,24 +953,24 @@ impl BlobBlobClient {
             request.insert_header("x-ms-client-request-id", request_id);
         }
         request.insert_header("x-ms-legal-hold", legal_hold.to_string());
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Set Metadata operation sets user-defined metadata for the specified blob as one or more name-value pairs.
     pub async fn set_metadata(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version: String,
         options: Option<BlobBlobClientSetMetadataOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=metadata");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -1011,26 +1011,26 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Set Tags operation enables users to set tags on a blob.
     pub async fn set_tags(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version_id: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version_id: String,
         tags: RequestContent<BlobTags>,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobBlobClientSetTagsOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/{containerName}/{blob}?comp=tags");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -1042,7 +1042,7 @@ impl BlobBlobClient {
             request.insert_header("content-md5", transactional_content_md5);
         }
         request.insert_header("content-type", "application/json");
-        request.insert_header("versionid", version_id.into());
+        request.insert_header("versionid", version_id);
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
@@ -1055,7 +1055,7 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         request.set_body(tags);
         self.pipeline.send(&mut ctx, &mut request).await
     }
@@ -1065,18 +1065,18 @@ impl BlobBlobClient {
     /// ETag.
     pub async fn set_tier(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         access_tier: AccessTier,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobBlobClientSetTierOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=tier");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -1097,25 +1097,25 @@ impl BlobBlobClient {
         if let Some(rehydrate_priority) = options.rehydrate_priority {
             request.insert_header("x-ms-rehydrate-priority", rehydrate_priority.to_string());
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Start Copy From URL operation copies a blob or an internet resource to a new blob.
     pub async fn start_copy_from_url(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        copy_source: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        copy_source: String,
+        version: String,
         options: Option<BlobBlobClientStartCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=copy");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -1141,7 +1141,7 @@ impl BlobBlobClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-copy-source", copy_source.into());
+        request.insert_header("x-ms-copy-source", copy_source);
         if let Some(if_tags) = options.if_tags {
             request.insert_header("x-ms-if-tags", if_tags);
         }
@@ -1193,31 +1193,31 @@ impl BlobBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// "Undelete a blob that was previously soft deleted"
     pub async fn undelete(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version: String,
         options: Option<BlobBlobClientUndeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}/?comp=undelete");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 }

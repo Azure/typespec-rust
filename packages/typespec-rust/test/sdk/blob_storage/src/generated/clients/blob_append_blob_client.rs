@@ -21,12 +21,12 @@ impl BlobAppendBlobClient {
     pub async fn append_block(
         &self,
         body: RequestContent<Vec<u8>>,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         content_length: i64,
         max_size: i64,
         append_position: i64,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobAppendBlobClientAppendBlockOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -35,8 +35,8 @@ impl BlobAppendBlobClient {
         let mut path = String::from(
             "/{containerName}/{blob}?AppendBlob/{containerName}/{blob}?comp=appendblock",
         );
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -87,7 +87,7 @@ impl BlobAppendBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         request.set_body(body);
         self.pipeline.send(&mut ctx, &mut request).await
     }
@@ -96,14 +96,14 @@ impl BlobAppendBlobClient {
     /// read from a URL.
     pub async fn append_block_from_url(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         content_length: i64,
-        source_url: impl Into<String>,
-        source_range: impl Into<String>,
+        source_url: String,
+        source_range: String,
         max_size: i64,
         append_position: i64,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobAppendBlobClientAppendBlockFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -112,8 +112,8 @@ impl BlobAppendBlobClient {
         let mut path = String::from(
             "/{containerName}/{blob}?AppendBlob/{containerName}/{blob}?comp=appendblock&fromUrl",
         );
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -166,27 +166,27 @@ impl BlobAppendBlobClient {
         if let Some(source_content_md5) = options.source_content_md5 {
             request.insert_header("x-ms-source-content-md5", source_content_md5);
         }
-        request.insert_header("x-ms-source-range", source_range.into());
-        request.insert_header("x-ms-source-url", source_url.into());
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-source-range", source_range);
+        request.insert_header("x-ms-source-url", source_url);
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Create operation creates a new append blob.
     pub async fn create(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         content_length: i64,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobAppendBlobClientCreateOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?AppendBlob");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -264,7 +264,7 @@ impl BlobAppendBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -272,10 +272,10 @@ impl BlobAppendBlobClient {
     /// later.
     pub async fn seal(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         append_position: i64,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobAppendBlobClientSealOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -283,8 +283,8 @@ impl BlobAppendBlobClient {
         let mut url = self.endpoint.clone();
         let mut path =
             String::from("/{containerName}/{blob}?AppendBlob/{containerName}/{blob}?comp=seal");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -314,7 +314,7 @@ impl BlobAppendBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 }

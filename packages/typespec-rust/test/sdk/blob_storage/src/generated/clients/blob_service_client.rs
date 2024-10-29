@@ -22,7 +22,7 @@ impl BlobServiceClient {
     /// The Filter Blobs operation enables callers to list blobs across all containers whose tags match a given search expression.
     pub async fn filter_blobs(
         &self,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobServiceClientFilterBlobsOptions<'_>>,
     ) -> Result<Response<FilterBlobSegment>> {
         let options = options.unwrap_or_default();
@@ -58,14 +58,14 @@ impl BlobServiceClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// Returns the sku name and account kind.
     pub async fn get_account_info(
         &self,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobServiceClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -77,7 +77,7 @@ impl BlobServiceClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -85,7 +85,7 @@ impl BlobServiceClient {
     /// Resource Sharing) rules.
     pub async fn get_properties(
         &self,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobServiceClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<StorageServiceProperties>> {
         let options = options.unwrap_or_default();
@@ -101,7 +101,7 @@ impl BlobServiceClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -109,7 +109,7 @@ impl BlobServiceClient {
     /// when read-access geo-redundant replication is enabled for the storage account.
     pub async fn get_statistics(
         &self,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobServiceClientGetStatisticsOptions<'_>>,
     ) -> Result<Response<StorageServiceStats>> {
         let options = options.unwrap_or_default();
@@ -125,7 +125,7 @@ impl BlobServiceClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -135,7 +135,7 @@ impl BlobServiceClient {
     pub async fn get_user_delegation_key(
         &self,
         body: RequestContent<KeyInfo>,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobServiceClientGetUserDelegationKeyOptions<'_>>,
     ) -> Result<Response<UserDelegationKey>> {
         let options = options.unwrap_or_default();
@@ -152,7 +152,7 @@ impl BlobServiceClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         request.set_body(body);
         self.pipeline.send(&mut ctx, &mut request).await
     }
@@ -160,7 +160,7 @@ impl BlobServiceClient {
     /// The List Containers Segment operation returns a list of the containers under the specified account
     pub async fn list_containers_segment(
         &self,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobServiceClientListContainersSegmentOptions<'_>>,
     ) -> Result<Response<ListContainersSegmentResponse>> {
         let options = options.unwrap_or_default();
@@ -186,7 +186,7 @@ impl BlobServiceClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -195,7 +195,7 @@ impl BlobServiceClient {
     pub async fn set_properties(
         &self,
         body: RequestContent<StorageServiceProperties>,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobServiceClientSetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -212,7 +212,7 @@ impl BlobServiceClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         request.set_body(body);
         self.pipeline.send(&mut ctx, &mut request).await
     }
@@ -221,7 +221,7 @@ impl BlobServiceClient {
     pub async fn submit_batch(
         &self,
         content_length: i64,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobServiceClientSubmitBatchOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -238,7 +238,7 @@ impl BlobServiceClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 }
