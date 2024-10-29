@@ -158,7 +158,7 @@ function generate(crate, input, outputDir, additionalArgs) {
         logResult(error, stdout, stderr);
         // format on success
         if (error === null && stderr === '') {
-          execSync('cargo fmt --all -- --emit files', { cwd: fullOutputDir, encoding: 'ascii' });
+          execSync('cargo fmt -- --emit files', { cwd: fullOutputDir, encoding: 'ascii' });
         }
       });
     } catch (err) {
