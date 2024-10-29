@@ -440,8 +440,8 @@ pub mod builders {
             self.options.clone()
         }
 
-        pub fn with_api_version(mut self, api_version: impl Into<String>) -> Self {
-            self.options.api_version = api_version.into();
+        pub fn with_api_version(mut self, api_version: String) -> Self {
+            self.options.api_version = api_version;
             self
         }
     }

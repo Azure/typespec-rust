@@ -335,15 +335,9 @@ function createPubModBuilders(client: rust.Client, use: Use): string {
     body += emitNewFunction(indentation, clientOptionsType);
     body += emitBuildMethod(indentation, clientOptionsType);
     for (const field of getClientOptionsFields(client.constructable.options)) {
-      let typeName = helpers.getTypeDeclaration(field.type);
-      let into = '';
-      if (field.type.kind === 'String') {
-        // for Strings, we define these as "impl Into<String>" so that passing a str will just work
-        typeName = `impl Into<${typeName}>`;
-        into = '.into()';
-      }
+      const typeName = helpers.getTypeDeclaration(field.type);
       body += `\n${indentation.get()}pub fn with_${field.name}(mut self, ${field.name}: ${typeName}) -> Self {\n`;
-      body += `${indentation.push().get()}self.options.${field.name} = ${field.name}${into};\n`;
+      body += `${indentation.push().get()}self.options.${field.name} = ${field.name};\n`;
       body += `${indentation.get()}self\n`;
       body += `${indentation.pop().get()}}\n`;
     }
