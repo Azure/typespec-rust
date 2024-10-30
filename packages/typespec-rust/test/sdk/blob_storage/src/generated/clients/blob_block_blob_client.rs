@@ -26,17 +26,17 @@ impl BlobBlockBlobClient {
     pub async fn commit_block_list(
         &self,
         blocks: RequestContent<BlockLookupList>,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version: String,
         options: Option<BlobBlockBlobClientCommitBlockListOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/?comp=blocklist/{containerName}/{blob}");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -120,7 +120,7 @@ impl BlobBlockBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         request.set_body(blocks);
         self.pipeline.send(&mut ctx, &mut request).await
     }
@@ -128,18 +128,18 @@ impl BlobBlockBlobClient {
     /// The Get Block List operation retrieves the list of blocks that have been uploaded as part of a block blob.
     pub async fn get_block_list(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         list_type: BlockListType,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobBlockBlobClientGetBlockListOptions<'_>>,
     ) -> Result<Response<BlockLookupList>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/?comp=blocklist/{containerName}/{blob}");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         url.query_pairs_mut()
             .append_pair("blocklisttype", &list_type.to_string());
@@ -157,7 +157,7 @@ impl BlobBlockBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -167,19 +167,19 @@ impl BlobBlockBlobClient {
     /// contents using a source URL, use the Put Block from URL API in conjunction with Put Block List.
     pub async fn put_blob_from_url(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         content_length: i64,
-        copy_source: impl Into<String>,
-        version: impl Into<String>,
+        copy_source: String,
+        version: String,
         options: Option<BlobBlockBlobClientPutBlobFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?BlockBlob&fromUrl");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -227,7 +227,7 @@ impl BlobBlockBlobClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-copy-source", copy_source.into());
+        request.insert_header("x-ms-copy-source", copy_source);
         if let Some(copy_source_authorization) = options.copy_source_authorization {
             request.insert_header("x-ms-copy-source-authorization", copy_source_authorization);
         }
@@ -279,7 +279,7 @@ impl BlobBlockBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -287,22 +287,21 @@ impl BlobBlockBlobClient {
     pub async fn stage_block(
         &self,
         body: RequestContent<Vec<u8>>,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        block_id: impl Into<String>,
+        container_name: String,
+        blob: String,
+        block_id: String,
         content_length: i64,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobBlockBlobClientStageBlockOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?comp=block");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
-        url.query_pairs_mut()
-            .append_pair("blockid", &block_id.into());
+        url.query_pairs_mut().append_pair("blockid", &block_id);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -335,7 +334,7 @@ impl BlobBlockBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         request.set_body(body);
         self.pipeline.send(&mut ctx, &mut request).await
     }
@@ -344,24 +343,23 @@ impl BlobBlockBlobClient {
     /// a URL.
     pub async fn stage_block_from_url(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        block_id: impl Into<String>,
+        container_name: String,
+        blob: String,
+        block_id: String,
         content_length: i64,
-        source_url: impl Into<String>,
-        source_range: impl Into<String>,
-        version: impl Into<String>,
+        source_url: String,
+        source_range: String,
+        version: String,
         options: Option<BlobBlockBlobClientStageBlockFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/?comp=block&fromURL/{containerName}/{blob}");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
-        url.query_pairs_mut()
-            .append_pair("blockid", &block_id.into());
+        url.query_pairs_mut().append_pair("blockid", &block_id);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -414,9 +412,9 @@ impl BlobBlockBlobClient {
                 source_if_unmodified_since.to_string(),
             );
         }
-        request.insert_header("x-ms-source-range", source_range.into());
-        request.insert_header("x-ms-source-url", source_url.into());
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-source-range", source_range);
+        request.insert_header("x-ms-source-url", source_url);
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -426,18 +424,18 @@ impl BlobBlockBlobClient {
     /// Block List operation.
     pub async fn upload(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         body: RequestContent<Vec<u8>>,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobBlockBlobClientUploadOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?BlockBlob");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -524,7 +522,7 @@ impl BlobBlockBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         request.set_body(body);
         self.pipeline.send(&mut ctx, &mut request).await
     }

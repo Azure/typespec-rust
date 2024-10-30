@@ -597,11 +597,7 @@ export class Adapter {
     }
 
     const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
-    let paramType = this.getType(param.type);
-    if (paramLoc === 'method' && paramType.kind === 'String' && !param.optional) {
-      // for Strings, we define these as "impl Into<String>" so that passing a str will just work
-      paramType = new rust.ImplTrait('Into', paramType);
-    }
+    const paramType = this.getType(param.type);
 
     let adaptedParam: rust.MethodParameter;
     switch (param.kind) {

@@ -20,18 +20,18 @@ impl BlobPageBlobClient {
     /// The Clear Pages operation clears a range of pages from a page blob
     pub async fn clear_pages(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         content_length: i64,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobPageBlobClientClearPagesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?comp=page&clear");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -84,7 +84,7 @@ impl BlobPageBlobClient {
         if let Some(range) = options.range {
             request.insert_header("x-ms-range", range);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -94,18 +94,18 @@ impl BlobPageBlobClient {
     /// since REST version 2016-05-31.
     pub async fn copy_incremental(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        copy_source: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        copy_source: String,
+        version: String,
         options: Option<BlobPageBlobClientCopyIncrementalOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?comp=incrementalcopy");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -128,33 +128,33 @@ impl BlobPageBlobClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-copy-source", copy_source.into());
+        request.insert_header("x-ms-copy-source", copy_source);
         if let Some(if_tags) = options.if_tags {
             request.insert_header("x-ms-if-tags", if_tags);
         }
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Create operation creates a new page blob.
     pub async fn create(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         content_length: i64,
         blob_content_length: i64,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobPageBlobClientCreateOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?PageBlob");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -236,24 +236,24 @@ impl BlobPageBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Get Page Ranges operation returns the list of valid page ranges for a page blob or snapshot of a page blob.
     pub async fn get_page_ranges(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        version: String,
         options: Option<BlobPageBlobClientGetPageRangesOptions<'_>>,
     ) -> Result<Response<PageList>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?comp=pagelist");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(marker) = options.marker {
             url.query_pairs_mut().append_pair("marker", &marker);
@@ -291,26 +291,26 @@ impl BlobPageBlobClient {
         if let Some(range) = options.range {
             request.insert_header("x-ms-range", range);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Get Page Ranges Diff operation returns the list of valid page ranges for a page blob or snapshot of a page blob.
     pub async fn get_page_ranges_diff(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
-        prevsnapshot: impl Into<String>,
-        prev_snapshot_url: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        blob: String,
+        prevsnapshot: String,
+        prev_snapshot_url: String,
+        version: String,
         options: Option<BlobPageBlobClientGetPageRangesDiffOptions<'_>>,
     ) -> Result<Response<PageList>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?comp=pagelist&diff");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(marker) = options.marker {
             url.query_pairs_mut().append_pair("marker", &marker);
@@ -320,7 +320,7 @@ impl BlobPageBlobClient {
                 .append_pair("maxresults", &maxresults.to_string());
         }
         url.query_pairs_mut()
-            .append_pair("prevsnapshot", &prevsnapshot.into());
+            .append_pair("prevsnapshot", &prevsnapshot);
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
         }
@@ -351,29 +351,29 @@ impl BlobPageBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-previous-snapshot-url", prev_snapshot_url.into());
+        request.insert_header("x-ms-previous-snapshot-url", prev_snapshot_url);
         if let Some(range) = options.range {
             request.insert_header("x-ms-range", range);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// The Resize operation increases the size of the page blob to the specified size.
     pub async fn resize(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         blob_content_length: i64,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobPageBlobClientResizeOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?comp=properties&Resize");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -415,7 +415,7 @@ impl BlobPageBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -423,19 +423,19 @@ impl BlobPageBlobClient {
     /// number is less than the current sequence number of the blob.
     pub async fn update_sequence_number(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         sequence_number_action: SequenceNumberActionType,
         blob_sequence_number: i64,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobPageBlobClientUpdateSequenceNumberOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?comp=properties&UpdateSequenceNumber");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -472,7 +472,7 @@ impl BlobPageBlobClient {
             "x-ms-sequence-number-action",
             sequence_number_action.to_string(),
         );
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -480,18 +480,18 @@ impl BlobPageBlobClient {
     pub async fn upload_pages(
         &self,
         body: RequestContent<Vec<u8>>,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         content_length: i64,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobPageBlobClientUploadPagesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?comp=page&update");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -563,7 +563,7 @@ impl BlobPageBlobClient {
         if let Some(range) = options.range {
             request.insert_header("x-ms-range", range);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         request.set_body(body);
         self.pipeline.send(&mut ctx, &mut request).await
     }
@@ -571,21 +571,21 @@ impl BlobPageBlobClient {
     /// The Upload Pages operation writes a range of pages to a page blob where the contents are read from a URL.
     pub async fn upload_pages_from_url(
         &self,
-        container_name: impl Into<String>,
-        blob: impl Into<String>,
+        container_name: String,
+        blob: String,
         content_length: i64,
-        source_url: impl Into<String>,
-        source_range: impl Into<String>,
-        range: impl Into<String>,
-        version: impl Into<String>,
+        source_url: String,
+        source_range: String,
+        range: String,
+        version: String,
         options: Option<BlobPageBlobClientUploadPagesFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}?comp=page&update&fromUrl");
-        path = path.replace("{blob}", &blob.into());
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{blob}", &blob);
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -650,7 +650,7 @@ impl BlobPageBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-range", range.into());
+        request.insert_header("x-ms-range", range);
         if let Some(source_content_crc64) = options.source_content_crc64 {
             request.insert_header("x-ms-source-content-crc64", source_content_crc64);
         }
@@ -675,9 +675,9 @@ impl BlobPageBlobClient {
                 source_if_unmodified_since.to_string(),
             );
         }
-        request.insert_header("x-ms-source-range", source_range.into());
-        request.insert_header("x-ms-source-url", source_url.into());
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-source-range", source_range);
+        request.insert_header("x-ms-source-url", source_url);
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 }

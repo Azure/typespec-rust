@@ -24,16 +24,16 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn acquire_lease(
         &self,
-        container_name: impl Into<String>,
+        container_name: String,
         duration: i32,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobContainerClientAcquireLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?comp=lease&restype=container&acquire");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -54,7 +54,7 @@ impl BlobContainerClient {
         if let Some(proposed_lease_id) = options.proposed_lease_id {
             request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -62,15 +62,15 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn break_lease(
         &self,
-        container_name: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        version: String,
         options: Option<BlobContainerClientBreakLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?comp=lease&restype=container&break");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -90,7 +90,7 @@ impl BlobContainerClient {
         if let Some(break_period) = options.break_period {
             request.insert_header("x-ms-lease-break-period", break_period.to_string());
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -98,17 +98,17 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn change_lease(
         &self,
-        container_name: impl Into<String>,
-        lease_id: impl Into<String>,
-        proposed_lease_id: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        lease_id: String,
+        proposed_lease_id: String,
+        version: String,
         options: Option<BlobContainerClientChangeLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?comp=lease&restype=container&change");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -125,9 +125,9 @@ impl BlobContainerClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-lease-id", lease_id.into());
-        request.insert_header("x-ms-proposed-lease-id", proposed_lease_id.into());
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-lease-id", lease_id);
+        request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -135,15 +135,15 @@ impl BlobContainerClient {
     /// fails.
     pub async fn create(
         &self,
-        container_name: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        version: String,
         options: Option<BlobContainerClientCreateOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=container");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -166,7 +166,7 @@ impl BlobContainerClient {
                 deny_encryption_scope_override.to_string(),
             );
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -174,15 +174,15 @@ impl BlobContainerClient {
     /// during garbage collection
     pub async fn delete(
         &self,
-        container_name: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        version: String,
         options: Option<BlobContainerClientDeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=container");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -202,7 +202,7 @@ impl BlobContainerClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -210,15 +210,15 @@ impl BlobContainerClient {
     /// blobs searches within the given container.
     pub async fn filter_blobs(
         &self,
-        container_name: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        version: String,
         options: Option<BlobContainerClientFilterBlobsOptions<'_>>,
     ) -> Result<Response<FilterBlobSegment>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=container&comp=blobs");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(include) = options.include {
             url.query_pairs_mut().append_pair(
@@ -249,22 +249,22 @@ impl BlobContainerClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// gets the permissions for the specified container. The permissions indicate whether container data may be accessed publicly.
     pub async fn get_access_policy(
         &self,
-        container_name: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        version: String,
         options: Option<BlobContainerClientGetAccessPolicyOptions<'_>>,
     ) -> Result<Response<Vec<SignedIdentifier>>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=container&comp=acl");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -278,29 +278,29 @@ impl BlobContainerClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// Returns the sku name and account kind
     pub async fn get_account_info(
         &self,
-        container_name: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        version: String,
         options: Option<BlobContainerClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=account&comp=properties");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -308,15 +308,15 @@ impl BlobContainerClient {
     /// the container's list of blobs
     pub async fn get_properties(
         &self,
-        container_name: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        version: String,
         options: Option<BlobContainerClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=container");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -330,22 +330,22 @@ impl BlobContainerClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// [Update] The List Blobs operation returns a list of the blobs under the specified container
     pub async fn list_blob_flat_segment(
         &self,
-        container_name: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        version: String,
         options: Option<BlobContainerClientListBlobFlatSegmentOptions<'_>>,
     ) -> Result<Response<ListBlobsFlatSegmentResponse>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=container&comp=list&flat");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(include) = options.include {
             url.query_pairs_mut().append_pair(
@@ -376,26 +376,25 @@ impl BlobContainerClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// [Update] The List Blobs operation returns a list of the blobs under the specified container
     pub async fn list_blob_hierarchy_segment(
         &self,
-        container_name: impl Into<String>,
-        delimiter: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        delimiter: String,
+        version: String,
         options: Option<BlobContainerClientListBlobHierarchySegmentOptions<'_>>,
     ) -> Result<Response<ListBlobsHierarchySegmentResponse>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=container&comp=list&hierarchy");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
-        url.query_pairs_mut()
-            .append_pair("delimiter", &delimiter.into());
+        url.query_pairs_mut().append_pair("delimiter", &delimiter);
         if let Some(include) = options.include {
             url.query_pairs_mut().append_pair(
                 "include",
@@ -425,7 +424,7 @@ impl BlobContainerClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -433,16 +432,16 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn release_lease(
         &self,
-        container_name: impl Into<String>,
-        lease_id: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        lease_id: String,
+        version: String,
         options: Option<BlobContainerClientReleaseLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?comp=lease&restype=container&release");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -459,24 +458,24 @@ impl BlobContainerClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-lease-id", lease_id.into());
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-lease-id", lease_id);
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
     /// Renames an existing container.
     pub async fn rename(
         &self,
-        container_name: impl Into<String>,
-        source_container_name: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        source_container_name: String,
+        version: String,
         options: Option<BlobContainerClientRenameOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=container&comp=rename");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -487,11 +486,11 @@ impl BlobContainerClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-source-container-name", source_container_name.into());
+        request.insert_header("x-ms-source-container-name", source_container_name);
         if let Some(source_lease_id) = options.source_lease_id {
             request.insert_header("x-ms-source-lease-id", source_lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -499,16 +498,16 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn renew_lease(
         &self,
-        container_name: impl Into<String>,
-        lease_id: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        lease_id: String,
+        version: String,
         options: Option<BlobContainerClientRenewLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?comp=lease&restype=container&renew");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -525,8 +524,8 @@ impl BlobContainerClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-lease-id", lease_id.into());
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-lease-id", lease_id);
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -534,16 +533,16 @@ impl BlobContainerClient {
     /// publicly.
     pub async fn set_access_policy(
         &self,
-        container_name: impl Into<String>,
+        container_name: String,
         acl: RequestContent<Vec<SignedIdentifier>>,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobContainerClientSetAccessPolicyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=container&comp=acl");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -564,7 +563,7 @@ impl BlobContainerClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         request.set_body(acl);
         self.pipeline.send(&mut ctx, &mut request).await
     }
@@ -572,15 +571,15 @@ impl BlobContainerClient {
     /// operation sets one or more user-defined name-value pairs for the specified container.
     pub async fn set_metadata(
         &self,
-        container_name: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        version: String,
         options: Option<BlobContainerClientSetMetadataOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=container&comp=metadata");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -597,7 +596,7 @@ impl BlobContainerClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 
@@ -605,16 +604,16 @@ impl BlobContainerClient {
     pub async fn submit_batch(
         &self,
         body: RequestContent<Vec<u8>>,
-        container_name: impl Into<String>,
+        container_name: String,
         content_length: i64,
-        version: impl Into<String>,
+        version: String,
         options: Option<BlobContainerClientSubmitBatchOptions<'_>>,
     ) -> Result<Response<Vec<u8>>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=container&comp=batch");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -627,7 +626,7 @@ impl BlobContainerClient {
         if let Some(request_id) = options.request_id {
             request.insert_header("x-ms-client-request-id", request_id);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         request.set_body(body);
         self.pipeline.send(&mut ctx, &mut request).await
     }
@@ -635,15 +634,15 @@ impl BlobContainerClient {
     /// Restores a previously-deleted container.
     pub async fn undelete(
         &self,
-        container_name: impl Into<String>,
-        version: impl Into<String>,
+        container_name: String,
+        version: String,
         options: Option<BlobContainerClientUndeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}?restype=container&comp=undelete");
-        path = path.replace("{containerName}", &container_name.into());
+        path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -660,7 +659,7 @@ impl BlobContainerClient {
         if let Some(deleted_container_version) = options.deleted_container_version {
             request.insert_header("x-ms-deleted-container-version", deleted_container_version);
         }
-        request.insert_header("x-ms-version", version.into());
+        request.insert_header("x-ms-version", version);
         self.pipeline.send(&mut ctx, &mut request).await
     }
 }
