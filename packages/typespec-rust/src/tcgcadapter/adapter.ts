@@ -349,7 +349,7 @@ export class Adapter {
     // anything other than public means non-instantiable client
     if (client.initialization.access === 'public') {
       const clientOptionsStruct = new rust.Struct(`${rustClient.name}Options`, true);
-      const clientOptionsField = new rust.StructField('client_options', false, new rust.ExternalType(this.crate, 'azure_core', 'ClientOptions'));
+      const clientOptionsField = new rust.StructField('client_options', true, new rust.ExternalType(this.crate, 'azure_core', 'ClientOptions'));
       clientOptionsField.defaultValue = 'ClientOptions::default()';
       clientOptionsStruct.fields.push(clientOptionsField);
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
@@ -427,7 +427,7 @@ export class Adapter {
             rustClient.fields.push(new rust.ClientParameter(paramName, new rust.StringType()));
 
             // client-side default value makes the param optional
-            const apiVersionField = new rust.StructField(paramName, false, new rust.StringType());
+            const apiVersionField = new rust.StructField(paramName, true, new rust.StringType());
             apiVersionField.defaultValue = `String::from("${param.clientDefaultValue}")`;
             clientOptionsStruct.fields.push(apiVersionField);
             break;
@@ -477,7 +477,7 @@ export class Adapter {
 
     const clientMethodOptions = new rust.ExternalType(this.crate, 'azure_core', 'ClientMethodOptions');
     clientMethodOptions.lifetime = optionsLifetime;
-    methodOptionsStruct.fields.push(new rust.StructField('method_options', false, clientMethodOptions));
+    methodOptionsStruct.fields.push(new rust.StructField('method_options', true, clientMethodOptions));
 
     const httpMethod = method.operation.verb;
     const httpPath = method.operation.path;
@@ -531,7 +531,7 @@ export class Adapter {
       rustMethod.params.push(adaptedParam);
 
       if (adaptedParam.optional) {
-        rustMethod.options.type.fields.push(new rust.StructField(adaptedParam.name, false, new rust.Option(adaptedParam.type)));
+        rustMethod.options.type.fields.push(new rust.StructField(adaptedParam.name, true, new rust.Option(adaptedParam.type)));
       }
 
       // remove the opParam we just processed

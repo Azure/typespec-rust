@@ -7,12 +7,10 @@ use crate::models::{
     BackupSecretResult, DeletedSecretBundle, SecretBundle, SecretRestoreParameters,
     SecretSetParameters, SecretUpdateParameters,
 };
-use azure_core::builders::{ClientMethodOptionsBuilder, ClientOptionsBuilder};
 use azure_core::credentials::TokenCredential;
 use azure_core::{
-    AsClientMethodOptions, BearerTokenCredentialPolicy, ClientMethodOptions, ClientOptions,
-    Context, Method, Pipeline, Policy, Request, RequestContent, Response, Result, RetryOptions,
-    TransportOptions, Url,
+    AsClientMethodOptions, BearerTokenCredentialPolicy, ClientMethodOptions, ClientOptions, Method,
+    Pipeline, Policy, Request, RequestContent, Response, Result, Url,
 };
 use std::sync::Arc;
 
@@ -24,8 +22,8 @@ pub struct KeyVaultClient {
 
 #[derive(Clone, Debug)]
 pub struct KeyVaultClientOptions {
-    api_version: String,
-    client_options: ClientOptions,
+    pub api_version: String,
+    pub client_options: ClientOptions,
 }
 
 impl KeyVaultClient {
@@ -270,12 +268,6 @@ impl KeyVaultClient {
     }
 }
 
-impl KeyVaultClientOptions {
-    pub fn builder() -> builders::KeyVaultClientOptionsBuilder {
-        builders::KeyVaultClientOptionsBuilder::new()
-    }
-}
-
 impl Default for KeyVaultClientOptions {
     fn default() -> Self {
         Self {
@@ -285,371 +277,47 @@ impl Default for KeyVaultClientOptions {
     }
 }
 
-impl ClientOptionsBuilder for KeyVaultClientOptions {
-    fn with_per_call_policies<P>(mut self, per_call_policies: P) -> Self
-    where
-        P: Into<Vec<Arc<dyn Policy>>>,
-        Self: Sized,
-    {
-        self.client_options.set_per_call_policies(per_call_policies);
-        self
-    }
-
-    fn with_per_try_policies<P>(mut self, per_try_policies: P) -> Self
-    where
-        P: Into<Vec<Arc<dyn Policy>>>,
-        Self: Sized,
-    {
-        self.client_options.set_per_try_policies(per_try_policies);
-        self
-    }
-
-    fn with_retry<P>(mut self, retry: P) -> Self
-    where
-        P: Into<RetryOptions>,
-        Self: Sized,
-    {
-        self.client_options.set_retry(retry);
-        self
-    }
-
-    fn with_transport<P>(mut self, transport: P) -> Self
-    where
-        P: Into<TransportOptions>,
-        Self: Sized,
-    {
-        self.client_options.set_transport(transport);
-        self
-    }
-}
-
 #[derive(Clone, Debug, Default)]
 pub struct KeyVaultClientBackupSecretOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> KeyVaultClientBackupSecretOptions<'a> {
-    pub fn builder() -> builders::KeyVaultClientBackupSecretOptionsBuilder<'a> {
-        builders::KeyVaultClientBackupSecretOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct KeyVaultClientDeleteSecretOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> KeyVaultClientDeleteSecretOptions<'a> {
-    pub fn builder() -> builders::KeyVaultClientDeleteSecretOptionsBuilder<'a> {
-        builders::KeyVaultClientDeleteSecretOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct KeyVaultClientGetDeletedSecretOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> KeyVaultClientGetDeletedSecretOptions<'a> {
-    pub fn builder() -> builders::KeyVaultClientGetDeletedSecretOptionsBuilder<'a> {
-        builders::KeyVaultClientGetDeletedSecretOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct KeyVaultClientGetSecretOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> KeyVaultClientGetSecretOptions<'a> {
-    pub fn builder() -> builders::KeyVaultClientGetSecretOptionsBuilder<'a> {
-        builders::KeyVaultClientGetSecretOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct KeyVaultClientPurgeDeletedSecretOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> KeyVaultClientPurgeDeletedSecretOptions<'a> {
-    pub fn builder() -> builders::KeyVaultClientPurgeDeletedSecretOptionsBuilder<'a> {
-        builders::KeyVaultClientPurgeDeletedSecretOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct KeyVaultClientRecoverDeletedSecretOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> KeyVaultClientRecoverDeletedSecretOptions<'a> {
-    pub fn builder() -> builders::KeyVaultClientRecoverDeletedSecretOptionsBuilder<'a> {
-        builders::KeyVaultClientRecoverDeletedSecretOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct KeyVaultClientRestoreSecretOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> KeyVaultClientRestoreSecretOptions<'a> {
-    pub fn builder() -> builders::KeyVaultClientRestoreSecretOptionsBuilder<'a> {
-        builders::KeyVaultClientRestoreSecretOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct KeyVaultClientSetSecretOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> KeyVaultClientSetSecretOptions<'a> {
-    pub fn builder() -> builders::KeyVaultClientSetSecretOptionsBuilder<'a> {
-        builders::KeyVaultClientSetSecretOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct KeyVaultClientUpdateSecretOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> KeyVaultClientUpdateSecretOptions<'a> {
-    pub fn builder() -> builders::KeyVaultClientUpdateSecretOptionsBuilder<'a> {
-        builders::KeyVaultClientUpdateSecretOptionsBuilder::new()
-    }
-}
-
-pub mod builders {
-    use super::*;
-
-    pub struct KeyVaultClientOptionsBuilder {
-        options: KeyVaultClientOptions,
-    }
-
-    impl KeyVaultClientOptionsBuilder {
-        pub(super) fn new() -> Self {
-            Self {
-                options: KeyVaultClientOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> KeyVaultClientOptions {
-            self.options.clone()
-        }
-
-        pub fn with_api_version(mut self, api_version: String) -> Self {
-            self.options.api_version = api_version;
-            self
-        }
-    }
-
-    pub struct KeyVaultClientBackupSecretOptionsBuilder<'a> {
-        options: KeyVaultClientBackupSecretOptions<'a>,
-    }
-
-    impl KeyVaultClientBackupSecretOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: KeyVaultClientBackupSecretOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> KeyVaultClientBackupSecretOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for KeyVaultClientBackupSecretOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct KeyVaultClientDeleteSecretOptionsBuilder<'a> {
-        options: KeyVaultClientDeleteSecretOptions<'a>,
-    }
-
-    impl KeyVaultClientDeleteSecretOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: KeyVaultClientDeleteSecretOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> KeyVaultClientDeleteSecretOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for KeyVaultClientDeleteSecretOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct KeyVaultClientGetDeletedSecretOptionsBuilder<'a> {
-        options: KeyVaultClientGetDeletedSecretOptions<'a>,
-    }
-
-    impl KeyVaultClientGetDeletedSecretOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: KeyVaultClientGetDeletedSecretOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> KeyVaultClientGetDeletedSecretOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for KeyVaultClientGetDeletedSecretOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct KeyVaultClientGetSecretOptionsBuilder<'a> {
-        options: KeyVaultClientGetSecretOptions<'a>,
-    }
-
-    impl KeyVaultClientGetSecretOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: KeyVaultClientGetSecretOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> KeyVaultClientGetSecretOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for KeyVaultClientGetSecretOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct KeyVaultClientPurgeDeletedSecretOptionsBuilder<'a> {
-        options: KeyVaultClientPurgeDeletedSecretOptions<'a>,
-    }
-
-    impl KeyVaultClientPurgeDeletedSecretOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: KeyVaultClientPurgeDeletedSecretOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> KeyVaultClientPurgeDeletedSecretOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for KeyVaultClientPurgeDeletedSecretOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct KeyVaultClientRecoverDeletedSecretOptionsBuilder<'a> {
-        options: KeyVaultClientRecoverDeletedSecretOptions<'a>,
-    }
-
-    impl KeyVaultClientRecoverDeletedSecretOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: KeyVaultClientRecoverDeletedSecretOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> KeyVaultClientRecoverDeletedSecretOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for KeyVaultClientRecoverDeletedSecretOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct KeyVaultClientRestoreSecretOptionsBuilder<'a> {
-        options: KeyVaultClientRestoreSecretOptions<'a>,
-    }
-
-    impl KeyVaultClientRestoreSecretOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: KeyVaultClientRestoreSecretOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> KeyVaultClientRestoreSecretOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for KeyVaultClientRestoreSecretOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct KeyVaultClientSetSecretOptionsBuilder<'a> {
-        options: KeyVaultClientSetSecretOptions<'a>,
-    }
-
-    impl KeyVaultClientSetSecretOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: KeyVaultClientSetSecretOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> KeyVaultClientSetSecretOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for KeyVaultClientSetSecretOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct KeyVaultClientUpdateSecretOptionsBuilder<'a> {
-        options: KeyVaultClientUpdateSecretOptions<'a>,
-    }
-
-    impl KeyVaultClientUpdateSecretOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: KeyVaultClientUpdateSecretOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> KeyVaultClientUpdateSecretOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for KeyVaultClientUpdateSecretOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }

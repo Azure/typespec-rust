@@ -7,9 +7,8 @@ use crate::models::{
     FilterBlobSegment, FilterBlobsIncludes, KeyInfo, ListContainersSegmentResponse,
     StorageServiceProperties, StorageServiceStats, UserDelegationKey,
 };
-use azure_core::builders::ClientMethodOptionsBuilder;
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
+    AsClientMethodOptions, ClientMethodOptions, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
 
@@ -245,412 +244,62 @@ impl BlobServiceClient {
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobServiceClientFilterBlobsOptions<'a> {
-    include: Option<Vec<FilterBlobsIncludes>>,
-    marker: Option<String>,
-    maxresults: Option<i32>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-    where_param: Option<String>,
-}
-
-impl<'a> BlobServiceClientFilterBlobsOptions<'a> {
-    pub fn builder() -> builders::BlobServiceClientFilterBlobsOptionsBuilder<'a> {
-        builders::BlobServiceClientFilterBlobsOptionsBuilder::new()
-    }
+    pub include: Option<Vec<FilterBlobsIncludes>>,
+    pub marker: Option<String>,
+    pub maxresults: Option<i32>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
+    pub where_param: Option<String>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobServiceClientGetAccountInfoOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-}
-
-impl<'a> BlobServiceClientGetAccountInfoOptions<'a> {
-    pub fn builder() -> builders::BlobServiceClientGetAccountInfoOptionsBuilder<'a> {
-        builders::BlobServiceClientGetAccountInfoOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobServiceClientGetPropertiesOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobServiceClientGetPropertiesOptions<'a> {
-    pub fn builder() -> builders::BlobServiceClientGetPropertiesOptionsBuilder<'a> {
-        builders::BlobServiceClientGetPropertiesOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobServiceClientGetStatisticsOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobServiceClientGetStatisticsOptions<'a> {
-    pub fn builder() -> builders::BlobServiceClientGetStatisticsOptionsBuilder<'a> {
-        builders::BlobServiceClientGetStatisticsOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobServiceClientGetUserDelegationKeyOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobServiceClientGetUserDelegationKeyOptions<'a> {
-    pub fn builder() -> builders::BlobServiceClientGetUserDelegationKeyOptionsBuilder<'a> {
-        builders::BlobServiceClientGetUserDelegationKeyOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobServiceClientListContainersSegmentOptions<'a> {
-    marker: Option<String>,
-    maxresults: Option<i32>,
-    method_options: ClientMethodOptions<'a>,
-    prefix: Option<String>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobServiceClientListContainersSegmentOptions<'a> {
-    pub fn builder() -> builders::BlobServiceClientListContainersSegmentOptionsBuilder<'a> {
-        builders::BlobServiceClientListContainersSegmentOptionsBuilder::new()
-    }
+    pub marker: Option<String>,
+    pub maxresults: Option<i32>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub prefix: Option<String>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobServiceClientSetPropertiesOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobServiceClientSetPropertiesOptions<'a> {
-    pub fn builder() -> builders::BlobServiceClientSetPropertiesOptionsBuilder<'a> {
-        builders::BlobServiceClientSetPropertiesOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobServiceClientSubmitBatchOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobServiceClientSubmitBatchOptions<'a> {
-    pub fn builder() -> builders::BlobServiceClientSubmitBatchOptionsBuilder<'a> {
-        builders::BlobServiceClientSubmitBatchOptionsBuilder::new()
-    }
-}
-
-pub mod builders {
-    use super::*;
-
-    pub struct BlobServiceClientFilterBlobsOptionsBuilder<'a> {
-        options: BlobServiceClientFilterBlobsOptions<'a>,
-    }
-
-    impl BlobServiceClientFilterBlobsOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobServiceClientFilterBlobsOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobServiceClientFilterBlobsOptions {
-            self.options.clone()
-        }
-
-        pub fn with_include(mut self, include: Vec<FilterBlobsIncludes>) -> Self {
-            self.options.include = Some(include);
-            self
-        }
-
-        pub fn with_marker(mut self, marker: String) -> Self {
-            self.options.marker = Some(marker);
-            self
-        }
-
-        pub fn with_maxresults(mut self, maxresults: i32) -> Self {
-            self.options.maxresults = Some(maxresults);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-
-        pub fn with_where_param(mut self, where_param: String) -> Self {
-            self.options.where_param = Some(where_param);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobServiceClientFilterBlobsOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobServiceClientGetAccountInfoOptionsBuilder<'a> {
-        options: BlobServiceClientGetAccountInfoOptions<'a>,
-    }
-
-    impl BlobServiceClientGetAccountInfoOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobServiceClientGetAccountInfoOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobServiceClientGetAccountInfoOptions {
-            self.options.clone()
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobServiceClientGetAccountInfoOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobServiceClientGetPropertiesOptionsBuilder<'a> {
-        options: BlobServiceClientGetPropertiesOptions<'a>,
-    }
-
-    impl BlobServiceClientGetPropertiesOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobServiceClientGetPropertiesOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobServiceClientGetPropertiesOptions {
-            self.options.clone()
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobServiceClientGetPropertiesOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobServiceClientGetStatisticsOptionsBuilder<'a> {
-        options: BlobServiceClientGetStatisticsOptions<'a>,
-    }
-
-    impl BlobServiceClientGetStatisticsOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobServiceClientGetStatisticsOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobServiceClientGetStatisticsOptions {
-            self.options.clone()
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobServiceClientGetStatisticsOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobServiceClientGetUserDelegationKeyOptionsBuilder<'a> {
-        options: BlobServiceClientGetUserDelegationKeyOptions<'a>,
-    }
-
-    impl BlobServiceClientGetUserDelegationKeyOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobServiceClientGetUserDelegationKeyOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobServiceClientGetUserDelegationKeyOptions {
-            self.options.clone()
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a>
-        for BlobServiceClientGetUserDelegationKeyOptionsBuilder<'a>
-    {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobServiceClientListContainersSegmentOptionsBuilder<'a> {
-        options: BlobServiceClientListContainersSegmentOptions<'a>,
-    }
-
-    impl BlobServiceClientListContainersSegmentOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobServiceClientListContainersSegmentOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobServiceClientListContainersSegmentOptions {
-            self.options.clone()
-        }
-
-        pub fn with_marker(mut self, marker: String) -> Self {
-            self.options.marker = Some(marker);
-            self
-        }
-
-        pub fn with_maxresults(mut self, maxresults: i32) -> Self {
-            self.options.maxresults = Some(maxresults);
-            self
-        }
-
-        pub fn with_prefix(mut self, prefix: String) -> Self {
-            self.options.prefix = Some(prefix);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a>
-        for BlobServiceClientListContainersSegmentOptionsBuilder<'a>
-    {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobServiceClientSetPropertiesOptionsBuilder<'a> {
-        options: BlobServiceClientSetPropertiesOptions<'a>,
-    }
-
-    impl BlobServiceClientSetPropertiesOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobServiceClientSetPropertiesOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobServiceClientSetPropertiesOptions {
-            self.options.clone()
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobServiceClientSetPropertiesOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobServiceClientSubmitBatchOptionsBuilder<'a> {
-        options: BlobServiceClientSubmitBatchOptions<'a>,
-    }
-
-    impl BlobServiceClientSubmitBatchOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobServiceClientSubmitBatchOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobServiceClientSubmitBatchOptions {
-            self.options.clone()
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobServiceClientSubmitBatchOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }

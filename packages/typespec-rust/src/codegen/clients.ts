@@ -50,7 +50,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
         body += ' {\n';
         for (const field of client.constructable.options.type.fields) {
           use.addForType(field.type);
-          body += `${indentation.get()}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+          body += `${indentation.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
         }
         body += '}\n\n'; // end client options
       } else {
@@ -139,16 +139,8 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
     body += '}\n\n'; // end client impl
 
     if (client.constructable) {
-      // emit the builder function for client options
-      const clientOptionsType = client.constructable.options;
-      const builderTypeName = getOptionsBuilderTypeName(clientOptionsType, false);
-      body += `impl ${clientOptionsType.type.name} {\n`;
-      body += `${indentation.get()}pub fn builder() -> builders::${builderTypeName} {\n`;
-      body += `${indentation.push().get()}builders::${builderTypeName}::new()\n`;
-      body += `${indentation.pop().get()}}\n`;
-      body += '}\n\n'; // end impl
-
       // emit default trait impl for client options type
+      const clientOptionsType = client.constructable.options;
       body += `impl Default for ${clientOptionsType.type.name} {\n`;
       body += `${indentation.get()}fn default() -> Self {\n`;
       body += `${indentation.push().get()}Self {\n`;
@@ -162,7 +154,6 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       body += `${indentation.pop().get()}}\n`;
       body += `${indentation.pop().get()}}\n`;
       body += '}\n\n'; // end impl
-      body += createClientOptionsBuilderImpl(indentation, clientOptionsType, use);
     }
 
     // emit method options
@@ -176,15 +167,9 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       body += `${helpers.emitPub(method.pub)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
       for (const field of method.options.type.fields) {
         use.addForType(field.type);
-        body += `${indentation.get()}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+        body += `${indentation.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
       }
       body += '}\n\n'; // end options
-
-      body += `impl${getLifetimeAnnotation(method.options.type)}${helpers.getTypeDeclaration(method.options.type)} {\n`;
-      body += `${indentation.get()}pub fn builder() -> builders::${getOptionsBuilderTypeName(method.options, true)} {\n`;
-      body += `${indentation.push().get()}builders::${getOptionsBuilderTypeName(method.options, false)}::new()\n`;
-      body += `${indentation.pop().get()}}\n`; // end builder()
-      body += '}\n'; // end options impl
 
       if (i + 1 < client.methods.length) {
         body += '\n';
@@ -192,7 +177,6 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
     }
 
     body += '\n';
-    body += createPubModBuilders(client, use);
 
     let content = helpers.contentPreamble();
     content += use.text();
@@ -250,7 +234,7 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
 function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
   for (const param of ctor.parameters) {
     if (param.type.kind === 'arc' && param.type.type.kind === 'tokenCredential') {
-      use.addType('azure_core', 'BearerTokenCredentialPolicy');
+      use.addTypes('azure_core', ['BearerTokenCredentialPolicy', 'Policy']);
       const scopes = new Array<string>();
       for (const scope of param.type.type.scopes) {
         scopes.push(`"${scope}"`);
@@ -277,140 +261,6 @@ function formatParamTypeName(param: rust.Parameter | rust.Self): string {
   return format;
 }
 
-function createClientOptionsBuilderImpl(indentation: helpers.indentation, options: rust.ClientOptions, use: Use): string {
-  use.addType('azure_core::builders', 'ClientOptionsBuilder');
-  use.addTypes('azure_core', ['Policy', 'RetryOptions', /*'TelemetryOptions', */'TransportOptions']);
-  use.addType('std::sync', 'Arc');
-
-  const emitWithMethod = function(indentation: helpers.indentation, name: string, into: string): string {
-    let withPolicies = `${indentation.get()}fn with_${name}<P>(mut self, ${name}: P) -> Self `;
-    withPolicies += `where P: Into<${into}>, Self: Sized {\n`;
-    withPolicies += `${indentation.push().get()}self.client_options.set_${name}(${name});\n`;
-    withPolicies += `${indentation.get()}self\n`;
-    withPolicies += `${indentation.pop().get()}}\n\n`;
-    return withPolicies;
-  };
-
-  let implBuilder = `impl ClientOptionsBuilder for ${options.type.name} {\n`;
-  implBuilder += emitWithMethod(indentation, 'per_call_policies', 'Vec<Arc<dyn Policy>>');
-  implBuilder += emitWithMethod(indentation, 'per_try_policies', 'Vec<Arc<dyn Policy>>');
-  implBuilder += emitWithMethod(indentation, 'retry', 'RetryOptions');
-  // TODO: https://github.com/Azure/azure-sdk-for-rust/issues/1753
-  //implBuilder += emitWithMethod(indentation, 'telemetry', 'TelemetryOptions');
-  implBuilder += emitWithMethod(indentation, 'transport', 'TransportOptions');
-  implBuilder += '}\n\n';
-  return implBuilder;
-}
-
-function createPubModBuilders(client: rust.Client, use: Use): string {
-  const indentation = new helpers.indentation();
-
-  let body = 'pub mod builders {\n';
-  body += `${indentation.get()}use super::*;\n\n`;
-
-  const emitNewFunction = function(indentation: helpers.indentation, options: rust.ClientOptions | rust.MethodOptions): string {
-    let newFunction = `${indentation.push().get()}pub(super) fn new() -> Self {\n`;
-    newFunction += `${indentation.push().get()}Self {\n`;
-    newFunction += `${indentation.push().get()}options: ${options.type.name}::default(),\n`;
-    newFunction += `${indentation.pop().get()}}\n`;
-    newFunction += `${indentation.pop().get()}}\n\n`;
-    return newFunction;
-  };
-
-  const emitBuildMethod = function(indentation: helpers.indentation, options: rust.ClientOptions | rust.MethodOptions): string {
-    let buildMethod = `${indentation.get()}pub fn build(&self) -> ${options.type.name} {\n`;
-    buildMethod += `${indentation.push().get()}self.options.clone()\n`;
-    buildMethod += `${indentation.pop().get()}}\n`;
-    return buildMethod;
-  };
-
-  if (client.constructable) {
-    // emit the builder type for client options
-    const clientOptionsType = client.constructable.options;
-    const builderTypeName = getOptionsBuilderTypeName(clientOptionsType, false);
-    body += `${indentation.get()}pub struct ${builderTypeName} {\n`;
-    body += `${indentation.push().get()}options: ${clientOptionsType.type.name},\n`;
-    body += `${indentation.pop().get()}}\n\n`; // end struct
-    body += `${indentation.get()}impl ${builderTypeName} {\n`;
-    body += emitNewFunction(indentation, clientOptionsType);
-    body += emitBuildMethod(indentation, clientOptionsType);
-    for (const field of getClientOptionsFields(client.constructable.options)) {
-      const typeName = helpers.getTypeDeclaration(field.type);
-      body += `\n${indentation.get()}pub fn with_${field.name}(mut self, ${field.name}: ${typeName}) -> Self {\n`;
-      body += `${indentation.push().get()}self.options.${field.name} = ${field.name};\n`;
-      body += `${indentation.get()}self\n`;
-      body += `${indentation.pop().get()}}\n`;
-    }
-    body += `${indentation.pop().get()}}\n\n`; // end impl
-  }
-
-  // emit the client method options builders
-  for (let i = 0; i < client.methods.length; ++i) {
-    const method = client.methods[i];
-    if (method.kind === 'clientaccessor') {
-      continue;
-    }
-
-    use.addType('azure_core', 'Context');
-    use.addType('azure_core::builders', 'ClientMethodOptionsBuilder');
-
-    const optionsBuilderTypeName = getOptionsBuilderTypeName(method.options, true);
-
-    body += `${indentation.get()}pub struct ${optionsBuilderTypeName} {\n`;
-    body += `${indentation.push().get()}options: ${helpers.getTypeDeclaration(method.options.type)},\n`;
-    body += `${indentation.pop().get()}}\n\n`; // end struct
-
-    body += `${indentation.get()}impl ${getOptionsBuilderTypeName(method.options, 'anonymous')} {\n`;
-    body += emitNewFunction(indentation, method.options);
-    body += emitBuildMethod(indentation, method.options);
-
-    for (const option of method.options.type.fields) {
-      if (option.type.kind === 'external' && option.type.name === 'ClientMethodOptions') {
-        // skip for now until lifetime annotations are worked out
-        continue;
-      }
-
-      let optionType = option.type;
-      if (optionType.kind === 'option') {
-        // unwrap the Option<T> to get the T
-        optionType = optionType.type;
-      }
-
-      body += `\n${indentation.get()}pub fn with_${option.name}(mut self, ${option.name}: ${helpers.getTypeDeclaration(optionType)}) -> Self {\n`;
-      body += `${indentation.push().get()}self.options.${option.name} = Some(${option.name});\n`;
-      body += `${indentation.get()}self\n`;
-      body += `${indentation.pop().get()}}\n`;
-    }
-
-    body += `${indentation.pop().get()}}\n\n`; // end impl
-
-    body += `${indentation.get()}impl${getLifetimeAnnotation(method.options.type)}ClientMethodOptionsBuilder${getLifetimeAnnotation(method.options.type)}for ${optionsBuilderTypeName} {\n`;
-
-    body += `${indentation.push().get()}fn with_context(mut self, context: &${getLifetimeName(method.options.type)}Context) -> Self {\n`;
-    body += `${indentation.push().get()}self.options.${getClientMethodOptionsFieldName(method.options)}.set_context(context);\n`;
-    body += `${indentation.get()}self\n`;
-    body += `${indentation.pop().get()}}\n`; // end with_context
-
-    body += `${indentation.pop().get()}}\n`; // end ClientMethodOptionsBuilder impl
-
-    if (i + 1 < client.methods.length) {
-      body += '\n';
-    }
-  }
-
-  body += '}\n'; // end pub mod builders
-  return body;
-}
-
-function getOptionsBuilderTypeName(option: rust.ClientOptions | rust.MethodOptions, withLifetime: true | false | 'anonymous'): string {
-  if (!withLifetime || !option.type.lifetime) {
-    return `${option.type.name}Builder`;
-  } else if (withLifetime === 'anonymous') {
-    return `${option.type.name}Builder${helpers.AnonymousLifetimeAnnotation}`;  
-  }
-  return `${option.type.name}Builder${helpers.getGenericLifetimeAnnotation(option.type.lifetime)}`;
-}
-
 // returns a filtered array of struct fields from the client options types
 function getClientOptionsFields(option: rust.ClientOptions): Array<rust.StructField> {
   const fields = new Array<rust.StructField>();
@@ -422,30 +272,6 @@ function getClientOptionsFields(option: rust.ClientOptions): Array<rust.StructFi
     fields.push(field);
   }
   return fields;
-}
-
-function getClientMethodOptionsFieldName(option: rust.MethodOptions): string {
-  for (const field of option.type.fields) {
-    // startsWith to ignore possible lifetime annotation suffix
-    if (helpers.getTypeDeclaration(field.type).startsWith('ClientMethodOptions')) {
-      return field.name;
-    }
-  }
-  throw new Error(`didn't find ClientMethodOptions field in ${option.type.name}`);
-}
-
-function getLifetimeAnnotation(type: rust.Struct): string {
-  if (type.lifetime) {
-    return `${helpers.getGenericLifetimeAnnotation(type.lifetime)} `;
-  }
-  return ' ';
-}
-
-function getLifetimeName(type: rust.Struct): string {
-  if (type.lifetime) {
-    return `${type.lifetime.name} `;
-  }
-  return ' ';
 }
 
 function getEndpointFieldName(client: rust.Client): string {

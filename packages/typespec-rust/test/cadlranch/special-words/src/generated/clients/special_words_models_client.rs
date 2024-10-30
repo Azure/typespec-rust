@@ -8,9 +8,8 @@ use crate::models::{
     Except, Exec, Finally, For, From, Global, If, Import, In, Is, Lambda, Not, Or, Pass, Raise,
     Return, Try, While, With, Yield,
 };
-use azure_core::builders::ClientMethodOptionsBuilder;
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
+    AsClientMethodOptions, ClientMethodOptions, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
 
@@ -518,1128 +517,165 @@ impl SpecialWordsModelsClient {
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithAndOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithAndOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithAndOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithAndOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithAsOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithAsOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithAsOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithAsOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithAssertOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithAssertOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithAssertOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithAssertOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithAsyncOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithAsyncOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithAsyncOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithAsyncOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithAwaitOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithAwaitOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithAwaitOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithAwaitOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithBreakOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithBreakOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithBreakOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithBreakOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithClassOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithClassOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithClassOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithClassOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithConstructorOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithConstructorOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithConstructorOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithConstructorOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithContinueOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithContinueOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithContinueOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithContinueOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithDefOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithDefOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithDefOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithDefOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithDelOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithDelOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithDelOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithDelOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithElifOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithElifOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithElifOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithElifOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithElseOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithElseOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithElseOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithElseOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithExceptOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithExceptOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithExceptOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithExceptOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithExecOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithExecOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithExecOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithExecOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithFinallyOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithFinallyOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithFinallyOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithFinallyOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithForOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithForOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithForOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithForOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithFromOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithFromOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithFromOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithFromOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithGlobalOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithGlobalOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithGlobalOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithGlobalOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithIfOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithIfOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithIfOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithIfOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithImportOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithImportOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithImportOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithImportOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithInOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithInOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithInOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithInOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithIsOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithIsOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithIsOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithIsOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithLambdaOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithLambdaOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithLambdaOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithLambdaOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithNotOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithNotOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithNotOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithNotOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithOrOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithOrOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithOrOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithOrOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithPassOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithPassOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithPassOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithPassOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithRaiseOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithRaiseOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithRaiseOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithRaiseOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithReturnOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithReturnOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithReturnOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithReturnOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithTryOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithTryOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithTryOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithTryOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithWhileOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithWhileOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithWhileOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithWhileOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct SpecialWordsModelsClientWithYieldOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-}
-
-impl<'a> SpecialWordsModelsClientWithYieldOptions<'a> {
-    pub fn builder() -> builders::SpecialWordsModelsClientWithYieldOptionsBuilder<'a> {
-        builders::SpecialWordsModelsClientWithYieldOptionsBuilder::new()
-    }
-}
-
-pub mod builders {
-    use super::*;
-
-    pub struct SpecialWordsModelsClientWithAndOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithAndOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithAndOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithAndOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithAndOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithAndOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithAsOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithAsOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithAsOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithAsOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithAsOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithAsOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithAssertOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithAssertOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithAssertOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithAssertOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithAssertOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithAssertOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithAsyncOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithAsyncOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithAsyncOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithAsyncOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithAsyncOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithAsyncOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithAwaitOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithAwaitOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithAwaitOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithAwaitOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithAwaitOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithAwaitOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithBreakOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithBreakOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithBreakOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithBreakOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithBreakOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithBreakOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithClassOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithClassOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithClassOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithClassOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithClassOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithClassOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithConstructorOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithConstructorOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithConstructorOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithConstructorOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithConstructorOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a>
-        for SpecialWordsModelsClientWithConstructorOptionsBuilder<'a>
-    {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithContinueOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithContinueOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithContinueOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithContinueOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithContinueOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithContinueOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithDefOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithDefOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithDefOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithDefOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithDefOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithDefOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithDelOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithDelOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithDelOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithDelOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithDelOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithDelOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithElifOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithElifOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithElifOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithElifOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithElifOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithElifOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithElseOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithElseOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithElseOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithElseOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithElseOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithElseOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithExceptOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithExceptOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithExceptOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithExceptOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithExceptOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithExceptOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithExecOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithExecOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithExecOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithExecOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithExecOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithExecOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithFinallyOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithFinallyOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithFinallyOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithFinallyOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithFinallyOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithFinallyOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithForOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithForOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithForOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithForOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithForOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithForOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithFromOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithFromOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithFromOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithFromOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithFromOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithFromOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithGlobalOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithGlobalOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithGlobalOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithGlobalOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithGlobalOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithGlobalOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithIfOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithIfOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithIfOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithIfOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithIfOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithIfOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithImportOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithImportOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithImportOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithImportOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithImportOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithImportOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithInOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithInOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithInOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithInOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithInOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithInOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithIsOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithIsOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithIsOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithIsOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithIsOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithIsOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithLambdaOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithLambdaOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithLambdaOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithLambdaOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithLambdaOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithLambdaOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithNotOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithNotOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithNotOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithNotOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithNotOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithNotOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithOrOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithOrOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithOrOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithOrOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithOrOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithOrOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithPassOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithPassOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithPassOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithPassOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithPassOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithPassOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithRaiseOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithRaiseOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithRaiseOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithRaiseOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithRaiseOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithRaiseOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithReturnOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithReturnOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithReturnOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithReturnOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithReturnOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithReturnOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithTryOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithTryOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithTryOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithTryOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithTryOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithTryOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithWhileOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithWhileOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithWhileOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithWhileOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithWhileOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithWhileOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct SpecialWordsModelsClientWithYieldOptionsBuilder<'a> {
-        options: SpecialWordsModelsClientWithYieldOptions<'a>,
-    }
-
-    impl SpecialWordsModelsClientWithYieldOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: SpecialWordsModelsClientWithYieldOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> SpecialWordsModelsClientWithYieldOptions {
-            self.options.clone()
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for SpecialWordsModelsClientWithYieldOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
+    pub method_options: ClientMethodOptions<'a>,
 }

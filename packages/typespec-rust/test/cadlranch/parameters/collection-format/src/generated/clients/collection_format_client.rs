@@ -5,9 +5,7 @@
 
 use crate::collection_format_header_client::CollectionFormatHeaderClient;
 use crate::collection_format_query_client::CollectionFormatQueryClient;
-use azure_core::builders::ClientOptionsBuilder;
-use azure_core::{ClientOptions, Pipeline, Policy, Result, RetryOptions, TransportOptions, Url};
-use std::sync::Arc;
+use azure_core::{ClientOptions, Pipeline, Result, Url};
 
 pub struct CollectionFormatClient {
     endpoint: Url,
@@ -16,7 +14,7 @@ pub struct CollectionFormatClient {
 
 #[derive(Clone, Debug)]
 pub struct CollectionFormatClientOptions {
-    client_options: ClientOptions,
+    pub client_options: ClientOptions,
 }
 
 impl CollectionFormatClient {
@@ -54,74 +52,10 @@ impl CollectionFormatClient {
     }
 }
 
-impl CollectionFormatClientOptions {
-    pub fn builder() -> builders::CollectionFormatClientOptionsBuilder {
-        builders::CollectionFormatClientOptionsBuilder::new()
-    }
-}
-
 impl Default for CollectionFormatClientOptions {
     fn default() -> Self {
         Self {
             client_options: ClientOptions::default(),
-        }
-    }
-}
-
-impl ClientOptionsBuilder for CollectionFormatClientOptions {
-    fn with_per_call_policies<P>(mut self, per_call_policies: P) -> Self
-    where
-        P: Into<Vec<Arc<dyn Policy>>>,
-        Self: Sized,
-    {
-        self.client_options.set_per_call_policies(per_call_policies);
-        self
-    }
-
-    fn with_per_try_policies<P>(mut self, per_try_policies: P) -> Self
-    where
-        P: Into<Vec<Arc<dyn Policy>>>,
-        Self: Sized,
-    {
-        self.client_options.set_per_try_policies(per_try_policies);
-        self
-    }
-
-    fn with_retry<P>(mut self, retry: P) -> Self
-    where
-        P: Into<RetryOptions>,
-        Self: Sized,
-    {
-        self.client_options.set_retry(retry);
-        self
-    }
-
-    fn with_transport<P>(mut self, transport: P) -> Self
-    where
-        P: Into<TransportOptions>,
-        Self: Sized,
-    {
-        self.client_options.set_transport(transport);
-        self
-    }
-}
-
-pub mod builders {
-    use super::*;
-
-    pub struct CollectionFormatClientOptionsBuilder {
-        options: CollectionFormatClientOptions,
-    }
-
-    impl CollectionFormatClientOptionsBuilder {
-        pub(super) fn new() -> Self {
-            Self {
-                options: CollectionFormatClientOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> CollectionFormatClientOptions {
-            self.options.clone()
         }
     }
 }

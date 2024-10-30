@@ -7,9 +7,8 @@ use crate::models::{
     FilterBlobSegment, FilterBlobsIncludes, ListBlobsFlatSegmentResponse,
     ListBlobsHierarchySegmentResponse, ListBlobsIncludes, PublicAccessType, SignedIdentifier,
 };
-use azure_core::builders::ClientMethodOptionsBuilder;
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
+    AsClientMethodOptions, ClientMethodOptions, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
 use time::OffsetDateTime;
@@ -666,1073 +665,165 @@ impl BlobContainerClient {
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientAcquireLeaseOptions<'a> {
-    if_modified_since: Option<OffsetDateTime>,
-    if_unmodified_since: Option<OffsetDateTime>,
-    method_options: ClientMethodOptions<'a>,
-    proposed_lease_id: Option<String>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientAcquireLeaseOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientAcquireLeaseOptionsBuilder<'a> {
-        builders::BlobContainerClientAcquireLeaseOptionsBuilder::new()
-    }
+    pub if_modified_since: Option<OffsetDateTime>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub proposed_lease_id: Option<String>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientBreakLeaseOptions<'a> {
-    break_period: Option<i32>,
-    if_modified_since: Option<OffsetDateTime>,
-    if_unmodified_since: Option<OffsetDateTime>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientBreakLeaseOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientBreakLeaseOptionsBuilder<'a> {
-        builders::BlobContainerClientBreakLeaseOptionsBuilder::new()
-    }
+    pub break_period: Option<i32>,
+    pub if_modified_since: Option<OffsetDateTime>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientChangeLeaseOptions<'a> {
-    if_modified_since: Option<OffsetDateTime>,
-    if_unmodified_since: Option<OffsetDateTime>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientChangeLeaseOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientChangeLeaseOptionsBuilder<'a> {
-        builders::BlobContainerClientChangeLeaseOptionsBuilder::new()
-    }
+    pub if_modified_since: Option<OffsetDateTime>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientCreateOptions<'a> {
-    access: Option<PublicAccessType>,
-    default_encryption_scope: Option<String>,
-    deny_encryption_scope_override: Option<bool>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientCreateOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientCreateOptionsBuilder<'a> {
-        builders::BlobContainerClientCreateOptionsBuilder::new()
-    }
+    pub access: Option<PublicAccessType>,
+    pub default_encryption_scope: Option<String>,
+    pub deny_encryption_scope_override: Option<bool>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientDeleteOptions<'a> {
-    if_modified_since: Option<OffsetDateTime>,
-    if_unmodified_since: Option<OffsetDateTime>,
-    lease_id: Option<String>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientDeleteOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientDeleteOptionsBuilder<'a> {
-        builders::BlobContainerClientDeleteOptionsBuilder::new()
-    }
+    pub if_modified_since: Option<OffsetDateTime>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
+    pub lease_id: Option<String>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientFilterBlobsOptions<'a> {
-    include: Option<Vec<FilterBlobsIncludes>>,
-    marker: Option<String>,
-    maxresults: Option<i32>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-    where_param: Option<String>,
-}
-
-impl<'a> BlobContainerClientFilterBlobsOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientFilterBlobsOptionsBuilder<'a> {
-        builders::BlobContainerClientFilterBlobsOptionsBuilder::new()
-    }
+    pub include: Option<Vec<FilterBlobsIncludes>>,
+    pub marker: Option<String>,
+    pub maxresults: Option<i32>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
+    pub where_param: Option<String>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientGetAccessPolicyOptions<'a> {
-    lease_id: Option<String>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientGetAccessPolicyOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientGetAccessPolicyOptionsBuilder<'a> {
-        builders::BlobContainerClientGetAccessPolicyOptionsBuilder::new()
-    }
+    pub lease_id: Option<String>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientGetAccountInfoOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-}
-
-impl<'a> BlobContainerClientGetAccountInfoOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientGetAccountInfoOptionsBuilder<'a> {
-        builders::BlobContainerClientGetAccountInfoOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientGetPropertiesOptions<'a> {
-    lease_id: Option<String>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientGetPropertiesOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientGetPropertiesOptionsBuilder<'a> {
-        builders::BlobContainerClientGetPropertiesOptionsBuilder::new()
-    }
+    pub lease_id: Option<String>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientListBlobFlatSegmentOptions<'a> {
-    include: Option<Vec<ListBlobsIncludes>>,
-    marker: Option<String>,
-    maxresults: Option<i32>,
-    method_options: ClientMethodOptions<'a>,
-    prefix: Option<String>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientListBlobFlatSegmentOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientListBlobFlatSegmentOptionsBuilder<'a> {
-        builders::BlobContainerClientListBlobFlatSegmentOptionsBuilder::new()
-    }
+    pub include: Option<Vec<ListBlobsIncludes>>,
+    pub marker: Option<String>,
+    pub maxresults: Option<i32>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub prefix: Option<String>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientListBlobHierarchySegmentOptions<'a> {
-    include: Option<Vec<ListBlobsIncludes>>,
-    marker: Option<String>,
-    maxresults: Option<i32>,
-    method_options: ClientMethodOptions<'a>,
-    prefix: Option<String>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientListBlobHierarchySegmentOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientListBlobHierarchySegmentOptionsBuilder<'a> {
-        builders::BlobContainerClientListBlobHierarchySegmentOptionsBuilder::new()
-    }
+    pub include: Option<Vec<ListBlobsIncludes>>,
+    pub marker: Option<String>,
+    pub maxresults: Option<i32>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub prefix: Option<String>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientReleaseLeaseOptions<'a> {
-    if_modified_since: Option<OffsetDateTime>,
-    if_unmodified_since: Option<OffsetDateTime>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientReleaseLeaseOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientReleaseLeaseOptionsBuilder<'a> {
-        builders::BlobContainerClientReleaseLeaseOptionsBuilder::new()
-    }
+    pub if_modified_since: Option<OffsetDateTime>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientRenameOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    source_lease_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientRenameOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientRenameOptionsBuilder<'a> {
-        builders::BlobContainerClientRenameOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub source_lease_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientRenewLeaseOptions<'a> {
-    if_modified_since: Option<OffsetDateTime>,
-    if_unmodified_since: Option<OffsetDateTime>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientRenewLeaseOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientRenewLeaseOptionsBuilder<'a> {
-        builders::BlobContainerClientRenewLeaseOptionsBuilder::new()
-    }
+    pub if_modified_since: Option<OffsetDateTime>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientSetAccessPolicyOptions<'a> {
-    if_modified_since: Option<OffsetDateTime>,
-    if_unmodified_since: Option<OffsetDateTime>,
-    lease_id: Option<String>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientSetAccessPolicyOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientSetAccessPolicyOptionsBuilder<'a> {
-        builders::BlobContainerClientSetAccessPolicyOptionsBuilder::new()
-    }
+    pub if_modified_since: Option<OffsetDateTime>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
+    pub lease_id: Option<String>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientSetMetadataOptions<'a> {
-    if_modified_since: Option<OffsetDateTime>,
-    lease_id: Option<String>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientSetMetadataOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientSetMetadataOptionsBuilder<'a> {
-        builders::BlobContainerClientSetMetadataOptionsBuilder::new()
-    }
+    pub if_modified_since: Option<OffsetDateTime>,
+    pub lease_id: Option<String>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientSubmitBatchOptions<'a> {
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientSubmitBatchOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientSubmitBatchOptionsBuilder<'a> {
-        builders::BlobContainerClientSubmitBatchOptionsBuilder::new()
-    }
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct BlobContainerClientUndeleteOptions<'a> {
-    deleted_container_name: Option<String>,
-    deleted_container_version: Option<String>,
-    method_options: ClientMethodOptions<'a>,
-    request_id: Option<String>,
-    timeout: Option<i32>,
-}
-
-impl<'a> BlobContainerClientUndeleteOptions<'a> {
-    pub fn builder() -> builders::BlobContainerClientUndeleteOptionsBuilder<'a> {
-        builders::BlobContainerClientUndeleteOptionsBuilder::new()
-    }
-}
-
-pub mod builders {
-    use super::*;
-
-    pub struct BlobContainerClientAcquireLeaseOptionsBuilder<'a> {
-        options: BlobContainerClientAcquireLeaseOptions<'a>,
-    }
-
-    impl BlobContainerClientAcquireLeaseOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientAcquireLeaseOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientAcquireLeaseOptions {
-            self.options.clone()
-        }
-
-        pub fn with_if_modified_since(mut self, if_modified_since: OffsetDateTime) -> Self {
-            self.options.if_modified_since = Some(if_modified_since);
-            self
-        }
-
-        pub fn with_if_unmodified_since(mut self, if_unmodified_since: OffsetDateTime) -> Self {
-            self.options.if_unmodified_since = Some(if_unmodified_since);
-            self
-        }
-
-        pub fn with_proposed_lease_id(mut self, proposed_lease_id: String) -> Self {
-            self.options.proposed_lease_id = Some(proposed_lease_id);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientAcquireLeaseOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientBreakLeaseOptionsBuilder<'a> {
-        options: BlobContainerClientBreakLeaseOptions<'a>,
-    }
-
-    impl BlobContainerClientBreakLeaseOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientBreakLeaseOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientBreakLeaseOptions {
-            self.options.clone()
-        }
-
-        pub fn with_break_period(mut self, break_period: i32) -> Self {
-            self.options.break_period = Some(break_period);
-            self
-        }
-
-        pub fn with_if_modified_since(mut self, if_modified_since: OffsetDateTime) -> Self {
-            self.options.if_modified_since = Some(if_modified_since);
-            self
-        }
-
-        pub fn with_if_unmodified_since(mut self, if_unmodified_since: OffsetDateTime) -> Self {
-            self.options.if_unmodified_since = Some(if_unmodified_since);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientBreakLeaseOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientChangeLeaseOptionsBuilder<'a> {
-        options: BlobContainerClientChangeLeaseOptions<'a>,
-    }
-
-    impl BlobContainerClientChangeLeaseOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientChangeLeaseOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientChangeLeaseOptions {
-            self.options.clone()
-        }
-
-        pub fn with_if_modified_since(mut self, if_modified_since: OffsetDateTime) -> Self {
-            self.options.if_modified_since = Some(if_modified_since);
-            self
-        }
-
-        pub fn with_if_unmodified_since(mut self, if_unmodified_since: OffsetDateTime) -> Self {
-            self.options.if_unmodified_since = Some(if_unmodified_since);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientChangeLeaseOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientCreateOptionsBuilder<'a> {
-        options: BlobContainerClientCreateOptions<'a>,
-    }
-
-    impl BlobContainerClientCreateOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientCreateOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientCreateOptions {
-            self.options.clone()
-        }
-
-        pub fn with_access(mut self, access: PublicAccessType) -> Self {
-            self.options.access = Some(access);
-            self
-        }
-
-        pub fn with_default_encryption_scope(mut self, default_encryption_scope: String) -> Self {
-            self.options.default_encryption_scope = Some(default_encryption_scope);
-            self
-        }
-
-        pub fn with_deny_encryption_scope_override(
-            mut self,
-            deny_encryption_scope_override: bool,
-        ) -> Self {
-            self.options.deny_encryption_scope_override = Some(deny_encryption_scope_override);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientCreateOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientDeleteOptionsBuilder<'a> {
-        options: BlobContainerClientDeleteOptions<'a>,
-    }
-
-    impl BlobContainerClientDeleteOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientDeleteOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientDeleteOptions {
-            self.options.clone()
-        }
-
-        pub fn with_if_modified_since(mut self, if_modified_since: OffsetDateTime) -> Self {
-            self.options.if_modified_since = Some(if_modified_since);
-            self
-        }
-
-        pub fn with_if_unmodified_since(mut self, if_unmodified_since: OffsetDateTime) -> Self {
-            self.options.if_unmodified_since = Some(if_unmodified_since);
-            self
-        }
-
-        pub fn with_lease_id(mut self, lease_id: String) -> Self {
-            self.options.lease_id = Some(lease_id);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientDeleteOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientFilterBlobsOptionsBuilder<'a> {
-        options: BlobContainerClientFilterBlobsOptions<'a>,
-    }
-
-    impl BlobContainerClientFilterBlobsOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientFilterBlobsOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientFilterBlobsOptions {
-            self.options.clone()
-        }
-
-        pub fn with_include(mut self, include: Vec<FilterBlobsIncludes>) -> Self {
-            self.options.include = Some(include);
-            self
-        }
-
-        pub fn with_marker(mut self, marker: String) -> Self {
-            self.options.marker = Some(marker);
-            self
-        }
-
-        pub fn with_maxresults(mut self, maxresults: i32) -> Self {
-            self.options.maxresults = Some(maxresults);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-
-        pub fn with_where_param(mut self, where_param: String) -> Self {
-            self.options.where_param = Some(where_param);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientFilterBlobsOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientGetAccessPolicyOptionsBuilder<'a> {
-        options: BlobContainerClientGetAccessPolicyOptions<'a>,
-    }
-
-    impl BlobContainerClientGetAccessPolicyOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientGetAccessPolicyOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientGetAccessPolicyOptions {
-            self.options.clone()
-        }
-
-        pub fn with_lease_id(mut self, lease_id: String) -> Self {
-            self.options.lease_id = Some(lease_id);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientGetAccessPolicyOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientGetAccountInfoOptionsBuilder<'a> {
-        options: BlobContainerClientGetAccountInfoOptions<'a>,
-    }
-
-    impl BlobContainerClientGetAccountInfoOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientGetAccountInfoOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientGetAccountInfoOptions {
-            self.options.clone()
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientGetAccountInfoOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientGetPropertiesOptionsBuilder<'a> {
-        options: BlobContainerClientGetPropertiesOptions<'a>,
-    }
-
-    impl BlobContainerClientGetPropertiesOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientGetPropertiesOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientGetPropertiesOptions {
-            self.options.clone()
-        }
-
-        pub fn with_lease_id(mut self, lease_id: String) -> Self {
-            self.options.lease_id = Some(lease_id);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientGetPropertiesOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientListBlobFlatSegmentOptionsBuilder<'a> {
-        options: BlobContainerClientListBlobFlatSegmentOptions<'a>,
-    }
-
-    impl BlobContainerClientListBlobFlatSegmentOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientListBlobFlatSegmentOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientListBlobFlatSegmentOptions {
-            self.options.clone()
-        }
-
-        pub fn with_include(mut self, include: Vec<ListBlobsIncludes>) -> Self {
-            self.options.include = Some(include);
-            self
-        }
-
-        pub fn with_marker(mut self, marker: String) -> Self {
-            self.options.marker = Some(marker);
-            self
-        }
-
-        pub fn with_maxresults(mut self, maxresults: i32) -> Self {
-            self.options.maxresults = Some(maxresults);
-            self
-        }
-
-        pub fn with_prefix(mut self, prefix: String) -> Self {
-            self.options.prefix = Some(prefix);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a>
-        for BlobContainerClientListBlobFlatSegmentOptionsBuilder<'a>
-    {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientListBlobHierarchySegmentOptionsBuilder<'a> {
-        options: BlobContainerClientListBlobHierarchySegmentOptions<'a>,
-    }
-
-    impl BlobContainerClientListBlobHierarchySegmentOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientListBlobHierarchySegmentOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientListBlobHierarchySegmentOptions {
-            self.options.clone()
-        }
-
-        pub fn with_include(mut self, include: Vec<ListBlobsIncludes>) -> Self {
-            self.options.include = Some(include);
-            self
-        }
-
-        pub fn with_marker(mut self, marker: String) -> Self {
-            self.options.marker = Some(marker);
-            self
-        }
-
-        pub fn with_maxresults(mut self, maxresults: i32) -> Self {
-            self.options.maxresults = Some(maxresults);
-            self
-        }
-
-        pub fn with_prefix(mut self, prefix: String) -> Self {
-            self.options.prefix = Some(prefix);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a>
-        for BlobContainerClientListBlobHierarchySegmentOptionsBuilder<'a>
-    {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientReleaseLeaseOptionsBuilder<'a> {
-        options: BlobContainerClientReleaseLeaseOptions<'a>,
-    }
-
-    impl BlobContainerClientReleaseLeaseOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientReleaseLeaseOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientReleaseLeaseOptions {
-            self.options.clone()
-        }
-
-        pub fn with_if_modified_since(mut self, if_modified_since: OffsetDateTime) -> Self {
-            self.options.if_modified_since = Some(if_modified_since);
-            self
-        }
-
-        pub fn with_if_unmodified_since(mut self, if_unmodified_since: OffsetDateTime) -> Self {
-            self.options.if_unmodified_since = Some(if_unmodified_since);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientReleaseLeaseOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientRenameOptionsBuilder<'a> {
-        options: BlobContainerClientRenameOptions<'a>,
-    }
-
-    impl BlobContainerClientRenameOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientRenameOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientRenameOptions {
-            self.options.clone()
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_source_lease_id(mut self, source_lease_id: String) -> Self {
-            self.options.source_lease_id = Some(source_lease_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientRenameOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientRenewLeaseOptionsBuilder<'a> {
-        options: BlobContainerClientRenewLeaseOptions<'a>,
-    }
-
-    impl BlobContainerClientRenewLeaseOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientRenewLeaseOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientRenewLeaseOptions {
-            self.options.clone()
-        }
-
-        pub fn with_if_modified_since(mut self, if_modified_since: OffsetDateTime) -> Self {
-            self.options.if_modified_since = Some(if_modified_since);
-            self
-        }
-
-        pub fn with_if_unmodified_since(mut self, if_unmodified_since: OffsetDateTime) -> Self {
-            self.options.if_unmodified_since = Some(if_unmodified_since);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientRenewLeaseOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientSetAccessPolicyOptionsBuilder<'a> {
-        options: BlobContainerClientSetAccessPolicyOptions<'a>,
-    }
-
-    impl BlobContainerClientSetAccessPolicyOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientSetAccessPolicyOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientSetAccessPolicyOptions {
-            self.options.clone()
-        }
-
-        pub fn with_if_modified_since(mut self, if_modified_since: OffsetDateTime) -> Self {
-            self.options.if_modified_since = Some(if_modified_since);
-            self
-        }
-
-        pub fn with_if_unmodified_since(mut self, if_unmodified_since: OffsetDateTime) -> Self {
-            self.options.if_unmodified_since = Some(if_unmodified_since);
-            self
-        }
-
-        pub fn with_lease_id(mut self, lease_id: String) -> Self {
-            self.options.lease_id = Some(lease_id);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientSetAccessPolicyOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientSetMetadataOptionsBuilder<'a> {
-        options: BlobContainerClientSetMetadataOptions<'a>,
-    }
-
-    impl BlobContainerClientSetMetadataOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientSetMetadataOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientSetMetadataOptions {
-            self.options.clone()
-        }
-
-        pub fn with_if_modified_since(mut self, if_modified_since: OffsetDateTime) -> Self {
-            self.options.if_modified_since = Some(if_modified_since);
-            self
-        }
-
-        pub fn with_lease_id(mut self, lease_id: String) -> Self {
-            self.options.lease_id = Some(lease_id);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientSetMetadataOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientSubmitBatchOptionsBuilder<'a> {
-        options: BlobContainerClientSubmitBatchOptions<'a>,
-    }
-
-    impl BlobContainerClientSubmitBatchOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientSubmitBatchOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientSubmitBatchOptions {
-            self.options.clone()
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientSubmitBatchOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
-
-    pub struct BlobContainerClientUndeleteOptionsBuilder<'a> {
-        options: BlobContainerClientUndeleteOptions<'a>,
-    }
-
-    impl BlobContainerClientUndeleteOptionsBuilder<'_> {
-        pub(super) fn new() -> Self {
-            Self {
-                options: BlobContainerClientUndeleteOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> BlobContainerClientUndeleteOptions {
-            self.options.clone()
-        }
-
-        pub fn with_deleted_container_name(mut self, deleted_container_name: String) -> Self {
-            self.options.deleted_container_name = Some(deleted_container_name);
-            self
-        }
-
-        pub fn with_deleted_container_version(mut self, deleted_container_version: String) -> Self {
-            self.options.deleted_container_version = Some(deleted_container_version);
-            self
-        }
-
-        pub fn with_request_id(mut self, request_id: String) -> Self {
-            self.options.request_id = Some(request_id);
-            self
-        }
-
-        pub fn with_timeout(mut self, timeout: i32) -> Self {
-            self.options.timeout = Some(timeout);
-            self
-        }
-    }
-
-    impl<'a> ClientMethodOptionsBuilder<'a> for BlobContainerClientUndeleteOptionsBuilder<'a> {
-        fn with_context(mut self, context: &'a Context) -> Self {
-            self.options.method_options.set_context(context);
-            self
-        }
-    }
+    pub deleted_container_name: Option<String>,
+    pub deleted_container_version: Option<String>,
+    pub method_options: ClientMethodOptions<'a>,
+    pub request_id: Option<String>,
+    pub timeout: Option<i32>,
 }

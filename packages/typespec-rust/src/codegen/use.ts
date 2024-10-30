@@ -51,6 +51,7 @@ export class Use {
   addForType(type: rust.Client | rust.Type): void {
     switch (type.kind) {
       case 'arc':
+        this.addType('std::sync', 'Arc');
         return this.addForType(type.type);
       case 'client': {
         const mod = codegen.deconstruct(type.name).join('_');

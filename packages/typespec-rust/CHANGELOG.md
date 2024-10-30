@@ -4,9 +4,10 @@
 
 ### Breaking Changes
 
-* Optional client method parameters are now in the method's options type and their associated builder methods have been added.
+* Optional client method parameters are now in the method's options type.
 * Sub-clients now have the suffix `Client` on their type names.
 * Methods parameters of type `impl Into<String>` have been changed to `String`.
+* Client and method options builders have been removed. The options are now POD types.
 
 ### Bugs Fixed
 

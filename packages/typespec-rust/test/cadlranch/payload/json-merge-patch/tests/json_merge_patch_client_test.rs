@@ -66,12 +66,13 @@ async fn update_optional_resource() {
     let resource_patch = ResourcePatch::default();
     // TODO: https://github.com/Azure/azure-sdk-for-rust/issues/1649 to send JSON nulls
 
-    let options_builder =
-        json_merge_patch_client::JsonMergePatchClientUpdateOptionalResourceOptions::builder()
-            .with_body(resource_patch.try_into().unwrap());
+    let options = json_merge_patch_client::JsonMergePatchClientUpdateOptionalResourceOptions {
+        body: Some(resource_patch.try_into().unwrap()),
+        ..Default::default()
+    };
 
     let _resp = client
-        .update_optional_resource(Some(options_builder.build()))
+        .update_optional_resource(Some(options))
         .await
         .unwrap();
 }

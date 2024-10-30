@@ -14,9 +14,7 @@ use crate::dictionary_nullable_float_value_client::DictionaryNullableFloatValueC
 use crate::dictionary_recursive_model_value_client::DictionaryRecursiveModelValueClient;
 use crate::dictionary_string_value_client::DictionaryStringValueClient;
 use crate::dictionary_unknown_value_client::DictionaryUnknownValueClient;
-use azure_core::builders::ClientOptionsBuilder;
-use azure_core::{ClientOptions, Pipeline, Policy, Result, RetryOptions, TransportOptions, Url};
-use std::sync::Arc;
+use azure_core::{ClientOptions, Pipeline, Result, Url};
 
 pub struct DictionaryClient {
     endpoint: Url,
@@ -25,7 +23,7 @@ pub struct DictionaryClient {
 
 #[derive(Clone, Debug)]
 pub struct DictionaryClientOptions {
-    client_options: ClientOptions,
+    pub client_options: ClientOptions,
 }
 
 impl DictionaryClient {
@@ -128,74 +126,10 @@ impl DictionaryClient {
     }
 }
 
-impl DictionaryClientOptions {
-    pub fn builder() -> builders::DictionaryClientOptionsBuilder {
-        builders::DictionaryClientOptionsBuilder::new()
-    }
-}
-
 impl Default for DictionaryClientOptions {
     fn default() -> Self {
         Self {
             client_options: ClientOptions::default(),
-        }
-    }
-}
-
-impl ClientOptionsBuilder for DictionaryClientOptions {
-    fn with_per_call_policies<P>(mut self, per_call_policies: P) -> Self
-    where
-        P: Into<Vec<Arc<dyn Policy>>>,
-        Self: Sized,
-    {
-        self.client_options.set_per_call_policies(per_call_policies);
-        self
-    }
-
-    fn with_per_try_policies<P>(mut self, per_try_policies: P) -> Self
-    where
-        P: Into<Vec<Arc<dyn Policy>>>,
-        Self: Sized,
-    {
-        self.client_options.set_per_try_policies(per_try_policies);
-        self
-    }
-
-    fn with_retry<P>(mut self, retry: P) -> Self
-    where
-        P: Into<RetryOptions>,
-        Self: Sized,
-    {
-        self.client_options.set_retry(retry);
-        self
-    }
-
-    fn with_transport<P>(mut self, transport: P) -> Self
-    where
-        P: Into<TransportOptions>,
-        Self: Sized,
-    {
-        self.client_options.set_transport(transport);
-        self
-    }
-}
-
-pub mod builders {
-    use super::*;
-
-    pub struct DictionaryClientOptionsBuilder {
-        options: DictionaryClientOptions,
-    }
-
-    impl DictionaryClientOptionsBuilder {
-        pub(super) fn new() -> Self {
-            Self {
-                options: DictionaryClientOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> DictionaryClientOptions {
-            self.options.clone()
         }
     }
 }

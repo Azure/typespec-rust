@@ -5,9 +5,7 @@
 
 use crate::content_negotiation_different_body_client::ContentNegotiationDifferentBodyClient;
 use crate::content_negotiation_same_body_client::ContentNegotiationSameBodyClient;
-use azure_core::builders::ClientOptionsBuilder;
-use azure_core::{ClientOptions, Pipeline, Policy, Result, RetryOptions, TransportOptions, Url};
-use std::sync::Arc;
+use azure_core::{ClientOptions, Pipeline, Result, Url};
 
 pub struct ContentNegotiationClient {
     endpoint: Url,
@@ -16,7 +14,7 @@ pub struct ContentNegotiationClient {
 
 #[derive(Clone, Debug)]
 pub struct ContentNegotiationClientOptions {
-    client_options: ClientOptions,
+    pub client_options: ClientOptions,
 }
 
 impl ContentNegotiationClient {
@@ -56,74 +54,10 @@ impl ContentNegotiationClient {
     }
 }
 
-impl ContentNegotiationClientOptions {
-    pub fn builder() -> builders::ContentNegotiationClientOptionsBuilder {
-        builders::ContentNegotiationClientOptionsBuilder::new()
-    }
-}
-
 impl Default for ContentNegotiationClientOptions {
     fn default() -> Self {
         Self {
             client_options: ClientOptions::default(),
-        }
-    }
-}
-
-impl ClientOptionsBuilder for ContentNegotiationClientOptions {
-    fn with_per_call_policies<P>(mut self, per_call_policies: P) -> Self
-    where
-        P: Into<Vec<Arc<dyn Policy>>>,
-        Self: Sized,
-    {
-        self.client_options.set_per_call_policies(per_call_policies);
-        self
-    }
-
-    fn with_per_try_policies<P>(mut self, per_try_policies: P) -> Self
-    where
-        P: Into<Vec<Arc<dyn Policy>>>,
-        Self: Sized,
-    {
-        self.client_options.set_per_try_policies(per_try_policies);
-        self
-    }
-
-    fn with_retry<P>(mut self, retry: P) -> Self
-    where
-        P: Into<RetryOptions>,
-        Self: Sized,
-    {
-        self.client_options.set_retry(retry);
-        self
-    }
-
-    fn with_transport<P>(mut self, transport: P) -> Self
-    where
-        P: Into<TransportOptions>,
-        Self: Sized,
-    {
-        self.client_options.set_transport(transport);
-        self
-    }
-}
-
-pub mod builders {
-    use super::*;
-
-    pub struct ContentNegotiationClientOptionsBuilder {
-        options: ContentNegotiationClientOptions,
-    }
-
-    impl ContentNegotiationClientOptionsBuilder {
-        pub(super) fn new() -> Self {
-            Self {
-                options: ContentNegotiationClientOptions::default(),
-            }
-        }
-
-        pub fn build(&self) -> ContentNegotiationClientOptions {
-            self.options.clone()
         }
     }
 }
