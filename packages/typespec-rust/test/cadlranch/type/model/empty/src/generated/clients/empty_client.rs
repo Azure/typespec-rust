@@ -22,10 +22,7 @@ pub struct EmptyClientOptions {
 }
 
 impl EmptyClient {
-    pub fn with_no_credential(
-        endpoint: impl AsRef<str>,
-        options: Option<EmptyClientOptions>,
-    ) -> Result<Self> {
+    pub fn with_no_credential(endpoint: &str, options: Option<EmptyClientOptions>) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;
         endpoint.query_pairs_mut().clear();
         let options = options.unwrap_or_default();

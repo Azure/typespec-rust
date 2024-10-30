@@ -62,7 +62,7 @@ export function getTypeDeclaration(type: rust.Type, withAnonymousLifetime = fals
     case 'literal':
       return `${type.value}`;
     case 'option':
-      return `Option<${type.ref ? '&' : ''}${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+      return `Option<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'requestContent':
     case 'response':
     case 'result':

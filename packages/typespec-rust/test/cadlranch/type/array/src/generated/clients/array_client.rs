@@ -32,10 +32,7 @@ pub struct ArrayClientOptions {
 }
 
 impl ArrayClient {
-    pub fn with_no_credential(
-        endpoint: impl AsRef<str>,
-        options: Option<ArrayClientOptions>,
-    ) -> Result<Self> {
+    pub fn with_no_credential(endpoint: &str, options: Option<ArrayClientOptions>) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;
         endpoint.query_pairs_mut().clear();
         let options = options.unwrap_or_default();

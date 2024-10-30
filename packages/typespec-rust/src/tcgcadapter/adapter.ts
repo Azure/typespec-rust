@@ -140,7 +140,7 @@ export class Adapter {
 
   // converts a tcgc model property to a model field
   private getModelField(property: tcgc.SdkBodyModelPropertyType): rust.ModelField {
-    const fieldType = new rust.Option(this.getType(property.type), false);
+    const fieldType = new rust.Option(this.getType(property.type));
     const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, true, fieldType);
     modelField.docs.summary = property.summary;
     modelField.docs.description = property.doc;
@@ -407,7 +407,7 @@ export class Adapter {
             // for Rust, we always require a complete endpoint param, templated
             // endpoints, e.g. https://{something}.contoso.com isn't supported.
             // note that the types of the param and the field are slightly different
-            ctorParams.push(new rust.ClientParameter(param.name, new rust.ImplTrait('AsRef', new rust.StringSlice())));
+            ctorParams.push(new rust.ClientParameter(param.name, new rust.StringSlice(), true));
             rustClient.fields.push(new rust.ClientParameter(param.name, new rust.Url(this.crate)));
             break;
           case 'method': {
@@ -484,7 +484,7 @@ export class Adapter {
 
     switch (method.kind) {
       case 'basic':
-        rustMethod = new rust.AsyncMethod(naming.getEscapedReservedName(snakeCaseName(method.name), 'fn'), rustClient, isPub(method.access), new rust.MethodOptions(methodOptionsStruct, false), httpMethod, httpPath);
+        rustMethod = new rust.AsyncMethod(naming.getEscapedReservedName(snakeCaseName(method.name), 'fn'), rustClient, isPub(method.access), new rust.MethodOptions(methodOptionsStruct), httpMethod, httpPath);
         break;
       case 'paging':
         // TODO: https://github.com/Azure/typespec-rust/issues/60
@@ -531,7 +531,7 @@ export class Adapter {
       rustMethod.params.push(adaptedParam);
 
       if (adaptedParam.optional) {
-        rustMethod.options.type.fields.push(new rust.StructField(adaptedParam.name, false, new rust.Option(adaptedParam.type, false)));
+        rustMethod.options.type.fields.push(new rust.StructField(adaptedParam.name, false, new rust.Option(adaptedParam.type)));
       }
 
       // remove the opParam we just processed

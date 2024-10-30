@@ -30,7 +30,7 @@ pub struct KeyVaultClientOptions {
 
 impl KeyVaultClient {
     pub fn new(
-        endpoint: impl AsRef<str>,
+        endpoint: &str,
         credential: Arc<dyn TokenCredential>,
         options: Option<KeyVaultClientOptions>,
     ) -> Result<Self> {
