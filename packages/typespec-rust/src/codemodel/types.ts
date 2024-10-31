@@ -286,6 +286,10 @@ export class StdType implements StdType {
   }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// base types
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 // base type for models and structs
 interface StructBase {
   kind: 'model' | 'struct';
@@ -296,8 +300,8 @@ interface StructBase {
   // any docs for the type
   docs: Docs;
 
-  // indicates if the struct should be public
-  pub: boolean;
+  // indicates if the struct is only for internal consumption
+  internal: boolean;
 
   // fields contains the fields within the struct
   fields: Array<StructFieldBase>;
@@ -322,6 +326,24 @@ interface StructFieldBase {
 
   // the value to use when emitting a Default impl for the containing struct
   defaultValue?: string;
+}
+
+class StructBase implements StructBase {
+  constructor(kind: 'model' | 'struct', name: string, internal: boolean) {
+    this.kind = kind;
+    this.name = name;
+    this.internal = internal;
+    this.docs = {};
+  }
+}
+
+class StructFieldBase implements StructFieldBase {
+  constructor(name: string, pub: boolean, type: Type) {
+    this.name = name;
+    this.pub = pub;
+    this.type = type;
+    this.docs = {};
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -407,23 +429,17 @@ export class Literal implements Literal {
   }
 }
 
-export class Model implements Model {
-  constructor(name: string, pub: boolean) {
-    this.kind = 'model';
-    this.name = name;
-    this.pub = pub;
+export class Model extends StructBase implements Model {
+  constructor(name: string, internal: boolean) {
+    super('model', name, internal);
     this.fields = new Array<ModelField>();
-    this.docs = {};
   }
 }
 
-export class ModelField implements ModelField {
+export class ModelField extends StructFieldBase implements ModelField {
   constructor(name: string, serde: string, pub: boolean, type: Type) {
-    this.name = name;
+    super(name, pub, type);
     this.serde = serde;
-    this.pub = pub;
-    this.type = type;
-    this.docs = {};
   }
 }
 
@@ -531,22 +547,16 @@ export class StringType implements StringType {
   }
 }
 
-export class Struct implements Struct {
-  constructor(name: string, pub: boolean) {
-    this.kind = 'struct';
-    this.name = name;
-    this.pub = pub;
+export class Struct extends StructBase implements Struct {
+  constructor(name: string, internal: boolean) {
+    super('struct', name, internal);
     this.fields = new Array<StructField>();
-    this.docs = {};
   }
 }
 
-export class StructField implements StructField {
+export class StructField extends StructFieldBase implements StructField {
   constructor(name: string, pub: boolean, type: Type) {
-    this.name = name;
-    this.pub = pub;
-    this.type = type;
-    this.docs = {};
+    super(name, pub, type);
   }
 }
 

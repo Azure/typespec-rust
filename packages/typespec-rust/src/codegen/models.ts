@@ -25,7 +25,7 @@ export function emitModels(crate: rust.Crate, context: Context): string {
     body += helpers.formatDocComment(model.docs);
     body += helpers.annotationDerive('Default', 'Model');
     body += helpers.AnnotationNonExhaustive;
-    body += `${helpers.emitPub(model.pub)}struct ${model.name} {\n`;
+    body += `pub struct ${model.name} {\n`;
 
     for (const field of model.fields) {
       use.addForType(field.type);

@@ -116,7 +116,7 @@ export class Adapter {
     if (rustModel) {
       return <rust.Model>rustModel;
     }
-    rustModel = new rust.Model(modelName, isPub(model.access));
+    rustModel = new rust.Model(modelName, model.access === 'internal');
     rustModel.docs.summary = model.summary;
     rustModel.docs.description = model.doc;
     this.types.set(modelName, rustModel);
