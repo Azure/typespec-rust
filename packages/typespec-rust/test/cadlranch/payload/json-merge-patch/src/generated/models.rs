@@ -30,20 +30,16 @@ pub struct Resource {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
 
-    #[serde(rename = "floatValue")]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "floatValue", skip_serializing_if = "Option::is_none")]
     pub float_value: Option<f32>,
 
-    #[serde(rename = "innerModel")]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "innerModel", skip_serializing_if = "Option::is_none")]
     pub inner_model: Option<InnerModel>,
 
-    #[serde(rename = "intArray")]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "intArray", skip_serializing_if = "Option::is_none")]
     pub int_array: Option<Vec<i32>>,
 
-    #[serde(rename = "intValue")]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "intValue", skip_serializing_if = "Option::is_none")]
     pub int_value: Option<i32>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -63,20 +59,16 @@ pub struct ResourcePatch {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
 
-    #[serde(rename = "floatValue")]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "floatValue", skip_serializing_if = "Option::is_none")]
     pub float_value: Option<f32>,
 
-    #[serde(rename = "innerModel")]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "innerModel", skip_serializing_if = "Option::is_none")]
     pub inner_model: Option<InnerModel>,
 
-    #[serde(rename = "intArray")]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "intArray", skip_serializing_if = "Option::is_none")]
     pub int_array: Option<Vec<i32>>,
 
-    #[serde(rename = "intValue")]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "intValue", skip_serializing_if = "Option::is_none")]
     pub int_value: Option<i32>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
