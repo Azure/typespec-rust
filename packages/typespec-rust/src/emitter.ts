@@ -32,8 +32,11 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   await writeToGeneratedDir(context.emitterOutputDir, 'mod.rs', codegen.emitMod());
 
   const models = codegen.emitModels();
-  if (models.length > 0) {
-    await writeToGeneratedDir(context.emitterOutputDir, 'models.rs', models);
+  if (models.public) {
+    await writeToGeneratedDir(context.emitterOutputDir, 'models.rs', models.public);
+  }
+  if (models.internal) {
+    await writeToGeneratedDir(context.emitterOutputDir, 'clients/internal_models.rs', models.internal);
   }
 
   const enums = codegen.emitEnums();

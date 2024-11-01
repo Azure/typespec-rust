@@ -51,8 +51,8 @@ export class CodeGenerator {
   }
 
   // returns the content for models.rs
-  // if there are no models, the empty string is returned.
-  emitModels(): string {
+  // if there are no models, the empty object is returned.
+  emitModels(): {public?: string, internal?: string} {
     return emitModels(this.crate, this.context);
   }
 }

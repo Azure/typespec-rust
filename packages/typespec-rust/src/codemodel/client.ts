@@ -106,7 +106,7 @@ export type ExtendedCollectionFormat = CollectionFormat | 'multi';
 export type ParameterLocation = 'client' | 'method';
 
 // MethodParameter defines the possible method parameter types
-export type MethodParameter = BodyParameter | HeaderCollectionParameter | HeaderParameter | PathParameter | QueryCollectionParameter | QueryParameter;
+export type MethodParameter = BodyParameter | HeaderCollectionParameter | HeaderParameter | PartialBodyParameter | PathParameter | QueryCollectionParameter | QueryParameter;
 
 // BodyParameter is a param that's passed via the HTTP request body
 export interface BodyParameter extends HTTPParameterBase {
@@ -145,6 +145,17 @@ export interface HeaderParameter extends HTTPParameterBase {
 // MethodOptions is the struct containing optional method params
 export interface MethodOptions extends types.Option {
   type: types.Struct;
+}
+
+// PartialBodyParameter is a param that's a field within a type passed via the HTTP request body
+export interface PartialBodyParameter extends HTTPParameterBase {
+  kind: 'partialBody';
+
+  // the model in which the partial param is placed
+  type: types.RequestContent<types.Model>;
+
+  // the name of the field over the wire in model.fields for this param
+  serde: string;
 }
 
 // PathParameter is a param that goes in the HTTP path
@@ -328,6 +339,14 @@ export class HeaderParameter extends HTTPParameterBase implements HeaderParamete
 export class MethodOptions extends types.Option implements MethodOptions {
   constructor(type: types.Struct) {
     super(type);
+  }
+}
+
+export class PartialBodyParameter extends HTTPParameterBase implements PartialBodyParameter {
+  constructor(name: string, location: ParameterLocation, optional: boolean, serde: string, type: types.RequestContent<types.Model>) {
+    super(name, location, optional, type);
+    this.kind = 'partialBody';
+    this.serde = serde;
   }
 }
 

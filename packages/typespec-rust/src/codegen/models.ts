@@ -9,12 +9,20 @@ import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
 // emits the models.rs file for this crate
-export function emitModels(crate: rust.Crate, context: Context): string {
+export function emitModels(crate: rust.Crate, context: Context): {public?: string, internal?: string} {
   if (crate.models.length === 0) {
-    return '';
+    return {};
   }
 
-  const use = new Use('models');
+  return {
+    public: emitModelsInternal(crate, context, true),
+    internal: emitModelsInternal(crate, context, false),
+  };
+}
+
+function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): string | undefined {
+  // for the internal models we might need to use public model types
+  const use = new Use(pub ? 'models' : undefined);
   use.addTypes('serde', ['Deserialize', 'Serialize']);
   use.addType('azure_core', 'Model');
 
@@ -22,6 +30,10 @@ export function emitModels(crate: rust.Crate, context: Context): string {
 
   let body = '';
   for (const model of crate.models) {
+    if (model.internal === pub) {
+      continue;
+    }
+
     body += helpers.formatDocComment(model.docs);
     body += helpers.annotationDerive('Default', 'Model');
     body += helpers.AnnotationNonExhaustive;
@@ -51,8 +63,17 @@ export function emitModels(crate: rust.Crate, context: Context): string {
     body += '}\n\n';
   }
 
+  if (body === '') {
+    // no models for this value of pub
+    return undefined;
+  }
+
   // emit TryFrom as required
   for (const model of crate.models) {
+    if (model.internal === pub) {
+      continue;
+    }
+
     body += context.getTryFromForRequestContent(model, use);
     body += context.getTryFromResponseForType(model, use);
   }

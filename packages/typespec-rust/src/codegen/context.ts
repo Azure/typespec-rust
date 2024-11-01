@@ -28,7 +28,7 @@ export class Context {
         // https://github.com/Azure/typespec-rust/issues/65
 
         for (const param of method.params) {
-          if (param.kind === 'body' && (param.type.type.kind === 'enum' || param.type.type.kind === 'model')) {
+          if ((param.kind === 'body' || param.kind === 'partialBody') && (param.type.type.kind === 'enum' || param.type.type.kind === 'model')) {
             this.tryFromForRequestTypes.set(helpers.getTypeDeclaration(param.type.type), param.type.format);
           }
         }

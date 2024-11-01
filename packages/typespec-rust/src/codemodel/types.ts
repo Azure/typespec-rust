@@ -148,12 +148,12 @@ export interface Option {
 }
 
 // RequestContent is a Rust RequestContent<T> from azure_core
-export interface RequestContent extends External {
+export interface RequestContent<T extends Type = Type> extends External {
   kind: 'requestContent';
 
   // the generic type param
   // note that not all types are applicable
-  type: Type;
+  type: T;
 
   // the wire format of the request body
   format: BodyFormat;
@@ -475,8 +475,8 @@ export class Option implements Option {
   }
 }
 
-export class RequestContent extends External implements RequestContent {
-  constructor(crate: Crate, type: Type, format: BodyFormat) {
+export class RequestContent<T> extends External implements RequestContent<T> {
+  constructor(crate: Crate, type: T, format: BodyFormat) {
     switch (type.kind) {
       case 'String':
       case 'encodedBytes':

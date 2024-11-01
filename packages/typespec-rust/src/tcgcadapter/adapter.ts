@@ -131,7 +131,7 @@ export class Adapter {
         // TODO: https://github.com/Azure/typespec-rust/issues/96
         throw new Error(`model property kind ${property.kind} NYI`);
       }
-      const structField = this.getModelField(property);
+      const structField = this.getModelField(property, !rustModel.internal);
       rustModel.fields.push(structField);
     }
 
@@ -139,8 +139,14 @@ export class Adapter {
   }
 
   // converts a tcgc model property to a model field
-  private getModelField(property: tcgc.SdkBodyModelPropertyType): rust.ModelField {
-    const fieldType = new rust.Option(this.getType(property.type));
+  private getModelField(property: tcgc.SdkBodyModelPropertyType, isPubMod: boolean): rust.ModelField {
+    let fieldType = this.getType(property.type);
+
+    // for public models each field is always an Option<T>
+    if (isPubMod || property.optional) {
+      fieldType = new rust.Option(fieldType);
+    }
+
     const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, true, fieldType);
     modelField.docs.summary = property.summary;
     modelField.docs.description = property.doc;
@@ -498,7 +504,7 @@ export class Adapter {
     rustClient.methods.push(rustMethod);
 
     // stuff all of the operation parameters into one array for easy traversal
-    let allOpParams = new Array<OperationParamType>();
+    const allOpParams = new Array<OperationParamType>();
     allOpParams.push(...method.operation.parameters);
     if (method.operation.bodyParam) {
       allOpParams.push(method.operation.bodyParam);
@@ -520,8 +526,13 @@ export class Adapter {
       }
 
       let adaptedParam: rust.MethodParameter;
-      if (opParam.kind === 'body' && opParam.type.kind === 'model' && opParam.type.kind !== param.type.kind) {
-        throw new Error('spread params NYI');
+      // for spread params there are two cases we need to consider.
+      // if the method param's type doesn't match the op param's type then it's a spread param
+      // - e.g. method param's type is string/int/etc which is a field in the op param's body type
+      // if the method param's type DOES match the op param's type and the op param has multiple corresponding method params, it's a spread param
+      // - e.g. op param is an intersection of multiple model types, and each model type is exposed as a discrete param
+      if (opParam.kind === 'body' && opParam.type.kind === 'model' && (opParam.type.kind !== param.type.kind || opParam.correspondingMethodParams.length > 1)) {
+        adaptedParam = this.adaptMethodSpreadParameter(param, this.adaptBodyFormat(opParam.defaultContentType), opParam.type);
       } else {
         adaptedParam = this.adaptMethodParameter(opParam);
       }
@@ -531,13 +542,22 @@ export class Adapter {
       rustMethod.params.push(adaptedParam);
 
       if (adaptedParam.optional) {
-        rustMethod.options.type.fields.push(new rust.StructField(adaptedParam.name, true, new rust.Option(adaptedParam.type)));
+        let fieldType: rust.Type;
+        if (adaptedParam.kind === 'partialBody') {
+          // for partial body params, adaptedParam.type is the model type that's
+          // sent in the request. we want the field within the model for this param.
+          // NOTE: if the param is optional then the field is optional, thus it's
+          // already wrapped in an Option<T> type.
+          const field = adaptedParam.type.type.fields.find(f => { return f.serde === adaptedParam.serde; });
+          if (!field) {
+            throw new Error(`didn't find field ${adaptedParam.serde} for spread param ${adaptedParam.name}`);
+          }
+          fieldType = field.type;
+        } else {
+          fieldType = new rust.Option(adaptedParam.type);
+        }
+        rustMethod.options.type.fields.push(new rust.StructField(adaptedParam.name, true, fieldType));
       }
-
-      // remove the opParam we just processed
-      allOpParams = allOpParams.filter((v: OperationParamType) => {
-        return v !== opParam;
-      });
     }
 
     // client params aren't included in method.parameters so
@@ -655,6 +675,37 @@ export class Adapter {
     }
 
     return adaptedParam;
+  }
+
+  private adaptMethodSpreadParameter(param: tcgc.SdkMethodParameter, format: rust.BodyFormat, opParamType: tcgc.SdkModelType): rust.PartialBodyParameter {
+    switch (format) {
+      case 'binary':
+        throw new Error('binary spread NYI');
+      case 'json': {
+        // find the corresponding field within the model so we can get its index
+        let serializedName: string | undefined;
+        for (const property of opParamType.properties) {
+          if (property.name === param.name) {
+            serializedName = (<tcgc.SdkBodyModelPropertyType>property).serializedName;
+            break;
+          }
+        }
+
+        if (serializedName === undefined) {
+          throw new Error(`didn't find body model property for spread parameter ${param.name}`);
+        }
+
+        const paramLoc: rust.ParameterLocation = 'method';
+        const paramType = this.getType(opParamType);
+        if (paramType.kind !== 'model') {
+          throw new Error(`unexpected kind ${paramType.kind} for spread body param`);
+        }
+        const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
+        return new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, new rust.RequestContent(this.crate, paramType, format));
+      }
+      default:
+        throw new Error(`unhandled spread param format ${format}`);
+    }
   }
 
   private adaptBodyFormat(contentType: string): rust.BodyFormat {

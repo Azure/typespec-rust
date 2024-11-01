@@ -193,6 +193,13 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
   for (const clientMod of sortedMods) {
     content += `pub mod ${clientMod};\n`;
   }
+  // check if we have any internal models
+  for (const model of crate.models) {
+    if (model.internal) {
+      content += 'mod internal_models;\n';
+      break;
+    }
+  }
   clientFiles.push({name: 'mod.rs', content: content});
 
   return clientFiles;
@@ -211,21 +218,26 @@ function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: r
 function getMethodParamsSig(method: rust.MethodType, use: Use): string {
   const paramsSig = new Array<string>();
   paramsSig.push(formatParamTypeName(method.self));
-  for (const param of method.params) {
-    if (param.type.kind === 'literal') {
-      // literal params are embedded directly in the code (e.g. accept header param)
-      continue;
+
+  // client accessors only have a self param so skip checking for params
+  if (method.kind !== 'clientaccessor') {
+    for (const param of method.params) {
+      if (param.type.kind === 'literal') {
+        // literal params are embedded directly in the code (e.g. accept header param)
+        continue;
+      }
+
+      // don't add client or optional params to the method param sig
+      if (param.location === 'method' && !param.optional) {
+        use.addForType(param.type);
+        // todo: index for spread
+        paramsSig.push(`${param.name}: ${formatParamTypeName(param)}`);
+      }
     }
 
-    // don't add client or optional params to the method param sig
-    if (method.kind !== 'clientaccessor' && (<rust.MethodParameter>param).location === 'method' && !(<rust.MethodParameter>param).optional) {
-      use.addForType(param.type);
-      paramsSig.push(`${param.name}: ${formatParamTypeName(param)}`);
-    }
-  }
-  if (method.kind !== 'clientaccessor') {
     paramsSig.push(`options: ${helpers.getTypeDeclaration(method.options, true)}`);
   }
+
   return paramsSig.join(', ');
 }
 
@@ -245,7 +257,7 @@ function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
   return undefined;
 }
 
-function formatParamTypeName(param: rust.Parameter | rust.Self): string {
+function formatParamTypeName(param: rust.MethodParameter | rust.Self): string {
   let format = '';
   if (param.ref) {
     format = '&';
@@ -253,8 +265,24 @@ function formatParamTypeName(param: rust.Parameter | rust.Self): string {
   if (param.mut) {
     format += 'mut ';
   }
-  if ((<rust.Parameter>param).type) {
-    format += helpers.getTypeDeclaration((<rust.Parameter>param).type);
+  if ((<rust.MethodParameter>param).kind) {
+    const methodParam = <rust.MethodParameter>param;
+    let paramType = methodParam.type;
+    if (methodParam.kind === 'partialBody') {
+      // for partial body params, methodParam.type is the model type that's
+      // sent in the request. we want the field within the model for this param.
+      const field = methodParam.type.type.fields.find(f => { return f.serde === methodParam.serde; });
+      if (!field) {
+        throw new Error(`didn't find field ${methodParam.serde} for spread param ${methodParam.name}`);
+      }
+      paramType = field.type;
+      if (paramType.kind === 'option') {
+        // this is the case where the spread param maps to a non-internal model.
+        // for this case, we unwrap the Option<T> to get the underlying type.
+        paramType = paramType.type;
+      }
+    }
+    format += helpers.getTypeDeclaration(paramType);
   } else {
     format += param.name;
   }
@@ -314,11 +342,15 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
   const headerParams = new Array<HeaderParamType>();
   const pathParams = new Array<rust.PathParameter>();
   const queryParams = new Array<QueryParamType>();
+  const partialBodyParams = new Array<rust.PartialBodyParameter>();
   for (const param of method.params) {
     switch (param.kind) {
       case 'header':
       case 'headerCollection':
         headerParams.push(param);
+        break;
+      case 'partialBody':
+        partialBodyParams.push(param);
         break;
       case 'path':
         pathParams.push(param);
@@ -388,6 +420,27 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
     body += getParamValueHelper(bodyParam, () => {
       return `${indentation.get()}request.set_body(${bodyParam.name});\n`;
     });
+  } else if (partialBodyParams.length > 0) {
+    // all partial body params should point to the same underlying model type.
+    const requestContentType = partialBodyParams[0].type;
+    use.addForType(requestContentType);
+    body += `${indentation.get()}let body: ${helpers.getTypeDeclaration(requestContentType)} = ${requestContentType.type.name} {\n`;
+    indentation.push();
+    for (const partialBodyParam of partialBodyParams) {
+      if (partialBodyParam.type.type !== requestContentType.type) {
+        throw new Error(`spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.type.name}, expected model type ${requestContentType.type.name}`);
+      }
+      let initializer = partialBodyParam.name;
+      if (partialBodyParam.optional) {
+        initializer = `${partialBodyParam.name}: options.${partialBodyParam.name}`;
+      } else if (!requestContentType.type.internal) {
+        // spread param maps to a non-internal model, so it must be wrapped in Some()
+        initializer = `${partialBodyParam.name}: Some(${partialBodyParam.name})`;
+      }
+      body += `${indentation.get()}${initializer},\n`;
+    }
+    body += `${indentation.pop().get()}}.try_into()?;\n`;
+    body += `${indentation.get()}request.set_body(body);\n`;
   }
 
   body += `${indentation.get()}self.pipeline.send(&mut ctx, &mut request).await\n`;

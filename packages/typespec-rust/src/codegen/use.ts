@@ -63,7 +63,11 @@ export class Use {
         break;
       case 'model':
         if (this.scope !== 'models') {
-          this.addType('crate::models', type.name);
+          let module = 'crate::models';
+          if (type.internal) {
+            module = 'super::internal_models';
+          }
+          this.addType(module, type.name);
         }
         break;
       case 'option':
