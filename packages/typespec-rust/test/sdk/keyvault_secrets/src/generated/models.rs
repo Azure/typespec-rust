@@ -5,11 +5,10 @@
 
 use crate::models::DeletionRecoveryLevel;
 use async_std::task::block_on;
-use azure_core::{RequestContent, Response, Result, Url};
+use azure_core::{Model, RequestContent, Response, Result, Url};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use time::OffsetDateTime;
-use typespec_client_core::Model;
 
 /// The backup secret result, containing the backup blob.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]

@@ -16,7 +16,7 @@ export function emitModels(crate: rust.Crate, context: Context): string {
 
   const use = new Use('models');
   use.addTypes('serde', ['Deserialize', 'Serialize']);
-  use.addType('typespec_client_core', 'Model');
+  use.addType('azure_core', 'Model');
 
   const indentation = new helpers.indentation();
 
