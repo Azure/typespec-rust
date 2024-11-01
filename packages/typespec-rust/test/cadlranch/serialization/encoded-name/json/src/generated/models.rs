@@ -12,8 +12,7 @@ use typespec_client_core::Model;
 #[non_exhaustive]
 pub struct JsonEncodedNameModel {
     /// Pass in true
-    #[serde(rename = "wireName")]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "wireName", skip_serializing_if = "Option::is_none")]
     pub default_name: Option<bool>,
 }
 

@@ -30,14 +30,21 @@ export function emitModels(crate: rust.Crate, context: Context): string {
     for (const field of model.fields) {
       use.addForType(field.type);
       body += helpers.formatDocComment(field.docs);
+      const serdeParams = new Array<string>();
       if (field.name !== field.serde) {
         // only emit the serde annotation when the names aren't equal
-        body += `${indentation.get()}#[serde(rename = "${field.serde}")]\n`;
+        serdeParams.push(`rename = "${field.serde}"`);
       }
 
       // TODO: omit skip_serializing_if if we need to send explicit JSON null
       // https://github.com/Azure/typespec-rust/issues/78
-      body += `${indentation.get()}#[serde(skip_serializing_if = "Option::is_none")]\n`;
+      if (field.type.kind === 'option') {
+        serdeParams.push('skip_serializing_if = "Option::is_none"');
+      }
+
+      if (serdeParams.length > 0) {
+        body += `${indentation.get()}#[serde(${serdeParams.join(', ')})]\n`;
+      }
       body += `${indentation.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
     }
 

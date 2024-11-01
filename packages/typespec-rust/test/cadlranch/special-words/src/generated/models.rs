@@ -213,8 +213,7 @@ pub struct Return {
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct SameAsModel {
-    #[serde(rename = "SameAsModel")]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "SameAsModel", skip_serializing_if = "Option::is_none")]
     pub same_as_model: Option<String>,
 }
 
