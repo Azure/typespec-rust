@@ -10,8 +10,8 @@ use azure_core::{
 use std::collections::HashMap;
 
 pub struct DictionaryStringValueClient {
-    pub(in crate::generated::clients) endpoint: Url,
-    pub(in crate::generated::clients) pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 impl DictionaryStringValueClient {
