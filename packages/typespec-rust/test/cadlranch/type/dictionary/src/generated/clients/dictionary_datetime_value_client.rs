@@ -11,8 +11,8 @@ use std::collections::HashMap;
 use time::OffsetDateTime;
 
 pub struct DictionaryDatetimeValueClient {
-    pub(in crate::generated::clients) endpoint: Url,
-    pub(in crate::generated::clients) pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 impl DictionaryDatetimeValueClient {

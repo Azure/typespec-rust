@@ -31,7 +31,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
     let pubInClients = '';
     if (!client.constructable) {
       // the constructable client will need access to these fields
-      pubInClients = 'pub(in crate::generated::clients) ';
+      pubInClients = 'pub(crate) ';
     }
 
     let body = `pub struct ${client.name} {\n`;

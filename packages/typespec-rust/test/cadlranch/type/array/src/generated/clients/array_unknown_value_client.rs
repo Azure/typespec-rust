@@ -10,8 +10,8 @@ use azure_core::{
 use serde_json::Value;
 
 pub struct ArrayUnknownValueClient {
-    pub(in crate::generated::clients) endpoint: Url,
-    pub(in crate::generated::clients) pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 impl ArrayUnknownValueClient {

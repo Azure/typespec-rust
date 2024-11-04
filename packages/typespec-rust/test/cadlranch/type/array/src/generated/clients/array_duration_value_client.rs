@@ -9,8 +9,8 @@ use azure_core::{
 };
 
 pub struct ArrayDurationValueClient {
-    pub(in crate::generated::clients) endpoint: Url,
-    pub(in crate::generated::clients) pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 impl ArrayDurationValueClient {

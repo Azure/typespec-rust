@@ -9,8 +9,8 @@ use azure_core::{
 };
 
 pub struct ArrayNullableInt32ValueClient {
-    pub(in crate::generated::clients) endpoint: Url,
-    pub(in crate::generated::clients) pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 impl ArrayNullableInt32ValueClient {
