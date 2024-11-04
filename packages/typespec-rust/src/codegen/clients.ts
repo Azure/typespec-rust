@@ -230,7 +230,6 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
       // don't add client or optional params to the method param sig
       if (param.location === 'method' && !param.optional) {
         use.addForType(param.type);
-        // todo: index for spread
         paramsSig.push(`${param.name}: ${formatParamTypeName(param)}`);
       }
     }
