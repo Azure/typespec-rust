@@ -327,21 +327,25 @@ function getClientAccessorMethodBody(indent: helpers.indentation, clientAccessor
   return body;
 }
 
+type ClientMethod = rust.AsyncMethod;
 type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderParameter;
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryParameter;
 
-function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
-  use.addTypes('azure_core', ['AsClientMethodOptions', 'Method', 'Request']);
-  const unwrappedOptionsVarName = 'options';
-  let body = `let ${unwrappedOptionsVarName} = options.unwrap_or_default();\n`;
-  body += `${indent.get()}let mut ctx = options.method_options.context();\n`;
-  body += `${indent.get()}let mut url = self.${getEndpointFieldName(client)}.clone();\n`;
+interface methodParamGroups {
+  body?: rust.BodyParameter;
+  header: Array<HeaderParamType>;
+  partialBody: Array<rust.PartialBodyParameter>;
+  path: Array<rust.PathParameter>;
+  query: Array<QueryParamType>;
+}
 
+function getMethodParamGroup(method: ClientMethod): methodParamGroups {
   // collect and sort all the header/path/query params
   const headerParams = new Array<HeaderParamType>();
   const pathParams = new Array<rust.PathParameter>();
   const queryParams = new Array<QueryParamType>();
   const partialBodyParams = new Array<rust.PartialBodyParameter>();
+
   for (const param of method.params) {
     switch (param.kind) {
       case 'header':
@@ -360,29 +364,53 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
         break;
     }
   }
+
   headerParams.sort((a: HeaderParamType, b: HeaderParamType) => { return helpers.sortAscending(a.header, b.header); });
   pathParams.sort((a: rust.PathParameter, b: rust.PathParameter) => { return helpers.sortAscending(a.segment, b.segment); });
   queryParams.sort((a: QueryParamType, b: QueryParamType) => { return helpers.sortAscending(a.key, b.key); });
 
-  // for optional params, by convention, we'll create a local named param.name.
-  // setter MUST reference by param.name so it works for optional and required params.
-  const getParamValueHelper = function(param: rust.MethodParameter, setter: () => string): string {
-    if (param.optional) {
-      // optional params are in the unwrapped options local var
-      const op = helpers.buildIfBlock(indent, {
-        condition: `let Some(${param.name}) = ${unwrappedOptionsVarName}.${param.name}`,
-        body: setter,
-      });
-      return op;
+  let bodyParam: rust.BodyParameter | undefined;
+  for (const param of method.params) {
+    if (param.kind === 'body') {
+      if (bodyParam) {
+        throw new Error(`method ${method.name} has multiple body parameters`);
+      }
+      bodyParam = param;
     }
-    return setter();
-  };
+  }
 
+  return {
+    body: bodyParam,
+    header: headerParams,
+    partialBody: partialBodyParams,
+    path: pathParams,
+    query: queryParams,
+  };
+}
+
+// for optional params, by convention, we'll create a local named param.name.
+// setter MUST reference by param.name so it works for optional and required params.
+function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, setter: () => string): string {
+  if (param.optional) {
+    // optional params are in the unwrapped options local var
+    const op = helpers.buildIfBlock(indent, {
+      condition: `let Some(${param.name}) = options.${param.name}`,
+      body: setter,
+    });
+    return op;
+  }
+  return setter();
+}
+
+// emits the code for building the request URL.
+// assumes that there's a mutable local var 'url'
+function constructUrl(indent: helpers.indentation, method: ClientMethod, paramGroups: methodParamGroups): string {
+  let body = '';
   let path = `"${method.httpPath}"`;
-  if (pathParams.length > 0) {
+  if (paramGroups.path.length > 0) {
     // we have path params that need to have their segments replaced with the param values
     body += `${indent.get()}let mut path = String::from(${path});\n`;
-    for (const pathParam of pathParams) {
+    for (const pathParam of paramGroups.path) {
       body += `${indent.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(pathParam)});\n`;
     }
     path = '&path';
@@ -390,9 +418,9 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
 
   body += `${indent.get()}url.set_path(${path});\n`;
 
-  for (const queryParam of queryParams) {
+  for (const queryParam of paramGroups.query) {
     if (queryParam.kind === 'queryCollection' && queryParam.format === 'multi') {
-      body += getParamValueHelper(queryParam, () => {
+      body += getParamValueHelper(indent, queryParam, () => {
         const valueVar = queryParam.name[0];
         let text = `${indent.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
         text += `${indent.push().get()}url.query_pairs_mut().append_pair("${queryParam.key}", ${valueVar});\n`;
@@ -400,32 +428,39 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
         return text;
       });
     } else {
-      body += getParamValueHelper(queryParam, () => {
+      body += getParamValueHelper(indent, queryParam, () => {
         return `${indent.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(queryParam)});\n`;
       });
     }
   }
 
-  body += `${indent.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
+  return body;
+}
 
-  for (const headerParam of headerParams) {
-    body += getParamValueHelper(headerParam, () => {
+// emits the code for building the HTTP request.
+// assumes that there's a local var 'url' which is the Url.
+// creates a mutable local 'request' which is the Request instance.
+function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups): string {
+  let body = `${indent.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
+
+  for (const headerParam of paramGroups.header) {
+    body += getParamValueHelper(indent, headerParam, () => {
       return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(headerParam)});\n`;
     });
   }
 
-  const bodyParam = getBodyParameter(method);
+  const bodyParam = paramGroups.body;
   if (bodyParam) {
-    body += getParamValueHelper(bodyParam, () => {
+    body += getParamValueHelper(indent, bodyParam, () => {
       return `${indent.get()}request.set_body(${bodyParam.name});\n`;
     });
-  } else if (partialBodyParams.length > 0) {
+  } else if (paramGroups.partialBody.length > 0) {
     // all partial body params should point to the same underlying model type.
-    const requestContentType = partialBodyParams[0].type;
+    const requestContentType = paramGroups.partialBody[0].type;
     use.addForType(requestContentType);
     body += `${indent.get()}let body: ${helpers.getTypeDeclaration(requestContentType)} = ${requestContentType.type.name} {\n`;
     indent.push();
-    for (const partialBodyParam of partialBodyParams) {
+    for (const partialBodyParam of paramGroups.partialBody) {
       if (partialBodyParam.type.type !== requestContentType.type) {
         throw new Error(`spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.type.name}, expected model type ${requestContentType.type.name}`);
       }
@@ -442,21 +477,20 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
     body += `${indent.get()}request.set_body(body);\n`;
   }
 
-  body += `${indent.get()}self.pipeline.send(&mut ctx, &mut request).await\n`;
   return body;
 }
 
-function getBodyParameter(method: rust.AsyncMethod): rust.BodyParameter | undefined {
-  let bodyParam: rust.BodyParameter | undefined;
-  for (const param of method.params) {
-    if (param.kind === 'body') {
-      if (bodyParam) {
-        throw new Error(`method ${method.name} has multiple body parameters`);
-      }
-      bodyParam = param;
-    }
-  }
-  return bodyParam;
+function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
+  use.addTypes('azure_core', ['AsClientMethodOptions', 'Method', 'Request']);
+  let body = 'let options = options.unwrap_or_default();\n';
+  body += `${indent.get()}let mut ctx = options.method_options.context();\n`;
+  body += `${indent.get()}let mut url = self.${getEndpointFieldName(client)}.clone();\n`;
+
+  const paramGroups = getMethodParamGroup(method);
+  body += constructUrl(indent, method, paramGroups);
+  body += constructRequest(indent, use, method, paramGroups);
+  body += `${indent.get()}self.pipeline.send(&mut ctx, &mut request).await\n`;
+  return body;
 }
 
 function getHeaderPathQueryParamValue(param: HeaderParamType | rust.PathParameter | QueryParamType): string {
