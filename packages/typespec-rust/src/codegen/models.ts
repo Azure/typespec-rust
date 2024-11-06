@@ -26,7 +26,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
   use.addTypes('serde', ['Deserialize', 'Serialize']);
   use.addType('azure_core', 'Model');
 
-  const indentation = new helpers.indentation();
+  const indent = new helpers.indentation();
 
   let body = '';
   for (const model of crate.models) {
@@ -55,9 +55,9 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
       }
 
       if (serdeParams.length > 0) {
-        body += `${indentation.get()}#[serde(${serdeParams.join(', ')})]\n`;
+        body += `${indent.get()}#[serde(${serdeParams.join(', ')})]\n`;
       }
-      body += `${indentation.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
+      body += `${indent.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
     }
 
     body += '}\n\n';

@@ -18,7 +18,7 @@ export function emitEnums(crate: rust.Crate, context: Context): string {
   // note that create_extensible_enum uses create_enum, so it will always be used
   use.addType('typespec_client_core', 'create_enum');
 
-  const indentation = new helpers.indentation();
+  const indent = new helpers.indentation();
 
   let body = '';
   for (const rustEnum of crate.enums) {
@@ -31,19 +31,19 @@ export function emitEnums(crate: rust.Crate, context: Context): string {
     body += `${enumType}!(\n`;
     const docs = helpers.formatDocComment(rustEnum.docs);
     if (docs.length > 0) {
-      body += `${indentation.get()}#[doc = r#"${docs}"#]\n`;
+      body += `${indent.get()}#[doc = r#"${docs}"#]\n`;
     }
-    body += `${indentation.get()}${rustEnum.name},\n`;
+    body += `${indent.get()}${rustEnum.name},\n`;
 
     for (let i = 0; i < rustEnum.values.length; ++i) {
       const value = rustEnum.values[i];
       const docs = helpers.formatDocComment(value.docs);
       if (docs.length > 0) {
-        body += `${indentation.get()}#[doc = r#"${docs}"#]\n`;
+        body += `${indent.get()}#[doc = r#"${docs}"#]\n`;
       }
       // TODO: hard-coded String type
       // https://github.com/Azure/typespec-rust/issues/25
-      body += `${indentation.get()}(${value.name}, "${value.value}")`;
+      body += `${indent.get()}(${value.name}, "${value.value}")`;
       if (i + 1 < rustEnum.values.length) {
         body += ',';
       }

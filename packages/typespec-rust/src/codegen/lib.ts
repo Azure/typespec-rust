@@ -22,14 +22,14 @@ export function emitLib(crate: rust.Crate): string {
     content += 'pub mod models {\n';
   }
 
-  const indentation = new helpers.indentation();
+  const indent = new helpers.indentation();
 
   if (crate.enums.length > 0) {
-    content += `${indentation.get()}pub use crate::generated::enums::*;\n`;
+    content += `${indent.get()}pub use crate::generated::enums::*;\n`;
   }
 
   if (crate.models.length > 0) {
-    content += `${indentation.get()}pub use crate::generated::models::*;\n`;
+    content += `${indent.get()}pub use crate::generated::models::*;\n`;
   }
 
   if (closeModels) {

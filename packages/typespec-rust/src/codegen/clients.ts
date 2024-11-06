@@ -26,7 +26,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
   // emit the clients, one file per client
   for (const client of crate.clients) {
     const use = new Use();
-    const indentation = new helpers.indentation();
+    const indent = new helpers.indentation();
 
     let pubInClients = '';
     if (!client.constructable) {
@@ -37,10 +37,10 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
     let body = `pub struct ${client.name} {\n`;
     for (const field of client.fields) {
       use.addForType(field.type);
-      body += `${indentation.get()}${pubInClients}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+      body += `${indent.get()}${pubInClients}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
     }
     use.addType('azure_core', 'Pipeline');
-    body += `${indentation.get()}${pubInClients}pipeline: Pipeline,\n`;
+    body += `${indent.get()}${pubInClients}pipeline: Pipeline,\n`;
     body += '}\n\n'; // end client
 
     if (client.constructable) {
@@ -50,7 +50,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
         body += ' {\n';
         for (const field of client.constructable.options.type.fields) {
           use.addForType(field.type);
-          body += `${indentation.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+          body += `${indent.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
         }
         body += '}\n\n'; // end client options
       } else {
@@ -66,35 +66,35 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
 
       for (let i = 0; i < client.constructable.constructors.length; ++i) {
         const constructor = client.constructable.constructors[i];
-        body += `${indentation.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.parameters, client.constructable.options, use)}) -> Result<Self> {\n`;
+        body += `${indent.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.parameters, client.constructable.options, use)}) -> Result<Self> {\n`;
         // by convention, the endpoint param is always the first ctor param
         const endpointParamName = constructor.parameters[0].name;
-        body += `${indentation.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName}.as_ref())?;\n`;
-        body += `${indentation.get()}${endpointParamName}.query_pairs_mut().clear();\n`;
+        body += `${indent.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName}.as_ref())?;\n`;
+        body += `${indent.get()}${endpointParamName}.query_pairs_mut().clear();\n`;
         // if there's a credential param, create the necessary auth policy
         const authPolicy = getAuthPolicy(constructor, use);
         if (authPolicy) {
-          body += `${indentation.get()}${authPolicy}\n`;
+          body += `${indent.get()}${authPolicy}\n`;
         }
-        body += `${indentation.get()}let options = options.unwrap_or_default();\n`;
-        body += `${indentation.get()}Ok(Self {\n`;
+        body += `${indent.get()}let options = options.unwrap_or_default();\n`;
+        body += `${indent.get()}Ok(Self {\n`;
 
         // propagate any client option fields to the client initializer
-        indentation.push();
+        indent.push();
         for (const field of getClientOptionsFields(client.constructable.options)) {
-          body += `${indentation.get()}${field.name}: options.${field.name},\n`;
+          body += `${indent.get()}${field.name}: options.${field.name},\n`;
         }
 
-        body += `${indentation.get()}${endpointParamName},\n`;
-        body += `${indentation.get()}pipeline: Pipeline::new(\n`;
-        body += `${indentation.push().get()}option_env!("CARGO_PKG_NAME"),\n`;
-        body += `${indentation.get()}option_env!("CARGO_PKG_VERSION"),\n`;
-        body += `${indentation.get()}options.client_options,\n`;
-        body += `${indentation.get()}Vec::default(),\n`;
-        body += `${indentation.get()}${authPolicy ? 'vec![auth_policy]' : 'Vec::default()'},\n`;
-        body += `${indentation.pop().get()}),\n`; // end Pipeline::new
-        body += `${indentation.pop().get()}})\n`; // end Ok
-        body += `${indentation.pop().get()}}\n`; // end constructor
+        body += `${indent.get()}${endpointParamName},\n`;
+        body += `${indent.get()}pipeline: Pipeline::new(\n`;
+        body += `${indent.push().get()}option_env!("CARGO_PKG_NAME"),\n`;
+        body += `${indent.get()}option_env!("CARGO_PKG_VERSION"),\n`;
+        body += `${indent.get()}options.client_options,\n`;
+        body += `${indent.get()}Vec::default(),\n`;
+        body += `${indent.get()}${authPolicy ? 'vec![auth_policy]' : 'Vec::default()'},\n`;
+        body += `${indent.pop().get()}),\n`; // end Pipeline::new
+        body += `${indent.pop().get()}})\n`; // end Ok
+        body += `${indent.pop().get()}}\n`; // end constructor
 
         // ensure extra new-line between ctors and/or client methods
         if (i + 1 < client.constructable.constructors.length || client.methods.length > 0) {
@@ -127,10 +127,10 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
           };
           break;
       }
-      body += `${indentation.get()}${helpers.formatDocComment(method.docs)}`;
-      body += `${indentation.get()}${helpers.emitPub(method.pub)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
-      body += `${indentation.push().get()}${methodBody(indentation)}\n`;
-      body += `${indentation.pop().get()}}\n`; // end method
+      body += `${indent.get()}${helpers.formatDocComment(method.docs)}`;
+      body += `${indent.get()}${helpers.emitPub(method.pub)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
+      body += `${indent.push().get()}${methodBody(indent)}\n`;
+      body += `${indent.pop().get()}}\n`; // end method
       if (i + 1 < client.methods.length) {
         body += '\n';
       }
@@ -142,17 +142,17 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       // emit default trait impl for client options type
       const clientOptionsType = client.constructable.options;
       body += `impl Default for ${clientOptionsType.type.name} {\n`;
-      body += `${indentation.get()}fn default() -> Self {\n`;
-      body += `${indentation.push().get()}Self {\n`;
-      indentation.push();
+      body += `${indent.get()}fn default() -> Self {\n`;
+      body += `${indent.push().get()}Self {\n`;
+      indent.push();
       for (const field of clientOptionsType.type.fields) {
         if (!field.defaultValue) {
           throw new Error(`missing default value for struct field ${clientOptionsType.type.name}.${field.name}`);
         }
-        body += `${indentation.get()}${field.name}: ${field.defaultValue},\n`;
+        body += `${indent.get()}${field.name}: ${field.defaultValue},\n`;
       }
-      body += `${indentation.pop().get()}}\n`;
-      body += `${indentation.pop().get()}}\n`;
+      body += `${indent.pop().get()}}\n`;
+      body += `${indent.pop().get()}}\n`;
       body += '}\n\n'; // end impl
     }
 
@@ -167,7 +167,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       body += `${helpers.emitPub(method.pub)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
       for (const field of method.options.type.fields) {
         use.addForType(field.type);
-        body += `${indentation.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+        body += `${indent.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
       }
       body += '}\n\n'; // end options
 
@@ -318,24 +318,24 @@ function getEndpointFieldName(client: rust.Client): string {
   return endpointFieldName;
 }
 
-function getClientAccessorMethodBody(indentation: helpers.indentation, clientAccessor: rust.ClientAccessor): string {
+function getClientAccessorMethodBody(indent: helpers.indentation, clientAccessor: rust.ClientAccessor): string {
   let body = `${clientAccessor.returns.name} {\n`;
   const endpointFieldName = getEndpointFieldName(clientAccessor.returns);
-  body += `${indentation.push().get()}${endpointFieldName}: self.${endpointFieldName}.clone(),\n`;
-  body += `${indentation.get()}pipeline: self.pipeline.clone(),\n`;
-  body += `${indentation.pop().get()}}`;
+  body += `${indent.push().get()}${endpointFieldName}: self.${endpointFieldName}.clone(),\n`;
+  body += `${indent.get()}pipeline: self.pipeline.clone(),\n`;
+  body += `${indent.pop().get()}}`;
   return body;
 }
 
 type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderParameter;
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryParameter;
 
-function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
+function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
   use.addTypes('azure_core', ['AsClientMethodOptions', 'Method', 'Request']);
   const unwrappedOptionsVarName = 'options';
   let body = `let ${unwrappedOptionsVarName} = options.unwrap_or_default();\n`;
-  body += `${indentation.get()}let mut ctx = options.method_options.context();\n`;
-  body += `${indentation.get()}let mut url = self.${getEndpointFieldName(client)}.clone();\n`;
+  body += `${indent.get()}let mut ctx = options.method_options.context();\n`;
+  body += `${indent.get()}let mut url = self.${getEndpointFieldName(client)}.clone();\n`;
 
   // collect and sort all the header/path/query params
   const headerParams = new Array<HeaderParamType>();
@@ -369,7 +369,7 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
   const getParamValueHelper = function(param: rust.MethodParameter, setter: () => string): string {
     if (param.optional) {
       // optional params are in the unwrapped options local var
-      const op = helpers.buildIfBlock(indentation, {
+      const op = helpers.buildIfBlock(indent, {
         condition: `let Some(${param.name}) = ${unwrappedOptionsVarName}.${param.name}`,
         body: setter,
       });
@@ -381,50 +381,50 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
   let path = `"${method.httpPath}"`;
   if (pathParams.length > 0) {
     // we have path params that need to have their segments replaced with the param values
-    body += `${indentation.get()}let mut path = String::from(${path});\n`;
+    body += `${indent.get()}let mut path = String::from(${path});\n`;
     for (const pathParam of pathParams) {
-      body += `${indentation.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(pathParam)});\n`;
+      body += `${indent.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(pathParam)});\n`;
     }
     path = '&path';
   }
 
-  body += `${indentation.get()}url.set_path(${path});\n`;
+  body += `${indent.get()}url.set_path(${path});\n`;
 
   for (const queryParam of queryParams) {
     if (queryParam.kind === 'queryCollection' && queryParam.format === 'multi') {
       body += getParamValueHelper(queryParam, () => {
         const valueVar = queryParam.name[0];
-        let text = `${indentation.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
-        text += `${indentation.push().get()}url.query_pairs_mut().append_pair("${queryParam.key}", ${valueVar});\n`;
-        text += `${indentation.pop().get()}}\n`;
+        let text = `${indent.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
+        text += `${indent.push().get()}url.query_pairs_mut().append_pair("${queryParam.key}", ${valueVar});\n`;
+        text += `${indent.pop().get()}}\n`;
         return text;
       });
     } else {
       body += getParamValueHelper(queryParam, () => {
-        return `${indentation.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(queryParam)});\n`;
+        return `${indent.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(queryParam)});\n`;
       });
     }
   }
 
-  body += `${indentation.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
+  body += `${indent.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
 
   for (const headerParam of headerParams) {
     body += getParamValueHelper(headerParam, () => {
-      return `${indentation.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(headerParam)});\n`;
+      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(headerParam)});\n`;
     });
   }
 
   const bodyParam = getBodyParameter(method);
   if (bodyParam) {
     body += getParamValueHelper(bodyParam, () => {
-      return `${indentation.get()}request.set_body(${bodyParam.name});\n`;
+      return `${indent.get()}request.set_body(${bodyParam.name});\n`;
     });
   } else if (partialBodyParams.length > 0) {
     // all partial body params should point to the same underlying model type.
     const requestContentType = partialBodyParams[0].type;
     use.addForType(requestContentType);
-    body += `${indentation.get()}let body: ${helpers.getTypeDeclaration(requestContentType)} = ${requestContentType.type.name} {\n`;
-    indentation.push();
+    body += `${indent.get()}let body: ${helpers.getTypeDeclaration(requestContentType)} = ${requestContentType.type.name} {\n`;
+    indent.push();
     for (const partialBodyParam of partialBodyParams) {
       if (partialBodyParam.type.type !== requestContentType.type) {
         throw new Error(`spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.type.name}, expected model type ${requestContentType.type.name}`);
@@ -436,13 +436,13 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
         // spread param maps to a non-internal model, so it must be wrapped in Some()
         initializer = `${partialBodyParam.name}: Some(${partialBodyParam.name})`;
       }
-      body += `${indentation.get()}${initializer},\n`;
+      body += `${indent.get()}${initializer},\n`;
     }
-    body += `${indentation.pop().get()}}.try_into()?;\n`;
-    body += `${indentation.get()}request.set_body(body);\n`;
+    body += `${indent.pop().get()}}.try_into()?;\n`;
+    body += `${indent.get()}request.set_body(body);\n`;
   }
 
-  body += `${indentation.get()}self.pipeline.send(&mut ctx, &mut request).await\n`;
+  body += `${indent.get()}self.pipeline.send(&mut ctx, &mut request).await\n`;
   return body;
 }
 
