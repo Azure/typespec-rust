@@ -150,3 +150,36 @@ export function sortAscending(a: string, b: string): number {
 export function getGenericLifetimeAnnotation(lifetime: rust.Lifetime): string {
   return `<${lifetime.name}>`;
 }
+
+// the if condition in an if block
+export interface ifBlock {
+  condition: string;
+  body: (indent: indentation) => string;
+}
+
+// constructs an if block (can expand to include else if/else as necessary)
+export function buildIfBlock(indent: indentation, ifBlock: ifBlock): string {
+  let body = `${indent.get()}if ${ifBlock.condition} {\n`;
+  body += ifBlock.body(indent.push());
+  body += `${indent.pop().get()}}\n`;
+  return body;
+}
+
+// an arm in a match expression
+export interface matchArm {
+  pattern: string;
+  body: (indent: indentation) => string;
+}
+
+// constructs a match expression at the provided indentation level
+export function buildMatch(indent: indentation, expr: string, arms: Array<matchArm>): string {
+  let match = `${indent.get()}match ${expr} {\n`;
+  indent.push();
+  for (const arm of arms) {
+    match += `${indent.get()}${arm.pattern} => {\n`;
+    match += arm.body(indent.push());
+    match += `${indent.pop().get()}}\n`;
+  }
+  match += `${indent.pop().get()}};\n`;
+  return match;
+}

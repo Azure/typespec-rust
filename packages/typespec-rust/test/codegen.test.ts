@@ -68,5 +68,46 @@ describe('typespec-rust: codegen', () => {
       strictEqual(indentation.pop().get(), '    ');
       strictEqual(indentation.get(), '    ');
     });
+
+    it('buildIfBlock', async () => {
+      const indent = new helpers.indentation();
+      const ifblock = helpers.buildIfBlock(indent, {
+        condition: 'foo == bar',
+        body: (indent) => { return `${indent.get()}bing = bong;\n`; }
+      });
+      const expected =
+      '    if foo == bar {\n' +
+      '        bing = bong;\n' +
+      '    }\n';
+      strictEqual(ifblock, expected);
+    });
+
+    it('buildMatch', async () => {
+      const indent = new helpers.indentation();
+      const match = helpers.buildMatch(indent, 'cond', [
+        {
+          pattern: 'Some(foo)',
+          body: (ind) => {
+            return `${ind.get()}if foo == bar {\n${ind.push().get()}bing = bong;\n${ind.pop().get()}}\n`;
+          }
+        },
+        {
+          pattern: 'None',
+          body: (ind) => { return `${ind.get()}the none branch;\n`; }
+        }
+      ]);
+      const expected =
+      '    match cond {\n' +
+      '        Some(foo) => {\n' +
+      '            if foo == bar {\n' +
+      '                bing = bong;\n' +
+      '            }\n' +
+      '        }\n' +
+      '        None => {\n' +
+      '            the none branch;\n' +
+      '        }\n' +
+      '    };\n';
+      strictEqual(match, expected);
+    });
   });
 });

@@ -369,10 +369,10 @@ function getAsyncMethodBody(indentation: helpers.indentation, use: Use, client: 
   const getParamValueHelper = function(param: rust.MethodParameter, setter: () => string): string {
     if (param.optional) {
       // optional params are in the unwrapped options local var
-      let op = `${indentation.get()}if let Some(${param.name}) = ${unwrappedOptionsVarName}.${param.name} {\n`;
-      indentation.push();
-      op += setter();
-      op += `${indentation.pop().get()}}\n`;
+      const op = helpers.buildIfBlock(indentation, {
+        condition: `let Some(${param.name}) = ${unwrappedOptionsVarName}.${param.name}`,
+        body: setter,
+      });
       return op;
     }
     return setter();
