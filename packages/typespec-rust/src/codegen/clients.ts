@@ -175,7 +175,6 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       body += '}\n\n'; // end options
 
       if (method.kind === 'pageable') {
-        // we need to implement the ToOwned trait for pageable method's client options
         body += `impl${getLifetimeAnnotation(method.options.type)} ${helpers.getTypeDeclaration(method.options.type)} {\n`;
         body += `${indent.get()}pub fn into_owned(self) -> ${method.options.type.name}<'static> {\n`;
         body += `${indent.push().get()}${method.options.type.name} {\n`;
