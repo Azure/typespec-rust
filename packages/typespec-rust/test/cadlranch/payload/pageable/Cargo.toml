@@ -1,5 +1,5 @@
 [package]
-name = "keyvault_secrets"
+name = "cadl_pageable"
 version = "0.1.0"
 authors.workspace = true
 edition.workspace = true
@@ -13,5 +13,4 @@ azure_core = { workspace = true }
 futures = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-time = { workspace = true }
 typespec_client_core = { workspace = true }

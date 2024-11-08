@@ -105,8 +105,8 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
 
     for (let i = 0; i < client.methods.length; ++i) {
       const method = client.methods[i];
-      let returnType: string;
-      let async = 'async ';
+      const returnType = helpers.getTypeDeclaration(method.returns);
+      let async = '';
       // NOTE: when methodBody is called, the starting indentation
       // will be correct for the current scope, so there's no need
       // for the callee to indent right away.
@@ -114,14 +114,17 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
       use.addForType(method.returns);
       switch (method.kind) {
         case 'async':
-          returnType = helpers.getTypeDeclaration(method.returns);
+          async = 'async ';
           methodBody = (indentation: helpers.indentation): string => {
             return getAsyncMethodBody(indentation, use, client, method);
           };
           break;
+        case 'pageable':
+          methodBody = (indentation: helpers.indentation): string => {
+            return getPageableMethodBody(indentation, use, client, method);
+          };
+          break;
         case 'clientaccessor':
-          async = '';
-          returnType = method.returns.name;
           methodBody = (indentation: helpers.indentation): string => {
             return getClientAccessorMethodBody(indentation, method);
           };
@@ -170,6 +173,26 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
         body += `${indent.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
       }
       body += '}\n\n'; // end options
+
+      if (method.kind === 'pageable') {
+        // we need to implement the ToOwned trait for pageable method's client options
+        body += `impl${getLifetimeAnnotation(method.options.type)} ${helpers.getTypeDeclaration(method.options.type)} {\n`;
+        body += `${indent.get()}pub fn into_owned(self) -> ${method.options.type.name}<'static> {\n`;
+        body += `${indent.push().get()}${method.options.type.name} {\n`;
+        indent.push();
+        for (const field of method.options.type.fields) {
+          if (field.type.kind === 'external' && field.type.name === 'ClientMethodOptions') {
+            body += `${indent.get()}${field.name}: ClientMethodOptions {\n`;
+            body += `${indent.push().get()}context: self.${field.name}.context.into_owned(),\n`;
+            body += `${indent.pop().get()}},\n`;
+            continue;
+          }
+          body += `${indent.get()}${field.name}: self.${field.name},\n`;
+        }
+        body += `${indent.pop().get()}}\n`;
+        body += `${indent.pop().get()}}\n`;
+        body += '}\n';
+      }
 
       if (i + 1 < client.methods.length) {
         body += '\n';
@@ -327,7 +350,7 @@ function getClientAccessorMethodBody(indent: helpers.indentation, clientAccessor
   return body;
 }
 
-type ClientMethod = rust.AsyncMethod;
+type ClientMethod = rust.AsyncMethod | rust.PageableMethod;
 type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderParameter;
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryParameter;
 
@@ -393,25 +416,25 @@ function getMethodParamGroup(method: ClientMethod): methodParamGroups {
 function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, setter: () => string): string {
   if (param.optional) {
     // optional params are in the unwrapped options local var
-    const op = helpers.buildIfBlock(indent, {
+    const op = indent.get() + helpers.buildIfBlock(indent, {
       condition: `let Some(${param.name}) = options.${param.name}`,
       body: setter,
     });
-    return op;
+    return op + '\n';
   }
   return setter();
 }
 
 // emits the code for building the request URL.
 // assumes that there's a mutable local var 'url'
-function constructUrl(indent: helpers.indentation, method: ClientMethod, paramGroups: methodParamGroups): string {
+function constructUrl(indent: helpers.indentation, method: ClientMethod, paramGroups: methodParamGroups, fromSelf = true): string {
   let body = '';
   let path = `"${method.httpPath}"`;
   if (paramGroups.path.length > 0) {
     // we have path params that need to have their segments replaced with the param values
     body += `${indent.get()}let mut path = String::from(${path});\n`;
     for (const pathParam of paramGroups.path) {
-      body += `${indent.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(pathParam)});\n`;
+      body += `${indent.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(pathParam, fromSelf)});\n`;
     }
     path = '&path';
   }
@@ -429,7 +452,7 @@ function constructUrl(indent: helpers.indentation, method: ClientMethod, paramGr
       });
     } else {
       body += getParamValueHelper(indent, queryParam, () => {
-        return `${indent.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(queryParam)});\n`;
+        return `${indent.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(queryParam, fromSelf)});\n`;
       });
     }
   }
@@ -440,12 +463,12 @@ function constructUrl(indent: helpers.indentation, method: ClientMethod, paramGr
 // emits the code for building the HTTP request.
 // assumes that there's a local var 'url' which is the Url.
 // creates a mutable local 'request' which is the Request instance.
-function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups): string {
+function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, fromSelf = true): string {
   let body = `${indent.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
 
   for (const headerParam of paramGroups.header) {
     body += getParamValueHelper(indent, headerParam, () => {
-      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(headerParam)});\n`;
+      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(headerParam, fromSelf)});\n`;
     });
   }
 
@@ -493,9 +516,78 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   return body;
 }
 
-function getHeaderPathQueryParamValue(param: HeaderParamType | rust.PathParameter | QueryParamType): string {
+function getPageableMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.PageableMethod): string {
+  if (!method.nextLinkName) {
+    throw new Error('paged responses other than nextLink format NYI');
+  }
+
+  use.addTypes('azure_core', ['Method', 'Pager', 'Request', 'Response', 'Result', 'Url']);
+  use.addType('typespec_client_core::http', 'PagerResult');
+  use.addType('typespec_client_core', 'json');
+  use.addForType(method.returns.type.type);
+
+  const paramGroups = getMethodParamGroup(method);
+
+  let body = 'let options = options.unwrap_or_default().into_owned();\n';
+  body += `${indent.get()}let endpoint = self.${getEndpointFieldName(client)}.clone();\n`;
+  body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
+  // clone any other client params
+  for (const param of method.params) {
+    if (param.location === 'client') {
+      body += `${indent.get()}let ${param.name} = self.${param.name}.clone();\n`;
+    }
+  }
+  body += `${indent.get()}Ok(Pager::from_callback(move |${method.nextLinkName}: Option<Url>| {\n`;
+  body += `${indent.push().get()}let mut url: Url;\n`;
+
+  body += indent.get() + helpers.buildMatch(indent, method.nextLinkName, [{
+    pattern: `Some(${method.nextLinkName})`,
+    body: (indent) => `${indent.get()}url = ${method.nextLinkName};\n`
+  }, {
+    pattern: 'None',
+    body: (indent) => {
+      let none = `${indent.get()}url = endpoint.clone();\n`;
+      none += constructUrl(indent, method, paramGroups, false);
+      return none;
+    }
+  }]);
+  body += ';\n';
+
+  // here we want the T in Pager<T>
+  const returnType = helpers.getTypeDeclaration(method.returns.type.type);
+
+  body += constructRequest(indent, use, method, paramGroups, false);
+  body += `${indent.get()}let mut ctx = options.method_options.context.clone();\n`;
+  body += `${indent.get()}let pipeline = pipeline.clone();\n`;
+  body += `${indent.get()}async move {\n`;
+  body += `${indent.push().get()}let rsp: Response<${returnType}> = pipeline.send(&mut ctx, &mut request).await?;\n`;
+  body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
+  body += `${indent.get()}let bytes = body.collect().await?;\n`;
+  body += `${indent.get()}let res: ${returnType} = json::from_json(bytes.clone())?;\n`;
+  body += `${indent.get()}let rsp = Response::from_bytes(status, headers, bytes);\n`;
+
+  body += `${indent.get()}Ok(${helpers.buildMatch(indent, `res.${method.nextLinkName}`, [{
+    pattern: `Some(${method.nextLinkName})`,
+    returns: 'PagerResult::Continue',
+    body: (indent) => `${indent.get()}response: (rsp),\n${indent.get()}continuation: (${method.nextLinkName}),\n`
+  }, {
+    pattern: 'None',
+    returns: 'PagerResult::Complete',
+    body: () => `${indent.get()}response: (rsp),\n`
+  }])}`;
+  body += ')\n'; // end Ok
+  body += `${indent.pop().get()}}\n`; // end async move
+  body += `${indent.pop().get()}}))`; // end Ok/Pager::from_callback
+
+  return body;
+}
+
+function getHeaderPathQueryParamValue(param: HeaderParamType | rust.PathParameter | QueryParamType, fromSelf = true): string {
   let paramName = '';
-  if (param.location === 'client') {
+  // when fromSelf is false we assume that there's a local with the same name.
+  // e.g. in pageable methods where we need to clone the params so they can be
+  // passed to a future that can outlive the calling method.
+  if (param.location === 'client' && fromSelf) {
     paramName = 'self.';
   }
 
@@ -544,4 +636,11 @@ function getCollectionDelimiter(format: rust.CollectionFormat): string {
     default:
       throw new Error(`unhandled collection format ${format}`);
   }
+}
+
+function getLifetimeAnnotation(type: rust.Struct): string {
+  if (type.lifetime) {
+    return `${helpers.getGenericLifetimeAnnotation(type.lifetime)}`;
+  }
+  return '';
 }

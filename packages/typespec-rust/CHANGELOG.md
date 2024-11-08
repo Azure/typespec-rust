@@ -18,6 +18,7 @@
 * Models now derive `typespec_client_core::Model`.
 * Added support for binary responses.
 * Added support for TypeSpec spread parameters.
+* Added support for pageable methods.
 
 ### Other Changes
 

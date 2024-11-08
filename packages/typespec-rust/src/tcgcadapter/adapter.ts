@@ -58,6 +58,22 @@ export class Adapter {
       this.crate.addDependency(new rust.CrateDependency('async-std'));
     }
 
+    // TODO: remove once https://github.com/Azure/typespec-rust/issues/22 is fixed
+    for (const client of this.crate.clients) {
+      let done = false;
+      for (const method of client.methods) {
+        if (method.kind === 'pageable') {
+          this.crate.addDependency(new rust.CrateDependency('futures'));
+          done = true;
+          break;
+        }
+      }
+      if (done) {
+        break;
+      }
+    }
+    // end TODO
+
     this.crate.sortContent();
     return this.crate;
   }
@@ -475,7 +491,7 @@ export class Adapter {
 
   // converts method into a rust.Method for the specified rust.Client
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
-    let rustMethod: rust.AsyncMethod;
+    let rustMethod: rust.MethodType;
     const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(method.name)}Options`, true);
     methodOptionsStruct.lifetime = optionsLifetime;
@@ -484,16 +500,30 @@ export class Adapter {
     clientMethodOptions.lifetime = optionsLifetime;
     methodOptionsStruct.fields.push(new rust.StructField('method_options', true, clientMethodOptions));
 
+    const methodName = naming.getEscapedReservedName(snakeCaseName(method.name), 'fn');
+    const pub = method.access === 'public';
+    const methodOptions = new rust.MethodOptions(methodOptionsStruct);
     const httpMethod = method.operation.verb;
     const httpPath = method.operation.path;
 
     switch (method.kind) {
       case 'basic':
-        rustMethod = new rust.AsyncMethod(naming.getEscapedReservedName(snakeCaseName(method.name), 'fn'), rustClient, method.access === 'public', new rust.MethodOptions(methodOptionsStruct), httpMethod, httpPath);
+        rustMethod = new rust.AsyncMethod(methodName, rustClient, pub, methodOptions, httpMethod, httpPath);
         break;
       case 'paging':
-        // TODO: https://github.com/Azure/typespec-rust/issues/60
-        return;
+        rustMethod = new rust.PageableMethod(methodName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        if (method.nextLinkOperation) {
+          // TODO: https://github.com/Azure/autorest.rust/issues/103
+          throw new Error('next page operation NYI');
+        } else if (method.nextLinkPath) {
+          // this is the name of the field in the response type that contains the next link URL
+          if (method.nextLinkPath.indexOf('.') > 0) {
+            // TODO: https://github.com/Azure/autorest.rust/issues/102
+            throw new Error('nested next link path NYI');
+          }
+          (<rust.PageableMethod>rustMethod).nextLinkName = naming.getEscapedReservedName(snakeCaseName(method.nextLinkPath), 'prop');
+        }
+        break;
       default:
         throw new Error(`method kind ${method.kind} NYI`);
     }
@@ -570,22 +600,43 @@ export class Adapter {
       }
     }
 
-    let returnType: rust.Type;
-    if (method.response.type) {
-      // search the HTTP responses for the corresponding type so we can determine the wire format
-      let format: rust.BodyFormat | undefined;
-      for (const httpResp of method.operation.responses.values()) {
-        if (!httpResp.type || !httpResp.defaultContentType || httpResp.type.kind !== method.response.type.kind) {
-          continue;
+    const getBodyFormat = (): rust.BodyFormat => {
+      // fetch the body format from the HTTP responses.
+      // they should all have the same type so no need to match responses to type.
+      let defaultContentType: string | undefined;
+      for (const httpResp of method.operation.responses) {
+        if (defaultContentType && httpResp.defaultContentType && defaultContentType !== httpResp.defaultContentType) {
+          throw new Error(`method ${method.name} has conflicting content types`);
         }
-        format = this.adaptBodyFormat(httpResp.defaultContentType);
-        break;
+        defaultContentType = httpResp.defaultContentType;
       }
 
-      if (!format) {
-        throw new Error(`didn't find HTTP response for kind ${method.response.type.kind} in method ${method.name}`);
+      if (!defaultContentType) {
+        throw new Error(`unable to determine content type for method ${method.name}`);
       }
 
+      return this.adaptBodyFormat(defaultContentType);
+    };
+
+    let returnType: rust.Type;
+    if (method.kind === 'paging') {
+      // for paged methods, tcgc models method.response.type as an Array<T>.
+      // however, we want the synthesized paged response envelope type instead.
+      const synthesizedType = method.operation.responses[0].type;
+      if (!synthesizedType) {
+        throw new Error(`paged method ${method.name} has no synthesized response type`);
+      } else if (synthesizedType.kind !== 'model') {
+        throw new Error(`paged method ${method.name} synthesized response type has unexpected kind ${synthesizedType.kind}`);
+      }
+
+      const format = getBodyFormat();
+      const synthesizedModel = this.getModel(synthesizedType);
+      if (!this.crate.models.includes(synthesizedModel)) {
+        this.crate.models.push(synthesizedModel);
+      }
+      returnType = new rust.Pager(this.crate, synthesizedModel, format);
+    } else if (method.response.type) {
+      const format = getBodyFormat();
       // until https://github.com/Azure/typespec-azure/issues/614 is resolved
       // we have to look at the format to determine if the response is a streaming
       // binary response. at present, it's represented as a base-64 encoded byte

@@ -74,7 +74,7 @@ export interface ClientParameter {
 export type HTTPMethod = 'delete' | 'get' | 'head' | 'patch' | 'post' | 'put';
 
 // Method defines the possible method types
-export type MethodType = AsyncMethod | ClientAccessor;
+export type MethodType = AsyncMethod | ClientAccessor | PageableMethod;
 
 // AsyncMethod is an async Rust method
 export interface AsyncMethod extends HTTPMethodBase {
@@ -90,6 +90,20 @@ export interface ClientAccessor extends method.Method<Client> {
 
   // the client returned by the accessor method
   returns: Client;
+}
+
+// PageableMethod is a method that returns a collection of items over one or more pages.
+export interface PageableMethod extends HTTPMethodBase {
+  kind: 'pageable';
+
+  // the params passed to the method (excluding self). can be empty
+  params: Array<MethodParameter>;
+
+  // the paged result
+  returns: types.Result<types.Pager>;
+
+  // the name of the field in the response that contains the next link URL
+  nextLinkName?: string;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -339,6 +353,15 @@ export class HeaderParameter extends HTTPParameterBase implements HeaderParamete
 export class MethodOptions extends types.Option implements MethodOptions {
   constructor(type: types.Struct) {
     super(type);
+  }
+}
+
+export class PageableMethod extends HTTPMethodBase implements PageableMethod {
+  constructor(name: string, client: Client, pub: boolean, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+    super(name, httpMethod, httpPath, pub, client.name, new method.Self(false, true));
+    this.kind = 'pageable';
+    this.params = new Array<MethodParameter>();
+    this.options = options;
   }
 }
 

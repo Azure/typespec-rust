@@ -49,10 +49,12 @@ export function emitPub(pub: boolean): string {
 }
 
 // returns the type declaration string for the specified Rust type
-export function getTypeDeclaration(type: rust.Type, withAnonymousLifetime = false): string {
+export function getTypeDeclaration(type: rust.Client | rust.Type, withAnonymousLifetime = false): string {
   switch (type.kind) {
     case 'arc':
       return `${type.name}<dyn ${getTypeDeclaration(type.type)}>`;
+    case 'client':
+      return type.name;
     case 'encodedBytes':
       return 'Vec<u8>';
     case 'hashmap':
@@ -63,6 +65,8 @@ export function getTypeDeclaration(type: rust.Type, withAnonymousLifetime = fals
       return `${type.value}`;
     case 'option':
       return `Option<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+    case 'pager':
+      return `Pager<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'requestContent':
     case 'response':
     case 'result':
@@ -101,15 +105,19 @@ const oneIndentation = '    ';
 // helper for managing indentation levels
 export class indentation {
   private level: number;
-  constructor() {
-    // level is one-based.
-    this.level = 1;
+  constructor(level?: number) {
+    if (level !== undefined) {
+      this.level = level;
+    } else {
+      // default to one level of indentation
+      this.level = 1;
+    }
   }
 
   // returns spaces for the current indentation level
   get(): string {
-    let indent = oneIndentation;
-    for (let i = 1; i < this.level; ++i) {
+    let indent = '';
+    for (let i = 0; i < this.level; ++i) {
       indent += oneIndentation;
     }
     return indent;
@@ -124,7 +132,7 @@ export class indentation {
   // decrements the indentation level
   pop(): indentation {
     --this.level;
-    if (this.level < 1) {
+    if (this.level < 0) {
       throw new Error('indentation stack underflow');
     }
     return this;
@@ -159,27 +167,31 @@ export interface ifBlock {
 
 // constructs an if block (can expand to include else if/else as necessary)
 export function buildIfBlock(indent: indentation, ifBlock: ifBlock): string {
-  let body = `${indent.get()}if ${ifBlock.condition} {\n`;
+  let body = `if ${ifBlock.condition} {\n`;
   body += ifBlock.body(indent.push());
-  body += `${indent.pop().get()}}\n`;
+  body += `${indent.pop().get()}}`;
   return body;
 }
 
 // an arm in a match expression
 export interface matchArm {
   pattern: string;
+  returns?: string;
   body: (indent: indentation) => string;
 }
 
 // constructs a match expression at the provided indentation level
 export function buildMatch(indent: indentation, expr: string, arms: Array<matchArm>): string {
-  let match = `${indent.get()}match ${expr} {\n`;
+  let match = `match ${expr} {\n`;
   indent.push();
   for (const arm of arms) {
-    match += `${indent.get()}${arm.pattern} => {\n`;
+    match += `${indent.get()}${arm.pattern} => ${arm.returns ? arm.returns + ' ' : ''}{\n`;
     match += arm.body(indent.push());
-    match += `${indent.pop().get()}}\n`;
+    // the comma after an arm block is optional depending on the number
+    // of lines in the block. we'll always emit it and rely on cargo fmt
+    // to remove it as required.
+    match += `${indent.pop().get()}},\n`;
   }
-  match += `${indent.pop().get()}};\n`;
+  match += `${indent.pop().get()}}`;
   return match;
 }

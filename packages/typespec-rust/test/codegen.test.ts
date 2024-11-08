@@ -70,25 +70,28 @@ describe('typespec-rust: codegen', () => {
     });
 
     it('buildIfBlock', async () => {
-      const indent = new helpers.indentation();
+      const indent = new helpers.indentation(0);
       const ifblock = helpers.buildIfBlock(indent, {
         condition: 'foo == bar',
         body: (indent) => { return `${indent.get()}bing = bong;\n`; }
       });
       const expected =
-      '    if foo == bar {\n' +
-      '        bing = bong;\n' +
-      '    }\n';
+      'if foo == bar {\n' +
+      '    bing = bong;\n' +
+      '}';
       strictEqual(ifblock, expected);
     });
 
     it('buildMatch', async () => {
-      const indent = new helpers.indentation();
+      const indent = new helpers.indentation(0);
       const match = helpers.buildMatch(indent, 'cond', [
         {
           pattern: 'Some(foo)',
           body: (ind) => {
-            return `${ind.get()}if foo == bar {\n${ind.push().get()}bing = bong;\n${ind.pop().get()}}\n`;
+            return `${ind.get()}${helpers.buildIfBlock(ind, {
+              condition: 'foo == bar',
+              body: (ind) => `${ind.get()}bing = bong;\n`
+            })}\n`;
           }
         },
         {
@@ -97,16 +100,49 @@ describe('typespec-rust: codegen', () => {
         }
       ]);
       const expected =
-      '    match cond {\n' +
-      '        Some(foo) => {\n' +
-      '            if foo == bar {\n' +
-      '                bing = bong;\n' +
-      '            }\n' +
+      'match cond {\n' +
+      '    Some(foo) => {\n' +
+      '        if foo == bar {\n' +
+      '            bing = bong;\n' +
       '        }\n' +
-      '        None => {\n' +
-      '            the none branch;\n' +
+      '    },\n' +
+      '    None => {\n' +
+      '        the none branch;\n' +
+      '    },\n' +
+      '}';
+      strictEqual(match, expected);
+    });
+
+    it('buildMatch with return types', async () => {
+      const indent = new helpers.indentation(0);
+      const match = helpers.buildMatch(indent, 'cond', [
+        {
+          pattern: 'Some(foo)',
+          returns: 'Returns1',
+          body: (ind) => {
+            return `${ind.get()}${helpers.buildIfBlock(ind, {
+              condition: 'foo == bar',
+              body: (ind) => `${ind.get()}bing = bong;\n`
+            })}\n`;
+          }
+        },
+        {
+          pattern: 'None',
+          returns: 'Returns2',
+          body: (ind) => { return `${ind.get()}the none branch;\n`; }
+        }
+      ]);
+      const expected =
+      'match cond {\n' +
+      '    Some(foo) => Returns1 {\n' +
+      '        if foo == bar {\n' +
+      '            bing = bong;\n' +
       '        }\n' +
-      '    };\n';
+      '    },\n' +
+      '    None => Returns2 {\n' +
+      '        the none branch;\n' +
+      '    },\n' +
+      '}';
       strictEqual(match, expected);
     });
   });

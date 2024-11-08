@@ -38,6 +38,8 @@ export class Context {
             throw new Error(`method ${client.name}.${method.name} returns a body but no format was specified`);
           }
           this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.type), method.returns.type.format);
+        } else if (method.returns.type.kind === 'pager') {
+          this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.type), method.returns.type.format);
         }
       }
     }

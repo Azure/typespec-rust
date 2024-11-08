@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 // Type defines a type within the Rust type system
-export type Type = Arc | EncodedBytes | Enum | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
+export type Type = Arc | EncodedBytes | Enum | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | Pager | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
 
 // Arc is a std::sync::Arc<T>
 export interface Arc extends StdType {
@@ -147,6 +147,17 @@ export interface Option {
   type: Type;
 }
 
+// Pager is a Pager<T> from azure_core
+export interface Pager extends External {
+  kind: 'pager';
+
+  // the model containing the page of items
+  type: Model;
+
+  // the wire format of the response body.
+  format: BodyFormat;
+}
+
 // RequestContent is a Rust RequestContent<T> from azure_core
 export interface RequestContent<T extends Type = Type> extends External {
   kind: 'requestContent';
@@ -174,11 +185,11 @@ export interface Response extends External {
 }
 
 // Result is a Rust Result<T> from azure_core
-export interface Result extends External {
+export interface Result<T = Pager | Response | Unit> extends External {
   kind: 'result';
 
   // the generic type param
-  type: Response | Unit;
+  type: T;
 }
 
 // ScalarType defines the supported Rust scalar type names
@@ -475,6 +486,15 @@ export class Option implements Option {
   }
 }
 
+export class Pager extends External implements Pager {
+  constructor(crate: Crate, type: Model, format: BodyFormat) {
+    super(crate, 'azure_core', 'Pager');
+    this.kind = 'pager';
+    this.type = type;
+    this.format = format;
+  }
+}
+
 export class RequestContent<T> extends External implements RequestContent<T> {
   constructor(crate: Crate, type: T, format: BodyFormat) {
     switch (type.kind) {
@@ -520,8 +540,8 @@ export class Response extends External implements Response {
   }
 }
 
-export class Result extends External implements Result {
-  constructor(crate: Crate, type: Response | Unit) {
+export class Result<T> extends External implements Result<T> {
+  constructor(crate: Crate, type: T) {
     super(crate, 'azure_core', 'Result');
     this.kind = 'result';
     this.type = type;

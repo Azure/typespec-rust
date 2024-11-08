@@ -105,6 +105,32 @@ pub struct DeletedSecretItem {
     pub tags: Option<HashMap<String, String>>,
 }
 
+/// Paged collection of DeletedSecretItem items
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[non_exhaustive]
+pub struct PagedDeletedSecretItem {
+    /// The link to the next page of items
+    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    pub next_link: Option<Url>,
+
+    /// The DeletedSecretItem items on this page
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<Vec<DeletedSecretItem>>,
+}
+
+/// Paged collection of SecretItem items
+#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[non_exhaustive]
+pub struct PagedSecretItem {
+    /// The link to the next page of items
+    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    pub next_link: Option<Url>,
+
+    /// The SecretItem items on this page
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<Vec<SecretItem>>,
+}
+
 /// The secret management attributes.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
@@ -281,10 +307,37 @@ impl TryFrom<Response<DeletedSecretBundle>> for DeletedSecretBundle {
     }
 }
 
+impl TryFrom<Response<PagedDeletedSecretItem>> for PagedDeletedSecretItem {
+    type Error = azure_core::Error;
+    fn try_from(value: Response<PagedDeletedSecretItem>) -> Result<Self> {
+        let f = || value.into_body().json::<PagedDeletedSecretItem>();
+        let r = block_on(f())?;
+        Ok(r)
+    }
+}
+
+impl TryFrom<Response<PagedSecretItem>> for PagedSecretItem {
+    type Error = azure_core::Error;
+    fn try_from(value: Response<PagedSecretItem>) -> Result<Self> {
+        let f = || value.into_body().json::<PagedSecretItem>();
+        let r = block_on(f())?;
+        Ok(r)
+    }
+}
+
 impl TryFrom<Response<SecretBundle>> for SecretBundle {
     type Error = azure_core::Error;
     fn try_from(value: Response<SecretBundle>) -> Result<Self> {
         let f = || value.into_body().json::<SecretBundle>();
+        let r = block_on(f())?;
+        Ok(r)
+    }
+}
+
+impl TryFrom<Response<SecretListResult>> for SecretListResult {
+    type Error = azure_core::Error;
+    fn try_from(value: Response<SecretListResult>) -> Result<Self> {
+        let f = || value.into_body().json::<SecretListResult>();
         let r = block_on(f())?;
         Ok(r)
     }

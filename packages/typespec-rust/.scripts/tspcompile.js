@@ -44,7 +44,7 @@ const cadlRanch = {
   'cadl_jmergepatch': ['payload/json-merge-patch'],
   //'cadl_mediatype': ['payload/media-type'],
   //'cadl_multipart': ['payload/multipart'],
-  //'cadl_pageable': ['payload/pageable'],
+  'cadl_pageable': ['payload/pageable'],
   //'cadl_srvdrivenold': ['resiliency/srv-driven/old.tsp'],
   //'cadl_srvdrivennew': ['resiliency/srv-driven'],
   'cadl_jsonencodedname': ['serialization/encoded-name/json'],
