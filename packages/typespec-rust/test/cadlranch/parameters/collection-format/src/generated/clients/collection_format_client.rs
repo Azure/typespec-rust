@@ -23,7 +23,7 @@ impl CollectionFormatClient {
         options: Option<CollectionFormatClientOptions>,
     ) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;
-        endpoint.query_pairs_mut().clear();
+        endpoint.set_query(None);
         let options = options.unwrap_or_default();
         Ok(Self {
             endpoint,

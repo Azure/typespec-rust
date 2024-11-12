@@ -12,6 +12,7 @@
 ### Bugs Fixed
 
 * Add necessary calls to `to_string()` for header/path/query params.
+* Fixed improperly clearing an endpoint's query parameters during client construction.
 
 ### Features Added
 

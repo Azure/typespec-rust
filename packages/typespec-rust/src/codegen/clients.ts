@@ -70,7 +70,7 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
         // by convention, the endpoint param is always the first ctor param
         const endpointParamName = constructor.parameters[0].name;
         body += `${indent.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName}.as_ref())?;\n`;
-        body += `${indent.get()}${endpointParamName}.query_pairs_mut().clear();\n`;
+        body += `${indent.get()}${endpointParamName}.set_query(None);\n`;
         // if there's a credential param, create the necessary auth policy
         const authPolicy = getAuthPolicy(constructor, use);
         if (authPolicy) {
