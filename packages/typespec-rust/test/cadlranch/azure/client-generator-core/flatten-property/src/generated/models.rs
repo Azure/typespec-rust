@@ -6,6 +6,7 @@
 use async_std::task::block_on;
 use azure_core::{Model, RequestContent, Response, Result};
 use serde::{Deserialize, Serialize};
+use typespec_client_core::json::to_json;
 
 /// This is the child model to be flattened. And it has flattened property as well.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
@@ -54,7 +55,7 @@ pub struct NestedFlattenModel {
 impl TryFrom<FlattenModel> for RequestContent<FlattenModel> {
     type Error = azure_core::Error;
     fn try_from(value: FlattenModel) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
@@ -70,7 +71,7 @@ impl TryFrom<Response<FlattenModel>> for FlattenModel {
 impl TryFrom<NestedFlattenModel> for RequestContent<NestedFlattenModel> {
     type Error = azure_core::Error;
     fn try_from(value: NestedFlattenModel) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 

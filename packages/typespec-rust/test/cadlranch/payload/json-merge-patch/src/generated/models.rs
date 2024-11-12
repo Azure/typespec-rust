@@ -7,6 +7,7 @@ use async_std::task::block_on;
 use azure_core::{Model, RequestContent, Response, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use typespec_client_core::json::to_json;
 
 /// It is the model used by Resource model
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
@@ -77,7 +78,7 @@ pub struct ResourcePatch {
 impl TryFrom<Resource> for RequestContent<Resource> {
     type Error = azure_core::Error;
     fn try_from(value: Resource) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
@@ -93,6 +94,6 @@ impl TryFrom<Response<Resource>> for Resource {
 impl TryFrom<ResourcePatch> for RequestContent<ResourcePatch> {
     type Error = azure_core::Error;
     fn try_from(value: ResourcePatch) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }

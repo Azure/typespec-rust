@@ -5,6 +5,7 @@
 
 use azure_core::{Model, RequestContent, Result};
 use serde::{Deserialize, Serialize};
+use typespec_client_core::json::to_json;
 
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
@@ -247,237 +248,237 @@ pub struct Yield {
 impl TryFrom<And> for RequestContent<And> {
     type Error = azure_core::Error;
     fn try_from(value: And) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<As> for RequestContent<As> {
     type Error = azure_core::Error;
     fn try_from(value: As) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Assert> for RequestContent<Assert> {
     type Error = azure_core::Error;
     fn try_from(value: Assert) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Async> for RequestContent<Async> {
     type Error = azure_core::Error;
     fn try_from(value: Async) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Await> for RequestContent<Await> {
     type Error = azure_core::Error;
     fn try_from(value: Await) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Break> for RequestContent<Break> {
     type Error = azure_core::Error;
     fn try_from(value: Break) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Class> for RequestContent<Class> {
     type Error = azure_core::Error;
     fn try_from(value: Class) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Constructor> for RequestContent<Constructor> {
     type Error = azure_core::Error;
     fn try_from(value: Constructor) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Continue> for RequestContent<Continue> {
     type Error = azure_core::Error;
     fn try_from(value: Continue) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Def> for RequestContent<Def> {
     type Error = azure_core::Error;
     fn try_from(value: Def) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Del> for RequestContent<Del> {
     type Error = azure_core::Error;
     fn try_from(value: Del) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Elif> for RequestContent<Elif> {
     type Error = azure_core::Error;
     fn try_from(value: Elif) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Else> for RequestContent<Else> {
     type Error = azure_core::Error;
     fn try_from(value: Else) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Except> for RequestContent<Except> {
     type Error = azure_core::Error;
     fn try_from(value: Except) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Exec> for RequestContent<Exec> {
     type Error = azure_core::Error;
     fn try_from(value: Exec) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Finally> for RequestContent<Finally> {
     type Error = azure_core::Error;
     fn try_from(value: Finally) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<For> for RequestContent<For> {
     type Error = azure_core::Error;
     fn try_from(value: For) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<From> for RequestContent<From> {
     type Error = azure_core::Error;
     fn try_from(value: From) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Global> for RequestContent<Global> {
     type Error = azure_core::Error;
     fn try_from(value: Global) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<If> for RequestContent<If> {
     type Error = azure_core::Error;
     fn try_from(value: If) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Import> for RequestContent<Import> {
     type Error = azure_core::Error;
     fn try_from(value: Import) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<In> for RequestContent<In> {
     type Error = azure_core::Error;
     fn try_from(value: In) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Is> for RequestContent<Is> {
     type Error = azure_core::Error;
     fn try_from(value: Is) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Lambda> for RequestContent<Lambda> {
     type Error = azure_core::Error;
     fn try_from(value: Lambda) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Not> for RequestContent<Not> {
     type Error = azure_core::Error;
     fn try_from(value: Not) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Or> for RequestContent<Or> {
     type Error = azure_core::Error;
     fn try_from(value: Or) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Pass> for RequestContent<Pass> {
     type Error = azure_core::Error;
     fn try_from(value: Pass) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Raise> for RequestContent<Raise> {
     type Error = azure_core::Error;
     fn try_from(value: Raise) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Return> for RequestContent<Return> {
     type Error = azure_core::Error;
     fn try_from(value: Return) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<SameAsModel> for RequestContent<SameAsModel> {
     type Error = azure_core::Error;
     fn try_from(value: SameAsModel) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Try> for RequestContent<Try> {
     type Error = azure_core::Error;
     fn try_from(value: Try) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<While> for RequestContent<While> {
     type Error = azure_core::Error;
     fn try_from(value: While) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<With> for RequestContent<With> {
     type Error = azure_core::Error;
     fn try_from(value: With) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<Yield> for RequestContent<Yield> {
     type Error = azure_core::Error;
     fn try_from(value: Yield) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }

@@ -5,6 +5,7 @@
 
 use azure_core::{Model, RequestContent, Result};
 use serde::{Deserialize, Serialize};
+use typespec_client_core::json::to_json;
 
 /// This is a simple model.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
@@ -17,6 +18,6 @@ pub struct BodyParameter {
 impl TryFrom<BodyParameter> for RequestContent<BodyParameter> {
     type Error = azure_core::Error;
     fn try_from(value: BodyParameter) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }

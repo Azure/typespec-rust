@@ -6,6 +6,7 @@
 use async_std::task::block_on;
 use azure_core::{Model, RequestContent, Response, Result};
 use serde::{Deserialize, Serialize};
+use typespec_client_core::json::to_json;
 
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
@@ -18,7 +19,7 @@ pub struct JsonEncodedNameModel {
 impl TryFrom<JsonEncodedNameModel> for RequestContent<JsonEncodedNameModel> {
     type Error = azure_core::Error;
     fn try_from(value: JsonEncodedNameModel) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 

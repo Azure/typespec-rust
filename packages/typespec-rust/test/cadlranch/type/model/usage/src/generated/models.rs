@@ -6,6 +6,7 @@
 use async_std::task::block_on;
 use azure_core::{Model, RequestContent, Response, Result};
 use serde::{Deserialize, Serialize};
+use typespec_client_core::json::to_json;
 
 /// Record used both as operation parameter and return type
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
@@ -34,7 +35,7 @@ pub struct OutputRecord {
 impl TryFrom<InputOutputRecord> for RequestContent<InputOutputRecord> {
     type Error = azure_core::Error;
     fn try_from(value: InputOutputRecord) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
@@ -50,7 +51,7 @@ impl TryFrom<Response<InputOutputRecord>> for InputOutputRecord {
 impl TryFrom<InputRecord> for RequestContent<InputRecord> {
     type Error = azure_core::Error;
     fn try_from(value: InputRecord) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 

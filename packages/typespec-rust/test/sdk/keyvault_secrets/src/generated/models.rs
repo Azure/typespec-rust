@@ -9,6 +9,7 @@ use azure_core::{Model, RequestContent, Response, Result, Url};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use time::OffsetDateTime;
+use typespec_client_core::json::to_json;
 
 /// The backup secret result, containing the backup blob.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
@@ -346,20 +347,20 @@ impl TryFrom<Response<SecretListResult>> for SecretListResult {
 impl TryFrom<SecretRestoreParameters> for RequestContent<SecretRestoreParameters> {
     type Error = azure_core::Error;
     fn try_from(value: SecretRestoreParameters) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<SecretSetParameters> for RequestContent<SecretSetParameters> {
     type Error = azure_core::Error;
     fn try_from(value: SecretSetParameters) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<SecretUpdateParameters> for RequestContent<SecretUpdateParameters> {
     type Error = azure_core::Error;
     fn try_from(value: SecretUpdateParameters) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }

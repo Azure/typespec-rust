@@ -5,7 +5,7 @@
 
 use async_std::task::block_on;
 use azure_core::{RequestContent, Response, Result};
-use typespec_client_core::create_enum;
+use typespec_client_core::{create_enum, json::to_json};
 
 create_enum!(
     DaysOfWeekEnum,
@@ -21,7 +21,7 @@ create_enum!(
 impl TryFrom<DaysOfWeekEnum> for RequestContent<DaysOfWeekEnum> {
     type Error = azure_core::Error;
     fn try_from(value: DaysOfWeekEnum) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 

@@ -6,6 +6,7 @@
 use async_std::task::block_on;
 use azure_core::{Model, RequestContent, Response, Result};
 use serde::{Deserialize, Serialize};
+use typespec_client_core::json::to_json;
 
 /// Empty model used in operation parameters
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
@@ -25,14 +26,14 @@ pub struct EmptyOutput {}
 impl TryFrom<EmptyInput> for RequestContent<EmptyInput> {
     type Error = azure_core::Error;
     fn try_from(value: EmptyInput) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
 impl TryFrom<EmptyInputOutput> for RequestContent<EmptyInputOutput> {
     type Error = azure_core::Error;
     fn try_from(value: EmptyInputOutput) -> Result<Self> {
-        Ok(RequestContent::from(serde_json::to_vec(&value)?))
+        Ok(RequestContent::try_from(to_json(&value)?)?)
     }
 }
 
