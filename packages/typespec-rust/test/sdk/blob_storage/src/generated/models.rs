@@ -965,15 +965,6 @@ pub struct StaticWebsite {
     pub index_document: Option<String>,
 }
 
-/// The error response.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
-#[non_exhaustive]
-pub struct StorageError {
-    /// The error message.
-    #[serde(rename = "Message", skip_serializing_if = "Option::is_none")]
-    pub message: Option<String>,
-}
-
 /// The service properties.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]

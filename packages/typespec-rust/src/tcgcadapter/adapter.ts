@@ -75,9 +75,8 @@ export class Adapter {
     }
 
     for (const model of this.ctx.sdkPackage.models) {
-      if (model.usage === tcgc.UsageFlags.Error) {
-        // if the model is purely used for errors then
-        // skip it as we use azure_core::Error.
+      if ((model.usage & tcgc.UsageFlags.Error) === tcgc.UsageFlags.Error || tcgc.isAzureCoreModel(model)) {
+        // skip error and core types as we use their azure_core equivalents
         continue;
       }
       const rustModel = this.getModel(model);
