@@ -52,6 +52,7 @@ export class Context {
     if (!format) {
       return '';
     }
+    this.validateBodyFormat(format);
 
     use.addTypes('azure_core', ['RequestContent', 'Result']);
     use.addType('typespec_client_core', `${format}::to_${format}`);
@@ -73,6 +74,7 @@ export class Context {
     if (!format) {
       return '';
     }
+    this.validateBodyFormat(format);
 
     use.addTypes('azure_core', ['Response', 'Result']);
     use.addType('async_std::task', 'block_on');
@@ -87,5 +89,14 @@ export class Context {
     content += `${indent.pop().get()}}\n`;
     content += '}\n\n';
     return content;
+  }
+
+  private validateBodyFormat(format: rust.BodyFormat): void {
+    switch (format) {
+      case 'json':
+        return;
+      default:
+        throw new Error(`unexpected body format ${format}`);
+    }
   }
 }
