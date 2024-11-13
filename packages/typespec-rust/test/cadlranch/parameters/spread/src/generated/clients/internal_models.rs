@@ -64,14 +64,14 @@ pub struct SpreadWithMultipleParametersRequest {
 impl TryFrom<SpreadAsRequestBodyRequest> for RequestContent<SpreadAsRequestBodyRequest> {
     type Error = azure_core::Error;
     fn try_from(value: SpreadAsRequestBodyRequest) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
 impl TryFrom<SpreadAsRequestParameterRequest> for RequestContent<SpreadAsRequestParameterRequest> {
     type Error = azure_core::Error;
     fn try_from(value: SpreadAsRequestParameterRequest) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
@@ -80,7 +80,7 @@ impl TryFrom<SpreadCompositeRequestMixRequest>
 {
     type Error = azure_core::Error;
     fn try_from(value: SpreadCompositeRequestMixRequest) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
@@ -89,7 +89,7 @@ impl TryFrom<SpreadParameterWithInnerAliasRequest>
 {
     type Error = azure_core::Error;
     fn try_from(value: SpreadParameterWithInnerAliasRequest) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
@@ -98,7 +98,7 @@ impl TryFrom<SpreadParameterWithInnerModelRequest>
 {
     type Error = azure_core::Error;
     fn try_from(value: SpreadParameterWithInnerModelRequest) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
@@ -107,6 +107,6 @@ impl TryFrom<SpreadWithMultipleParametersRequest>
 {
     type Error = azure_core::Error;
     fn try_from(value: SpreadWithMultipleParametersRequest) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }

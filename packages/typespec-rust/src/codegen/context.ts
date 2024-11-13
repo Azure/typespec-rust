@@ -60,7 +60,7 @@ export class Context {
     let content = `impl TryFrom<${helpers.getTypeDeclaration(type)}> for RequestContent<${helpers.getTypeDeclaration(type)}> {\n`;
     content += `${indent.get()}type Error = azure_core::Error;\n`;
     content += `${indent.get()}fn try_from(value: ${helpers.getTypeDeclaration(type)}) -> Result<Self> {\n`;
-    content += `${indent.push().get()}Ok(RequestContent::try_from(to_${format}(&value)?)?)\n`;
+    content += `${indent.push().get()}RequestContent::try_from(to_${format}(&value)?)\n`;
     content += `${indent.pop().get()}}\n`;
     content += '}\n\n';
     return content;

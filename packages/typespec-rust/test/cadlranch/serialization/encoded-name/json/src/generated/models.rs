@@ -19,7 +19,7 @@ pub struct JsonEncodedNameModel {
 impl TryFrom<JsonEncodedNameModel> for RequestContent<JsonEncodedNameModel> {
     type Error = azure_core::Error;
     fn try_from(value: JsonEncodedNameModel) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 

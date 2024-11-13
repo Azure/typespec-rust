@@ -18,6 +18,6 @@ pub struct BodyParameter {
 impl TryFrom<BodyParameter> for RequestContent<BodyParameter> {
     type Error = azure_core::Error;
     fn try_from(value: BodyParameter) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }

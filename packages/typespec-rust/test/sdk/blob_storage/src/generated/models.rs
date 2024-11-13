@@ -1050,7 +1050,7 @@ pub struct UserDelegationKey {
 impl TryFrom<BlobTags> for RequestContent<BlobTags> {
     type Error = azure_core::Error;
     fn try_from(value: BlobTags) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
@@ -1066,7 +1066,7 @@ impl TryFrom<Response<BlobTags>> for BlobTags {
 impl TryFrom<BlockLookupList> for RequestContent<BlockLookupList> {
     type Error = azure_core::Error;
     fn try_from(value: BlockLookupList) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
@@ -1091,7 +1091,7 @@ impl TryFrom<Response<FilterBlobSegment>> for FilterBlobSegment {
 impl TryFrom<KeyInfo> for RequestContent<KeyInfo> {
     type Error = azure_core::Error;
     fn try_from(value: KeyInfo) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
@@ -1138,14 +1138,14 @@ impl TryFrom<Response<PageList>> for PageList {
 impl TryFrom<QueryRequest> for RequestContent<QueryRequest> {
     type Error = azure_core::Error;
     fn try_from(value: QueryRequest) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
 impl TryFrom<StorageServiceProperties> for RequestContent<StorageServiceProperties> {
     type Error = azure_core::Error;
     fn try_from(value: StorageServiceProperties) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 

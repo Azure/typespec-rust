@@ -55,7 +55,7 @@ pub struct NestedFlattenModel {
 impl TryFrom<FlattenModel> for RequestContent<FlattenModel> {
     type Error = azure_core::Error;
     fn try_from(value: FlattenModel) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
@@ -71,7 +71,7 @@ impl TryFrom<Response<FlattenModel>> for FlattenModel {
 impl TryFrom<NestedFlattenModel> for RequestContent<NestedFlattenModel> {
     type Error = azure_core::Error;
     fn try_from(value: NestedFlattenModel) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 

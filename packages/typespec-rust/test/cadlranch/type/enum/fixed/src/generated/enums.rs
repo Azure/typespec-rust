@@ -21,7 +21,7 @@ create_enum!(
 impl TryFrom<DaysOfWeekEnum> for RequestContent<DaysOfWeekEnum> {
     type Error = azure_core::Error;
     fn try_from(value: DaysOfWeekEnum) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 

@@ -26,14 +26,14 @@ pub struct EmptyOutput {}
 impl TryFrom<EmptyInput> for RequestContent<EmptyInput> {
     type Error = azure_core::Error;
     fn try_from(value: EmptyInput) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
 impl TryFrom<EmptyInputOutput> for RequestContent<EmptyInputOutput> {
     type Error = azure_core::Error;
     fn try_from(value: EmptyInputOutput) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 

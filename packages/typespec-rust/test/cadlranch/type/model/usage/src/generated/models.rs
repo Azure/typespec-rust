@@ -35,7 +35,7 @@ pub struct OutputRecord {
 impl TryFrom<InputOutputRecord> for RequestContent<InputOutputRecord> {
     type Error = azure_core::Error;
     fn try_from(value: InputOutputRecord) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
@@ -51,7 +51,7 @@ impl TryFrom<Response<InputOutputRecord>> for InputOutputRecord {
 impl TryFrom<InputRecord> for RequestContent<InputRecord> {
     type Error = azure_core::Error;
     fn try_from(value: InputRecord) -> Result<Self> {
-        Ok(RequestContent::try_from(to_json(&value)?)?)
+        RequestContent::try_from(to_json(&value)?)
     }
 }
 
