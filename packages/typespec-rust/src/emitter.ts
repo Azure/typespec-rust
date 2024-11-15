@@ -29,24 +29,9 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   // https://github.com/Azure/typespec-rust/issues/20
   await writeFile(`${context.emitterOutputDir}/src/lib.rs`, codegen.emitLib());
 
-  await writeToGeneratedDir(context.emitterOutputDir, 'mod.rs', codegen.emitMod());
-
-  const models = codegen.emitModels();
-  if (models.public) {
-    await writeToGeneratedDir(context.emitterOutputDir, 'models.rs', models.public);
-  }
-  if (models.internal) {
-    await writeToGeneratedDir(context.emitterOutputDir, 'clients/internal_models.rs', models.internal);
-  }
-
-  const enums = codegen.emitEnums();
-  if (enums.length > 0) {
-    await writeToGeneratedDir(context.emitterOutputDir, 'enums.rs', enums);
-  }
-
-  const clientFiles = codegen.emitClients();
-  for (const clientFile of clientFiles) {
-    await writeToGeneratedDir(context.emitterOutputDir, clientFile.name, clientFile.content, 'clients');
+  const files = codegen.emitContent();
+  for (const file of files) {
+    await writeToGeneratedDir(context.emitterOutputDir, file.name, file.content);
   }
 }
 

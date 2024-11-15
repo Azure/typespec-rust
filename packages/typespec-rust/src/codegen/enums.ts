@@ -9,9 +9,9 @@ import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
 // emits the enums.rs file for this crate
-export function emitEnums(crate: rust.Crate, context: Context): string {
+export function emitEnums(crate: rust.Crate, context: Context): string | undefined {
   if (crate.enums.length === 0) {
-    return '';
+    return undefined;
   }
 
   const use = new Use('models');

@@ -9,19 +9,25 @@ import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
 // the files and their content to emit
-export interface ClientFiles {
+export interface ClientFile {
   readonly name: string;
   readonly content: string;
 }
 
+// the client files and modules
+export interface ClientsContent {
+  clients: Array<ClientFile>;
+  modules: Array<rust.Module>;
+}
+
 // emits the content for all client files
-export function emitClients(crate: rust.Crate): Array<ClientFiles> {
-  const clientFiles = new Array<ClientFiles>();
+export function emitClients(crate: rust.Crate, targetDir: string): ClientsContent | undefined {
   if (crate.clients.length === 0) {
-    return clientFiles;
+    return undefined;
   }
 
-  const clientMods = new Array<string>();
+  const clientFiles = new Array<ClientFile>();
+  const clientMods = new Array<rust.Module>();
 
   // emit the clients, one file per client
   for (const client of crate.clients) {
@@ -205,26 +211,11 @@ export function emitClients(crate: rust.Crate): Array<ClientFiles> {
     content += body;
 
     const clientMod = codegen.deconstruct(client.name).join('_');
-    clientFiles.push({name: `${clientMod}.rs`, content: content});
-    clientMods.push(clientMod);
+    clientFiles.push({name: `${targetDir}/${clientMod}.rs`, content: content});
+    clientMods.push(new rust.Module(clientMod, true));
   }
 
-  // now emit the mod.rs file for the clients
-  let content = helpers.contentPreamble();
-  const sortedMods = clientMods.sort((a: string, b: string) => { return helpers.sortAscending(a, b); });
-  for (const clientMod of sortedMods) {
-    content += `pub mod ${clientMod};\n`;
-  }
-  // check if we have any internal models
-  for (const model of crate.models) {
-    if (model.internal) {
-      content += 'mod internal_models;\n';
-      break;
-    }
-  }
-  clientFiles.push({name: 'mod.rs', content: content});
-
-  return clientFiles;
+  return {clients: clientFiles, modules: clientMods};
 }
 
 function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: rust.ClientOptions, use: Use): string {
