@@ -27,7 +27,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   // TODO: this will overwrite an existing lib.rs file.
   // we will likely need to support merging generated content with a preexisting lib.rs
   // https://github.com/Azure/typespec-rust/issues/20
-  await writeFile(`${context.emitterOutputDir}/src/lib.rs`, codegen.emitLib());
+  await writeFile(`${context.emitterOutputDir}/src/lib.rs`, codegen.emitLibRs());
 
   const files = codegen.emitContent();
   for (const file of files) {

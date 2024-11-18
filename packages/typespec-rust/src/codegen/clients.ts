@@ -8,15 +8,15 @@ import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
-// the files and their content to emit
-export interface ClientFile {
+// a file to emit
+export interface File {
   readonly name: string;
   readonly content: string;
 }
 
 // the client files and modules
 export interface ClientsContent {
-  clients: Array<ClientFile>;
+  clients: Array<File>;
   modules: Array<rust.Module>;
 }
 
@@ -26,7 +26,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
     return undefined;
   }
 
-  const clientFiles = new Array<ClientFile>();
+  const clientFiles = new Array<File>();
   const clientMods = new Array<rust.Module>();
 
   // emit the clients, one file per client

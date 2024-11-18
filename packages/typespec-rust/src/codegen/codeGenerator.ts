@@ -7,8 +7,8 @@ import { emitCargoToml } from './cargotoml.js';
 import { emitClients } from './clients.js';
 import { Context } from './context.js';
 import { emitEnums } from './enums.js';
-import { emitLib } from './lib.js';
-import { emitMod } from './mod.js';
+import { emitLibRs } from './lib.js';
+import { emitModRs } from './mod.js';
 import { emitModels } from './models.js';
 
 import * as rust from '../codemodel/index.js';
@@ -35,8 +35,8 @@ export class CodeGenerator {
   }
 
   // returns the content for lib.rs
-  emitLib(): string {
-    return emitLib(this.crate);
+  emitLibRs(): string {
+    return emitLibRs(this.crate);
   }
 
   // returns the generated content
@@ -70,11 +70,11 @@ export class CodeGenerator {
     }
 
     if (clientsModRS.length > 0) {
-      files.push({name: `${clientsSubDir}/mod.rs`, content: emitMod(clientsModRS)});
+      files.push({name: `${clientsSubDir}/mod.rs`, content: emitModRs(clientsModRS)});
     }
 
     // there will always be something in the generated/mod.rs file
-    files.push({name: 'mod.rs', content: emitMod(generatedModRS)});
+    files.push({name: 'mod.rs', content: emitModRs(generatedModRS)});
 
     return files;
   }

@@ -8,7 +8,7 @@ import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
 
 // emits the lib.rs file
-export function emitLib(crate: rust.Crate): string {
+export function emitLibRs(crate: rust.Crate): string {
   let content = helpers.contentPreamble();
   content += 'mod generated;\n\n';
 

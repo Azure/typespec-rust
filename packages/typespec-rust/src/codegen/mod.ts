@@ -7,7 +7,7 @@ import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
 
 // emits a mod.rs file
-export function emitMod(modules: Array<rust.Module>): string {
+export function emitModRs(modules: Array<rust.Module>): string {
   modules.sort((a, b) => { return helpers.sortAscending(a.name, b.name); });
   let content = helpers.contentPreamble();
   for (const module of modules) {
