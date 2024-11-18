@@ -120,12 +120,19 @@ export interface Model extends StructBase {
 
   // fields contains the fields within the struct
   fields: Array<ModelField>;
+
+  // the name of the type over the wire if it's
+  // different from the type's name.
+  xmlName?: string;
 }
 
 // ModelField is a field definition within a model
 export interface ModelField extends StructFieldBase {
   // the name of the field over the wire
   serde: string;
+
+  // contains XML-specific serde info
+  xmlKind?: XMLKind;
 }
 
 // DateTimeEncoding is the wire format of the date/time
@@ -204,7 +211,7 @@ export interface Scalar {
 
 // BodyFormat indicates the wire format for request and response bodies
 // TODO: Add 'xml' https://github.com/Azure/typespec-rust/issues/8
-export type BodyFormat = 'binary' | 'json';
+export type BodyFormat = 'binary' | 'json' | 'xml';
 
 // StringSlice is a Rust string slice
 export interface StringSlice {
@@ -255,6 +262,9 @@ export interface Vector {
   // the generic type param
   type: Type;
 }
+
+// XMLKind contains info used for generating XML-specific serde
+export type XMLKind = 'attribute' | 'text' | 'unwrappedList';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // base types

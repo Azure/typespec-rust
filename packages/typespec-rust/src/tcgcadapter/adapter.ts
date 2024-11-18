@@ -15,7 +15,12 @@ import * as rust from '../codemodel/index.js';
 // Adapter converts the tcgc code model to a Rust Crate
 export class Adapter {
   static async create(context: EmitContext<RustEmitterOptions>): Promise<Adapter> {
-    const ctx = await tcgc.createSdkContext(context);
+    // @encodedName can be used in XML scenarios, it is effectively the
+    // same as TypeSpec.Xml.@name. however, it's filtered out by default
+    // so we need to add it to the allow list of decorators
+    const ctx = await tcgc.createSdkContext(context, '@azure-tools/typespec-rust', {
+      additionalDecorators: ['TypeSpec\\.@encodedName'],
+    });
     return new Adapter(ctx, context.options);
   }
 
@@ -134,6 +139,7 @@ export class Adapter {
     rustModel = new rust.Model(modelName, model.access === 'internal');
     rustModel.docs.summary = model.summary;
     rustModel.docs.description = model.doc;
+    rustModel.xmlName = getXMLName(model.decorators);
     this.types.set(modelName, rustModel);
 
     for (const property of model.properties) {
@@ -165,6 +171,14 @@ export class Adapter {
     const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, true, fieldType);
     modelField.docs.summary = property.summary;
     modelField.docs.description = property.doc;
+
+    const xmlName = getXMLName(property.decorators);
+    if (xmlName) {
+      // use the XML name when specified
+      modelField.serde = xmlName;
+    }
+    modelField.xmlKind = getXMLKind(property.decorators, modelField);
+
     return modelField;
   }
 
@@ -731,7 +745,8 @@ export class Adapter {
     switch (format) {
       case 'binary':
         throw new Error('binary spread NYI');
-      case 'json': {
+      case 'json':
+      case 'xml': {
         // find the corresponding field within the model so we can get its index
         let serializedName: string | undefined;
         for (const property of opParamType.properties) {
@@ -766,7 +781,7 @@ export class Adapter {
       this.crate.addDependency(new rust.CrateDependency('serde_json'));
       bodyFormat = 'json';
     } else if (contentType.match(/xml/i)) {
-      throw new Error(`unhandled contentType ${contentType}`);
+      bodyFormat = 'xml';
     } else if (contentType.match(/text/i)) {
       throw new Error(`unhandled contentType ${contentType}`);
     }
@@ -808,4 +823,49 @@ function recursiveKeyName(root: string, obj: tcgc.SdkType): string {
     default:
       return `${root}-${obj.kind}`;
   }
+}
+
+function getXMLName(decorators: Array<tcgc.DecoratorInfo>): string | undefined {
+  if (decorators.length === 0) {
+    return undefined;
+  }
+
+  for (const decorator of decorators) {
+    switch (decorator.name) {
+      case 'TypeSpec.@encodedName':
+        if (decorator.arguments['mimeType'] === 'application/xml') {
+          return decorator.arguments['name'];
+        }
+        break;
+      case 'TypeSpec.Xml.@name':
+        return decorator.arguments['name'];
+    }
+  }
+
+  return undefined;
+}
+
+function getXMLKind(decorators: Array<tcgc.DecoratorInfo>, field: rust.ModelField): rust.XMLKind | undefined {
+  if (decorators.length === 0) {
+    return undefined;
+  }
+
+  for (const decorator of decorators) {
+    switch (decorator.name) {
+      case 'TypeSpec.Xml.@attribute':
+        return 'attribute';
+      case 'TypeSpec.Xml.@unwrapped': {
+        const fieldType = helpers.unwrapOption(field.type);
+        switch (fieldType.kind) {
+          case 'vector':
+            return 'unwrappedList';
+          case 'String':
+            // an unwrapped string means it's text
+            return 'text';
+        }
+      }
+    }
+  }
+
+  return undefined;
 }

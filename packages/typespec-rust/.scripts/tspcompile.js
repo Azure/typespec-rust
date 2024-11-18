@@ -45,6 +45,7 @@ const cadlRanch = {
   //'cadl_mediatype': ['payload/media-type'],
   //'cadl_multipart': ['payload/multipart'],
   'cadl_pageable': ['payload/pageable'],
+  'cadl_xml': ['payload/xml'],
   //'cadl_srvdrivenold': ['resiliency/srv-driven/old.tsp'],
   //'cadl_srvdrivennew': ['resiliency/srv-driven'],
   'cadl_jsonencodedname': ['serialization/encoded-name/json'],

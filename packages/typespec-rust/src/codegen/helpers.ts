@@ -195,3 +195,28 @@ export function buildMatch(indent: indentation, expr: string, arms: Array<matchA
   match += `${indent.pop().get()}}`;
   return match;
 }
+
+// returns capitalized str
+export function capitalize(str: string): string {
+  return codegen.capitalize(str);
+}
+
+// if type is an Option<T>, returns the T, else returns type
+export function unwrapOption(type: rust.Type): rust.Type {
+  if (type.kind === 'option') {
+    return type.type;
+  }
+  return type;
+}
+
+// recursively unwraps a type. if type is an Option<Vec<T>>, returns the T
+export function unwrapType(type: rust.Type): rust.Type {
+  switch (type.kind) {
+    case 'option':
+    case 'hashmap':
+    case 'vector':
+      return unwrapType(type.type);
+    default:
+      return type;
+  }
+}
