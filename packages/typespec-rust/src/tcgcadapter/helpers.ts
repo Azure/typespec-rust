@@ -50,3 +50,11 @@ export function sortClientParameters(params: Array<rust.ClientParameter>): void 
     return 0;
   });
 }
+
+// if type is an Option<T>, returns the T, else returns type
+export function unwrapOption(type: rust.Type): rust.Type {
+  if (type.kind === 'option') {
+    return type.type;
+  }
+  return type;
+}

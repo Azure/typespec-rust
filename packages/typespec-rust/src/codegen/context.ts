@@ -11,10 +11,32 @@ import * as rust from '../codemodel/index.js';
 // It's an implementation detail of CodeGenerator and isn't intended
 // for use outside of that class.
 export class Context {
+  private readonly bodyFormatForModels = new Map<rust.Model, rust.BodyFormat>();
   private readonly tryFromForRequestTypes = new Map<string, rust.BodyFormat>();
   private readonly tryFromResponseTypes = new Map<string, rust.BodyFormat>();
 
   constructor(crate: rust.Crate) {
+    const recursiveAddBodyFormat = (type: rust.Type, format: rust.BodyFormat) => {
+      type = helpers.unwrapType(type);
+      if (type.kind !== 'model') {
+        return;
+      }
+
+      const existingFormat = this.bodyFormatForModels.get(type);
+      if (existingFormat) {
+        if (existingFormat === format) {
+          // already processed this model
+          return;
+        }
+        throw new Error(`found conflicting body formats for model ${type.name}`);
+      }
+
+      this.bodyFormatForModels.set(type, format);
+      for (const field of type.fields) {
+        recursiveAddBodyFormat(field.type, format);
+      }
+    };
+
     // enumerate all client methods, looking for enum and model
     // params/responses and their wire format (JSON/XML etc).
     for (const client of crate.clients) {
@@ -28,18 +50,25 @@ export class Context {
         // https://github.com/Azure/typespec-rust/issues/65
 
         for (const param of method.params) {
-          if ((param.kind === 'body' || param.kind === 'partialBody') && (param.type.type.kind === 'enum' || param.type.type.kind === 'model')) {
-            this.tryFromForRequestTypes.set(helpers.getTypeDeclaration(param.type.type), param.type.format);
+          if (param.kind === 'body' || param.kind === 'partialBody') {
+            if (param.type.type.kind === 'enum' || param.type.type.kind === 'model') {
+              this.tryFromForRequestTypes.set(helpers.getTypeDeclaration(param.type.type), param.type.format);
+            }
+            recursiveAddBodyFormat(param.type.type, param.type.format);
           }
         }
 
-        if (method.returns.type.kind === 'response' && (method.returns.type.type.kind === 'enum' || method.returns.type.type.kind === 'model')) {
+        if (method.returns.type.kind === 'response' && method.returns.type.type.kind !== 'unit') {
           if (!method.returns.type.format) {
             throw new Error(`method ${client.name}.${method.name} returns a body but no format was specified`);
           }
-          this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.type), method.returns.type.format);
+          if (method.returns.type.type.kind === 'enum' || method.returns.type.type.kind === 'model') {
+            this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.type), method.returns.type.format);
+          }
+          recursiveAddBodyFormat(method.returns.type.type, method.returns.type.format);
         } else if (method.returns.type.kind === 'pager') {
           this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.type), method.returns.type.format);
+          recursiveAddBodyFormat(method.returns.type.type, method.returns.type.format);
         }
       }
     }
@@ -91,9 +120,18 @@ export class Context {
     return content;
   }
 
+  getModelBodyFormat(model: rust.Model): rust.BodyFormat {
+    const bodyFormat = this.bodyFormatForModels.get(model);
+    if (!bodyFormat) {
+      throw new Error(`didn't find body format for model ${model.name}`);
+    }
+    return bodyFormat;
+  }
+
   private validateBodyFormat(format: rust.BodyFormat): void {
     switch (format) {
       case 'json':
+      case 'xml':
         return;
       default:
         throw new Error(`unexpected body format ${format}`);

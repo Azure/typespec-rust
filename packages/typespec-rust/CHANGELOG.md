@@ -20,6 +20,7 @@
 * Added support for binary responses.
 * Added support for TypeSpec spread parameters.
 * Added support for pageable methods.
+* Added support for XML payloads.
 
 ### Other Changes
 

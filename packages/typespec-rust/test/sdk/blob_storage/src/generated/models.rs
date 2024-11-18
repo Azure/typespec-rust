@@ -19,115 +19,120 @@ use typespec_client_core::json::to_json;
 #[non_exhaustive]
 pub struct AccessPolicy {
     /// The date-time the policy expires.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Expiry", skip_serializing_if = "Option::is_none")]
     pub expiry: Option<OffsetDateTime>,
 
     /// The permissions for acl the policy.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Permission", skip_serializing_if = "Option::is_none")]
     pub permission: Option<String>,
 
     /// The date-time the policy is active.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Start", skip_serializing_if = "Option::is_none")]
     pub start: Option<OffsetDateTime>,
 }
 
 /// Represents the Apache Arrow configuration.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "ArrowConfiguration")]
 pub struct ArrowConfiguration {
     /// The Apache Arrow schema
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Schema", skip_serializing_if = "Option::is_none")]
     pub schema: Option<Vec<ArrowField>>,
 }
 
 /// Represents an Apache Arrow field.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "Field")]
 pub struct ArrowField {
     /// The arrow field name.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The arrow field precision.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Precision", skip_serializing_if = "Option::is_none")]
     pub precision: Option<i32>,
 
     /// The arrow field scale.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Scale", skip_serializing_if = "Option::is_none")]
     pub scale: Option<i32>,
 
     /// The arrow field type.
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
 
 /// The blob flat list segment.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "Blobs")]
 pub struct BlobFlatListSegment {
     /// The blob items.
-    #[serde(rename = "blobItems", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "BlobItems", skip_serializing_if = "Option::is_none")]
     pub blob_items: Option<Vec<BlobItemInternal>>,
 }
 
 /// Represents an array of blobs.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "Blobs")]
 pub struct BlobHierarchyListSegment {
     /// The blob items
-    #[serde(rename = "blobItems", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "BlobItems", skip_serializing_if = "Option::is_none")]
     pub blob_items: Option<Vec<BlobItemInternal>>,
 
     /// The blob prefixes.
-    #[serde(rename = "blobPrefixes", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "BlobPrefixes", skip_serializing_if = "Option::is_none")]
     pub blob_prefixes: Option<Vec<BlobPrefix>>,
 }
 
 /// An Azure Storage Blob
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "Blob")]
 pub struct BlobItemInternal {
     /// The tags of the blob.
-    #[serde(rename = "blobTags", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "BlobTags", skip_serializing_if = "Option::is_none")]
     pub blob_tags: Option<Vec<BlobTag>>,
 
     /// Whether the blob is deleted.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Deleted", skip_serializing_if = "Option::is_none")]
     pub deleted: Option<bool>,
 
     /// Whether the blog has versions only.
-    #[serde(rename = "hasVersionsOnly", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "HasVersionsOnly", skip_serializing_if = "Option::is_none")]
     pub has_versions_only: Option<bool>,
 
     /// Whether the blob is the current version.
-    #[serde(rename = "isCurrentVersion", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "IsCurrentVersion", skip_serializing_if = "Option::is_none")]
     pub is_current_version: Option<bool>,
 
     /// The metadata of the blob.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Metadata", skip_serializing_if = "Option::is_none")]
     pub metadata: Option<BlobMetadata>,
 
     /// The name of the blob.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
     pub name: Option<BlobName>,
 
     /// The object replication metadata of the blob.
     #[serde(
-        rename = "objectReplicationMetadata",
+        rename = "ObjectReplicationMetadata",
         skip_serializing_if = "Option::is_none"
     )]
     pub object_replication_metadata: Option<ObjectReplicationMetadata>,
 
     /// The properties of the blob.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<BlobPropertiesInternal>,
 
     /// The snapshot of the blob.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Snapshot", skip_serializing_if = "Option::is_none")]
     pub snapshot: Option<String>,
 
     /// The version id of the blob.
-    #[serde(rename = "versionId", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "VersionId", skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -136,7 +141,7 @@ pub struct BlobItemInternal {
 #[non_exhaustive]
 pub struct BlobMetadata {
     /// Whether the blob metadata is encrypted.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "@Encrypted", skip_serializing_if = "Option::is_none")]
     pub encrypted: Option<String>,
 }
 
@@ -145,11 +150,11 @@ pub struct BlobMetadata {
 #[non_exhaustive]
 pub struct BlobName {
     /// The blob name.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "$text", skip_serializing_if = "Option::is_none")]
     pub content: Option<String>,
 
     /// Whether the blob name is encoded.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "@Encoded", skip_serializing_if = "Option::is_none")]
     pub encoded: Option<bool>,
 }
 
@@ -158,186 +163,193 @@ pub struct BlobName {
 #[non_exhaustive]
 pub struct BlobPrefix {
     /// The blob name.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
     pub name: Option<BlobName>,
 }
 
 /// The properties of a blob.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "Properties")]
 pub struct BlobPropertiesInternal {
     /// The access tier of the blob.
-    #[serde(rename = "accessTier", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "AccessTier", skip_serializing_if = "Option::is_none")]
     pub access_tier: Option<AccessTier>,
 
     /// The access tier change time of the blob.
     #[serde(
-        rename = "accessTierChangeTime",
+        rename = "AccessTierChangeTime",
         skip_serializing_if = "Option::is_none"
     )]
     pub access_tier_change_time: Option<OffsetDateTime>,
 
     /// Whether the access tier is inferred.
-    #[serde(rename = "accessTierInferred", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "AccessTierInferred", skip_serializing_if = "Option::is_none")]
     pub access_tier_inferred: Option<bool>,
 
     /// The archive status of the blob.
-    #[serde(rename = "archiveStatus", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "ArchiveStatus", skip_serializing_if = "Option::is_none")]
     pub archive_status: Option<ArchiveStatus>,
 
     /// The sequence number of the blob.
-    #[serde(rename = "blobSequenceNumber", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "x-ms-blob-sequence-number",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub blob_sequence_number: Option<i64>,
 
     /// The blob type.
-    #[serde(rename = "blobType", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "BlobType", skip_serializing_if = "Option::is_none")]
     pub blob_type: Option<BlobType>,
 
     /// The cache control of the blob.
-    #[serde(rename = "cacheControl", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Cache-Control", skip_serializing_if = "Option::is_none")]
     pub cache_control: Option<String>,
 
     /// The content disposition of the blob.
-    #[serde(rename = "contentDisposition", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "Content-Disposition",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub content_disposition: Option<String>,
 
     /// The content encoding of the blob.
-    #[serde(rename = "contentEncoding", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Content-Encoding", skip_serializing_if = "Option::is_none")]
     pub content_encoding: Option<String>,
 
     /// The content language of the blob.
-    #[serde(rename = "contentLanguage", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Content-Language", skip_serializing_if = "Option::is_none")]
     pub content_language: Option<String>,
 
     /// The content length of the blob.
-    #[serde(rename = "contentLength", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Content-Length", skip_serializing_if = "Option::is_none")]
     pub content_length: Option<i64>,
 
     /// The content MD5 of the blob.
-    #[serde(rename = "contentMd5", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Content-MD5", skip_serializing_if = "Option::is_none")]
     pub content_md5: Option<String>,
 
     /// The content type of the blob.
-    #[serde(rename = "contentType", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Content-Type", skip_serializing_if = "Option::is_none")]
     pub content_type: Option<String>,
 
     /// The copy completion time of the blob.
-    #[serde(rename = "copyCompletionTime", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "CopyCompletionTime", skip_serializing_if = "Option::is_none")]
     pub copy_completion_time: Option<OffsetDateTime>,
 
     /// The copy ID of the blob.
-    #[serde(rename = "copyId", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "CopyId", skip_serializing_if = "Option::is_none")]
     pub copy_id: Option<String>,
 
     /// The copy progress of the blob.
-    #[serde(rename = "copyProgress", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "CopyProgress", skip_serializing_if = "Option::is_none")]
     pub copy_progress: Option<String>,
 
     /// The copy source of the blob.
-    #[serde(rename = "copySource", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "CopySource", skip_serializing_if = "Option::is_none")]
     pub copy_source: Option<String>,
 
     /// The copy status of the blob.
-    #[serde(rename = "copyStatus", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "CopyStatus", skip_serializing_if = "Option::is_none")]
     pub copy_status: Option<CopyStatus>,
 
     /// The copy status description of the blob.
     #[serde(
-        rename = "copyStatusDescription",
+        rename = "CopyStatusDescription",
         skip_serializing_if = "Option::is_none"
     )]
     pub copy_status_description: Option<String>,
 
     /// The date-time the blob was created in RFC1123 format.
-    #[serde(rename = "creationTime", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Creation-Time", skip_serializing_if = "Option::is_none")]
     pub creation_time: Option<OffsetDateTime>,
 
     /// The time the blob was deleted.
-    #[serde(rename = "deletedTime", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "DeletedTime", skip_serializing_if = "Option::is_none")]
     pub deleted_time: Option<OffsetDateTime>,
 
     /// The name of the desination snapshot.
     #[serde(
-        rename = "destinationSnapshot",
+        rename = "DestinationSnapshot",
         skip_serializing_if = "Option::is_none"
     )]
     pub destination_snapshot: Option<String>,
 
     /// The blog ETag.
-    #[serde(rename = "eTag", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "ETag", skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
 
     /// The encryption scope of the blob.
-    #[serde(rename = "encryptionScope", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "EncryptionScope", skip_serializing_if = "Option::is_none")]
     pub encryption_scope: Option<String>,
 
     /// The expire time of the blob.
-    #[serde(rename = "expiryTime", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Expiry-Time", skip_serializing_if = "Option::is_none")]
     pub expiry_time: Option<OffsetDateTime>,
 
     /// The immutability policy mode of the blob.
     #[serde(
-        rename = "immutabilityPolicyMode",
+        rename = "ImmutabilityPolicyMode",
         skip_serializing_if = "Option::is_none"
     )]
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
 
     /// The immutability policy until time of the blob.
     #[serde(
-        rename = "immutabilityPolicyUntilDate",
+        rename = "ImmutabilityPolicyUntilDate",
         skip_serializing_if = "Option::is_none"
     )]
     pub immutability_policy_until_date: Option<OffsetDateTime>,
 
     /// Whether the blog is incremental copy.
-    #[serde(rename = "incrementalCopy", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "IncrementalCopy", skip_serializing_if = "Option::is_none")]
     pub incremental_copy: Option<bool>,
 
     /// The last access time of the blob.
-    #[serde(rename = "lastAccessTime", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "LastAccessTime", skip_serializing_if = "Option::is_none")]
     pub last_access_time: Option<OffsetDateTime>,
 
     /// The date-time the blob was last modified in RFC1123 format.
-    #[serde(rename = "lastModified", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Last-Modified", skip_serializing_if = "Option::is_none")]
     pub last_modified: Option<OffsetDateTime>,
 
     /// The lease duration of the blob.
-    #[serde(rename = "leaseDuration", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "LeaseDuration", skip_serializing_if = "Option::is_none")]
     pub lease_duration: Option<LeaseDuration>,
 
     /// The lease state of the blob.
-    #[serde(rename = "leaseState", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "LeaseState", skip_serializing_if = "Option::is_none")]
     pub lease_state: Option<LeaseState>,
 
     /// The lease status of the blob.
-    #[serde(rename = "leaseStatus", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "LeaseStatus", skip_serializing_if = "Option::is_none")]
     pub lease_status: Option<LeaseStatus>,
 
     /// Whether the blob is under legal hold.
-    #[serde(rename = "legalHold", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "LegalHold", skip_serializing_if = "Option::is_none")]
     pub legal_hold: Option<bool>,
 
     /// The rehydrate priority of the blob.
-    #[serde(rename = "rehydratePriority", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "RehydratePriority", skip_serializing_if = "Option::is_none")]
     pub rehydrate_priority: Option<RehydratePriority>,
 
     /// The remaining retention days of the blob.
     #[serde(
-        rename = "remainingRetentionDays",
+        rename = "RemainingRetentionDays",
         skip_serializing_if = "Option::is_none"
     )]
     pub remaining_retention_days: Option<i32>,
 
     /// Whether the blob is sealed.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Sealed", skip_serializing_if = "Option::is_none")]
     pub sealed: Option<bool>,
 
     /// Whether the blog is encrypted on the server.
-    #[serde(rename = "serverEncrypted", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "ServerEncrypted", skip_serializing_if = "Option::is_none")]
     pub server_encrypted: Option<bool>,
 
     /// The number of tags for the blob.
-    #[serde(rename = "tagCount", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "TagCount", skip_serializing_if = "Option::is_none")]
     pub tag_count: Option<i32>,
 }
 
@@ -346,37 +358,39 @@ pub struct BlobPropertiesInternal {
 #[non_exhaustive]
 pub struct BlobTag {
     /// The key of the tag.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Key", skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
 
     /// The value of the tag.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Value", skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
 /// Represents blob tags.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "Tags")]
 pub struct BlobTags {
     /// Represents the blob tags.
-    #[serde(rename = "blobTagSet", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "TagSet", skip_serializing_if = "Option::is_none")]
     pub blob_tag_set: Option<Vec<BlobTag>>,
 }
 
 /// The Block lookup list.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "BlockList")]
 pub struct BlockLookupList {
     /// The committed blocks
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Committed", skip_serializing_if = "Option::is_none")]
     pub committed: Option<Vec<String>>,
 
     /// The latest blocks
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Latest", skip_serializing_if = "Option::is_none")]
     pub latest: Option<Vec<String>>,
 
     /// The uncommitted blocks
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Uncommitted", skip_serializing_if = "Option::is_none")]
     pub uncommitted: Option<Vec<String>>,
 }
 
@@ -385,45 +399,47 @@ pub struct BlockLookupList {
 #[non_exhaustive]
 pub struct ClearRange {
     /// The end of the byte range.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "End", skip_serializing_if = "Option::is_none")]
     pub end: Option<i64>,
 
     /// The start of the byte range.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Start", skip_serializing_if = "Option::is_none")]
     pub start: Option<i64>,
 }
 
 /// An Azure Storage container.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "Container")]
 pub struct ContainerItem {
     /// Whether the container is deleted.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Deleted", skip_serializing_if = "Option::is_none")]
     pub delete: Option<bool>,
 
     /// The metadata of the container.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Metadata", skip_serializing_if = "Option::is_none")]
     pub metadata: Option<ContainerMetadata>,
 
     /// The name of the container.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The properties of the container.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Properties", skip_serializing_if = "Option::is_none")]
     pub properties: Option<ContainerProperties>,
 
     /// The version of the container.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Version", skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
 
 /// The metadata of a container.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "Metadata")]
 pub struct ContainerMetadata {
     /// Whether the metadata is encrypted.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "@Encrypted", skip_serializing_if = "Option::is_none")]
     pub encrypted: Option<String>,
 }
 
@@ -432,72 +448,72 @@ pub struct ContainerMetadata {
 #[non_exhaustive]
 pub struct ContainerProperties {
     /// The date-time the container was created in RFC1123 format.
-    #[serde(rename = "creationTime", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Creation-Time", skip_serializing_if = "Option::is_none")]
     pub creation_time: Option<OffsetDateTime>,
 
     /// The default encryption scope of the container.
     #[serde(
-        rename = "defaultEncryptionScope",
+        rename = "DefaultEncryptionScope",
         skip_serializing_if = "Option::is_none"
     )]
     pub default_encryption_scope: Option<String>,
 
     /// The deleted time of the container.
-    #[serde(rename = "deletedTime", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "DeletedTime", skip_serializing_if = "Option::is_none")]
     pub deleted_time: Option<OffsetDateTime>,
 
     /// Whether to prevent encryption scope override.
     #[serde(
-        rename = "denyEncryptionScopeOverride",
+        rename = "DenyEncryptionScopeOverride",
         skip_serializing_if = "Option::is_none"
     )]
     pub deny_encryption_scope_override: Option<bool>,
 
     /// The ETag of the container.
-    #[serde(rename = "eTag", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "ETag", skip_serializing_if = "Option::is_none")]
     pub e_tag: Option<String>,
 
     /// Whether it has an immutability policy.
     #[serde(
-        rename = "hasImmutabilityPolicy",
+        rename = "HasImmutabilityPolicy",
         skip_serializing_if = "Option::is_none"
     )]
     pub has_immutability_policy: Option<bool>,
 
     /// The has legal hold status of the container.
-    #[serde(rename = "hasLegalHold", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "HasLegalHold", skip_serializing_if = "Option::is_none")]
     pub has_legal_hold: Option<bool>,
 
     /// Whether immutable storage with versioning is enabled.
     #[serde(
-        rename = "immutableStorageWithVersioningEnabled",
+        rename = "ImmutableStorageWithVersioningEnabled",
         skip_serializing_if = "Option::is_none"
     )]
     pub immutable_storage_with_versioning_enabled: Option<bool>,
 
     /// The date-time the container was last modified in RFC1123 format.
-    #[serde(rename = "lastModified", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Last-Modified", skip_serializing_if = "Option::is_none")]
     pub last_modified: Option<OffsetDateTime>,
 
     /// The lease duration of the container.
-    #[serde(rename = "leaseDuration", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "LeaseDuration", skip_serializing_if = "Option::is_none")]
     pub lease_duration: Option<LeaseDuration>,
 
     /// The lease state of the container.
-    #[serde(rename = "leaseState", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "LeaseState", skip_serializing_if = "Option::is_none")]
     pub lease_state: Option<LeaseState>,
 
     /// The lease status of the container.
-    #[serde(rename = "leaseStatus", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "LeaseStatus", skip_serializing_if = "Option::is_none")]
     pub lease_status: Option<LeaseStatus>,
 
     /// The public access type of the container.
-    #[serde(rename = "publicAccess", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "PublicAccess", skip_serializing_if = "Option::is_none")]
     pub public_access: Option<PublicAccessType>,
 
     /// The remaining retention days of the container.
     #[serde(
-        rename = "remainingRetentionDays",
+        rename = "RemainingRetentionDays",
         skip_serializing_if = "Option::is_none"
     )]
     pub remaining_retention_days: Option<i32>,
@@ -508,73 +524,75 @@ pub struct ContainerProperties {
 #[non_exhaustive]
 pub struct CorsRule {
     /// The allowed headers.
-    #[serde(rename = "allowedHeaders", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "AllowedHeaders", skip_serializing_if = "Option::is_none")]
     pub allowed_headers: Option<String>,
 
     /// The allowed methods.
-    #[serde(rename = "allowedMethods", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "AllowedMethods", skip_serializing_if = "Option::is_none")]
     pub allowed_methods: Option<String>,
 
     /// The allowed origins.
-    #[serde(rename = "allowedOrigins", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "AllowedOrigins", skip_serializing_if = "Option::is_none")]
     pub allowed_origins: Option<String>,
 
     /// The exposed headers.
-    #[serde(rename = "exposedHeaders", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "ExposedHeaders", skip_serializing_if = "Option::is_none")]
     pub exposed_headers: Option<String>,
 
     /// The maximum age in seconds.
-    #[serde(rename = "maxAgeInSeconds", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "MaxAgeInSeconds", skip_serializing_if = "Option::is_none")]
     pub max_age_in_seconds: Option<i32>,
 }
 
 /// Represents the delimited text configuration.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "DelimitedTextConfiguration")]
 pub struct DelimitedTextConfiguration {
     /// The string used to separate columns.
-    #[serde(rename = "columnSeparator", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "ColumnSeparator", skip_serializing_if = "Option::is_none")]
     pub column_separator: Option<String>,
 
     /// The string used to escape a quote character in a field.
-    #[serde(rename = "escapeChar", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "EscapeChar", skip_serializing_if = "Option::is_none")]
     pub escape_char: Option<String>,
 
     /// The string used to quote a specific field.
-    #[serde(rename = "fieldQuote", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "FieldQuote", skip_serializing_if = "Option::is_none")]
     pub field_quote: Option<String>,
 
     /// Represents whether the data has headers.
-    #[serde(rename = "headersPresent", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "HasHeaders", skip_serializing_if = "Option::is_none")]
     pub headers_present: Option<bool>,
 
     /// The string used to separate records.
-    #[serde(rename = "recordSeparator", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "RecordSeparator", skip_serializing_if = "Option::is_none")]
     pub record_separator: Option<String>,
 }
 
 /// The filter blob item.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "Blob")]
 pub struct FilterBlobItem {
     /// The properties of the blob.
-    #[serde(rename = "containerName", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "ContainerName", skip_serializing_if = "Option::is_none")]
     pub container_name: Option<String>,
 
     /// Whether it is the current version of the blob
-    #[serde(rename = "isCurrentVersion", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "IsCurrentVersion", skip_serializing_if = "Option::is_none")]
     pub is_current_version: Option<bool>,
 
     /// The name of the blob.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The metadata of the blob.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Tags", skip_serializing_if = "Option::is_none")]
     pub tags: Option<BlobTags>,
 
     /// The version ID of the blob.
-    #[serde(rename = "versionId", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "VersionId", skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -583,19 +601,19 @@ pub struct FilterBlobItem {
 #[non_exhaustive]
 pub struct FilterBlobSegment {
     /// The blob segment.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Blobs", skip_serializing_if = "Option::is_none")]
     pub blobs: Option<Vec<FilterBlobItem>>,
 
     /// The next marker of the blobs.
-    #[serde(rename = "nextMarker", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "NextMarker", skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
 
     /// The service endpoint.
-    #[serde(rename = "serviceEndpoint", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "@ServiceEndpoint", skip_serializing_if = "Option::is_none")]
     pub service_endpoint: Option<String>,
 
     /// The filter for the blobs.
-    #[serde(rename = "where", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Where", skip_serializing_if = "Option::is_none")]
     pub where_prop: Option<String>,
 }
 
@@ -604,20 +622,21 @@ pub struct FilterBlobSegment {
 #[non_exhaustive]
 pub struct GeoReplication {
     /// The last sync time.
-    #[serde(rename = "lastSyncTime", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "LastSyncTime", skip_serializing_if = "Option::is_none")]
     pub last_sync_time: Option<String>,
 
     /// The georeplication status.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Status", skip_serializing_if = "Option::is_none")]
     pub status: Option<GeoReplicationStatus>,
 }
 
 /// Represents the JSON text configuration.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "JsonTextConfiguration")]
 pub struct JsonTextConfiguration {
     /// The string used to separate records.
-    #[serde(rename = "recordSeparator", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "RecordSeparator", skip_serializing_if = "Option::is_none")]
     pub record_separator: Option<String>,
 }
 
@@ -626,110 +645,113 @@ pub struct JsonTextConfiguration {
 #[non_exhaustive]
 pub struct KeyInfo {
     /// The date-time the key expires.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Expiry", skip_serializing_if = "Option::is_none")]
     pub expiry: Option<String>,
 
     /// The date-time the key is active.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Start", skip_serializing_if = "Option::is_none")]
     pub start: Option<String>,
 }
 
 /// An enumeration of blobs.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "EnumerationResults")]
 pub struct ListBlobsFlatSegmentResponse {
     /// The container name.
-    #[serde(rename = "containerName", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "@ContainerName", skip_serializing_if = "Option::is_none")]
     pub container_name: Option<String>,
 
     /// The marker of the blobs.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Marker", skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 
     /// The max results of the blobs.
-    #[serde(rename = "maxResults", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "MaxResults", skip_serializing_if = "Option::is_none")]
     pub max_results: Option<i32>,
 
     /// The next marker of the blobs.
-    #[serde(rename = "nextMarker", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "NextMarker", skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
 
     /// The prefix of the blobs.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Prefix", skip_serializing_if = "Option::is_none")]
     pub rrefix: Option<String>,
 
     /// The blob segment.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Segment", skip_serializing_if = "Option::is_none")]
     pub segment: Option<BlobFlatListSegment>,
 
     /// The service endpoint.
-    #[serde(rename = "serviceEndpoint", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "@ServiceEndpoint", skip_serializing_if = "Option::is_none")]
     pub service_endpoint: Option<String>,
 }
 
 /// An enumeration of blobs
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "EnumerationResults")]
 pub struct ListBlobsHierarchySegmentResponse {
     /// The container name.
-    #[serde(rename = "containerName", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "@ContainerName", skip_serializing_if = "Option::is_none")]
     pub container_name: Option<String>,
 
     /// The delimiter of the blobs.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Delimiter", skip_serializing_if = "Option::is_none")]
     pub delimiter: Option<String>,
 
     /// The marker of the blobs.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Marker", skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 
     /// The max results of the blobs.
-    #[serde(rename = "maxResults", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "MaxResults", skip_serializing_if = "Option::is_none")]
     pub max_results: Option<i32>,
 
     /// The next marker of the blobs.
-    #[serde(rename = "nextMarker", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "NextMarker", skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
 
     /// The prefix of the blobs.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Prefix", skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
 
     /// The blob segment.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Segment", skip_serializing_if = "Option::is_none")]
     pub segment: Option<BlobHierarchyListSegment>,
 
     /// The service endpoint.
-    #[serde(rename = "serviceEndpoint", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "@ServiceEndpoint", skip_serializing_if = "Option::is_none")]
     pub service_endpoint: Option<String>,
 }
 
 /// The list container segement response
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "EnumerationResults")]
 pub struct ListContainersSegmentResponse {
     /// The container segment.
-    #[serde(rename = "containerItems", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "ContainerItems", skip_serializing_if = "Option::is_none")]
     pub container_items: Option<Vec<ContainerItem>>,
 
     /// The marker of the containers.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Marker", skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 
     /// The max results of the containers.
-    #[serde(rename = "maxxResults", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "MaxResults", skip_serializing_if = "Option::is_none")]
     pub maxx_results: Option<i32>,
 
     /// The next marker of the containers.
-    #[serde(rename = "nextMarker", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "NextMarker", skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
 
     /// The prefix of the containers.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Prefix", skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
 
     /// The service endpoint.
-    #[serde(rename = "serviceEndpoint", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "@ServiceEndpoint", skip_serializing_if = "Option::is_none")]
     pub service_endpoint: Option<String>,
 }
 
@@ -738,23 +760,23 @@ pub struct ListContainersSegmentResponse {
 #[non_exhaustive]
 pub struct Logging {
     /// Whether delete operation is logged.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Delete", skip_serializing_if = "Option::is_none")]
     pub delete: Option<bool>,
 
     /// Whether read operation is logged.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Read", skip_serializing_if = "Option::is_none")]
     pub read: Option<bool>,
 
     /// The retention policy of the logs.
-    #[serde(rename = "retentionPolicy", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "RetentionPolicy", skip_serializing_if = "Option::is_none")]
     pub retention_policy: Option<RetentionPolicy>,
 
     /// The version of the logging properties.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Version", skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 
     /// Whether write operation is logged.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Write", skip_serializing_if = "Option::is_none")]
     pub write: Option<bool>,
 }
 
@@ -763,23 +785,23 @@ pub struct Logging {
 #[non_exhaustive]
 pub struct Metrics {
     /// Whether it is enabled.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Enabled", skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
 
     /// Whether to include API in the metrics.
-    #[serde(rename = "includeApis", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "IncludeAPIs", skip_serializing_if = "Option::is_none")]
     pub include_apis: Option<bool>,
 
     /// The retention policy of the metrics.
-    #[serde(rename = "retentionPolicy", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "RetentionPolicy", skip_serializing_if = "Option::is_none")]
     pub retention_policy: Option<RetentionPolicy>,
 
     /// The service properties of the metrics.
-    #[serde(rename = "serviceProperties", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "ServiceProperties", skip_serializing_if = "Option::is_none")]
     pub service_properties: Option<MetricsServiceProperties>,
 
     /// The version of the metrics properties.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Version", skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
 
@@ -788,15 +810,15 @@ pub struct Metrics {
 #[non_exhaustive]
 pub struct MetricsProperties {
     /// Whether to include API in the metrics.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Enabled", skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
 
     /// The retention policy of the metrics.
-    #[serde(rename = "retentionPolicy", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "RetentionPolicy", skip_serializing_if = "Option::is_none")]
     pub retention_policy: Option<RetentionPolicy>,
 
     /// The version of the metrics properties.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Version", skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
 
@@ -805,11 +827,11 @@ pub struct MetricsProperties {
 #[non_exhaustive]
 pub struct MetricsServiceProperties {
     /// The hour metrics properties.
-    #[serde(rename = "hourMetrics", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "HourMetrics", skip_serializing_if = "Option::is_none")]
     pub hour_metrics: Option<MetricsProperties>,
 
     /// The minute metrics properties.
-    #[serde(rename = "minuteMetrics", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "MinuteMetrics", skip_serializing_if = "Option::is_none")]
     pub minute_metrics: Option<MetricsProperties>,
 }
 
@@ -823,34 +845,36 @@ pub struct ObjectReplicationMetadata {}
 #[non_exhaustive]
 pub struct PageList {
     /// The clear ranges.
-    #[serde(rename = "clearRange", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "ClearRange", skip_serializing_if = "Option::is_none")]
     pub clear_range: Option<Vec<ClearRange>>,
 
     /// The next marker.
-    #[serde(rename = "nextMarker", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "NextMarker", skip_serializing_if = "Option::is_none")]
     pub next_marker: Option<String>,
 
     /// The page ranges.
-    #[serde(rename = "pageRange", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "PageRange", skip_serializing_if = "Option::is_none")]
     pub page_range: Option<Vec<PageRange>>,
 }
 
 /// The page range.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "PageRange")]
 pub struct PageRange {
     /// The end of the byte range.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "End", skip_serializing_if = "Option::is_none")]
     pub end: Option<i64>,
 
     /// The start of the byte range.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Start", skip_serializing_if = "Option::is_none")]
     pub start: Option<i64>,
 }
 
 /// Represents the Parquet configuration.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "ParquetConfiguration")]
 pub struct ParquetConfiguration {}
 
 /// The query format settings.
@@ -858,56 +882,57 @@ pub struct ParquetConfiguration {}
 #[non_exhaustive]
 pub struct QueryFormat {
     /// The Apache Arrow configuration.
-    #[serde(rename = "arrowConfiguration", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "ArrowConfiguration", skip_serializing_if = "Option::is_none")]
     pub arrow_configuration: Option<ArrowConfiguration>,
 
     /// The delimited text configuration.
     #[serde(
-        rename = "delimitedTextConfiguration",
+        rename = "DelimitedTextConfiguration",
         skip_serializing_if = "Option::is_none"
     )]
     pub delimited_text_configuration: Option<DelimitedTextConfiguration>,
 
     /// The JSON text configuration.
     #[serde(
-        rename = "jsonTextConfiguration",
+        rename = "JsonTextConfiguration",
         skip_serializing_if = "Option::is_none"
     )]
     pub json_text_configuration: Option<JsonTextConfiguration>,
 
     /// The Parquet configuration.
     #[serde(
-        rename = "parquetConfiguration",
+        rename = "ParquetConfiguration",
         skip_serializing_if = "Option::is_none"
     )]
     pub parquet_configuration: Option<ParquetConfiguration>,
 
     /// The query type.
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<QueryType>,
 }
 
 /// Groups the set of query request settings.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
+#[serde(rename = "QueryRequest")]
 pub struct QueryRequest {
     /// The query expression in SQL. The maximum size of the query expression is 256KiB.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Expression", skip_serializing_if = "Option::is_none")]
     pub expression: Option<String>,
 
     /// The input serialization settings.
-    #[serde(rename = "inputSerialization", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "InputSerialization", skip_serializing_if = "Option::is_none")]
     pub input_serialization: Option<QuerySerialization>,
 
     /// The output serialization settings.
     #[serde(
-        rename = "outputSerialization",
+        rename = "OutputSerialization",
         skip_serializing_if = "Option::is_none"
     )]
     pub output_serialization: Option<QuerySerialization>,
 
     /// Required. The type of the provided query expression.
-    #[serde(rename = "queryType", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "QueryType", skip_serializing_if = "Option::is_none")]
     pub query_type: Option<QueryRequestTypeSqlOnly>,
 }
 
@@ -916,7 +941,7 @@ pub struct QueryRequest {
 #[non_exhaustive]
 pub struct QuerySerialization {
     /// The query format.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Format", skip_serializing_if = "Option::is_none")]
     pub format: Option<QueryFormat>,
 }
 
@@ -926,17 +951,17 @@ pub struct QuerySerialization {
 pub struct RetentionPolicy {
     /// Whether to allow permanent delete.
     #[serde(
-        rename = "allowPermanentDelete",
+        rename = "AllowPermanentDelete",
         skip_serializing_if = "Option::is_none"
     )]
     pub allow_permanent_delete: Option<bool>,
 
     /// The number of days to retain the logs.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Days", skip_serializing_if = "Option::is_none")]
     pub days: Option<i32>,
 
     /// Whether to enable the retention policy.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Enabled", skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
 }
 
@@ -945,11 +970,11 @@ pub struct RetentionPolicy {
 #[non_exhaustive]
 pub struct SignedIdentifier {
     /// The access policy for the signed identifier.
-    #[serde(rename = "accessPolicy", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "AccessPolicy", skip_serializing_if = "Option::is_none")]
     pub access_policy: Option<AccessPolicy>,
 
     /// The unique ID for the signed identifier.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 }
 
@@ -958,11 +983,11 @@ pub struct SignedIdentifier {
 #[non_exhaustive]
 pub struct StaticWebsite {
     /// The error document.
-    #[serde(rename = "errorDocument", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "ErrorDocument", skip_serializing_if = "Option::is_none")]
     pub error_document: Option<String>,
 
     /// The index document.
-    #[serde(rename = "indexDocument", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "IndexDocument", skip_serializing_if = "Option::is_none")]
     pub index_document: Option<String>,
 }
 
@@ -971,37 +996,37 @@ pub struct StaticWebsite {
 #[non_exhaustive]
 pub struct StorageServiceProperties {
     /// The CORS properties.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Cors", skip_serializing_if = "Option::is_none")]
     pub cors: Option<Vec<CorsRule>>,
 
     /// The default service version.
     #[serde(
-        rename = "defaultServiceVersion",
+        rename = "DefaultServiceVersion",
         skip_serializing_if = "Option::is_none"
     )]
     pub default_service_version: Option<String>,
 
     /// The delete retention policy.
     #[serde(
-        rename = "deleteRetentionPolicy",
+        rename = "DeleteRetentionPolicy",
         skip_serializing_if = "Option::is_none"
     )]
     pub delete_retention_policy: Option<RetentionPolicy>,
 
     /// The hour metrics properties.
-    #[serde(rename = "hourMetrics", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "HourMetrics", skip_serializing_if = "Option::is_none")]
     pub hour_metrics: Option<Metrics>,
 
     /// The logging properties.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Logging", skip_serializing_if = "Option::is_none")]
     pub logging: Option<Logging>,
 
     /// The minute metrics properties.
-    #[serde(rename = "minuteMetrics", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "MinuteMetrics", skip_serializing_if = "Option::is_none")]
     pub minute_metrics: Option<Metrics>,
 
     /// The static website properties.
-    #[serde(rename = "staticWebsite", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "StaticWebsite", skip_serializing_if = "Option::is_none")]
     pub static_website: Option<StaticWebsite>,
 }
 
@@ -1010,7 +1035,7 @@ pub struct StorageServiceProperties {
 #[non_exhaustive]
 pub struct StorageServiceStats {
     /// The geo replication stats.
-    #[serde(rename = "geoReplication", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "GeoReplication", skip_serializing_if = "Option::is_none")]
     pub geo_replication: Option<GeoReplication>,
 }
 
@@ -1019,31 +1044,31 @@ pub struct StorageServiceStats {
 #[non_exhaustive]
 pub struct UserDelegationKey {
     /// The date-time the key expires.
-    #[serde(rename = "signedExpiry", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "SignedExpiry", skip_serializing_if = "Option::is_none")]
     pub signed_expiry: Option<String>,
 
     /// The Azure Active Directory object ID in GUID format.
-    #[serde(rename = "signedOid", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "SignedOid", skip_serializing_if = "Option::is_none")]
     pub signed_oid: Option<String>,
 
     /// Abbreviation of the Azure Storage service that accepts the key.
-    #[serde(rename = "signedService", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "SignedService", skip_serializing_if = "Option::is_none")]
     pub signed_service: Option<String>,
 
     /// The date-time the key is active.
-    #[serde(rename = "signedStart", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "SignedStart", skip_serializing_if = "Option::is_none")]
     pub signed_start: Option<String>,
 
     /// The Azure Active Directory tenant ID in GUID format.
-    #[serde(rename = "signedTid", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "SignedTid", skip_serializing_if = "Option::is_none")]
     pub signed_tid: Option<String>,
 
     /// The service version that created the key.
-    #[serde(rename = "signedVersion", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "SignedVersion", skip_serializing_if = "Option::is_none")]
     pub signed_version: Option<String>,
 
     /// The key as a base64 string.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Value", skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 

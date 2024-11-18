@@ -68,6 +68,10 @@ export class CodeGenerator {
       clientsModRS.push(new rust.Module('internal_models', false));
       files.push({name: `${clientsSubDir}/internal_models.rs`, content: models.internal});
     }
+    if (models.xmlHelpers) {
+      generatedModRS.push(new rust.Module('xml_helpers', false));
+      files.push({name: 'xml_helpers.rs', content: models.xmlHelpers});
+    }
 
     if (clientsModRS.length > 0) {
       files.push({name: `${clientsSubDir}/mod.rs`, content: emitModRs(clientsModRS)});
