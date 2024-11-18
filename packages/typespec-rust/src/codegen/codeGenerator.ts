@@ -13,8 +13,8 @@ import { emitModels } from './models.js';
 
 import * as rust from '../codemodel/index.js';
 
-// the files and their content to emit
-export interface Files {
+// a file to emit
+export interface File {
   readonly name: string;
   readonly content: string;
 }
@@ -40,10 +40,10 @@ export class CodeGenerator {
   }
 
   // returns the generated content
-  emitContent(): Array<Files> {
+  emitContent(): Array<File> {
     const clientsModRS = new Array<rust.Module>();
     const generatedModRS = new Array<rust.Module>();
-    const files = new Array<Files>();
+    const files = new Array<File>();
     const clientsSubDir = 'clients';
 
     const clients = emitClients(this.crate, clientsSubDir);
