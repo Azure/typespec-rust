@@ -407,6 +407,7 @@ export class QueryParameter extends HTTPParameterBase implements QueryParameter 
 function validateHeaderPathQueryParamKind(type: types.Type, paramKind: string) {
   switch (type.kind) {
     case 'String':
+    case 'encodedBytes':
     case 'enum':
     case 'literal':
     case 'offsetDateTime':

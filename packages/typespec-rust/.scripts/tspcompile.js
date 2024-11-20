@@ -34,7 +34,7 @@ const cadlRanch = {
   //'cadl_multiclient': ['client/structure/multi-client/client.tsp'],
   //'cadl_renamedop': ['client/structure/renamed-operation/client.tsp'],
   //'cadl_twoop': ['client/structure/two-operation-group/client.tsp'],
-  //'cadl_bytes': ['encode/bytes'],
+  'cadl_bytes': ['encode/bytes'], // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
   //'cadl_datetime': ['encode/datetime'],
   //'cadl_duration': ['encode/duration'],
   //'cadl_bodyoptional': ['parameters/body-optionality'],

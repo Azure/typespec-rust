@@ -5,7 +5,7 @@
 
 use crate::models::DeletionRecoveryLevel;
 use async_std::task::block_on;
-use azure_core::{Model, RequestContent, Response, Result, Url};
+use azure_core::{base64, Model, RequestContent, Response, Result, Url};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use time::OffsetDateTime;
@@ -16,7 +16,11 @@ use typespec_client_core::json::to_json;
 #[non_exhaustive]
 pub struct BackupSecretResult {
     /// The backup blob containing the backed up secret.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(
+        deserialize_with = "base64::deserialize_url_safe",
+        serialize_with = "base64::serialize_url_safe",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub value: Option<Vec<u8>>,
 }
 
@@ -248,7 +252,12 @@ pub struct SecretListResult {
 #[non_exhaustive]
 pub struct SecretRestoreParameters {
     /// The backup blob associated with a secret bundle.
-    #[serde(rename = "value", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "value",
+        deserialize_with = "base64::deserialize_url_safe",
+        serialize_with = "base64::serialize_url_safe",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub secret_bundle_backup: Option<Vec<u8>>,
 }
 

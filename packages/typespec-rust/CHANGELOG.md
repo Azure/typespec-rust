@@ -21,6 +21,9 @@
 * Added support for TypeSpec spread parameters.
 * Added support for pageable methods.
 * Added support for XML payloads.
+* Added partial support for base64 encoded values.
+  * Headers, query parameters, and struct fiels work. The exception for struct fields is nested arrays (e.g. `Vec<Vec<u8>>`).
+  * Requests and responses of base64 encoded values do not work due to the orphan problem.
 
 ### Other Changes
 

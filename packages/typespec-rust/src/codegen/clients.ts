@@ -417,14 +417,14 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
 
 // emits the code for building the request URL.
 // assumes that there's a mutable local var 'url'
-function constructUrl(indent: helpers.indentation, method: ClientMethod, paramGroups: methodParamGroups, fromSelf = true): string {
+function constructUrl(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, fromSelf = true): string {
   let body = '';
   let path = `"${method.httpPath}"`;
   if (paramGroups.path.length > 0) {
     // we have path params that need to have their segments replaced with the param values
     body += `${indent.get()}let mut path = String::from(${path});\n`;
     for (const pathParam of paramGroups.path) {
-      body += `${indent.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(pathParam, fromSelf)});\n`;
+      body += `${indent.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(use, pathParam, fromSelf)});\n`;
     }
     path = '&path';
   }
@@ -442,7 +442,7 @@ function constructUrl(indent: helpers.indentation, method: ClientMethod, paramGr
       });
     } else {
       body += getParamValueHelper(indent, queryParam, () => {
-        return `${indent.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(queryParam, fromSelf)});\n`;
+        return `${indent.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(use, queryParam, fromSelf)});\n`;
       });
     }
   }
@@ -458,7 +458,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
 
   for (const headerParam of paramGroups.header) {
     body += getParamValueHelper(indent, headerParam, () => {
-      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(headerParam, fromSelf)});\n`;
+      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, headerParam, fromSelf)});\n`;
     });
   }
 
@@ -500,7 +500,7 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   body += `${indent.get()}let mut url = self.${getEndpointFieldName(client)}.clone();\n`;
 
   const paramGroups = getMethodParamGroup(method);
-  body += constructUrl(indent, method, paramGroups);
+  body += constructUrl(indent, use, method, paramGroups);
   body += constructRequest(indent, use, method, paramGroups);
   body += `${indent.get()}self.pipeline.send(&mut ctx, &mut request).await\n`;
   return body;
@@ -537,7 +537,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     pattern: 'None',
     body: (indent) => {
       let none = `${indent.get()}url = endpoint.clone();\n`;
-      none += constructUrl(indent, method, paramGroups, false);
+      none += constructUrl(indent, use, method, paramGroups, false);
       return none;
     }
   }]);
@@ -572,7 +572,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   return body;
 }
 
-function getHeaderPathQueryParamValue(param: HeaderParamType | rust.PathParameter | QueryParamType, fromSelf = true): string {
+function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.PathParameter | QueryParamType, fromSelf = true): string {
   let paramName = '';
   // when fromSelf is false we assume that there's a local with the same name.
   // e.g. in pageable methods where we need to clone the params so they can be
@@ -581,21 +581,41 @@ function getHeaderPathQueryParamValue(param: HeaderParamType | rust.PathParamete
     paramName = 'self.';
   }
 
+  const encodeBytes = function(type: rust.EncodedBytes, param: string): string {
+    use.addType('azure_core', 'base64');
+    let encoding: string;
+    switch (type.encoding) {
+      case 'std':
+        encoding = 'base64::encode';
+        break;
+      case 'url':
+        encoding = 'base64::encode_url_safe';
+        break;
+    }
+    return `${encoding}(${param})`;
+  };
+
   if (param.kind === 'headerCollection' || param.kind === 'queryCollection') {
     if (param.format === 'multi') {
       throw new Error('multi should have been handled outside getHeaderPathQueryParamValue');
-    }
-    if (param.type.type.kind === 'String') {
+    } else if (param.type.type.kind === 'String') {
       return `${param.name}.join("${getCollectionDelimiter(param.format)}")`;
     }
+
     // convert the items to strings
-    return `${param.name}.iter().map(|i| i.to_string()).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
+    let strConv = 'i.to_string()';
+    if (param.type.type.kind === 'encodedBytes') {
+      strConv = encodeBytes(param.type.type, 'i');
+    }
+    return `${param.name}.iter().map(|i| ${strConv}).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
   }
 
   switch (param.type.kind) {
     case 'String':
       paramName += param.name;
       break;
+    case 'encodedBytes':
+      return encodeBytes(param.type, param.name);
     case 'enum':
     case 'offsetDateTime':
     case 'scalar':

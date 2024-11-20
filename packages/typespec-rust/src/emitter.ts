@@ -35,11 +35,9 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   }
 }
 
-async function writeToGeneratedDir(outDir: string, filename: string, content: string, subdir?: string): Promise<void> {
-  let srcGen = `${outDir}/src/generated`;
-  if (subdir) {
-    srcGen = path.join(srcGen, subdir);
-  }
-  await mkdir(srcGen, {recursive: true});
-  await writeFile(`${srcGen}/${filename}`, content);
+async function writeToGeneratedDir(outDir: string, filename: string, content: string): Promise<void> {
+  const fullFilePath = path.join(outDir, 'src', 'generated', filename);
+  const fullDirPath = fullFilePath.substring(0, fullFilePath.lastIndexOf(path.sep));
+  await mkdir(fullDirPath, {recursive: true});
+  await writeFile(fullFilePath, content);
 }

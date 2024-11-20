@@ -52,7 +52,19 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
         serdeParams.push(`rename = "${fieldRename}"`);
       }
 
-      if (context.getModelBodyFormat(model) === 'xml' && helpers.unwrapOption(field.type).kind === 'vector' && field.xmlKind !== 'unwrappedList') {
+      // NOTE: usage of serde annotations like this means that base64 encoded bytes and
+      // XML wrapped lists are mutually exclusive. it's not a real scenario at present.
+      if (helpers.unwrapOption(field.type).kind === 'encodedBytes') {
+        // TODO: https://github.com/Azure/typespec-rust/issues/56
+        // specifically need to handle nested arrays of base64 encoded bytes
+        let format = '';
+        if ((<rust.EncodedBytes>helpers.unwrapOption(field.type)).encoding === 'url') {
+          format = '_url_safe';
+        }
+        serdeParams.push(`deserialize_with = "base64::deserialize${format}"`);
+        serdeParams.push(`serialize_with = "base64::serialize${format}"`);
+        use.addType('azure_core', 'base64');
+      } else if (context.getModelBodyFormat(model) === 'xml' && helpers.unwrapOption(field.type).kind === 'vector' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
         serdeParams.push(`deserialize_with = "${xmlListWrapper.name}::unwrap"`);

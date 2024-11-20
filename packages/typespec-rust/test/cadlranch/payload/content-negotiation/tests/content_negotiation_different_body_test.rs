@@ -6,7 +6,6 @@ use cadl_contentneg::{models::PngImageAsJson, ContentNegotiationClient};
 use std::fs;
 
 #[async_std::test]
-#[should_panic]
 async fn get_avatar_as_json() {
     let client =
         ContentNegotiationClient::with_no_credential("http://localhost:3000", None).unwrap();
@@ -15,7 +14,6 @@ async fn get_avatar_as_json() {
         .get_avatar_as_json(None)
         .await
         .unwrap();
-    // TODO: https://github.com/Azure/typespec-rust/issues/56
     let result: PngImageAsJson = resp.try_into().unwrap();
     let image_png =
         fs::read("../../../../node_modules/@azure-tools/cadl-ranch-specs/assets/image.png")
