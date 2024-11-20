@@ -5,280 +5,298 @@
 
 import { Crate, CrateDependency } from './crate.js';
 
-// Docs contains the values used in doc comment generation.
+/** Docs contains the values used in doc comment generation. */
 export interface Docs {
-  // the high level summary
+  /** the high level summary */
   summary?: string;
 
-  // detailed description
+  /** detailed description */
   description?: string;
 }
 
-// Type defines a type within the Rust type system
+/** Type defines a type within the Rust type system */
 export type Type = Arc | EncodedBytes | Enum | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | Pager | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
 
-// Arc is a std::sync::Arc<T>
+/** Arc is a std::sync::Arc<T> */
 export interface Arc extends StdType {
   kind: 'arc';
 
-  // the generic type param
-  // note that not all types are applicable
+  /**
+   * the generic type param
+   * note that not all types are applicable
+   */
   type: Type;
 }
 
-// BytesEncoding defines the possible types of base64-encoding.
+/** BytesEncoding defines the possible types of base64-encoding. */
 export type BytesEncoding = 'std' | 'url';
 
-// EncodedBytes is a Rust Vec<u8> that's base64-encoded.
+/** EncodedBytes is a Rust Vec<u8> that's base64-encoded. */
 export interface EncodedBytes {
   kind: 'encodedBytes';
 
-  // indicates what kind of base64-encoding to use
+  /** indicates what kind of base64-encoding to use */
   encoding: BytesEncoding;
 }
 
-// Enum is a Rust enum type.
+/** Enum is a Rust enum type. */
 export interface Enum {
   kind: 'enum';
 
-  // the name of the enum type
+  /** the name of the enum type */
   name: string;
 
-  // any docs for the type
+  /** any docs for the type */
   docs: Docs;
 
-  // indicates if the enum and its values should be public
+  /** indicates if the enum and its values should be public */
   pub: boolean;
 
-  // one or more values for the enum
+  /** one or more values for the enum */
   values: Array<EnumValue>;
 
-  // indicates if the enum is extensible or not
+  /** indicates if the enum is extensible or not */
   extensible: boolean;
 }
 
-// EnumValue is an enum value for a specific Enum
+/** EnumValue is an enum value for a specific Enum */
 export interface EnumValue {
-  // the name of the enum value
+  /** the name of the enum value */
   name: string;
 
-  // any docs for the value
+  /** any docs for the value */
   docs: Docs;
 
-  // the value used in SerDe operations
+  /** the value used in SerDe operations */
   value: number | string;
 }
 
-// ExternalType is a type defined in a different crate
+/** ExternalType is a type defined in a different crate */
 export interface ExternalType extends External {
   kind: 'external';
 
-  // indicates if the type includes a lifetime annotation
+  /** indicates if the type includes a lifetime annotation */
   lifetime?: Lifetime;
 }
 
-// HashMap is a Rust HashMap<K, V>
-// K is always a String
+/**
+ * HashMap is a Rust HashMap<K, V>
+ * K is always a String
+ */
 export interface HashMap extends StdType {
   kind: 'hashmap';
 
-  // the V generic type param
+  /** the V generic type param */
   type: Type;
 }
 
-// ImplTrait is the Rust syntax for "a concrete type that implements this trait"
+/** ImplTrait is the Rust syntax for "a concrete type that implements this trait" */
 export interface ImplTrait {
   kind: 'implTrait';
 
-  // the name of the trait
+  /** the name of the trait */
   name: string;
 
-  // the type on which the trait is implemented
+  /** the type on which the trait is implemented */
   type: Type;
 }
 
-// JsonValue is a raw JSON value
+/** JsonValue is a raw JSON value */
 export interface JsonValue extends External {
   kind: 'jsonValue';
 }
 
-// Lifetime is a Rust lifetime name.
+/** Lifetime is a Rust lifetime name. */
 export interface Lifetime {
   name: string;
 }
 
-// Literal is a literal value (e.g. a string "foo")
+/** Literal is a literal value (e.g. a string "foo") */
 export interface Literal {
   kind: 'literal';
 
+  /** the literal's value */
   value: boolean | null | number | string;
 }
 
-// Model is a Rust struct that participates in serde
+/** Model is a Rust struct that participates in serde */
 export interface Model extends StructBase {
   kind: 'model';
 
-  // fields contains the fields within the struct
+  /** fields contains the fields within the struct */
   fields: Array<ModelField>;
 
-  // the name of the type over the wire if it's
-  // different from the type's name.
+  /**
+   * the name of the type over the wire if it's
+   * different from the type's name.
+   */
   xmlName?: string;
 }
 
-// ModelField is a field definition within a model
+/** ModelField is a field definition within a model */
 export interface ModelField extends StructFieldBase {
-  // the name of the field over the wire
+  /** the name of the field over the wire */
   serde: string;
 
-  // contains XML-specific serde info
+  /** contains XML-specific serde info */
   xmlKind?: XMLKind;
 }
 
-// DateTimeEncoding is the wire format of the date/time
+/** DateTimeEncoding is the wire format of the date/time */
 export type DateTimeEncoding = 'rfc3339' | 'rfc7231' | 'unixTimestamp';
 
-// OffsetDateTime is a Rust time::OffsetDateTime type
+/** OffsetDateTime is a Rust time::OffsetDateTime type */
 export interface OffsetDateTime extends External {
   kind: 'offsetDateTime';
 
+  /** the encoding format */
   encoding: DateTimeEncoding;
 }
 
-// Option is a Rust Option<T>
+/** Option is a Rust Option<T> */
 export interface Option {
   kind: 'option';
 
-  // the generic type param
-  // note that not all types are applicable
+  /**
+   * the generic type param
+   * note that not all types are applicable
+   */
   type: Type;
 }
 
-// Pager is a Pager<T> from azure_core
+/** Pager is a Pager<T> from azure_core */
 export interface Pager extends External {
   kind: 'pager';
 
-  // the model containing the page of items
+  /** the model containing the page of items */
   type: Model;
 
-  // the wire format of the response body.
+  /** the wire format of the response body. */
   format: BodyFormat;
 }
 
-// RequestContent is a Rust RequestContent<T> from azure_core
+/** RequestContent is a Rust RequestContent<T> from azure_core */
 export interface RequestContent<T extends Type = Type> extends External {
   kind: 'requestContent';
 
-  // the generic type param
-  // note that not all types are applicable
+  /**
+   * the generic type param
+   * note that not all types are applicable
+   */
   type: T;
 
-  // the wire format of the request body
+  /** the wire format of the request body */
   format: BodyFormat;
 }
 
-// Response is a Rust Response<T> from azure_core
+/** Response is a Rust Response<T> from azure_core */
 export interface Response extends External {
   kind: 'response';
 
-  // the generic type param
-  // note that not all types are applicable
+  /**
+   * the generic type param
+   * note that not all types are applicable
+   */
   type: Type;
 
-  // the wire format of the response body.
-  // if the response doesn't return a body (i.e. Unit)
-  // the format will be undefined.
+  /**
+   * the wire format of the response body.
+   * if the response doesn't return a body (i.e. Unit)
+   * the format will be undefined.
+   */
   format?: BodyFormat;
 }
 
-// Result is a Rust Result<T> from azure_core
+/** Result is a Rust Result<T> from azure_core */
 export interface Result<T = Pager | Response | Unit> extends External {
   kind: 'result';
 
-  // the generic type param
+  /** the generic type param */
   type: T;
 }
 
-// ScalarType defines the supported Rust scalar type names
+/** ScalarType defines the supported Rust scalar type names */
 export type ScalarType = 'bool' | 'f32' | 'f64' | 'i8' | 'i16' | 'i32' | 'i64';
 
-// Scalar is a Rust scalar type
+/** Scalar is a Rust scalar type */
 export interface Scalar {
   kind: 'scalar';
 
+  /** the type of scalar */
   type: ScalarType;
 }
 
-// BodyFormat indicates the wire format for request and response bodies
-// TODO: Add 'xml' https://github.com/Azure/typespec-rust/issues/8
+/** BodyFormat indicates the wire format for request and response bodies */
 export type BodyFormat = 'binary' | 'json' | 'xml';
 
-// StringSlice is a Rust string slice
+/** StringSlice is a Rust string slice */
 export interface StringSlice {
   kind: 'str';
 }
 
-// StringType is a Rust string
+/** StringType is a Rust string */
 export interface StringType {
   kind: 'String';
 }
 
-// Struct is a Rust struct type definition
+/** Struct is a Rust struct type definition */
 export interface Struct extends StructBase {
   kind: 'struct';
 
-  // fields contains the fields within the struct
+  /** fields contains the fields within the struct */
   fields: Array<StructField>;
 }
 
-// StructField is a field definition within a struct
+/** StructField is a field definition within a struct */
 export interface StructField extends StructFieldBase {
   // no additional fields at present
 }
 
-// TokenCredential is an azure_core::TokenCredential parameter
+/** TokenCredential is an azure_core::TokenCredential parameter */
 export interface TokenCredential extends External {
   kind: 'tokenCredential';
 
-  // the scopes to include for the credential
+  /** the scopes to include for the credential */
   scopes: Array<string>;
 }
 
-// Unit is the unit type (i.e. "()")
+/** Unit is the unit type (i.e. "()") */
 export interface Unit {
   kind: 'unit';
 }
 
-// Url is an azure_core::Url type
+/** Url is an azure_core::Url type */
 export interface Url extends External {
   kind: 'Url';
 }
 
-// Vector is a Rust Vec<T>
-// since Vec<T> is in the prelude set, it doesn't need to extend StdType
+/**
+ * Vector is a Rust Vec<T>
+ * since Vec<T> is in the prelude set, it doesn't need to extend StdType
+ */
 export interface Vector {
   kind: 'vector';
 
-  // the generic type param
+  /** the generic type param */
   type: Type;
 }
 
-// XMLKind contains info used for generating XML-specific serde
+/** XMLKind contains info used for generating XML-specific serde */
 export type XMLKind = 'attribute' | 'text' | 'unwrappedList';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // base types
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-// External is a type defined in a different crate
+/** External is a type defined in a different crate */
 export interface External {
-  // the crate that defines the type
+  /** the crate that defines the type */
   crate: string;
 
-  // the name of the type
+  /** the name of the type */
   name: string;
 
-  // namespace within the crate where the type is defined (e.g. foo, foo::bar)
+  /** namespace within the crate where the type is defined (e.g. foo, foo::bar) */
   namespace?: string;
 }
 
@@ -291,12 +309,12 @@ export class External implements External {
   }
 }
 
-// StdType is a type in the standard library that's not in the prelude set.
+/** StdType is a type in the standard library that's not in the prelude set. */
 export interface StdType {
-  // the name of the type
+  /** the name of the type */
   name: string;
 
-  // the using statement to bring it into scope
+  /** the using statement to bring it into scope */
   use: string;
 }
 
@@ -311,41 +329,41 @@ export class StdType implements StdType {
 // base types
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-// base type for models and structs
+/** base type for models and structs */
 interface StructBase {
   kind: 'model' | 'struct';
 
-  // the name of the struct
+  /** the name of the struct */
   name: string;
 
-  // any docs for the type
+  /** any docs for the type */
   docs: Docs;
 
-  // indicates if the struct is only for internal consumption
+  /** indicates if the struct is only for internal consumption */
   internal: boolean;
 
-  // fields contains the fields within the struct
+  /** fields contains the fields within the struct */
   fields: Array<StructFieldBase>;
 
-  // indicates if the type includes a lifetime annotation
+  /** indicates if the type includes a lifetime annotation */
   lifetime?: Lifetime;
 }
 
-// base type for model and struct fields
+/** base type for model and struct fields */
 interface StructFieldBase {
-  // the name of the field
+  /** the name of the field */
   name: string;
 
-  // any docs for the field
+  /** any docs for the field */
   docs: Docs;
 
-  // indicates if the field should be public
+  /** indicates if the field should be public */
   pub: boolean;
 
-  // the field's underlying type
+  /** the field's underlying type */
   type: Type;
 
-  // the value to use when emitting a Default impl for the containing struct
+  /** the value to use when emitting a Default impl for the containing struct */
   defaultValue?: string;
 }
 

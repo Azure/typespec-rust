@@ -8,8 +8,27 @@ import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
-// emits the models.rs file for this crate
-export function emitModels(crate: rust.Crate, context: Context): {public?: string, internal?: string, xmlHelpers?: string} {
+/** contains different types of models to emit */
+export interface Models {
+  /** models that are part of public surface area */
+  public?: string;
+
+  /** models that are for internal use only */
+  internal?: string;
+
+  /** XML-specific helpers for internal use only */
+  xmlHelpers?: string;
+}
+
+/**
+ * returns the emitted model types, or empty if the
+ * crate contains no model types.
+ * 
+ * @param crate the crate for which to emit models
+ * @param context the context for the provided crate
+ * @returns the model content or empty
+ */
+export function emitModels(crate: rust.Crate, context: Context): Models {
   if (crate.models.length === 0) {
     return {};
   }
@@ -17,10 +36,18 @@ export function emitModels(crate: rust.Crate, context: Context): {public?: strin
   return {
     public: emitModelsInternal(crate, context, true),
     internal: emitModelsInternal(crate, context, false),
-    xmlHelpers: emitXMLListWrappers(crate),
+    xmlHelpers: emitXMLListWrappers(),
   };
 }
 
+/**
+ * the implementation of emitModels
+ * 
+ * @param crate the crate for which to emit models
+ * @param context the context for the provided crate
+ * @param pub true if we want public models, false for internal models
+ * @returns the model content or empty
+ */
 function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): string | undefined {
   // for the internal models we might need to use public model types
   const use = new Use(pub ? 'models' : undefined);
@@ -109,6 +136,13 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
   return content;
 }
 
+/**
+ * returns the value for the rename option in a serde derive macro
+ * or undefined if no rename is required.
+ * 
+ * @param field the field for which to emit a rename
+ * @returns the value for the rename option or undefined
+ */
 function getSerDeRename(field: rust.ModelField): string | undefined {
   if (field.name === field.serde && field.xmlKind !== 'attribute' && field.xmlKind !== 'text') {
     return undefined;
@@ -128,20 +162,24 @@ function getSerDeRename(field: rust.ModelField): string | undefined {
 // XML helpers infrastructure
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-// helper for wrapped XML lists
+/** helper for wrapped XML lists */
 interface XMLListWrapper {
-  // the name of the wrapper type
+  /** the name of the wrapper type */
   name: string;
 
-  // the wire name if different from the wrapper type name
+  /** the wire name if different from the wrapper type name */
   serde?: string;
 
-  // the name of the wrapped field.
-  // the name is the XML wire name.
+  /**
+   * the name of the wrapped field.
+   * the name is the XML wire name.
+   */
   fieldName: string;
 
-  // the field's type.
-  // should be an Option<Vec<T>>
+  /**
+   * the field's type.
+   * should be an Option<Vec<T>>
+   */
   fieldType: rust.Type;
 }
 
@@ -156,7 +194,13 @@ class XMLListWrapper implements XMLListWrapper {
 // used by getXMLListWrapper and emitXMLListWrappers
 const xmlListWrappers = new Map<string, XMLListWrapper>();
 
-// creates an XMLListWrapper for the specified model field
+/**
+ * gets or creates an XMLListWrapper for the specified model field.
+ * assumes that it's been determined that the wrapper is required.
+ * 
+ * @param field the field for which to create an XMLWrapper
+ * @returns the XMLListWrapper for the provided field
+ */
 function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
   // for wrapped lists of scalar types, the element names for
   // scalar types use the TypeSpec defined names. so, we need
@@ -208,8 +252,13 @@ function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
   return xmlListWrapper;
 }
 
-// emits helper types for XML lists as needed
-function emitXMLListWrappers(crate: rust.Crate): string | undefined {
+/**
+ * emits helper types for XML lists or returns undefined
+ * if no XMLListWrappers are required.
+ * 
+ * @returns the helper models for wrapped XML lists or undefined
+ */
+function emitXMLListWrappers(): string | undefined {
   if (xmlListWrappers.size === 0) {
     return undefined;
   }

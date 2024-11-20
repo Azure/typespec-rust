@@ -6,7 +6,12 @@
 import * as codegen from '@azure-tools/codegen';
 import * as rust from '../codemodel/index.js';
 
-// fixes up enum names to follow Rust conventions
+/**
+ * fixes up enum names to follow Rust conventions
+ * 
+ * @param name the name to fix up
+ * @returns the fixed up name. can be the original value if no fix-up was required
+ */
 export function fixUpEnumValueName(name: string): string {
   name = codegen.capitalize(name);
 
@@ -40,7 +45,11 @@ export function fixUpEnumValueName(name: string): string {
   return name;
 }
 
-// sorts client params so they're in the order, endpoint, [credential], other
+/**
+ * sorts client params in place so they're in the order, endpoint, [credential], other
+ * 
+ * @param params the client parameters to sort
+ */
 export function sortClientParameters(params: Array<rust.ClientParameter>): void {
   params.sort((a: rust.ClientParameter, b: rust.ClientParameter): number => {
     if (a.name === 'endpoint' || (a.name === 'credential' && b.name !== 'endpoint')) {
@@ -51,7 +60,12 @@ export function sortClientParameters(params: Array<rust.ClientParameter>): void 
   });
 }
 
-// if type is an Option<T>, returns the T, else returns type
+/**
+ * if type is an Option<T>, returns the T, else returns type
+ * 
+ * @param type the type to unwrap
+ * @returns the unwrapped type. can be the original value if no unwrapping was required
+ */
 export function unwrapOption(type: rust.Type): rust.Type {
   if (type.kind === 'option') {
     return type.type;

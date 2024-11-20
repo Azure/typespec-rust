@@ -6,48 +6,52 @@
 import * as client from './client.js';
 import * as types from './types.js';
 
-// Crate is a Rust crate
-// the Rust edition is centrally managed
+/**
+ * Crate is a Rust crate
+ * the Rust edition is centrally managed
+ */
 export interface Crate {
-  // the name of the Crate
+  /** the name of the Crate */
   name: string;
 
-  // the version of the Crate
+  /** the version of the Crate */
   version: string;
 
-  // the target service type
+  /** the target service type */
   type: ServiceType;
 
-  // the Crates on which this Crate depends
+  /** the Crates on which this Crate depends */
   dependencies: Array<CrateDependency>;
 
-  // enums contains all of the enums for this crate. can be empty
+  /** enums contains all of the enums for this crate. can be empty */
   enums: Array<types.Enum>;
 
-  // models contains all of the models for this crate. can be empty
+  /** models contains all of the models for this crate. can be empty */
   models: Array<types.Model>;
 
-  // clients contains all the clients for this crate. can be empty
+  /** clients contains all the clients for this crate. can be empty */
   clients: Array<client.Client>;
 }
 
-// ServiceType defines the possible service types
+/** ServiceType defines the possible service types */
 export type ServiceType = 'azure-arm' | 'data-plane';
 
-// CrateDependency is an external Crate dependency
-// note that dependency versions are centralized which is
-// why there's no version info specified here.
+/**
+ * CrateDependency is an external Crate dependency
+ * note that dependency versions are centralized which is
+ * why there's no version info specified here.
+ */
 export interface CrateDependency {
-  // the name of the Crate
+  /** the name of the Crate */
   name: string;
 }
 
-// Module is an entry in a mod.rs file
+/** Module is an entry in a mod.rs file */
 export interface Module {
-  // the name of the module
+  /** the name of the module */
   name: string;
 
-  // if the module is public
+  /** if the module is public */
   pub: boolean;
 }
 
@@ -65,6 +69,10 @@ export class Crate implements Crate {
     this.clients = new Array<client.Client>();
   }
 
+  /**
+   * add a dependency to the crate if it doesn't already exist
+   * @param dependency the dependency to add
+   */
   addDependency(dependency: CrateDependency): void {
     for (const dep of this.dependencies) {
       if (dep.name === dependency.name) {
@@ -74,6 +82,7 @@ export class Crate implements Crate {
     this.dependencies.push(dependency);
   }
 
+  /** lexicographically sorts all content */
   sortContent(): void {
     const sortAscending = function(a: string, b: string): number {
       return a < b ? -1 : a > b ? 1 : 0;

@@ -7,7 +7,12 @@ import * as codegen from '@azure-tools/codegen';
 import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
 
-// emits the lib.rs file
+/**
+ * emits the contents of the lib.rs file
+ * 
+ * @param crate the crate for which to emit a lib.rs file
+ * @returns the contents of the lib.rs file
+ */
 export function emitLibRs(crate: rust.Crate): string {
   let content = helpers.contentPreamble();
   content += 'mod generated;\n\n';

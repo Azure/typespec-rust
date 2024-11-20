@@ -7,14 +7,21 @@ import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
-// Context contains contextual information about how types are used.
-// It's an implementation detail of CodeGenerator and isn't intended
-// for use outside of that class.
+/**
+ * Context contains contextual information about how types are used.
+ * It's an implementation detail of CodeGenerator and isn't intended
+ * for use outside of that class.
+ */
 export class Context {
   private readonly bodyFormatForModels = new Map<rust.Model, rust.BodyFormat>();
   private readonly tryFromForRequestTypes = new Map<string, rust.BodyFormat>();
   private readonly tryFromResponseTypes = new Map<string, rust.BodyFormat>();
 
+  /**
+   * instantiates a new Context for the provided crate
+   * 
+   * @param crate the crate for which the context will be constructed
+   */
   constructor(crate: rust.Crate) {
     const recursiveAddBodyFormat = (type: rust.Type, format: rust.BodyFormat) => {
       type = helpers.unwrapType(type);
@@ -74,8 +81,14 @@ export class Context {
     }
   }
 
-  // returns the TryFrom<T> for RequestContent<T> where T is type.
-  // if no impl is required, it returns the empty string.
+  /**
+   * returns the impl TryFrom<T> for RequestContent<T> where T is type.
+   * if no impl is required, it returns the empty string.
+   * 
+   * @param type the type for which to implement TryFrom
+   * @param use the use statement builder currently in scope
+   * @returns the impl TryFrom<T> block for type or the empty string
+   */
   getTryFromForRequestContent(type: rust.Type, use: Use): string {
     const format = this.tryFromForRequestTypes.get(helpers.getTypeDeclaration(type));
     if (!format) {
@@ -96,8 +109,14 @@ export class Context {
     return content;
   }
 
-  // returns the TryFrom<Response<T>> for T where T is type.
-  // if no impl is required, it returns the empty string.
+  /**
+   * returns the impl TryFrom<Response<T>> for T where T is type.
+   * if no impl is required, it returns the empty string.
+   * 
+   * @param type the type for which to implement TryFrom
+   * @param use the use statement builder currently in scope
+   * @returns the impl TryFrom<T> block for type or the empty string
+   */
   getTryFromResponseForType(type: rust.Type, use: Use): string {
     const format = this.tryFromResponseTypes.get(helpers.getTypeDeclaration(type));
     if (!format) {
@@ -120,6 +139,12 @@ export class Context {
     return content;
   }
 
+  /**
+   * returns the body format for the provided model
+   * 
+   * @param model the model for which to determine the format
+   * @returns the body format
+   */
   getModelBodyFormat(model: rust.Model): rust.BodyFormat {
     const bodyFormat = this.bodyFormatForModels.get(model);
     if (!bodyFormat) {
@@ -128,6 +153,12 @@ export class Context {
     return bodyFormat;
   }
 
+  /**
+   * verifies that the body format is JSON or XML as those are
+   * the only formats requiring impl TryFrom<T> helpers.
+   * 
+   * @param format the format to inspect
+   */
   private validateBodyFormat(format: rust.BodyFormat): void {
     switch (format) {
       case 'json':

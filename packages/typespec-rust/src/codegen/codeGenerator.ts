@@ -13,33 +13,52 @@ import { emitModels } from './models.js';
 
 import * as rust from '../codemodel/index.js';
 
-// a file to emit
+/** a file to emit */
 export interface File {
+  /** the name of the file. can contain sub-directories */
   readonly name: string;
+
+  /** the contents of the file */
   readonly content: string;
 }
 
-// CodeGenerator exposes the APIs for obtaining generated code content.
+/** CodeGenerator exposes the APIs for obtaining generated code content */
 export class CodeGenerator {
   private readonly context: Context;
   private readonly crate: rust.Crate;
 
+  /**
+   * instantiates a new CodeGenerator instance for the provided crate
+   * @param crate the Rust crate for which to generate code
+   */
   constructor(crate: rust.Crate) {
     this.context = new Context(crate);
     this.crate = crate;
   }
 
-  // returns the contents for the Cargo.toml file
+  /**
+   * generates a Cargo.toml file
+   * 
+   * @returns the contents for the Cargo.toml file
+   */
   emitCargoToml(): string {
     return emitCargoToml(this.crate);
   }
 
-  // returns the content for lib.rs
+  /**
+   * generates the lib.rs file for crate
+   * 
+   * @returns the content for lib.rs
+   */
   emitLibRs(): string {
     return emitLibRs(this.crate);
   }
 
-  // returns the generated content
+  /**
+   * generates all clients, models, and any helper content
+   * 
+   * @returns an array of files to emit
+   */
   emitContent(): Array<File> {
     const clientsModRS = new Array<rust.Module>();
     const generatedModRS = new Array<rust.Module>();

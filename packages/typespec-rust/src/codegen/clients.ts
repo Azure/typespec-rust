@@ -8,19 +8,31 @@ import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
-// a file to emit
+/** a file to emit */
 export interface File {
+  /** the name of the file. can contain sub-directories */
   readonly name: string;
+
+  /** the contents of the file */
   readonly content: string;
 }
 
-// the client files and modules
+/** the client files and modules */
 export interface ClientsContent {
+  /** the list of client files */
   clients: Array<File>;
+
+  /** the list of client modules */
   modules: Array<rust.Module>;
 }
 
-// emits the content for all client files
+/**
+ * emits the content for all client files
+ * 
+ * @param crate the crate for which to emit clients
+ * @param targetDir the directory to contain the client content
+ * @returns client content or undefined if the crate contains no clients
+ */
 export function emitClients(crate: rust.Crate, targetDir: string): ClientsContent | undefined {
   if (crate.clients.length === 0) {
     return undefined;
@@ -218,6 +230,15 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
   return {clients: clientFiles, modules: clientMods};
 }
 
+/**
+ * creates the parameter signature for a client constructor
+ * e.g. "foo: i32, bar: String, options: ClientOptions"
+ * 
+ * @param params the params to include in the signature. can be empty
+ * @param options the client options type. will always be the last parameter
+ * @param use the use statement builder currently in scope
+ * @returns the client constructor params sig
+ */
 function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: rust.ClientOptions, use: Use): string {
   const paramsSig = new Array<string>();
   for (const param of params) {
@@ -228,6 +249,14 @@ function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: r
   return paramsSig.join(', ');
 }
 
+/**
+ * creates the parameter signature for a client method
+ * e.g. "foo: i32, bar: String, options: MethodOptions"
+ * 
+ * @param method the Rust method for which to create the param sig
+ * @param use the use statement builder currently in scope
+ * @returns the method params sig
+ */
 function getMethodParamsSig(method: rust.MethodType, use: Use): string {
   const paramsSig = new Array<string>();
   paramsSig.push(formatParamTypeName(method.self));
@@ -253,8 +282,14 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
   return paramsSig.join(', ');
 }
 
-// creates the auth policy if the ctor contains a credential param.
-// the policy will be named auth_policy.
+/**
+ * returns the auth policy instantiation code if the ctor contains a credential param.
+ * the policy will be a local var named auth_policy.
+ * 
+ * @param ctor the constructor for which to instantiate an auth policy
+ * @param use the use statement builder currently in scope
+ * @returns the auth policy instantiation code or undefined if not required
+ */
 function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
   for (const param of ctor.parameters) {
     if (param.type.kind === 'arc' && param.type.type.kind === 'tokenCredential') {
@@ -269,6 +304,13 @@ function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
   return undefined;
 }
 
+/**
+ * returns the complete text for the provided parameter's type
+ * e.g. self, &String, mut SomeStruct
+ * 
+ * @param param the parameter for which to create the
+ * @returns the parameter's type declaration
+ */
 function formatParamTypeName(param: rust.MethodParameter | rust.Self): string {
   let format = '';
   if (param.ref) {
@@ -301,7 +343,15 @@ function formatParamTypeName(param: rust.MethodParameter | rust.Self): string {
   return format;
 }
 
-// returns a filtered array of struct fields from the client options types
+/**
+ * returns a subset of struct fields from the client options types.
+ * at present, only the core ClientOptions field is omitted.
+ * 
+ * can return an empty array if there are no client options.
+ * 
+ * @param option the client options type to enumerate
+ * @returns the subset of struct fields
+ */
 function getClientOptionsFields(option: rust.ClientOptions): Array<rust.StructField> {
   const fields = new Array<rust.StructField>();
   for (const field of option.type.fields) {
@@ -314,6 +364,12 @@ function getClientOptionsFields(option: rust.ClientOptions): Array<rust.StructFi
   return fields;
 }
 
+/**
+ * returns the name of the endpoint field within the client
+ * 
+ * @param client the client in which to find the endpoint field
+ * @returns the name of the endpoint field
+ */
 function getEndpointFieldName(client: rust.Client): string {
   // find the endpoint field. it's the only one that's
   // a Url. the name will be uniform across clients
@@ -331,6 +387,13 @@ function getEndpointFieldName(client: rust.Client): string {
   return endpointFieldName;
 }
 
+/**
+ * constructs the body for a client accessor method
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param clientAccessor the client accessor for which to construct the body
+ * @returns the contents of the method body
+ */
 function getClientAccessorMethodBody(indent: helpers.indentation, clientAccessor: rust.ClientAccessor): string {
   let body = `${clientAccessor.returns.name} {\n`;
   const endpointFieldName = getEndpointFieldName(clientAccessor.returns);
@@ -344,14 +407,30 @@ type ClientMethod = rust.AsyncMethod | rust.PageableMethod;
 type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderParameter;
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryParameter;
 
+/** groups method parameters based on their kind */
 interface methodParamGroups {
+  /** the body parameter if applicable */
   body?: rust.BodyParameter;
+
+  /** header parameters. can be empty */
   header: Array<HeaderParamType>;
+
+  /** partial body parameters. can be empty */
   partialBody: Array<rust.PartialBodyParameter>;
+
+  /** path parameters. can be empty */
   path: Array<rust.PathParameter>;
+
+  /** query parameters. can be empty */
   query: Array<QueryParamType>;
 }
 
+/**
+ * enumerates method parameters and returns them based on groups
+ * 
+ * @param method the method containing the parameters to group
+ * @returns the groups parameters
+ */
 function getMethodParamGroup(method: ClientMethod): methodParamGroups {
   // collect and sort all the header/path/query params
   const headerParams = new Array<HeaderParamType>();
@@ -401,8 +480,18 @@ function getMethodParamGroup(method: ClientMethod): methodParamGroups {
   };
 }
 
-// for optional params, by convention, we'll create a local named param.name.
-// setter MUST reference by param.name so it works for optional and required params.
+/**
+ * wraps the emitted code emitted by setter in a "let Some" block
+ * if the parameter is optional, else the value of setter is returned.
+ * 
+ * NOTE: for optional params, by convention, we'll create a local named param.name.
+ * setter MUST reference by param.name so it works for optional and required params.
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param param the parameter to which the contents of setter apply
+ * @param setter the callback that emits the code to read from a param var
+ * @returns 
+ */
 function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, setter: () => string): string {
   if (param.optional) {
     // optional params are in the unwrapped options local var
@@ -415,8 +504,17 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
   return setter();
 }
 
-// emits the code for building the request URL.
-// assumes that there's a mutable local var 'url'
+/**
+ * emits the code for building the request URL.
+ * assumes that there's a mutable local var 'url'
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param use the use statement builder currently in scope
+ * @param method the method for which we're building the body
+ * @param paramGroups the param groups for the provided method
+ * @param fromSelf applicable for client params. when true, the prefix "self." is included
+ * @returns the URL construction code
+ */
 function constructUrl(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, fromSelf = true): string {
   let body = '';
   let path = `"${method.httpPath}"`;
@@ -450,9 +548,18 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
   return body;
 }
 
-// emits the code for building the HTTP request.
-// assumes that there's a local var 'url' which is the Url.
-// creates a mutable local 'request' which is the Request instance.
+/**
+ * emits the code for building the HTTP request.
+ * assumes that there's a local var 'url' which is the Url.
+ * creates a mutable local 'request' which is the Request instance.
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param use the use statement builder currently in scope
+ * @param method the method for which we're building the body
+ * @param paramGroups the param groups for the provided method
+ * @param fromSelf applicable for client params. when true, the prefix "self." is included
+ * @returns the request construction code
+ */
 function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, fromSelf = true): string {
   let body = `${indent.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
 
@@ -493,6 +600,15 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
   return body;
 }
 
+/**
+ * constructs the body for an async client method
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param use the use statement builder currently in scope
+ * @param client the client to which the method belongs
+ * @param method the method for the body to build
+ * @returns the contents of the method body
+ */
 function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
   use.addTypes('azure_core', ['AsClientMethodOptions', 'Method', 'Request']);
   let body = 'let options = options.unwrap_or_default();\n';
@@ -506,6 +622,15 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   return body;
 }
 
+/**
+ * constructs the body for a pageable client method
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param use the use statement builder currently in scope
+ * @param client the client to which the method belongs
+ * @param method the method for the body to build
+ * @returns the contents of the method body
+ */
 function getPageableMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.PageableMethod): string {
   if (!method.nextLinkName) {
     throw new Error('paged responses other than nextLink format NYI');
@@ -572,6 +697,20 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   return body;
 }
 
+/**
+ * contains the code to use when populating a header/path/query value
+ * from a parameter of that type.
+ * 
+ * if the param's type is a String, then the return value is simply the
+ * param's name. the non-String cases require some kind of conversion.
+ * this could simply be a to_string() call, e.g. "paramName.to_string()".
+ * other cases might be more complex.
+ * 
+ * @param use the use statement builder currently in scope
+ * @param param the param for which to get the value
+ * @param fromSelf applicable for client params. when true, the prefix "self." is included
+ * @returns 
+ */
 function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.PathParameter | QueryParamType, fromSelf = true): string {
   let paramName = '';
   // when fromSelf is false we assume that there's a local with the same name.
@@ -633,6 +772,12 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
   return paramName;
 }
 
+/**
+ * returns the delimiter character for the provided format type
+ * 
+ * @param format the format collection type
+ * @returns the delimiter character
+ */
 function getCollectionDelimiter(format: rust.CollectionFormat): string {
   switch (format) {
     case 'csv':
@@ -648,6 +793,13 @@ function getCollectionDelimiter(format: rust.CollectionFormat): string {
   }
 }
 
+/**
+ * returns the lifetime annotation for the provide struct.
+ * can return the empty string if the struct has no lifetime.
+ * 
+ * @param type the struct for which to get the annotation
+ * @returns the annotation or empty string
+ */
 function getLifetimeAnnotation(type: rust.Struct): string {
   if (type.lifetime) {
     return `${helpers.getGenericLifetimeAnnotation(type.lifetime)}`;

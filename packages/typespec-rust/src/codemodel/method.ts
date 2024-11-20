@@ -5,56 +5,56 @@
 
 import * as types from './types.js';
 
-// Method is a Rust method
+/** Method is a Rust method */
 export interface Method<T> {
-  // the name of the method
+  /** the name of the method */
   name: string;
 
-  // any docs for the method
+  /** any docs for the method */
   docs: types.Docs;
 
-  // indicates if the method should be public
+  /** indicates if the method should be public */
   pub: boolean;
 
-  // the name of the type on which the method is implemented
+  /** the name of the type on which the method is implemented */
   impl: string;
 
-  // self contains info about the self param
+  /** self contains info about the self param */
   self: Self;
 
-  // the params passed to the method (excluding self). can be empty
+  /** the params passed to the method (excluding self). can be empty */
   params: Array<Parameter>;
 
-  // the method's return type
+  /** the method's return type */
   returns?: T;
 }
 
-// Parameter is a Rust function or method parameter
+/** Parameter is a Rust function or method parameter */
 export interface Parameter {
-  // the name of the parameter
+  /** the name of the parameter */
   name: string;
 
-  // any docs for the parameter
+  /** any docs for the parameter */
   docs: types.Docs;
 
-  // the parameter's type
+  /** the parameter's type */
   type: types.Type;
 
-  // indicates if the parameter is mutable. defaults to false
+  /** indicates if the parameter is mutable. defaults to false */
   mut: boolean;
 
-  // indicates if the parameter is a reference. defaults to false
+  /** indicates if the parameter is a reference. defaults to false */
   ref: boolean;
 }
 
-// Self is a method's self parameter
+/** Self is a method's self parameter */
 export interface Self {
   name: 'self';
 
-  // indicates if self is mutable
+  /** indicates if self is mutable */
   mut: boolean;
 
-  // indicates if self is a reference
+  /** indicates if self is a reference */
   ref: boolean;
 }
 

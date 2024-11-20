@@ -12,8 +12,14 @@ import { RustEmitterOptions } from '../lib.js';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as rust from '../codemodel/index.js';
 
-// Adapter converts the tcgc code model to a Rust Crate
+/** Adapter converts the tcgc code model to a Rust Crate */
 export class Adapter {
+  /**
+   * Creates an Adapter for the specified EmitContext.
+   * 
+   * @param context the compiler context from which to create the Adapter
+   * @returns 
+   */
   static async create(context: EmitContext<RustEmitterOptions>): Promise<Adapter> {
     // @encodedName can be used in XML scenarios, it is effectively the
     // same as TypeSpec.Xml.@name. however, it's filtered out by default
@@ -46,7 +52,7 @@ export class Adapter {
     this.crate = new rust.Crate(options['crate-name'], options['crate-version'], serviceType);
   }
 
-  // performs all the steps to convert tcgc to a crate
+  /** performs all the steps to convert tcgc to a crate */
   tcgcToCrate(): rust.Crate {
     this.adaptTypes();
     this.adaptClients();
@@ -83,7 +89,7 @@ export class Adapter {
     return this.crate;
   }
 
-  // converts all tcgc types to their Rust type equivalent
+  /** converts all tcgc types to their Rust type equivalent */
   private adaptTypes(): void {
     for (const sdkEnum of this.ctx.sdkPackage.enums) {
       if ((sdkEnum.usage & tcgc.UsageFlags.ApiVersionEnum) === tcgc.UsageFlags.ApiVersionEnum) {
@@ -105,7 +111,12 @@ export class Adapter {
     }
   }
 
-  // converts a tcgc enum to a Rust enum
+  /**
+   * converts a tcgc enum to a Rust enum
+   * 
+   * @param sdkEnum the tcgc enum to convert
+   * @returns a Rust enum
+   */
   private getEnum(sdkEnum: tcgc.SdkEnumType): rust.Enum {
     const enumName = codegen.capitalize(sdkEnum.name);
     let rustEnum = this.types.get(enumName);
@@ -126,7 +137,12 @@ export class Adapter {
     return rustEnum;
   }
 
-  // converts a tcgc model to a Rust model
+  /**
+   * converts a tcgc model to a Rust model
+   * 
+   * @param model the tcgc model to convert
+   * @returns a Rust model
+   */
   private getModel(model: tcgc.SdkModelType): rust.Model {
     if (model.name.length === 0) {
       throw new Error('unnamed model'); // TODO: this might no longer be an issue
@@ -159,7 +175,13 @@ export class Adapter {
     return rustModel;
   }
 
-  // converts a tcgc model property to a model field
+  /**
+   * converts a tcgc model property to a model field
+   * 
+   * @param property the tcgc model property to convert
+   * @param isPubMod indicates if the model is public
+   * @returns a Rust model field
+   */
   private getModelField(property: tcgc.SdkBodyModelPropertyType, isPubMod: boolean): rust.ModelField {
     let fieldType = this.getType(property.type);
 
@@ -182,7 +204,7 @@ export class Adapter {
     return modelField;
   }
 
-  // converts a tcgc type to a Rust type
+  /** converts a tcgc type to a Rust type */
   private getType(type: tcgc.SdkType): rust.Type {
     const getScalar = (kind: 'boolean' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8'): rust.Scalar => {
       let scalar = this.types.get(kind);
@@ -312,6 +334,7 @@ export class Adapter {
     }
   }
 
+  /** returns the Rust unit type */
   private getUnitType(): rust.Unit {
     const typeKey = 'rust-unit';
     let unitType = this.types.get(typeKey);
@@ -323,6 +346,12 @@ export class Adapter {
     return unitType;
   }
 
+  /**
+   * converts a tcgc constant to a Rust literal
+   * 
+   * @param constType the constant to convert
+   * @returns a Rust literal
+   */
   private getLiteral(constType: tcgc.SdkConstantType): rust.Literal {
     const literalKey = `literal-${constType.value}`;
     let literalType = this.types.get(literalKey);
@@ -334,7 +363,7 @@ export class Adapter {
     return literalType;
   }
 
-  // converts all tcgc clients and their methods into Rust clients/methods
+  /** converts all tcgc clients and their methods into Rust clients/methods */
   private adaptClients(): void {
     for (const client of this.ctx.sdkPackage.clients) {
       if (client.methods.length === 0) {
@@ -349,8 +378,14 @@ export class Adapter {
     }
   }
 
-  // recursively adapts a client and its methods.
-  // this simplifies the case for hierarchical clients.
+  /**
+   * recursively converts a client and its methods.
+   * this simplifies the case for hierarchical clients.
+   * 
+   * @param client the tcgc client to recursively convert
+   * @param parent contains the parent Rust client when converting a child client
+   * @returns a Rust client
+   */
   private recursiveAdaptClient(client: tcgc.SdkClientType<tcgc.SdkHttpOperation>, parent?: rust.Client): rust.Client {
     let clientName = client.name;
     if (parent) {
@@ -503,7 +538,12 @@ export class Adapter {
     return rustClient;
   }
 
-  // converts method into a rust.Method for the specified rust.Client
+  /**
+   * converts a tcgc method to a Rust method for the specified client
+   * 
+   * @param method the tcgc method to convert
+   * @param rustClient the client to which the method belongs
+   */
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
     let rustMethod: rust.MethodType;
     const optionsLifetime = new rust.Lifetime('a');
@@ -669,6 +709,12 @@ export class Adapter {
     rustMethod.returns = new rust.Result(this.crate, returnType);
   }
 
+  /**
+   * converts a tcgc operation parameter into a Rust method parameter
+   * 
+   * @param param the tcgc operation parameter to convert
+   * @returns a Rust method parameter
+   */
   private adaptMethodParameter(param: OperationParamType): rust.MethodParameter {
     const paramLoc = param.onClient ? 'client' : 'method';
 
@@ -741,6 +787,14 @@ export class Adapter {
     return adaptedParam;
   }
 
+  /**
+   * converts a tcgc spread parameter into a Rust partial body parameter.
+   * 
+   * @param param the tcgc method parameter to convert
+   * @param format the wire format for the underlying body type
+   * @param opParamType the tcgc model to which the spread parameter belongs
+   * @returns a Rust partial body parameter
+   */
   private adaptMethodSpreadParameter(param: tcgc.SdkMethodParameter, format: rust.BodyFormat, opParamType: tcgc.SdkModelType): rust.PartialBodyParameter {
     switch (format) {
       case 'binary':
@@ -773,6 +827,12 @@ export class Adapter {
     }
   }
 
+  /**
+   * converts a Content-Type header value into a Rust body format
+   * 
+   * @param contentType the value of the Content-Type header
+   * @returns a Rust body format
+   */
   private adaptBodyFormat(contentType: string): rust.BodyFormat {
     // we only recognize/support JSON, text, and XML content types, so assume anything else is binary
     // NOTE: we check XML before text in order to support text/xml
@@ -789,12 +849,31 @@ export class Adapter {
   }
 }
 
+/**
+ * snake-cases the provided name
+ * 
+ * @param name the name to snake-case
+ * @returns name in snake-case format
+ */
 function snakeCaseName(name: string): string {
   return codegen.deconstruct(name).join('_');
 }
 
 type OperationParamType = tcgc.SdkBodyParameter | tcgc.SdkHeaderParameter | tcgc.SdkPathParameter | tcgc.SdkQueryParameter;
 
+/**
+ * recursively creates a map key from the specified type.
+ * this is idempotent so providing the same type will create
+ * the same key.
+ * 
+ * obj is recursively unwrapped, and each layer is used to construct
+ * the key. e.g. if obj is a HashMap<String, Vec<i32>> this would
+ * unwrap to dict-array-int32.
+ * 
+ * @param root the starting value for the key
+ * @param obj the type for which to create the key
+ * @returns a string containing the complete map key
+ */
 function recursiveKeyName(root: string, obj: tcgc.SdkType): string {
   switch (obj.kind) {
     case 'array':
@@ -825,6 +904,12 @@ function recursiveKeyName(root: string, obj: tcgc.SdkType): string {
   }
 }
 
+/**
+ * returns the XML-specific name based on the provided decorators
+ * 
+ * @param decorators the decorators to enumerate
+ * @returns the XML-specific name or undefined if there isn't one
+ */
 function getXMLName(decorators: Array<tcgc.DecoratorInfo>): string | undefined {
   if (decorators.length === 0) {
     return undefined;
@@ -845,6 +930,13 @@ function getXMLName(decorators: Array<tcgc.DecoratorInfo>): string | undefined {
   return undefined;
 }
 
+/**
+ * returns the XML-specific kind for field based on the provided decorators
+ * 
+ * @param decorators the decorators to enumerate
+ * @param field the Rust model field to which the kind will apply
+ * @returns the XML-specific field kind or undefined if there isn't one
+ */
 function getXMLKind(decorators: Array<tcgc.DecoratorInfo>, field: rust.ModelField): rust.XMLKind | undefined {
   if (decorators.length === 0) {
     return undefined;

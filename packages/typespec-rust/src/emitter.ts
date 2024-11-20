@@ -11,6 +11,11 @@ import * as path from 'path';
 import { EmitContext } from '@typespec/compiler';
 import 'source-map-support/register.js';
 
+/**
+ * entry point called by the tsp compiler
+ * 
+ * @param context the emit context
+ */
 export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   const adapter = await Adapter.create(context);
   const crate = adapter.tcgcToCrate();
@@ -35,6 +40,12 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   }
 }
 
+/**
+ * 
+ * @param outDir the output directory provided by the tsp compiler
+ * @param filename the name of the file to write. can contain sub-directories
+ * @param content the contents of the file
+ */
 async function writeToGeneratedDir(outDir: string, filename: string, content: string): Promise<void> {
   const fullFilePath = path.join(outDir, 'src', 'generated', filename);
   const fullDirPath = fullFilePath.substring(0, fullFilePath.lastIndexOf(path.sep));

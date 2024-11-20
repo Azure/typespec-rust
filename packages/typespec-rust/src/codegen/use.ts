@@ -7,22 +7,31 @@ import * as codegen from '@azure-tools/codegen';
 import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
 
-// used to generate use statements
+/** used to generate use statements */
 export class Use {
   private uses: Array<moduleTypes>;
   private scope?: 'models';
 
-  // scope indicates a scope in which use statements are constructed.
-  // e.g. 'models' indicates we're "in" the crate::models scope so there's
-  // no need to add a use statement for types in crate::models
-  // no scope will add all using statements as required.
+  /**
+   * instantiates a new instance of the Use type
+   * 
+   * @param scope indicates a scope in which use statements are constructed.
+   * e.g. 'models' indicates we're "in" the crate::models scope so there's
+   * no need to add a use statement for types in crate::models
+   * no scope will add all using statements as required.
+   */
   constructor(scope?: 'models') {
     this.uses = new Array<moduleTypes>();
     this.scope = scope;
   }
 
-  // adds the specified module and type if not already in the list
-  // e.g. ('azure_core', 'Context') or ('crate::models', 'FooType')
+  /**
+   * adds the specified module and type if not already in the list
+   * e.g. ('azure_core', 'Context') or ('crate::models', 'FooType')
+   * 
+   * @param module a module name
+   * @param type a type within the provided module
+   */
   addType(module: string, type: string): void {
     let mod = this.uses.find((v: moduleTypes, i: number, o: Array<moduleTypes>) => { return v.module === module; });
     if (!mod) {
@@ -37,7 +46,12 @@ export class Use {
     }
   }
 
-  // adds the specified module and types if not already in the list
+  /**
+   * adds the specified module and types if not already in the list
+   * 
+   * @param module a module name
+   * @param types one or more types within the provided module
+   */
   addTypes(module: string, types: Array<string>): void {
     if (types.length === 0) {
       throw new Error('types can\'t be empty');
@@ -47,7 +61,11 @@ export class Use {
     }
   }
 
-  // adds the specified type if not already in the list
+  /**
+   * adds the specified type if not already in the list
+   * 
+   * @param type the Rust type to add
+   */
   addForType(type: rust.Client | rust.Type): void {
     switch (type.kind) {
       case 'arc':
@@ -93,7 +111,11 @@ export class Use {
     }
   }
 
-  // returns Rust formatted use statements
+  /**
+   * emits Rust use statements for the contents of this Use object
+   * 
+   * @returns returns Rust formatted use statements
+   */
   text(): string {
     if (this.uses.length === 0) {
       return '';
@@ -121,7 +143,11 @@ export class Use {
   }
 }
 
+/** module and types within */
 interface moduleTypes {
+  /** the module name */
   module: string;
+
+  /** the types within module */
   types: Array<string>;
 }

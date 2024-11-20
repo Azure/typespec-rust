@@ -5,6 +5,7 @@
 
 import { createTypeSpecLibrary, JSONSchemaType } from '@typespec/compiler';
 
+/** the public Rust emitter options */
 export interface RustEmitterOptions {
   'crate-name': string;
   'crate-version': string;

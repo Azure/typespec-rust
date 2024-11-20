@@ -6,63 +6,67 @@
 import * as method from './method.js';
 import * as types from './types.js';
 
-// Client is a SDK client
+/** Client is a SDK client */
 export interface Client {
   kind: 'client';
 
-  // the name of the client
+  /** the name of the client */
   name: string;
 
-  // any docs for the client
+  /** any docs for the client */
   docs: types.Docs;
 
-  // contains info for instantiable clients
+  /** contains info for instantiable clients */
   constructable?: ClientConstruction;
 
-  // fields contains the ctor parameters that are
-  // persisted as fields on the client type. note that
-  // not all ctor params might be persisted, and not
-  // all fields are ctor params.
+  /**
+   * fields contains the ctor parameters that are
+   * persisted as fields on the client type. note that
+   * not all ctor params might be persisted, and not
+   * all fields are ctor params.
+   */
   fields: Array<ClientParameter>;
 
-  // all the methods for this client
+  /** all the methods for this client */
   methods: Array<MethodType>;
 
-  // the parent client in a hierarchical client
+  /** the parent client in a hierarchical client */
   parent?: Client;
 }
 
-// ClientConstruction contains data for instantiable clients.
+/** ClientConstruction contains data for instantiable clients. */
 export interface ClientConstruction {
-  // the client options type used in the constructors
+  /** the client options type used in the constructors */
   options: ClientOptions;
 
-  // the constructor functions for a client.
+  /** the constructor functions for a client. */
   constructors: Array<Constructor>;
 }
 
-// ClientOptions is the struct containing optional client params
+/** ClientOptions is the struct containing optional client params */
 export interface ClientOptions extends types.Option {
+  /** the client options type */
   type: types.Struct;
 }
 
-// represents a client constructor function
+/** represents a client constructor function */
 export interface Constructor {
+  /** name of the constructor */
   name: string;
 
-  // the modeled parameters. at minimum, an endpoint param
+  /** the modeled parameters. at minimum, an endpoint param */
   parameters: Array<ClientParameter>;
 }
 
-// ClientParameter is a Rust client parameter
+/** ClientParameter is a Rust client parameter */
 export interface ClientParameter {
-  // the name of the parameter
+  /** the name of the parameter */
   name: string;
 
-  // the type of the client parameter
+  /** the type of the client parameter */
   type: types.Type;
 
-  // indicates if the parameter is a reference. defaults to false
+  /** indicates if the parameter is a reference. defaults to false */
   ref: boolean;
 }
 
@@ -70,39 +74,39 @@ export interface ClientParameter {
 // methods
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-// HTTPMethod defines the possible HTTP verbs in a request
+/** HTTPMethod defines the possible HTTP verbs in a request */
 export type HTTPMethod = 'delete' | 'get' | 'head' | 'patch' | 'post' | 'put';
 
-// Method defines the possible method types
+/** Method defines the possible method types */
 export type MethodType = AsyncMethod | ClientAccessor | PageableMethod;
 
-// AsyncMethod is an async Rust method
+/** AsyncMethod is an async Rust method */
 export interface AsyncMethod extends HTTPMethodBase {
   kind: 'async';
 
-  // the params passed to the method (excluding self). can be empty
+  /** the params passed to the method (excluding self). can be empty */
   params: Array<MethodParameter>;
 }
 
-// ClientAccessor is a method that returns a sub-client instance.
+/** ClientAccessor is a method that returns a sub-client instance. */
 export interface ClientAccessor extends method.Method<Client> {
   kind: 'clientaccessor';
 
-  // the client returned by the accessor method
+  /** the client returned by the accessor method */
   returns: Client;
 }
 
-// PageableMethod is a method that returns a collection of items over one or more pages.
+/** PageableMethod is a method that returns a collection of items over one or more pages. */
 export interface PageableMethod extends HTTPMethodBase {
   kind: 'pageable';
 
-  // the params passed to the method (excluding self). can be empty
+  /** the params passed to the method (excluding self). can be empty */
   params: Array<MethodParameter>;
 
-  // the paged result
+  /** the paged result */
   returns: types.Result<types.Pager>;
 
-  // the name of the field in the response that contains the next link URL
+  /** the name of the field in the response that contains the next link URL */
   nextLinkName?: string;
 }
 
@@ -110,112 +114,118 @@ export interface PageableMethod extends HTTPMethodBase {
 // parameters
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-// CollectionFormat indicates how a collection is formatted on the wire
+/** CollectionFormat indicates how a collection is formatted on the wire */
 export type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes';
 
-// ExtendedCollectionFormat includes additional formats
+/** ExtendedCollectionFormat includes additional formats */
 export type ExtendedCollectionFormat = CollectionFormat | 'multi';
 
-// ParameterLocation indicates where the value of the param originates
+/** ParameterLocation indicates where the value of the param originates */
 export type ParameterLocation = 'client' | 'method';
 
-// MethodParameter defines the possible method parameter types
+/** MethodParameter defines the possible method parameter types */
 export type MethodParameter = BodyParameter | HeaderCollectionParameter | HeaderParameter | PartialBodyParameter | PathParameter | QueryCollectionParameter | QueryParameter;
 
-// BodyParameter is a param that's passed via the HTTP request body
+/** BodyParameter is a param that's passed via the HTTP request body */
 export interface BodyParameter extends HTTPParameterBase {
   kind: 'body';
 
-  // the type of the body param
+  /** the type of the body param */
   type: types.RequestContent;
 }
 
-// HeaderCollectionParameter is a param that goes in a HTTP header
+/** HeaderCollectionParameter is a param that goes in a HTTP header */
 export interface HeaderCollectionParameter extends HTTPParameterBase {
   kind: 'headerCollection';
 
-  // the header in the HTTP request
+  /** the header in the HTTP request */
   header: string;
 
-  // the collection of header param values
+  /** the collection of header param values */
   type: types.Vector;
 
-  // the format of the collection
+  /** the format of the collection */
   format: CollectionFormat;
 }
 
-// HeaderParameter is a param that goes in a HTTP header
+/** HeaderParameter is a param that goes in a HTTP header */
 export interface HeaderParameter extends HTTPParameterBase {
   kind: 'header';
 
-  // the header in the HTTP request
+  /** the header in the HTTP request */
   header: string;
 
-  // the type of the header param
-  // note that not all types are applicable
+  /**
+   * the type of the header param
+   * note that not all types are applicable
+   */
   type: types.Type;
 }
 
-// MethodOptions is the struct containing optional method params
+/** MethodOptions is the struct containing optional method params */
 export interface MethodOptions extends types.Option {
   type: types.Struct;
 }
 
-// PartialBodyParameter is a param that's a field within a type passed via the HTTP request body
+/** PartialBodyParameter is a param that's a field within a type passed via the HTTP request body */
 export interface PartialBodyParameter extends HTTPParameterBase {
   kind: 'partialBody';
 
-  // the model in which the partial param is placed
+  /** the model in which the partial param is placed */
   type: types.RequestContent<types.Model>;
 
-  // the name of the field over the wire in model.fields for this param
+  /** the name of the field over the wire in model.fields for this param */
   serde: string;
 }
 
-// PathParameter is a param that goes in the HTTP path
+/** PathParameter is a param that goes in the HTTP path */
 export interface PathParameter extends HTTPParameterBase {
   kind: 'path';
 
-  // the segment name to be replaced with the param's value
+  /** the segment name to be replaced with the param's value */
   segment: string;
 
-  // the type of the path param
-  // note that not all types are applicable
+  /**
+   * the type of the path param
+   * note that not all types are applicable
+   */
   type: types.Type;
 
-  // indicates if the path parameter should be URL encoded
+  /** indicates if the path parameter should be URL encoded */
   encoded: boolean;
 }
 
-// QueryCollectionParameter is a param that goes in the HTTP query string
+/** QueryCollectionParameter is a param that goes in the HTTP query string */
 export interface QueryCollectionParameter extends HTTPParameterBase {
   kind: 'queryCollection';
 
-  // key is the query param's key name
+  /** key is the query param's key name */
   key: string;
 
-  // the collection of query param values
+  /** the collection of query param values */
   type: types.Vector;
 
-  // indicates if the query parameter should be URL encoded
+  /** indicates if the query parameter should be URL encoded */
   encoded: boolean;
 
-  // the format of the collection
+  /** the format of the collection */
   format: ExtendedCollectionFormat;
 }
 
-// QueryParameter is a param that goes in the HTTP query string
+/** QueryParameter is a param that goes in the HTTP query string */
 export interface QueryParameter extends HTTPParameterBase {
   kind: 'query';
 
-  // key is the query param's key name
+  /** key is the query param's key name */
   key: string;
 
-  // the type of the query param
-  // note that not all types are applicable
+  /**
+   * the type of the query param
+   * note that not all types are applicable
+   */
   type: types.Type;
 
-  // indicates if the query parameter should be URL encoded
+  /** indicates if the query parameter should be URL encoded */
   encoded: boolean;
 }
 
@@ -223,27 +233,30 @@ export interface QueryParameter extends HTTPParameterBase {
 // base types
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+/** base type for HTTP-based methods */
 interface HTTPMethodBase extends method.Method<types.Type> {
-  // the params passed to the method (excluding self). can be empty
+  /** the params passed to the method (excluding self). can be empty */
   params: Array<HTTPParameterBase>;
 
-  // the method options type for this method
+  /** the method options type for this method */
   options: MethodOptions;
 
-  // the type returned by the method
+  /** the type returned by the method */
   returns: types.Result;
 
-  // the HTTP verb used for the request
+  /** the HTTP verb used for the request */
   httpMethod: HTTPMethod;
 
-  // the HTTP path for the request
+  /** the HTTP path for the request */
   httpPath: string;
 }
 
+/** base type for HTTP-based method parameters */
 interface HTTPParameterBase extends method.Parameter {
+  /** location of the parameter (e.g. client or method) */
   location: ParameterLocation;
 
-  // optional params go in the method's MethodOptions type
+  /** optional params go in the method's MethodOptions type */
   optional: boolean;
 }
 

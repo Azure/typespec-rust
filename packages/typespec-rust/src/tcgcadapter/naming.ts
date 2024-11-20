@@ -3,11 +3,14 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-// if name is a reserved word, append the suffix and return the result, else return name
-// the suffix indicates the context in which name appears
-//    fn - function name
-// param - param name
-//  prop - struct field
+/**
+ * if name is a reserved word, append the suffix and return the result, else return name.
+ * the suffix indicates the context in which name appears
+ * 
+ * @param name the name to potentially fix up
+ * @param suffix the context in which name appears
+ * @returns the fixed up name. can be the original value if no fix-up was required
+ */
 export function getEscapedReservedName(name: string, suffix: 'fn' | 'param' | 'prop'): string {
   if (reservedWords.has(name)) {
     name = `${name}_${suffix}`;

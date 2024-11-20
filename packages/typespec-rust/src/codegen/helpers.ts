@@ -17,12 +17,21 @@ export const AnnotationNonExhaustive = '#[non_exhaustive]\n';
 
 export const AnonymousLifetimeAnnotation = '<\'_>';
 
-// returns the content preamble common to all emitted files
+/**
+ * returns the content preamble common to all emitted files
+ * 
+ * @returns the preamble content
+ */
 export function contentPreamble(): string {
   return headerText;
 }
 
-// formats doc comments if available
+/**
+ * formats doc comments if available
+ * 
+ * @param docs contains any doc comments
+ * @returns formatted doc comments or the empty string
+ */
 export function formatDocComment(docs: rust.Docs): string {
   if (!docs.summary && !docs.description) {
     return '';
@@ -43,12 +52,23 @@ export function formatDocComment(docs: rust.Docs): string {
   return docStr;
 }
 
-// returns 'pub ' prefix as required
+/**
+ * returns 'pub ' prefix as required
+ * 
+ * @param pub true if the prefix is required
+ * @returns the prefix or the empty string
+ */
 export function emitPub(pub: boolean): string {
   return pub ? 'pub ' : '';
 }
 
-// returns the type declaration string for the specified Rust type
+/**
+ * returns the type declaration string for the specified Rust type
+ * 
+ * @param type is the Rust type for which to emit the declaration
+ * @param withAnonymousLifetime indicates if an existing lifetime annotation should be substituted with the anonymous lifetime
+ * @returns 
+ */
 export function getTypeDeclaration(type: rust.Client | rust.Type, withAnonymousLifetime = false): string {
   switch (type.kind) {
     case 'arc':
@@ -102,7 +122,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Type, withAnonymousL
 // four spaces per indent level
 const oneIndentation = '    ';
 
-// helper for managing indentation levels
+/** helper for managing indentation levels */
 export class indentation {
   private level: number;
   constructor(level?: number) {
@@ -114,7 +134,11 @@ export class indentation {
     }
   }
 
-  // returns spaces for the current indentation level
+  /**
+   * returns spaces for the current indentation level
+   * 
+   * @returns a string with the current indentation level
+   */
   get(): string {
     let indent = '';
     for (let i = 0; i < this.level; ++i) {
@@ -123,13 +147,21 @@ export class indentation {
     return indent;
   }
 
-  // increments the indentation level
+  /**
+   * increments the indentation level
+   * 
+   * @returns this indentation instance
+   */
   push(): indentation {
     ++this.level;
     return this;
   }
 
-  // decrements the indentation level
+  /**
+   * decrements the indentation level
+   * 
+   * @returns this indentation instance
+   */
   pop(): indentation {
     --this.level;
     if (this.level < 0) {
@@ -139,7 +171,12 @@ export class indentation {
   }
 }
 
-// emits the derive annotation with the standard and any additional values
+/**
+ * emits the derive annotation with the standard and any additional values
+ * 
+ * @param extra contains any extra derive values
+ * @returns a derive macro
+ */
 export function annotationDerive(...extra: Array<string>): string {
   const derive = new Array<string>('Clone', 'Debug', 'Deserialize', 'Serialize');
   // remove any empty values
@@ -149,23 +186,43 @@ export function annotationDerive(...extra: Array<string>): string {
   return `#[derive(${derive.join(', ')})]\n`;
 }
 
-// used to sort strings in ascending order
+/**
+ * used to sort strings in ascending order
+ * 
+ * @param a is the value on the left side
+ * @param b is the value on the right side
+ * @returns -1 if a < b, 1 if a > b, or 0 if they're equal
+ */
 export function sortAscending(a: string, b: string): number {
   return a < b ? -1 : a > b ? 1 : 0;
 }
 
-// returns the generic lifetime annotation string for lifetime (e.g. <'a>)
+/**
+ * returns the generic lifetime annotation string for lifetime (e.g. <'a>)
+ * 
+ * @param lifetime contains the Rust lifetime value
+ * @returns the properly formatted lifetime annotation
+ */
 export function getGenericLifetimeAnnotation(lifetime: rust.Lifetime): string {
   return `<${lifetime.name}>`;
 }
 
-// the if condition in an if block
+/** the if condition in an if block */
 export interface ifBlock {
+  /** the condition in the if block */
   condition: string;
+
+  /** the body of the if block */
   body: (indent: indentation) => string;
 }
 
-// constructs an if block (can expand to include else if/else as necessary)
+/**
+ * constructs an if block (can expand to include else if/else as necessary)
+ * 
+ * @param indent the current indentation helper in scope
+ * @param ifBlock the if block definition
+ * @returns the text for the if block
+ */
 export function buildIfBlock(indent: indentation, ifBlock: ifBlock): string {
   let body = `if ${ifBlock.condition} {\n`;
   body += ifBlock.body(indent.push());
@@ -173,14 +230,26 @@ export function buildIfBlock(indent: indentation, ifBlock: ifBlock): string {
   return body;
 }
 
-// an arm in a match expression
+/** an arm in a match expression */
 export interface matchArm {
+  /** the pattern being matched */
   pattern: string;
+
+  /** optional return type for this match arm */
   returns?: string;
+
+  /** the body of this match arm */
   body: (indent: indentation) => string;
 }
 
-// constructs a match expression at the provided indentation level
+/**
+ * constructs a match expression at the provided indentation level
+ * 
+ * @param indent the current indentation helper in scope
+ * @param expr the expression to match
+ * @param arms one or more match arms
+ * @returns the text for the match block
+ */
 export function buildMatch(indent: indentation, expr: string, arms: Array<matchArm>): string {
   let match = `match ${expr} {\n`;
   indent.push();
@@ -196,12 +265,23 @@ export function buildMatch(indent: indentation, expr: string, arms: Array<matchA
   return match;
 }
 
-// returns capitalized str
+/**
+ * returns capitalized str
+ * e.g. foo -> Foo
+ * 
+ * @param str the string to capitalize
+ * @returns the capitalized value
+ */
 export function capitalize(str: string): string {
   return codegen.capitalize(str);
 }
 
-// if type is an Option<T>, returns the T, else returns type
+/**
+ * if type is an Option<T>, returns the T, else returns type
+ * 
+ * @param type is the type to unwrap
+ * @returns the wrapped type or the original type if it wasn't wrapped
+ */
 export function unwrapOption(type: rust.Type): rust.Type {
   if (type.kind === 'option') {
     return type.type;
@@ -209,7 +289,12 @@ export function unwrapOption(type: rust.Type): rust.Type {
   return type;
 }
 
-// recursively unwraps a type. if type is an Option<Vec<T>>, returns the T
+/**
+ * recursively unwraps a type. if type is an Option<Vec<T>>, returns the T
+ * 
+ * @param type is the type to unwrap
+ * @returns the wrapped type or the original type if it wasn't wrapped
+ */
 export function unwrapType(type: rust.Type): rust.Type {
   switch (type.kind) {
     case 'option':

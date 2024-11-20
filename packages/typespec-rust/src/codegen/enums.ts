@@ -8,7 +8,14 @@ import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
-// emits the enums.rs file for this crate
+/**
+ * returns the emitted enum types, or undefined if the
+ * crate contains no enum types.
+ * 
+ * @param crate the crate for which to emit enums
+ * @param context the context for the provided crate
+ * @returns the enum content or undefined
+ */
 export function emitEnums(crate: rust.Crate, context: Context): string | undefined {
   if (crate.enums.length === 0) {
     return undefined;
