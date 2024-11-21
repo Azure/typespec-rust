@@ -5,6 +5,7 @@
 
 import * as codegen from '@azure-tools/codegen';
 import * as helpers from './helpers.js';
+import queryString from 'query-string';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
@@ -516,8 +517,15 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
  * @returns the URL construction code
  */
 function constructUrl(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, fromSelf = true): string {
+  // for paths that contain query parameters, we must set the query params separately.
+  // including them in the call to set_path() causes the chars to be path-escaped.
+  const pathChunks = method.httpPath.split('?');
+  // TODO: enable once https://github.com/Azure/typespec-azure/issues/1899 is fixed
+  /*if (pathChunks.length > 2) {
+    throw new Error('too many HTTP path chunks');
+  }*/
   let body = '';
-  let path = `"${method.httpPath}"`;
+  let path = `"${pathChunks[0]}"`;
   if (paramGroups.path.length > 0) {
     // we have path params that need to have their segments replaced with the param values
     body += `${indent.get()}let mut path = String::from(${path});\n`;
@@ -528,6 +536,20 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
   }
 
   body += `${indent.get()}url.set_path(${path});\n`;
+  if (pathChunks.length === 2) {
+    body += `${indent.get()}url.query_pairs_mut()`;
+    // set the query params that were in the path
+    const qps = queryString.parse(pathChunks[1]);
+    for (const qp of Object.keys(qps)) {
+      const val = qps[qp];
+      if (val) {
+        body += `.append_pair("${qp}", "${val}")`;
+      } else {
+        body += `.append_key_only("${qp}")`;
+      }
+    }
+    body += ';\n';
+  }
 
   for (const queryParam of paramGroups.query) {
     if (queryParam.kind === 'queryCollection' && queryParam.format === 'multi') {

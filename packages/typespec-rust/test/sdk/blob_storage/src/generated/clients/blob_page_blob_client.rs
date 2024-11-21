@@ -28,10 +28,13 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}?comp=page&clear");
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_key_only("clear")
+            .append_pair("comp", "page");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -102,10 +105,11 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}?comp=incrementalcopy");
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut().append_pair("comp", "incrementalcopy");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -151,10 +155,11 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}?PageBlob");
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut().append_key_only("PageBlob");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -250,10 +255,11 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}?comp=pagelist");
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut().append_pair("comp", "pagelist");
         if let Some(marker) = options.marker {
             url.query_pairs_mut().append_pair("marker", &marker);
         }
@@ -307,10 +313,13 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}?comp=pagelist&diff");
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "pagelist")
+            .append_key_only("diff");
         if let Some(marker) = options.marker {
             url.query_pairs_mut().append_pair("marker", &marker);
         }
@@ -370,10 +379,13 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}?comp=properties&Resize");
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_key_only("Resize")
+            .append_pair("comp", "properties");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -432,10 +444,13 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}?comp=properties&UpdateSequenceNumber");
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_key_only("UpdateSequenceNumber")
+            .append_pair("comp", "properties");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -488,10 +503,13 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}?comp=page&update");
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "page")
+            .append_key_only("update");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -582,10 +600,14 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}?comp=page&update&fromUrl");
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "page")
+            .append_key_only("fromUrl")
+            .append_key_only("update");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());

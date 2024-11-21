@@ -31,9 +31,7 @@ impl BlobAppendBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from(
-            "/{containerName}/{blob}?AppendBlob/{containerName}/{blob}?comp=appendblock",
-        );
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
@@ -108,9 +106,7 @@ impl BlobAppendBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from(
-            "/{containerName}/{blob}?AppendBlob/{containerName}/{blob}?comp=appendblock&fromUrl",
-        );
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
@@ -183,10 +179,11 @@ impl BlobAppendBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}?AppendBlob");
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut().append_key_only("AppendBlob");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -280,8 +277,7 @@ impl BlobAppendBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path =
-            String::from("/{containerName}/{blob}?AppendBlob/{containerName}/{blob}?comp=seal");
+        let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);

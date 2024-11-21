@@ -31,9 +31,13 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?comp=lease&restype=container&acquire");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_key_only("acquire")
+            .append_pair("comp", "lease")
+            .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -68,9 +72,13 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?comp=lease&restype=container&break");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_key_only("break")
+            .append_pair("comp", "lease")
+            .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -106,9 +114,13 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?comp=lease&restype=container&change");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_key_only("change")
+            .append_pair("comp", "lease")
+            .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -141,9 +153,10 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=container");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut().append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -180,9 +193,10 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=container");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut().append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -216,9 +230,12 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=container&comp=blobs");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "blobs")
+            .append_pair("restype", "container");
         if let Some(include) = options.include {
             url.query_pairs_mut().append_pair(
                 "include",
@@ -262,9 +279,12 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=container&comp=acl");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "acl")
+            .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -291,9 +311,12 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=account&comp=properties");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "properties")
+            .append_pair("restype", "account");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         if let Some(request_id) = options.request_id {
@@ -314,9 +337,10 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=container");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut().append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -343,9 +367,13 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=container&comp=list&flat");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "list")
+            .append_key_only("flat")
+            .append_pair("restype", "container");
         if let Some(include) = options.include {
             url.query_pairs_mut().append_pair(
                 "include",
@@ -390,9 +418,13 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=container&comp=list&hierarchy");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "list")
+            .append_key_only("hierarchy")
+            .append_pair("restype", "container");
         url.query_pairs_mut().append_pair("delimiter", &delimiter);
         if let Some(include) = options.include {
             url.query_pairs_mut().append_pair(
@@ -439,9 +471,13 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?comp=lease&restype=container&release");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "lease")
+            .append_key_only("release")
+            .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -473,9 +509,12 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=container&comp=rename");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "rename")
+            .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -505,9 +544,13 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?comp=lease&restype=container&renew");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "lease")
+            .append_key_only("renew")
+            .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -540,9 +583,12 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=container&comp=acl");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "acl")
+            .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -577,9 +623,12 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=container&comp=metadata");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "metadata")
+            .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -611,9 +660,12 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=container&comp=batch");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "batch")
+            .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -640,9 +692,12 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}?restype=container&comp=undelete");
+        let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
         url.set_path(&path);
+        url.query_pairs_mut()
+            .append_pair("comp", "undelete")
+            .append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());

@@ -27,7 +27,8 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        url.set_path("/?comp=blobs");
+        url.set_path("/");
+        url.query_pairs_mut().append_pair("comp", "blobs");
         if let Some(include) = options.include {
             url.query_pairs_mut().append_pair(
                 "include",
@@ -70,7 +71,10 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        url.set_path("/?restype=account&comp=properties");
+        url.set_path("/");
+        url.query_pairs_mut()
+            .append_pair("comp", "properties")
+            .append_pair("restype", "account");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         if let Some(request_id) = options.request_id {
@@ -90,7 +94,10 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        url.set_path("/?restype=service&comp=properties");
+        url.set_path("/");
+        url.query_pairs_mut()
+            .append_pair("comp", "properties")
+            .append_pair("restype", "service");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -114,7 +121,10 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        url.set_path("/?restype=service&comp=stats");
+        url.set_path("/");
+        url.query_pairs_mut()
+            .append_pair("comp", "stats")
+            .append_pair("restype", "service");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -140,7 +150,10 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        url.set_path("/?restype=service&comp=userdelegationkey");
+        url.set_path("/");
+        url.query_pairs_mut()
+            .append_pair("comp", "userdelegationkey")
+            .append_pair("restype", "service");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -165,7 +178,8 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        url.set_path("/?comp=list");
+        url.set_path("/");
+        url.query_pairs_mut().append_pair("comp", "list");
         if let Some(marker) = options.marker {
             url.query_pairs_mut().append_pair("marker", &marker);
         }
@@ -200,7 +214,10 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        url.set_path("/?restype=service&comp=properties");
+        url.set_path("/");
+        url.query_pairs_mut()
+            .append_pair("comp", "properties")
+            .append_pair("restype", "service");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -226,7 +243,8 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let mut ctx = options.method_options.context();
         let mut url = self.endpoint.clone();
-        url.set_path("/?comp=batch");
+        url.set_path("/");
+        url.query_pairs_mut().append_pair("comp", "batch");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
