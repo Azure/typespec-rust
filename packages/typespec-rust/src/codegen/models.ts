@@ -13,6 +13,9 @@ export interface Models {
   /** models that are part of public surface area */
   public?: string;
 
+  /** serde helpers for public models */
+  serde?: string;
+
   /** models that are for internal use only */
   internal?: string;
 
@@ -35,6 +38,7 @@ export function emitModels(crate: rust.Crate, context: Context): Models {
 
   return {
     public: emitModelsInternal(crate, context, true),
+    serde: emitModelsSerde(crate, context),
     internal: emitModelsInternal(crate, context, false),
     xmlHelpers: emitXMLListWrappers(),
   };
@@ -119,14 +123,61 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
     return undefined;
   }
 
+  // emit TryFrom as required for internal models only.
+  // public models will have their helpers in a separate file.
+  if (!pub) {
+    for (const model of crate.models) {
+      if (!model.internal) {
+        continue;
+      }
+
+      body += context.getTryFromForRequestContent(model, use);
+      body += context.getTryFromResponseForType(model, use);
+    }
+  }
+
+  let content = helpers.contentPreamble();
+  content += use.text();
+  content += body;
+
+  return content;
+}
+
+/**
+ * returns serde helpers for public models.
+ * if no helpers are required, undefined is returned.
+ * 
+ * @param crate the crate for which to emit model serde helpers
+ * @param context the context for the provided crate
+ * @returns the model serde helpers content or undefined
+ */
+function emitModelsSerde(crate: rust.Crate, context: Context): string | undefined {
+  const use = new Use();
+  let body = '';
+
   // emit TryFrom as required
   for (const model of crate.models) {
-    if (model.internal === pub) {
+    if (model.internal) {
+      // skip internal models as their serde helpers are in the same file
       continue;
     }
 
-    body += context.getTryFromForRequestContent(model, use);
-    body += context.getTryFromResponseForType(model, use);
+    const forReq = context.getTryFromForRequestContent(model, use);
+    const forRes = context.getTryFromResponseForType(model, use);
+
+    // helpers aren't required for all types, so only
+    // add a use statement for a type if it has a helper
+    if (forReq.length > 0 || forRes.length > 0) {
+      use.addForType(model);
+    }
+
+    body += forReq;
+    body += forRes;
+  }
+
+  if (body.length === 0) {
+    // no helpers
+    return undefined;
   }
 
   let content = helpers.contentPreamble();

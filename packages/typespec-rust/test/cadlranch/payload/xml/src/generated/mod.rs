@@ -5,4 +5,5 @@
 
 pub mod clients;
 pub mod models;
+pub mod models_serde;
 mod xml_helpers;
