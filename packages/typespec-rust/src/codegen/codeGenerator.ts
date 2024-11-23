@@ -83,6 +83,10 @@ export class CodeGenerator {
       generatedModRS.push(new rust.Module('models', true));
       files.push({name: 'models.rs', content: models.public});
     }
+    if (models.serde) {
+      generatedModRS.push(new rust.Module('models_serde', true));
+      files.push({name: 'models_serde.rs', content: models.serde});
+    }
     if (models.internal) {
       clientsModRS.push(new rust.Module('internal_models', false));
       files.push({name: `${clientsSubDir}/internal_models.rs`, content: models.internal});
