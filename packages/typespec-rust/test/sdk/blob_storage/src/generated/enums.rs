@@ -8,6 +8,7 @@ use typespec_client_core::{create_enum, create_extensible_enum};
 create_extensible_enum!(
     AccessTier,
     (Archive, "Archive"),
+    (Cold, "Cold"),
     (Cool, "Cool"),
     (Hot, "Hot"),
     (P10, "P10"),
@@ -20,7 +21,8 @@ create_extensible_enum!(
     (P6, "P6"),
     (P60, "P60"),
     (P70, "P70"),
-    (P80, "P80")
+    (P80, "P80"),
+    (Premium, "Premium")
 );
 
 create_extensible_enum!(
@@ -34,11 +36,12 @@ create_extensible_enum!(
 
 create_extensible_enum!(
     ArchiveStatus,
-    (RehydratePendingToArchive, "rehydrate-pending-to-archive"),
+    (RehydratePendingToCold, "rehydrate-pending-to-cold"),
     (RehydratePendingToCool, "rehydrate-pending-to-cool"),
-    (RehydratePendingToExpired, "rehydrate-pending-to-expired"),
     (RehydratePendingToHot, "rehydrate-pending-to-hot")
 );
+
+create_extensible_enum!(BlobDeleteType, (Permanent, "Permanent"));
 
 create_extensible_enum!(
     BlobExpiryOptions,
@@ -80,19 +83,23 @@ create_extensible_enum!(
 create_extensible_enum!(
     DeleteSnapshotsOptionType,
     (Include, "include"),
-    (Nonne, "none")
+    (Only, "only")
 );
 
-create_extensible_enum!(FilterBlobsIncludes, (None, "none"), (Versions, "versions"));
+create_extensible_enum!(EncryptionAlgorithmType, (AES256, "AES256"));
 
 create_extensible_enum!(
-    GeoReplicationStatus,
+    FilterBlobsIncludeItem,
+    (None, "none"),
+    (Versions, "versions")
+);
+
+create_extensible_enum!(
+    GeoReplicationStatusType,
     (Bootstrap, "bootstrap"),
     (Live, "live"),
     (Unavailable, "unavailable")
 );
-
-create_extensible_enum!(LeaseDuration, (Fixed, "fixed"), (Infinite, "infinite"));
 
 create_extensible_enum!(
     LeaseState,
@@ -104,20 +111,6 @@ create_extensible_enum!(
 );
 
 create_extensible_enum!(LeaseStatus, (Locked, "locked"), (Unlocked, "unlocked"));
-
-create_extensible_enum!(
-    ListBlobsIncludes,
-    (Copies, "copies"),
-    (Deleted, "deleted"),
-    (DeletedWithVersions, "deletedwithversions"),
-    (ImmutabilityPolicy, "immutabilitypolicy"),
-    (LegalHold, "legalhold"),
-    (Metadata, "metadata"),
-    (Snapshots, "snapshots"),
-    (Tags, "tags"),
-    (UncommittedBlobs, "uncommittedblobs"),
-    (Versions, "versions")
-);
 
 create_extensible_enum!(
     PremiumPageBlobAccessTier,
@@ -136,7 +129,7 @@ create_extensible_enum!(
 
 create_extensible_enum!(PublicAccessType, (Blob, "blob"), (Container, "container"));
 
-create_extensible_enum!(QueryRequestTypeSqlOnly, (SQL, "SQL"));
+create_extensible_enum!(QueryRequestType, (SQL, "SQL"));
 
 create_extensible_enum!(
     QueryType,
@@ -158,7 +151,7 @@ create_extensible_enum!(
 create_extensible_enum!(
     SkuName,
     (PremiumLRS, "Premium_LRS"),
-    (StandardGRS, "tandard_GRS"),
+    (StandardGRS, "Standard_GRS"),
     (StandardLRS, "Standard_LRS"),
     (StandardRAGRS, "Standard_RAGRS"),
     (StandardZRS, "Standard_ZRS")

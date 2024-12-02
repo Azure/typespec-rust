@@ -14,6 +14,7 @@
 * Add necessary calls to `to_string()` for header/path/query params.
 * Fixed improperly clearing an endpoint's query parameters during client construction.
 * Fixed constructing URLs from routes that contain query parameters.
+* Fixed handling of spread parameters when the param and serde names are different.
 
 ### Features Added
 
@@ -25,6 +26,7 @@
 * Added partial support for base64 encoded values.
   * Headers, query parameters, and struct fiels work. The exception for struct fields is nested arrays (e.g. `Vec<Vec<u8>>`).
   * Requests and responses of base64 encoded values do not work due to the orphan problem.
+* Added support for `x-ms-meta-*` headers in blob storage.
 
 ### Other Changes
 

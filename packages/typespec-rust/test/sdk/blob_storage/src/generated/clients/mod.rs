@@ -10,3 +10,4 @@ pub mod blob_client;
 pub mod blob_container_client;
 pub mod blob_page_blob_client;
 pub mod blob_service_client;
+mod internal_models;

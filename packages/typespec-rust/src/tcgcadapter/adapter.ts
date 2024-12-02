@@ -575,7 +575,7 @@ export class Adapter {
             // TODO: https://github.com/Azure/autorest.rust/issues/102
             throw new Error('nested next link path NYI');
           }
-          rustMethod.nextLinkName = naming.getEscapedReservedName(snakeCaseName(method.nextLinkPath), 'prop');
+          rustMethod.strategy = new rust.PageableStrategyNextLink(naming.getEscapedReservedName(snakeCaseName(method.nextLinkPath), 'prop'));
         }
         break;
       default:
@@ -631,9 +631,9 @@ export class Adapter {
           // sent in the request. we want the field within the model for this param.
           // NOTE: if the param is optional then the field is optional, thus it's
           // already wrapped in an Option<T> type.
-          const field = adaptedParam.type.type.fields.find(f => { return f.serde === adaptedParam.serde; });
+          const field = adaptedParam.type.type.fields.find(f => { return f.name === adaptedParam.name; });
           if (!field) {
-            throw new Error(`didn't find field ${adaptedParam.serde} for spread param ${adaptedParam.name}`);
+            throw new Error(`didn't find spread param field ${adaptedParam.name} in type ${adaptedParam.type.type.name}`);
           }
           fieldType = field.type;
         } else {
@@ -755,6 +755,11 @@ export class Adapter {
               throw new Error(`unexpected format ${param.collectionFormat} for HeaderCollectionParameter`);
           }
           adaptedParam = new rust.HeaderCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, format);
+        } else if (param.serializedName === 'x-ms-meta') {
+          if (paramType.kind !== 'hashmap') {
+            throw new Error(`unexpected kind ${paramType.kind} for header ${param.serializedName}`);
+          }
+          adaptedParam = new rust.HeaderHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
         } else {
           adaptedParam = new rust.HeaderParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
         }

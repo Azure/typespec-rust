@@ -106,9 +106,32 @@ export interface PageableMethod extends HTTPMethodBase {
   /** the paged result */
   returns: types.Result<types.Pager>;
 
-  /** the name of the field in the response that contains the next link URL */
-  nextLinkName?: string;
+  /**
+   * the strategy used to fetch the next page.
+   * no strategy indicates the method is modeled as pageable
+   * but doesn't (yet) support fetching subsequent pages.
+   */
+  strategy?: PageableStrategyKind;
 }
+
+/** PageableStrategyContinuationToken indicates a pageable method uses the continuation token strategy */
+export interface PageableStrategyContinuationToken {
+  kind: 'continuationToken';
+
+  /** the name of the field in the response that contains the continuation token */
+  continuationToken: string;
+}
+
+/** PageableStrategyNextLink indicates a pageable method uses the nextLink strategy */
+export interface PageableStrategyNextLink {
+  kind: 'nextLink';
+
+  /** the name of the field in the response that contains the next link URL */
+  nextLinkName: string;
+}
+
+/** PageableStrategyKind contains different strategies for fetching subsequent pages */
+export type PageableStrategyKind = PageableStrategyContinuationToken | PageableStrategyNextLink;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // parameters
@@ -124,7 +147,7 @@ export type ExtendedCollectionFormat = CollectionFormat | 'multi';
 export type ParameterLocation = 'client' | 'method';
 
 /** MethodParameter defines the possible method parameter types */
-export type MethodParameter = BodyParameter | HeaderCollectionParameter | HeaderParameter | PartialBodyParameter | PathParameter | QueryCollectionParameter | QueryParameter;
+export type MethodParameter = BodyParameter | HeaderCollectionParameter | HeaderHashMapParameter | HeaderParameter | PartialBodyParameter | PathParameter | QueryCollectionParameter | QueryParameter;
 
 /** BodyParameter is a param that's passed via the HTTP request body */
 export interface BodyParameter extends HTTPParameterBase {
@@ -146,6 +169,20 @@ export interface HeaderCollectionParameter extends HTTPParameterBase {
 
   /** the format of the collection */
   format: CollectionFormat;
+}
+
+/**
+ * HeaderHashMapParameter is a param that goes in a HTTP header
+ * NOTE: this is a specialized parameter type to support storage.
+ */
+export interface HeaderHashMapParameter extends HTTPParameterBase {
+  kind: 'headerHashMap';
+
+  /** the header prefix for each header name in type */
+  header: string;
+
+  /** contains key/value pairs of header names/values */
+  type: types.HashMap;
 }
 
 /** HeaderParameter is a param that goes in a HTTP header */
@@ -354,6 +391,15 @@ export class HeaderCollectionParameter extends HTTPParameterBase implements Head
   }
 }
 
+export class HeaderHashMapParameter extends HTTPParameterBase implements HeaderHashMapParameter {
+  constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.HashMap) {
+    validateHeaderPathQueryParamKind(type, 'headerHashMap');
+    super(name, location, optional, type);
+    this.kind = 'headerHashMap';
+    this.header = header;
+  }
+}
+
 export class HeaderParameter extends HTTPParameterBase implements HeaderParameter {
   constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.Type) {
     validateHeaderPathQueryParamKind(type, 'header');
@@ -375,6 +421,20 @@ export class PageableMethod extends HTTPMethodBase implements PageableMethod {
     this.kind = 'pageable';
     this.params = new Array<MethodParameter>();
     this.options = options;
+  }
+}
+
+export class PageableStrategyContinuationToken implements PageableStrategyContinuationToken {
+  constructor(continuationToken: string) {
+    this.kind = 'continuationToken';
+    this.continuationToken = continuationToken;
+  }
+}
+
+export class PageableStrategyNextLink implements PageableStrategyNextLink {
+  constructor(nextLinkName: string) {
+    this.kind = 'nextLink';
+    this.nextLinkName = nextLinkName;
   }
 }
 
@@ -426,6 +486,11 @@ function validateHeaderPathQueryParamKind(type: types.Type, paramKind: string) {
     case 'offsetDateTime':
     case 'scalar':
       return;
+    case 'hashmap':
+      if (paramKind === 'headerHashMap') {
+        return;
+      }
+      break;
     case 'implTrait':
       validateHeaderPathQueryParamKind(type.type, paramKind);
       return;

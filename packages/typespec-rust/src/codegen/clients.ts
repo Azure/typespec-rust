@@ -326,9 +326,9 @@ function formatParamTypeName(param: rust.MethodParameter | rust.Self): string {
     if (methodParam.kind === 'partialBody') {
       // for partial body params, methodParam.type is the model type that's
       // sent in the request. we want the field within the model for this param.
-      const field = methodParam.type.type.fields.find(f => { return f.serde === methodParam.serde; });
+      const field = methodParam.type.type.fields.find(f => { return f.name === methodParam.name; });
       if (!field) {
-        throw new Error(`didn't find field ${methodParam.serde} for spread param ${methodParam.name}`);
+        throw new Error(`didn't find spread param field ${methodParam.name} in type ${methodParam.type.type.name}`);
       }
       paramType = field.type;
       if (paramType.kind === 'option') {
@@ -405,7 +405,7 @@ function getClientAccessorMethodBody(indent: helpers.indentation, clientAccessor
 }
 
 type ClientMethod = rust.AsyncMethod | rust.PageableMethod;
-type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderParameter;
+type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderHashMapParameter | rust.HeaderParameter;
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryParameter;
 
 /** groups method parameters based on their kind */
@@ -443,6 +443,7 @@ function getMethodParamGroup(method: ClientMethod): methodParamGroups {
     switch (param.kind) {
       case 'header':
       case 'headerCollection':
+      case 'headerHashMap':
         headerParams.push(param);
         break;
       case 'partialBody':
@@ -520,10 +521,9 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
   // for paths that contain query parameters, we must set the query params separately.
   // including them in the call to set_path() causes the chars to be path-escaped.
   const pathChunks = method.httpPath.split('?');
-  // TODO: enable once https://github.com/Azure/typespec-azure/issues/1899 is fixed
-  /*if (pathChunks.length > 2) {
+  if (pathChunks.length > 2) {
     throw new Error('too many HTTP path chunks');
-  }*/
+  }
   let body = '';
   let path = `"${pathChunks[0]}"`;
   if (paramGroups.path.length > 0) {
@@ -593,6 +593,12 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
 
   for (const headerParam of paramGroups.header) {
     body += getParamValueHelper(indent, headerParam, () => {
+      if (headerParam.kind === 'headerHashMap') {
+        let setter = `for (k, v) in &${headerParam.name} {\n`;
+        setter += `${indent.push().get()}request.insert_header(format!("${headerParam.header}-{}", k), v);\n`;
+        setter += `${indent.pop().get()}}\n`;
+        return setter;
+      }
       return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, headerParam, fromSelf)});\n`;
     });
   }
@@ -660,10 +666,13 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
  * @returns the contents of the method body
  */
 function getPageableMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.PageableMethod): string {
-  if (!method.nextLinkName) {
-    throw new Error('paged responses other than nextLink format NYI');
+  if (!method.strategy) {
+    throw new Error('paged method with no strategy NYI');
+  } else if (method.strategy.kind !== 'nextLink') {
+    throw new Error('paged methods other than nextLink NYI');
   }
 
+  const nextLinkName = method.strategy.nextLinkName;
   use.addTypes('azure_core', ['Method', 'Pager', 'Request', 'Response', 'Result', 'Url']);
   use.addType('typespec_client_core::http', 'PagerResult');
   use.addType('typespec_client_core', 'json');
@@ -680,12 +689,12 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       body += `${indent.get()}let ${param.name} = self.${param.name}.clone();\n`;
     }
   }
-  body += `${indent.get()}Ok(Pager::from_callback(move |${method.nextLinkName}: Option<Url>| {\n`;
+  body += `${indent.get()}Ok(Pager::from_callback(move |${nextLinkName}: Option<Url>| {\n`;
   body += `${indent.push().get()}let mut url: Url;\n`;
 
-  body += indent.get() + helpers.buildMatch(indent, method.nextLinkName, [{
-    pattern: `Some(${method.nextLinkName})`,
-    body: (indent) => `${indent.get()}url = ${method.nextLinkName};\n`
+  body += indent.get() + helpers.buildMatch(indent, nextLinkName, [{
+    pattern: `Some(${nextLinkName})`,
+    body: (indent) => `${indent.get()}url = ${nextLinkName};\n`
   }, {
     pattern: 'None',
     body: (indent) => {
@@ -709,10 +718,10 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let res: ${returnType} = json::from_json(bytes.clone())?;\n`;
   body += `${indent.get()}let rsp = Response::from_bytes(status, headers, bytes);\n`;
 
-  body += `${indent.get()}Ok(${helpers.buildMatch(indent, `res.${method.nextLinkName}`, [{
-    pattern: `Some(${method.nextLinkName})`,
+  body += `${indent.get()}Ok(${helpers.buildMatch(indent, `res.${nextLinkName}`, [{
+    pattern: `Some(${nextLinkName})`,
     returns: 'PagerResult::Continue',
-    body: (indent) => `${indent.get()}response: (rsp),\n${indent.get()}continuation: (${method.nextLinkName}),\n`
+    body: (indent) => `${indent.get()}response: (rsp),\n${indent.get()}continuation: (${nextLinkName}),\n`
   }, {
     pattern: 'None',
     returns: 'PagerResult::Complete',
@@ -784,6 +793,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     case 'encodedBytes':
       return encodeBytes(param.type, param.name);
     case 'enum':
+    case 'hashmap':
     case 'offsetDateTime':
     case 'scalar':
       paramName += `${param.name}.to_string()`;
