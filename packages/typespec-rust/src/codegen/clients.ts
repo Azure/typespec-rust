@@ -543,7 +543,13 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
     for (const qp of Object.keys(qps)) {
       const val = qps[qp];
       if (val) {
-        body += `.append_pair("${qp}", "${val}")`;
+        if (typeof val === 'string') {
+          body += `.append_pair("${qp}", "${val}")`;
+        } else {
+          for (const v of val) {
+            body += `.append_pair("${qp}", "${v}")`;
+          }
+        }
       } else {
         body += `.append_key_only("${qp}")`;
       }
@@ -810,8 +816,6 @@ function getCollectionDelimiter(format: rust.CollectionFormat): string {
       return ' ';
     case 'tsv':
       return '\t';
-    default:
-      throw new Error(`unhandled collection format ${format}`);
   }
 }
 

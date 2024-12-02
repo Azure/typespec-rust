@@ -92,7 +92,7 @@ export class Adapter {
   /** converts all tcgc types to their Rust type equivalent */
   private adaptTypes(): void {
     for (const sdkEnum of this.ctx.sdkPackage.enums) {
-      if ((sdkEnum.usage & tcgc.UsageFlags.ApiVersionEnum) === tcgc.UsageFlags.ApiVersionEnum) {
+      if (<tcgc.UsageFlags>(sdkEnum.usage & tcgc.UsageFlags.ApiVersionEnum) === tcgc.UsageFlags.ApiVersionEnum) {
         // we skip generating the enums for API
         // versions as we expose it as a String
         continue;
@@ -102,7 +102,7 @@ export class Adapter {
     }
 
     for (const model of this.ctx.sdkPackage.models) {
-      if ((model.usage & tcgc.UsageFlags.Error) === tcgc.UsageFlags.Error || tcgc.isAzureCoreModel(model)) {
+      if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Error) === tcgc.UsageFlags.Error || tcgc.isAzureCoreModel(model)) {
         // skip error and core types as we use their azure_core equivalents
         continue;
       }
@@ -498,14 +498,14 @@ export class Adapter {
 
             // client-side default value makes the param optional
             const apiVersionField = new rust.StructField(paramName, true, new rust.StringType());
-            apiVersionField.defaultValue = `String::from("${param.clientDefaultValue}")`;
+            apiVersionField.defaultValue = `String::from("${<string>param.clientDefaultValue}")`;
             clientOptionsStruct.fields.push(apiVersionField);
             break;
           }
         }
       }
 
-      if (authType === AuthTypes.Default || (authType & AuthTypes.NoAuth) === AuthTypes.NoAuth) {
+      if (authType === AuthTypes.Default || <AuthTypes>(authType & AuthTypes.NoAuth) === AuthTypes.NoAuth) {
         const ctorWithNoCredential = new rust.Constructor('with_no_credential');
         rustClient.constructable.constructors.push(ctorWithNoCredential);
       }
@@ -575,7 +575,7 @@ export class Adapter {
             // TODO: https://github.com/Azure/autorest.rust/issues/102
             throw new Error('nested next link path NYI');
           }
-          (<rust.PageableMethod>rustMethod).nextLinkName = naming.getEscapedReservedName(snakeCaseName(method.nextLinkPath), 'prop');
+          rustMethod.nextLinkName = naming.getEscapedReservedName(snakeCaseName(method.nextLinkPath), 'prop');
         }
         break;
       default:
@@ -822,8 +822,6 @@ export class Adapter {
         const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
         return new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, new rust.RequestContent(this.crate, paramType, format));
       }
-      default:
-        throw new Error(`unhandled spread param format ${format}`);
     }
   }
 
@@ -919,11 +917,11 @@ function getXMLName(decorators: Array<tcgc.DecoratorInfo>): string | undefined {
     switch (decorator.name) {
       case 'TypeSpec.@encodedName':
         if (decorator.arguments['mimeType'] === 'application/xml') {
-          return decorator.arguments['name'];
+          return <string>decorator.arguments['name'];
         }
         break;
       case 'TypeSpec.Xml.@name':
-        return decorator.arguments['name'];
+        return <string>decorator.arguments['name'];
     }
   }
 

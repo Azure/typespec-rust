@@ -4,7 +4,7 @@
 coverage/
 src/
 test/
-.eslint*
+eslint.config.js
 *.log
 test-results.xml
 tsconfig.json
