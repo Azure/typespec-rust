@@ -403,7 +403,7 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-**/dist/*
+**/dist/
 
 # cadl-ranch test results
 cadl-ranch-coverage.json
