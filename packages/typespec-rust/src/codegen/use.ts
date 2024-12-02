@@ -33,7 +33,7 @@ export class Use {
    * @param type a type within the provided module
    */
   addType(module: string, type: string): void {
-    let mod = this.uses.find((v: moduleTypes, i: number, o: Array<moduleTypes>) => { return v.module === module; });
+    let mod = this.uses.find((v: moduleTypes) => { return v.module === module; });
     if (!mod) {
       mod = {
         module: module,
@@ -41,7 +41,7 @@ export class Use {
       };
       this.uses.push(mod);
     }
-    if (!mod.types.find((v: string, i: number, o: Array<string>) => { return v === type; })) {
+    if (!mod.types.find((v: string) => { return v === type; })) {
       mod.types.push(type);
     }
   }

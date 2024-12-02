@@ -10,14 +10,14 @@ import { describe, it } from 'vitest';
 
 describe('typespec-rust: tcgcadapter', () => {
   describe('helpers', () => {
-    it('fixUpEnumValueName', async () => {
+    it('fixUpEnumValueName', () => {
       strictEqual(helpers.fixUpEnumValueName('fooBar'), 'FooBar');
       strictEqual(helpers.fixUpEnumValueName('foo_bar'), 'FooBar');
       strictEqual(helpers.fixUpEnumValueName('V2022_12_01_preview'), 'V2022_12_01Preview');
       strictEqual(helpers.fixUpEnumValueName('V7.6_preview.1'), 'V7Dot6Preview1');
     });
 
-    it('sortClientParameters', async () => {
+    it('sortClientParameters', () => {
       const endpointParam = new rust.ClientParameter('endpoint', new rust.StringType());
       const credentialParam = new rust.ClientParameter('credential', new rust.StringType());
       const someOtherParam = new rust.ClientParameter('something', new rust.StringType());

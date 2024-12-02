@@ -30,4 +30,5 @@ const libDef = {
 } as const;
 
 export const $lib = createTypeSpecLibrary(libDef);
+/* eslint-disable-next-line @typescript-eslint/unbound-method */
 export const { reportDiagnostic, createStateSymbol, getTracer } = $lib;

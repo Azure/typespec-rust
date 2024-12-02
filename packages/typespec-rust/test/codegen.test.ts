@@ -11,7 +11,7 @@ import { describe, it } from 'vitest';
 
 describe('typespec-rust: codegen', () => {
   describe('generateCargoTomlFile', () => {
-    it('default Cargo.toml file', async () => {
+    it('default Cargo.toml file', () => {
       const expected = '[package]\n' +
         'name = "test_crate"\n' +
         'version = "1.2.3"\n' +
@@ -26,7 +26,7 @@ describe('typespec-rust: codegen', () => {
       strictEqual(cargoToml, expected);
     });
 
-    it('default Cargo.toml file with dependencies', async () => {
+    it('default Cargo.toml file with dependencies', () => {
       const expected =   '[package]\n' +
         'name = "test_crate"\n' +
         'version = "1.2.3"\n' +
@@ -48,18 +48,18 @@ describe('typespec-rust: codegen', () => {
   });
 
   describe('helpers', () => {
-    it('annotationDerive', async () => {
+    it('annotationDerive', () => {
       strictEqual(helpers.annotationDerive(), '#[derive(Clone, Debug, Deserialize, Serialize)]\n');
       strictEqual(helpers.annotationDerive('Copy'), '#[derive(Clone, Copy, Debug, Deserialize, Serialize)]\n');
       strictEqual(helpers.annotationDerive('', 'Copy'), '#[derive(Clone, Copy, Debug, Deserialize, Serialize)]\n');
     });
 
-    it('emitPub', async () => {
+    it('emitPub', () => {
       strictEqual(helpers.emitPub(false), '');
       strictEqual(helpers.emitPub(true), 'pub ');
     });
 
-    it('indent', async () => {
+    it('indent', () => {
       const indent = new helpers.indentation();
       strictEqual(indent.get(), '    ');
       strictEqual(indent.push().get(), '        ');
@@ -69,7 +69,7 @@ describe('typespec-rust: codegen', () => {
       strictEqual(indent.get(), '    ');
     });
 
-    it('buildIfBlock', async () => {
+    it('buildIfBlock', () => {
       const indent = new helpers.indentation(0);
       const ifblock = helpers.buildIfBlock(indent, {
         condition: 'foo == bar',
@@ -82,7 +82,7 @@ describe('typespec-rust: codegen', () => {
       strictEqual(ifblock, expected);
     });
 
-    it('buildMatch', async () => {
+    it('buildMatch', () => {
       const indent = new helpers.indentation(0);
       const match = helpers.buildMatch(indent, 'cond', [
         {
@@ -113,7 +113,7 @@ describe('typespec-rust: codegen', () => {
       strictEqual(match, expected);
     });
 
-    it('buildMatch with return types', async () => {
+    it('buildMatch with return types', () => {
       const indent = new helpers.indentation(0);
       const match = helpers.buildMatch(indent, 'cond', [
         {

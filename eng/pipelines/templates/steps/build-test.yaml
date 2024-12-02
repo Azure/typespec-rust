@@ -6,7 +6,7 @@ steps:
     workingDirectory: $(TypeSpecRustPkgDir)
 
   - script: |
-      pnpm run eslint
+      pnpm eslint
     displayName: Run Lint
     workingDirectory: $(TypeSpecRustPkgDir)
 
