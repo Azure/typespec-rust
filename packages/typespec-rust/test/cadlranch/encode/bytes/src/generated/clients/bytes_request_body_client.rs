@@ -14,6 +14,11 @@ pub struct BytesRequestBodyClient {
 }
 
 impl BytesRequestBodyClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn base64(
         &self,
         value: RequestContent<Vec<u8>>,

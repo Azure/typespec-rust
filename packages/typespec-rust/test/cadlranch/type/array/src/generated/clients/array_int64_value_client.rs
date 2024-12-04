@@ -14,6 +14,11 @@ pub struct ArrayInt64ValueClient {
 }
 
 impl ArrayInt64ValueClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn get(
         &self,
         options: Option<ArrayInt64ValueClientGetOptions<'_>>,

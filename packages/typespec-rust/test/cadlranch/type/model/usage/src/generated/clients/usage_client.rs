@@ -36,6 +36,11 @@ impl UsageClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn input(
         &self,
         input: RequestContent<InputRecord>,

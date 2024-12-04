@@ -15,6 +15,11 @@ pub struct SpecialWordsModelPropertiesClient {
 }
 
 impl SpecialWordsModelPropertiesClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn same_as_model(
         &self,
         body: RequestContent<SameAsModel>,

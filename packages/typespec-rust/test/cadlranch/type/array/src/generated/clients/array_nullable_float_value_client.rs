@@ -14,6 +14,11 @@ pub struct ArrayNullableFloatValueClient {
 }
 
 impl ArrayNullableFloatValueClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn get(
         &self,
         options: Option<ArrayNullableFloatValueClientGetOptions<'_>>,

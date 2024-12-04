@@ -37,6 +37,11 @@ impl BytesClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub fn get_bytes_header_client(&self) -> BytesHeaderClient {
         BytesHeaderClient {
             endpoint: self.endpoint.clone(),

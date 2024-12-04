@@ -37,6 +37,11 @@ impl SpreadClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub fn get_spread_alias_client(&self) -> SpreadAliasClient {
         SpreadAliasClient {
             endpoint: self.endpoint.clone(),

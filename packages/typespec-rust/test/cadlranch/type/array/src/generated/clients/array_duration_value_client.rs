@@ -14,6 +14,11 @@ pub struct ArrayDurationValueClient {
 }
 
 impl ArrayDurationValueClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn get(
         &self,
         options: Option<ArrayDurationValueClientGetOptions<'_>>,

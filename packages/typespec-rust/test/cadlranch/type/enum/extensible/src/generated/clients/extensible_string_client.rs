@@ -15,6 +15,11 @@ pub struct ExtensibleStringClient {
 }
 
 impl ExtensibleStringClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn get_known_value(
         &self,
         options: Option<ExtensibleStringClientGetKnownValueOptions<'_>>,

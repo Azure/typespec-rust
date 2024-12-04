@@ -122,6 +122,13 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
       }
     }
 
+    // emit the endpoint method before the rest of the methods.
+    // we don't model this as the implementation isn't dynamic.
+    body += `${indent.get()}/// Returns the Url associated with this client.\n`;
+    body += `${indent.get()}pub fn endpoint(&self) -> &Url {\n`;
+    body += `${indent.push().get()}&self.endpoint\n`;
+    body += `${indent.pop().get()}}\n\n`;
+
     for (let i = 0; i < client.methods.length; ++i) {
       const method = client.methods[i];
       const returnType = helpers.getTypeDeclaration(method.returns);

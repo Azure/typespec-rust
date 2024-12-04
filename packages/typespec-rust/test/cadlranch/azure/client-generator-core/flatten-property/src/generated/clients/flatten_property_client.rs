@@ -39,6 +39,11 @@ impl FlattenPropertyClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn put_flatten_model(
         &self,
         input: RequestContent<FlattenModel>,

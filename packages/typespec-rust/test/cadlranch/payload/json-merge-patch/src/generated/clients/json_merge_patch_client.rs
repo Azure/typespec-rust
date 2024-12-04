@@ -39,6 +39,11 @@ impl JsonMergePatchClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     /// Test content-type: application/merge-patch+json with required body
     pub async fn create_resource(
         &self,

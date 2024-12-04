@@ -14,6 +14,11 @@ pub struct ArrayNullableInt32ValueClient {
 }
 
 impl ArrayNullableInt32ValueClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn get(
         &self,
         options: Option<ArrayNullableInt32ValueClientGetOptions<'_>>,

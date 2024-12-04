@@ -33,6 +33,11 @@ impl JsonClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub fn get_json_property_client(&self) -> JsonPropertyClient {
         JsonPropertyClient {
             endpoint: self.endpoint.clone(),

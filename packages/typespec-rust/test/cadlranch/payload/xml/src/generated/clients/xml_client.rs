@@ -44,6 +44,11 @@ impl XmlClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub fn get_xml_model_with_array_of_model_value_client(
         &self,
     ) -> XmlModelWithArrayOfModelValueClient {

@@ -46,6 +46,11 @@ impl ArrayClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub fn get_array_boolean_value_client(&self) -> ArrayBooleanValueClient {
         ArrayBooleanValueClient {
             endpoint: self.endpoint.clone(),

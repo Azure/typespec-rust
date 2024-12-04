@@ -1,5 +1,11 @@
 # Release History
 
+## 0.3.0 (Unreleased)
+
+### Features Added
+
+* Clients have an `endpoint()` method that returns its `azure_core::Url`.
+
 ## 0.2.0 (2024-12-03)
 
 ### Breaking Changes

@@ -38,6 +38,11 @@ impl BlobClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub fn get_blob_append_blob_client(&self) -> BlobAppendBlobClient {
         BlobAppendBlobClient {
             endpoint: self.endpoint.clone(),

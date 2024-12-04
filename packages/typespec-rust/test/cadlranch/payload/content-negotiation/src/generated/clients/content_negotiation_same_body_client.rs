@@ -13,6 +13,11 @@ pub struct ContentNegotiationSameBodyClient {
 }
 
 impl ContentNegotiationSameBodyClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn get_avatar_as_jpeg(
         &self,
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsJpegOptions<'_>>,

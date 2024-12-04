@@ -15,6 +15,11 @@ pub struct FixedStringClient {
 }
 
 impl FixedStringClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     /// getKnownValue
     pub async fn get_known_value(
         &self,

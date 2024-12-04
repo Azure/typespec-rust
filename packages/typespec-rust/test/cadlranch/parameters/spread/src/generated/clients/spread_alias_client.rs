@@ -19,6 +19,11 @@ pub struct SpreadAliasClient {
 }
 
 impl SpreadAliasClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn spread_as_request_body(
         &self,
         name: String,

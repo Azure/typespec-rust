@@ -17,6 +17,11 @@ pub struct BytesPropertyClient {
 }
 
 impl BytesPropertyClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn base64(
         &self,
         body: RequestContent<Base64BytesProperty>,

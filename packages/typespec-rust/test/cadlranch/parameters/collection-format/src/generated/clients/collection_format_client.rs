@@ -37,6 +37,11 @@ impl CollectionFormatClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub fn get_collection_format_header_client(&self) -> CollectionFormatHeaderClient {
         CollectionFormatHeaderClient {
             endpoint: self.endpoint.clone(),

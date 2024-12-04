@@ -54,6 +54,11 @@ impl KeyVaultClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     /// Backs up the specified secret.
     ///
     /// Requests that a backup of the specified secret be downloaded to the client. All

@@ -14,6 +14,11 @@ pub struct ArrayBooleanValueClient {
 }
 
 impl ArrayBooleanValueClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn get(
         &self,
         options: Option<ArrayBooleanValueClientGetOptions<'_>>,

@@ -36,6 +36,11 @@ impl ExtensibleClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub fn get_extensible_string_client(&self) -> ExtensibleStringClient {
         ExtensibleStringClient {
             endpoint: self.endpoint.clone(),

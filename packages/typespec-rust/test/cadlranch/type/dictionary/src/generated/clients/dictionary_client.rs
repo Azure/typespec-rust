@@ -46,6 +46,11 @@ impl DictionaryClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub fn get_dictionary_boolean_value_client(&self) -> DictionaryBooleanValueClient {
         DictionaryBooleanValueClient {
             endpoint: self.endpoint.clone(),

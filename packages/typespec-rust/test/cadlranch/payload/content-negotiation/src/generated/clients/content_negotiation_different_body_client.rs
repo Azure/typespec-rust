@@ -14,6 +14,11 @@ pub struct ContentNegotiationDifferentBodyClient {
 }
 
 impl ContentNegotiationDifferentBodyClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn get_avatar_as_json(
         &self,
         options: Option<ContentNegotiationDifferentBodyClientGetAvatarAsJsonOptions<'_>>,

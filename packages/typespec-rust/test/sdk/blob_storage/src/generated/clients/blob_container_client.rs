@@ -18,6 +18,11 @@ pub struct BlobContainerClient {
 }
 
 impl BlobContainerClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
     /// or can be infinite
     pub async fn acquire_lease(

@@ -13,6 +13,11 @@ pub struct CollectionFormatHeaderClient {
 }
 
 impl CollectionFormatHeaderClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn csv(
         &self,
         colors: Vec<String>,

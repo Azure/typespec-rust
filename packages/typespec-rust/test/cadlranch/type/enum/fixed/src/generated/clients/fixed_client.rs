@@ -33,6 +33,11 @@ impl FixedClient {
         })
     }
 
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub fn get_fixed_string_client(&self) -> FixedStringClient {
         FixedStringClient {
             endpoint: self.endpoint.clone(),

@@ -15,6 +15,11 @@ pub struct DictionaryInt64ValueClient {
 }
 
 impl DictionaryInt64ValueClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn get(
         &self,
         options: Option<DictionaryInt64ValueClientGetOptions<'_>>,

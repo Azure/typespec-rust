@@ -16,6 +16,11 @@ pub struct DictionaryUnknownValueClient {
 }
 
 impl DictionaryUnknownValueClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     pub async fn get(
         &self,
         options: Option<DictionaryUnknownValueClientGetOptions<'_>>,

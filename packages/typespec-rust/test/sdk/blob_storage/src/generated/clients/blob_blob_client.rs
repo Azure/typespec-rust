@@ -20,6 +20,11 @@ pub struct BlobBlobClient {
 }
 
 impl BlobBlobClient {
+    /// Returns the Url associated with this client.
+    pub fn endpoint(&self) -> &Url {
+        &self.endpoint
+    }
+
     /// The Abort Copy From URL operation aborts a pending Copy From URL operation, and leaves a destination blob with zero length
     /// and full metadata.
     pub async fn abort_copy_from_url(
