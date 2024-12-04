@@ -292,7 +292,8 @@ export class Adapter {
       case 'model':
         return this.getModel(type);
       case 'endpoint':
-      case 'string': {
+      case 'string':
+      case 'url': {
         let stringType = this.types.get(type.kind);
         if (stringType) {
           return stringType;
@@ -309,15 +310,6 @@ export class Adapter {
         anyType = new rust.JsonValue(this.crate);
         this.types.set(type.kind, anyType);
         return anyType;
-      }
-      case 'url': {
-        let urlType = this.types.get(type.kind);
-        if (urlType) {
-          return urlType;
-        }
-        urlType = new rust.Url(this.crate);
-        this.types.set(type.kind, urlType);
-        return urlType;
       }
       case 'utcDateTime': {
         const keyName = `${type.kind}-${type.encode}`;

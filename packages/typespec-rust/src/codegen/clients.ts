@@ -728,7 +728,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}Ok(${helpers.buildMatch(indent, `res.${nextLinkName}`, [{
     pattern: `Some(${nextLinkName})`,
     returns: 'PagerResult::Continue',
-    body: (indent) => `${indent.get()}response: (rsp),\n${indent.get()}continuation: (${nextLinkName}),\n`
+    body: (indent) => `${indent.get()}response: (rsp),\n${indent.get()}continuation: (Url::parse(&${nextLinkName})?),\n`
   }, {
     pattern: 'None',
     returns: 'PagerResult::Complete',

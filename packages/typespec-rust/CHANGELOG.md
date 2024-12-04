@@ -2,6 +2,10 @@
 
 ## 0.3.0 (Unreleased)
 
+### Breaking Changes
+
+* Model fields of type `url` are now emitted as `String` types.
+
 ### Features Added
 
 * Clients have an `endpoint()` method that returns its `azure_core::Url`.

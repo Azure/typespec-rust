@@ -171,7 +171,7 @@ impl KeyVaultClient {
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
                         response: (rsp),
-                        continuation: (next_link),
+                        continuation: (Url::parse(&next_link)?),
                     },
                     None => PagerResult::Complete { response: (rsp) },
                 })
@@ -249,7 +249,7 @@ impl KeyVaultClient {
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
                         response: (rsp),
-                        continuation: (next_link),
+                        continuation: (Url::parse(&next_link)?),
                     },
                     None => PagerResult::Complete { response: (rsp) },
                 })
@@ -301,7 +301,7 @@ impl KeyVaultClient {
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
                         response: (rsp),
-                        continuation: (next_link),
+                        continuation: (Url::parse(&next_link)?),
                     },
                     None => PagerResult::Complete { response: (rsp) },
                 })
