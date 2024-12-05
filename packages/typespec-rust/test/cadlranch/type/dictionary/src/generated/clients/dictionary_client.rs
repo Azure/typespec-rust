@@ -51,6 +51,7 @@ impl DictionaryClient {
         &self.endpoint
     }
 
+    /// Returns a new instance of DictionaryBooleanValueClient.
     pub fn get_dictionary_boolean_value_client(&self) -> DictionaryBooleanValueClient {
         DictionaryBooleanValueClient {
             endpoint: self.endpoint.clone(),
@@ -58,6 +59,7 @@ impl DictionaryClient {
         }
     }
 
+    /// Returns a new instance of DictionaryDatetimeValueClient.
     pub fn get_dictionary_datetime_value_client(&self) -> DictionaryDatetimeValueClient {
         DictionaryDatetimeValueClient {
             endpoint: self.endpoint.clone(),
@@ -65,6 +67,7 @@ impl DictionaryClient {
         }
     }
 
+    /// Returns a new instance of DictionaryDurationValueClient.
     pub fn get_dictionary_duration_value_client(&self) -> DictionaryDurationValueClient {
         DictionaryDurationValueClient {
             endpoint: self.endpoint.clone(),
@@ -72,6 +75,7 @@ impl DictionaryClient {
         }
     }
 
+    /// Returns a new instance of DictionaryFloat32ValueClient.
     pub fn get_dictionary_float32_value_client(&self) -> DictionaryFloat32ValueClient {
         DictionaryFloat32ValueClient {
             endpoint: self.endpoint.clone(),
@@ -79,6 +83,7 @@ impl DictionaryClient {
         }
     }
 
+    /// Returns a new instance of DictionaryInt32ValueClient.
     pub fn get_dictionary_int32_value_client(&self) -> DictionaryInt32ValueClient {
         DictionaryInt32ValueClient {
             endpoint: self.endpoint.clone(),
@@ -86,6 +91,7 @@ impl DictionaryClient {
         }
     }
 
+    /// Returns a new instance of DictionaryInt64ValueClient.
     pub fn get_dictionary_int64_value_client(&self) -> DictionaryInt64ValueClient {
         DictionaryInt64ValueClient {
             endpoint: self.endpoint.clone(),
@@ -93,6 +99,7 @@ impl DictionaryClient {
         }
     }
 
+    /// Returns a new instance of DictionaryModelValueClient.
     pub fn get_dictionary_model_value_client(&self) -> DictionaryModelValueClient {
         DictionaryModelValueClient {
             endpoint: self.endpoint.clone(),
@@ -100,6 +107,7 @@ impl DictionaryClient {
         }
     }
 
+    /// Returns a new instance of DictionaryNullableFloatValueClient.
     pub fn get_dictionary_nullable_float_value_client(&self) -> DictionaryNullableFloatValueClient {
         DictionaryNullableFloatValueClient {
             endpoint: self.endpoint.clone(),
@@ -107,6 +115,7 @@ impl DictionaryClient {
         }
     }
 
+    /// Returns a new instance of DictionaryRecursiveModelValueClient.
     pub fn get_dictionary_recursive_model_value_client(
         &self,
     ) -> DictionaryRecursiveModelValueClient {
@@ -116,6 +125,7 @@ impl DictionaryClient {
         }
     }
 
+    /// Returns a new instance of DictionaryStringValueClient.
     pub fn get_dictionary_string_value_client(&self) -> DictionaryStringValueClient {
         DictionaryStringValueClient {
             endpoint: self.endpoint.clone(),
@@ -123,6 +133,7 @@ impl DictionaryClient {
         }
     }
 
+    /// Returns a new instance of DictionaryUnknownValueClient.
     pub fn get_dictionary_unknown_value_client(&self) -> DictionaryUnknownValueClient {
         DictionaryUnknownValueClient {
             endpoint: self.endpoint.clone(),

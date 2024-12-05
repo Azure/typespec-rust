@@ -42,6 +42,7 @@ impl ContentNegotiationClient {
         &self.endpoint
     }
 
+    /// Returns a new instance of ContentNegotiationDifferentBodyClient.
     pub fn get_content_negotiation_different_body_client(
         &self,
     ) -> ContentNegotiationDifferentBodyClient {
@@ -51,6 +52,7 @@ impl ContentNegotiationClient {
         }
     }
 
+    /// Returns a new instance of ContentNegotiationSameBodyClient.
     pub fn get_content_negotiation_same_body_client(&self) -> ContentNegotiationSameBodyClient {
         ContentNegotiationSameBodyClient {
             endpoint: self.endpoint.clone(),

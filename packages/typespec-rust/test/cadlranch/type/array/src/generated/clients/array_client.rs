@@ -51,6 +51,7 @@ impl ArrayClient {
         &self.endpoint
     }
 
+    /// Returns a new instance of ArrayBooleanValueClient.
     pub fn get_array_boolean_value_client(&self) -> ArrayBooleanValueClient {
         ArrayBooleanValueClient {
             endpoint: self.endpoint.clone(),
@@ -58,6 +59,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayDatetimeValueClient.
     pub fn get_array_datetime_value_client(&self) -> ArrayDatetimeValueClient {
         ArrayDatetimeValueClient {
             endpoint: self.endpoint.clone(),
@@ -65,6 +67,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayDurationValueClient.
     pub fn get_array_duration_value_client(&self) -> ArrayDurationValueClient {
         ArrayDurationValueClient {
             endpoint: self.endpoint.clone(),
@@ -72,6 +75,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayFloat32ValueClient.
     pub fn get_array_float32_value_client(&self) -> ArrayFloat32ValueClient {
         ArrayFloat32ValueClient {
             endpoint: self.endpoint.clone(),
@@ -79,6 +83,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayInt32ValueClient.
     pub fn get_array_int32_value_client(&self) -> ArrayInt32ValueClient {
         ArrayInt32ValueClient {
             endpoint: self.endpoint.clone(),
@@ -86,6 +91,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayInt64ValueClient.
     pub fn get_array_int64_value_client(&self) -> ArrayInt64ValueClient {
         ArrayInt64ValueClient {
             endpoint: self.endpoint.clone(),
@@ -93,6 +99,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayModelValueClient.
     pub fn get_array_model_value_client(&self) -> ArrayModelValueClient {
         ArrayModelValueClient {
             endpoint: self.endpoint.clone(),
@@ -100,6 +107,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayNullableBooleanValueClient.
     pub fn get_array_nullable_boolean_value_client(&self) -> ArrayNullableBooleanValueClient {
         ArrayNullableBooleanValueClient {
             endpoint: self.endpoint.clone(),
@@ -107,6 +115,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayNullableFloatValueClient.
     pub fn get_array_nullable_float_value_client(&self) -> ArrayNullableFloatValueClient {
         ArrayNullableFloatValueClient {
             endpoint: self.endpoint.clone(),
@@ -114,6 +123,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayNullableInt32ValueClient.
     pub fn get_array_nullable_int32_value_client(&self) -> ArrayNullableInt32ValueClient {
         ArrayNullableInt32ValueClient {
             endpoint: self.endpoint.clone(),
@@ -121,6 +131,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayNullableModelValueClient.
     pub fn get_array_nullable_model_value_client(&self) -> ArrayNullableModelValueClient {
         ArrayNullableModelValueClient {
             endpoint: self.endpoint.clone(),
@@ -128,6 +139,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayNullableStringValueClient.
     pub fn get_array_nullable_string_value_client(&self) -> ArrayNullableStringValueClient {
         ArrayNullableStringValueClient {
             endpoint: self.endpoint.clone(),
@@ -135,6 +147,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayStringValueClient.
     pub fn get_array_string_value_client(&self) -> ArrayStringValueClient {
         ArrayStringValueClient {
             endpoint: self.endpoint.clone(),
@@ -142,6 +155,7 @@ impl ArrayClient {
         }
     }
 
+    /// Returns a new instance of ArrayUnknownValueClient.
     pub fn get_array_unknown_value_client(&self) -> ArrayUnknownValueClient {
         ArrayUnknownValueClient {
             endpoint: self.endpoint.clone(),

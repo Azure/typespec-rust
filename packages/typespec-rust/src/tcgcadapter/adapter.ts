@@ -528,7 +528,9 @@ export class Adapter {
     for (const method of client.methods) {
       if (method.kind === 'clientaccessor') {
         const subClient = this.recursiveAdaptClient(method.response, rustClient);
-        rustClient.methods.push(new rust.ClientAccessor(`get_${snakeCaseName(subClient.name)}`, rustClient, subClient));
+        const clientAccessor = new rust.ClientAccessor(`get_${snakeCaseName(subClient.name)}`, rustClient, subClient);
+        clientAccessor.docs.summary = `Returns a new instance of ${subClient.name}.`;
+        rustClient.methods.push(clientAccessor);
       } else {
         this.adaptMethod(method, rustClient);
       }
