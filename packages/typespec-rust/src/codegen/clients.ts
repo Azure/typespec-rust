@@ -728,11 +728,11 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}Ok(${helpers.buildMatch(indent, `res.${nextLinkName}`, [{
     pattern: `Some(${nextLinkName})`,
     returns: 'PagerResult::Continue',
-    body: (indent) => `${indent.get()}response: (rsp),\n${indent.get()}continuation: (${nextLinkName}),\n`
+    body: (indent) => `${indent.get()}response: rsp,\n${indent.get()}continuation: ${nextLinkName}.parse()?,\n`
   }, {
     pattern: 'None',
     returns: 'PagerResult::Complete',
-    body: () => `${indent.get()}response: (rsp),\n`
+    body: () => `${indent.get()}response: rsp,\n`
   }])}`;
   body += ')\n'; // end Ok
   body += `${indent.pop().get()}}\n`; // end async move
