@@ -42,6 +42,7 @@ impl SpreadClient {
         &self.endpoint
     }
 
+    /// Returns a new instance of SpreadAliasClient.
     pub fn get_spread_alias_client(&self) -> SpreadAliasClient {
         SpreadAliasClient {
             endpoint: self.endpoint.clone(),
@@ -49,6 +50,7 @@ impl SpreadClient {
         }
     }
 
+    /// Returns a new instance of SpreadModelClient.
     pub fn get_spread_model_client(&self) -> SpreadModelClient {
         SpreadModelClient {
             endpoint: self.endpoint.clone(),

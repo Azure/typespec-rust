@@ -38,6 +38,7 @@ impl JsonClient {
         &self.endpoint
     }
 
+    /// Returns a new instance of JsonPropertyClient.
     pub fn get_json_property_client(&self) -> JsonPropertyClient {
         JsonPropertyClient {
             endpoint: self.endpoint.clone(),

@@ -41,6 +41,7 @@ impl ExtensibleClient {
         &self.endpoint
     }
 
+    /// Returns a new instance of ExtensibleStringClient.
     pub fn get_extensible_string_client(&self) -> ExtensibleStringClient {
         ExtensibleStringClient {
             endpoint: self.endpoint.clone(),

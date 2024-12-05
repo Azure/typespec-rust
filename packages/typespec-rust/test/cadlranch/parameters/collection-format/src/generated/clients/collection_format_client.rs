@@ -42,6 +42,7 @@ impl CollectionFormatClient {
         &self.endpoint
     }
 
+    /// Returns a new instance of CollectionFormatHeaderClient.
     pub fn get_collection_format_header_client(&self) -> CollectionFormatHeaderClient {
         CollectionFormatHeaderClient {
             endpoint: self.endpoint.clone(),
@@ -49,6 +50,7 @@ impl CollectionFormatClient {
         }
     }
 
+    /// Returns a new instance of CollectionFormatQueryClient.
     pub fn get_collection_format_query_client(&self) -> CollectionFormatQueryClient {
         CollectionFormatQueryClient {
             endpoint: self.endpoint.clone(),

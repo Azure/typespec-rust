@@ -43,6 +43,7 @@ impl BlobClient {
         &self.endpoint
     }
 
+    /// Returns a new instance of BlobAppendBlobClient.
     pub fn get_blob_append_blob_client(&self) -> BlobAppendBlobClient {
         BlobAppendBlobClient {
             endpoint: self.endpoint.clone(),
@@ -50,6 +51,7 @@ impl BlobClient {
         }
     }
 
+    /// Returns a new instance of BlobBlobClient.
     pub fn get_blob_blob_client(&self) -> BlobBlobClient {
         BlobBlobClient {
             endpoint: self.endpoint.clone(),
@@ -57,6 +59,7 @@ impl BlobClient {
         }
     }
 
+    /// Returns a new instance of BlobBlockBlobClient.
     pub fn get_blob_block_blob_client(&self) -> BlobBlockBlobClient {
         BlobBlockBlobClient {
             endpoint: self.endpoint.clone(),
@@ -64,6 +67,7 @@ impl BlobClient {
         }
     }
 
+    /// Returns a new instance of BlobContainerClient.
     pub fn get_blob_container_client(&self) -> BlobContainerClient {
         BlobContainerClient {
             endpoint: self.endpoint.clone(),
@@ -71,6 +75,7 @@ impl BlobClient {
         }
     }
 
+    /// Returns a new instance of BlobPageBlobClient.
     pub fn get_blob_page_blob_client(&self) -> BlobPageBlobClient {
         BlobPageBlobClient {
             endpoint: self.endpoint.clone(),
@@ -78,6 +83,7 @@ impl BlobClient {
         }
     }
 
+    /// Returns a new instance of BlobServiceClient.
     pub fn get_blob_service_client(&self) -> BlobServiceClient {
         BlobServiceClient {
             endpoint: self.endpoint.clone(),

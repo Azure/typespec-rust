@@ -49,6 +49,7 @@ impl XmlClient {
         &self.endpoint
     }
 
+    /// Returns a new instance of XmlModelWithArrayOfModelValueClient.
     pub fn get_xml_model_with_array_of_model_value_client(
         &self,
     ) -> XmlModelWithArrayOfModelValueClient {
@@ -58,6 +59,7 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithAttributesValueClient.
     pub fn get_xml_model_with_attributes_value_client(&self) -> XmlModelWithAttributesValueClient {
         XmlModelWithAttributesValueClient {
             endpoint: self.endpoint.clone(),
@@ -65,6 +67,7 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithDictionaryValueClient.
     pub fn get_xml_model_with_dictionary_value_client(&self) -> XmlModelWithDictionaryValueClient {
         XmlModelWithDictionaryValueClient {
             endpoint: self.endpoint.clone(),
@@ -72,6 +75,7 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithEmptyArrayValueClient.
     pub fn get_xml_model_with_empty_array_value_client(&self) -> XmlModelWithEmptyArrayValueClient {
         XmlModelWithEmptyArrayValueClient {
             endpoint: self.endpoint.clone(),
@@ -79,6 +83,7 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithEncodedNamesValueClient.
     pub fn get_xml_model_with_encoded_names_value_client(
         &self,
     ) -> XmlModelWithEncodedNamesValueClient {
@@ -88,6 +93,7 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithOptionalFieldValueClient.
     pub fn get_xml_model_with_optional_field_value_client(
         &self,
     ) -> XmlModelWithOptionalFieldValueClient {
@@ -97,6 +103,7 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithRenamedArraysValueClient.
     pub fn get_xml_model_with_renamed_arrays_value_client(
         &self,
     ) -> XmlModelWithRenamedArraysValueClient {
@@ -106,6 +113,7 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithRenamedFieldsValueClient.
     pub fn get_xml_model_with_renamed_fields_value_client(
         &self,
     ) -> XmlModelWithRenamedFieldsValueClient {
@@ -115,6 +123,7 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithSimpleArraysValueClient.
     pub fn get_xml_model_with_simple_arrays_value_client(
         &self,
     ) -> XmlModelWithSimpleArraysValueClient {
@@ -124,6 +133,7 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithTextValueClient.
     pub fn get_xml_model_with_text_value_client(&self) -> XmlModelWithTextValueClient {
         XmlModelWithTextValueClient {
             endpoint: self.endpoint.clone(),
@@ -131,6 +141,7 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlModelWithUnwrappedArrayValueClient.
     pub fn get_xml_model_with_unwrapped_array_value_client(
         &self,
     ) -> XmlModelWithUnwrappedArrayValueClient {
@@ -140,6 +151,7 @@ impl XmlClient {
         }
     }
 
+    /// Returns a new instance of XmlSimpleModelValueClient.
     pub fn get_xml_simple_model_value_client(&self) -> XmlSimpleModelValueClient {
         XmlSimpleModelValueClient {
             endpoint: self.endpoint.clone(),

@@ -42,6 +42,7 @@ impl BytesClient {
         &self.endpoint
     }
 
+    /// Returns a new instance of BytesHeaderClient.
     pub fn get_bytes_header_client(&self) -> BytesHeaderClient {
         BytesHeaderClient {
             endpoint: self.endpoint.clone(),
@@ -49,6 +50,7 @@ impl BytesClient {
         }
     }
 
+    /// Returns a new instance of BytesPropertyClient.
     pub fn get_bytes_property_client(&self) -> BytesPropertyClient {
         BytesPropertyClient {
             endpoint: self.endpoint.clone(),
@@ -56,6 +58,7 @@ impl BytesClient {
         }
     }
 
+    /// Returns a new instance of BytesQueryClient.
     pub fn get_bytes_query_client(&self) -> BytesQueryClient {
         BytesQueryClient {
             endpoint: self.endpoint.clone(),
@@ -63,6 +66,7 @@ impl BytesClient {
         }
     }
 
+    /// Returns a new instance of BytesRequestBodyClient.
     pub fn get_bytes_request_body_client(&self) -> BytesRequestBodyClient {
         BytesRequestBodyClient {
             endpoint: self.endpoint.clone(),
@@ -70,6 +74,7 @@ impl BytesClient {
         }
     }
 
+    /// Returns a new instance of BytesResponseBodyClient.
     pub fn get_bytes_response_body_client(&self) -> BytesResponseBodyClient {
         BytesResponseBodyClient {
             endpoint: self.endpoint.clone(),

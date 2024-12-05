@@ -44,6 +44,7 @@ impl SpecialWordsClient {
         &self.endpoint
     }
 
+    /// Returns a new instance of SpecialWordsModelPropertiesClient.
     pub fn get_special_words_model_properties_client(&self) -> SpecialWordsModelPropertiesClient {
         SpecialWordsModelPropertiesClient {
             endpoint: self.endpoint.clone(),
@@ -51,6 +52,7 @@ impl SpecialWordsClient {
         }
     }
 
+    /// Returns a new instance of SpecialWordsModelsClient.
     pub fn get_special_words_models_client(&self) -> SpecialWordsModelsClient {
         SpecialWordsModelsClient {
             endpoint: self.endpoint.clone(),
@@ -58,6 +60,7 @@ impl SpecialWordsClient {
         }
     }
 
+    /// Returns a new instance of SpecialWordsOperationsClient.
     pub fn get_special_words_operations_client(&self) -> SpecialWordsOperationsClient {
         SpecialWordsOperationsClient {
             endpoint: self.endpoint.clone(),
@@ -65,6 +68,7 @@ impl SpecialWordsClient {
         }
     }
 
+    /// Returns a new instance of SpecialWordsParametersClient.
     pub fn get_special_words_parameters_client(&self) -> SpecialWordsParametersClient {
         SpecialWordsParametersClient {
             endpoint: self.endpoint.clone(),

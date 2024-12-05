@@ -38,6 +38,7 @@ impl FixedClient {
         &self.endpoint
     }
 
+    /// Returns a new instance of FixedStringClient.
     pub fn get_fixed_string_client(&self) -> FixedStringClient {
         FixedStringClient {
             endpoint: self.endpoint.clone(),
