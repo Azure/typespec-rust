@@ -78,7 +78,7 @@ impl PageableClient {
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
                         response: (rsp),
-                        continuation: (Url::parse(&next_link)?),
+                        continuation: (next_link.parse()?),
                     },
                     None => PagerResult::Complete { response: (rsp) },
                 })
