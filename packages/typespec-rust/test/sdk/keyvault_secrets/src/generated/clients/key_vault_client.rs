@@ -170,10 +170,10 @@ impl KeyVaultClient {
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
-                        response: (rsp),
-                        continuation: (next_link.parse()?),
+                        response: rsp,
+                        continuation: next_link.parse()?,
                     },
-                    None => PagerResult::Complete { response: (rsp) },
+                    None => PagerResult::Complete { response: rsp },
                 })
             }
         }))
@@ -248,10 +248,10 @@ impl KeyVaultClient {
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
-                        response: (rsp),
-                        continuation: (next_link.parse()?),
+                        response: rsp,
+                        continuation: next_link.parse()?,
                     },
-                    None => PagerResult::Complete { response: (rsp) },
+                    None => PagerResult::Complete { response: rsp },
                 })
             }
         }))
@@ -300,10 +300,10 @@ impl KeyVaultClient {
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
-                        response: (rsp),
-                        continuation: (next_link.parse()?),
+                        response: rsp,
+                        continuation: next_link.parse()?,
                     },
-                    None => PagerResult::Complete { response: (rsp) },
+                    None => PagerResult::Complete { response: rsp },
                 })
             }
         }))
