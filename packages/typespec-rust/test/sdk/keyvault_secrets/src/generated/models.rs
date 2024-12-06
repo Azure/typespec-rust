@@ -22,8 +22,7 @@ pub struct BackupSecretResult {
     pub value: Option<Vec<u8>>,
 }
 
-/// A Deleted Secret consisting of its previous id, attributes and its tags, as
-/// well as information on when it will be purged.
+/// A Deleted Secret consisting of its previous id, attributes and its tags, as well as information on when it will be purged.
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct DeletedSecretBundle {
@@ -43,13 +42,12 @@ pub struct DeletedSecretBundle {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
-    /// If this is a secret backing a KV certificate, then this field specifies the
-    /// corresponding key backing the KV certificate.
+    /// If this is a secret backing a KV certificate, then this field specifies the corresponding key backing the KV certificate.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kid: Option<String>,
 
-    /// True if the secret's lifetime is managed by key vault. If this is a secret
-    /// backing a certificate, then managed will be true.
+    /// True if the secret's lifetime is managed by key vault. If this is a secret backing a certificate, then managed will be
+    /// true.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 
@@ -90,8 +88,7 @@ pub struct DeletedSecretItem {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
-    /// True if the secret's lifetime is managed by key vault. If this is a key backing
-    /// a certificate, then managed will be true.
+    /// True if the secret's lifetime is managed by key vault. If this is a key backing a certificate, then managed will be true.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 
@@ -108,30 +105,18 @@ pub struct DeletedSecretItem {
     pub tags: Option<HashMap<String, String>>,
 }
 
-/// Paged collection of DeletedSecretItem items
+/// The deleted secret list result
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
-pub struct PagedDeletedSecretItem {
-    /// The link to the next page of items
+pub struct DeletedSecretListResult {
+    /// The URL to get the next set of deleted secrets.
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
-    /// The DeletedSecretItem items on this page
+    /// A response message containing a list of deleted secrets in the key vault along with a link to the next page of deleted
+    /// secrets.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<Vec<DeletedSecretItem>>,
-}
-
-/// Paged collection of SecretItem items
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
-#[non_exhaustive]
-pub struct PagedSecretItem {
-    /// The link to the next page of items
-    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
-    pub next_link: Option<String>,
-
-    /// The SecretItem items on this page
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Vec<SecretItem>>,
 }
 
 /// The secret management attributes.
@@ -154,15 +139,13 @@ pub struct SecretAttributes {
     #[serde(rename = "nbf", skip_serializing_if = "Option::is_none")]
     pub not_before: Option<OffsetDateTime>,
 
-    /// softDelete data retention days. Value should be >=7 and <=90 when softDelete
-    /// enabled, otherwise 0.
+    /// softDelete data retention days. Value should be >=7 and <=90 when softDelete enabled, otherwise 0.
     #[serde(rename = "recoverableDays", skip_serializing_if = "Option::is_none")]
     pub recoverable_days: Option<i32>,
 
-    /// Reflects the deletion recovery level currently in effect for secrets in the
-    /// current vault. If it contains 'Purgeable', the secret can be permanently
-    /// deleted by a privileged user; otherwise, only the system can purge the secret,
-    /// at the end of the retention interval.
+    /// Reflects the deletion recovery level currently in effect for secrets in the current vault. If it contains 'Purgeable',
+    /// the secret can be permanently deleted by a privileged user; otherwise, only the system can purge the secret, at the end
+    /// of the retention interval.
     #[serde(rename = "recoveryLevel", skip_serializing_if = "Option::is_none")]
     pub recovery_level: Option<DeletionRecoveryLevel>,
 
@@ -187,13 +170,12 @@ pub struct SecretBundle {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
-    /// If this is a secret backing a KV certificate, then this field specifies the
-    /// corresponding key backing the KV certificate.
+    /// If this is a secret backing a KV certificate, then this field specifies the corresponding key backing the KV certificate.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kid: Option<String>,
 
-    /// True if the secret's lifetime is managed by key vault. If this is a secret
-    /// backing a certificate, then managed will be true.
+    /// True if the secret's lifetime is managed by key vault. If this is a secret backing a certificate, then managed will be
+    /// true.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 
@@ -222,8 +204,7 @@ pub struct SecretItem {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
-    /// True if the secret's lifetime is managed by key vault. If this is a key backing
-    /// a certificate, then managed will be true.
+    /// True if the secret's lifetime is managed by key vault. If this is a key backing a certificate, then managed will be true.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 
@@ -236,11 +217,11 @@ pub struct SecretItem {
 #[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
 #[non_exhaustive]
 pub struct SecretListResult {
-    /// The link to the next page of items
+    /// The URL to get the next set of secrets.
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
-    /// The SecretItem items on this page
+    /// A response message containing a list of secrets in the key vault along with a link to the next page of secrets.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<Vec<SecretItem>>,
 }

@@ -102,7 +102,7 @@ export class Adapter {
     }
 
     for (const model of this.ctx.sdkPackage.models) {
-      if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Error) === tcgc.UsageFlags.Error || tcgc.isAzureCoreModel(model)) {
+      if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Exception) === tcgc.UsageFlags.Exception && (model.usage & tcgc.UsageFlags.Input) === 0 && (model.usage & tcgc.UsageFlags.Output) === 0 || tcgc.isAzureCoreModel(model)) {
         // skip error and core types as we use their azure_core equivalents
         continue;
       }

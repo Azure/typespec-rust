@@ -2,82 +2,52 @@ import "@typespec/rest";
 import "@typespec/http";
 import "@azure-tools/typespec-azure-core";
 
+using Azure.Core;
 using TypeSpec.Rest;
 using TypeSpec.Http;
 
 namespace KeyVault;
 
 /**
- * Reflects the deletion recovery level currently in effect for secrets in the
- * current vault. If it contains 'Purgeable', the secret can be permanently
- * deleted by a privileged user; otherwise, only the system can purge the secret,
- * at the end of the retention interval.
+ * Reflects the deletion recovery level currently in effect for secrets in the current vault. If it contains 'Purgeable', the secret can be permanently deleted by a privileged user; otherwise, only the system can purge the secret, at the end of the retention interval.
  */
 union DeletionRecoveryLevel {
   string,
 
   /**
-   * Denotes a vault state in which deletion is an irreversible operation, without
-   * the possibility for recovery. This level corresponds to no protection being
-   * available against a Delete operation; the data is irretrievably lost upon
-   * accepting a Delete operation at the entity level or higher (vault, resource
-   * group, subscription etc.)
+   * Denotes a vault state in which deletion is an irreversible operation, without the possibility for recovery. This level corresponds to no protection being available against a Delete operation; the data is irretrievably lost upon accepting a Delete operation at the entity level or higher (vault, resource group, subscription etc.)
    */
   Purgeable: "Purgeable",
 
   /**
-   * Denotes a vault state in which deletion is recoverable, and which also permits
-   * immediate and permanent deletion (i.e. purge). This level guarantees the
-   * recoverability of the deleted entity during the retention interval (90 days),
-   * unless a Purge operation is requested, or the subscription is cancelled. System
-   * wil permanently delete it after 90 days, if not recovered
+   * Denotes a vault state in which deletion is recoverable, and which also permits immediate and permanent deletion (i.e. purge). This level guarantees the recoverability of the deleted entity during the retention interval (90 days), unless a Purge operation is requested, or the subscription is cancelled. System wil permanently delete it after 90 days, if not recovered
    */
-  Recoverable_Purgeable: "Recoverable+Purgeable",
+  RecoverablePurgeable: "Recoverable+Purgeable",
 
   /**
-   * Denotes a vault state in which deletion is recoverable without the possibility
-   * for immediate and permanent deletion (i.e. purge). This level guarantees the
-   * recoverability of the deleted entity during the retention interval(90 days) and
-   * while the subscription is still available. System wil permanently delete it
-   * after 90 days, if not recovered
+   * Denotes a vault state in which deletion is recoverable without the possibility for immediate and permanent deletion (i.e. purge). This level guarantees the recoverability of the deleted entity during the retention interval (90 days) and while the subscription is still available. System wil permanently delete it after 90 days, if not recovered
    */
   Recoverable: "Recoverable",
 
   /**
-   * Denotes a vault and subscription state in which deletion is recoverable within
-   * retention interval (90 days), immediate and permanent deletion (i.e. purge) is
-   * not permitted, and in which the subscription itself  cannot be permanently
-   * canceled. System wil permanently delete it after 90 days, if not recovered
+   * Denotes a vault and subscription state in which deletion is recoverable within retention interval (90 days), immediate and permanent deletion (i.e. purge) is not permitted, and in which the subscription itself  cannot be permanently canceled. System wil permanently delete it after 90 days, if not recovered
    */
-  Recoverable_ProtectedSubscription: "Recoverable+ProtectedSubscription",
+  RecoverableProtectedSubscription: "Recoverable+ProtectedSubscription",
 
   /**
-   * Denotes a vault state in which deletion is recoverable, and which also permits
-   * immediate and permanent deletion (i.e. purge when 7<= SoftDeleteRetentionInDays
-   * < 90). This level guarantees the recoverability of the deleted entity during
-   * the retention interval, unless a Purge operation is requested, or the
-   * subscription is cancelled.
+   * Denotes a vault state in which deletion is recoverable, and which also permits immediate and permanent deletion (i.e. purge when 7 <= SoftDeleteRetentionInDays < 90). This level guarantees the recoverability of the deleted entity during the retention interval, unless a Purge operation is requested, or the subscription is cancelled.
    */
-  CustomizedRecoverable_Purgeable: "CustomizedRecoverable+Purgeable",
+  CustomizedRecoverablePurgeable: "CustomizedRecoverable+Purgeable",
 
   /**
-   * Denotes a vault state in which deletion is recoverable without the possibility
-   * for immediate and permanent deletion (i.e. purge when 7<=
-   * SoftDeleteRetentionInDays < 90).This level guarantees the recoverability of the
-   * deleted entity during the retention interval and while the subscription is
-   * still available.
+   * Denotes a vault state in which deletion is recoverable without the possibility for immediate and permanent deletion (i.e. purge when 7 <= SoftDeleteRetentionInDays < 90).This level guarantees the recoverability of the deleted entity during the retention interval and while the subscription is still available.
    */
   CustomizedRecoverable: "CustomizedRecoverable",
 
   /**
-   * Denotes a vault and subscription state in which deletion is recoverable,
-   * immediate and permanent deletion (i.e. purge) is not permitted, and in which
-   * the subscription itself cannot be permanently canceled when 7<=
-   * SoftDeleteRetentionInDays < 90. This level guarantees the recoverability of the
-   * deleted entity during the retention interval, and also reflects the fact that
-   * the subscription itself cannot be cancelled.
+   * Denotes a vault and subscription state in which deletion is recoverable, immediate and permanent deletion (i.e. purge) is not permitted, and in which the subscription itself cannot be permanently canceled when 7 <= SoftDeleteRetentionInDays < 90. This level guarantees the recoverability of the deleted entity during the retention interval, and also reflects the fact that the subscription itself cannot be cancelled.
    */
-  CustomizedRecoverable_ProtectedSubscription: "CustomizedRecoverable+ProtectedSubscription",
+  CustomizedRecoverableProtectedSubscription: "CustomizedRecoverable+ProtectedSubscription",
 }
 
 /**
@@ -113,17 +83,13 @@ model SecretAttributes {
   ...Attributes;
 
   /**
-   * softDelete data retention days. Value should be >=7 and <=90 when softDelete
-   * enabled, otherwise 0.
+   * softDelete data retention days. Value should be >=7 and <=90 when softDelete enabled, otherwise 0.
    */
   @visibility("read")
   recoverableDays?: int32;
 
   /**
-   * Reflects the deletion recovery level currently in effect for secrets in the
-   * current vault. If it contains 'Purgeable', the secret can be permanently
-   * deleted by a privileged user; otherwise, only the system can purge the secret,
-   * at the end of the retention interval.
+   * Reflects the deletion recovery level currently in effect for secrets in the current vault. If it contains 'Purgeable', the secret can be permanently deleted by a privileged user; otherwise, only the system can purge the secret, at the end of the retention interval.
    */
   @visibility("read")
   recoveryLevel?: DeletionRecoveryLevel;
@@ -141,16 +107,18 @@ model Attributes {
   /**
    * Not before date in UTC.
    */
+  #suppress "@azure-tools/typespec-azure-core/casing-style" "Preserving original casing"
   @encodedName("application/json", "nbf")
   @encode("unixTimestamp", int32)
-  notBefore?: utcDateTime;
+  NotBefore?: utcDateTime;
 
   /**
    * Expiry date in UTC.
    */
+  #suppress "@azure-tools/typespec-azure-core/casing-style" "Preserving original casing"
   @encodedName("application/json", "exp")
   @encode("unixTimestamp", int32)
-  expires?: utcDateTime;
+  Expires?: utcDateTime;
 
   /**
    * Creation time in UTC.
@@ -197,15 +165,13 @@ model SecretBundle {
   tags?: Record<string>;
 
   /**
-   * If this is a secret backing a KV certificate, then this field specifies the
-   * corresponding key backing the KV certificate.
+   * If this is a secret backing a KV certificate, then this field specifies the corresponding key backing the KV certificate.
    */
   @visibility("read")
   kid?: string;
 
   /**
-   * True if the secret's lifetime is managed by key vault. If this is a secret
-   * backing a certificate, then managed will be true.
+   * True if the secret's lifetime is managed by key vault. If this is a secret backing a certificate, then managed will be true.
    */
   @visibility("read")
   managed?: boolean;
@@ -248,8 +214,7 @@ model Error {
 }
 
 /**
- * A Deleted Secret consisting of its previous id, attributes and its tags, as
- * well as information on when it will be purged.
+ * A Deleted Secret consisting of its previous id, attributes and its tags, as well as information on when it will be purged.
  */
 model DeletedSecretBundle {
   ...SecretBundle;
@@ -298,19 +263,31 @@ model SecretUpdateParameters {
 /**
  * The secret list result.
  */
-@friendlyName("SecretListResult")
-model SecretListResult is Azure.Core.Page<SecretItem>;
+@pagedResult
+model SecretListResult {
+  /**
+   * A response message containing a list of secrets in the key vault along with a link to the next page of secrets.
+   */
+  @items
+  @visibility("read")
+  value?: SecretItem[];
+
+  /**
+   * The URL to get the next set of secrets.
+   */
+  @Azure.Core.nextLink
+  @visibility("read")
+  nextLink?: string;
+}
 
 /**
  * The secret item containing secret metadata.
  */
-@resource("secrets")
 model SecretItem {
   /**
    * Secret identifier.
    */
-  @key // The ID isn't really the key; it should be the certificate name, but we don't have this attribute on the model
-  id: string;
+  id?: string;
 
   /**
    * The secret management attributes.
@@ -328,8 +305,7 @@ model SecretItem {
   contentType?: string;
 
   /**
-   * True if the secret's lifetime is managed by key vault. If this is a key backing
-   * a certificate, then managed will be true.
+   * True if the secret's lifetime is managed by key vault. If this is a key backing a certificate, then managed will be true.
    */
   @visibility("read")
   managed?: boolean;
@@ -338,13 +314,26 @@ model SecretItem {
 /**
  * The deleted secret list result
  */
-@friendlyName("DeletedSecretListResult")
-model DeletedSecretListResult is Azure.Core.Page<DeletedSecretItem>;
+@pagedResult
+model DeletedSecretListResult {
+  /**
+   * A response message containing a list of deleted secrets in the key vault along with a link to the next page of deleted secrets.
+   */
+  @items
+  @visibility("read")
+  value?: DeletedSecretItem[];
+
+  /**
+   * The URL to get the next set of deleted secrets.
+   */
+  @Azure.Core.nextLink
+  @visibility("read")
+  nextLink?: string;
+}
 
 /**
  * The deleted secret item containing metadata about the deleted secret.
  */
-@resource("deletedsecrets")
 model DeletedSecretItem {
   ...SecretItem;
 
