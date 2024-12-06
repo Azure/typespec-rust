@@ -1,6 +1,6 @@
 # Release History
 
-## 0.3.0 (Unreleased)
+## 0.3.0 (2024-12-06)
 
 ### Breaking Changes
 
@@ -11,6 +11,7 @@
 * Don't overwrite an existing `Cargo.toml` file by default.
   * Specify `overwrite-cargo-toml=true` to force overwriting the file.
 * Emitter args `crate-name` and `crate-version` have been marked as requried.
+* Updated minimum tcgc to `v0.48.4`.
 
 ### Features Added
 
