@@ -77,6 +77,8 @@ export function getTypeDeclaration(type: rust.Client | rust.Type, withAnonymousL
       return type.name;
     case 'encodedBytes':
       return 'Vec<u8>';
+    case 'Etag':
+      return type.kind;
     case 'hashmap':
       return `${type.name}<String, ${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'implTrait':

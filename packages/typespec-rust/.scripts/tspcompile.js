@@ -23,7 +23,7 @@ const cadlRanch = {
   //'cadl_access': ['azure/client-generator-core/access'],
   'cadl_flattenproperty': ['azure/client-generator-core/flatten-property'],
   //'cadl_coreusage': ['azure/client-generator-core/usage'],
-  //'cadl_basic': ['azure/core/basic'],
+  'cadl_basic': ['azure/core/basic'],
   //'cadl_lrorpc': ['azure/core/lro/rpc'],
   //'cadl_lrolegacy': ['azure/core/lro/rpc-legacy'],
   //'cadl_lrostd': ['azure/core/lro/standard'],

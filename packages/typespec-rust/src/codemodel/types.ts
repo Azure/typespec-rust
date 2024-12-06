@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** Type defines a type within the Rust type system */
-export type Type = Arc | EncodedBytes | Enum | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | Pager | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
+export type Type = Arc | EncodedBytes | Enum | Etag | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | Pager | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
 
 /** Arc is a std::sync::Arc<T> */
 export interface Arc extends StdType {
@@ -69,6 +69,11 @@ export interface EnumValue {
 
   /** the value used in SerDe operations */
   value: number | string;
+}
+
+/** Etag is an azure_core::Etag */
+export interface Etag extends External {
+  kind: 'Etag';
 }
 
 /** ExternalType is a type defined in a different crate */
@@ -425,6 +430,13 @@ export class EnumValue implements EnumValue {
   }
 }
 
+export class Etag extends External implements Etag {
+  constructor(crate: Crate) {
+    super(crate, 'azure_core', 'Etag');
+    this.kind = 'Etag';
+  }
+}
+
 export class ExternalType extends External implements ExternalType {
   constructor(crate: Crate, crateName: string, typeName: string) {
     super(crate, crateName, typeName);
@@ -496,6 +508,7 @@ export class Option implements Option {
       case 'String':
       case 'encodedBytes':
       case 'enum':
+      case 'Etag':
       case 'external':
       case 'hashmap':
       case 'model':

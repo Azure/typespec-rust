@@ -699,13 +699,34 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}Ok(Pager::from_callback(move |${nextLinkName}: Option<Url>| {\n`;
   body += `${indent.push().get()}let mut url: Url;\n`;
 
+  /** returns true if the method options type needs to be cloned */
+  const optionsNeedsCloning = function(options: rust.MethodOptions): boolean {
+    if (options.type.fields.length === 1) {
+      // only has ClientMethodOptions
+      return false;
+    }
+
+    // if options contains any non-copyable types we'll need to clone it
+    for (const field of options.type.fields) {
+      const unwrappedFieldType = helpers.unwrapOption(field.type);
+      if (unwrappedFieldType.kind === 'String' || unwrappedFieldType.kind === 'vector') {
+        return true;
+      }
+    }
+    return false;
+  };
+
   body += indent.get() + helpers.buildMatch(indent, nextLinkName, [{
     pattern: `Some(${nextLinkName})`,
     body: (indent) => `${indent.get()}url = ${nextLinkName};\n`
   }, {
     pattern: 'None',
     body: (indent) => {
-      let none = `${indent.get()}url = endpoint.clone();\n`;
+      let none = '';
+      if (optionsNeedsCloning(method.options)) {
+        none += `${indent.get()}let options = options.clone();\n`;
+      }
+      none += `${indent.get()}url = endpoint.clone();\n`;
       none += constructUrl(indent, use, method, paramGroups, false);
       return none;
     }
