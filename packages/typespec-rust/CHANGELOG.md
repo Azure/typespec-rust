@@ -6,6 +6,12 @@
 
 * Model fields of type `url` are now emitted as `String` types.
 
+### Other Changes
+
+* Don't overwrite an existing `Cargo.toml` file by default.
+  * Specify `overwrite-cargo-toml=true` to force overwriting the file.
+* Emitter args `crate-name` and `crate-version` have been marked as requried.
+
 ### Features Added
 
 * Clients have an `endpoint()` method that returns its `azure_core::Url`.

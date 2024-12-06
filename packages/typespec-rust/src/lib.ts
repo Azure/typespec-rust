@@ -9,6 +9,7 @@ import { createTypeSpecLibrary, JSONSchemaType } from '@typespec/compiler';
 export interface RustEmitterOptions {
   'crate-name': string;
   'crate-version': string;
+  'overwrite-cargo-toml': boolean;
 }
 
 const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
@@ -17,8 +18,12 @@ const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
   properties: {
     'crate-name': { type: 'string', nullable: false },
     'crate-version': { type: 'string', nullable: false },
+    'overwrite-cargo-toml': { type: 'boolean', nullable: false },
   },
-  required: [],
+  required: [
+    'crate-name',
+    'crate-version',
+  ],
 };
 
 const libDef = {

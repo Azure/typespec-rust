@@ -6,9 +6,10 @@
 import { CodeGenerator } from './codegen/codeGenerator.js';
 import { Adapter } from './tcgcadapter/adapter.js';
 import { RustEmitterOptions } from './lib.js';
+import { existsSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
 import * as path from 'path';
-import { EmitContext } from '@typespec/compiler';
+import { EmitContext, NoTarget } from '@typespec/compiler';
 import 'source-map-support/register.js';
 
 /**
@@ -24,10 +25,20 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
 
   const codegen = new CodeGenerator(crate);
 
-  // TODO: don't overwrite an existing Cargo.toml file
-  // will likely need to merge existing Cargo.toml file with generated content
+  // don't overwrite an existing Cargo.toml file by default
+  // TODO: consider merging existing dependencies with emitted dependencies when overwriting
   // https://github.com/Azure/typespec-rust/issues/22
-  await writeFile(`${context.emitterOutputDir}/Cargo.toml`, codegen.emitCargoToml());
+  const cargoTomlPath = `${context.emitterOutputDir}/Cargo.toml`;
+  if (existsSync(cargoTomlPath) && !context.options['overwrite-cargo-toml']) {
+    context.program.reportDiagnostic({
+      code: "FileAlreadyExists",
+      severity: "warning",
+      message: `skip overwriting file ${cargoTomlPath}`,
+      target: NoTarget,
+    });
+  } else {
+    await writeFile(cargoTomlPath, codegen.emitCargoToml());
+  }
 
   // TODO: this will overwrite an existing lib.rs file.
   // we will likely need to support merging generated content with a preexisting lib.rs

@@ -149,6 +149,7 @@ function generate(crate, input, outputDir, additionalArgs) {
       const options = [];
       options.push(`--option="@azure-tools/typespec-rust.crate-name=${crate}"`);
       options.push(`--option="@azure-tools/typespec-rust.crate-version=0.1.0"`);
+      options.push(`--option="@azure-tools/typespec-rust.overwrite-cargo-toml=true"`);
       options.push(`--option="@azure-tools/typespec-rust.emitter-output-dir=${fullOutputDir}"`);
       const command = `node ${compiler} compile ${input} --emit=${pkgRoot} ${options.join(' ')} ${additionalArgs.join(' ')}`;
       if (switches.includes('--verbose')) {
