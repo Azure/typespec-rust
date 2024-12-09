@@ -299,6 +299,7 @@ export function unwrapOption(type: rust.Type): rust.Type {
  */
 export function unwrapType(type: rust.Type): rust.Type {
   switch (type.kind) {
+    case 'arc':
     case 'option':
     case 'hashmap':
     case 'vector':

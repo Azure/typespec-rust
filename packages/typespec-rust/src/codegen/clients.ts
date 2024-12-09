@@ -58,8 +58,6 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
       use.addForType(field.type);
       body += `${indent.get()}${pubInClients}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
     }
-    use.addType('azure_core', 'Pipeline');
-    body += `${indent.get()}${pubInClients}pipeline: Pipeline,\n`;
     body += '}\n\n'; // end client
 
     if (client.constructable) {
@@ -98,13 +96,26 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         body += `${indent.get()}let options = options.unwrap_or_default();\n`;
         body += `${indent.get()}Ok(Self {\n`;
 
-        // propagate any client option fields to the client initializer
         indent.push();
+
+        // propagate the required client params to the initializer
+        // NOTE: we do this on a sorted copy of the client params as we must preserve their order
+        for (const param of [...constructor.parameters].sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); })) {
+          if (isCredential(param.type)) {
+            // credential params aren't persisted on the client so skip them
+            continue;
+          }
+
+          // by convention, the param field and param name are the
+          // same so we can use shorthand initialization syntax
+          body += `${indent.get()}${param.name},\n`;
+        }
+
+        // propagate any client option fields to the client initializer
         for (const field of getClientOptionsFields(client.constructable.options)) {
           body += `${indent.get()}${field.name}: options.${field.name},\n`;
         }
 
-        body += `${indent.get()}${endpointParamName},\n`;
         body += `${indent.get()}pipeline: Pipeline::new(\n`;
         body += `${indent.push().get()}option_env!("CARGO_PKG_NAME"),\n`;
         body += `${indent.get()}option_env!("CARGO_PKG_VERSION"),\n`;
@@ -152,7 +163,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
           break;
         case 'clientaccessor':
           methodBody = (indentation: helpers.indentation): string => {
-            return getClientAccessorMethodBody(indentation, method);
+            return getClientAccessorMethodBody(indentation, client, method);
           };
           break;
       }
@@ -206,7 +217,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         body += `${indent.push().get()}${method.options.type.name} {\n`;
         indent.push();
         for (const field of method.options.type.fields) {
-          if (field.type.kind === 'external' && field.type.name === 'ClientMethodOptions') {
+          if (isClientMethodOptions(field.type)) {
             body += `${indent.get()}${field.name}: ClientMethodOptions {\n`;
             body += `${indent.push().get()}context: self.${field.name}.context.into_owned(),\n`;
             body += `${indent.pop().get()}},\n`;
@@ -384,9 +395,10 @@ function getEndpointFieldName(client: rust.Client): string {
   let endpointFieldName: string | undefined;
   for (const field of client.fields) {
     if (field.type.kind === 'Url' ) {
+      if (endpointFieldName) {
+        throw new Error(`found multiple URL fields in client ${client.name} which is unexpected`);
+      }
       endpointFieldName = field.name;
-    } else if (endpointFieldName) {
-      throw new Error(`found multiple URL fields in client ${client.name} which is unexpected`);
     }
   }
   if (!endpointFieldName) {
@@ -402,11 +414,12 @@ function getEndpointFieldName(client: rust.Client): string {
  * @param clientAccessor the client accessor for which to construct the body
  * @returns the contents of the method body
  */
-function getClientAccessorMethodBody(indent: helpers.indentation, clientAccessor: rust.ClientAccessor): string {
+function getClientAccessorMethodBody(indent: helpers.indentation, client: rust.Client, clientAccessor: rust.ClientAccessor): string {
   let body = `${clientAccessor.returns.name} {\n`;
-  const endpointFieldName = getEndpointFieldName(clientAccessor.returns);
-  body += `${indent.push().get()}${endpointFieldName}: self.${endpointFieldName}.clone(),\n`;
-  body += `${indent.get()}pipeline: self.pipeline.clone(),\n`;
+  indent.push();
+  for (const field of client.fields) {
+    body += `${indent.get()}${field.name}: self.${field.name}${typeNeedsCloning(field.type) ? '.clone()' : ''},\n`;
+  }
   body += `${indent.pop().get()}}`;
   return body;
 }
@@ -706,10 +719,11 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       return false;
     }
 
-    // if options contains any non-copyable types we'll need to clone it
+    // if options contains any non-copyable types other than ClientMethodOptions we'll need to clone it
     for (const field of options.type.fields) {
-      const unwrappedFieldType = helpers.unwrapOption(field.type);
-      if (unwrappedFieldType.kind === 'String' || unwrappedFieldType.kind === 'vector') {
+      if (isClientMethodOptions(field.type)) {
+        continue;
+      } else if (typeNeedsCloning(field.type)) {
         return true;
       }
     }
@@ -869,4 +883,30 @@ function getLifetimeAnnotation(type: rust.Struct): string {
     return `${helpers.getGenericLifetimeAnnotation(type.lifetime)}`;
   }
   return '';
+}
+
+/** returns true if the type isn't copyable thus nees to be cloned */
+function typeNeedsCloning(type: rust.Type): boolean {
+  const unwrappedType = helpers.unwrapOption(type);
+  switch (unwrappedType.kind) {
+    case 'String':
+    case 'Url':
+    case 'external':
+    case 'hashmap':
+    case 'vector':
+      return true;
+    default:
+      return false;
+  }
+}
+
+/** returns true if the type is the azure_core::ClientMethodOptions type */
+function isClientMethodOptions(type: rust.Type): boolean {
+  return type.kind === 'external' && type.name === 'ClientMethodOptions';
+}
+
+/** returns true if the type is a credential */
+function isCredential(type: rust.Type): boolean {
+  const unwrappedType = helpers.unwrapType(type);
+  return unwrappedType.kind === 'tokenCredential';
 }

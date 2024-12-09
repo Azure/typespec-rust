@@ -15,8 +15,10 @@ use std::collections::HashMap;
 use time::OffsetDateTime;
 
 pub struct BlobPageBlobClient {
+    pub(crate) container_name: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
+    pub(crate) version: String,
 }
 
 impl BlobPageBlobClient {

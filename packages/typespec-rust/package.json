@@ -49,7 +49,7 @@
   "devDependencies": {
     "@azure-tools/cadl-ranch": "0.16.1",
     "@azure-tools/cadl-ranch-expect": "0.15.6",
-    "@azure-tools/cadl-ranch-specs": "0.39.2",
+    "@azure-tools/cadl-ranch-specs": "0.39.5",
     "@azure-tools/typespec-autorest": "0.48.0",
     "@azure-tools/typespec-azure-core": "0.48.0",
     "@azure-tools/typespec-azure-resource-manager": "0.48.0",

@@ -29,8 +29,10 @@ const cadlRanch = {
   //'cadl_lrostd': ['azure/core/lro/standard'],
   //'cadl_corescalar': ['azure/core/scalar'],
   //'cadl_traits': ['azure/core/traits'],
+  'cadl_azurebasic': ['azure/example/basic'],
   //'cadl_naming': ['client/naming'],
   //'cadl_default': ['client/structure/default/client.tsp'],
+  //'cadl_clientopgroup': ['client/structure/client-operation-group/client.tsp'],
   //'cadl_multiclient': ['client/structure/multi-client/client.tsp'],
   //'cadl_renamedop': ['client/structure/renamed-operation/client.tsp'],
   //'cadl_twoop': ['client/structure/two-operation-group/client.tsp'],
@@ -109,7 +111,7 @@ function should_generate(name) {
 const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrests';
 generate('keyvault_secrets', keyvault_secrets, 'test/sdk/keyvault_secrets');
 
-const blob_storage = pkgRoot + 'test/tsp/Microsoft.BlobStorage';
+const blob_storage = pkgRoot + 'test/tsp/Microsoft.BlobStorage/client.tsp';
 generate('blob_storage', blob_storage, 'test/sdk/blob_storage');
 
 for (const crate in cadlRanch) {

@@ -10,6 +10,10 @@
 
 * Pager callbacks will properly clone method options when it contains non-copyable types.
 
+### Features Added
+
+* Added support for required client parameters.
+
 ### Other Changes
 
 * Methods create their own `Context` using the caller's as the parent.

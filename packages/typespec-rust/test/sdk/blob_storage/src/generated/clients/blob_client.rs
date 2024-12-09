@@ -12,8 +12,10 @@ use crate::blob_service_client::BlobServiceClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 
 pub struct BlobClient {
+    container_name: String,
     endpoint: Url,
     pipeline: Pipeline,
+    version: String,
 }
 
 #[derive(Clone, Debug)]
@@ -22,12 +24,19 @@ pub struct BlobClientOptions {
 }
 
 impl BlobClient {
-    pub fn with_no_credential(endpoint: &str, options: Option<BlobClientOptions>) -> Result<Self> {
+    pub fn with_no_credential(
+        endpoint: &str,
+        version: String,
+        container_name: String,
+        options: Option<BlobClientOptions>,
+    ) -> Result<Self> {
         let mut endpoint = Url::parse(endpoint.as_ref())?;
         endpoint.set_query(None);
         let options = options.unwrap_or_default();
         Ok(Self {
+            container_name,
             endpoint,
+            version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
                 option_env!("CARGO_PKG_VERSION"),
@@ -46,48 +55,60 @@ impl BlobClient {
     /// Returns a new instance of BlobAppendBlobClient.
     pub fn get_blob_append_blob_client(&self) -> BlobAppendBlobClient {
         BlobAppendBlobClient {
+            container_name: self.container_name.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
+            version: self.version.clone(),
         }
     }
 
     /// Returns a new instance of BlobBlobClient.
     pub fn get_blob_blob_client(&self) -> BlobBlobClient {
         BlobBlobClient {
+            container_name: self.container_name.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
+            version: self.version.clone(),
         }
     }
 
     /// Returns a new instance of BlobBlockBlobClient.
     pub fn get_blob_block_blob_client(&self) -> BlobBlockBlobClient {
         BlobBlockBlobClient {
+            container_name: self.container_name.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
+            version: self.version.clone(),
         }
     }
 
     /// Returns a new instance of BlobContainerClient.
     pub fn get_blob_container_client(&self) -> BlobContainerClient {
         BlobContainerClient {
+            container_name: self.container_name.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
+            version: self.version.clone(),
         }
     }
 
     /// Returns a new instance of BlobPageBlobClient.
     pub fn get_blob_page_blob_client(&self) -> BlobPageBlobClient {
         BlobPageBlobClient {
+            container_name: self.container_name.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
+            version: self.version.clone(),
         }
     }
 
     /// Returns a new instance of BlobServiceClient.
     pub fn get_blob_service_client(&self) -> BlobServiceClient {
         BlobServiceClient {
+            container_name: self.container_name.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
+            version: self.version.clone(),
         }
     }
 }

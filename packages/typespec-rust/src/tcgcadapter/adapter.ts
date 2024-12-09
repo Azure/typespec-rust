@@ -417,6 +417,7 @@ export class Adapter {
     rustClient.docs.summary = client.summary;
     rustClient.docs.description = client.doc;
     rustClient.parent = parent;
+    rustClient.fields.push(new rust.ClientParameter('pipeline', new rust.ExternalType(this.crate, 'azure_core', 'Pipeline')));
 
     // anything other than public means non-instantiable client
     if (client.initialization.access === 'public') {
@@ -483,25 +484,27 @@ export class Adapter {
             rustClient.fields.push(new rust.ClientParameter(param.name, new rust.Url(this.crate)));
             break;
           case 'method': {
-            // this is a client param that's used in method bodies (e.g. api-version but can be others)
-            if (!param.isApiVersionParam) {
-              // TODO: https://github.com/Azure/typespec-rust/issues/90
-              throw new Error('client method params other than api-version NYI');
+            let paramType: rust.Type;
+            if (param.isApiVersionParam) {
+              // we expose the api-version param as a String
+              paramType = new rust.StringType();
+            } else {
+              paramType = this.getType(param.type);
             }
 
-            if (!param.clientDefaultValue) {
-              // TODO: https://github.com/Azure/typespec-rust/issues/90
-              throw new Error('required client method params NYI');
-            }
-
-            // we expose the api-version param as a String
             const paramName = snakeCaseName(param.name);
-            rustClient.fields.push(new rust.ClientParameter(paramName, new rust.StringType()));
+            rustClient.fields.push(new rust.ClientParameter(paramName, paramType));
 
             // client-side default value makes the param optional
-            const apiVersionField = new rust.StructField(paramName, true, new rust.StringType());
-            apiVersionField.defaultValue = `String::from("${<string>param.clientDefaultValue}")`;
-            clientOptionsStruct.fields.push(apiVersionField);
+            if (param.optional || param.clientDefaultValue) {
+              const paramField = new rust.StructField(paramName, true, paramType);
+              clientOptionsStruct.fields.push(paramField);
+              if (param.clientDefaultValue) {
+                paramField.defaultValue = `String::from("${<string>param.clientDefaultValue}")`;
+              }
+            } else {
+              ctorParams.push(new rust.ClientParameter(paramName, paramType, false));
+            }
             break;
           }
         }

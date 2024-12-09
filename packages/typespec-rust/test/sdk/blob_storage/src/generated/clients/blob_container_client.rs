@@ -12,8 +12,10 @@ use azure_core::{
 use std::collections::HashMap;
 
 pub struct BlobContainerClient {
+    pub(crate) container_name: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
+    pub(crate) version: String,
 }
 
 impl BlobContainerClient {

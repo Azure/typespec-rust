@@ -42,8 +42,8 @@ impl KeyVaultClient {
         ));
         let options = options.unwrap_or_default();
         Ok(Self {
-            api_version: options.api_version,
             endpoint,
+            api_version: options.api_version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
                 option_env!("CARGO_PKG_VERSION"),
