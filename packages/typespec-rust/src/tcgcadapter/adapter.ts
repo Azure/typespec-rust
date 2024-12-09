@@ -294,6 +294,16 @@ export class Adapter {
       case 'endpoint':
       case 'string':
       case 'url': {
+        if (type.kind === 'string' && type.crossLanguageDefinitionId === 'Azure.Core.eTag') {
+          const etagKey = 'etag';
+          let etagType = this.types.get(etagKey);
+          if (etagType) {
+            return etagType;
+          }
+          etagType = new rust.Etag(this.crate);
+          this.types.set(etagKey, etagType);
+          return etagType;
+        }
         let stringType = this.types.get(type.kind);
         if (stringType) {
           return stringType;

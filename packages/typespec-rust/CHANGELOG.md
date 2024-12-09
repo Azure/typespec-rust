@@ -1,10 +1,24 @@
 # Release History
 
+## 0.4.0 (Unreleased)
+
+### Breaking Changes
+
+* `Azure.Core.eTag` types are now emitted as `azure_core::Etag` types.
+
+### Bugs Fixed
+
+* Pager callbacks will properly clone method options when it contains non-copyable types.
+
 ## 0.3.0 (2024-12-06)
 
 ### Breaking Changes
 
 * Model fields of type `url` are now emitted as `String` types.
+
+### Bugs Fixed
+
+* Fixed an issue that could cause a crash with error `Error: didn't find body format for model Error`.
 
 ### Other Changes
 
