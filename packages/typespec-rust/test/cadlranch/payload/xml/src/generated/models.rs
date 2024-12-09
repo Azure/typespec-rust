@@ -7,12 +7,11 @@ use crate::{
     generated::xml_helpers::ColorsString, generated::xml_helpers::CountsInt32,
     generated::xml_helpers::ItemsSimpleModel,
 };
-use azure_core::Model;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// Contains an array of models.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct ModelWithArrayOfModel {
     #[serde(
@@ -24,7 +23,7 @@ pub struct ModelWithArrayOfModel {
 }
 
 /// Contains fields that are XML attributes.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct ModelWithAttributes {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -38,7 +37,7 @@ pub struct ModelWithAttributes {
 }
 
 /// Contains a dictionary of key value pairs.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct ModelWithDictionary {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -46,7 +45,7 @@ pub struct ModelWithDictionary {
 }
 
 /// Contains an array of models that's supposed to be sent/received as an empty XML element.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct ModelWithEmptyArray {
     #[serde(
@@ -58,7 +57,7 @@ pub struct ModelWithEmptyArray {
 }
 
 /// Uses encodedName instead of Xml.Name which is functionally equivalent.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 #[serde(rename = "ModelWithEncodedNamesSrc")]
 pub struct ModelWithEncodedNames {
@@ -75,7 +74,7 @@ pub struct ModelWithEncodedNames {
 }
 
 /// Contains an optional field.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct ModelWithOptionalField {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -86,7 +85,7 @@ pub struct ModelWithOptionalField {
 }
 
 /// Contains fields of wrapped and unwrapped arrays of primitive types that have different XML representations.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct ModelWithRenamedArrays {
     #[serde(rename = "Colors", skip_serializing_if = "Option::is_none")]
@@ -102,7 +101,7 @@ pub struct ModelWithRenamedArrays {
 }
 
 /// Contains fields of the same type that have different XML representation.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 #[serde(rename = "ModelWithRenamedFieldsSrc")]
 pub struct ModelWithRenamedFields {
@@ -114,7 +113,7 @@ pub struct ModelWithRenamedFields {
 }
 
 /// Contains fields of arrays of primitive types.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct ModelWithSimpleArrays {
     #[serde(
@@ -133,7 +132,7 @@ pub struct ModelWithSimpleArrays {
 }
 
 /// Contains an attribute and text.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct ModelWithText {
     #[serde(rename = "$text", skip_serializing_if = "Option::is_none")]
@@ -144,7 +143,7 @@ pub struct ModelWithText {
 }
 
 /// Contains fields of wrapped and unwrapped arrays of primitive types.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct ModelWithUnwrappedArray {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -159,7 +158,7 @@ pub struct ModelWithUnwrappedArray {
 }
 
 /// Contains fields of primitive types.
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct SimpleModel {
     #[serde(skip_serializing_if = "Option::is_none")]

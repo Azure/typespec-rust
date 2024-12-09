@@ -5,11 +5,11 @@
 
 use crate::generated::xml_helpers::CorsCorsRule;
 use crate::models::{CorsRule, Logging, Metrics, RetentionPolicy, StaticWebsite};
-use azure_core::{Model, RequestContent, Result};
+use azure_core::{RequestContent, Result};
 use serde::{Deserialize, Serialize};
 use typespec_client_core::xml::to_xml;
 
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct GetUserDelegationKeyRequest {
     /// The date-time the key expires.
@@ -21,7 +21,7 @@ pub struct GetUserDelegationKeyRequest {
     pub start: String,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Model, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct SetPropertiesRequest {
     /// The CORS properties.

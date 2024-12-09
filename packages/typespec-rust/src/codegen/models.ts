@@ -56,7 +56,6 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
   // for the internal models we might need to use public model types
   const use = new Use(pub ? 'models' : undefined);
   use.addTypes('serde', ['Deserialize', 'Serialize']);
-  use.addType('azure_core', 'Model');
 
   const indent = new helpers.indentation();
 
@@ -67,7 +66,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
     }
 
     body += helpers.formatDocComment(model.docs);
-    body += helpers.annotationDerive('Default', 'Model');
+    body += helpers.annotationDerive('Default', 'azure_core::Model');
     body += helpers.AnnotationNonExhaustive;
     if (model.xmlName) {
       body += `#[serde(rename = "${model.xmlName}")]\n`;
