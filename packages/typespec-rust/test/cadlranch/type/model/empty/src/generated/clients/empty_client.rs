@@ -5,7 +5,7 @@
 
 use crate::models::{EmptyInput, EmptyInputOutput, EmptyOutput};
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, ClientOptions, Method, Pipeline, Request,
+    AsClientMethodOptions, ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request,
     RequestContent, Response, Result, Url,
 };
 
@@ -46,7 +46,7 @@ impl EmptyClient {
         options: Option<EmptyClientGetEmptyOptions<'_>>,
     ) -> Result<Response<EmptyOutput>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/type/model/empty/alone");
         let mut request = Request::new(url, Method::Get);
@@ -60,7 +60,7 @@ impl EmptyClient {
         options: Option<EmptyClientPostRoundTripEmptyOptions<'_>>,
     ) -> Result<Response<EmptyInputOutput>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/type/model/empty/round-trip");
         let mut request = Request::new(url, Method::Post);
@@ -76,7 +76,7 @@ impl EmptyClient {
         options: Option<EmptyClientPutEmptyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/type/model/empty/alone");
         let mut request = Request::new(url, Method::Put);

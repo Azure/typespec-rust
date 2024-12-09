@@ -7,8 +7,8 @@ use crate::models::{
     AccessTier, BlobImmutabilityPolicyMode, BlockListType, BlockLookupList, EncryptionAlgorithmType,
 };
 use azure_core::{
-    base64, AsClientMethodOptions, ClientMethodOptions, Method, Pipeline, Request, RequestContent,
-    Response, Result, Url,
+    base64, AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request,
+    RequestContent, Response, Result, Url,
 };
 use std::collections::HashMap;
 use time::OffsetDateTime;
@@ -39,7 +39,7 @@ impl BlobBlockBlobClient {
         options: Option<BlobBlockBlobClientCommitBlockListOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -154,7 +154,7 @@ impl BlobBlockBlobClient {
         options: Option<BlobBlockBlobClientGetBlockListOptions<'_>>,
     ) -> Result<Response<BlockLookupList>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -200,7 +200,7 @@ impl BlobBlockBlobClient {
         options: Option<BlobBlockBlobClientPutBlobFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -335,7 +335,7 @@ impl BlobBlockBlobClient {
         options: Option<BlobBlockBlobClientStageBlockOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -405,7 +405,7 @@ impl BlobBlockBlobClient {
         options: Option<BlobBlockBlobClientStageBlockFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -493,7 +493,7 @@ impl BlobBlockBlobClient {
         options: Option<BlobBlockBlobClientUploadOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);

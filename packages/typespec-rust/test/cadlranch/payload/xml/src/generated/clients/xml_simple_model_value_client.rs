@@ -5,7 +5,7 @@
 
 use crate::models::SimpleModel;
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Method, Pipeline, Request, RequestContent,
+    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
 
@@ -25,7 +25,7 @@ impl XmlSimpleModelValueClient {
         options: Option<XmlSimpleModelValueClientGetOptions<'_>>,
     ) -> Result<Response<SimpleModel>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/payload/xml/simpleModel");
         let mut request = Request::new(url, Method::Get);
@@ -39,7 +39,7 @@ impl XmlSimpleModelValueClient {
         options: Option<XmlSimpleModelValueClientPutOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/payload/xml/simpleModel");
         let mut request = Request::new(url, Method::Put);

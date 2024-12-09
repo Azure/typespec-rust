@@ -5,7 +5,7 @@
 
 use crate::models::{FlattenModel, NestedFlattenModel};
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, ClientOptions, Method, Pipeline, Request,
+    AsClientMethodOptions, ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request,
     RequestContent, Response, Result, Url,
 };
 
@@ -50,7 +50,7 @@ impl FlattenPropertyClient {
         options: Option<FlattenPropertyClientPutFlattenModelOptions<'_>>,
     ) -> Result<Response<FlattenModel>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/azure/client-generator-core/flatten-property/flattenModel");
         let mut request = Request::new(url, Method::Put);
@@ -66,7 +66,7 @@ impl FlattenPropertyClient {
         options: Option<FlattenPropertyClientPutNestedFlattenModelOptions<'_>>,
     ) -> Result<Response<NestedFlattenModel>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/azure/client-generator-core/flatten-property/nestedFlattenModel");
         let mut request = Request::new(url, Method::Put);

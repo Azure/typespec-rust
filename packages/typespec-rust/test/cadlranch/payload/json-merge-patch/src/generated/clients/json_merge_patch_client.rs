@@ -5,7 +5,7 @@
 
 use crate::models::{Resource, ResourcePatch};
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, ClientOptions, Method, Pipeline, Request,
+    AsClientMethodOptions, ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request,
     RequestContent, Response, Result, Url,
 };
 
@@ -51,7 +51,7 @@ impl JsonMergePatchClient {
         options: Option<JsonMergePatchClientCreateResourceOptions<'_>>,
     ) -> Result<Response<Resource>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/json-merge-patch/create/resource");
         let mut request = Request::new(url, Method::Put);
@@ -67,7 +67,7 @@ impl JsonMergePatchClient {
         options: Option<JsonMergePatchClientUpdateOptionalResourceOptions<'_>>,
     ) -> Result<Response<Resource>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/json-merge-patch/update/resource/optional");
         let mut request = Request::new(url, Method::Patch);
@@ -86,7 +86,7 @@ impl JsonMergePatchClient {
         options: Option<JsonMergePatchClientUpdateResourceOptions<'_>>,
     ) -> Result<Response<Resource>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/json-merge-patch/update/resource");
         let mut request = Request::new(url, Method::Patch);

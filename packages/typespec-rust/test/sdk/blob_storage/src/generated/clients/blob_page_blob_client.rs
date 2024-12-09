@@ -8,8 +8,8 @@ use crate::models::{
     SequenceNumberActionType,
 };
 use azure_core::{
-    base64, AsClientMethodOptions, ClientMethodOptions, Method, Pipeline, Request, RequestContent,
-    Response, Result, Url,
+    base64, AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request,
+    RequestContent, Response, Result, Url,
 };
 use std::collections::HashMap;
 use time::OffsetDateTime;
@@ -35,7 +35,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientClearPagesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -128,7 +128,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientCopyIncrementalOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -176,7 +176,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientCreateOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -292,7 +292,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientResizeOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -360,7 +360,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientUpdateSequenceNumberOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -422,7 +422,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientUploadPagesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -531,7 +531,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientUploadPagesFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);

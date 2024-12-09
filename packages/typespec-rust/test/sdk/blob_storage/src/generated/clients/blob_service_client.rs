@@ -9,7 +9,7 @@ use crate::models::{
     StaticWebsite, StorageServiceProperties, StorageServiceStats, UserDelegationKey,
 };
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Method, Pipeline, Request, RequestContent,
+    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
 
@@ -31,7 +31,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientFilterBlobsOptions<'_>>,
     ) -> Result<Response<FilterBlobSegment>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/");
         url.query_pairs_mut().append_pair("comp", "blobs");
@@ -76,7 +76,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/");
         url.query_pairs_mut()
@@ -104,7 +104,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<StorageServiceProperties>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/");
         url.query_pairs_mut()
@@ -132,7 +132,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientGetStatisticsOptions<'_>>,
     ) -> Result<Response<StorageServiceStats>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/");
         url.query_pairs_mut()
@@ -161,7 +161,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientGetUserDelegationKeyOptions<'_>>,
     ) -> Result<Response<UserDelegationKey>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/");
         url.query_pairs_mut()
@@ -192,7 +192,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientSetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/");
         url.query_pairs_mut()
@@ -232,7 +232,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientSubmitBatchOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/");
         url.query_pairs_mut().append_pair("comp", "batch");

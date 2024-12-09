@@ -7,7 +7,7 @@ use crate::models::{
     FilterBlobSegment, FilterBlobsIncludeItem, PublicAccessType, SignedIdentifier,
 };
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Method, Pipeline, Request, RequestContent,
+    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
 use std::collections::HashMap;
@@ -32,7 +32,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientAcquireLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -76,7 +76,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientBreakLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -119,7 +119,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientChangeLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -159,7 +159,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientCreateOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -205,7 +205,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientDeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -243,7 +243,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientFilterBlobsOptions<'_>>,
     ) -> Result<Response<FilterBlobSegment>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -293,7 +293,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientGetAccessPolicyOptions<'_>>,
     ) -> Result<Response<Vec<SignedIdentifier>>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -326,7 +326,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -357,7 +357,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -390,7 +390,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientReleaseLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -429,7 +429,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientRenameOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -465,7 +465,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientRenewLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -503,7 +503,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientRestoreOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -541,7 +541,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientSetAccessPolicyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -584,7 +584,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientSetMetadataOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
@@ -627,7 +627,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientSubmitBatchOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}");
         path = path.replace("{containerName}", &container_name);
