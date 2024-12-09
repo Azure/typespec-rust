@@ -5,7 +5,7 @@
 
 use crate::models::InnerModel;
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Method, Pipeline, Request, RequestContent,
+    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
 use std::collections::HashMap;
@@ -26,7 +26,7 @@ impl DictionaryRecursiveModelValueClient {
         options: Option<DictionaryRecursiveModelValueClientGetOptions<'_>>,
     ) -> Result<Response<HashMap<String, InnerModel>>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/type/dictionary/model/recursive");
         let mut request = Request::new(url, Method::Get);
@@ -40,7 +40,7 @@ impl DictionaryRecursiveModelValueClient {
         options: Option<DictionaryRecursiveModelValueClientPutOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/type/dictionary/model/recursive");
         let mut request = Request::new(url, Method::Put);

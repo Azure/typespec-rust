@@ -6,7 +6,7 @@
 use super::internal_models::SpreadCompositeRequestMixRequest;
 use crate::models::BodyParameter;
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Method, Pipeline, Request, RequestContent,
+    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
 
@@ -27,7 +27,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadAsRequestBodyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/parameters/spread/model/request-body");
         let mut request = Request::new(url, Method::Put);
@@ -45,7 +45,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/parameters/spread/model/composite-request/{name}");
         path = path.replace("{name}", &name);
@@ -65,7 +65,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestMixOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/parameters/spread/model/composite-request-mix/{name}");
         path = path.replace("{name}", &name);
@@ -85,7 +85,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestOnlyWithBodyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         url.set_path("/parameters/spread/model/composite-request-only-with-body");
         let mut request = Request::new(url, Method::Put);
@@ -101,7 +101,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestWithoutBodyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path =
             String::from("/parameters/spread/model/composite-request-without-body/{name}");

@@ -8,8 +8,8 @@ use crate::models::{
     DeleteSnapshotsOptionType, EncryptionAlgorithmType, QueryRequest, RehydratePriority,
 };
 use azure_core::{
-    base64, AsClientMethodOptions, ClientMethodOptions, Method, Pipeline, Request, RequestContent,
-    Response, Result, Url,
+    base64, AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request,
+    RequestContent, Response, Result, Url,
 };
 use std::collections::HashMap;
 use time::OffsetDateTime;
@@ -36,7 +36,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientAbortCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -72,7 +72,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientAcquireLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -125,7 +125,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientBreakLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -176,7 +176,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientChangeLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -229,7 +229,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -333,7 +333,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientCreateSnapshotOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -409,7 +409,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientDeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -469,7 +469,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientDeleteImmutabilityPolicyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -507,7 +507,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientDownloadOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -589,7 +589,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -623,7 +623,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -688,7 +688,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientGetTagsOptions<'_>>,
     ) -> Result<Response<BlobTags>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -731,7 +731,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientQueryOptions<'_>>,
     ) -> Result<Response<Vec<u8>>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -796,7 +796,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientReleaseLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -845,7 +845,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientRenewLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -894,7 +894,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetExpiryOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -928,7 +928,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetHttpHeadersOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -996,7 +996,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetImmutabilityPolicyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1049,7 +1049,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetLegalHoldOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1086,7 +1086,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetMetadataOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1155,7 +1155,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetTagsOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1204,7 +1204,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetTierOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1251,7 +1251,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientStartCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1350,7 +1350,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientUndeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = options.method_options.context();
+        let mut ctx = Context::with_context(options.method_options.context());
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
