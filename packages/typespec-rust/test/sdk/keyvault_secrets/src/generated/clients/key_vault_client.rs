@@ -9,8 +9,8 @@ use crate::models::{
 };
 use azure_core::credentials::TokenCredential;
 use azure_core::{
-    AsClientMethodOptions, BearerTokenCredentialPolicy, ClientMethodOptions, ClientOptions,
-    Context, Method, Pager, Pipeline, Policy, Request, RequestContent, Response, Result, Url,
+    BearerTokenCredentialPolicy, ClientMethodOptions, ClientOptions, Context, Method, Pager,
+    Pipeline, Policy, Request, RequestContent, Response, Result, Url,
 };
 use std::sync::Arc;
 use typespec_client_core::http::PagerResult;
@@ -69,7 +69,7 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientBackupSecretOptions<'_>>,
     ) -> Result<Response<BackupSecretResult>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/secrets/{secret-name}/backup");
         path = path.replace("{secret-name}", &secret_name);
@@ -91,7 +91,7 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientDeleteSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecretBundle>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/secrets/{secret-name}");
         path = path.replace("{secret-name}", &secret_name);
@@ -113,7 +113,7 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientGetDeletedSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecretBundle>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/deletedsecrets/{secret-name}");
         path = path.replace("{secret-name}", &secret_name);
@@ -186,7 +186,7 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientGetSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", &secret_name);
@@ -313,7 +313,7 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientPurgeDeletedSecretOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/deletedsecrets/{secret-name}");
         path = path.replace("{secret-name}", &secret_name);
@@ -335,7 +335,7 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientRecoverDeletedSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/deletedsecrets/{secret-name}/recover");
         path = path.replace("{secret-name}", &secret_name);
@@ -356,7 +356,7 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientRestoreSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/secrets/restore");
         url.query_pairs_mut()
@@ -379,7 +379,7 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientSetSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/secrets/{secret-name}");
         path = path.replace("{secret-name}", &secret_name);
@@ -405,7 +405,7 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientUpdateSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", &secret_name);

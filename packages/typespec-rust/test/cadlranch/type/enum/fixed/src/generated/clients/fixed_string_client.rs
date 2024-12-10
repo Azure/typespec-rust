@@ -5,8 +5,7 @@
 
 use crate::models::DaysOfWeekEnum;
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
-    Response, Result, Url,
+    ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
 
 pub struct FixedStringClient {
@@ -26,7 +25,7 @@ impl FixedStringClient {
         options: Option<FixedStringClientGetKnownValueOptions<'_>>,
     ) -> Result<Response<DaysOfWeekEnum>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/type/enum/fixed/string/known-value");
         let mut request = Request::new(url, Method::Get);
@@ -41,7 +40,7 @@ impl FixedStringClient {
         options: Option<FixedStringClientPutKnownValueOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/type/enum/fixed/string/known-value");
         let mut request = Request::new(url, Method::Put);
@@ -57,7 +56,7 @@ impl FixedStringClient {
         options: Option<FixedStringClientPutUnknownValueOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/type/enum/fixed/string/unknown-value");
         let mut request = Request::new(url, Method::Put);

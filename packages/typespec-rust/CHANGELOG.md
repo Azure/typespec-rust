@@ -13,6 +13,7 @@
 ### Other Changes
 
 * Methods create their own `Context` using the caller's as the parent.
+* Updated to the latest version of `azure_core` which removed `AsClientMethodOptions` and it associated methods.
 
 ## 0.3.0 (2024-12-06)
 

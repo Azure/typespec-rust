@@ -5,8 +5,7 @@
 
 use crate::models::ModelWithAttributes;
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
-    Response, Result, Url,
+    ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
 
 pub struct XmlModelWithAttributesValueClient {
@@ -25,7 +24,7 @@ impl XmlModelWithAttributesValueClient {
         options: Option<XmlModelWithAttributesValueClientGetOptions<'_>>,
     ) -> Result<Response<ModelWithAttributes>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/payload/xml/modelWithAttributes");
         let mut request = Request::new(url, Method::Get);
@@ -39,7 +38,7 @@ impl XmlModelWithAttributesValueClient {
         options: Option<XmlModelWithAttributesValueClientPutOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/payload/xml/modelWithAttributes");
         let mut request = Request::new(url, Method::Put);

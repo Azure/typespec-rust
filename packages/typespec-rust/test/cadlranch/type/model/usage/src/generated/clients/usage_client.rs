@@ -5,8 +5,8 @@
 
 use crate::models::{InputOutputRecord, InputRecord, OutputRecord};
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request,
-    RequestContent, Response, Result, Url,
+    ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request, RequestContent,
+    Response, Result, Url,
 };
 
 pub struct UsageClient {
@@ -47,7 +47,7 @@ impl UsageClient {
         options: Option<UsageClientInputOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/type/model/usage/input");
         let mut request = Request::new(url, Method::Post);
@@ -62,7 +62,7 @@ impl UsageClient {
         options: Option<UsageClientInputAndOutputOptions<'_>>,
     ) -> Result<Response<InputOutputRecord>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/type/model/usage/input-output");
         let mut request = Request::new(url, Method::Post);
@@ -77,7 +77,7 @@ impl UsageClient {
         options: Option<UsageClientOutputOptions<'_>>,
     ) -> Result<Response<OutputRecord>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/type/model/usage/output");
         let mut request = Request::new(url, Method::Get);
