@@ -9,8 +9,7 @@ use super::internal_models::{
     SpreadWithMultipleParametersRequest,
 };
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
-    Response, Result, Url,
+    ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
 
 pub struct SpreadAliasClient {
@@ -30,7 +29,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadAsRequestBodyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/parameters/spread/alias/request-body");
         let mut request = Request::new(url, Method::Put);
@@ -49,7 +48,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadAsRequestParameterOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/parameters/spread/alias/request-parameter/{id}");
         path = path.replace("{id}", &id);
@@ -73,7 +72,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadParameterWithInnerAliasOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/parameters/spread/alias/inner-alias-parameter/{id}");
         path = path.replace("{id}", &id);
@@ -95,7 +94,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadParameterWithInnerModelOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/parameters/spread/alias/inner-model-parameter/{id}");
         path = path.replace("{id}", &id);
@@ -118,7 +117,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadWithMultipleParametersOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/parameters/spread/alias/multiple-parameters/{id}");
         path = path.replace("{id}", &id);

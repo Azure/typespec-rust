@@ -651,9 +651,9 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
  * @returns the contents of the method body
  */
 function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
-  use.addTypes('azure_core', ['AsClientMethodOptions', 'Context', 'Method', 'Request']);
+  use.addTypes('azure_core', ['Context', 'Method', 'Request']);
   let body = 'let options = options.unwrap_or_default();\n';
-  body += `${indent.get()}let mut ctx = Context::with_context(options.method_options.context());\n`;
+  body += `${indent.get()}let mut ctx = Context::with_context(&options.method_options.context);\n`;
   body += `${indent.get()}let mut url = self.${getEndpointFieldName(client)}.clone();\n`;
 
   const paramGroups = getMethodParamGroup(method);

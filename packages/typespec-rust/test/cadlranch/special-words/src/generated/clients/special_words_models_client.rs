@@ -9,8 +9,7 @@ use crate::models::{
     Return, Try, While, With, Yield,
 };
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
-    Response, Result, Url,
+    ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
 
 pub struct SpecialWordsModelsClient {
@@ -30,7 +29,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithAndOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/and");
         let mut request = Request::new(url, Method::Post);
@@ -45,7 +44,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithAsOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/as");
         let mut request = Request::new(url, Method::Post);
@@ -60,7 +59,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithAssertOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/assert");
         let mut request = Request::new(url, Method::Post);
@@ -75,7 +74,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithAsyncOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/async");
         let mut request = Request::new(url, Method::Post);
@@ -90,7 +89,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithAwaitOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/await");
         let mut request = Request::new(url, Method::Post);
@@ -105,7 +104,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithBreakOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/break");
         let mut request = Request::new(url, Method::Post);
@@ -120,7 +119,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithClassOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/class");
         let mut request = Request::new(url, Method::Post);
@@ -135,7 +134,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithConstructorOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/constructor");
         let mut request = Request::new(url, Method::Post);
@@ -150,7 +149,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithContinueOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/continue");
         let mut request = Request::new(url, Method::Post);
@@ -165,7 +164,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithDefOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/def");
         let mut request = Request::new(url, Method::Post);
@@ -180,7 +179,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithDelOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/del");
         let mut request = Request::new(url, Method::Post);
@@ -195,7 +194,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithElifOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/elif");
         let mut request = Request::new(url, Method::Post);
@@ -210,7 +209,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithElseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/else");
         let mut request = Request::new(url, Method::Post);
@@ -225,7 +224,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithExceptOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/except");
         let mut request = Request::new(url, Method::Post);
@@ -240,7 +239,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithExecOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/exec");
         let mut request = Request::new(url, Method::Post);
@@ -255,7 +254,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithFinallyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/finally");
         let mut request = Request::new(url, Method::Post);
@@ -270,7 +269,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithForOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/for");
         let mut request = Request::new(url, Method::Post);
@@ -285,7 +284,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithFromOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/from");
         let mut request = Request::new(url, Method::Post);
@@ -300,7 +299,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithGlobalOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/global");
         let mut request = Request::new(url, Method::Post);
@@ -315,7 +314,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithIfOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/if");
         let mut request = Request::new(url, Method::Post);
@@ -330,7 +329,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithImportOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/import");
         let mut request = Request::new(url, Method::Post);
@@ -345,7 +344,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithInOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/in");
         let mut request = Request::new(url, Method::Post);
@@ -360,7 +359,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithIsOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/is");
         let mut request = Request::new(url, Method::Post);
@@ -375,7 +374,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithLambdaOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/lambda");
         let mut request = Request::new(url, Method::Post);
@@ -390,7 +389,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithNotOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/not");
         let mut request = Request::new(url, Method::Post);
@@ -405,7 +404,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithOrOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/or");
         let mut request = Request::new(url, Method::Post);
@@ -420,7 +419,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithPassOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/pass");
         let mut request = Request::new(url, Method::Post);
@@ -435,7 +434,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithRaiseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/raise");
         let mut request = Request::new(url, Method::Post);
@@ -450,7 +449,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithReturnOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/return");
         let mut request = Request::new(url, Method::Post);
@@ -465,7 +464,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithTryOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/try");
         let mut request = Request::new(url, Method::Post);
@@ -480,7 +479,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithWhileOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/while");
         let mut request = Request::new(url, Method::Post);
@@ -495,7 +494,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/with");
         let mut request = Request::new(url, Method::Post);
@@ -510,7 +509,7 @@ impl SpecialWordsModelsClient {
         options: Option<SpecialWordsModelsClientWithYieldOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/special-words/models/yield");
         let mut request = Request::new(url, Method::Post);

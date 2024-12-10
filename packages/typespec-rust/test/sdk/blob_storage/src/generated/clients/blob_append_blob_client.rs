@@ -5,8 +5,8 @@
 
 use crate::models::{BlobImmutabilityPolicyMode, EncryptionAlgorithmType};
 use azure_core::{
-    base64, AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request,
-    RequestContent, Response, Result, Url,
+    base64, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response,
+    Result, Url,
 };
 use std::collections::HashMap;
 use time::OffsetDateTime;
@@ -33,7 +33,7 @@ impl BlobAppendBlobClient {
         options: Option<BlobAppendBlobClientAppendBlockOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -122,7 +122,7 @@ impl BlobAppendBlobClient {
         options: Option<BlobAppendBlobClientAppendBlockFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -229,7 +229,7 @@ impl BlobAppendBlobClient {
         options: Option<BlobAppendBlobClientCreateOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -335,7 +335,7 @@ impl BlobAppendBlobClient {
         options: Option<BlobAppendBlobClientSealOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/{containerName}/{blob}");
         path = path.replace("{blob}", &blob);

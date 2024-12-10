@@ -7,8 +7,7 @@ use crate::models::{
     Base64BytesProperty, Base64urlArrayBytesProperty, Base64urlBytesProperty, DefaultBytesProperty,
 };
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
-    Response, Result, Url,
+    ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
 
 pub struct BytesPropertyClient {
@@ -28,7 +27,7 @@ impl BytesPropertyClient {
         options: Option<BytesPropertyClientBase64Options<'_>>,
     ) -> Result<Response<Base64BytesProperty>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/encode/bytes/property/base64");
         let mut request = Request::new(url, Method::Post);
@@ -44,7 +43,7 @@ impl BytesPropertyClient {
         options: Option<BytesPropertyClientBase64UrlOptions<'_>>,
     ) -> Result<Response<Base64urlBytesProperty>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/encode/bytes/property/base64url");
         let mut request = Request::new(url, Method::Post);
@@ -60,7 +59,7 @@ impl BytesPropertyClient {
         options: Option<BytesPropertyClientBase64UrlArrayOptions<'_>>,
     ) -> Result<Response<Base64urlArrayBytesProperty>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/encode/bytes/property/base64url-array");
         let mut request = Request::new(url, Method::Post);
@@ -76,7 +75,7 @@ impl BytesPropertyClient {
         options: Option<BytesPropertyClientDefaultOptions<'_>>,
     ) -> Result<Response<DefaultBytesProperty>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/encode/bytes/property/default");
         let mut request = Request::new(url, Method::Post);

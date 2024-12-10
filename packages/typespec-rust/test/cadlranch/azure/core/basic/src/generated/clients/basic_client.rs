@@ -5,8 +5,8 @@
 
 use crate::models::{PagedUser, User, UserList};
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, ClientOptions, Context, Method, Pager, Pipeline,
-    Request, RequestContent, Response, Result, Url,
+    ClientMethodOptions, ClientOptions, Context, Method, Pager, Pipeline, Request, RequestContent,
+    Response, Result, Url,
 };
 use typespec_client_core::http::PagerResult;
 use typespec_client_core::json;
@@ -56,7 +56,7 @@ impl BasicClient {
         options: Option<BasicClientCreateOrReplaceOptions<'_>>,
     ) -> Result<Response<User>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
@@ -80,7 +80,7 @@ impl BasicClient {
         options: Option<BasicClientCreateOrUpdateOptions<'_>>,
     ) -> Result<Response<User>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
@@ -103,7 +103,7 @@ impl BasicClient {
         options: Option<BasicClientDeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
@@ -125,7 +125,7 @@ impl BasicClient {
         options: Option<BasicClientExportOptions<'_>>,
     ) -> Result<Response<User>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/azure/core/basic/users/{id}:export");
         path = path.replace("{id}", &id.to_string());
@@ -147,7 +147,7 @@ impl BasicClient {
         options: Option<BasicClientExportAllUsersOptions<'_>>,
     ) -> Result<Response<UserList>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/azure/core/basic/users:exportallusers");
         url.query_pairs_mut()
@@ -167,7 +167,7 @@ impl BasicClient {
         options: Option<BasicClientGetOptions<'_>>,
     ) -> Result<Response<User>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("/azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());

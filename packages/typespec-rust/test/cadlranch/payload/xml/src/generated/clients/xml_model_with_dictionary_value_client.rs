@@ -5,8 +5,7 @@
 
 use crate::models::ModelWithDictionary;
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
-    Response, Result, Url,
+    ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
 
 pub struct XmlModelWithDictionaryValueClient {
@@ -25,7 +24,7 @@ impl XmlModelWithDictionaryValueClient {
         options: Option<XmlModelWithDictionaryValueClientGetOptions<'_>>,
     ) -> Result<Response<ModelWithDictionary>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/payload/xml/modelWithDictionary");
         let mut request = Request::new(url, Method::Get);
@@ -39,7 +38,7 @@ impl XmlModelWithDictionaryValueClient {
         options: Option<XmlModelWithDictionaryValueClientPutOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/payload/xml/modelWithDictionary");
         let mut request = Request::new(url, Method::Put);

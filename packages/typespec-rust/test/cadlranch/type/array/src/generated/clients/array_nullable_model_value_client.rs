@@ -5,8 +5,7 @@
 
 use crate::models::InnerModel;
 use azure_core::{
-    AsClientMethodOptions, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
-    Response, Result, Url,
+    ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
 
 pub struct ArrayNullableModelValueClient {
@@ -25,7 +24,7 @@ impl ArrayNullableModelValueClient {
         options: Option<ArrayNullableModelValueClientGetOptions<'_>>,
     ) -> Result<Response<Vec<InnerModel>>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/type/array/nullable-model");
         let mut request = Request::new(url, Method::Get);
@@ -39,7 +38,7 @@ impl ArrayNullableModelValueClient {
         options: Option<ArrayNullableModelValueClientPutOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(options.method_options.context());
+        let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url.set_path("/type/array/nullable-model");
         let mut request = Request::new(url, Method::Put);
