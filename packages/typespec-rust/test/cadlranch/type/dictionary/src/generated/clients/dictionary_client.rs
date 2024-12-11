@@ -31,9 +31,9 @@ impl DictionaryClient {
         endpoint: &str,
         options: Option<DictionaryClientOptions>,
     ) -> Result<Self> {
+        let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint.as_ref())?;
         endpoint.set_query(None);
-        let options = options.unwrap_or_default();
         Ok(Self {
             endpoint,
             pipeline: Pipeline::new(

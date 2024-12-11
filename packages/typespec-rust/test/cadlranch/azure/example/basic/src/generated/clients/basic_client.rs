@@ -20,9 +20,9 @@ pub struct BasicClientOptions {
 
 impl BasicClient {
     pub fn with_no_credential(endpoint: &str, options: Option<BasicClientOptions>) -> Result<Self> {
+        let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint.as_ref())?;
         endpoint.set_query(None);
-        let options = options.unwrap_or_default();
         Ok(Self {
             endpoint,
             api_version: options.api_version,
