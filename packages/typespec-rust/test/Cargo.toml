@@ -14,6 +14,7 @@ rust-version = "1.76"
 
 [workspace.dependencies]
 async-std = { version = "1.12.0", features = ["attributes", "tokio1"] }
+async-trait = "0.1"
 azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "6b19d1efb94ef61e04e71874ab1a2ef904dbb5a0", features = ["reqwest", "xml"] }
 bytes = { version = "1.5.0" }
 futures = "0.3"

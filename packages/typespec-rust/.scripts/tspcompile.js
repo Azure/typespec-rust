@@ -18,7 +18,7 @@ const compiler = pkgRoot + 'node_modules/@typespec/compiler/cmd/tsp.js';
 const cadlRanch = {
   //'cadl_apikey': ['authentication/api-key'],
   //'cadl_custom': ['authentication/http/custom'],
-  //'cadl_oauth2': ['authentication/oauth2'],
+  'cadl_oauth2': ['authentication/oauth2', 'overwrite-cargo-toml=false'],
   //'cadl_unionauth': ['authentication/union'],
   //'cadl_access': ['azure/client-generator-core/access'],
   'cadl_flattenproperty': ['azure/client-generator-core/flatten-property'],
