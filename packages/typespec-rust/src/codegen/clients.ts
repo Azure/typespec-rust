@@ -84,6 +84,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
       for (let i = 0; i < client.constructable.constructors.length; ++i) {
         const constructor = client.constructable.constructors[i];
         body += `${indent.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.parameters, client.constructable.options, use)}) -> Result<Self> {\n`;
+        body += `${indent.get()}let options = options.unwrap_or_default();\n`;
         // by convention, the endpoint param is always the first ctor param
         const endpointParamName = constructor.parameters[0].name;
         body += `${indent.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName}.as_ref())?;\n`;
@@ -93,7 +94,6 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         if (authPolicy) {
           body += `${indent.get()}${authPolicy}\n`;
         }
-        body += `${indent.get()}let options = options.unwrap_or_default();\n`;
         body += `${indent.get()}Ok(Self {\n`;
 
         indent.push();

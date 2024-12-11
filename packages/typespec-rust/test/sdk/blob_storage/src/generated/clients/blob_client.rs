@@ -30,9 +30,9 @@ impl BlobClient {
         container_name: String,
         options: Option<BlobClientOptions>,
     ) -> Result<Self> {
+        let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint.as_ref())?;
         endpoint.set_query(None);
-        let options = options.unwrap_or_default();
         Ok(Self {
             container_name,
             endpoint,

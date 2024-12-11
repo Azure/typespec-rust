@@ -26,13 +26,13 @@ impl OAuth2Client {
         credential: Arc<dyn TokenCredential>,
         options: Option<OAuth2ClientOptions>,
     ) -> Result<Self> {
+        let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint.as_ref())?;
         endpoint.set_query(None);
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
             credential,
             vec!["https://security.microsoft.com/.default"],
         ));
-        let options = options.unwrap_or_default();
         Ok(Self {
             endpoint,
             pipeline: Pipeline::new(
