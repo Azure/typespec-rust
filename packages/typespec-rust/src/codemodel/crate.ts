@@ -99,7 +99,7 @@ export class Crate implements Crate {
     }
     this.clients.sort((a: client.Client, b: client.Client) => { return sortAscending(a.name, b.name); });
     for (const client of this.clients) {
-      client.fields.sort((a: client.ClientParameter, b: client.ClientParameter) => { return sortAscending(a.name, b.name); });
+      client.fields.sort((a: types.StructField, b: types.StructField) => { return sortAscending(a.name, b.name); });
       client.methods.sort((a: client.MethodType, b: client.MethodType) => { return sortAscending(a.name, b.name); });
       if (client.constructable) {
         client.constructable.options.type.fields.sort((a: types.StructField, b: types.StructField) => { return sortAscending(a.name, b.name); });
