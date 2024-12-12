@@ -417,7 +417,7 @@ export class Adapter {
     rustClient.docs.summary = client.summary;
     rustClient.docs.description = client.doc;
     rustClient.parent = parent;
-    rustClient.fields.push(new rust.ClientParameter('pipeline', new rust.ExternalType(this.crate, 'azure_core', 'Pipeline')));
+    rustClient.fields.push(new rust.StructField('pipeline', false, new rust.ExternalType(this.crate, 'azure_core', 'Pipeline')));
 
     // anything other than public means non-instantiable client
     if (client.initialization.access === 'public') {
@@ -481,7 +481,7 @@ export class Adapter {
             // endpoints, e.g. https://{something}.contoso.com isn't supported.
             // note that the types of the param and the field are slightly different
             ctorParams.push(new rust.ClientParameter(param.name, new rust.StringSlice(), true));
-            rustClient.fields.push(new rust.ClientParameter(param.name, new rust.Url(this.crate)));
+            rustClient.fields.push(new rust.StructField(param.name, false, new rust.Url(this.crate)));
             break;
           case 'method': {
             let paramType: rust.Type;
@@ -493,7 +493,7 @@ export class Adapter {
             }
 
             const paramName = snakeCaseName(param.name);
-            rustClient.fields.push(new rust.ClientParameter(paramName, paramType));
+            rustClient.fields.push(new rust.StructField(paramName, false, paramType));
 
             // client-side default value makes the param optional
             if (param.optional || param.clientDefaultValue) {

@@ -21,11 +21,14 @@ export interface Client {
 
   /**
    * fields contains the ctor parameters that are
-   * persisted as fields on the client type. note that
-   * not all ctor params might be persisted, and not
-   * all fields are ctor params.
+   * persisted as fields on the client type and might
+   * also contain other fields that don't originate
+   * from ctor params (e.g. the pipeline).
+   * by convention, all fields that have their values
+   * populated from ctor params (required or optional)
+   * will have the same name as their originating param.
    */
-  fields: Array<ClientParameter>;
+  fields: Array<types.StructField>;
 
   /** all the methods for this client */
   methods: Array<MethodType>;
@@ -338,7 +341,7 @@ export class Client implements Client {
   constructor(name: string) {
     this.kind = 'client';
     this.name = name;
-    this.fields = new Array<ClientParameter>();
+    this.fields = new Array<types.StructField>();
     this.methods = new Array<MethodType>();
     this.docs = {};
   }

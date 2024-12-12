@@ -106,6 +106,10 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
             continue;
           }
 
+          if (!client.fields.find((v: rust.StructField) => { return v.name === param.name; })) {
+            throw new Error(`didn't find field in client ${client.name} for param ${param.name}`);
+          }
+
           // by convention, the param field and param name are the
           // same so we can use shorthand initialization syntax
           body += `${indent.get()}${param.name},\n`;
