@@ -100,8 +100,11 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
 
         // propagate the required client params to the initializer
         // NOTE: we do this on a sorted copy of the client params as we must preserve their order
-        for (const param of [...constructor.parameters].sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); })) {
-          if (isCredential(param.type)) {
+        const sortedParams = [...constructor.parameters].sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); });
+        for (const param of sortedParams) {
+          if (!param.required) {
+            continue;
+          } else if (isCredential(param.type)) {
             // credential params aren't persisted on the client so skip them
             continue;
           }
@@ -115,9 +118,21 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
           body += `${indent.get()}${param.name},\n`;
         }
 
-        // propagate any client option fields to the client initializer
-        for (const field of getClientOptionsFields(client.constructable.options)) {
-          body += `${indent.get()}${field.name}: options.${field.name},\n`;
+        // propagate any optional client params to the client initializer
+        for (const param of sortedParams) {
+          if (param.required) {
+            continue;
+          }
+
+          if (!client.fields.find((v: rust.StructField) => { return v.name === param.name; })) {
+            throw new Error(`didn't find field in client ${client.name} for param ${param.name}`);
+          }
+
+          if (!client.constructable.options.type.fields.find((v: rust.StructField) => { return v.name === param.name; })) {
+            throw new Error(`didn't find field in client options ${client.constructable.options.type.name} for optional param ${param.name}`);
+          }
+
+          body += `${indent.get()}${param.name}: options.${param.name},\n`;
         }
 
         body += `${indent.get()}pipeline: Pipeline::new(\n`;
@@ -265,6 +280,11 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
 function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: rust.ClientOptions, use: Use): string {
   const paramsSig = new Array<string>();
   for (const param of params) {
+    if (!param.required) {
+      // optional params will be in the client options type
+      continue;
+    }
+
     use.addForType(param.type);
     paramsSig.push(`${param.name}: ${param.ref ? '&' : ''}${helpers.getTypeDeclaration(param.type)}`);
   }
@@ -364,27 +384,6 @@ function formatParamTypeName(param: rust.MethodParameter | rust.Self): string {
     format += param.name;
   }
   return format;
-}
-
-/**
- * returns a subset of struct fields from the client options types.
- * at present, only the core ClientOptions field is omitted.
- * 
- * can return an empty array if there are no client options.
- * 
- * @param option the client options type to enumerate
- * @returns the subset of struct fields
- */
-function getClientOptionsFields(option: rust.ClientOptions): Array<rust.StructField> {
-  const fields = new Array<rust.StructField>();
-  for (const field of option.type.fields) {
-    if (helpers.getTypeDeclaration(field.type) === 'ClientOptions') {
-      // azure_core::ClientOptions is passed to Pipeline::new so skip it
-      continue;
-    }
-    fields.push(field);
-  }
-  return fields;
 }
 
 /**

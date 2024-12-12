@@ -462,7 +462,7 @@ export class Adapter {
                       scopes.push(scope.value);
                     }
                     const ctorTokenCredential = new rust.Constructor('new');
-                    ctorTokenCredential.parameters.push(new rust.ClientParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes))));
+                    ctorTokenCredential.parameters.push(new rust.ClientParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), true));
                     rustClient.constructable.constructors.push(ctorTokenCredential);
                     break;
                   }
@@ -480,7 +480,7 @@ export class Adapter {
             // for Rust, we always require a complete endpoint param, templated
             // endpoints, e.g. https://{something}.contoso.com isn't supported.
             // note that the types of the param and the field are slightly different
-            ctorParams.push(new rust.ClientParameter(param.name, new rust.StringSlice(), true));
+            ctorParams.push(new rust.ClientParameter(param.name, new rust.StringSlice(), true, true));
             rustClient.fields.push(new rust.StructField(param.name, false, new rust.Url(this.crate)));
             break;
           case 'method': {
@@ -495,16 +495,17 @@ export class Adapter {
             const paramName = snakeCaseName(param.name);
             rustClient.fields.push(new rust.StructField(paramName, false, paramType));
 
+            let required = true;
             // client-side default value makes the param optional
             if (param.optional || param.clientDefaultValue) {
+              required = false;
               const paramField = new rust.StructField(paramName, true, paramType);
               clientOptionsStruct.fields.push(paramField);
               if (param.clientDefaultValue) {
                 paramField.defaultValue = `String::from("${<string>param.clientDefaultValue}")`;
               }
-            } else {
-              ctorParams.push(new rust.ClientParameter(paramName, paramType, false));
             }
+            ctorParams.push(new rust.ClientParameter(paramName, paramType, required));
             break;
           }
         }
