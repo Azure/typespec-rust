@@ -87,7 +87,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         body += `${indent.get()}let options = options.unwrap_or_default();\n`;
         // by convention, the endpoint param is always the first ctor param
         const endpointParamName = constructor.parameters[0].name;
-        body += `${indent.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName}.as_ref())?;\n`;
+        body += `${indent.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
         body += `${indent.get()}${endpointParamName}.set_query(None);\n`;
         // if there's a credential param, create the necessary auth policy
         const authPolicy = getAuthPolicy(constructor, use);

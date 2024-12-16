@@ -27,7 +27,7 @@ impl OAuth2Client {
         options: Option<OAuth2ClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint.as_ref())?;
+        let mut endpoint = Url::parse(endpoint)?;
         endpoint.set_query(None);
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
             credential,
