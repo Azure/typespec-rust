@@ -23,7 +23,7 @@ pub struct BytesClientOptions {
 impl BytesClient {
     pub fn with_no_credential(endpoint: &str, options: Option<BytesClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint.as_ref())?;
+        let mut endpoint = Url::parse(endpoint)?;
         endpoint.set_query(None);
         Ok(Self {
             endpoint,
