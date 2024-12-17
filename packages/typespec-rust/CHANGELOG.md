@@ -2,6 +2,10 @@
 
 ## 0.4.1 (Unreleased)
 
+### Features Added
+
+* Added support for endpoints with supplemental paths.
+
 ### Other Changes
 
 * Use `Url::join` for constructing the complete endpoint.

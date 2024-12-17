@@ -44,6 +44,12 @@ export interface ClientConstruction {
 
   /** the constructor functions for a client. */
   constructors: Array<Constructor>;
+
+  /**
+   * indicates that the endpoint requires additional host configuration. i.e. the
+   * endpoint passed by the caller will be augmented with supplemental path info.
+   */
+  endpoint?: SupplementalEndpoint;
 }
 
 /** ClientOptions is the struct containing optional client params */
@@ -77,6 +83,24 @@ export interface ClientParameter {
 
   /** indicates if the parameter is a reference. defaults to false */
   ref: boolean;
+}
+
+/** EndpointParameter is used when constructing the endpoint's supplemental path */
+export interface EndpointParameter {
+  /** the segment name to be replaced with the param's value */
+  segment: string;
+
+  /** the client parameter containing the segment's value */
+  source: ClientParameter;
+}
+
+/** contains data on how to supplement a client endpoint */
+export interface SupplementalEndpoint {
+  /** the supplemental path used to construct the complete endpoint */
+  path: string;
+
+  /** the parameters used to replace segments in the path */
+  parameters: Array<EndpointParameter>;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -391,6 +415,13 @@ export class Constructor implements Constructor {
   }
 }
 
+export class EndpointParameter implements EndpointParameter{
+  constructor(segment: string, source: ClientParameter) {
+    this.segment = segment;
+    this.source = source;
+  }
+}
+
 export class HeaderCollectionParameter extends HTTPParameterBase implements HeaderCollectionParameter {
   constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.Vector, format: CollectionFormat) {
     validateHeaderPathQueryParamKind(type, 'headerCollection');
@@ -484,6 +515,13 @@ export class QueryParameter extends HTTPParameterBase implements QueryParameter 
     this.kind = 'query';
     this.key = key;
     this.encoded = encoded;
+  }
+}
+
+export class SupplementalEndpoint implements SupplementalEndpoint{
+  constructor(path: string) {
+    this.path = path;
+    this.parameters = new Array<EndpointParameter>();
   }
 }
 

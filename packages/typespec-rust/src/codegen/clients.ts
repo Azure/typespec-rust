@@ -89,6 +89,17 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         const endpointParamName = constructor.parameters[0].name;
         body += `${indent.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
         body += `${indent.get()}${endpointParamName}.set_query(None);\n`;
+
+        // construct the supplemental path and join it to the endpoint
+        if (client.constructable.endpoint) {
+          const supplementalEndpoint = client.constructable.endpoint;
+          body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
+          for (const param of supplementalEndpoint.parameters) {
+            body += `${indent.get()}host = host.replace("{${param.segment}}", ${!param.source.required ? '&options.' : ''}${param.source.name});\n`;
+          }
+          body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
+        }
+
         // if there's a credential param, create the necessary auth policy
         const authPolicy = getAuthPolicy(constructor, use);
         if (authPolicy) {
@@ -156,7 +167,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
     // we don't model this as the implementation isn't dynamic.
     body += `${indent.get()}/// Returns the Url associated with this client.\n`;
     body += `${indent.get()}pub fn endpoint(&self) -> &Url {\n`;
-    body += `${indent.push().get()}&self.endpoint\n`;
+    body += `${indent.push().get()}&self.${getEndpointFieldName(client)}\n`;
     body += `${indent.pop().get()}}\n\n`;
 
     for (let i = 0; i < client.methods.length; ++i) {
@@ -667,6 +678,19 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
 }
 
 /**
+ * Returns 'mut ' if the Url local var needs to be mutable, else the empty string.
+ * @param paramGroups the param groups associated with the Url being constructed.
+ * @param method the method associated with the Url being constructed.
+ * @returns 'mut ' or the empty string
+ */
+function urlVarNeedsMut(paramGroups: methodParamGroups, method: ClientMethod): string {
+  if (paramGroups.path.length > 0 || paramGroups.query.length > 0 || method.httpPath !== '/') {
+    return 'mut ';
+  }
+  return '';
+}
+
+/**
  * constructs the body for an async client method
  * 
  * @param indent the indentation helper currently in scope
@@ -677,11 +701,11 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
  */
 function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
   use.addTypes('azure_core', ['Context', 'Method', 'Request']);
+  const paramGroups = getMethodParamGroup(method);
   let body = 'let options = options.unwrap_or_default();\n';
   body += `${indent.get()}let mut ctx = Context::with_context(&options.method_options.context);\n`;
-  body += `${indent.get()}let mut url = self.${getEndpointFieldName(client)}.clone();\n`;
+  body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}url = self.${getEndpointFieldName(client)}.clone();\n`;
 
-  const paramGroups = getMethodParamGroup(method);
   body += constructUrl(indent, use, method, paramGroups);
   body += constructRequest(indent, use, method, paramGroups);
   body += `${indent.get()}self.pipeline.send(&mut ctx, &mut request).await\n`;
@@ -715,7 +739,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
-  body += `${indent.get()}let mut ${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
+  body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
   body += `${indent.get()}Ok(Pager::from_callback(move |${nextLinkName}: Option<Url>| {\n`;
   body += `${indent.push().get()}let url: Url;\n`;

@@ -476,36 +476,67 @@ export class Adapter {
                 continue;
             }
             break;
-          case 'endpoint':
-            // for Rust, we always require a complete endpoint param, templated
-            // endpoints, e.g. https://{something}.contoso.com isn't supported.
-            // note that the types of the param and the field are slightly different
-            ctorParams.push(new rust.ClientParameter(param.name, new rust.StringSlice(), true, true));
-            rustClient.fields.push(new rust.StructField(param.name, false, new rust.Url(this.crate)));
-            break;
-          case 'method': {
-            let paramType: rust.Type;
-            if (param.isApiVersionParam) {
-              // we expose the api-version param as a String
-              paramType = new rust.StringType();
-            } else {
-              paramType = this.getType(param.type);
+          case 'endpoint': {
+            let endpointType: tcgc.SdkEndpointType;
+            switch (param.type.kind) {
+              case 'endpoint':
+                // single endpoint without any supplemental path
+                endpointType = param.type;
+                break;
+              case 'union':
+                // this is a union of endpoints. the first is the endpoint plus
+                // the supplemental path. the second is a "raw" endpoint which
+                // requires the caller to provide the complete endpoint. we only
+                // expose the former at present. languages that support overloads
+                // MAY support both but it's not a requirement.
+                endpointType = param.type.variantTypes[0];
             }
 
-            const paramName = snakeCaseName(param.name);
-            rustClient.fields.push(new rust.StructField(paramName, false, paramType));
+            for (let i = 0; i < endpointType.templateArguments.length; ++i) {
+              const templateArg = endpointType.templateArguments[i];
+              if (i === 0) {
+                // the first template arg is always the endpoint parameter.
+                // note that the types of the param and the field are different.
+                // NOTE: we use param.name here instead of templateArg.name as
+                // the former has the fixed name "endpoint" which is what we want.
+                ctorParams.push(new rust.ClientParameter(param.name, new rust.StringSlice(), true, true));
+                rustClient.fields.push(new rust.StructField(param.name, false, new rust.Url(this.crate)));
 
-            let required = true;
-            // client-side default value makes the param optional
-            if (param.optional || param.clientDefaultValue) {
-              required = false;
-              const paramField = new rust.StructField(paramName, true, paramType);
-              clientOptionsStruct.fields.push(paramField);
-              if (param.clientDefaultValue) {
-                paramField.defaultValue = `String::from("${<string>param.clientDefaultValue}")`;
+                // if the server's URL is *only* the endpoint parameter then we're done.
+                // this is the param.type.kind === 'endpoint' case.
+                if (endpointType.serverUrl === `{${templateArg.serializedName}}`) {
+                  break;
+                }
+
+                // there's either a suffix on the endpoint param, more template arguments, or both.
+                // either way we need to create supplemental info on the constructable.
+                // NOTE: we remove the {endpoint} segment and trailing forward slash as we use
+                // Url::join to concatenate the two and not string replacement.
+                let serverUrl = endpointType.serverUrl.replace(`{${templateArg.serializedName}}/`, '');
+
+                // NOTE: the behavior of Url::join requires that the path ends with a forward slash.
+                // if there are any query params, splice it in as required else just append it.
+                if (serverUrl.includes('?')) {
+                  if (serverUrl[serverUrl.indexOf('?')-1] !== '/') {
+                    serverUrl = serverUrl.replace('?', '/?');
+                  }
+                } else if (serverUrl[serverUrl.length - 1] !== '/') {
+                  serverUrl += '/';
+                }
+
+                rustClient.constructable.endpoint = new rust.SupplementalEndpoint(serverUrl);
+                continue;
               }
+
+              const clientParam = this.adaptClientParameter(templateArg, rustClient.constructable);
+              rustClient.constructable.endpoint?.parameters.push(new rust.EndpointParameter(templateArg.serializedName, clientParam));
             }
-            ctorParams.push(new rust.ClientParameter(paramName, paramType, required));
+            break;
+          }
+          case 'method': {
+            const clientParam = this.adaptClientParameter(param, rustClient.constructable);
+            rustClient.fields.push(new rust.StructField(clientParam.name, false, clientParam.type));
+            ctorParams.push(clientParam);
             break;
           }
         }
@@ -544,6 +575,36 @@ export class Adapter {
 
     this.crate.clients.push(rustClient);
     return rustClient;
+  }
+
+  /**
+   * converts a tcgc client parameter to a Rust client parameter
+   * @param param the tcgc client parameter to convert
+   * @param constructable contains client construction info. if the param is optional, it will go in the options type
+   * @returns the Rust client parameter
+   */
+  private adaptClientParameter(param: tcgc.SdkMethodParameter | tcgc.SdkPathParameter, constructable: rust.ClientConstruction): rust.ClientParameter {
+    let paramType: rust.Type;
+    if (param.isApiVersionParam) {
+      // we expose the api-version param as a String
+      paramType = new rust.StringType();
+    } else {
+      paramType = this.getType(param.type);
+    }
+
+    const paramName = snakeCaseName(param.name);
+
+    let required = true;
+    // client-side default value makes the param optional
+    if (param.optional || param.clientDefaultValue) {
+      required = false;
+      const paramField = new rust.StructField(paramName, true, paramType);
+      constructable.options.type.fields.push(paramField);
+      if (param.clientDefaultValue) {
+        paramField.defaultValue = `String::from("${<string>param.clientDefaultValue}")`;
+      }
+    }
+    return new rust.ClientParameter(paramName, paramType, required);
   }
 
   /**
