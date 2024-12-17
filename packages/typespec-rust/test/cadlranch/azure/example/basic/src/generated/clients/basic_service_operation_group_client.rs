@@ -30,7 +30,7 @@ impl BasicServiceOperationGroupClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/azure/example/basic/basic");
+        url = url.join("azure/example/basic/basic")?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         url.query_pairs_mut()

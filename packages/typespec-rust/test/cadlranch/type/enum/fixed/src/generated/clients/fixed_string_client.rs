@@ -27,7 +27,7 @@ impl FixedStringClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/type/enum/fixed/string/known-value");
+        url = url.join("type/enum/fixed/string/known-value")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -42,7 +42,7 @@ impl FixedStringClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/type/enum/fixed/string/known-value");
+        url = url.join("type/enum/fixed/string/known-value")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -58,7 +58,7 @@ impl FixedStringClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/type/enum/fixed/string/unknown-value");
+        url = url.join("type/enum/fixed/string/unknown-value")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

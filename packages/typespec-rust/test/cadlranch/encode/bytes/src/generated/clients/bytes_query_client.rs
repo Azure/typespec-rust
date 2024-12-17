@@ -26,7 +26,7 @@ impl BytesQueryClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/query/base64");
+        url = url.join("encode/bytes/query/base64")?;
         url.query_pairs_mut()
             .append_pair("value", &base64::encode(value));
         let mut request = Request::new(url, Method::Get);
@@ -41,7 +41,7 @@ impl BytesQueryClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/query/base64url");
+        url = url.join("encode/bytes/query/base64url")?;
         url.query_pairs_mut()
             .append_pair("value", &base64::encode_url_safe(value));
         let mut request = Request::new(url, Method::Get);
@@ -56,7 +56,7 @@ impl BytesQueryClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/query/base64url-array");
+        url = url.join("encode/bytes/query/base64url-array")?;
         url.query_pairs_mut().append_pair(
             "value",
             &value
@@ -77,7 +77,7 @@ impl BytesQueryClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/query/default");
+        url = url.join("encode/bytes/query/default")?;
         url.query_pairs_mut()
             .append_pair("value", &base64::encode(value));
         let mut request = Request::new(url, Method::Get);

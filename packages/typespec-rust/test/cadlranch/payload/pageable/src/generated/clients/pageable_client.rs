@@ -48,21 +48,22 @@ impl PageableClient {
     /// List users
     pub fn list(&self, options: Option<PageableClientListOptions<'_>>) -> Result<Pager<PagedUser>> {
         let options = options.unwrap_or_default().into_owned();
-        let endpoint = self.endpoint.clone();
         let pipeline = self.pipeline.clone();
+        let mut first_url = self.endpoint.clone();
+        first_url = first_url.join("payload/pageable")?;
+        if let Some(maxpagesize) = options.maxpagesize {
+            first_url
+                .query_pairs_mut()
+                .append_pair("maxpagesize", &maxpagesize.to_string());
+        }
         Ok(Pager::from_callback(move |next_link: Option<Url>| {
-            let mut url: Url;
+            let url: Url;
             match next_link {
                 Some(next_link) => {
                     url = next_link;
                 }
                 None => {
-                    url = endpoint.clone();
-                    url.set_path("/payload/pageable");
-                    if let Some(maxpagesize) = options.maxpagesize {
-                        url.query_pairs_mut()
-                            .append_pair("maxpagesize", &maxpagesize.to_string());
-                    }
+                    url = first_url.clone();
                 }
             };
             let mut request = Request::new(url, Method::Get);

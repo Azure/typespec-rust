@@ -29,7 +29,7 @@ impl BytesPropertyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/property/base64");
+        url = url.join("encode/bytes/property/base64")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -45,7 +45,7 @@ impl BytesPropertyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/property/base64url");
+        url = url.join("encode/bytes/property/base64url")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -61,7 +61,7 @@ impl BytesPropertyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/property/base64url-array");
+        url = url.join("encode/bytes/property/base64url-array")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -77,7 +77,7 @@ impl BytesPropertyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/property/default");
+        url = url.join("encode/bytes/property/default")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

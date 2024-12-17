@@ -24,7 +24,7 @@ impl CollectionFormatQueryClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/parameters/collection-format/query/csv");
+        url = url.join("parameters/collection-format/query/csv")?;
         url.query_pairs_mut()
             .append_pair("colors", &colors.join(","));
         let mut request = Request::new(url, Method::Get);
@@ -39,7 +39,7 @@ impl CollectionFormatQueryClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/parameters/collection-format/query/multi");
+        url = url.join("parameters/collection-format/query/multi")?;
         for c in colors.iter() {
             url.query_pairs_mut().append_pair("colors", c);
         }
@@ -55,7 +55,7 @@ impl CollectionFormatQueryClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/parameters/collection-format/query/pipes");
+        url = url.join("parameters/collection-format/query/pipes")?;
         url.query_pairs_mut()
             .append_pair("colors", &colors.join("|"));
         let mut request = Request::new(url, Method::Get);
@@ -70,7 +70,7 @@ impl CollectionFormatQueryClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/parameters/collection-format/query/ssv");
+        url = url.join("parameters/collection-format/query/ssv")?;
         url.query_pairs_mut()
             .append_pair("colors", &colors.join(" "));
         let mut request = Request::new(url, Method::Get);
@@ -85,7 +85,7 @@ impl CollectionFormatQueryClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/parameters/collection-format/query/tsv");
+        url = url.join("parameters/collection-format/query/tsv")?;
         url.query_pairs_mut()
             .append_pair("colors", &colors.join("	"));
         let mut request = Request::new(url, Method::Get);

@@ -39,10 +39,10 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("clear")
             .append_pair("comp", "page");
@@ -132,10 +132,10 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "incrementalcopy");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -180,10 +180,10 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut().append_key_only("PageBlob");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -296,10 +296,10 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("Resize")
             .append_pair("comp", "properties");
@@ -364,10 +364,10 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("UpdateSequenceNumber")
             .append_pair("comp", "properties");
@@ -426,10 +426,10 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "page")
             .append_key_only("update");
@@ -535,10 +535,10 @@ impl BlobPageBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "page")
             .append_key_only("fromUrl")

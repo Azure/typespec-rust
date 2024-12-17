@@ -26,7 +26,7 @@ impl BytesHeaderClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/header/base64");
+        url = url.join("encode/bytes/header/base64")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", base64::encode(value));
         self.pipeline.send(&mut ctx, &mut request).await
@@ -40,7 +40,7 @@ impl BytesHeaderClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/header/base64url");
+        url = url.join("encode/bytes/header/base64url")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", base64::encode_url_safe(value));
         self.pipeline.send(&mut ctx, &mut request).await
@@ -54,7 +54,7 @@ impl BytesHeaderClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/header/base64url-array");
+        url = url.join("encode/bytes/header/base64url-array")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header(
             "value",
@@ -75,7 +75,7 @@ impl BytesHeaderClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/header/default");
+        url = url.join("encode/bytes/header/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", base64::encode(value));
         self.pipeline.send(&mut ctx, &mut request).await

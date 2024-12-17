@@ -31,7 +31,7 @@ impl SpreadAliasClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/parameters/spread/alias/request-body");
+        url = url.join("parameters/spread/alias/request-body")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         let body: RequestContent<SpreadAsRequestBodyRequest> =
@@ -50,9 +50,9 @@ impl SpreadAliasClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/parameters/spread/alias/request-parameter/{id}");
+        let mut path = String::from("parameters/spread/alias/request-parameter/{id}");
         path = path.replace("{id}", &id);
-        url.set_path(&path);
+        url = url.join(&path)?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.insert_header("x-ms-test-header", x_ms_test_header);
@@ -74,9 +74,9 @@ impl SpreadAliasClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/parameters/spread/alias/inner-alias-parameter/{id}");
+        let mut path = String::from("parameters/spread/alias/inner-alias-parameter/{id}");
         path = path.replace("{id}", &id);
-        url.set_path(&path);
+        url = url.join(&path)?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.insert_header("x-ms-test-header", x_ms_test_header);
@@ -96,9 +96,9 @@ impl SpreadAliasClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/parameters/spread/alias/inner-model-parameter/{id}");
+        let mut path = String::from("parameters/spread/alias/inner-model-parameter/{id}");
         path = path.replace("{id}", &id);
-        url.set_path(&path);
+        url = url.join(&path)?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.insert_header("x-ms-test-header", x_ms_test_header);
@@ -119,9 +119,9 @@ impl SpreadAliasClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/parameters/spread/alias/multiple-parameters/{id}");
+        let mut path = String::from("parameters/spread/alias/multiple-parameters/{id}");
         path = path.replace("{id}", &id);
-        url.set_path(&path);
+        url = url.join(&path)?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.insert_header("x-ms-test-header", x_ms_test_header);

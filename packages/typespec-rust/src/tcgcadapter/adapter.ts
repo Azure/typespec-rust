@@ -566,7 +566,17 @@ export class Adapter {
     const pub = method.access === 'public';
     const methodOptions = new rust.MethodOptions(methodOptionsStruct);
     const httpMethod = method.operation.verb;
-    const httpPath = method.operation.path;
+
+    // if path is more than just "/" strip off any leading forward slash.
+    // this is because Url::join will treat the path as absolute, overwriting
+    // any existing path on the endpoint.
+    // e.g. if endpoint is https://contoso.com/foo/bar and httpPath is /some/sub/path
+    // then calling Url::join will provide result https://contoso.com/some/sub/path
+    // which is not what we want.
+    let httpPath = method.operation.path;
+    if (httpPath.length > 1 && httpPath[0] === '/') {
+      httpPath = httpPath.slice(1);
+    }
 
     switch (method.kind) {
       case 'basic':

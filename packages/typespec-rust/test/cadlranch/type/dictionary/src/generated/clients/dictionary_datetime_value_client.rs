@@ -27,7 +27,7 @@ impl DictionaryDatetimeValueClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/type/dictionary/datetime");
+        url = url.join("type/dictionary/datetime")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -41,7 +41,7 @@ impl DictionaryDatetimeValueClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/type/dictionary/datetime");
+        url = url.join("type/dictionary/datetime")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

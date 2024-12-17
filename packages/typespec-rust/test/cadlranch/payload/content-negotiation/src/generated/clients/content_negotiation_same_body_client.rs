@@ -23,7 +23,7 @@ impl ContentNegotiationSameBodyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/content-negotiation/same-body");
+        url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/jpeg");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -36,7 +36,7 @@ impl ContentNegotiationSameBodyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/content-negotiation/same-body");
+        url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
         self.pipeline.send(&mut ctx, &mut request).await

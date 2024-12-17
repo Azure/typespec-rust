@@ -23,7 +23,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/body/response/base64");
+        url = url.join("encode/bytes/body/response/base64")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -36,7 +36,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/body/response/base64url");
+        url = url.join("encode/bytes/body/response/base64url")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -49,7 +49,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/body/response/custom-content-type");
+        url = url.join("encode/bytes/body/response/custom-content-type")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -62,7 +62,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/body/response/default");
+        url = url.join("encode/bytes/body/response/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -75,7 +75,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/body/response/octet-stream");
+        url = url.join("encode/bytes/body/response/octet-stream")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/octet-stream");
         self.pipeline.send(&mut ctx, &mut request).await

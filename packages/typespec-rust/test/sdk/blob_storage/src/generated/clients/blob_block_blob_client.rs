@@ -43,10 +43,10 @@ impl BlobBlockBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "blocklist");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -158,10 +158,10 @@ impl BlobBlockBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "blocklist");
         url.query_pairs_mut()
             .append_pair("blocklisttype", &list_type.to_string());
@@ -204,10 +204,10 @@ impl BlobBlockBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("BlockBlob")
             .append_key_only("fromUrl");
@@ -339,10 +339,10 @@ impl BlobBlockBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "block");
         url.query_pairs_mut().append_pair("blockid", &block_id);
         if let Some(timeout) = options.timeout {
@@ -409,10 +409,10 @@ impl BlobBlockBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "block")
             .append_key_only("fromURL");
@@ -497,10 +497,10 @@ impl BlobBlockBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut().append_key_only("BlockBlob");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
