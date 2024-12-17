@@ -48,7 +48,7 @@ impl EmptyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/type/model/empty/alone");
+        url = url.join("type/model/empty/alone")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&mut ctx, &mut request).await
@@ -62,7 +62,7 @@ impl EmptyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/type/model/empty/round-trip");
+        url = url.join("type/model/empty/round-trip")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -78,7 +78,7 @@ impl EmptyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/type/model/empty/alone");
+        url = url.join("type/model/empty/alone")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(input);

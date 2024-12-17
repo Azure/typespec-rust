@@ -31,7 +31,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/and");
+        url = url.join("special-words/models/and")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -46,7 +46,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/as");
+        url = url.join("special-words/models/as")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -61,7 +61,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/assert");
+        url = url.join("special-words/models/assert")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -76,7 +76,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/async");
+        url = url.join("special-words/models/async")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -91,7 +91,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/await");
+        url = url.join("special-words/models/await")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -106,7 +106,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/break");
+        url = url.join("special-words/models/break")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -121,7 +121,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/class");
+        url = url.join("special-words/models/class")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -136,7 +136,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/constructor");
+        url = url.join("special-words/models/constructor")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -151,7 +151,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/continue");
+        url = url.join("special-words/models/continue")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -166,7 +166,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/def");
+        url = url.join("special-words/models/def")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -181,7 +181,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/del");
+        url = url.join("special-words/models/del")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -196,7 +196,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/elif");
+        url = url.join("special-words/models/elif")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -211,7 +211,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/else");
+        url = url.join("special-words/models/else")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -226,7 +226,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/except");
+        url = url.join("special-words/models/except")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -241,7 +241,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/exec");
+        url = url.join("special-words/models/exec")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -256,7 +256,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/finally");
+        url = url.join("special-words/models/finally")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -271,7 +271,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/for");
+        url = url.join("special-words/models/for")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -286,7 +286,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/from");
+        url = url.join("special-words/models/from")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -301,7 +301,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/global");
+        url = url.join("special-words/models/global")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -316,7 +316,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/if");
+        url = url.join("special-words/models/if")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -331,7 +331,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/import");
+        url = url.join("special-words/models/import")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -346,7 +346,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/in");
+        url = url.join("special-words/models/in")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -361,7 +361,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/is");
+        url = url.join("special-words/models/is")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -376,7 +376,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/lambda");
+        url = url.join("special-words/models/lambda")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -391,7 +391,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/not");
+        url = url.join("special-words/models/not")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -406,7 +406,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/or");
+        url = url.join("special-words/models/or")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -421,7 +421,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/pass");
+        url = url.join("special-words/models/pass")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -436,7 +436,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/raise");
+        url = url.join("special-words/models/raise")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -451,7 +451,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/return");
+        url = url.join("special-words/models/return")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -466,7 +466,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/try");
+        url = url.join("special-words/models/try")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -481,7 +481,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/while");
+        url = url.join("special-words/models/while")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -496,7 +496,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/with");
+        url = url.join("special-words/models/with")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -511,7 +511,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/special-words/models/yield");
+        url = url.join("special-words/models/yield")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

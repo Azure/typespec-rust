@@ -1,5 +1,11 @@
 # Release History
 
+## 0.4.1 (Unreleased)
+
+### Other Changes
+
+* Use `Url::join` for constructing the complete endpoint.
+
 ## 0.4.0 (2024-12-10)
 
 ### Breaking Changes

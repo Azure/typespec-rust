@@ -58,9 +58,9 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/azure/core/basic/users/{id}");
+        let mut path = String::from("azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Put);
@@ -82,9 +82,9 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/azure/core/basic/users/{id}");
+        let mut path = String::from("azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Patch);
@@ -105,9 +105,9 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/azure/core/basic/users/{id}");
+        let mut path = String::from("azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
@@ -127,9 +127,9 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/azure/core/basic/users/{id}:export");
+        let mut path = String::from("azure/core/basic/users/{id}:export");
         path = path.replace("{id}", &id.to_string());
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         url.query_pairs_mut().append_pair("format", &format);
@@ -149,7 +149,7 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/azure/core/basic/users:exportallusers");
+        url = url.join("azure/core/basic/users:exportallusers")?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         url.query_pairs_mut().append_pair("format", &format);
@@ -169,9 +169,9 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/azure/core/basic/users/{id}");
+        let mut path = String::from("azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -184,49 +184,53 @@ impl BasicClient {
     /// Lists all Users
     pub fn list(&self, options: Option<BasicClientListOptions<'_>>) -> Result<Pager<PagedUser>> {
         let options = options.unwrap_or_default().into_owned();
-        let endpoint = self.endpoint.clone();
         let pipeline = self.pipeline.clone();
-        let api_version = self.api_version.clone();
+        let mut first_url = self.endpoint.clone();
+        first_url = first_url.join("azure/core/basic/users")?;
+        first_url
+            .query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
+        if let Some(expand) = options.expand {
+            for e in expand.iter() {
+                first_url.query_pairs_mut().append_pair("expand", e);
+            }
+        }
+        if let Some(filter) = options.filter {
+            first_url.query_pairs_mut().append_pair("filter", &filter);
+        }
+        if let Some(maxpagesize) = options.maxpagesize {
+            first_url
+                .query_pairs_mut()
+                .append_pair("maxpagesize", &maxpagesize.to_string());
+        }
+        if let Some(orderby) = options.orderby {
+            for o in orderby.iter() {
+                first_url.query_pairs_mut().append_pair("orderby", o);
+            }
+        }
+        if let Some(select) = options.select {
+            for s in select.iter() {
+                first_url.query_pairs_mut().append_pair("select", s);
+            }
+        }
+        if let Some(skip) = options.skip {
+            first_url
+                .query_pairs_mut()
+                .append_pair("skip", &skip.to_string());
+        }
+        if let Some(top) = options.top {
+            first_url
+                .query_pairs_mut()
+                .append_pair("top", &top.to_string());
+        }
         Ok(Pager::from_callback(move |next_link: Option<Url>| {
-            let mut url: Url;
+            let url: Url;
             match next_link {
                 Some(next_link) => {
                     url = next_link;
                 }
                 None => {
-                    let options = options.clone();
-                    url = endpoint.clone();
-                    url.set_path("/azure/core/basic/users");
-                    url.query_pairs_mut()
-                        .append_pair("api-version", &api_version);
-                    if let Some(expand) = options.expand {
-                        for e in expand.iter() {
-                            url.query_pairs_mut().append_pair("expand", e);
-                        }
-                    }
-                    if let Some(filter) = options.filter {
-                        url.query_pairs_mut().append_pair("filter", &filter);
-                    }
-                    if let Some(maxpagesize) = options.maxpagesize {
-                        url.query_pairs_mut()
-                            .append_pair("maxpagesize", &maxpagesize.to_string());
-                    }
-                    if let Some(orderby) = options.orderby {
-                        for o in orderby.iter() {
-                            url.query_pairs_mut().append_pair("orderby", o);
-                        }
-                    }
-                    if let Some(select) = options.select {
-                        for s in select.iter() {
-                            url.query_pairs_mut().append_pair("select", s);
-                        }
-                    }
-                    if let Some(skip) = options.skip {
-                        url.query_pairs_mut().append_pair("skip", &skip.to_string());
-                    }
-                    if let Some(top) = options.top {
-                        url.query_pairs_mut().append_pair("top", &top.to_string());
-                    }
+                    url = first_url.clone();
                 }
             };
             let mut request = Request::new(url, Method::Get);

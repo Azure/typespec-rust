@@ -531,16 +531,15 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
 
 /**
  * emits the code for building the request URL.
- * assumes that there's a mutable local var 'url'
  * 
  * @param indent the indentation helper currently in scope
  * @param use the use statement builder currently in scope
  * @param method the method for which we're building the body
  * @param paramGroups the param groups for the provided method
- * @param fromSelf applicable for client params. when true, the prefix "self." is included
+ * @param urlVarName the name of the var that contains the azure_core::Url. defaults to 'url'
  * @returns the URL construction code
  */
-function constructUrl(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, fromSelf = true): string {
+function constructUrl(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, urlVarName: string = 'url'): string {
   // for paths that contain query parameters, we must set the query params separately.
   // including them in the call to set_path() causes the chars to be path-escaped.
   const pathChunks = method.httpPath.split('?');
@@ -548,19 +547,29 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
     throw new Error('too many HTTP path chunks');
   }
   let body = '';
-  let path = `"${pathChunks[0]}"`;
-  if (paramGroups.path.length > 0) {
-    // we have path params that need to have their segments replaced with the param values
-    body += `${indent.get()}let mut path = String::from(${path});\n`;
-    for (const pathParam of paramGroups.path) {
-      body += `${indent.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(use, pathParam, fromSelf)});\n`;
+
+  // if path is just "/" no need to set it again, we're already there
+  if (pathChunks[0] !== '/') {
+    let path = `"${pathChunks[0]}"`;
+    if (paramGroups.path.length === 0) {
+      // no path params, just a static path
+      body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
+    } else if (paramGroups.path.length === 1 && pathChunks[0] === `{${paramGroups.path[0].segment}}`) {
+      // for a single path param (i.e. "{foo}") we can directly join the path param's value
+      body += `${indent.get()}${urlVarName} = ${urlVarName}.join(&${getHeaderPathQueryParamValue(use, paramGroups.path[0])})?;\n`;
+    } else {
+      // we have path params that need to have their segments replaced with the param values
+      body += `${indent.get()}let mut path = String::from(${path});\n`;
+      for (const pathParam of paramGroups.path) {
+        body += `${indent.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(use, pathParam)});\n`;
+      }
+      path = '&path';
+      body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
     }
-    path = '&path';
   }
 
-  body += `${indent.get()}url.set_path(${path});\n`;
   if (pathChunks.length === 2) {
-    body += `${indent.get()}url.query_pairs_mut()`;
+    body += `${indent.get()}${urlVarName}.query_pairs_mut()`;
     // set the query params that were in the path
     const qps = queryString.parse(pathChunks[1]);
     for (const qp of Object.keys(qps)) {
@@ -585,13 +594,13 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       body += getParamValueHelper(indent, queryParam, () => {
         const valueVar = queryParam.name[0];
         let text = `${indent.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
-        text += `${indent.push().get()}url.query_pairs_mut().append_pair("${queryParam.key}", ${valueVar});\n`;
+        text += `${indent.push().get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${valueVar});\n`;
         text += `${indent.pop().get()}}\n`;
         return text;
       });
     } else {
       body += getParamValueHelper(indent, queryParam, () => {
-        return `${indent.get()}url.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(use, queryParam, fromSelf)});\n`;
+        return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(use, queryParam)});\n`;
       });
     }
   }
@@ -702,51 +711,21 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   use.addForType(method.returns.type.type);
 
   const paramGroups = getMethodParamGroup(method);
+  const urlVar = 'first_url';
 
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
-  body += `${indent.get()}let endpoint = self.${getEndpointFieldName(client)}.clone();\n`;
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
-  // clone any other client params
-  for (const param of method.params) {
-    if (param.location === 'client') {
-      body += `${indent.get()}let ${param.name} = self.${param.name}.clone();\n`;
-    }
-  }
+  body += `${indent.get()}let mut ${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
+  body += constructUrl(indent, use, method, paramGroups, urlVar);
   body += `${indent.get()}Ok(Pager::from_callback(move |${nextLinkName}: Option<Url>| {\n`;
-  body += `${indent.push().get()}let mut url: Url;\n`;
-
-  /** returns true if the method options type needs to be cloned */
-  const optionsNeedsCloning = function(options: rust.MethodOptions): boolean {
-    if (options.type.fields.length === 1) {
-      // only has ClientMethodOptions
-      return false;
-    }
-
-    // if options contains any non-copyable types other than ClientMethodOptions we'll need to clone it
-    for (const field of options.type.fields) {
-      if (isClientMethodOptions(field.type)) {
-        continue;
-      } else if (typeNeedsCloning(field.type)) {
-        return true;
-      }
-    }
-    return false;
-  };
+  body += `${indent.push().get()}let url: Url;\n`;
 
   body += indent.get() + helpers.buildMatch(indent, nextLinkName, [{
     pattern: `Some(${nextLinkName})`,
     body: (indent) => `${indent.get()}url = ${nextLinkName};\n`
   }, {
     pattern: 'None',
-    body: (indent) => {
-      let none = '';
-      if (optionsNeedsCloning(method.options)) {
-        none += `${indent.get()}let options = options.clone();\n`;
-      }
-      none += `${indent.get()}url = endpoint.clone();\n`;
-      none += constructUrl(indent, use, method, paramGroups, false);
-      return none;
-    }
+    body: (indent) => `${indent.get()}url = ${urlVar}.clone();\n`
   }]);
   body += ';\n';
 

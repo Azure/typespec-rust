@@ -71,9 +71,9 @@ impl KeyVaultClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/secrets/{secret-name}/backup");
+        let mut path = String::from("secrets/{secret-name}/backup");
         path = path.replace("{secret-name}", &secret_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Post);
@@ -93,9 +93,9 @@ impl KeyVaultClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/secrets/{secret-name}");
+        let mut path = String::from("secrets/{secret-name}");
         path = path.replace("{secret-name}", &secret_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
@@ -115,9 +115,9 @@ impl KeyVaultClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/deletedsecrets/{secret-name}");
+        let mut path = String::from("deletedsecrets/{secret-name}");
         path = path.replace("{secret-name}", &secret_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -134,24 +134,25 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientGetDeletedSecretsOptions<'_>>,
     ) -> Result<Pager<DeletedSecretListResult>> {
         let options = options.unwrap_or_default().into_owned();
-        let endpoint = self.endpoint.clone();
         let pipeline = self.pipeline.clone();
-        let api_version = self.api_version.clone();
+        let mut first_url = self.endpoint.clone();
+        first_url = first_url.join("deletedsecrets")?;
+        first_url
+            .query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
+        if let Some(maxresults) = options.maxresults {
+            first_url
+                .query_pairs_mut()
+                .append_pair("maxresults", &maxresults.to_string());
+        }
         Ok(Pager::from_callback(move |next_link: Option<Url>| {
-            let mut url: Url;
+            let url: Url;
             match next_link {
                 Some(next_link) => {
                     url = next_link;
                 }
                 None => {
-                    url = endpoint.clone();
-                    url.set_path("/deletedsecrets");
-                    url.query_pairs_mut()
-                        .append_pair("api-version", &api_version);
-                    if let Some(maxresults) = options.maxresults {
-                        url.query_pairs_mut()
-                            .append_pair("maxresults", &maxresults.to_string());
-                    }
+                    url = first_url.clone();
                 }
             };
             let mut request = Request::new(url, Method::Get);
@@ -188,10 +189,10 @@ impl KeyVaultClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/secrets/{secret-name}/{secret-version}");
+        let mut path = String::from("secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", &secret_name);
         path = path.replace("{secret-version}", &secret_version);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -209,26 +210,27 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientGetSecretVersionsOptions<'_>>,
     ) -> Result<Pager<SecretListResult>> {
         let options = options.unwrap_or_default().into_owned();
-        let endpoint = self.endpoint.clone();
         let pipeline = self.pipeline.clone();
-        let api_version = self.api_version.clone();
+        let mut first_url = self.endpoint.clone();
+        let mut path = String::from("secrets/{secret-name}/versions");
+        path = path.replace("{secret-name}", &secret_name);
+        first_url = first_url.join(&path)?;
+        first_url
+            .query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
+        if let Some(maxresults) = options.maxresults {
+            first_url
+                .query_pairs_mut()
+                .append_pair("maxresults", &maxresults.to_string());
+        }
         Ok(Pager::from_callback(move |next_link: Option<Url>| {
-            let mut url: Url;
+            let url: Url;
             match next_link {
                 Some(next_link) => {
                     url = next_link;
                 }
                 None => {
-                    url = endpoint.clone();
-                    let mut path = String::from("/secrets/{secret-name}/versions");
-                    path = path.replace("{secret-name}", &secret_name);
-                    url.set_path(&path);
-                    url.query_pairs_mut()
-                        .append_pair("api-version", &api_version);
-                    if let Some(maxresults) = options.maxresults {
-                        url.query_pairs_mut()
-                            .append_pair("maxresults", &maxresults.to_string());
-                    }
+                    url = first_url.clone();
                 }
             };
             let mut request = Request::new(url, Method::Get);
@@ -262,24 +264,25 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientGetSecretsOptions<'_>>,
     ) -> Result<Pager<SecretListResult>> {
         let options = options.unwrap_or_default().into_owned();
-        let endpoint = self.endpoint.clone();
         let pipeline = self.pipeline.clone();
-        let api_version = self.api_version.clone();
+        let mut first_url = self.endpoint.clone();
+        first_url = first_url.join("secrets")?;
+        first_url
+            .query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
+        if let Some(maxresults) = options.maxresults {
+            first_url
+                .query_pairs_mut()
+                .append_pair("maxresults", &maxresults.to_string());
+        }
         Ok(Pager::from_callback(move |next_link: Option<Url>| {
-            let mut url: Url;
+            let url: Url;
             match next_link {
                 Some(next_link) => {
                     url = next_link;
                 }
                 None => {
-                    url = endpoint.clone();
-                    url.set_path("/secrets");
-                    url.query_pairs_mut()
-                        .append_pair("api-version", &api_version);
-                    if let Some(maxresults) = options.maxresults {
-                        url.query_pairs_mut()
-                            .append_pair("maxresults", &maxresults.to_string());
-                    }
+                    url = first_url.clone();
                 }
             };
             let mut request = Request::new(url, Method::Get);
@@ -315,9 +318,9 @@ impl KeyVaultClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/deletedsecrets/{secret-name}");
+        let mut path = String::from("deletedsecrets/{secret-name}");
         path = path.replace("{secret-name}", &secret_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
@@ -337,9 +340,9 @@ impl KeyVaultClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/deletedsecrets/{secret-name}/recover");
+        let mut path = String::from("deletedsecrets/{secret-name}/recover");
         path = path.replace("{secret-name}", &secret_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Post);
@@ -358,7 +361,7 @@ impl KeyVaultClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/secrets/restore");
+        url = url.join("secrets/restore")?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Post);
@@ -381,9 +384,9 @@ impl KeyVaultClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/secrets/{secret-name}");
+        let mut path = String::from("secrets/{secret-name}");
         path = path.replace("{secret-name}", &secret_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Put);
@@ -407,10 +410,10 @@ impl KeyVaultClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/secrets/{secret-name}/{secret-version}");
+        let mut path = String::from("secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", &secret_name);
         path = path.replace("{secret-version}", &secret_version);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Patch);

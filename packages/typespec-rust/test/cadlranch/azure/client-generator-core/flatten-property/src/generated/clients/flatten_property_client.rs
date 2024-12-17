@@ -52,7 +52,7 @@ impl FlattenPropertyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/azure/client-generator-core/flatten-property/flattenModel");
+        url = url.join("azure/client-generator-core/flatten-property/flattenModel")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -68,7 +68,7 @@ impl FlattenPropertyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/azure/client-generator-core/flatten-property/nestedFlattenModel");
+        url = url.join("azure/client-generator-core/flatten-property/nestedFlattenModel")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

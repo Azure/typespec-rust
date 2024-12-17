@@ -26,7 +26,7 @@ impl BytesRequestBodyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/body/request/base64");
+        url = url.join("encode/bytes/body/request/base64")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(value);
@@ -41,7 +41,7 @@ impl BytesRequestBodyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/body/request/base64url");
+        url = url.join("encode/bytes/body/request/base64url")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(value);
@@ -56,7 +56,7 @@ impl BytesRequestBodyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/body/request/custom-content-type");
+        url = url.join("encode/bytes/body/request/custom-content-type")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "image/png");
         request.set_body(value);
@@ -71,7 +71,7 @@ impl BytesRequestBodyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/body/request/default");
+        url = url.join("encode/bytes/body/request/default")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(value);
@@ -86,7 +86,7 @@ impl BytesRequestBodyClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url.set_path("/encode/bytes/body/request/octet-stream");
+        url = url.join("encode/bytes/body/request/octet-stream")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/octet-stream");
         request.set_body(value);

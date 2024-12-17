@@ -37,10 +37,10 @@ impl BlobAppendBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "appendblock");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -126,10 +126,10 @@ impl BlobAppendBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "appendblock")
             .append_key_only("fromUrl");
@@ -233,10 +233,10 @@ impl BlobAppendBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut().append_key_only("AppendBlob");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -339,10 +339,10 @@ impl BlobAppendBlobClient {
         let options = options.unwrap_or_default();
         let mut ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("/{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
         path = path.replace("{containerName}", &container_name);
-        url.set_path(&path);
+        url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "seal");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
