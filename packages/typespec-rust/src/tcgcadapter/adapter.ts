@@ -797,9 +797,20 @@ export class Adapter {
   private adaptMethodParameter(param: OperationParamType): rust.MethodParameter {
     const paramLoc = param.onClient ? 'client' : 'method';
 
+    /**
+     * used to create keys for this.clientMethodParams
+     * @param param the param for which to create a key
+     * @returns the map's key
+     */
+    const getClientParamsKey = function (param: OperationParamType): string {
+      // include the param kind in the key name as a client param can be used
+      // in different places across methods (path/query)
+      return `${param.name}-${param.kind}`;
+    };
+
     // if this is a client method param, check if we've already adapted it
     if (paramLoc === 'client') {
-      const clientMethodParam = this.clientMethodParams.get(param.name);
+      const clientMethodParam = this.clientMethodParams.get(getClientParamsKey(param));
       if (clientMethodParam) {
         return clientMethodParam;
       }
@@ -865,7 +876,7 @@ export class Adapter {
     adaptedParam.docs.description = param.doc;
 
     if (paramLoc === 'client') {
-      this.clientMethodParams.set(param.name, adaptedParam);
+      this.clientMethodParams.set(getClientParamsKey(param), adaptedParam);
     }
 
     return adaptedParam;

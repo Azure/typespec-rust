@@ -2,6 +2,10 @@
 
 ## 0.4.1 (Unreleased)
 
+### Bugs Fixed
+
+* Fixed an issue that could cause incorrect usage of client parameters in method bodies.
+
 ### Features Added
 
 * Added support for endpoints with supplemental paths.
