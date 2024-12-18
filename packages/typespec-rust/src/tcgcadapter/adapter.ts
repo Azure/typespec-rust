@@ -462,7 +462,7 @@ export class Adapter {
                       scopes.push(scope.value);
                     }
                     const ctorTokenCredential = new rust.Constructor('new');
-                    ctorTokenCredential.parameters.push(new rust.ClientParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), true));
+                    ctorTokenCredential.parameters.push(new rust.ClientParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), false));
                     rustClient.constructable.constructors.push(ctorTokenCredential);
                     break;
                   }
@@ -499,7 +499,7 @@ export class Adapter {
                 // note that the types of the param and the field are different.
                 // NOTE: we use param.name here instead of templateArg.name as
                 // the former has the fixed name "endpoint" which is what we want.
-                ctorParams.push(new rust.ClientParameter(param.name, new rust.StringSlice(), true, true));
+                ctorParams.push(new rust.ClientParameter(param.name, new rust.StringSlice(), false, true));
                 rustClient.fields.push(new rust.StructField(param.name, false, new rust.Url(this.crate)));
 
                 // if the server's URL is *only* the endpoint parameter then we're done.
@@ -594,17 +594,17 @@ export class Adapter {
 
     const paramName = snakeCaseName(param.name);
 
-    let required = true;
+    let optional = false;
     // client-side default value makes the param optional
     if (param.optional || param.clientDefaultValue) {
-      required = false;
+      optional = true;
       const paramField = new rust.StructField(paramName, true, paramType);
       constructable.options.type.fields.push(paramField);
       if (param.clientDefaultValue) {
         paramField.defaultValue = `String::from("${<string>param.clientDefaultValue}")`;
       }
     }
-    return new rust.ClientParameter(paramName, paramType, required);
+    return new rust.ClientParameter(paramName, paramType, optional);
   }
 
   /**

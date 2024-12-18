@@ -95,7 +95,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
           const supplementalEndpoint = client.constructable.endpoint;
           body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
           for (const param of supplementalEndpoint.parameters) {
-            body += `${indent.get()}host = host.replace("{${param.segment}}", ${!param.source.required ? '&options.' : ''}${param.source.name});\n`;
+            body += `${indent.get()}host = host.replace("{${param.segment}}", ${param.source.optional ? '&options.' : ''}${param.source.name});\n`;
           }
           body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
         }
@@ -113,7 +113,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         // NOTE: we do this on a sorted copy of the client params as we must preserve their order
         const sortedParams = [...constructor.parameters].sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); });
         for (const param of sortedParams) {
-          if (!param.required) {
+          if (param.optional) {
             continue;
           } else if (isCredential(param.type)) {
             // credential params aren't persisted on the client so skip them
@@ -131,7 +131,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
 
         // propagate any optional client params to the client initializer
         for (const param of sortedParams) {
-          if (param.required) {
+          if (!param.optional) {
             continue;
           }
 
@@ -291,7 +291,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
 function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: rust.ClientOptions, use: Use): string {
   const paramsSig = new Array<string>();
   for (const param of params) {
-    if (!param.required) {
+    if (param.optional) {
       // optional params will be in the client options type
       continue;
     }
