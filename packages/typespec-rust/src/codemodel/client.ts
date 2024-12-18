@@ -76,10 +76,10 @@ export interface ClientParameter {
   type: types.Type;
 
   /**
-   * indicates if the parameter is required.
+   * indicates if the parameter is optional.
    * optional params will be surfaced in the client options type.
    */
-  required: boolean;
+  optional: boolean;
 
   /** indicates if the parameter is a reference. defaults to false */
   ref: boolean;
@@ -400,10 +400,10 @@ export class ClientOptions extends types.Option implements ClientOptions {
 }
 
 export class ClientParameter implements ClientParameter {
-  constructor(name: string, type: types.Type, required: boolean, ref?: boolean) {
+  constructor(name: string, type: types.Type, optional: boolean, ref?: boolean) {
     this.name = name;
     this.type = type;
-    this.required = required;
+    this.optional = optional;
     this.ref = ref ? ref : false;
   }
 }
