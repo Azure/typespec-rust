@@ -6,6 +6,7 @@
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
 import { EmitContext } from '@typespec/compiler';
+import * as http from '@typespec/http';
 import * as helpers from './helpers.js';
 import * as naming from './naming.js';
 import { RustEmitterOptions } from '../lib.js';
@@ -442,38 +443,54 @@ export class Adapter {
 
       let authType = AuthTypes.Default;
 
+      /**
+       * processes a credendial, potentially adding its supporting client constructor
+       * 
+       * @param cred the credential type to process
+       * @param constructable the constructable for the current Rust client
+       * @param throwOnDefault when true, throws an error on unsupported credential types
+       * @returns the AuthTypes enum for the credential that was handled, or AuthTypes.Default if none were
+       */
+      const processCredential = (cred: http.HttpAuth, constructable: rust.ClientConstruction, throwOnDefault: boolean): AuthTypes => {
+        switch (cred.type) {
+          case 'noAuth':
+            return AuthTypes.NoAuth;
+          case 'oauth2': {
+            constructable.constructors.push(this.createTokenCredentialCtor(cred));
+            return AuthTypes.WithAut;
+          }
+          default:
+            if (throwOnDefault) {
+              throw new Error(`credential scheme type ${cred.type} NYI`);
+            }
+            return AuthTypes.Default;
+        }
+      };
+
       const ctorParams = new Array<rust.ClientParameter>();
       for (const param of client.initialization.properties) {
         switch (param.kind) {
           case 'credential':
             switch (param.type.kind) {
               case 'credential':
-                switch (param.type.scheme.type) {
-                  case 'noAuth':
-                    authType |= AuthTypes.NoAuth;
-                    break;
-                  case 'oauth2': {
-                    authType |= AuthTypes.WithAut;
-                    if (param.type.scheme.flows.length === 0) {
-                      throw new Error(`no flows defined for credential type ${param.type.scheme.type}`);
-                    }
-                    const scopes = new Array<string>();
-                    for (const scope of param.type.scheme.flows[0].scopes) {
-                      scopes.push(scope.value);
-                    }
-                    const ctorTokenCredential = new rust.Constructor('new');
-                    ctorTokenCredential.parameters.push(new rust.ClientMethodParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), false));
-                    rustClient.constructable.constructors.push(ctorTokenCredential);
-                    break;
-                  }
-                  default:
-                    // TODO: https://github.com/Azure/typespec-rust/issues/57
-                    throw new Error(`credential scheme type ${param.type.scheme.type} NYI`);
-                }
+                authType |= processCredential(param.type.scheme, rustClient.constructable, true);
                 break;
-              case 'union':
-                // TODO: https://github.com/Azure/typespec-rust/issues/57
+              case 'union': {
+                const variantKinds = new Array<string>();
+                for (const variantType of param.type.variantTypes) {
+                  variantKinds.push(variantType.scheme.type);
+                  // if OAuth2 is specified then emit that and skip any unsupported ones.
+                  // this prevents emitting the with_no_credential constructor in cases
+                  // where it might not actually be supported.
+                  authType |= processCredential(variantType.scheme, rustClient.constructable, false);
+                }
+
+                // no supported credential types were specified
+                if (authType === AuthTypes.Default) {
+                  throw new Error(`credential scheme types ${variantKinds.join()} NYI`);
+                }
                 continue;
+              }
             }
             break;
           case 'endpoint': {
@@ -582,7 +599,28 @@ export class Adapter {
   }
 
   /**
+   * creates a client constructor for the TokenCredential type.
+   * the constructor is named new.
+   * 
+   * @param cred the OAuth2 credential to adapt
+   * @returns a client constructor for TokenCredential
+   */
+  private createTokenCredentialCtor(cred: http.Oauth2Auth<http.OAuth2Flow[]>): rust.Constructor {
+    if (cred.flows.length === 0) {
+      throw new Error(`no flows defined for credential type ${cred.type}`);
+    }
+    const scopes = new Array<string>();
+    for (const scope of cred.flows[0].scopes) {
+      scopes.push(scope.value);
+    }
+    const ctorTokenCredential = new rust.Constructor('new');
+    ctorTokenCredential.parameters.push(new rust.ClientMethodParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), false));
+    return ctorTokenCredential;
+  }
+
+  /**
    * converts a tcgc client parameter to a Rust client parameter
+   * 
    * @param param the tcgc client parameter to convert
    * @param constructable contains client construction info. if the param is optional, it will go in the options type
    * @returns the Rust client parameter
