@@ -9,6 +9,7 @@
 ### Features Added
 
 * Added support for endpoints with supplemental paths.
+* Added support for `OAuth2` credentials when part of a union authentication scheme. Unsupported schemes are omitted.
 
 ### Other Changes
 

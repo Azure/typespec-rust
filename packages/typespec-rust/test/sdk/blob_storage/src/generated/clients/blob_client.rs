@@ -9,7 +9,9 @@ use crate::blob_block_blob_client::BlobBlockBlobClient;
 use crate::blob_container_client::BlobContainerClient;
 use crate::blob_page_blob_client::BlobPageBlobClient;
 use crate::blob_service_client::BlobServiceClient;
-use azure_core::{ClientOptions, Pipeline, Result, Url};
+use azure_core::credentials::TokenCredential;
+use azure_core::{BearerTokenCredentialPolicy, ClientOptions, Pipeline, Policy, Result, Url};
+use std::sync::Arc;
 
 pub struct BlobClient {
     container_name: String,
@@ -24,8 +26,9 @@ pub struct BlobClientOptions {
 }
 
 impl BlobClient {
-    pub fn with_no_credential(
+    pub fn new(
         endpoint: &str,
+        credential: Arc<dyn TokenCredential>,
         version: String,
         container_name: String,
         options: Option<BlobClientOptions>,
@@ -33,6 +36,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
         endpoint.set_query(None);
+        let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
+            credential,
+            vec!["https://storage.azure.com/.default"],
+        ));
         Ok(Self {
             container_name,
             endpoint,
@@ -42,7 +49,7 @@ impl BlobClient {
                 option_env!("CARGO_PKG_VERSION"),
                 options.client_options,
                 Vec::default(),
-                Vec::default(),
+                vec![auth_policy],
             ),
         })
     }

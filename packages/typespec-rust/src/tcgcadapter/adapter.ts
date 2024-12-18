@@ -6,6 +6,7 @@
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
 import { EmitContext } from '@typespec/compiler';
+import * as http from '@typespec/http';
 import * as helpers from './helpers.js';
 import * as naming from './naming.js';
 import { RustEmitterOptions } from '../lib.js';
@@ -454,16 +455,7 @@ export class Adapter {
                     break;
                   case 'oauth2': {
                     authType |= AuthTypes.WithAut;
-                    if (param.type.scheme.flows.length === 0) {
-                      throw new Error(`no flows defined for credential type ${param.type.scheme.type}`);
-                    }
-                    const scopes = new Array<string>();
-                    for (const scope of param.type.scheme.flows[0].scopes) {
-                      scopes.push(scope.value);
-                    }
-                    const ctorTokenCredential = new rust.Constructor('new');
-                    ctorTokenCredential.parameters.push(new rust.ClientMethodParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), false));
-                    rustClient.constructable.constructors.push(ctorTokenCredential);
+                    rustClient.constructable.constructors.push(this.createTokenCredentialCtor(param.type.scheme));
                     break;
                   }
                   default:
@@ -471,9 +463,33 @@ export class Adapter {
                     throw new Error(`credential scheme type ${param.type.scheme.type} NYI`);
                 }
                 break;
-              case 'union':
-                // TODO: https://github.com/Azure/typespec-rust/issues/57
+              case 'union': {
+                // if OAuth2 is specified then emit that and skip any unsupported ones.
+                // this prevents emitting the with_no_credential constructor in cases
+                // where it might not actually be supported.
+                let hasOAuth2Cred = false;
+                const variantKinds = new Array<string>();
+                for (const variantType of param.type.variantTypes) {
+                  variantKinds.push(variantType.scheme.type);
+                  switch (variantType.scheme.type) {
+                    case 'noAuth':
+                      authType |= AuthTypes.NoAuth;
+                      break;
+                    case 'oauth2': {
+                      hasOAuth2Cred = true;
+                      authType |= AuthTypes.WithAut;
+                      rustClient.constructable.constructors.push(this.createTokenCredentialCtor(variantType.scheme));
+                      break;
+                    }
+                  }
+                  // TODO: https://github.com/Azure/typespec-rust/issues/57
+                }
+
+                if (!hasOAuth2Cred) {
+                  throw new Error(`credential scheme types ${variantKinds.join()} NYI`);
+                }
                 continue;
+              }
             }
             break;
           case 'endpoint': {
@@ -582,7 +598,28 @@ export class Adapter {
   }
 
   /**
+   * creates a client constructor for the TokenCredential type.
+   * the constructor is named new.
+   * 
+   * @param cred the OAuth2 credential to adapt
+   * @returns a client constructor for TokenCredential
+   */
+  private createTokenCredentialCtor(cred: http.Oauth2Auth<http.OAuth2Flow[]>): rust.Constructor {
+    if (cred.flows.length === 0) {
+      throw new Error(`no flows defined for credential type ${cred.type}`);
+    }
+    const scopes = new Array<string>();
+    for (const scope of cred.flows[0].scopes) {
+      scopes.push(scope.value);
+    }
+    const ctorTokenCredential = new rust.Constructor('new');
+    ctorTokenCredential.parameters.push(new rust.ClientMethodParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), false));
+    return ctorTokenCredential;
+  }
+
+  /**
    * converts a tcgc client parameter to a Rust client parameter
+   * 
    * @param param the tcgc client parameter to convert
    * @param constructable contains client construction info. if the param is optional, it will go in the options type
    * @returns the Rust client parameter
