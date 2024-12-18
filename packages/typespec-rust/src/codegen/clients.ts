@@ -567,12 +567,12 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
     } else if (paramGroups.path.length === 1 && pathChunks[0] === `{${paramGroups.path[0].segment}}`) {
       // for a single path param (i.e. "{foo}") we can directly join the path param's value
-      body += `${indent.get()}${urlVarName} = ${urlVarName}.join(&${getHeaderPathQueryParamValue(use, paramGroups.path[0])})?;\n`;
+      body += `${indent.get()}${urlVarName} = ${urlVarName}.join(&${getHeaderPathQueryParamValue(use, paramGroups.path[0], true)})?;\n`;
     } else {
       // we have path params that need to have their segments replaced with the param values
       body += `${indent.get()}let mut path = String::from(${path});\n`;
       for (const pathParam of paramGroups.path) {
-        body += `${indent.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(use, pathParam)});\n`;
+        body += `${indent.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(use, pathParam, true)});\n`;
       }
       path = '&path';
       body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
@@ -611,7 +611,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       });
     } else {
       body += getParamValueHelper(indent, queryParam, () => {
-        return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(use, queryParam)});\n`;
+        return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional)});\n`;
       });
     }
   }
@@ -796,13 +796,13 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
  * @param fromSelf applicable for client params. when true, the prefix "self." is included
  * @returns 
  */
-function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.PathParameter | QueryParamType, fromSelf = true): string {
-  let paramName = '';
+function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.PathParameter | QueryParamType, fromSelf: boolean): string {
+  let paramName = param.name;
   // when fromSelf is false we assume that there's a local with the same name.
   // e.g. in pageable methods where we need to clone the params so they can be
   // passed to a future that can outlive the calling method.
   if (param.location === 'client' && fromSelf) {
-    paramName = 'self.';
+    paramName = 'self.' + paramName;
   }
 
   const encodeBytes = function(type: rust.EncodedBytes, param: string): string {
@@ -823,7 +823,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     if (param.format === 'multi') {
       throw new Error('multi should have been handled outside getHeaderPathQueryParamValue');
     } else if (param.type.type.kind === 'String') {
-      return `${param.name}.join("${getCollectionDelimiter(param.format)}")`;
+      return `${paramName}.join("${getCollectionDelimiter(param.format)}")`;
     }
 
     // convert the items to strings
@@ -831,31 +831,26 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     if (param.type.type.kind === 'encodedBytes') {
       strConv = encodeBytes(param.type.type, 'i');
     }
-    return `${param.name}.iter().map(|i| ${strConv}).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
+    return `${paramName}.iter().map(|i| ${strConv}).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
   }
 
   switch (param.type.kind) {
     case 'String':
-      paramName += param.name;
-      break;
+      return paramName;
     case 'encodedBytes':
-      return encodeBytes(param.type, param.name);
+      return encodeBytes(param.type, paramName);
     case 'enum':
     case 'hashmap':
     case 'offsetDateTime':
     case 'scalar':
-      paramName += `${param.name}.to_string()`;
-      break;
+      return `${paramName}.to_string()`;
     case 'implTrait':
-      // only done for method params so no need to include paramName prefix
-      return `${param.name}.into()`;
+      return `${paramName}.into()`;
     case 'literal':
       return `"${param.type.value}"`;
     default:
       throw new Error(`unhandled ${param.kind} param type kind ${param.type.kind}`);
   }
-
-  return paramName;
 }
 
 /**
