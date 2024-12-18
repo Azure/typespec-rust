@@ -187,7 +187,7 @@ model ListContainersSegmentResponse {
 
   /** The next marker of the containers. */
   #suppress "@azure-tools/typespec-azure-core/casing-style" "Existing API. The casing is correct."
-  @Azure.Core.nextLink
+  @nextLink
   @Xml.name("NextMarker")
   NextMarker?: string;
 }
@@ -878,7 +878,7 @@ model ListBlobsFlatSegmentResponse {
   @Xml.name("Segment") segment: BlobFlatListSegment;
 
   /** The next marker of the blobs. */
-  @Azure.Core.nextLink
+  @nextLink
   @Xml.name("NextMarker")
   nextMarker?: string;
 }
@@ -900,7 +900,7 @@ model PageList {
   @Xml.name("ClearRange") clearRange?: ClearRange[];
 
   /** The next marker. */
-  @Azure.Core.nextLink
+  @nextLink
   @Xml.name("NextMarker")
   nextMarker?: string;
 }
@@ -1961,7 +1961,7 @@ model ListBlobsHierarchySegmentResponse {
   @Xml.name("Segment") segment: BlobHierarchyListSegment;
 
   /** The next marker of the blobs. */
-  @Azure.Core.nextLink
+  @nextLink
   @Xml.name("NextMarker")
   nextMarker?: string;
 }

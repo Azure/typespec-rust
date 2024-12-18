@@ -13,6 +13,7 @@
 ### Other Changes
 
 * Use `Url::join` for constructing the complete endpoint.
+* Updated to the latest tsp toolset.
 
 ## 0.4.0 (2024-12-10)
 
