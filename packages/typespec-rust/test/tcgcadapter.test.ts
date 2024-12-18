@@ -18,9 +18,9 @@ describe('typespec-rust: tcgcadapter', () => {
     });
 
     it('sortClientParameters', () => {
-      const endpointParam = new rust.ClientParameter('endpoint', new rust.StringType(), true);
-      const credentialParam = new rust.ClientParameter('credential', new rust.StringType(), true);
-      const someOtherParam = new rust.ClientParameter('something', new rust.StringType(), true);
+      const endpointParam = new rust.ClientMethodParameter('endpoint', new rust.StringType(), true);
+      const credentialParam = new rust.ClientMethodParameter('credential', new rust.StringType(), true);
+      const someOtherParam = new rust.ClientEndpointParameter('something', new rust.StringType(), true, 'segment');
 
       let params = new Array<rust.ClientParameter>(endpointParam, credentialParam, someOtherParam);
       helpers.sortClientParameters(params);

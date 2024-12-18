@@ -462,7 +462,7 @@ export class Adapter {
                       scopes.push(scope.value);
                     }
                     const ctorTokenCredential = new rust.Constructor('new');
-                    ctorTokenCredential.parameters.push(new rust.ClientParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), false));
+                    ctorTokenCredential.parameters.push(new rust.ClientMethodParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), false));
                     rustClient.constructable.constructors.push(ctorTokenCredential);
                     break;
                   }
@@ -499,7 +499,7 @@ export class Adapter {
                 // note that the types of the param and the field are different.
                 // NOTE: we use param.name here instead of templateArg.name as
                 // the former has the fixed name "endpoint" which is what we want.
-                ctorParams.push(new rust.ClientParameter(param.name, new rust.StringSlice(), false, true));
+                ctorParams.push(new rust.ClientMethodParameter(param.name, new rust.StringSlice(), false, true));
                 rustClient.fields.push(new rust.StructField(param.name, false, new rust.Url(this.crate)));
 
                 // if the server's URL is *only* the endpoint parameter then we're done.
@@ -529,7 +529,11 @@ export class Adapter {
               }
 
               const clientParam = this.adaptClientParameter(templateArg, rustClient.constructable);
-              rustClient.constructable.endpoint?.parameters.push(new rust.EndpointParameter(templateArg.serializedName, clientParam));
+              if (clientParam.kind !== 'clientEndpoint') {
+                throw new Error(`unexpected client parameter kind ${clientParam.kind}`);
+              }
+              rustClient.constructable.endpoint?.parameters.push(clientParam);
+              ctorParams.push(clientParam);
             }
             break;
           }
@@ -604,7 +608,13 @@ export class Adapter {
         paramField.defaultValue = `String::from("${<string>param.clientDefaultValue}")`;
       }
     }
-    return new rust.ClientParameter(paramName, paramType, optional);
+
+    switch (param.kind) {
+      case 'method':
+        return new rust.ClientMethodParameter(paramName, paramType, optional);
+      case 'path':
+        return new rust.ClientEndpointParameter(paramName, paramType, optional, param.serializedName);
+    }
   }
 
   /**

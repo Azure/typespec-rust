@@ -58,6 +58,9 @@ export interface ClientOptions extends types.Option {
   type: types.Struct;
 }
 
+/** ClientParameter defines the possible client parameter types */
+export type ClientParameter = ClientEndpointParameter | ClientMethodParameter;
+
 /** represents a client constructor function */
 export interface Constructor {
   /** name of the constructor */
@@ -67,31 +70,20 @@ export interface Constructor {
   parameters: Array<ClientParameter>;
 }
 
-/** ClientParameter is a Rust client parameter */
-export interface ClientParameter {
-  /** the name of the parameter */
-  name: string;
-
-  /** the type of the client parameter */
-  type: types.Type;
-
-  /**
-   * indicates if the parameter is optional.
-   * optional params will be surfaced in the client options type.
-   */
-  optional: boolean;
+/** ClientMethodParameter is a Rust client parameter that's used in method bodies */
+export interface ClientMethodParameter extends ClientParameterBase {
+  kind: 'clientMethod';
 
   /** indicates if the parameter is a reference. defaults to false */
   ref: boolean;
 }
 
-/** EndpointParameter is used when constructing the endpoint's supplemental path */
-export interface EndpointParameter {
+/** ClientEndpointParameter is used when constructing the endpoint's supplemental path */
+export interface ClientEndpointParameter extends ClientParameterBase {
+  kind: 'clientEndpoint';
+
   /** the segment name to be replaced with the param's value */
   segment: string;
-
-  /** the client parameter containing the segment's value */
-  source: ClientParameter;
 }
 
 /** contains data on how to supplement a client endpoint */
@@ -100,7 +92,7 @@ export interface SupplementalEndpoint {
   path: string;
 
   /** the parameters used to replace segments in the path */
-  parameters: Array<EndpointParameter>;
+  parameters: Array<ClientEndpointParameter>;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -303,6 +295,20 @@ export interface QueryParameter extends HTTPParameterBase {
 // base types
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+interface ClientParameterBase {
+  /** the name of the parameter */
+  name: string;
+
+  /** the type of the client parameter */
+  type: types.Type;
+
+  /**
+   * indicates if the parameter is optional.
+   * optional params will be surfaced in the client options type.
+   */
+  optional: boolean;
+}
+
 /** base type for HTTP-based methods */
 interface HTTPMethodBase extends method.Method<types.Type> {
   /** the params passed to the method (excluding self). can be empty */
@@ -328,6 +334,14 @@ interface HTTPParameterBase extends method.Parameter {
 
   /** optional params go in the method's MethodOptions type */
   optional: boolean;
+}
+
+class ClientParameterBase implements ClientParameterBase {
+  constructor(name: string, type: types.Type, optional: boolean) {
+    this.name = name;
+    this.type = type;
+    this.optional = optional;
+  }
 }
 
 class HTTPMethodBase extends method.Method<types.Type> implements HTTPMethodBase {
@@ -399,11 +413,10 @@ export class ClientOptions extends types.Option implements ClientOptions {
   }
 }
 
-export class ClientParameter implements ClientParameter {
+export class ClientMethodParameter extends ClientParameterBase implements ClientMethodParameter {
   constructor(name: string, type: types.Type, optional: boolean, ref?: boolean) {
-    this.name = name;
-    this.type = type;
-    this.optional = optional;
+    super(name, type, optional);
+    this.kind = 'clientMethod';
     this.ref = ref ? ref : false;
   }
 }
@@ -415,10 +428,11 @@ export class Constructor implements Constructor {
   }
 }
 
-export class EndpointParameter implements EndpointParameter{
-  constructor(segment: string, source: ClientParameter) {
+export class ClientEndpointParameter extends ClientParameterBase implements ClientEndpointParameter{
+  constructor(name: string, type: types.Type, optional: boolean, segment: string) {
+    super(name, type, optional);
+    this.kind = 'clientEndpoint';
     this.segment = segment;
-    this.source = source;
   }
 }
 
@@ -521,7 +535,7 @@ export class QueryParameter extends HTTPParameterBase implements QueryParameter 
 export class SupplementalEndpoint implements SupplementalEndpoint{
   constructor(path: string) {
     this.path = path;
-    this.parameters = new Array<EndpointParameter>();
+    this.parameters = new Array<ClientEndpointParameter>();
   }
 }
 

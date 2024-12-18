@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
+import { values } from '@azure-tools/linq';
 import * as helpers from './helpers.js';
 import queryString from 'query-string';
 import { Use } from './use.js';
@@ -95,7 +96,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
           const supplementalEndpoint = client.constructable.endpoint;
           body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
           for (const param of supplementalEndpoint.parameters) {
-            body += `${indent.get()}host = host.replace("{${param.segment}}", ${param.source.optional ? '&options.' : ''}${param.source.name});\n`;
+            body += `${indent.get()}host = host.replace("{${param.segment}}", &${getClientEndpointParamValue(param)});\n`;
           }
           body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
         }
@@ -110,8 +111,12 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         indent.push();
 
         // propagate the required client params to the initializer
-        // NOTE: we do this on a sorted copy of the client params as we must preserve their order
-        const sortedParams = [...constructor.parameters].sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); });
+        // NOTE: we do this on a sorted copy of the client params as we must preserve their order.
+        // exclude endpoint params as they aren't propagated to clients (they're consumed when creating the complete endpoint)
+        const sortedParams = values([...constructor.parameters]
+          .sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); }))
+          .where((each) => each.kind !== 'clientEndpoint').toArray();
+
         for (const param of sortedParams) {
           if (param.optional) {
             continue;
@@ -297,7 +302,11 @@ function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: r
     }
 
     use.addForType(param.type);
-    paramsSig.push(`${param.name}: ${param.ref ? '&' : ''}${helpers.getTypeDeclaration(param.type)}`);
+    let ref = '';
+    if (param.kind === 'clientMethod' && param.ref) {
+      ref = '&';
+    }
+    paramsSig.push(`${param.name}: ${ref}${helpers.getTypeDeclaration(param.type)}`);
   }
   paramsSig.push(`options: ${helpers.getTypeDeclaration(options)}`);
   return paramsSig.join(', ');
@@ -783,6 +792,30 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 }
 
 /**
+ * contains the code to use when populating a client endpoint parameter value
+ * from a parameter of that type.
+ * @param param the param for which to get the value
+ * @returns the code to use for the param's value
+ */
+function getClientEndpointParamValue(param: rust.ClientEndpointParameter): string {
+  let paramName = param.name;
+  if (param.optional) {
+    paramName = 'options.' + paramName;
+  }
+
+  switch (param.type.kind) {
+    case 'String':
+      return paramName;
+    case 'enum':
+    case 'offsetDateTime':
+    case 'scalar':
+      return `${paramName}.to_string()`;
+    default:
+      throw new Error(`unhandled ${param.kind} param type kind ${param.type.kind}`);
+  }
+}
+
+/**
  * contains the code to use when populating a header/path/query value
  * from a parameter of that type.
  * 
@@ -794,7 +827,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
  * @param use the use statement builder currently in scope
  * @param param the param for which to get the value
  * @param fromSelf applicable for client params. when true, the prefix "self." is included
- * @returns 
+ * @returns the code to use for the param's value
  */
 function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.PathParameter | QueryParamType, fromSelf: boolean): string {
   let paramName = param.name;
