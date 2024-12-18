@@ -443,49 +443,50 @@ export class Adapter {
 
       let authType = AuthTypes.Default;
 
+      /**
+       * processes a credendial, potentially adding its supporting client constructor
+       * 
+       * @param cred the credential type to process
+       * @param constructable the constructable for the current Rust client
+       * @param throwOnDefault when true, throws an error on unsupported credential types
+       * @returns the AuthTypes enum for the credential that was handled, or AuthTypes.Default if none were
+       */
+      const processCredential = (cred: http.HttpAuth, constructable: rust.ClientConstruction, throwOnDefault: boolean): AuthTypes => {
+        switch (cred.type) {
+          case 'noAuth':
+            return AuthTypes.NoAuth;
+          case 'oauth2': {
+            constructable.constructors.push(this.createTokenCredentialCtor(cred));
+            return AuthTypes.WithAut;
+          }
+          default:
+            if (throwOnDefault) {
+              throw new Error(`credential scheme type ${cred.type} NYI`);
+            }
+            return AuthTypes.Default;
+        }
+      };
+
       const ctorParams = new Array<rust.ClientParameter>();
       for (const param of client.initialization.properties) {
         switch (param.kind) {
           case 'credential':
             switch (param.type.kind) {
               case 'credential':
-                switch (param.type.scheme.type) {
-                  case 'noAuth':
-                    authType |= AuthTypes.NoAuth;
-                    break;
-                  case 'oauth2': {
-                    authType |= AuthTypes.WithAut;
-                    rustClient.constructable.constructors.push(this.createTokenCredentialCtor(param.type.scheme));
-                    break;
-                  }
-                  default:
-                    // TODO: https://github.com/Azure/typespec-rust/issues/57
-                    throw new Error(`credential scheme type ${param.type.scheme.type} NYI`);
-                }
+                authType |= processCredential(param.type.scheme, rustClient.constructable, true);
                 break;
               case 'union': {
-                // if OAuth2 is specified then emit that and skip any unsupported ones.
-                // this prevents emitting the with_no_credential constructor in cases
-                // where it might not actually be supported.
-                let hasOAuth2Cred = false;
                 const variantKinds = new Array<string>();
                 for (const variantType of param.type.variantTypes) {
                   variantKinds.push(variantType.scheme.type);
-                  switch (variantType.scheme.type) {
-                    case 'noAuth':
-                      authType |= AuthTypes.NoAuth;
-                      break;
-                    case 'oauth2': {
-                      hasOAuth2Cred = true;
-                      authType |= AuthTypes.WithAut;
-                      rustClient.constructable.constructors.push(this.createTokenCredentialCtor(variantType.scheme));
-                      break;
-                    }
-                  }
-                  // TODO: https://github.com/Azure/typespec-rust/issues/57
+                  // if OAuth2 is specified then emit that and skip any unsupported ones.
+                  // this prevents emitting the with_no_credential constructor in cases
+                  // where it might not actually be supported.
+                  authType |= processCredential(variantType.scheme, rustClient.constructable, false);
                 }
 
-                if (!hasOAuth2Cred) {
+                // no supported credential types were specified
+                if (authType === AuthTypes.Default) {
                   throw new Error(`credential scheme types ${variantKinds.join()} NYI`);
                 }
                 continue;
