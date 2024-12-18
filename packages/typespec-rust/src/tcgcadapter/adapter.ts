@@ -826,6 +826,7 @@ export class Adapter {
         break;
       }
       case 'cookie':
+        // TODO: https://github.com/Azure/typespec-rust/issues/192
         throw new Error('cookie parameters are not supported');
       case 'header':
         if (param.collectionFormat) {
