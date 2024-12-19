@@ -1,6 +1,6 @@
 # Release History
 
-## 0.4.1 (Unreleased)
+## 0.4.1 (2024-12-19)
 
 ### Bugs Fixed
 
