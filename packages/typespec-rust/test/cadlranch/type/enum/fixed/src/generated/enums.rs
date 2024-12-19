@@ -28,7 +28,7 @@ impl TryFrom<DaysOfWeekEnum> for RequestContent<DaysOfWeekEnum> {
 impl TryFrom<Response<DaysOfWeekEnum>> for DaysOfWeekEnum {
     type Error = azure_core::Error;
     fn try_from(value: Response<DaysOfWeekEnum>) -> Result<Self> {
-        let f = || value.into_body().json::<DaysOfWeekEnum>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }

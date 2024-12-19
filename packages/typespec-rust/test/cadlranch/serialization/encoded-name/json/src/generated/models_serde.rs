@@ -18,7 +18,7 @@ impl TryFrom<JsonEncodedNameModel> for RequestContent<JsonEncodedNameModel> {
 impl TryFrom<Response<JsonEncodedNameModel>> for JsonEncodedNameModel {
     type Error = azure_core::Error;
     fn try_from(value: Response<JsonEncodedNameModel>) -> Result<Self> {
-        let f = || value.into_body().json::<JsonEncodedNameModel>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }

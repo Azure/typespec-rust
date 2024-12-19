@@ -1,5 +1,11 @@
 # Release History
 
+## 0.5.0 (2024-12-19)
+
+### Breaking Changes
+
+* Updated serde helpers to use renamed methods from core. This requires core versions from commit 65917ad or later.
+
 ## 0.4.1 (2024-12-19)
 
 ### Bugs Fixed

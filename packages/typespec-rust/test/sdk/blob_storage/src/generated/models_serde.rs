@@ -21,7 +21,7 @@ impl TryFrom<BlobTags> for RequestContent<BlobTags> {
 impl TryFrom<Response<BlobTags>> for BlobTags {
     type Error = azure_core::Error;
     fn try_from(value: Response<BlobTags>) -> Result<Self> {
-        let f = || value.into_body().xml::<BlobTags>();
+        let f = || value.into_xml_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -37,7 +37,7 @@ impl TryFrom<BlockLookupList> for RequestContent<BlockLookupList> {
 impl TryFrom<Response<BlockLookupList>> for BlockLookupList {
     type Error = azure_core::Error;
     fn try_from(value: Response<BlockLookupList>) -> Result<Self> {
-        let f = || value.into_body().xml::<BlockLookupList>();
+        let f = || value.into_xml_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -46,7 +46,7 @@ impl TryFrom<Response<BlockLookupList>> for BlockLookupList {
 impl TryFrom<Response<FilterBlobSegment>> for FilterBlobSegment {
     type Error = azure_core::Error;
     fn try_from(value: Response<FilterBlobSegment>) -> Result<Self> {
-        let f = || value.into_body().xml::<FilterBlobSegment>();
+        let f = || value.into_xml_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -62,7 +62,7 @@ impl TryFrom<QueryRequest> for RequestContent<QueryRequest> {
 impl TryFrom<Response<StorageServiceProperties>> for StorageServiceProperties {
     type Error = azure_core::Error;
     fn try_from(value: Response<StorageServiceProperties>) -> Result<Self> {
-        let f = || value.into_body().xml::<StorageServiceProperties>();
+        let f = || value.into_xml_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -71,7 +71,7 @@ impl TryFrom<Response<StorageServiceProperties>> for StorageServiceProperties {
 impl TryFrom<Response<StorageServiceStats>> for StorageServiceStats {
     type Error = azure_core::Error;
     fn try_from(value: Response<StorageServiceStats>) -> Result<Self> {
-        let f = || value.into_body().xml::<StorageServiceStats>();
+        let f = || value.into_xml_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -80,7 +80,7 @@ impl TryFrom<Response<StorageServiceStats>> for StorageServiceStats {
 impl TryFrom<Response<UserDelegationKey>> for UserDelegationKey {
     type Error = azure_core::Error;
     fn try_from(value: Response<UserDelegationKey>) -> Result<Self> {
-        let f = || value.into_body().xml::<UserDelegationKey>();
+        let f = || value.into_xml_body();
         let r = block_on(f())?;
         Ok(r)
     }

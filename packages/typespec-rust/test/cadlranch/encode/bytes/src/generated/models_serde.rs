@@ -20,7 +20,7 @@ impl TryFrom<Base64BytesProperty> for RequestContent<Base64BytesProperty> {
 impl TryFrom<Response<Base64BytesProperty>> for Base64BytesProperty {
     type Error = azure_core::Error;
     fn try_from(value: Response<Base64BytesProperty>) -> Result<Self> {
-        let f = || value.into_body().json::<Base64BytesProperty>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -36,7 +36,7 @@ impl TryFrom<Base64urlArrayBytesProperty> for RequestContent<Base64urlArrayBytes
 impl TryFrom<Response<Base64urlArrayBytesProperty>> for Base64urlArrayBytesProperty {
     type Error = azure_core::Error;
     fn try_from(value: Response<Base64urlArrayBytesProperty>) -> Result<Self> {
-        let f = || value.into_body().json::<Base64urlArrayBytesProperty>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -52,7 +52,7 @@ impl TryFrom<Base64urlBytesProperty> for RequestContent<Base64urlBytesProperty> 
 impl TryFrom<Response<Base64urlBytesProperty>> for Base64urlBytesProperty {
     type Error = azure_core::Error;
     fn try_from(value: Response<Base64urlBytesProperty>) -> Result<Self> {
-        let f = || value.into_body().json::<Base64urlBytesProperty>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -68,7 +68,7 @@ impl TryFrom<DefaultBytesProperty> for RequestContent<DefaultBytesProperty> {
 impl TryFrom<Response<DefaultBytesProperty>> for DefaultBytesProperty {
     type Error = azure_core::Error;
     fn try_from(value: Response<DefaultBytesProperty>) -> Result<Self> {
-        let f = || value.into_body().json::<DefaultBytesProperty>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }

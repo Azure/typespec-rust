@@ -11,7 +11,7 @@ use typespec_client_core::json::to_json;
 impl TryFrom<Response<PagedUser>> for PagedUser {
     type Error = azure_core::Error;
     fn try_from(value: Response<PagedUser>) -> Result<Self> {
-        let f = || value.into_body().json::<PagedUser>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -27,7 +27,7 @@ impl TryFrom<User> for RequestContent<User> {
 impl TryFrom<Response<User>> for User {
     type Error = azure_core::Error;
     fn try_from(value: Response<User>) -> Result<Self> {
-        let f = || value.into_body().json::<User>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -36,7 +36,7 @@ impl TryFrom<Response<User>> for User {
 impl TryFrom<Response<UserList>> for UserList {
     type Error = azure_core::Error;
     fn try_from(value: Response<UserList>) -> Result<Self> {
-        let f = || value.into_body().json::<UserList>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }

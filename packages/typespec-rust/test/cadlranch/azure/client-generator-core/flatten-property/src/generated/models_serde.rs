@@ -18,7 +18,7 @@ impl TryFrom<FlattenModel> for RequestContent<FlattenModel> {
 impl TryFrom<Response<FlattenModel>> for FlattenModel {
     type Error = azure_core::Error;
     fn try_from(value: Response<FlattenModel>) -> Result<Self> {
-        let f = || value.into_body().json::<FlattenModel>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -34,7 +34,7 @@ impl TryFrom<NestedFlattenModel> for RequestContent<NestedFlattenModel> {
 impl TryFrom<Response<NestedFlattenModel>> for NestedFlattenModel {
     type Error = azure_core::Error;
     fn try_from(value: Response<NestedFlattenModel>) -> Result<Self> {
-        let f = || value.into_body().json::<NestedFlattenModel>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }

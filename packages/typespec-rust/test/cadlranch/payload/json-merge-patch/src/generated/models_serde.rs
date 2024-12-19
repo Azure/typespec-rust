@@ -18,7 +18,7 @@ impl TryFrom<Resource> for RequestContent<Resource> {
 impl TryFrom<Response<Resource>> for Resource {
     type Error = azure_core::Error;
     fn try_from(value: Response<Resource>) -> Result<Self> {
-        let f = || value.into_body().json::<Resource>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }

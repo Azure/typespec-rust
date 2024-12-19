@@ -18,7 +18,7 @@ impl TryFrom<ActionRequest> for RequestContent<ActionRequest> {
 impl TryFrom<Response<ActionResponse>> for ActionResponse {
     type Error = azure_core::Error;
     fn try_from(value: Response<ActionResponse>) -> Result<Self> {
-        let f = || value.into_body().json::<ActionResponse>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }

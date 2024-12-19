@@ -25,7 +25,7 @@ impl TryFrom<EmptyInputOutput> for RequestContent<EmptyInputOutput> {
 impl TryFrom<Response<EmptyInputOutput>> for EmptyInputOutput {
     type Error = azure_core::Error;
     fn try_from(value: Response<EmptyInputOutput>) -> Result<Self> {
-        let f = || value.into_body().json::<EmptyInputOutput>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -34,7 +34,7 @@ impl TryFrom<Response<EmptyInputOutput>> for EmptyInputOutput {
 impl TryFrom<Response<EmptyOutput>> for EmptyOutput {
     type Error = azure_core::Error;
     fn try_from(value: Response<EmptyOutput>) -> Result<Self> {
-        let f = || value.into_body().json::<EmptyOutput>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }

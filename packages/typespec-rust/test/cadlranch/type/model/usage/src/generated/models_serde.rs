@@ -18,7 +18,7 @@ impl TryFrom<InputOutputRecord> for RequestContent<InputOutputRecord> {
 impl TryFrom<Response<InputOutputRecord>> for InputOutputRecord {
     type Error = azure_core::Error;
     fn try_from(value: Response<InputOutputRecord>) -> Result<Self> {
-        let f = || value.into_body().json::<InputOutputRecord>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }
@@ -34,7 +34,7 @@ impl TryFrom<InputRecord> for RequestContent<InputRecord> {
 impl TryFrom<Response<OutputRecord>> for OutputRecord {
     type Error = azure_core::Error;
     fn try_from(value: Response<OutputRecord>) -> Result<Self> {
-        let f = || value.into_body().json::<OutputRecord>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }

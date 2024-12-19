@@ -10,7 +10,7 @@ use azure_core::{Response, Result};
 impl TryFrom<Response<PagedUser>> for PagedUser {
     type Error = azure_core::Error;
     fn try_from(value: Response<PagedUser>) -> Result<Self> {
-        let f = || value.into_body().json::<PagedUser>();
+        let f = || value.into_json_body();
         let r = block_on(f())?;
         Ok(r)
     }

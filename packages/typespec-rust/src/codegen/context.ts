@@ -131,7 +131,7 @@ export class Context {
     let content = `impl TryFrom<Response<${helpers.getTypeDeclaration(type)}>> for ${helpers.getTypeDeclaration(type)} {\n`;
     content += `${indent.get()}type Error = azure_core::Error;\n`;
     content += `${indent.get()}fn try_from(value: Response<${helpers.getTypeDeclaration(type)}>) -> Result<Self> {\n`;
-    content += `${indent.push().get()}let f = || value.into_body().${format}::<${helpers.getTypeDeclaration(type)}>();\n`;
+    content += `${indent.push().get()}let f = || value.into_${format}_body();\n`;
     content += `${indent.get()}let r = block_on(f())?;\n`;
     content += `${indent.get()}Ok(r)\n`;
     content += `${indent.pop().get()}}\n`;
