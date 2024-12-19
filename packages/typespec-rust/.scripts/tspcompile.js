@@ -13,76 +13,76 @@ const tspRoot = pkgRoot + 'node_modules/@azure-tools/cadl-ranch-specs/http/';
 const compiler = pkgRoot + 'node_modules/@typespec/compiler/cmd/tsp.js';
 
 // the format is as follows
-// 'crateName': [ 'input', 'additional arg 1', 'additional arg N...' ]
+// 'crateName': { input: 'input dir', output: 'optional output dir', args: [optional args] }
 // if no .tsp file is specified in input, it's assumed to be main.tsp
 const cadlRanch = {
-  //'cadl_apikey': ['authentication/api-key'],
-  //'cadl_custom': ['authentication/http/custom'],
-  'cadl_oauth2': ['authentication/oauth2', 'overwrite-cargo-toml=false'],
-  'cadl_unionauth': ['authentication/union', 'overwrite-cargo-toml=false'],
-  //'cadl_access': ['azure/client-generator-core/access'],
-  'cadl_flattenproperty': ['azure/client-generator-core/flatten-property'],
-  //'cadl_coreusage': ['azure/client-generator-core/usage'],
-  'cadl_basic': ['azure/core/basic'],
-  //'cadl_lrorpc': ['azure/core/lro/rpc'],
-  //'cadl_lrolegacy': ['azure/core/lro/rpc-legacy'],
-  //'cadl_lrostd': ['azure/core/lro/standard'],
-  //'cadl_coremodel': ['azure/core/model'],
-  //'cadl_corepage': ['azure/core/page'],
-  //'cadl_corescalar': ['azure/core/scalar'],
-  //'cadl_traits': ['azure/core/traits'],
-  'cadl_azurebasic': ['azure/example/basic'],
-  //'cadl_armcommon': ['azure/resource-manager/common-properties'],
-  //'cadl_armresources': ['azure/resource-manager/resources'],
-  //'cadl_naming': ['client/naming'],
-  'cadl_clientopgroup': ['client/structure/client-operation-group/client.tsp'],
-  'cadl_default': ['client/structure/default/client.tsp'],
-  'cadl_multiclient': ['client/structure/multi-client/client.tsp'],
-  'cadl_renamedop': ['client/structure/renamed-operation/client.tsp'],
-  'cadl_twoop': ['client/structure/two-operation-group/client.tsp'],
-  'cadl_bytes': ['encode/bytes'], // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
-  //'cadl_datetime': ['encode/datetime'],
-  //'cadl_duration': ['encode/duration'],
-  //'cadl_bodyoptional': ['parameters/body-optionality'],
-  'cadl_basicparams': ['parameters/basic'],
-  'cadl_collectionfmt': ['parameters/collection-format'],
-  'cadl_spread': ['parameters/spread'],
-  'cadl_contentneg': ['payload/content-negotiation'],
-  'cadl_jmergepatch': ['payload/json-merge-patch'],
-  //'cadl_mediatype': ['payload/media-type'],
-  //'cadl_multipart': ['payload/multipart'],
-  'cadl_pageable': ['payload/pageable'],
-  'cadl_xml': ['payload/xml'],
-  //'cadl_srvdrivenold': ['resiliency/srv-driven/old.tsp'],
-  //'cadl_srvdrivennew': ['resiliency/srv-driven'],
-  //'cadl_routes': ['routes'],
-  'cadl_jsonencodedname': ['serialization/encoded-name/json'],
-  'cadl_noendpoint': ['server/endpoint/not-defined'],
-  'cadl_multiple': ['server/path/multiple'],
-  'cadl_single': ['server/path/single'],
-  'cadl_unversioned': ['server/versions/not-versioned'],
-  'cadl_versioned': ['server/versions/versioned'],
-  //'cadl_clientreqid': ['special-headers/client-request-id'],
-  //'cadl_condreq': ['special-headers/conditional-request'],
-  //'cadl_repeatability': ['special-headers/repeatability'],
-  'cadl_specialwords': ['special-words'],
-  'cadl_array': ['type/array'],           // needs additional codegen work before we can add tests
-  'cadl_dictionary': ['type/dictionary'], // needs additional codegen work before we can add tests
-  'cadl_extensible': ['type/enum/extensible'],
-  'cadl_fixed': ['type/enum/fixed'],
-  'cadl_empty': ['type/model/empty'],
-  //'cadl_enumdisc': ['type/model/inheritance/enum-discriminator'],
-  //'cadl_nodisc': ['type/model/inheritance/not-discriminated'],
-  //'cadl_recursive': ['type/model/inheritance/recursive'],
-  //'cadl_singledisc': ['type/model/inheritance/single-discriminator'],
-  'cadl_usage': ['type/model/usage'],
-  //'cadl_visibility': ['type/model/visibility'],
-  //'cadl_addlprops': ['type/property/additional-properties'],
-  //'cadl_nullable': ['type/property/nullable'],
-  //'cadl_optionality': ['type/property/optionality'],
-  //'cadl_valuetypes': ['type/property/value-types'],
-  //'cadl_scalar': ['type/scalar'],
-  //'cadl_union': ['type/union'],
+  //'cadl_apikey': {input: 'authentication/api-key'},
+  //'cadl_custom': {input: 'authentication/http/custom'},
+  'cadl_oauth2': {input: 'authentication/oauth2', args: ['overwrite-cargo-toml=false']},
+  'cadl_unionauth': {input: 'authentication/union', args: ['overwrite-cargo-toml=false']},
+  //'cadl_access': {input: 'azure/client-generator-core/access'},
+  'cadl_flattenproperty': {input: 'azure/client-generator-core/flatten-property'},
+  //'cadl_coreusage': {input: 'azure/client-generator-core/usage'},
+  'cadl_basic': {input: 'azure/core/basic'},
+  //'cadl_lrorpc': {input: 'azure/core/lro/rpc'},
+  //'cadl_lrolegacy': {input: 'azure/core/lro/rpc-legacy'},
+  //'cadl_lrostd': {input: 'azure/core/lro/standard'},
+  //'cadl_coremodel': {input: 'azure/core/model'},
+  //'cadl_corepage': {input: 'azure/core/page'},
+  //'cadl_corescalar': {input: 'azure/core/scalar'},
+  //'cadl_traits': {input: 'azure/core/traits'},
+  'cadl_azurebasic': {input: 'azure/example/basic'},
+  //'cadl_armcommon': {input: 'azure/resource-manager/common-properties'},
+  //'cadl_armresources': {input: 'azure/resource-manager/resources'},
+  //'cadl_naming': {input: 'client/naming'},
+  'cadl_clientopgroup': {input: 'client/structure/client-operation-group/client.tsp'},
+  'cadl_default': {input: 'client/structure/default/client.tsp'},
+  'cadl_multiclient': {input: 'client/structure/multi-client/client.tsp'},
+  'cadl_renamedop': {input: 'client/structure/renamed-operation/client.tsp'},
+  'cadl_twoop': {input: 'client/structure/two-operation-group/client.tsp'},
+  'cadl_bytes': {input: 'encode/bytes'}, // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
+  //'cadl_datetime': {input: 'encode/datetime'},
+  //'cadl_duration': {input: 'encode/duration'},
+  //'cadl_bodyoptional': {input: 'parameters/body-optionality'},
+  'cadl_basicparams': {input: 'parameters/basic'},
+  'cadl_collectionfmt': {input: 'parameters/collection-format'},
+  'cadl_spread': {input: 'parameters/spread'},
+  'cadl_contentneg': {input: 'payload/content-negotiation'},
+  'cadl_jmergepatch': {input: 'payload/json-merge-patch'},
+  //'cadl_mediatype': {input: 'payload/media-type'},
+  //'cadl_multipart': {input: 'payload/multipart'},
+  'cadl_pageable': {input: 'payload/pageable'},
+  'cadl_xml': {input: 'payload/xml'},
+  'cadl_srvdrivenold': {input: 'resiliency/srv-driven/old.tsp', output: 'resiliency/srv-driven/old'},
+  'cadl_srvdrivennew': {input: 'resiliency/srv-driven', output: 'resiliency/srv-driven/new'},
+  //'cadl_routes': {input: 'routes'},
+  'cadl_jsonencodedname': {input: 'serialization/encoded-name/json'},
+  'cadl_noendpoint': {input: 'server/endpoint/not-defined'},
+  'cadl_multiple': {input: 'server/path/multiple'},
+  'cadl_single': {input: 'server/path/single'},
+  'cadl_unversioned': {input: 'server/versions/not-versioned'},
+  'cadl_versioned': {input: 'server/versions/versioned'},
+  //'cadl_clientreqid': {input: 'special-headers/client-request-id'},
+  //'cadl_condreq': {input: 'special-headers/conditional-request'},
+  //'cadl_repeatability': {input: 'special-headers/repeatability'},
+  'cadl_specialwords': {input: 'special-words'},
+  'cadl_array': {input: 'type/array'},           // needs additional codegen work before we can add tests
+  'cadl_dictionary': {input: 'type/dictionary'}, // needs additional codegen work before we can add tests
+  'cadl_extensible': {input: 'type/enum/extensible'},
+  'cadl_fixed': {input: 'type/enum/fixed'},
+  'cadl_empty': {input: 'type/model/empty'},
+  //'cadl_enumdisc': {input: 'type/model/inheritance/enum-discriminator'},
+  //'cadl_nodisc': {input: 'type/model/inheritance/not-discriminated'},
+  //'cadl_recursive': {input: 'type/model/inheritance/recursive'},
+  //'cadl_singledisc': {input: 'type/model/inheritance/single-discriminator'},
+  'cadl_usage': {input: 'type/model/usage'},
+  //'cadl_visibility': {input: 'type/model/visibility'},
+  //'cadl_addlprops': {input: 'type/property/additional-properties'},
+  //'cadl_nullable': {input: 'type/property/nullable'},
+  //'cadl_optionality': {input: 'type/property/optionality'},
+  //'cadl_valuetypes': {input: 'type/property/value-types'},
+  //'cadl_scalar': {input: 'type/scalar'},
+  //'cadl_union': {input: 'type/union'},
 };
 
 const args = process.argv.slice(2);
@@ -122,18 +122,23 @@ const blob_storage = pkgRoot + 'test/tsp/Microsoft.BlobStorage/client.tsp';
 generate('blob_storage', blob_storage, 'test/sdk/blob_storage');
 
 for (const crate in cadlRanch) {
-  const values = cadlRanch[crate];
+  const crateSettings = cadlRanch[crate];
   let additionalArgs;
-  if (values.length > 1) {
-    additionalArgs = values.slice(1);
+  if (crateSettings.args) {
+    additionalArgs = crateSettings.args;
   }
-  // make the output directory structure the same as the cadl input directory.
-  // if the input specifies a .tsp file, remove that first.
-  let outDir = values[0];
-  if (outDir.lastIndexOf('.tsp') > -1) {
-    outDir = outDir.substring(0, outDir.lastIndexOf('/'));
+  let outDir;
+  if (crateSettings.output) {
+    outDir = crateSettings.output;
+  } else {
+    // make the output directory structure the same as the cadl input directory.
+    // if the input specifies a .tsp file, remove that first.
+    outDir = crateSettings.input;
+    if (outDir.lastIndexOf('.tsp') > -1) {
+      outDir = outDir.substring(0, outDir.lastIndexOf('/'));
+    }
   }
-  generate(crate, tspRoot + values[0], `test/cadlranch/${outDir}`, additionalArgs);
+  generate(crate, tspRoot + crateSettings.input, `test/cadlranch/${outDir}`, additionalArgs);
 }
 
 function generate(crate, input, outputDir, additionalArgs) {
