@@ -28,6 +28,9 @@ export function fixUpEnumValueName(name: string): string {
     name = name.replace(wordDotNumMatch[0], wordDotNumMatch[0].replace('.', ''));
   }
 
+  // remove any commas (e.g. value name Foo,Bar becomes FooBar)
+  name = name.replace(',', '');
+
   // if we have a name like V2022_12_01_preview, we want to
   // turn this into V2022_12_01Preview to make the linter happy
   const parts = name.split('_');
