@@ -32,7 +32,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientFilterBlobsOptions<'_>>,
     ) -> Result<Response<FilterBlobSegment>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("")?;
         url.query_pairs_mut().append_pair("comp", "blobs");
@@ -67,7 +67,7 @@ impl BlobServiceClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Returns the sku name and account kind.
@@ -77,7 +77,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("")?;
         url.query_pairs_mut()
@@ -94,7 +94,7 @@ impl BlobServiceClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Retrieves properties of a storage account's Blob service, including properties for Storage Analytics and CORS (Cross-Origin
@@ -105,7 +105,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<StorageServiceProperties>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("")?;
         url.query_pairs_mut()
@@ -122,7 +122,7 @@ impl BlobServiceClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Retrieves statistics related to replication for the Blob service. It is only available on the secondary location endpoint
@@ -133,7 +133,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientGetStatisticsOptions<'_>>,
     ) -> Result<Response<StorageServiceStats>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("")?;
         url.query_pairs_mut()
@@ -150,7 +150,7 @@ impl BlobServiceClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Retrieves a user delegation key for the Blob service. This is only a valid operation when using bearer token authentication.
@@ -162,7 +162,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientGetUserDelegationKeyOptions<'_>>,
     ) -> Result<Response<UserDelegationKey>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("")?;
         url.query_pairs_mut()
@@ -182,7 +182,7 @@ impl BlobServiceClient {
         let body: RequestContent<GetUserDelegationKeyRequest> =
             GetUserDelegationKeyRequest { start, expiry }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Sets properties for a storage account's Blob service endpoint, including properties for Storage Analytics and CORS (Cross-Origin
@@ -193,7 +193,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientSetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("")?;
         url.query_pairs_mut()
@@ -221,7 +221,7 @@ impl BlobServiceClient {
         }
         .try_into()?;
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Batch operation allows multiple API calls to be embedded into a single HTTP request.
@@ -233,7 +233,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientSubmitBatchOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("")?;
         url.query_pairs_mut().append_pair("comp", "batch");
@@ -250,7 +250,7 @@ impl BlobServiceClient {
         }
         request.insert_header("x-ms-version", version);
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

@@ -27,14 +27,14 @@ impl BytesPropertyClient {
         options: Option<BytesPropertyClientBase64Options<'_>>,
     ) -> Result<Response<Base64BytesProperty>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/property/base64")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn base64_url(
@@ -43,14 +43,14 @@ impl BytesPropertyClient {
         options: Option<BytesPropertyClientBase64UrlOptions<'_>>,
     ) -> Result<Response<Base64urlBytesProperty>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/property/base64url")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn base64_url_array(
@@ -59,14 +59,14 @@ impl BytesPropertyClient {
         options: Option<BytesPropertyClientBase64UrlArrayOptions<'_>>,
     ) -> Result<Response<Base64urlArrayBytesProperty>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/property/base64url-array")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn default(
@@ -75,14 +75,14 @@ impl BytesPropertyClient {
         options: Option<BytesPropertyClientDefaultOptions<'_>>,
     ) -> Result<Response<DefaultBytesProperty>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/property/default")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

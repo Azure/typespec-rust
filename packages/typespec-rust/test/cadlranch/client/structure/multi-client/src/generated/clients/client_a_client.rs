@@ -13,7 +13,7 @@ pub struct ClientAClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct ClientAClientOptions {
     pub client_options: ClientOptions,
 }
@@ -28,7 +28,7 @@ impl ClientAClient {
         let mut endpoint = Url::parse(endpoint)?;
         endpoint.set_query(None);
         let mut host = String::from("client/structure/{client}/");
-        host = host.replace("{client}", &client.to_string());
+        host = host.replace("{client}", client.as_ref());
         endpoint = endpoint.join(&host)?;
         Ok(Self {
             endpoint,
@@ -52,11 +52,11 @@ impl ClientAClient {
         options: Option<ClientAClientRenamedFiveOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("five")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn renamed_one(
@@ -64,11 +64,11 @@ impl ClientAClient {
         options: Option<ClientAClientRenamedOneOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("one")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn renamed_three(
@@ -76,19 +76,11 @@ impl ClientAClient {
         options: Option<ClientAClientRenamedThreeOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("three")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&mut ctx, &mut request).await
-    }
-}
-
-impl Default for ClientAClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
-        }
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

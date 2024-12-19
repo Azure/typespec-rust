@@ -14,7 +14,7 @@ pub struct SpecialWordsClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct SpecialWordsClientOptions {
     pub client_options: ClientOptions,
 }
@@ -73,14 +73,6 @@ impl SpecialWordsClient {
         SpecialWordsParametersClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for SpecialWordsClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

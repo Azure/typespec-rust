@@ -30,7 +30,7 @@ impl CommonPropertiesManagedIdentityClient {
         options: Option<CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions<'_>>,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/managedIdentityTrackedResources/{managedIdentityTrackedResourceName}");
         path = path.replace(
@@ -46,7 +46,7 @@ impl CommonPropertiesManagedIdentityClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(resource);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Get a ManagedIdentityTrackedResource
@@ -57,7 +57,7 @@ impl CommonPropertiesManagedIdentityClient {
         options: Option<CommonPropertiesManagedIdentityClientGetOptions<'_>>,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/managedIdentityTrackedResources/{managedIdentityTrackedResourceName}");
         path = path.replace(
@@ -71,7 +71,7 @@ impl CommonPropertiesManagedIdentityClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Update a ManagedIdentityTrackedResource
@@ -85,7 +85,7 @@ impl CommonPropertiesManagedIdentityClient {
         >,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/managedIdentityTrackedResources/{managedIdentityTrackedResourceName}");
         path = path.replace(
@@ -101,7 +101,7 @@ impl CommonPropertiesManagedIdentityClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(properties);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

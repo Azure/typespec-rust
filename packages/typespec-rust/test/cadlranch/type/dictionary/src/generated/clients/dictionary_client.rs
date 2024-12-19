@@ -21,7 +21,7 @@ pub struct DictionaryClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct DictionaryClientOptions {
     pub client_options: ClientOptions,
 }
@@ -138,14 +138,6 @@ impl DictionaryClient {
         DictionaryUnknownValueClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for DictionaryClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

@@ -24,7 +24,7 @@ pub struct ArrayClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct ArrayClientOptions {
     pub client_options: ClientOptions,
 }
@@ -160,14 +160,6 @@ impl ArrayClient {
         ArrayUnknownValueClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for ArrayClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

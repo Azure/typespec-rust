@@ -22,7 +22,7 @@ pub struct XmlClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct XmlClientOptions {
     pub client_options: ClientOptions,
 }
@@ -156,14 +156,6 @@ impl XmlClient {
         XmlSimpleModelValueClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for XmlClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

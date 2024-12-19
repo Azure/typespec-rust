@@ -24,12 +24,12 @@ impl XmlModelWithRenamedFieldsValueClient {
         options: Option<XmlModelWithRenamedFieldsValueClientGetOptions<'_>>,
     ) -> Result<Response<ModelWithRenamedFields>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("payload/xml/modelWithRenamedFields")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn put(
@@ -38,13 +38,13 @@ impl XmlModelWithRenamedFieldsValueClient {
         options: Option<XmlModelWithRenamedFieldsValueClientPutOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("payload/xml/modelWithRenamedFields")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.set_body(input);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

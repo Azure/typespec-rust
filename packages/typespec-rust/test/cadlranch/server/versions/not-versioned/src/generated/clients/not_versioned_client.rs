@@ -12,7 +12,7 @@ pub struct NotVersionedClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct NotVersionedClientOptions {
     pub client_options: ClientOptions,
 }
@@ -48,14 +48,14 @@ impl NotVersionedClient {
         options: Option<NotVersionedClientWithPathApiVersionOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path =
             String::from("server/versions/not-versioned/with-path-api-version/{apiVersion}");
         path = path.replace("{apiVersion}", &api_version);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_query_api_version(
@@ -64,13 +64,13 @@ impl NotVersionedClient {
         options: Option<NotVersionedClientWithQueryApiVersionOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("server/versions/not-versioned/with-query-api-version")?;
         url.query_pairs_mut()
             .append_pair("api-version", &api_version);
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn without_api_version(
@@ -78,19 +78,11 @@ impl NotVersionedClient {
         options: Option<NotVersionedClientWithoutApiVersionOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("server/versions/not-versioned/without-api-version")?;
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&mut ctx, &mut request).await
-    }
-}
-
-impl Default for NotVersionedClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
-        }
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

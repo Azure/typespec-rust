@@ -24,12 +24,12 @@ impl ExtensibleStringClient {
         options: Option<ExtensibleStringClientGetKnownValueOptions<'_>>,
     ) -> Result<Response<DaysOfWeekExtensibleEnum>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("type/enum/extensible/string/known-value")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn get_unknown_value(
@@ -37,12 +37,12 @@ impl ExtensibleStringClient {
         options: Option<ExtensibleStringClientGetUnknownValueOptions<'_>>,
     ) -> Result<Response<DaysOfWeekExtensibleEnum>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("type/enum/extensible/string/unknown-value")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn put_known_value(
@@ -51,13 +51,13 @@ impl ExtensibleStringClient {
         options: Option<ExtensibleStringClientPutKnownValueOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("type/enum/extensible/string/known-value")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn put_unknown_value(
@@ -66,13 +66,13 @@ impl ExtensibleStringClient {
         options: Option<ExtensibleStringClientPutUnknownValueOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("type/enum/extensible/string/unknown-value")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

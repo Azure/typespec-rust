@@ -20,7 +20,7 @@ pub struct BlobClient {
     version: String,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct BlobClientOptions {
     pub client_options: ClientOptions,
 }
@@ -116,14 +116,6 @@ impl BlobClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
             version: self.version.clone(),
-        }
-    }
-}
-
-impl Default for BlobClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

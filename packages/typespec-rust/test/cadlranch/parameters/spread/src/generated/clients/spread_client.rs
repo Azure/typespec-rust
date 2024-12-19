@@ -12,7 +12,7 @@ pub struct SpreadClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct SpreadClientOptions {
     pub client_options: ClientOptions,
 }
@@ -55,14 +55,6 @@ impl SpreadClient {
         SpreadModelClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for SpreadClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

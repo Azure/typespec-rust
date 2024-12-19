@@ -11,7 +11,7 @@ pub struct JsonClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct JsonClientOptions {
     pub client_options: ClientOptions,
 }
@@ -43,14 +43,6 @@ impl JsonClient {
         JsonPropertyClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for JsonClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

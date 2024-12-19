@@ -14,7 +14,7 @@ pub struct FlattenPropertyClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct FlattenPropertyClientOptions {
     pub client_options: ClientOptions,
 }
@@ -50,14 +50,14 @@ impl FlattenPropertyClient {
         options: Option<FlattenPropertyClientPutFlattenModelOptions<'_>>,
     ) -> Result<Response<FlattenModel>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("azure/client-generator-core/flatten-property/flattenModel")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn put_nested_flatten_model(
@@ -66,22 +66,14 @@ impl FlattenPropertyClient {
         options: Option<FlattenPropertyClientPutNestedFlattenModelOptions<'_>>,
     ) -> Result<Response<NestedFlattenModel>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("azure/client-generator-core/flatten-property/nestedFlattenModel")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        self.pipeline.send(&mut ctx, &mut request).await
-    }
-}
-
-impl Default for FlattenPropertyClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
-        }
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

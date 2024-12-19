@@ -26,14 +26,14 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadAsRequestBodyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("parameters/spread/model/request-body")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         let body: RequestContent<BodyParameter> = BodyParameter { name: Some(name) }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn spread_composite_request(
@@ -44,7 +44,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/model/composite-request/{name}");
         path = path.replace("{name}", &name);
@@ -53,7 +53,7 @@ impl SpreadModelClient {
         request.insert_header("content-type", "application/json");
         request.insert_header("test-header", test_header);
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn spread_composite_request_mix(
@@ -64,7 +64,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestMixOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/model/composite-request-mix/{name}");
         path = path.replace("{name}", &name);
@@ -75,7 +75,7 @@ impl SpreadModelClient {
         let body: RequestContent<SpreadCompositeRequestMixRequest> =
             SpreadCompositeRequestMixRequest { prop }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn spread_composite_request_only_with_body(
@@ -84,13 +84,13 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestOnlyWithBodyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("parameters/spread/model/composite-request-only-with-body")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn spread_composite_request_without_body(
@@ -100,7 +100,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestWithoutBodyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path =
             String::from("parameters/spread/model/composite-request-without-body/{name}");
@@ -108,7 +108,7 @@ impl SpreadModelClient {
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("test-header", test_header);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

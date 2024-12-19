@@ -14,7 +14,7 @@ pub struct UsageClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct UsageClientOptions {
     pub client_options: ClientOptions,
 }
@@ -47,13 +47,13 @@ impl UsageClient {
         options: Option<UsageClientInputOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("type/model/usage/input")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn input_and_output(
@@ -62,14 +62,14 @@ impl UsageClient {
         options: Option<UsageClientInputAndOutputOptions<'_>>,
     ) -> Result<Response<InputOutputRecord>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("type/model/usage/input-output")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn output(
@@ -77,20 +77,12 @@ impl UsageClient {
         options: Option<UsageClientOutputOptions<'_>>,
     ) -> Result<Response<OutputRecord>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("type/model/usage/output")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&mut ctx, &mut request).await
-    }
-}
-
-impl Default for UsageClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
-        }
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

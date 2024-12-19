@@ -11,7 +11,7 @@ pub struct ExtensibleClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct ExtensibleClientOptions {
     pub client_options: ClientOptions,
 }
@@ -46,14 +46,6 @@ impl ExtensibleClient {
         ExtensibleStringClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for ExtensibleClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

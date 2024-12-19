@@ -54,11 +54,11 @@ impl ResiliencyServiceDrivenClient {
         options: Option<ResiliencyServiceDrivenClientFromNoneOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("add-optional-param/from-none")?;
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Test that currently accepts one optional parameter, will be updated in next spec to accept a new optional parameter as
@@ -68,14 +68,14 @@ impl ResiliencyServiceDrivenClient {
         options: Option<ResiliencyServiceDrivenClientFromOneOptionalOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("add-optional-param/from-one-optional")?;
         if let Some(parameter) = options.parameter {
             url.query_pairs_mut().append_pair("parameter", &parameter);
         }
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Test that currently accepts one required parameter, will be updated in next spec to accept a new optional parameter as
@@ -86,12 +86,12 @@ impl ResiliencyServiceDrivenClient {
         options: Option<ResiliencyServiceDrivenClientFromOneRequiredOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("add-optional-param/from-one-required")?;
         url.query_pairs_mut().append_pair("parameter", &parameter);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

@@ -22,13 +22,13 @@ impl CollectionFormatQueryClient {
         options: Option<CollectionFormatQueryClientCsvOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("parameters/collection-format/query/csv")?;
         url.query_pairs_mut()
             .append_pair("colors", &colors.join(","));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn multi(
@@ -37,14 +37,14 @@ impl CollectionFormatQueryClient {
         options: Option<CollectionFormatQueryClientMultiOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("parameters/collection-format/query/multi")?;
         for c in colors.iter() {
             url.query_pairs_mut().append_pair("colors", c);
         }
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn pipes(
@@ -53,13 +53,13 @@ impl CollectionFormatQueryClient {
         options: Option<CollectionFormatQueryClientPipesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("parameters/collection-format/query/pipes")?;
         url.query_pairs_mut()
             .append_pair("colors", &colors.join("|"));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn ssv(
@@ -68,13 +68,13 @@ impl CollectionFormatQueryClient {
         options: Option<CollectionFormatQueryClientSsvOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("parameters/collection-format/query/ssv")?;
         url.query_pairs_mut()
             .append_pair("colors", &colors.join(" "));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn tsv(
@@ -83,13 +83,13 @@ impl CollectionFormatQueryClient {
         options: Option<CollectionFormatQueryClientTsvOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("parameters/collection-format/query/tsv")?;
         url.query_pairs_mut()
             .append_pair("colors", &colors.join("	"));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

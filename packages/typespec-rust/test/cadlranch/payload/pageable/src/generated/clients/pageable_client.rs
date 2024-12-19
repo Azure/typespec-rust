@@ -15,7 +15,7 @@ pub struct PageableClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PageableClientOptions {
     pub client_options: ClientOptions,
 }
@@ -57,21 +57,16 @@ impl PageableClient {
                 .append_pair("maxpagesize", &maxpagesize.to_string());
         }
         Ok(Pager::from_callback(move |next_link: Option<Url>| {
-            let url: Url;
-            match next_link {
-                Some(next_link) => {
-                    url = next_link;
-                }
-                None => {
-                    url = first_url.clone();
-                }
+            let url = match next_link {
+                Some(next_link) => next_link,
+                None => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);
             request.insert_header("accept", "application/json");
-            let mut ctx = options.method_options.context.clone();
+            let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<PagedUser> = pipeline.send(&mut ctx, &mut request).await?;
+                let rsp: Response<PagedUser> = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(bytes.clone())?;
@@ -85,14 +80,6 @@ impl PageableClient {
                 })
             }
         }))
-    }
-}
-
-impl Default for PageableClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
-        }
     }
 }
 

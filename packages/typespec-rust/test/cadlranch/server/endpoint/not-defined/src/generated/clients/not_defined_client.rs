@@ -12,7 +12,7 @@ pub struct NotDefinedClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct NotDefinedClientOptions {
     pub client_options: ClientOptions,
 }
@@ -47,19 +47,11 @@ impl NotDefinedClient {
         options: Option<NotDefinedClientValidOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("server/endpoint/not-defined/valid")?;
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&mut ctx, &mut request).await
-    }
-}
-
-impl Default for NotDefinedClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
-        }
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

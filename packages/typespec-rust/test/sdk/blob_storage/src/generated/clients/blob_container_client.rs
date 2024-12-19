@@ -33,7 +33,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientAcquireLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -63,7 +63,7 @@ impl BlobContainerClient {
             request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
@@ -75,7 +75,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientBreakLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -102,7 +102,7 @@ impl BlobContainerClient {
             request.insert_header("x-ms-lease-break-period", break_period.to_string());
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
@@ -116,7 +116,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientChangeLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -142,7 +142,7 @@ impl BlobContainerClient {
         request.insert_header("x-ms-lease-id", lease_id);
         request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Creates a new container under the specified account. If the container with the same name already exists, the operation
@@ -154,7 +154,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientCreateOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
@@ -186,7 +186,7 @@ impl BlobContainerClient {
             }
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// operation marks the specified container for deletion. The container and any blobs contained within it are later deleted
@@ -198,7 +198,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientDeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
@@ -222,7 +222,7 @@ impl BlobContainerClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Filter Blobs operation enables callers to list blobs in a container whose tags match a given search expression. Filter
@@ -234,7 +234,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientFilterBlobsOptions<'_>>,
     ) -> Result<Response<FilterBlobSegment>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -271,7 +271,7 @@ impl BlobContainerClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// gets the permissions for the specified container. The permissions indicate whether container data may be accessed publicly.
@@ -282,7 +282,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientGetAccessPolicyOptions<'_>>,
     ) -> Result<Response<Vec<SignedIdentifier>>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -302,7 +302,7 @@ impl BlobContainerClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Returns the sku name and account kind
@@ -313,7 +313,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -330,7 +330,7 @@ impl BlobContainerClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// returns all user-defined metadata and system properties for the specified container. The data returned does not include
@@ -342,7 +342,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
@@ -360,7 +360,7 @@ impl BlobContainerClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
@@ -373,7 +373,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientReleaseLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -398,7 +398,7 @@ impl BlobContainerClient {
         }
         request.insert_header("x-ms-lease-id", lease_id);
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Renames an existing container.
@@ -410,7 +410,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientRenameOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -431,7 +431,7 @@ impl BlobContainerClient {
             request.insert_header("x-ms-source-lease-id", source_lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
@@ -444,7 +444,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientRenewLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -469,7 +469,7 @@ impl BlobContainerClient {
         }
         request.insert_header("x-ms-lease-id", lease_id);
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Restores a previously-deleted container.
@@ -480,7 +480,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientRestoreOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -503,7 +503,7 @@ impl BlobContainerClient {
             request.insert_header("x-ms-deleted-container-version", deleted_container_version);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// sets the permissions for the specified container. The permissions indicate whether blobs in a container may be accessed
@@ -516,7 +516,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientSetAccessPolicyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -546,7 +546,7 @@ impl BlobContainerClient {
         }
         request.insert_header("x-ms-version", version);
         request.set_body(container_acl);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// operation sets one or more user-defined name-value pairs for the specified container.
@@ -557,7 +557,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientSetMetadataOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -585,7 +585,7 @@ impl BlobContainerClient {
             }
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Batch operation allows multiple API calls to be embedded into a single HTTP request.
@@ -598,7 +598,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientSubmitBatchOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join(&container_name)?;
         url.query_pairs_mut()
@@ -617,7 +617,7 @@ impl BlobContainerClient {
         }
         request.insert_header("x-ms-version", version);
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

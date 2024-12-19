@@ -15,7 +15,7 @@ pub struct UnionClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct UnionClientOptions {
     pub client_options: ClientOptions,
 }
@@ -56,11 +56,11 @@ impl UnionClient {
         options: Option<UnionClientValidKeyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("authentication/union/validkey")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Check whether client is authenticated
@@ -69,19 +69,11 @@ impl UnionClient {
         options: Option<UnionClientValidTokenOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("authentication/union/validtoken")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
-    }
-}
-
-impl Default for UnionClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
-        }
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

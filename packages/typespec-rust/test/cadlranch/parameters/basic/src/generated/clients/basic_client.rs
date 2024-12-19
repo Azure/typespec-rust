@@ -12,7 +12,7 @@ pub struct BasicClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct BasicClientOptions {
     pub client_options: ClientOptions,
 }
@@ -52,14 +52,6 @@ impl BasicClient {
         BasicImplicitBodyClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for BasicClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

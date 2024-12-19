@@ -13,7 +13,7 @@ pub struct TwoOperationGroupClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct TwoOperationGroupClientOptions {
     pub client_options: ClientOptions,
 }
@@ -28,7 +28,7 @@ impl TwoOperationGroupClient {
         let mut endpoint = Url::parse(endpoint)?;
         endpoint.set_query(None);
         let mut host = String::from("client/structure/{client}/");
-        host = host.replace("{client}", &client.to_string());
+        host = host.replace("{client}", client.as_ref());
         endpoint = endpoint.join(&host)?;
         Ok(Self {
             endpoint,
@@ -60,14 +60,6 @@ impl TwoOperationGroupClient {
         TwoOperationGroupGroup2Client {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for TwoOperationGroupClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

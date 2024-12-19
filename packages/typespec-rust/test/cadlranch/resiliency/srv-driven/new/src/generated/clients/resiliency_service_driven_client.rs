@@ -54,11 +54,11 @@ impl ResiliencyServiceDrivenClient {
         options: Option<ResiliencyServiceDrivenClientAddOperationOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("add-operation")?;
         let mut request = Request::new(url, Method::Delete);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Test that grew up from accepting no parameters to an optional input parameter
@@ -67,7 +67,7 @@ impl ResiliencyServiceDrivenClient {
         options: Option<ResiliencyServiceDrivenClientFromNoneOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("add-optional-param/from-none")?;
         if let Some(new_parameter) = options.new_parameter {
@@ -75,7 +75,7 @@ impl ResiliencyServiceDrivenClient {
                 .append_pair("new-parameter", &new_parameter);
         }
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Tests that we can grow up an operation from accepting one optional parameter to accepting two optional parameters.
@@ -84,7 +84,7 @@ impl ResiliencyServiceDrivenClient {
         options: Option<ResiliencyServiceDrivenClientFromOneOptionalOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("add-optional-param/from-one-optional")?;
         if let Some(new_parameter) = options.new_parameter {
@@ -95,7 +95,7 @@ impl ResiliencyServiceDrivenClient {
             url.query_pairs_mut().append_pair("parameter", &parameter);
         }
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Operation that grew up from accepting one required parameter to accepting a required parameter and an optional parameter.
@@ -105,7 +105,7 @@ impl ResiliencyServiceDrivenClient {
         options: Option<ResiliencyServiceDrivenClientFromOneRequiredOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("add-optional-param/from-one-required")?;
         if let Some(new_parameter) = options.new_parameter {
@@ -114,7 +114,7 @@ impl ResiliencyServiceDrivenClient {
         }
         url.query_pairs_mut().append_pair("parameter", &parameter);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

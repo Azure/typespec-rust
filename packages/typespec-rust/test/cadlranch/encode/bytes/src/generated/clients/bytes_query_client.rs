@@ -24,13 +24,13 @@ impl BytesQueryClient {
         options: Option<BytesQueryClientBase64Options<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/query/base64")?;
         url.query_pairs_mut()
             .append_pair("value", &base64::encode(value));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn base64_url(
@@ -39,13 +39,13 @@ impl BytesQueryClient {
         options: Option<BytesQueryClientBase64UrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/query/base64url")?;
         url.query_pairs_mut()
             .append_pair("value", &base64::encode_url_safe(value));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn base64_url_array(
@@ -54,19 +54,19 @@ impl BytesQueryClient {
         options: Option<BytesQueryClientBase64UrlArrayOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/query/base64url-array")?;
         url.query_pairs_mut().append_pair(
             "value",
             &value
                 .iter()
-                .map(|i| base64::encode_url_safe(i))
+                .map(base64::encode_url_safe)
                 .collect::<Vec<String>>()
                 .join(","),
         );
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn default(
@@ -75,13 +75,13 @@ impl BytesQueryClient {
         options: Option<BytesQueryClientDefaultOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/query/default")?;
         url.query_pairs_mut()
             .append_pair("value", &base64::encode(value));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

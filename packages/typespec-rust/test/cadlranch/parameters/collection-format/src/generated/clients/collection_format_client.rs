@@ -12,7 +12,7 @@ pub struct CollectionFormatClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct CollectionFormatClientOptions {
     pub client_options: ClientOptions,
 }
@@ -55,14 +55,6 @@ impl CollectionFormatClient {
         CollectionFormatQueryClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for CollectionFormatClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

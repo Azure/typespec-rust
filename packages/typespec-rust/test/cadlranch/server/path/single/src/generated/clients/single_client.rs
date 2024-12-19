@@ -12,7 +12,7 @@ pub struct SingleClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct SingleClientOptions {
     pub client_options: ClientOptions,
 }
@@ -47,19 +47,11 @@ impl SingleClient {
         options: Option<SingleClientMyOpOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("server/path/single/myOp")?;
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&mut ctx, &mut request).await
-    }
-}
-
-impl Default for SingleClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
-        }
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

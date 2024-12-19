@@ -15,7 +15,7 @@ pub struct BytesClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct BytesClientOptions {
     pub client_options: ClientOptions,
 }
@@ -79,14 +79,6 @@ impl BytesClient {
         BytesResponseBodyClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for BytesClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

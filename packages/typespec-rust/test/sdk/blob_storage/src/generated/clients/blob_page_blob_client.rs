@@ -37,7 +37,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientClearPagesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -114,7 +114,7 @@ impl BlobPageBlobClient {
             request.insert_header("x-ms-range", range);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Copy Incremental operation copies a snapshot of the source page blob to a destination page blob. The snapshot is copied
@@ -130,7 +130,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientCopyIncrementalOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -164,7 +164,7 @@ impl BlobPageBlobClient {
             request.insert_header("x-ms-if-tags", if_tags);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Create operation creates a new page blob.
@@ -178,7 +178,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientCreateOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -281,7 +281,7 @@ impl BlobPageBlobClient {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Resize operation increases the size of the page blob to the specified size.
@@ -294,7 +294,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientResizeOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -348,7 +348,7 @@ impl BlobPageBlobClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Update Sequence Number operation sets the blob's sequence number. The operation will fail if the specified sequence
@@ -362,7 +362,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientUpdateSequenceNumberOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -410,7 +410,7 @@ impl BlobPageBlobClient {
             sequence_number_action.to_string(),
         );
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Upload Pages operation writes a range of pages to a page blob
@@ -424,7 +424,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientUploadPagesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -517,7 +517,7 @@ impl BlobPageBlobClient {
         }
         request.insert_header("x-ms-version", version);
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Upload Pages operation writes a range of pages to a page blob where the contents are read from a URL.
@@ -533,7 +533,7 @@ impl BlobPageBlobClient {
         options: Option<BlobPageBlobClientUploadPagesFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -638,7 +638,7 @@ impl BlobPageBlobClient {
         }
         request.insert_header("x-ms-source-range", source_range);
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

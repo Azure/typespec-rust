@@ -56,7 +56,7 @@ impl BasicClient {
         options: Option<BasicClientCreateOrReplaceOptions<'_>>,
     ) -> Result<Response<User>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
@@ -67,7 +67,7 @@ impl BasicClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(resource);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Adds a user or updates a user's fields.
@@ -80,7 +80,7 @@ impl BasicClient {
         options: Option<BasicClientCreateOrUpdateOptions<'_>>,
     ) -> Result<Response<User>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
@@ -91,7 +91,7 @@ impl BasicClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(resource);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Deletes a user.
@@ -103,7 +103,7 @@ impl BasicClient {
         options: Option<BasicClientDeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
@@ -112,7 +112,7 @@ impl BasicClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Exports a user.
@@ -125,7 +125,7 @@ impl BasicClient {
         options: Option<BasicClientExportOptions<'_>>,
     ) -> Result<Response<User>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/basic/users/{id}:export");
         path = path.replace("{id}", &id.to_string());
@@ -135,7 +135,7 @@ impl BasicClient {
         url.query_pairs_mut().append_pair("format", &format);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Exports all users.
@@ -147,7 +147,7 @@ impl BasicClient {
         options: Option<BasicClientExportAllUsersOptions<'_>>,
     ) -> Result<Response<UserList>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("azure/core/basic/users:exportallusers")?;
         url.query_pairs_mut()
@@ -155,7 +155,7 @@ impl BasicClient {
         url.query_pairs_mut().append_pair("format", &format);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Gets a user.
@@ -167,7 +167,7 @@ impl BasicClient {
         options: Option<BasicClientGetOptions<'_>>,
     ) -> Result<Response<User>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
@@ -176,7 +176,7 @@ impl BasicClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Lists all users.
@@ -224,21 +224,16 @@ impl BasicClient {
                 .append_pair("top", &top.to_string());
         }
         Ok(Pager::from_callback(move |next_link: Option<Url>| {
-            let url: Url;
-            match next_link {
-                Some(next_link) => {
-                    url = next_link;
-                }
-                None => {
-                    url = first_url.clone();
-                }
+            let url = match next_link {
+                Some(next_link) => next_link,
+                None => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);
             request.insert_header("accept", "application/json");
-            let mut ctx = options.method_options.context.clone();
+            let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<PagedUser> = pipeline.send(&mut ctx, &mut request).await?;
+                let rsp: Response<PagedUser> = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(bytes.clone())?;

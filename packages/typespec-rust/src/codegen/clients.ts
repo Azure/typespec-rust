@@ -62,7 +62,13 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
     body += '}\n\n'; // end client
 
     if (client.constructable) {
-      body += '#[derive(Clone, Debug)]\n';
+      // if client options contains only one field (the azure_core::ClientOptions type)
+      // then we can simply derive Default and elide the manual implementation.
+      let deriveDefault = ', Default';
+      if (client.constructable.options.type.fields.length > 1) {
+        deriveDefault = '';
+      }
+      body += `#[derive(Clone, Debug${deriveDefault})]\n`;
       body += `pub struct ${client.constructable.options.type.name}`;
       if (client.constructable.options.type.fields.length > 0) {
         body += ' {\n';
@@ -96,7 +102,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
           const supplementalEndpoint = client.constructable.endpoint;
           body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
           for (const param of supplementalEndpoint.parameters) {
-            body += `${indent.get()}host = host.replace("{${param.segment}}", &${getClientEndpointParamValue(param)});\n`;
+            body += `${indent.get()}host = host.replace("{${param.segment}}", ${getClientEndpointParamValue(param)});\n`;
           }
           body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
         }
@@ -213,7 +219,9 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
 
     body += '}\n\n'; // end client impl
 
-    if (client.constructable) {
+    // only implement Default when there's more than one field.
+    // for the single-case field we just derive Default.
+    if (client.constructable && client.constructable.options.type.fields.length > 1) {
       // emit default trait impl for client options type
       const clientOptionsType = client.constructable.options;
       body += `impl Default for ${clientOptionsType.type.name} {\n`;
@@ -712,12 +720,12 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   use.addTypes('azure_core', ['Context', 'Method', 'Request']);
   const paramGroups = getMethodParamGroup(method);
   let body = 'let options = options.unwrap_or_default();\n';
-  body += `${indent.get()}let mut ctx = Context::with_context(&options.method_options.context);\n`;
+  body += `${indent.get()}let ctx = Context::with_context(&options.method_options.context);\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}url = self.${getEndpointFieldName(client)}.clone();\n`;
 
   body += constructUrl(indent, use, method, paramGroups);
   body += constructRequest(indent, use, method, paramGroups);
-  body += `${indent.get()}self.pipeline.send(&mut ctx, &mut request).await\n`;
+  body += `${indent.get()}self.pipeline.send(&ctx, &mut request).await\n`;
   return body;
 }
 
@@ -751,14 +759,13 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
   body += `${indent.get()}Ok(Pager::from_callback(move |${nextLinkName}: Option<Url>| {\n`;
-  body += `${indent.push().get()}let url: Url;\n`;
 
-  body += indent.get() + helpers.buildMatch(indent, nextLinkName, [{
+  body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
     pattern: `Some(${nextLinkName})`,
-    body: (indent) => `${indent.get()}url = ${nextLinkName};\n`
+    body: (indent) => `${indent.get()} ${nextLinkName}\n`
   }, {
     pattern: 'None',
-    body: (indent) => `${indent.get()}url = ${urlVar}.clone();\n`
+    body: (indent) => `${indent.get()}${urlVar}.clone()\n`
   }]);
   body += ';\n';
 
@@ -766,10 +773,10 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   const returnType = helpers.getTypeDeclaration(method.returns.type.type);
 
   body += constructRequest(indent, use, method, paramGroups, false);
-  body += `${indent.get()}let mut ctx = options.method_options.context.clone();\n`;
+  body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
-  body += `${indent.push().get()}let rsp: Response<${returnType}> = pipeline.send(&mut ctx, &mut request).await?;\n`;
+  body += `${indent.push().get()}let rsp: Response<${returnType}> = pipeline.send(&ctx, &mut request).await?;\n`;
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
   body += `${indent.get()}let bytes = body.collect().await?;\n`;
   body += `${indent.get()}let res: ${returnType} = json::from_json(bytes.clone())?;\n`;
@@ -805,11 +812,12 @@ function getClientEndpointParamValue(param: rust.ClientEndpointParameter): strin
 
   switch (param.type.kind) {
     case 'String':
-      return paramName;
+      return `&${paramName}`;
     case 'enum':
+      return `${paramName}.as_ref()`;
     case 'offsetDateTime':
     case 'scalar':
-      return `${paramName}.to_string()`;
+      return `&${paramName}.to_string()`;
     default:
       throw new Error(`unhandled ${param.kind} param type kind ${param.type.kind}`);
   }
@@ -838,7 +846,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     paramName = 'self.' + paramName;
   }
 
-  const encodeBytes = function(type: rust.EncodedBytes, param: string): string {
+  const encodeBytes = function(type: rust.EncodedBytes, param?: string): string {
     use.addType('azure_core', 'base64');
     let encoding: string;
     switch (type.encoding) {
@@ -849,7 +857,10 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
         encoding = 'base64::encode_url_safe';
         break;
     }
-    return `${encoding}(${param})`;
+    if (param) {
+      return `${encoding}(${param})`;
+    }
+    return encoding;
   };
 
   if (param.kind === 'headerCollection' || param.kind === 'queryCollection') {
@@ -860,11 +871,11 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     }
 
     // convert the items to strings
-    let strConv = 'i.to_string()';
+    let strConv = '|i| i.to_string()';
     if (param.type.type.kind === 'encodedBytes') {
-      strConv = encodeBytes(param.type.type, 'i');
+      strConv = encodeBytes(param.type.type);
     }
-    return `${paramName}.iter().map(|i| ${strConv}).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
+    return `${paramName}.iter().map(${strConv}).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
   }
 
   switch (param.type.kind) {

@@ -11,7 +11,7 @@ pub struct FixedClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct FixedClientOptions {
     pub client_options: ClientOptions,
 }
@@ -43,14 +43,6 @@ impl FixedClient {
         FixedStringClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for FixedClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

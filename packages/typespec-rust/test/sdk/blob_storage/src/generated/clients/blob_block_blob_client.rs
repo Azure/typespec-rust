@@ -41,7 +41,7 @@ impl BlobBlockBlobClient {
         options: Option<BlobBlockBlobClientCommitBlockListOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -143,7 +143,7 @@ impl BlobBlockBlobClient {
         }
         request.insert_header("x-ms-version", version);
         request.set_body(blocks);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Get Block List operation retrieves the list of blocks that have been uploaded as part of a block blob.
@@ -156,7 +156,7 @@ impl BlobBlockBlobClient {
         options: Option<BlobBlockBlobClientGetBlockListOptions<'_>>,
     ) -> Result<Response<BlockLookupList>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -185,7 +185,7 @@ impl BlobBlockBlobClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Put Blob from URL operation creates a new Block Blob where the contents of the blob are read from a given URL. This
@@ -202,7 +202,7 @@ impl BlobBlockBlobClient {
         options: Option<BlobBlockBlobClientPutBlobFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -322,7 +322,7 @@ impl BlobBlockBlobClient {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Stage Block operation creates a new block to be committed as part of a blob
@@ -337,7 +337,7 @@ impl BlobBlockBlobClient {
         options: Option<BlobBlockBlobClientStageBlockOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -391,7 +391,7 @@ impl BlobBlockBlobClient {
         }
         request.insert_header("x-ms-version", version);
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Stage Block From URL operation creates a new block to be committed as part of a blob where the contents are read from
@@ -407,7 +407,7 @@ impl BlobBlockBlobClient {
         options: Option<BlobBlockBlobClientStageBlockFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -478,7 +478,7 @@ impl BlobBlockBlobClient {
             request.insert_header("x-ms-source-range", source_range);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Upload Block Blob operation updates the content of an existing block blob. Updating an existing block blob overwrites
@@ -495,7 +495,7 @@ impl BlobBlockBlobClient {
         options: Option<BlobBlockBlobClientUploadOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -607,7 +607,7 @@ impl BlobBlockBlobClient {
         }
         request.insert_header("x-ms-version", version);
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

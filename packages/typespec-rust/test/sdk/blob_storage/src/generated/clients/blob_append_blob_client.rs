@@ -35,7 +35,7 @@ impl BlobAppendBlobClient {
         options: Option<BlobAppendBlobClientAppendBlockOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -109,7 +109,7 @@ impl BlobAppendBlobClient {
         }
         request.insert_header("x-ms-version", version);
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Append Block From URL operation creates a new block to be committed as part of an append blob where the contents are
@@ -124,7 +124,7 @@ impl BlobAppendBlobClient {
         options: Option<BlobAppendBlobClientAppendBlockFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -218,7 +218,7 @@ impl BlobAppendBlobClient {
             request.insert_header("x-ms-source-range", source_range);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Create operation creates a new append blob.
@@ -231,7 +231,7 @@ impl BlobAppendBlobClient {
         options: Option<BlobAppendBlobClientCreateOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -324,7 +324,7 @@ impl BlobAppendBlobClient {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Seal operation seals the Append Blob to make it read-only. Seal is supported only on version 2019-12-12 version or
@@ -337,7 +337,7 @@ impl BlobAppendBlobClient {
         options: Option<BlobAppendBlobClientSealOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -373,7 +373,7 @@ impl BlobAppendBlobClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

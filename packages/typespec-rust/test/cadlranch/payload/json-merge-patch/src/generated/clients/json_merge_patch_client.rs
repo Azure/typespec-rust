@@ -14,7 +14,7 @@ pub struct JsonMergePatchClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct JsonMergePatchClientOptions {
     pub client_options: ClientOptions,
 }
@@ -51,14 +51,14 @@ impl JsonMergePatchClient {
         options: Option<JsonMergePatchClientCreateResourceOptions<'_>>,
     ) -> Result<Response<Resource>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("json-merge-patch/create/resource")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Test content-type: application/merge-patch+json with optional body
@@ -67,7 +67,7 @@ impl JsonMergePatchClient {
         options: Option<JsonMergePatchClientUpdateOptionalResourceOptions<'_>>,
     ) -> Result<Response<Resource>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("json-merge-patch/update/resource/optional")?;
         let mut request = Request::new(url, Method::Patch);
@@ -76,7 +76,7 @@ impl JsonMergePatchClient {
         if let Some(body) = options.body {
             request.set_body(body);
         }
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Test content-type: application/merge-patch+json with required body
@@ -86,22 +86,14 @@ impl JsonMergePatchClient {
         options: Option<JsonMergePatchClientUpdateResourceOptions<'_>>,
     ) -> Result<Response<Resource>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("json-merge-patch/update/resource")?;
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
-    }
-}
-
-impl Default for JsonMergePatchClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
-        }
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

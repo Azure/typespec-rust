@@ -38,7 +38,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientAbortCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -62,7 +62,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
@@ -74,7 +74,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientAcquireLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -115,7 +115,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
@@ -127,7 +127,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientBreakLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -165,7 +165,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-lease-break-period", break_period.to_string());
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
@@ -178,7 +178,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientChangeLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -217,7 +217,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Copy From URL operation copies a blob or an internet resource to a new blob. It will not return a response until the
@@ -231,7 +231,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -323,7 +323,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Create Snapshot operation creates a read-only snapshot of a blob
@@ -335,7 +335,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientCreateSnapshotOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -391,7 +391,7 @@ impl BlobBlobClient {
             }
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// If the storage account's soft delete feature is disabled then, when a blob is deleted, it is permanently removed from
@@ -411,7 +411,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientDeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -459,7 +459,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Delete Immutability Policy operation deletes the immutability policy on the blob.
@@ -471,7 +471,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientDeleteImmutabilityPolicyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -496,7 +496,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Download operation reads or downloads a blob from the system, including its metadata and properties. You can also
@@ -509,7 +509,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientDownloadOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -579,7 +579,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-structured-body", structured_body_type);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Returns the sku name and account kind
@@ -591,7 +591,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -612,7 +612,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Get Properties operation returns all user-defined metadata, standard HTTP properties, and system properties for the
@@ -625,7 +625,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -678,7 +678,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Get Blob Tags operation enables users to get tags on a blob.
@@ -690,7 +690,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientGetTagsOptions<'_>>,
     ) -> Result<Response<BlobTags>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -720,7 +720,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Query operation enables users to select/project on blob data by providing simple query expressions.
@@ -733,7 +733,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientQueryOptions<'_>>,
     ) -> Result<Response<Vec<u8>>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -785,7 +785,7 @@ impl BlobBlobClient {
         }
         request.insert_header("x-ms-version", version);
         request.set_body(query_request);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
@@ -798,7 +798,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientReleaseLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -834,7 +834,7 @@ impl BlobBlobClient {
         }
         request.insert_header("x-ms-lease-id", lease_id);
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
@@ -847,7 +847,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientRenewLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -883,7 +883,7 @@ impl BlobBlobClient {
         }
         request.insert_header("x-ms-lease-id", lease_id);
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Set the expiration time of a blob
@@ -896,7 +896,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetExpiryOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -918,7 +918,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-expiry-time", expires_on);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Set HTTP Headers operation sets system properties on the blob.
@@ -930,7 +930,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetHttpHeadersOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -986,7 +986,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Set the immutability policy of a blob
@@ -998,7 +998,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetImmutabilityPolicyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1038,7 +1038,7 @@ impl BlobBlobClient {
             );
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Set Legal Hold operation sets a legal hold on the blob.
@@ -1051,7 +1051,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetLegalHoldOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1076,7 +1076,7 @@ impl BlobBlobClient {
         }
         request.insert_header("x-ms-legal-hold", legal_hold.to_string());
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Set Metadata operation sets user-defined metadata for the specified blob as one or more name-value pairs.
@@ -1088,7 +1088,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetMetadataOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1144,7 +1144,7 @@ impl BlobBlobClient {
             }
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Set Tags operation enables users to set tags on a blob.
@@ -1157,7 +1157,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetTagsOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1191,7 +1191,7 @@ impl BlobBlobClient {
         }
         request.insert_header("x-ms-version", version);
         request.set_body(tags);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Set Tier operation sets the tier on a block blob. The operation is allowed on a page blob or block blob, but not on
@@ -1206,7 +1206,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientSetTierOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1240,7 +1240,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-rehydrate-priority", rehydrate_priority.to_string());
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Start Copy From URL operation copies a blob or an internet resource to a new blob.
@@ -1253,7 +1253,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientStartCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1340,7 +1340,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Undelete a blob that was previously soft deleted
@@ -1352,7 +1352,7 @@ impl BlobBlobClient {
         options: Option<BlobBlobClientUndeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
         path = path.replace("{blob}", &blob);
@@ -1370,7 +1370,7 @@ impl BlobBlobClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", version);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

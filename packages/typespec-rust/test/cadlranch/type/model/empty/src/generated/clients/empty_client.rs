@@ -14,7 +14,7 @@ pub struct EmptyClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct EmptyClientOptions {
     pub client_options: ClientOptions,
 }
@@ -46,12 +46,12 @@ impl EmptyClient {
         options: Option<EmptyClientGetEmptyOptions<'_>>,
     ) -> Result<Response<EmptyOutput>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("type/model/empty/alone")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn post_round_trip_empty(
@@ -60,14 +60,14 @@ impl EmptyClient {
         options: Option<EmptyClientPostRoundTripEmptyOptions<'_>>,
     ) -> Result<Response<EmptyInputOutput>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("type/model/empty/round-trip")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn put_empty(
@@ -76,21 +76,13 @@ impl EmptyClient {
         options: Option<EmptyClientPutEmptyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("type/model/empty/alone")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        self.pipeline.send(&mut ctx, &mut request).await
-    }
-}
-
-impl Default for EmptyClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
-        }
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

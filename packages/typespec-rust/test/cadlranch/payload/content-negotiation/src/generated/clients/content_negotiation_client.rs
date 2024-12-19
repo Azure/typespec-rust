@@ -12,7 +12,7 @@ pub struct ContentNegotiationClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct ContentNegotiationClientOptions {
     pub client_options: ClientOptions,
 }
@@ -57,14 +57,6 @@ impl ContentNegotiationClient {
         ContentNegotiationSameBodyClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-        }
-    }
-}
-
-impl Default for ContentNegotiationClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
         }
     }
 }

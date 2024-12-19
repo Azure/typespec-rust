@@ -24,13 +24,13 @@ impl BytesRequestBodyClient {
         options: Option<BytesRequestBodyClientBase64Options<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/request/base64")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(value);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn base64_url(
@@ -39,13 +39,13 @@ impl BytesRequestBodyClient {
         options: Option<BytesRequestBodyClientBase64UrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/request/base64url")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(value);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn custom_content_type(
@@ -54,13 +54,13 @@ impl BytesRequestBodyClient {
         options: Option<BytesRequestBodyClientCustomContentTypeOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/request/custom-content-type")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "image/png");
         request.set_body(value);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn default(
@@ -69,13 +69,13 @@ impl BytesRequestBodyClient {
         options: Option<BytesRequestBodyClientDefaultOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/request/default")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(value);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn octet_stream(
@@ -84,13 +84,13 @@ impl BytesRequestBodyClient {
         options: Option<BytesRequestBodyClientOctetStreamOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/request/octet-stream")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/octet-stream");
         request.set_body(value);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

@@ -29,7 +29,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadAsRequestBodyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("parameters/spread/alias/request-body")?;
         let mut request = Request::new(url, Method::Put);
@@ -37,7 +37,7 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadAsRequestBodyRequest> =
             SpreadAsRequestBodyRequest { name }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn spread_as_request_parameter(
@@ -48,7 +48,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadAsRequestParameterOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/alias/request-parameter/{id}");
         path = path.replace("{id}", &id);
@@ -59,7 +59,7 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadAsRequestParameterRequest> =
             SpreadAsRequestParameterRequest { name }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     /// spread an alias with contains another alias property as body.
@@ -72,7 +72,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadParameterWithInnerAliasOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/alias/inner-alias-parameter/{id}");
         path = path.replace("{id}", &id);
@@ -83,7 +83,7 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadParameterWithInnerAliasRequest> =
             SpreadParameterWithInnerAliasRequest { name, age }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn spread_parameter_with_inner_model(
@@ -94,7 +94,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadParameterWithInnerModelOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/alias/inner-model-parameter/{id}");
         path = path.replace("{id}", &id);
@@ -105,7 +105,7 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadParameterWithInnerModelRequest> =
             SpreadParameterWithInnerModelRequest { name }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn spread_with_multiple_parameters(
@@ -117,7 +117,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadWithMultipleParametersOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/alias/multiple-parameters/{id}");
         path = path.replace("{id}", &id);
@@ -134,7 +134,7 @@ impl SpreadAliasClient {
             }
             .try_into()?;
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

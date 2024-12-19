@@ -28,7 +28,7 @@ impl BasicServiceOperationGroupClient {
         options: Option<BasicServiceOperationGroupClientBasicOptions<'_>>,
     ) -> Result<Response<ActionResponse>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("azure/example/basic/basic")?;
         url.query_pairs_mut()
@@ -40,7 +40,7 @@ impl BasicServiceOperationGroupClient {
         request.insert_header("content-type", "application/json");
         request.insert_header("header-param", header_param);
         request.set_body(body);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 

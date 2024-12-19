@@ -17,7 +17,7 @@ pub struct ServiceClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct ServiceClientOptions {
     pub client_options: ClientOptions,
 }
@@ -32,7 +32,7 @@ impl ServiceClient {
         let mut endpoint = Url::parse(endpoint)?;
         endpoint.set_query(None);
         let mut host = String::from("client/structure/{client}/");
-        host = host.replace("{client}", &client.to_string());
+        host = host.replace("{client}", client.as_ref());
         endpoint = endpoint.join(&host)?;
         Ok(Self {
             endpoint,
@@ -85,28 +85,20 @@ impl ServiceClient {
 
     pub async fn one(&self, options: Option<ServiceClientOneOptions<'_>>) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("one")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&mut ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn two(&self, options: Option<ServiceClientTwoOptions<'_>>) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
-        let mut ctx = Context::with_context(&options.method_options.context);
+        let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("two")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&mut ctx, &mut request).await
-    }
-}
-
-impl Default for ServiceClientOptions {
-    fn default() -> Self {
-        Self {
-            client_options: ClientOptions::default(),
-        }
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
 
