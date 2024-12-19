@@ -189,8 +189,8 @@ export class Adapter {
           // we don't need to emit this as a field so skip it.
           continue;
         } else if (property.kind === 'path') {
-          // for ARM resources, a property of kind path is the model
-          // key and will be exposed as a discrete method parameter.
+          // a property of kind path is the model key and
+          // will be exposed as a discrete method parameter.
           // we just adapt it here as a regular model field.
         } else {
           throw new Error(`model property kind ${property.kind} NYI`);
