@@ -1,5 +1,16 @@
 # Release History
 
+## 0.5.1 (unreleased)
+
+### Bugs Fixed
+
+* Fixed bad codegen for enum values that contain a comma character.
+
+### Features Added
+
+* Added support for model properties of type `path`.
+* Aggregate inherited model properties so they're all in the super-type.
+
 ## 0.5.0 (2024-12-19)
 
 ### Breaking Changes

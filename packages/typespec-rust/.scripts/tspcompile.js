@@ -32,7 +32,7 @@ const cadlRanch = {
   //'cadl_corescalar': {input: 'azure/core/scalar'},
   //'cadl_traits': {input: 'azure/core/traits'},
   'cadl_azurebasic': {input: 'azure/example/basic'},
-  //'cadl_armcommon': {input: 'azure/resource-manager/common-properties'},
+  'cadl_armcommon': {input: 'azure/resource-manager/common-properties', args: ['overwrite-cargo-toml=false']},
   //'cadl_armresources': {input: 'azure/resource-manager/resources'},
   //'cadl_naming': {input: 'client/naming'},
   'cadl_clientopgroup': {input: 'client/structure/client-operation-group/client.tsp'},

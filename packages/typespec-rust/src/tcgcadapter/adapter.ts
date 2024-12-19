@@ -27,6 +27,7 @@ export class Adapter {
     // so we need to add it to the allow list of decorators
     const ctx = await tcgc.createSdkContext(context, '@azure-tools/typespec-rust', {
       additionalDecorators: ['TypeSpec\\.@encodedName'],
+      disableUsageAccessPropagationToBase: true,
     });
     return new Adapter(ctx, context.options);
   }
@@ -103,7 +104,7 @@ export class Adapter {
     }
 
     for (const model of this.ctx.sdkPackage.models) {
-      if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Exception) === tcgc.UsageFlags.Exception && (model.usage & tcgc.UsageFlags.Input) === 0 && (model.usage & tcgc.UsageFlags.Output) === 0 || tcgc.isAzureCoreModel(model)) {
+      if ((<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Exception) === tcgc.UsageFlags.Exception && (model.usage & tcgc.UsageFlags.Input) === 0 && (model.usage & tcgc.UsageFlags.Output) === 0) || tcgc.isAzureCoreModel(model)) {
         // skip error and core types as we use their azure_core equivalents
         continue;
       }
@@ -159,15 +160,41 @@ export class Adapter {
     rustModel.xmlName = getXMLName(model.decorators);
     this.types.set(modelName, rustModel);
 
-    for (const property of model.properties) {
+    // aggregate the properties from the provided type and its parent types
+    const allProps = new Array<tcgc.SdkModelPropertyType>();
+    for (const prop of model.properties) {
+      allProps.push(prop);
+    }
+
+    let parent = model.baseModel;
+    while (parent) {
+      for (const parentProp of parent.properties) {
+        const exists = values(allProps).where(p => { return p.name === parentProp.name; }).first();
+        if (exists) {
+          // don't add the duplicate. the TS compiler has better enforcement than OpenAPI
+          // to ensure that duplicate fields with different types aren't added.
+          continue;
+        }
+        allProps.push(parentProp);
+      }
+
+      // TODO: propagate additional properties https://github.com/Azure/typespec-rust/issues/4
+      parent = parent.baseModel;
+    }
+
+    for (const property of allProps) {
       if (property.kind !== 'property') {
         if (property.type.kind === 'constant') {
           // typical case is content-type header.
           // we don't need to emit this as a field so skip it.
           continue;
+        } else if (property.kind === 'path') {
+          // a property of kind path is the model key and
+          // will be exposed as a discrete method parameter.
+          // we just adapt it here as a regular model field.
+        } else {
+          throw new Error(`model property kind ${property.kind} NYI`);
         }
-        // TODO: https://github.com/Azure/typespec-rust/issues/96
-        throw new Error(`model property kind ${property.kind} NYI`);
       }
       const structField = this.getModelField(property, !rustModel.internal);
       rustModel.fields.push(structField);
@@ -183,7 +210,7 @@ export class Adapter {
    * @param isPubMod indicates if the model is public
    * @returns a Rust model field
    */
-  private getModelField(property: tcgc.SdkBodyModelPropertyType, isPubMod: boolean): rust.ModelField {
+  private getModelField(property: tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, isPubMod: boolean): rust.ModelField {
     let fieldType = this.getType(property.type);
 
     // for public models each field is always an Option<T>
