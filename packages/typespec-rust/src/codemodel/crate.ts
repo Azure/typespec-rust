@@ -44,6 +44,8 @@ export type ServiceType = 'azure-arm' | 'data-plane';
 export interface CrateDependency {
   /** the name of the Crate */
   name: string;
+  /** the features to enable for the Crate */
+  features: Array<string>;
 }
 
 /** Module is an entry in a mod.rs file */
@@ -115,8 +117,9 @@ export class Crate implements Crate {
 }
 
 export class CrateDependency implements CrateDependency {
-  constructor(name: string) {
+  constructor(name: string, features = new Array<string>()) {
     this.name = name;
+    this.features = features;
   }
 }
 

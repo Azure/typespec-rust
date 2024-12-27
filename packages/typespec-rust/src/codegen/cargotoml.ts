@@ -22,7 +22,8 @@ export function emitCargoToml(crate: rust.Crate): string {
     content += '\n[dependencies]\n';
     for (const dependency of crate.dependencies) {
       // dependency versions are managed by the workspace's Cargo.toml file
-      content += `${dependency.name} = { workspace = true }\n`;
+      var features = dependency.features.length > 0 ? `, features = [${dependency.features.map(f => `"${f}"`).join(', ')}]` : '';
+      content += `${dependency.name} = { workspace = true${features} }\n`;
     }
   }
   return content;
