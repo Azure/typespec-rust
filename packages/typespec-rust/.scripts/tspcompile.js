@@ -42,7 +42,7 @@ const cadlRanch = {
   'cadl_twoop': {input: 'client/structure/two-operation-group/client.tsp'},
   'cadl_bytes': {input: 'encode/bytes'}, // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
   //'cadl_datetime': {input: 'encode/datetime'},
-  //'cadl_duration': {input: 'encode/duration'},
+  'cadl_duration': {input: 'encode/duration'},
   //'cadl_bodyoptional': {input: 'parameters/body-optionality'},
   'cadl_basicparams': {input: 'parameters/basic'},
   'cadl_collectionfmt': {input: 'parameters/collection-format'},

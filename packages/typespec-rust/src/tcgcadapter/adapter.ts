@@ -234,7 +234,7 @@ export class Adapter {
 
   /** converts a tcgc type to a Rust type */
   private getType(type: tcgc.SdkType): rust.Type {
-    const getScalar = (kind: 'boolean' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8'): rust.Scalar => {
+    const getScalar = (kind: 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8'): rust.Scalar => {
       let scalar = this.types.get(kind);
       if (scalar) {
         return <rust.Scalar>scalar;
@@ -245,6 +245,7 @@ export class Adapter {
         case 'boolean':
           scalarType = 'bool';
           break;
+        case 'float':
         case 'float32':
           scalarType = 'f32';
           break;
@@ -268,6 +269,16 @@ export class Adapter {
       scalar = new rust.Scalar(scalarType);
       this.types.set(kind, scalar);
       return scalar;
+    };
+
+    const getStringType = (): rust.Type => {
+      let stringType = this.types.get(type.kind);
+      if (stringType) {
+        return stringType;
+      }
+      stringType = new rust.StringType();
+      this.types.set(type.kind, stringType);
+      return stringType;
     };
 
     switch (type.kind) {
@@ -307,6 +318,19 @@ export class Adapter {
         this.types.set(keyName, hashmapType);
         return hashmapType;
       }
+      case 'duration':
+        switch (type.wireType.kind) {
+          case 'float':
+          case 'float32':
+          case 'float64':
+          case 'int32':
+          case 'int64':
+            return getScalar(type.wireType.kind);
+          case 'string':
+            return getStringType();
+          default:
+            throw new Error(`unhandled duration wireType.kind ${type.wireType.kind}`);
+        }
       case 'boolean':
       case 'float32':
       case 'float64':
@@ -332,13 +356,7 @@ export class Adapter {
           this.types.set(etagKey, etagType);
           return etagType;
         }
-        let stringType = this.types.get(type.kind);
-        if (stringType) {
-          return stringType;
-        }
-        stringType = new rust.StringType();
-        this.types.set(type.kind, stringType);
-        return stringType;
+        return getStringType();
       }
       case 'unknown': {
         let anyType = this.types.get(type.kind);

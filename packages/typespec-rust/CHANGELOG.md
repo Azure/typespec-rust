@@ -1,5 +1,11 @@
 # Release History
 
+## 0.5.2 (unreleased)
+
+### Features Added
+
+* Added support for TypeSpec `duration` types. Numeric durations are emitted as their respective types. For ISO8601 they're emitted as `String` types.
+
 ## 0.5.1 (2024-12-19)
 
 ### Bugs Fixed
