@@ -110,30 +110,26 @@ export class Context {
   }
 
   /**
-   * returns the impl TryFrom<Response<T>> for T where T is type.
+   * returns the impl azure_core::Model for the specified type.
    * if no impl is required, it returns the empty string.
    * 
    * @param type the type for which to implement TryFrom
    * @param use the use statement builder currently in scope
-   * @returns the impl TryFrom<T> block for type or the empty string
+   * @returns the impl azure_core::Model block for type or the empty string
    */
-  getTryFromResponseForType(type: rust.Type, use: Use): string {
+  getModelImplForType(type: rust.Type, use: Use): string {
     const format = this.tryFromResponseTypes.get(helpers.getTypeDeclaration(type));
     if (!format) {
       return '';
     }
     this.validateBodyFormat(format);
 
-    use.addTypes('azure_core', ['Response', 'Result']);
-    use.addType('async_std::task', 'block_on');
+    use.addType('azure_core', 'ResponseBody');
 
     const indent = new helpers.indentation();
-    let content = `impl TryFrom<Response<${helpers.getTypeDeclaration(type)}>> for ${helpers.getTypeDeclaration(type)} {\n`;
-    content += `${indent.get()}type Error = azure_core::Error;\n`;
-    content += `${indent.get()}fn try_from(value: Response<${helpers.getTypeDeclaration(type)}>) -> Result<Self> {\n`;
-    content += `${indent.push().get()}let f = || value.into_${format}_body();\n`;
-    content += `${indent.get()}let r = block_on(f())?;\n`;
-    content += `${indent.get()}Ok(r)\n`;
+    let content = `impl azure_core::Model for ${helpers.getTypeDeclaration(type)} {\n`;
+    content += `${indent.get()}async fn from_response_body(body: ResponseBody) -> Result<Self> {\n`;
+    content += `${indent.push().get()}body.${format}().await\n`;
     content += `${indent.pop().get()}}\n`;
     content += '}\n\n';
     return content;

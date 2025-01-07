@@ -60,10 +60,10 @@ export function emitEnums(crate: rust.Crate, context: Context): string | undefin
     body += ');\n\n'; // end enum macro
   }
 
-  // emit TryFrom as required
+  // emit impls as required
   for (const rustEnum of crate.enums) {
     body += context.getTryFromForRequestContent(rustEnum, use);
-    body += context.getTryFromResponseForType(rustEnum, use);
+    body += context.getModelImplForType(rustEnum, use);
   }
 
   let content = helpers.contentPreamble();

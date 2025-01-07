@@ -13,7 +13,7 @@ async fn get_known_value() {
         .get_known_value(None)
         .await
         .unwrap();
-    let value: DaysOfWeekEnum = resp.try_into().unwrap();
+    let value: DaysOfWeekEnum = resp.into_body().await.unwrap();
     assert_eq!(value, DaysOfWeekEnum::Monday);
 }
 

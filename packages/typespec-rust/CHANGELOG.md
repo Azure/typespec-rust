@@ -4,7 +4,7 @@
 
 ### Breaking Changes
 
-* Models used as output types no longer implement `TryFrom`. Use `into_body()` instead of `try_into()` when deserializing a modeled response.
+* Models and enums used as output types no longer implement `TryFrom`. Use `into_body()` instead of `try_into()` when deserializing a modeled response.
 
 ### Features Added
 
