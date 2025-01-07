@@ -14,6 +14,7 @@ use time::OffsetDateTime;
 /// Represents an access policy.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct AccessPolicy {
     /// The date-time the policy expires.
     #[serde(rename = "Expiry", skip_serializing_if = "Option::is_none")]
@@ -31,6 +32,7 @@ pub struct AccessPolicy {
 /// Represents the Apache Arrow configuration.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct ArrowConfiguration {
     /// The Apache Arrow schema
     #[serde(
@@ -46,6 +48,7 @@ pub struct ArrowConfiguration {
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 #[serde(rename = "Field")]
+#[typespec(format = "xml")]
 pub struct ArrowField {
     /// The arrow field name.
     #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
@@ -68,6 +71,7 @@ pub struct ArrowField {
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 #[serde(rename = "Tag")]
+#[typespec(format = "xml")]
 pub struct BlobTag {
     /// The key of the tag.
     #[serde(rename = "Key", skip_serializing_if = "Option::is_none")]
@@ -82,6 +86,7 @@ pub struct BlobTag {
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 #[serde(rename = "Tags")]
+#[typespec(format = "xml")]
 pub struct BlobTags {
     /// Represents the blob tags.
     #[serde(
@@ -97,6 +102,7 @@ pub struct BlobTags {
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 #[serde(rename = "BlockList")]
+#[typespec(format = "xml")]
 pub struct BlockLookupList {
     /// The committed blocks
     #[serde(rename = "Committed", skip_serializing_if = "Option::is_none")]
@@ -116,6 +122,7 @@ pub struct BlockLookupList {
 /// a different domain; CORS provides a secure way to allow one domain (the origin domain) to call APIs in another domain
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct CorsRule {
     /// The allowed headers.
     #[serde(rename = "AllowedHeaders", skip_serializing_if = "Option::is_none")]
@@ -141,6 +148,7 @@ pub struct CorsRule {
 /// Represents the delimited text configuration.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct DelimitedTextConfiguration {
     /// The string used to separate columns.
     #[serde(rename = "ColumnSeparator", skip_serializing_if = "Option::is_none")]
@@ -167,6 +175,7 @@ pub struct DelimitedTextConfiguration {
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 #[serde(rename = "Blob")]
+#[typespec(format = "xml")]
 pub struct FilterBlobItem {
     /// The properties of the blob.
     #[serde(rename = "ContainerName", skip_serializing_if = "Option::is_none")]
@@ -193,6 +202,7 @@ pub struct FilterBlobItem {
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 #[serde(rename = "EnumerationResults")]
+#[typespec(format = "xml")]
 pub struct FilterBlobSegment {
     /// The blob segment.
     #[serde(
@@ -219,6 +229,7 @@ pub struct FilterBlobSegment {
 /// Geo-Replication information for the Secondary Storage Service
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct GeoReplication {
     /// A GMT date/time value, to the second. All primary writes preceding this value are guaranteed to be available for read
     /// operations at the secondary. Primary writes after this point in time may or may not be available for reads.
@@ -233,6 +244,7 @@ pub struct GeoReplication {
 /// Represents the JSON text configuration.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct JsonTextConfiguration {
     /// The string used to separate records.
     #[serde(rename = "RecordSeparator", skip_serializing_if = "Option::is_none")]
@@ -242,6 +254,7 @@ pub struct JsonTextConfiguration {
 /// Azure Analytics Logging settings.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct Logging {
     /// Whether delete operation is logged.
     #[serde(rename = "Delete", skip_serializing_if = "Option::is_none")]
@@ -267,6 +280,7 @@ pub struct Logging {
 /// The metrics properties.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct Metrics {
     /// Whether it is enabled.
     #[serde(rename = "Enabled", skip_serializing_if = "Option::is_none")]
@@ -288,11 +302,13 @@ pub struct Metrics {
 /// Represents the Parquet configuration.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct ParquetConfiguration {}
 
 /// The query format settings.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct QueryFormat {
     /// The Apache Arrow configuration.
     #[serde(rename = "ArrowConfiguration", skip_serializing_if = "Option::is_none")]
@@ -327,6 +343,7 @@ pub struct QueryFormat {
 /// Groups the set of query request settings.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct QueryRequest {
     /// The query expression in SQL. The maximum size of the query expression is 256KiB.
     #[serde(rename = "Expression", skip_serializing_if = "Option::is_none")]
@@ -351,6 +368,7 @@ pub struct QueryRequest {
 /// The query serialization settings.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct QuerySerialization {
     /// The query format.
     #[serde(rename = "Format", skip_serializing_if = "Option::is_none")]
@@ -360,6 +378,7 @@ pub struct QuerySerialization {
 /// The retention policy.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct RetentionPolicy {
     /// Whether to allow permanent delete.
     #[serde(
@@ -381,6 +400,7 @@ pub struct RetentionPolicy {
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
 #[serde(rename = "SignedIdentifier")]
+#[typespec(format = "xml")]
 pub struct SignedIdentifier {
     /// The access policy for the signed identifier.
     #[serde(rename = "AccessPolicy", skip_serializing_if = "Option::is_none")]
@@ -394,6 +414,7 @@ pub struct SignedIdentifier {
 /// The properties that enable an account to host a static website
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct StaticWebsite {
     /// Absolute path of the default index page
     #[serde(
@@ -421,6 +442,7 @@ pub struct StaticWebsite {
 /// The service properties.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct StorageServiceProperties {
     /// The CORS properties.
     #[serde(
@@ -465,6 +487,7 @@ pub struct StorageServiceProperties {
 /// Stats for the storage service.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct StorageServiceStats {
     /// The geo replication stats.
     #[serde(rename = "GeoReplication", skip_serializing_if = "Option::is_none")]
@@ -474,6 +497,7 @@ pub struct StorageServiceStats {
 /// A user delegation key.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct UserDelegationKey {
     /// The date-time the key expires.
     #[serde(rename = "SignedExpiry", skip_serializing_if = "Option::is_none")]

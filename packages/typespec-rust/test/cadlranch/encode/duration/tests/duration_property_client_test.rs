@@ -20,7 +20,7 @@ async fn default() {
         .default(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: DefaultDurationProperty = resp.try_into().unwrap();
+    let result: DefaultDurationProperty = resp.into_body().await.unwrap();
     assert_eq!(result.value, Some("P40D".to_string()));
 }
 
@@ -34,7 +34,7 @@ async fn float64_seconds() {
         .float64_seconds(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: Float64SecondsDurationProperty = resp.try_into().unwrap();
+    let result: Float64SecondsDurationProperty = resp.into_body().await.unwrap();
     assert_eq!(result.value, Some(35.625));
 }
 
@@ -48,7 +48,7 @@ async fn float_seconds() {
         .float_seconds(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: FloatSecondsDurationProperty = resp.try_into().unwrap();
+    let result: FloatSecondsDurationProperty = resp.into_body().await.unwrap();
     assert_eq!(result.value, Some(35.625));
 }
 
@@ -62,7 +62,7 @@ async fn float_seconds_array() {
         .float_seconds_array(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: FloatSecondsDurationArrayProperty = resp.try_into().unwrap();
+    let result: FloatSecondsDurationArrayProperty = resp.into_body().await.unwrap();
     assert_eq!(result.value, Some(vec![35.625, 46.75]));
 }
 
@@ -76,7 +76,7 @@ async fn int32_seconds() {
         .int32_seconds(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: Int32SecondsDurationProperty = resp.try_into().unwrap();
+    let result: Int32SecondsDurationProperty = resp.into_body().await.unwrap();
     assert_eq!(result.value, Some(36));
 }
 
@@ -90,6 +90,6 @@ async fn iso8601() {
         .iso8601(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: ISO8601DurationProperty = resp.try_into().unwrap();
+    let result: ISO8601DurationProperty = resp.into_body().await.unwrap();
     assert_eq!(result.value, Some("P40D".to_string()));
 }

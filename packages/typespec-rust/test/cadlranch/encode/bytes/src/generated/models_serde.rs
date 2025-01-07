@@ -6,23 +6,13 @@
 use crate::models::{
     Base64BytesProperty, Base64urlArrayBytesProperty, Base64urlBytesProperty, DefaultBytesProperty,
 };
-use async_std::task::block_on;
-use azure_core::{RequestContent, Response, Result};
+use azure_core::{RequestContent, Result};
 use typespec_client_core::json::to_json;
 
 impl TryFrom<Base64BytesProperty> for RequestContent<Base64BytesProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Base64BytesProperty) -> Result<Self> {
         RequestContent::try_from(to_json(&value)?)
-    }
-}
-
-impl TryFrom<Response<Base64BytesProperty>> for Base64BytesProperty {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<Base64BytesProperty>) -> Result<Self> {
-        let f = || value.into_json_body();
-        let r = block_on(f())?;
-        Ok(r)
     }
 }
 
@@ -33,15 +23,6 @@ impl TryFrom<Base64urlArrayBytesProperty> for RequestContent<Base64urlArrayBytes
     }
 }
 
-impl TryFrom<Response<Base64urlArrayBytesProperty>> for Base64urlArrayBytesProperty {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<Base64urlArrayBytesProperty>) -> Result<Self> {
-        let f = || value.into_json_body();
-        let r = block_on(f())?;
-        Ok(r)
-    }
-}
-
 impl TryFrom<Base64urlBytesProperty> for RequestContent<Base64urlBytesProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Base64urlBytesProperty) -> Result<Self> {
@@ -49,27 +30,9 @@ impl TryFrom<Base64urlBytesProperty> for RequestContent<Base64urlBytesProperty> 
     }
 }
 
-impl TryFrom<Response<Base64urlBytesProperty>> for Base64urlBytesProperty {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<Base64urlBytesProperty>) -> Result<Self> {
-        let f = || value.into_json_body();
-        let r = block_on(f())?;
-        Ok(r)
-    }
-}
-
 impl TryFrom<DefaultBytesProperty> for RequestContent<DefaultBytesProperty> {
     type Error = azure_core::Error;
     fn try_from(value: DefaultBytesProperty) -> Result<Self> {
         RequestContent::try_from(to_json(&value)?)
-    }
-}
-
-impl TryFrom<Response<DefaultBytesProperty>> for DefaultBytesProperty {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<DefaultBytesProperty>) -> Result<Self> {
-        let f = || value.into_json_body();
-        let r = block_on(f())?;
-        Ok(r)
     }
 }

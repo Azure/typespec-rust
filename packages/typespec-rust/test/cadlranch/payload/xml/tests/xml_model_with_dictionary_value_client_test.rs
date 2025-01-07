@@ -14,7 +14,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap();
-    let value: ModelWithDictionary = resp.try_into().unwrap();
+    let value: ModelWithDictionary = resp.into_body().await.unwrap();
     let metadata = value.metadata.unwrap();
     assert_eq!(metadata.len(), 3);
     assert_eq!(metadata.get("Color"), Some(&"blue".to_string()));

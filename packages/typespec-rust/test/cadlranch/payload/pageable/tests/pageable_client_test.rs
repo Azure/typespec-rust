@@ -20,7 +20,7 @@ async fn list() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: PagedUser = page.try_into().unwrap();
+        let page: PagedUser = page.into_body().await.unwrap();
         let value = page.value.unwrap();
         match page_count {
             1 => {

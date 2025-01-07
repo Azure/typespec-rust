@@ -8,23 +8,13 @@ use crate::models::{
     ModelWithEncodedNames, ModelWithOptionalField, ModelWithRenamedArrays, ModelWithRenamedFields,
     ModelWithSimpleArrays, ModelWithText, ModelWithUnwrappedArray, SimpleModel,
 };
-use async_std::task::block_on;
-use azure_core::{RequestContent, Response, Result};
+use azure_core::{RequestContent, Result};
 use typespec_client_core::xml::to_xml;
 
 impl TryFrom<ModelWithArrayOfModel> for RequestContent<ModelWithArrayOfModel> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithArrayOfModel) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
-    }
-}
-
-impl TryFrom<Response<ModelWithArrayOfModel>> for ModelWithArrayOfModel {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<ModelWithArrayOfModel>) -> Result<Self> {
-        let f = || value.into_xml_body();
-        let r = block_on(f())?;
-        Ok(r)
     }
 }
 
@@ -35,28 +25,10 @@ impl TryFrom<ModelWithAttributes> for RequestContent<ModelWithAttributes> {
     }
 }
 
-impl TryFrom<Response<ModelWithAttributes>> for ModelWithAttributes {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<ModelWithAttributes>) -> Result<Self> {
-        let f = || value.into_xml_body();
-        let r = block_on(f())?;
-        Ok(r)
-    }
-}
-
 impl TryFrom<ModelWithDictionary> for RequestContent<ModelWithDictionary> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithDictionary) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
-    }
-}
-
-impl TryFrom<Response<ModelWithDictionary>> for ModelWithDictionary {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<ModelWithDictionary>) -> Result<Self> {
-        let f = || value.into_xml_body();
-        let r = block_on(f())?;
-        Ok(r)
     }
 }
 
@@ -67,28 +39,10 @@ impl TryFrom<ModelWithEmptyArray> for RequestContent<ModelWithEmptyArray> {
     }
 }
 
-impl TryFrom<Response<ModelWithEmptyArray>> for ModelWithEmptyArray {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<ModelWithEmptyArray>) -> Result<Self> {
-        let f = || value.into_xml_body();
-        let r = block_on(f())?;
-        Ok(r)
-    }
-}
-
 impl TryFrom<ModelWithEncodedNames> for RequestContent<ModelWithEncodedNames> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithEncodedNames) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
-    }
-}
-
-impl TryFrom<Response<ModelWithEncodedNames>> for ModelWithEncodedNames {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<ModelWithEncodedNames>) -> Result<Self> {
-        let f = || value.into_xml_body();
-        let r = block_on(f())?;
-        Ok(r)
     }
 }
 
@@ -99,28 +53,10 @@ impl TryFrom<ModelWithOptionalField> for RequestContent<ModelWithOptionalField> 
     }
 }
 
-impl TryFrom<Response<ModelWithOptionalField>> for ModelWithOptionalField {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<ModelWithOptionalField>) -> Result<Self> {
-        let f = || value.into_xml_body();
-        let r = block_on(f())?;
-        Ok(r)
-    }
-}
-
 impl TryFrom<ModelWithRenamedArrays> for RequestContent<ModelWithRenamedArrays> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithRenamedArrays) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
-    }
-}
-
-impl TryFrom<Response<ModelWithRenamedArrays>> for ModelWithRenamedArrays {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<ModelWithRenamedArrays>) -> Result<Self> {
-        let f = || value.into_xml_body();
-        let r = block_on(f())?;
-        Ok(r)
     }
 }
 
@@ -131,28 +67,10 @@ impl TryFrom<ModelWithRenamedFields> for RequestContent<ModelWithRenamedFields> 
     }
 }
 
-impl TryFrom<Response<ModelWithRenamedFields>> for ModelWithRenamedFields {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<ModelWithRenamedFields>) -> Result<Self> {
-        let f = || value.into_xml_body();
-        let r = block_on(f())?;
-        Ok(r)
-    }
-}
-
 impl TryFrom<ModelWithSimpleArrays> for RequestContent<ModelWithSimpleArrays> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithSimpleArrays) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
-    }
-}
-
-impl TryFrom<Response<ModelWithSimpleArrays>> for ModelWithSimpleArrays {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<ModelWithSimpleArrays>) -> Result<Self> {
-        let f = || value.into_xml_body();
-        let r = block_on(f())?;
-        Ok(r)
     }
 }
 
@@ -163,15 +81,6 @@ impl TryFrom<ModelWithText> for RequestContent<ModelWithText> {
     }
 }
 
-impl TryFrom<Response<ModelWithText>> for ModelWithText {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<ModelWithText>) -> Result<Self> {
-        let f = || value.into_xml_body();
-        let r = block_on(f())?;
-        Ok(r)
-    }
-}
-
 impl TryFrom<ModelWithUnwrappedArray> for RequestContent<ModelWithUnwrappedArray> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithUnwrappedArray) -> Result<Self> {
@@ -179,27 +88,9 @@ impl TryFrom<ModelWithUnwrappedArray> for RequestContent<ModelWithUnwrappedArray
     }
 }
 
-impl TryFrom<Response<ModelWithUnwrappedArray>> for ModelWithUnwrappedArray {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<ModelWithUnwrappedArray>) -> Result<Self> {
-        let f = || value.into_xml_body();
-        let r = block_on(f())?;
-        Ok(r)
-    }
-}
-
 impl TryFrom<SimpleModel> for RequestContent<SimpleModel> {
     type Error = azure_core::Error;
     fn try_from(value: SimpleModel) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
-    }
-}
-
-impl TryFrom<Response<SimpleModel>> for SimpleModel {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<SimpleModel>) -> Result<Self> {
-        let f = || value.into_xml_body();
-        let r = block_on(f())?;
-        Ok(r)
     }
 }

@@ -7,8 +7,7 @@ use crate::models::{
     DefaultDurationProperty, Float64SecondsDurationProperty, FloatSecondsDurationArrayProperty,
     FloatSecondsDurationProperty, ISO8601DurationProperty, Int32SecondsDurationProperty,
 };
-use async_std::task::block_on;
-use azure_core::{RequestContent, Response, Result};
+use azure_core::{RequestContent, Result};
 use typespec_client_core::json::to_json;
 
 impl TryFrom<DefaultDurationProperty> for RequestContent<DefaultDurationProperty> {
@@ -18,28 +17,10 @@ impl TryFrom<DefaultDurationProperty> for RequestContent<DefaultDurationProperty
     }
 }
 
-impl TryFrom<Response<DefaultDurationProperty>> for DefaultDurationProperty {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<DefaultDurationProperty>) -> Result<Self> {
-        let f = || value.into_json_body();
-        let r = block_on(f())?;
-        Ok(r)
-    }
-}
-
 impl TryFrom<Float64SecondsDurationProperty> for RequestContent<Float64SecondsDurationProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Float64SecondsDurationProperty) -> Result<Self> {
         RequestContent::try_from(to_json(&value)?)
-    }
-}
-
-impl TryFrom<Response<Float64SecondsDurationProperty>> for Float64SecondsDurationProperty {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<Float64SecondsDurationProperty>) -> Result<Self> {
-        let f = || value.into_json_body();
-        let r = block_on(f())?;
-        Ok(r)
     }
 }
 
@@ -52,28 +33,10 @@ impl TryFrom<FloatSecondsDurationArrayProperty>
     }
 }
 
-impl TryFrom<Response<FloatSecondsDurationArrayProperty>> for FloatSecondsDurationArrayProperty {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<FloatSecondsDurationArrayProperty>) -> Result<Self> {
-        let f = || value.into_json_body();
-        let r = block_on(f())?;
-        Ok(r)
-    }
-}
-
 impl TryFrom<FloatSecondsDurationProperty> for RequestContent<FloatSecondsDurationProperty> {
     type Error = azure_core::Error;
     fn try_from(value: FloatSecondsDurationProperty) -> Result<Self> {
         RequestContent::try_from(to_json(&value)?)
-    }
-}
-
-impl TryFrom<Response<FloatSecondsDurationProperty>> for FloatSecondsDurationProperty {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<FloatSecondsDurationProperty>) -> Result<Self> {
-        let f = || value.into_json_body();
-        let r = block_on(f())?;
-        Ok(r)
     }
 }
 
@@ -84,27 +47,9 @@ impl TryFrom<ISO8601DurationProperty> for RequestContent<ISO8601DurationProperty
     }
 }
 
-impl TryFrom<Response<ISO8601DurationProperty>> for ISO8601DurationProperty {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<ISO8601DurationProperty>) -> Result<Self> {
-        let f = || value.into_json_body();
-        let r = block_on(f())?;
-        Ok(r)
-    }
-}
-
 impl TryFrom<Int32SecondsDurationProperty> for RequestContent<Int32SecondsDurationProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Int32SecondsDurationProperty) -> Result<Self> {
         RequestContent::try_from(to_json(&value)?)
-    }
-}
-
-impl TryFrom<Response<Int32SecondsDurationProperty>> for Int32SecondsDurationProperty {
-    type Error = azure_core::Error;
-    fn try_from(value: Response<Int32SecondsDurationProperty>) -> Result<Self> {
-        let f = || value.into_json_body();
-        let r = block_on(f())?;
-        Ok(r)
     }
 }

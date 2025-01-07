@@ -8,7 +8,7 @@ use cadl_jsonencodedname::{models::JsonEncodedNameModel, JsonClient};
 async fn get() {
     let client = JsonClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.get_json_property_client().get(None).await.unwrap();
-    let value: JsonEncodedNameModel = resp.try_into().unwrap();
+    let value: JsonEncodedNameModel = resp.into_body().await.unwrap();
     assert_eq!(value.default_name, Some(true));
 }
 

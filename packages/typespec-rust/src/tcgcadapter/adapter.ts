@@ -68,6 +68,7 @@ export class Adapter {
     }
 
     if (this.crate.clients.length > 0) {
+      // TODO: remove as part of https://github.com/Azure/typespec-rust/issues/127
       this.crate.addDependency(new rust.CrateDependency('async-std'));
     }
 

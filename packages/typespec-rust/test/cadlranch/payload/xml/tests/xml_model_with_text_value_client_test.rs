@@ -12,7 +12,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap();
-    let value: ModelWithText = resp.try_into().unwrap();
+    let value: ModelWithText = resp.into_body().await.unwrap();
     // TODO: revisit. expected "\n  This is some text.\n"
     assert_eq!(value.content, Some("This is some text.".to_string()));
     assert_eq!(value.language, Some("foo".to_string()));

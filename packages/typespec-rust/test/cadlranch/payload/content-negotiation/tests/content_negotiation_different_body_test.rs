@@ -14,7 +14,7 @@ async fn get_avatar_as_json() {
         .get_avatar_as_json(None)
         .await
         .unwrap();
-    let result: PngImageAsJson = resp.try_into().unwrap();
+    let result: PngImageAsJson = resp.into_body().await.unwrap();
     let image_png =
         fs::read("../../../../node_modules/@azure-tools/cadl-ranch-specs/assets/image.png")
             .unwrap();

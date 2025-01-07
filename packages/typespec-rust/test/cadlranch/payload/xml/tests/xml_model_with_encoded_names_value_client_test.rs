@@ -15,7 +15,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap();
-    let value: ModelWithEncodedNames = resp.try_into().unwrap();
+    let value: ModelWithEncodedNames = resp.into_body().await.unwrap();
     assert_eq!(
         value.colors,
         Some(vec![

@@ -1,6 +1,10 @@
 # Release History
 
-## 0.5.2 (unreleased)
+## 0.6.0 (unreleased)
+
+### Breaking Changes
+
+* Models used as output types no longer implement `TryFrom`. Use `into_body()` instead of `try_into()` when deserializing a modeled response.
 
 ### Features Added
 

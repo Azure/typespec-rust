@@ -11,6 +11,7 @@ use typespec_client_core::xml::to_xml;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct GetUserDelegationKeyRequest {
     /// The date-time the key expires.
     #[serde(rename = "Expiry")]
@@ -23,6 +24,7 @@ pub struct GetUserDelegationKeyRequest {
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
 #[non_exhaustive]
+#[typespec(format = "xml")]
 pub struct SetPropertiesRequest {
     /// The CORS properties.
     #[serde(

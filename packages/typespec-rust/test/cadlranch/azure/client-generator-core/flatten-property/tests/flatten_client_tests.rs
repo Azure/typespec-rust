@@ -18,7 +18,7 @@ async fn put_flatten_model() {
     flatten_model.properties = Some(child_model);
     let req = flatten_model.try_into().unwrap();
     let resp = client.put_flatten_model(req, None).await.unwrap();
-    let value: FlattenModel = resp.try_into().unwrap();
+    let value: FlattenModel = resp.into_body().await.unwrap();
     assert_eq!(value.name, Some(String::from("test")));
     let props = value.properties.unwrap();
     assert_eq!(props.age, Some(1));
@@ -39,7 +39,7 @@ async fn put_nested_flatten_model() {
     nested_flatten_model.properties = Some(child_flatten_model);
     let req = nested_flatten_model.try_into().unwrap();
     let resp = client.put_nested_flatten_model(req, None).await.unwrap();
-    let value: NestedFlattenModel = resp.try_into().unwrap();
+    let value: NestedFlattenModel = resp.into_body().await.unwrap();
     assert_eq!(value.name, Some(String::from("test")));
     let props = value.properties.unwrap();
     assert_eq!(props.summary, Some(String::from("test")));

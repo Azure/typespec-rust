@@ -65,11 +65,17 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
       continue;
     }
 
+    const bodyFormat = context.getModelBodyFormat(model);
+
     body += helpers.formatDocComment(model.docs);
     body += helpers.annotationDerive('Default', 'azure_core::Model');
     body += helpers.AnnotationNonExhaustive;
     if (model.xmlName) {
       body += `#[serde(rename = "${model.xmlName}")]\n`;
+    }
+    if (bodyFormat === 'xml') {
+      // json is the default if not specified so no need to handle it
+      body += `#[typespec(format = "xml")]\n`;
     }
     body += `pub struct ${model.name} {\n`;
 
@@ -94,7 +100,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
         serdeParams.push(`deserialize_with = "base64::deserialize${format}"`);
         serdeParams.push(`serialize_with = "base64::serialize${format}"`);
         use.addType('azure_core', 'base64');
-      } else if (context.getModelBodyFormat(model) === 'xml' && helpers.unwrapOption(field.type).kind === 'vector' && field.xmlKind !== 'unwrappedList') {
+      } else if (bodyFormat === 'xml' && helpers.unwrapOption(field.type).kind === 'vector' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
         serdeParams.push(`deserialize_with = "${xmlListWrapper.name}::unwrap"`);
@@ -131,7 +137,6 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
       }
 
       body += context.getTryFromForRequestContent(model, use);
-      body += context.getTryFromResponseForType(model, use);
     }
   }
 
@@ -162,16 +167,14 @@ function emitModelsSerde(crate: rust.Crate, context: Context): string | undefine
     }
 
     const forReq = context.getTryFromForRequestContent(model, use);
-    const forRes = context.getTryFromResponseForType(model, use);
 
     // helpers aren't required for all types, so only
     // add a use statement for a type if it has a helper
-    if (forReq.length > 0 || forRes.length > 0) {
+    if (forReq.length > 0) {
       use.addForType(model);
     }
 
     body += forReq;
-    body += forRes;
   }
 
   if (body.length === 0) {
