@@ -6,6 +6,10 @@
 
 * Models and enums used as output types no longer implement `TryFrom`. Use `into_body()` instead of `try_into()` when deserializing a modeled response.
 
+### Bugs Fixed
+
+* Add `derive` and `xml` features in `Cargo.toml` files as required.
+
 ### Features Added
 
 * Added support for TypeSpec `duration` types. Numeric durations are emitted as their respective types. For ISO8601 they're emitted as `String` types.
