@@ -64,7 +64,7 @@ export class Adapter {
     }
 
     if (this.crate.enums.length > 0 || this.crate.models.length > 0) {
-      this.crate.addDependency(new rust.CrateDependency('typespec_client_core', ['derive']));
+      this.crate.addDependency(new rust.CrateDependency('typespec_client_core'));
     }
 
     if (this.crate.clients.length > 0) {
@@ -111,6 +111,8 @@ export class Adapter {
       }
       const rustModel = this.getModel(model);
       this.crate.models.push(rustModel);
+      // presence of models requires the derive feature
+      this.crate.addDependency(new rust.CrateDependency('typespec_client_core', ['derive']));
     }
   }
 
@@ -842,7 +844,13 @@ export class Adapter {
         throw new Error(`unable to determine content type for method ${method.name}`);
       }
 
-      return this.adaptBodyFormat(defaultContentType);
+      const bodyFormat = this.adaptBodyFormat(defaultContentType);
+      if (bodyFormat === 'xml') {
+        // XML support is disabled by default
+        this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
+      }
+
+      return bodyFormat;
     };
 
     let returnType: rust.Type;

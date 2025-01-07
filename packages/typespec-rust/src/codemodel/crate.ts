@@ -44,6 +44,7 @@ export type ServiceType = 'azure-arm' | 'data-plane';
 export interface CrateDependency {
   /** the name of the Crate */
   name: string;
+
   /** the features to enable for the Crate */
   features: Array<string>;
 }
@@ -78,6 +79,8 @@ export class Crate implements Crate {
   addDependency(dependency: CrateDependency): void {
     for (const dep of this.dependencies) {
       if (dep.name === dependency.name) {
+        // merge in any features
+        dep.features = dep.features.concat(dependency.features.filter(item => !dep.features.includes(item)));
         return;
       }
     }

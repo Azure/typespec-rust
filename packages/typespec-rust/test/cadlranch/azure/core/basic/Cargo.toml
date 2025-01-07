@@ -13,4 +13,4 @@ azure_core = { workspace = true }
 futures = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-typespec_client_core = { workspace = true }
+typespec_client_core = { workspace = true, features = ["derive"] }
