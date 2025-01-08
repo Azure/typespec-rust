@@ -34,7 +34,6 @@ impl BlobBlockBlobClient {
     /// to.
     pub async fn commit_block_list(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         blocks: RequestContent<BlockLookupList>,
@@ -141,7 +140,7 @@ impl BlobBlockBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         request.set_body(blocks);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -149,7 +148,6 @@ impl BlobBlockBlobClient {
     /// The Get Block List operation retrieves the list of blocks that have been uploaded as part of a block blob.
     pub async fn get_block_list(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         list_type: BlockListType,
@@ -184,7 +182,7 @@ impl BlobBlockBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -194,7 +192,6 @@ impl BlobBlockBlobClient {
     /// contents using a source URL, use the Put Block from URL API in conjunction with Put Block List.
     pub async fn put_blob_from_url(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         content_length: i64,
@@ -321,14 +318,13 @@ impl BlobBlockBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Stage Block operation creates a new block to be committed as part of a blob
     pub async fn stage_block(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         block_id: String,
@@ -389,7 +385,7 @@ impl BlobBlockBlobClient {
                 structured_content_length.to_string(),
             );
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -398,7 +394,6 @@ impl BlobBlockBlobClient {
     /// a URL.
     pub async fn stage_block_from_url(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         block_id: String,
@@ -477,7 +472,7 @@ impl BlobBlockBlobClient {
         if let Some(source_range) = options.source_range {
             request.insert_header("x-ms-source-range", source_range);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -487,7 +482,6 @@ impl BlobBlockBlobClient {
     /// Block List operation.
     pub async fn upload(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         body: RequestContent<Vec<u8>>,
@@ -605,7 +599,7 @@ impl BlobBlockBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }

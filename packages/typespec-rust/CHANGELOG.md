@@ -9,6 +9,7 @@
 ### Bugs Fixed
 
 * Add `derive` and `xml` features in `Cargo.toml` files as required.
+* Borrow client fields used in method header parameters if their type is non-copyable.
 
 ### Features Added
 

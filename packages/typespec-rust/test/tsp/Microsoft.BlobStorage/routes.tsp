@@ -12,6 +12,13 @@ using TypeSpec.Versioning;
 using Azure.Core;
 using Azure.ClientGenerator.Core;
 
+alias ApiVersionHeader = {
+  /** Specifies the version of the operation to use for this request. */
+  @apiVersion
+  @header("x-ms-version")
+  version: string;
+};
+
 /** Azure Storage Blob basic operation template */
 #suppress "@azure-tools/typespec-azure-core/operation-missing-api-version" "Existing API. Storage API version parameter pre-dates current guidance."
 op StorageOperation<
@@ -25,10 +32,7 @@ op StorageOperation<
   @header("Content-Type")
   contentType: MediaType,
 
-  /** Specifies the version of the operation to use for this request. */
-  @header("x-ms-version")
-  version: string,
-
+  ...ApiVersionHeader,
   ...TParams,
   ...ClientRequestIdHeader,
 ): (TResponse & {
@@ -36,10 +40,6 @@ op StorageOperation<
   #suppress "@typespec/http/content-type-ignored" "Template for exisitng API"
   @header("Content-Type")
   contentType: MediaType;
-
-  /** Indicates the version of the Blob service used to execute the request. This header is returned for requests made against version 2009-09-19 and above. */
-  @header("x-ms-version")
-  version: string;
 
   ...RequestIdResponseHeader;
   ...ClientRequestIdHeader;
@@ -111,10 +111,7 @@ interface Service {
     @header("Content-Type")
     multipartContentType: "multipart/mixed",
 
-    /** Specifies the version of the operation to use for this request. */
-    @header("x-ms-version")
-    version: string,
-
+    ...ApiVersionHeader,
     ...TimeoutParameter,
     ...ClientRequestIdHeader,
     ...ContentLengthParameter,
@@ -124,10 +121,6 @@ interface Service {
     #suppress "@typespec/http/content-type-ignored" "Template for exisitng API"
     @header("Content-Type")
     contentType: "multipart/mixed";
-
-    /** Indicates the version of the Blob service used to execute the request. This header is returned for requests made against version 2009-09-19 and above. */
-    @header("x-ms-version")
-    version: string;
 
     ...RequestIdResponseHeader;
     ...ClientRequestIdHeader;
@@ -371,11 +364,7 @@ interface Container {
 
     ...ContentLengthParameter,
     ...TimeoutParameter,
-
-    /** Specifies the version of the operation to use for this request. */
-    @header("x-ms-version")
-    version: string,
-
+    ...ApiVersionHeader,
     ...ClientRequestIdHeader,
   ): ({
     @statusCode statusCode: 202;
@@ -383,10 +372,6 @@ interface Container {
     /** Required. The value of this header must be multipart/mixed with a batch boundary. Example header value: multipart/mixed; boundary=batch_<GUID> */
     @header("Content-Type")
     multipartContentType: "multipart/mixed";
-
-    /** Indicates the version of the Blob service used to execute the request. This header is returned for requests made against version 2009-09-19 and above. */
-    @header("x-ms-version")
-    version: string;
 
     ...RequestIdResponseHeader;
   } & BodyParameter) | StorageError;
@@ -549,10 +534,7 @@ interface Blob {
   @get
   @route("/{containerName}/{blob}")
   download(
-    /** Specifies the version of the operation to use for this request. */
-    @header("x-ms-version")
-    version: string,
-
+    ...ApiVersionHeader,
     ...ClientRequestIdHeader,
     ...ContainerNamePathParameter,
     ...BlobPathParameter,
@@ -580,10 +562,6 @@ interface Blob {
     ...IfTagsParameter,
     ...ConditionalRequestHeaders,
   ): (BodyParameter & {
-    /** Indicates the version of the Blob service used to execute the request. This header is returned for requests made against version 2009-09-19 and above. */
-    @header("x-ms-version")
-    version: string;
-
     /** The media type of the body of the response. */
     @header("Content-Type")
     contentType: "application/octet-stream";
@@ -634,10 +612,6 @@ interface Blob {
   }) | (BodyParameter & {
     #suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Following standard pattern"
     @statusCode statusCode: 206;
-
-    /** Indicates the version of the Blob service used to execute the request. This header is returned for requests made against version 2009-09-19 and above. */
-    @header("x-ms-version")
-    version: string;
 
     /** The media type of the body of the response. */
     @header("Content-Type")
@@ -811,6 +785,7 @@ interface Blob {
 
   /** Undelete a blob that was previously soft deleted */
   #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
+  #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
   #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
   @put
   @route("/{containerName}/{blob}?comp=undelete")
@@ -825,6 +800,7 @@ interface Blob {
 
   /** Set the expiration time of a blob */
   #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
+  #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
   #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
   @put
   @route("/{containerName}/{blob}?comp=expiry")
@@ -1512,6 +1488,7 @@ interface PageBlob {
 
   /** The Upload Pages operation writes a range of pages to a page blob where the contents are read from a URL. */
   #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
+  #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
   #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
   @put
   @route("/{containerName}/{blob}?comp=page&update&fromUrl")

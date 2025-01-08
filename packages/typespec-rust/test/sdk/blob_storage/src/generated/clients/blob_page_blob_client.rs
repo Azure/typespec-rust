@@ -30,7 +30,6 @@ impl BlobPageBlobClient {
     /// The Clear Pages operation clears a range of pages from a page blob
     pub async fn clear_pages(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         content_length: i64,
@@ -113,7 +112,7 @@ impl BlobPageBlobClient {
         if let Some(range) = options.range {
             request.insert_header("x-ms-range", range);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -123,7 +122,6 @@ impl BlobPageBlobClient {
     /// since REST version 2016-05-31.
     pub async fn copy_incremental(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         copy_source: String,
@@ -163,14 +161,13 @@ impl BlobPageBlobClient {
         if let Some(if_tags) = options.if_tags {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Create operation creates a new page blob.
     pub async fn create(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         content_length: i64,
@@ -280,14 +277,13 @@ impl BlobPageBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Resize operation increases the size of the page blob to the specified size.
     pub async fn resize(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         blob_content_length: i64,
@@ -347,7 +343,7 @@ impl BlobPageBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -355,7 +351,6 @@ impl BlobPageBlobClient {
     /// number is less than the current sequence number of the blob.
     pub async fn update_sequence_number(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         sequence_number_action: SequenceNumberActionType,
@@ -409,14 +404,13 @@ impl BlobPageBlobClient {
             "x-ms-sequence-number-action",
             sequence_number_action.to_string(),
         );
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Upload Pages operation writes a range of pages to a page blob
     pub async fn upload_pages(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         body: RequestContent<Vec<u8>>,
@@ -515,7 +509,7 @@ impl BlobPageBlobClient {
                 structured_content_length.to_string(),
             );
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -523,7 +517,6 @@ impl BlobPageBlobClient {
     /// The Upload Pages operation writes a range of pages to a page blob where the contents are read from a URL.
     pub async fn upload_pages_from_url(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         source_url: String,
@@ -637,7 +630,7 @@ impl BlobPageBlobClient {
             );
         }
         request.insert_header("x-ms-source-range", source_range);
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 }

@@ -20,16 +20,16 @@ pub struct BlobClient {
     version: String,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct BlobClientOptions {
     pub client_options: ClientOptions,
+    pub version: String,
 }
 
 impl BlobClient {
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
-        version: String,
         container_name: String,
         options: Option<BlobClientOptions>,
     ) -> Result<Self> {
@@ -43,7 +43,7 @@ impl BlobClient {
         Ok(Self {
             container_name,
             endpoint,
-            version,
+            version: options.version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
                 option_env!("CARGO_PKG_VERSION"),
@@ -116,6 +116,15 @@ impl BlobClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
             version: self.version.clone(),
+        }
+    }
+}
+
+impl Default for BlobClientOptions {
+    fn default() -> Self {
+        Self {
+            client_options: ClientOptions::default(),
+            version: String::from("2025-01-05"),
         }
     }
 }

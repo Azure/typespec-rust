@@ -28,7 +28,6 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn acquire_lease(
         &self,
-        version: String,
         container_name: String,
         options: Option<BlobContainerClientAcquireLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -62,7 +61,7 @@ impl BlobContainerClient {
         if let Some(proposed_lease_id) = options.proposed_lease_id {
             request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -70,7 +69,6 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn break_lease(
         &self,
-        version: String,
         container_name: String,
         options: Option<BlobContainerClientBreakLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -101,7 +99,7 @@ impl BlobContainerClient {
         if let Some(break_period) = options.break_period {
             request.insert_header("x-ms-lease-break-period", break_period.to_string());
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -109,7 +107,6 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn change_lease(
         &self,
-        version: String,
         container_name: String,
         lease_id: String,
         proposed_lease_id: String,
@@ -141,7 +138,7 @@ impl BlobContainerClient {
         }
         request.insert_header("x-ms-lease-id", lease_id);
         request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -149,7 +146,6 @@ impl BlobContainerClient {
     /// fails.
     pub async fn create(
         &self,
-        version: String,
         container_name: String,
         options: Option<BlobContainerClientCreateOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -185,7 +181,7 @@ impl BlobContainerClient {
                 request.insert_header(format!("x-ms-meta-{}", k), v);
             }
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -193,7 +189,6 @@ impl BlobContainerClient {
     /// during garbage collection
     pub async fn delete(
         &self,
-        version: String,
         container_name: String,
         options: Option<BlobContainerClientDeleteOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -221,7 +216,7 @@ impl BlobContainerClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -229,7 +224,6 @@ impl BlobContainerClient {
     /// blobs searches within the given container.
     pub async fn filter_blobs(
         &self,
-        version: String,
         container_name: String,
         options: Option<BlobContainerClientFilterBlobsOptions<'_>>,
     ) -> Result<Response<FilterBlobSegment>> {
@@ -270,14 +264,13 @@ impl BlobContainerClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// gets the permissions for the specified container. The permissions indicate whether container data may be accessed publicly.
     pub async fn get_access_policy(
         &self,
-        version: String,
         container_name: String,
         options: Option<BlobContainerClientGetAccessPolicyOptions<'_>>,
     ) -> Result<Response<Vec<SignedIdentifier>>> {
@@ -301,14 +294,13 @@ impl BlobContainerClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Returns the sku name and account kind
     pub async fn get_account_info(
         &self,
-        version: String,
         container_name: String,
         options: Option<BlobContainerClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -329,7 +321,7 @@ impl BlobContainerClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -337,7 +329,6 @@ impl BlobContainerClient {
     /// the container's list of blobs
     pub async fn get_properties(
         &self,
-        version: String,
         container_name: String,
         options: Option<BlobContainerClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -359,7 +350,7 @@ impl BlobContainerClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -367,7 +358,6 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn release_lease(
         &self,
-        version: String,
         container_name: String,
         lease_id: String,
         options: Option<BlobContainerClientReleaseLeaseOptions<'_>>,
@@ -397,14 +387,13 @@ impl BlobContainerClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-lease-id", lease_id);
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Renames an existing container.
     pub async fn rename(
         &self,
-        version: String,
         container_name: String,
         source_container_name: String,
         options: Option<BlobContainerClientRenameOptions<'_>>,
@@ -430,7 +419,7 @@ impl BlobContainerClient {
         if let Some(source_lease_id) = options.source_lease_id {
             request.insert_header("x-ms-source-lease-id", source_lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -438,7 +427,6 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn renew_lease(
         &self,
-        version: String,
         container_name: String,
         lease_id: String,
         options: Option<BlobContainerClientRenewLeaseOptions<'_>>,
@@ -468,14 +456,13 @@ impl BlobContainerClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-lease-id", lease_id);
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Restores a previously-deleted container.
     pub async fn restore(
         &self,
-        version: String,
         container_name: String,
         options: Option<BlobContainerClientRestoreOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -502,7 +489,7 @@ impl BlobContainerClient {
         if let Some(deleted_container_version) = options.deleted_container_version {
             request.insert_header("x-ms-deleted-container-version", deleted_container_version);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -510,7 +497,6 @@ impl BlobContainerClient {
     /// publicly.
     pub async fn set_access_policy(
         &self,
-        version: String,
         container_name: String,
         container_acl: RequestContent<Vec<SignedIdentifier>>,
         options: Option<BlobContainerClientSetAccessPolicyOptions<'_>>,
@@ -544,7 +530,7 @@ impl BlobContainerClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         request.set_body(container_acl);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -552,7 +538,6 @@ impl BlobContainerClient {
     /// operation sets one or more user-defined name-value pairs for the specified container.
     pub async fn set_metadata(
         &self,
-        version: String,
         container_name: String,
         options: Option<BlobContainerClientSetMetadataOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -584,7 +569,7 @@ impl BlobContainerClient {
                 request.insert_header(format!("x-ms-meta-{}", k), v);
             }
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -594,7 +579,6 @@ impl BlobContainerClient {
         container_name: String,
         body: RequestContent<Vec<u8>>,
         content_length: i64,
-        version: String,
         options: Option<BlobContainerClientSubmitBatchOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -615,7 +599,7 @@ impl BlobContainerClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }

@@ -27,7 +27,6 @@ impl BlobAppendBlobClient {
     /// The Append Block operation commits a new block of data to the end of an append blob.
     pub async fn append_block(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         body: RequestContent<Vec<u8>>,
@@ -107,7 +106,7 @@ impl BlobAppendBlobClient {
                 structured_content_length.to_string(),
             );
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -116,7 +115,6 @@ impl BlobAppendBlobClient {
     /// read from a URL.
     pub async fn append_block_from_url(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         source_url: String,
@@ -217,14 +215,13 @@ impl BlobAppendBlobClient {
         if let Some(source_range) = options.source_range {
             request.insert_header("x-ms-source-range", source_range);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Create operation creates a new append blob.
     pub async fn create(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         content_length: i64,
@@ -323,7 +320,7 @@ impl BlobAppendBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -331,7 +328,6 @@ impl BlobAppendBlobClient {
     /// later.
     pub async fn seal(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobAppendBlobClientSealOptions<'_>>,
@@ -372,7 +368,7 @@ impl BlobAppendBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 }
