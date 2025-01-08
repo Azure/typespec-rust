@@ -4,7 +4,7 @@ trigger:
       - main
   paths:
     include:
-      - packages/typespec-rust/test/cadlranch
+      - packages/typespec-rust/test/spector
 pr: none
 
 variables:
@@ -17,10 +17,10 @@ steps:
   - template: /eng/pipelines/templates/steps/build-test.yaml
 
   - task: AzureCLI@2
-    displayName: Upload CADL Ranch Test Coverage
+    displayName: Upload Spector Test Coverage
     inputs:
-      azureSubscription: "Cadl Ranch Storage"
+      azureSubscription: "Typespec Storage"
       scriptType: "bash"
       scriptLocation: "inlineScript"
-      inlineScript: npx cadl-ranch upload-coverage --generatorName rust --storageAccountName azuresdkcadlranch --generatorVersion $(node -p -e "require('./package.json').version") --generatorMode azure
+      inlineScript: npx tsp-spector upload-coverage --containerName=coverages --generatorName @azure-tools/typespec-rust --storageAccountName typespec --generatorVersion $(node -p -e "require('./package.json').version") --generatorMode azure
       workingDirectory: $(TypeSpecRustPkgDir)

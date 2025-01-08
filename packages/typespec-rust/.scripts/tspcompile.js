@@ -8,81 +8,82 @@ const sem = semaphore(8);
 
 const pkgRoot = execSync('git rev-parse --show-toplevel').toString().trim() + '/packages/typespec-rust/';
 
-const tspRoot = pkgRoot + 'node_modules/@azure-tools/cadl-ranch-specs/http/';
+const httpSpecs = pkgRoot + 'node_modules/@typespec/http-specs/specs/';
+const azureHttpSpecs = pkgRoot + 'node_modules/@azure-tools/azure-http-specs/specs/';
 
 const compiler = pkgRoot + 'node_modules/@typespec/compiler/cmd/tsp.js';
 
 // the format is as follows
 // 'crateName': { input: 'input dir', output: 'optional output dir', args: [optional args] }
 // if no .tsp file is specified in input, it's assumed to be main.tsp
-const cadlRanch = {
-  //'cadl_apikey': {input: 'authentication/api-key'},
-  //'cadl_custom': {input: 'authentication/http/custom'},
-  'cadl_oauth2': {input: 'authentication/oauth2', args: ['overwrite-cargo-toml=false']},
-  'cadl_unionauth': {input: 'authentication/union', args: ['overwrite-cargo-toml=false']},
-  //'cadl_access': {input: 'azure/client-generator-core/access'},
-  'cadl_flattenproperty': {input: 'azure/client-generator-core/flatten-property'},
-  //'cadl_coreusage': {input: 'azure/client-generator-core/usage'},
-  'cadl_basic': {input: 'azure/core/basic'},
-  //'cadl_lrorpc': {input: 'azure/core/lro/rpc'},
-  //'cadl_lrolegacy': {input: 'azure/core/lro/rpc-legacy'},
-  //'cadl_lrostd': {input: 'azure/core/lro/standard'},
-  //'cadl_coremodel': {input: 'azure/core/model'},
-  //'cadl_corepage': {input: 'azure/core/page'},
-  //'cadl_corescalar': {input: 'azure/core/scalar'},
-  //'cadl_traits': {input: 'azure/core/traits'},
-  'cadl_azurebasic': {input: 'azure/example/basic'},
-  'cadl_armcommon': {input: 'azure/resource-manager/common-properties', args: ['overwrite-cargo-toml=false']},
-  //'cadl_armresources': {input: 'azure/resource-manager/resources'},
-  //'cadl_naming': {input: 'client/naming'},
-  'cadl_clientopgroup': {input: 'client/structure/client-operation-group/client.tsp'},
-  'cadl_default': {input: 'client/structure/default/client.tsp'},
-  'cadl_multiclient': {input: 'client/structure/multi-client/client.tsp'},
-  'cadl_renamedop': {input: 'client/structure/renamed-operation/client.tsp'},
-  'cadl_twoop': {input: 'client/structure/two-operation-group/client.tsp'},
-  'cadl_bytes': {input: 'encode/bytes'}, // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
-  //'cadl_datetime': {input: 'encode/datetime'},
-  'cadl_duration': {input: 'encode/duration'},
-  //'cadl_bodyoptional': {input: 'parameters/body-optionality'},
-  'cadl_basicparams': {input: 'parameters/basic'},
-  'cadl_collectionfmt': {input: 'parameters/collection-format'},
-  'cadl_spread': {input: 'parameters/spread'},
-  'cadl_contentneg': {input: 'payload/content-negotiation'},
-  'cadl_jmergepatch': {input: 'payload/json-merge-patch'},
-  //'cadl_mediatype': {input: 'payload/media-type'},
-  //'cadl_multipart': {input: 'payload/multipart'},
-  'cadl_pageable': {input: 'payload/pageable'},
-  'cadl_xml': {input: 'payload/xml'},
-  'cadl_srvdrivenold': {input: 'resiliency/srv-driven/old.tsp', output: 'resiliency/srv-driven/old'},
-  'cadl_srvdrivennew': {input: 'resiliency/srv-driven', output: 'resiliency/srv-driven/new'},
-  //'cadl_routes': {input: 'routes'},
-  'cadl_jsonencodedname': {input: 'serialization/encoded-name/json'},
-  'cadl_noendpoint': {input: 'server/endpoint/not-defined'},
-  'cadl_multiple': {input: 'server/path/multiple'},
-  'cadl_single': {input: 'server/path/single'},
-  'cadl_unversioned': {input: 'server/versions/not-versioned'},
-  'cadl_versioned': {input: 'server/versions/versioned'},
-  //'cadl_clientreqid': {input: 'special-headers/client-request-id'},
-  //'cadl_condreq': {input: 'special-headers/conditional-request'},
-  //'cadl_repeatability': {input: 'special-headers/repeatability'},
-  'cadl_specialwords': {input: 'special-words'},
-  'cadl_array': {input: 'type/array'},           // needs additional codegen work before we can add tests
-  'cadl_dictionary': {input: 'type/dictionary'}, // needs additional codegen work before we can add tests
-  'cadl_extensible': {input: 'type/enum/extensible'},
-  'cadl_fixed': {input: 'type/enum/fixed'},
-  'cadl_empty': {input: 'type/model/empty'},
-  //'cadl_enumdisc': {input: 'type/model/inheritance/enum-discriminator'},
-  //'cadl_nodisc': {input: 'type/model/inheritance/not-discriminated'},
-  //'cadl_recursive': {input: 'type/model/inheritance/recursive'},
-  //'cadl_singledisc': {input: 'type/model/inheritance/single-discriminator'},
-  'cadl_usage': {input: 'type/model/usage'},
-  //'cadl_visibility': {input: 'type/model/visibility'},
-  //'cadl_addlprops': {input: 'type/property/additional-properties'},
-  //'cadl_nullable': {input: 'type/property/nullable'},
-  //'cadl_optionality': {input: 'type/property/optionality'},
-  //'cadl_valuetypes': {input: 'type/property/value-types'},
-  //'cadl_scalar': {input: 'type/scalar'},
-  //'cadl_union': {input: 'type/union'},
+const httpSpecsGroup = {
+  //'spector_apikey': {input: 'authentication/api-key'},
+  //'spector_custom': {input: 'authentication/http/custom'},
+  'spector_oauth2': {input: 'authentication/oauth2', args: ['overwrite-cargo-toml=false']},
+  'spector_unionauth': {input: 'authentication/union', args: ['overwrite-cargo-toml=false']},
+  'spector_bytes': {input: 'encode/bytes'}, // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
+  //'spector_datetime': {input: 'encode/datetime'},
+  'spector_duration': {input: 'encode/duration'},
+  //'spector_bodyoptional': {input: 'parameters/body-optionality'},
+  'spector_basicparams': {input: 'parameters/basic'},
+  'spector_collectionfmt': {input: 'parameters/collection-format'},
+  'spector_spread': {input: 'parameters/spread'},
+  'spector_contentneg': {input: 'payload/content-negotiation'},
+  'spector_jmergepatch': {input: 'payload/json-merge-patch'},
+  //'spector_mediatype': {input: 'payload/media-type'},
+  //'spector_multipart': {input: 'payload/multipart'},
+  'spector_xml': {input: 'payload/xml'},
+  //'spector_routes': {input: 'routes'},
+  'spector_jsonencodedname': {input: 'serialization/encoded-name/json'},
+  'spector_noendpoint': {input: 'server/endpoint/not-defined'},
+  'spector_multiple': {input: 'server/path/multiple'},
+  'spector_single': {input: 'server/path/single'},
+  'spector_unversioned': {input: 'server/versions/not-versioned'},
+  'spector_versioned': {input: 'server/versions/versioned'},
+  //'spector_condreq': {input: 'special-headers/conditional-request'},
+  //'spector_repeatability': {input: 'special-headers/repeatability'},
+  'spector_specialwords': {input: 'special-words'},
+  'spector_array': {input: 'type/array'},           // needs additional codegen work before we can add tests
+  'spector_dictionary': {input: 'type/dictionary'}, // needs additional codegen work before we can add tests
+  'spector_extensible': {input: 'type/enum/extensible'},
+  'spector_fixed': {input: 'type/enum/fixed'},
+  'spector_empty': {input: 'type/model/empty'},
+  //'spector_enumdisc': {input: 'type/model/inheritance/enum-discriminator'},
+  //'spector_nodisc': {input: 'type/model/inheritance/not-discriminated'},
+  //'spector_recursive': {input: 'type/model/inheritance/recursive'},
+  //'spector_singledisc': {input: 'type/model/inheritance/single-discriminator'},
+  'spector_usage': {input: 'type/model/usage'},
+  //'spector_visibility': {input: 'type/model/visibility'},
+  //'spector_addlprops': {input: 'type/property/additional-properties'},
+  //'spector_nullable': {input: 'type/property/nullable'},
+  //'spector_optionality': {input: 'type/property/optionality'},
+  //'spector_valuetypes': {input: 'type/property/value-types'},
+  //'spector_scalar': {input: 'type/scalar'},
+  //'spector_union': {input: 'type/union'},
+};
+
+const azureHttpSpecsGroup = {
+  //'spector_access': {input: 'azure/client-generator-core/access'},
+  'spector_flattenproperty': {input: 'azure/client-generator-core/flatten-property'},
+  //'spector_coreusage': {input: 'azure/client-generator-core/usage'},
+  'spector_basic': {input: 'azure/core/basic'},
+  //'spector_lrorpc': {input: 'azure/core/lro/rpc'},
+  //'spector_lrostd': {input: 'azure/core/lro/standard'},
+  //'spector_corepage': {input: 'azure/core/page'},
+  //'spector_corescalar': {input: 'azure/core/scalar'},
+  //'spector_traits': {input: 'azure/core/traits'},
+  'spector_azurepageable': {input: 'azure/payload/pageable'},
+  'spector_azurebasic': {input: 'azure/example/basic'},
+  'spector_armcommon': {input: 'azure/resource-manager/common-properties', args: ['overwrite-cargo-toml=false']},
+  //'spector_armresources': {input: 'azure/resource-manager/resources'},
+  //'spector_naming': {input: 'client/naming'},
+  'spector_clientopgroup': {input: 'client/structure/client-operation-group/client.tsp'},
+  'spector_default': {input: 'client/structure/default/client.tsp'},
+  'spector_multiclient': {input: 'client/structure/multi-client/client.tsp'},
+  'spector_renamedop': {input: 'client/structure/renamed-operation/client.tsp'},
+  'spector_twoop': {input: 'client/structure/two-operation-group/client.tsp'},
+  'spector_srvdrivenold': {input: 'resiliency/srv-driven/old.tsp', output: 'resiliency/srv-driven/old'},
+  'spector_srvdrivennew': {input: 'resiliency/srv-driven', output: 'resiliency/srv-driven/new'},
 };
 
 const args = process.argv.slice(2);
@@ -121,24 +122,29 @@ generate('keyvault_secrets', keyvault_secrets, 'test/sdk/keyvault_secrets');
 const blob_storage = pkgRoot + 'test/tsp/Microsoft.BlobStorage/client.tsp';
 generate('blob_storage', blob_storage, 'test/sdk/blob_storage');
 
-for (const crate in cadlRanch) {
-  const crateSettings = cadlRanch[crate];
-  let additionalArgs;
-  if (crateSettings.args) {
-    additionalArgs = crateSettings.args;
-  }
-  let outDir;
-  if (crateSettings.output) {
-    outDir = crateSettings.output;
-  } else {
-    // make the output directory structure the same as the cadl input directory.
-    // if the input specifies a .tsp file, remove that first.
-    outDir = crateSettings.input;
-    if (outDir.lastIndexOf('.tsp') > -1) {
-      outDir = outDir.substring(0, outDir.lastIndexOf('/'));
+loopSpec(httpSpecsGroup, httpSpecs)
+loopSpec(azureHttpSpecsGroup, azureHttpSpecs)
+
+function loopSpec(group, root) {
+  for (const crate in group) {
+    const crateSettings = group[crate];
+    let additionalArgs;
+    if (crateSettings.args) {
+      additionalArgs = crateSettings.args;
     }
+    let outDir;
+    if (crateSettings.output) {
+      outDir = crateSettings.output;
+    } else {
+      // make the output directory structure the same as the spector input directory.
+      // if the input specifies a .tsp file, remove that first.
+      outDir = crateSettings.input;
+      if (outDir.lastIndexOf('.tsp') > -1) {
+        outDir = outDir.substring(0, outDir.lastIndexOf('/'));
+      }
+    }
+    generate(crate, root + crateSettings.input, `test/spector/${outDir}`, additionalArgs);
   }
-  generate(crate, tspRoot + crateSettings.input, `test/cadlranch/${outDir}`, additionalArgs);
 }
 
 function generate(crate, input, outputDir, additionalArgs) {

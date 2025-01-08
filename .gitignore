@@ -405,8 +405,8 @@ FodyWeavers.xsd
 
 **/dist/
 
-# cadl-ranch test results
-cadl-ranch-coverage.json
+# spector test results
+spec-coverage.json
 
 packages/typespec-rust/test/target/
 
