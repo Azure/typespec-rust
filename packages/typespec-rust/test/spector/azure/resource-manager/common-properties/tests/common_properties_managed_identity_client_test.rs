@@ -75,7 +75,8 @@ fn get_valid_mi_resource() -> ManagedIdentityTrackedResource {
 async fn create_with_system_assigned() {
     let client = create_client();
     let mut identity = ManagedServiceIdentity::default();
-    identity.type_prop = Some(spector_armcommon::models::ManagedServiceIdentityType::SystemAssigned);
+    identity.type_prop =
+        Some(spector_armcommon::models::ManagedServiceIdentityType::SystemAssigned);
     let mut resource = ManagedIdentityTrackedResource::default();
     resource.identity = Some(identity);
     resource.location = Some("eastus".to_string());

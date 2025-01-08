@@ -1,5 +1,5 @@
 [package]
-name = "spector_pageable"
+name = "spector_azurepageable"
 version = "0.1.0"
 authors.workspace = true
 edition.workspace = true

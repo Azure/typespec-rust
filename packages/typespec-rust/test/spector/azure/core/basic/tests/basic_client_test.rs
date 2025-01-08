@@ -3,12 +3,12 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use azure_core::Etag;
+use futures::StreamExt;
 use spector_basic::{
     basic_client::BasicClientListOptions,
     models::{PagedUser, User, UserList},
     BasicClient,
 };
-use futures::StreamExt;
 
 #[async_std::test]
 async fn create_or_replace() {
