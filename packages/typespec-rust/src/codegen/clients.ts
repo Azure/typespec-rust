@@ -449,7 +449,7 @@ function getClientAccessorMethodBody(indent: helpers.indentation, client: rust.C
   let body = `${clientAccessor.returns.name} {\n`;
   indent.push();
   for (const field of client.fields) {
-    body += `${indent.get()}${field.name}: self.${field.name}${typeNeedsCloning(field.type) ? '.clone()' : ''},\n`;
+    body += `${indent.get()}${field.name}: self.${field.name}${nonCopyableType(field.type) ? '.clone()' : ''},\n`;
   }
   body += `${indent.pop().get()}}`;
   return body;
@@ -659,7 +659,8 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
         setter += `${indent.pop().get()}}\n`;
         return setter;
       }
-      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, headerParam, fromSelf)});\n`;
+      const borrow = headerParam.location === 'client' && nonCopyableType(headerParam.type) ? '&' : '';
+      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, fromSelf)});\n`;
     });
   }
 
@@ -931,7 +932,7 @@ function getLifetimeAnnotation(type: rust.Struct): string {
 }
 
 /** returns true if the type isn't copyable thus nees to be cloned */
-function typeNeedsCloning(type: rust.Type): boolean {
+function nonCopyableType(type: rust.Type): boolean {
   const unwrappedType = helpers.unwrapOption(type);
   switch (unwrappedType.kind) {
     case 'String':

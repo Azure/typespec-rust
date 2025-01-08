@@ -31,7 +31,6 @@ impl BlobBlobClient {
     /// and full metadata.
     pub async fn abort_copy_from_url(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         copy_id: String,
@@ -61,14 +60,13 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn acquire_lease(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientAcquireLeaseOptions<'_>>,
@@ -114,14 +112,13 @@ impl BlobBlobClient {
         if let Some(proposed_lease_id) = options.proposed_lease_id {
             request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn break_lease(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientBreakLeaseOptions<'_>>,
@@ -164,14 +161,13 @@ impl BlobBlobClient {
         if let Some(break_period) = options.break_period {
             request.insert_header("x-ms-lease-break-period", break_period.to_string());
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn change_lease(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         lease_id: String,
@@ -216,7 +212,7 @@ impl BlobBlobClient {
         if let Some(proposed_lease_id) = options.proposed_lease_id {
             request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -224,7 +220,6 @@ impl BlobBlobClient {
     /// copy is complete.
     pub async fn copy_from_url(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         copy_source: String,
@@ -322,14 +317,13 @@ impl BlobBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Create Snapshot operation creates a read-only snapshot of a blob
     pub async fn create_snapshot(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientCreateSnapshotOptions<'_>>,
@@ -390,7 +384,7 @@ impl BlobBlobClient {
                 request.insert_header(format!("x-ms-meta-{}", k), v);
             }
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -405,7 +399,6 @@ impl BlobBlobClient {
     /// causes the service to return an HTTP status code of 404 (ResourceNotFound).
     pub async fn delete(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientDeleteOptions<'_>>,
@@ -458,14 +451,13 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Delete Immutability Policy operation deletes the immutability policy on the blob.
     pub async fn delete_immutability_policy(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientDeleteImmutabilityPolicyOptions<'_>>,
@@ -495,7 +487,7 @@ impl BlobBlobClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -503,7 +495,6 @@ impl BlobBlobClient {
     /// call Download to read a snapshot.
     pub async fn download(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientDownloadOptions<'_>>,
@@ -578,14 +569,13 @@ impl BlobBlobClient {
         if let Some(structured_body_type) = options.structured_body_type {
             request.insert_header("x-ms-structured-body", structured_body_type);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Returns the sku name and account kind
     pub async fn get_account_info(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientGetAccountInfoOptions<'_>>,
@@ -611,7 +601,7 @@ impl BlobBlobClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -619,7 +609,6 @@ impl BlobBlobClient {
     /// blob. It does not return the content of the blob.
     pub async fn get_properties(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientGetPropertiesOptions<'_>>,
@@ -677,14 +666,13 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Get Blob Tags operation enables users to get tags on a blob.
     pub async fn get_tags(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientGetTagsOptions<'_>>,
@@ -719,14 +707,13 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Query operation enables users to select/project on blob data by providing simple query expressions.
     pub async fn query(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         query_request: RequestContent<QueryRequest>,
@@ -783,7 +770,7 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         request.set_body(query_request);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -791,7 +778,6 @@ impl BlobBlobClient {
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn release_lease(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         lease_id: String,
@@ -833,14 +819,13 @@ impl BlobBlobClient {
             request.insert_header("x-ms-if-tags", if_tags);
         }
         request.insert_header("x-ms-lease-id", lease_id);
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn renew_lease(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         lease_id: String,
@@ -882,14 +867,13 @@ impl BlobBlobClient {
             request.insert_header("x-ms-if-tags", if_tags);
         }
         request.insert_header("x-ms-lease-id", lease_id);
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Set the expiration time of a blob
     pub async fn set_expiry(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         expiry_options: BlobExpiryOptions,
@@ -917,14 +901,13 @@ impl BlobBlobClient {
         if let Some(expires_on) = options.expires_on {
             request.insert_header("x-ms-expiry-time", expires_on);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Set HTTP Headers operation sets system properties on the blob.
     pub async fn set_http_headers(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientSetHttpHeadersOptions<'_>>,
@@ -985,14 +968,13 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Set the immutability policy of a blob
     pub async fn set_immutability_policy(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientSetImmutabilityPolicyOptions<'_>>,
@@ -1037,14 +1019,13 @@ impl BlobBlobClient {
                 immutability_policy_expiry,
             );
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Set Legal Hold operation sets a legal hold on the blob.
     pub async fn set_legal_hold(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         legal_hold: bool,
@@ -1075,14 +1056,13 @@ impl BlobBlobClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-legal-hold", legal_hold.to_string());
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Set Metadata operation sets user-defined metadata for the specified blob as one or more name-value pairs.
     pub async fn set_metadata(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientSetMetadataOptions<'_>>,
@@ -1143,14 +1123,13 @@ impl BlobBlobClient {
                 request.insert_header(format!("x-ms-meta-{}", k), v);
             }
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Set Tags operation enables users to set tags on a blob.
     pub async fn set_tags(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         tags: RequestContent<BlobTags>,
@@ -1189,7 +1168,7 @@ impl BlobBlobClient {
         if let Some(lease_id) = options.lease_id {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         request.set_body(tags);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -1199,7 +1178,6 @@ impl BlobBlobClient {
     /// ETag.
     pub async fn set_tier(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         tier: AccessTier,
@@ -1239,14 +1217,13 @@ impl BlobBlobClient {
         if let Some(rehydrate_priority) = options.rehydrate_priority {
             request.insert_header("x-ms-rehydrate-priority", rehydrate_priority.to_string());
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// The Start Copy From URL operation copies a blob or an internet resource to a new blob.
     pub async fn start_copy_from_url(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         copy_source: String,
@@ -1339,14 +1316,13 @@ impl BlobBlobClient {
         if let Some(blob_tags_string) = options.blob_tags_string {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Undelete a blob that was previously soft deleted
     pub async fn undelete(
         &self,
-        version: String,
         container_name: String,
         blob: String,
         options: Option<BlobBlobClientUndeleteOptions<'_>>,
@@ -1369,7 +1345,7 @@ impl BlobBlobClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 }

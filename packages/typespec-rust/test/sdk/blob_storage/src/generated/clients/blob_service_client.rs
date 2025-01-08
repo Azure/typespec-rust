@@ -28,7 +28,6 @@ impl BlobServiceClient {
     /// The Filter Blobs operation enables callers to list blobs across all containers whose tags match a given search expression.
     pub async fn filter_blobs(
         &self,
-        version: String,
         options: Option<BlobServiceClientFilterBlobsOptions<'_>>,
     ) -> Result<Response<FilterBlobSegment>> {
         let options = options.unwrap_or_default();
@@ -66,14 +65,13 @@ impl BlobServiceClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Returns the sku name and account kind.
     pub async fn get_account_info(
         &self,
-        version: String,
         options: Option<BlobServiceClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -93,7 +91,7 @@ impl BlobServiceClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -101,7 +99,6 @@ impl BlobServiceClient {
     /// Resource Sharing) rules.
     pub async fn get_properties(
         &self,
-        version: String,
         options: Option<BlobServiceClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<StorageServiceProperties>> {
         let options = options.unwrap_or_default();
@@ -121,7 +118,7 @@ impl BlobServiceClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -129,7 +126,6 @@ impl BlobServiceClient {
     /// when read-access geo-redundant replication is enabled for the storage account.
     pub async fn get_statistics(
         &self,
-        version: String,
         options: Option<BlobServiceClientGetStatisticsOptions<'_>>,
     ) -> Result<Response<StorageServiceStats>> {
         let options = options.unwrap_or_default();
@@ -149,14 +145,13 @@ impl BlobServiceClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     /// Retrieves a user delegation key for the Blob service. This is only a valid operation when using bearer token authentication.
     pub async fn get_user_delegation_key(
         &self,
-        version: String,
         start: String,
         expiry: String,
         options: Option<BlobServiceClientGetUserDelegationKeyOptions<'_>>,
@@ -178,7 +173,7 @@ impl BlobServiceClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         let body: RequestContent<GetUserDelegationKeyRequest> =
             GetUserDelegationKeyRequest { start, expiry }.try_into()?;
         request.set_body(body);
@@ -189,7 +184,6 @@ impl BlobServiceClient {
     /// Resource Sharing) rules
     pub async fn set_properties(
         &self,
-        version: String,
         options: Option<BlobServiceClientSetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -209,7 +203,7 @@ impl BlobServiceClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         let body: RequestContent<SetPropertiesRequest> = SetPropertiesRequest {
             logging: options.logging,
             hour_metrics: options.hour_metrics,
@@ -227,7 +221,6 @@ impl BlobServiceClient {
     /// The Batch operation allows multiple API calls to be embedded into a single HTTP request.
     pub async fn submit_batch(
         &self,
-        version: String,
         content_length: i64,
         body: RequestContent<Vec<u8>>,
         options: Option<BlobServiceClientSubmitBatchOptions<'_>>,
@@ -248,7 +241,7 @@ impl BlobServiceClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-version", version);
+        request.insert_header("x-ms-version", &self.version);
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
