@@ -29,7 +29,7 @@ steps:
       pnpm run tspcompile --verbose
       git add -A .
       git diff --staged 1>&2
-    displayName: Regenerate Cadl Tests
+    displayName: Regenerate Spector Tests
     workingDirectory: $(TypeSpecRustPkgDir)/test
     failOnStderr: true
 
@@ -39,11 +39,11 @@ steps:
     workingDirectory: $(TypeSpecRustPkgDir)/test
 
   - pwsh: |
-      pnpm cadl-ranch --start
+      pnpm spector --start
       cargo test --no-fail-fast
       $code = $LASTEXITCODE
-      pnpm cadl-ranch --stop
+      pnpm spector --stop
       exit $code
-    displayName: "Run cadl-ranch Tests"
+    displayName: "Run Spector Tests"
     timeoutInMinutes: 10
-    workingDirectory: $(System.DefaultWorkingDirectory)/packages/typespec-rust/test/cadlranch
+    workingDirectory: $(System.DefaultWorkingDirectory)/packages/typespec-rust/test/spector
