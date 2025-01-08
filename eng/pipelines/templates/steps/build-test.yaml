@@ -46,4 +46,4 @@ steps:
       exit $code
     displayName: "Run Spector Tests"
     timeoutInMinutes: 10
-    workingDirectory: $(System.DefaultWorkingDirectory)/packages/typespec-rust/test/spector
+    workingDirectory: $(TypeSpecRustPkgDir)/test/spector
