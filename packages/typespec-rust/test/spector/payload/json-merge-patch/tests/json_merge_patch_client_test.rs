@@ -9,7 +9,7 @@ use spector_jmergepatch::{
 };
 use std::collections::HashMap;
 
-#[async_std::test]
+#[tokio::test]
 async fn create_resource() {
     let client = JsonMergePatchClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut inner_model = InnerModel::default();
@@ -58,7 +58,7 @@ async fn create_resource() {
     assert_eq!(int_array_val, vec![1, 2, 3]);
 }
 
-#[async_std::test]
+#[tokio::test]
 #[should_panic]
 async fn update_optional_resource() {
     let client = JsonMergePatchClient::with_no_credential("http://localhost:3000", None).unwrap();
@@ -77,7 +77,7 @@ async fn update_optional_resource() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 #[should_panic]
 async fn update_resource() {
     let client = JsonMergePatchClient::with_no_credential("http://localhost:3000", None).unwrap();

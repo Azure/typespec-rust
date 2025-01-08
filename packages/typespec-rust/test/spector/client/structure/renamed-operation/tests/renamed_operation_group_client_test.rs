@@ -4,7 +4,7 @@
 
 use spector_renamedop::{models::ClientType, RenamedOperationClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn renamed_four() {
     let client = RenamedOperationClient::with_no_credential(
         "http://localhost:3000",
@@ -19,7 +19,7 @@ async fn renamed_four() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn renamed_six() {
     let client = RenamedOperationClient::with_no_credential(
         "http://localhost:3000",
@@ -34,7 +34,7 @@ async fn renamed_six() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn renamed_two() {
     let client = RenamedOperationClient::with_no_credential(
         "http://localhost:3000",

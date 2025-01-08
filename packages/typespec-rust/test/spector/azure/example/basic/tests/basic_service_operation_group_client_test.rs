@@ -9,7 +9,7 @@ use spector_azurebasic::{
     BasicClient,
 };
 
-#[async_std::test]
+#[tokio::test]
 async fn basic() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut model_prop = Model::default();

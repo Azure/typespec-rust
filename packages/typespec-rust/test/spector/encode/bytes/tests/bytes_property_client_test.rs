@@ -10,7 +10,7 @@ use spector_bytes::{
     BytesClient,
 };
 
-#[async_std::test]
+#[tokio::test]
 async fn base64() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut input = Base64BytesProperty::default();
@@ -24,7 +24,7 @@ async fn base64() {
     assert_eq!(output.value, Some("test".as_bytes().to_owned()));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn base64_url() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut input = Base64urlBytesProperty::default();
@@ -38,7 +38,7 @@ async fn base64_url() {
     assert_eq!(output.value, Some("test".as_bytes().to_owned()));
 }
 
-#[async_std::test]
+#[tokio::test]
 #[should_panic]
 async fn base64_url_array() {
     // TODO: https://github.com/Azure/typespec-rust/issues/56
@@ -64,7 +64,7 @@ async fn base64_url_array() {
     );
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn default() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut input = DefaultBytesProperty::default();

@@ -4,7 +4,7 @@
 
 use spector_bytes::BytesClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn base64() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -14,7 +14,7 @@ async fn base64() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn base64_url() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -24,7 +24,7 @@ async fn base64_url() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn base64_url_array() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -37,7 +37,7 @@ async fn base64_url_array() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn default() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     client

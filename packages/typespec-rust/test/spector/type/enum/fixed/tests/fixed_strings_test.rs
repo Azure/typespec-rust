@@ -5,7 +5,7 @@
 use spector_fixed::models::DaysOfWeekEnum;
 use spector_fixed::FixedClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn get_known_value() {
     let client = FixedClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
@@ -17,7 +17,7 @@ async fn get_known_value() {
     assert_eq!(value, DaysOfWeekEnum::Monday);
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn put_known_value() {
     let client = FixedClient::with_no_credential("http://localhost:3000", None).unwrap();
     let req = DaysOfWeekEnum::Monday.try_into().unwrap();
@@ -28,7 +28,7 @@ async fn put_known_value() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 #[ignore]
 async fn put_unknown_value() {
     // can't send an arbitrary value for fixed enums in Rust

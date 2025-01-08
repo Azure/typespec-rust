@@ -4,7 +4,7 @@
 
 use spector_twoop::{models::ClientType, TwoOperationGroupClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn four() {
     let client = TwoOperationGroupClient::with_no_credential(
         "http://localhost:3000",
@@ -19,7 +19,7 @@ async fn four() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn one() {
     let client = TwoOperationGroupClient::with_no_credential(
         "http://localhost:3000",
@@ -34,7 +34,7 @@ async fn one() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn three() {
     let client = TwoOperationGroupClient::with_no_credential(
         "http://localhost:3000",

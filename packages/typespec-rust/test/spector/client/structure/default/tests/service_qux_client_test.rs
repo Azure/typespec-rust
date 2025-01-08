@@ -4,7 +4,7 @@
 
 use spector_default::{models::ClientType, ServiceClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn eight() {
     let client =
         ServiceClient::with_no_credential("http://localhost:3000", ClientType::Default, None)

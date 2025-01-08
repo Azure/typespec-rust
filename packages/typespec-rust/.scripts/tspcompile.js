@@ -19,8 +19,8 @@ const compiler = pkgRoot + 'node_modules/@typespec/compiler/cmd/tsp.js';
 const httpSpecsGroup = {
   //'spector_apikey': {input: 'authentication/api-key'},
   //'spector_custom': {input: 'authentication/http/custom'},
-  'spector_oauth2': {input: 'authentication/oauth2', args: ['overwrite-cargo-toml=false']},
-  'spector_unionauth': {input: 'authentication/union', args: ['overwrite-cargo-toml=false']},
+  'spector_oauth2': {input: 'authentication/oauth2'},
+  'spector_unionauth': {input: 'authentication/union'},
   'spector_bytes': {input: 'encode/bytes'}, // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
   //'spector_datetime': {input: 'encode/datetime'},
   'spector_duration': {input: 'encode/duration'},
@@ -74,7 +74,7 @@ const azureHttpSpecsGroup = {
   //'spector_traits': {input: 'azure/core/traits'},
   'spector_azurepageable': {input: 'azure/payload/pageable'},
   'spector_azurebasic': {input: 'azure/example/basic'},
-  'spector_armcommon': {input: 'azure/resource-manager/common-properties', args: ['overwrite-cargo-toml=false']},
+  'spector_armcommon': {input: 'azure/resource-manager/common-properties'},
   //'spector_armresources': {input: 'azure/resource-manager/resources'},
   //'spector_naming': {input: 'client/naming'},
   'spector_clientopgroup': {input: 'client/structure/client-operation-group/client.tsp'},
@@ -169,7 +169,6 @@ function generate(crate, input, outputDir, additionalArgs) {
       const options = [];
       options.push(`--option="@azure-tools/typespec-rust.crate-name=${crate}"`);
       options.push(`--option="@azure-tools/typespec-rust.crate-version=0.1.0"`);
-      options.push(`--option="@azure-tools/typespec-rust.overwrite-cargo-toml=true"`);
       options.push(`--option="@azure-tools/typespec-rust.emitter-output-dir=${fullOutputDir}"`);
       const command = `node ${compiler} compile ${input} --emit=${pkgRoot} ${options.join(' ')} ${additionalArgs.join(' ')}`;
       if (switches.includes('--verbose')) {

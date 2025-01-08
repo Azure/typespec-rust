@@ -4,7 +4,7 @@
 
 use spector_unversioned::NotVersionedClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn with_path_api_version() {
     let client = NotVersionedClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -13,7 +13,7 @@ async fn with_path_api_version() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_query_api_version() {
     let client = NotVersionedClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -22,7 +22,7 @@ async fn with_query_api_version() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn without_api_version() {
     let client = NotVersionedClient::with_no_credential("http://localhost:3000", None).unwrap();
     client.without_api_version(None).await.unwrap();

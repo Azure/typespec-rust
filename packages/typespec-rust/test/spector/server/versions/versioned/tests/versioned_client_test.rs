@@ -4,19 +4,19 @@
 
 use spector_versioned::{versioned_client::VersionedClientOptions, VersionedClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn with_path_api_version() {
     let client = VersionedClient::with_no_credential("http://localhost:3000", None).unwrap();
     client.with_path_api_version(None).await.unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_query_api_version() {
     let client = VersionedClient::with_no_credential("http://localhost:3000", None).unwrap();
     client.with_query_api_version(None).await.unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_query_old_api_version() {
     let client = VersionedClient::with_no_credential(
         "http://localhost:3000",
@@ -29,7 +29,7 @@ async fn with_query_old_api_version() {
     client.with_query_old_api_version(None).await.unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn without_api_version() {
     let client = VersionedClient::with_no_credential("http://localhost:3000", None).unwrap();
     client.without_api_version(None).await.unwrap();

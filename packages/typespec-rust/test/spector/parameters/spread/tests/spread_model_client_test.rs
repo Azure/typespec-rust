@@ -4,7 +4,7 @@
 
 use spector_spread::{models::BodyParameter, SpreadClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn spread_as_request_body() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -14,7 +14,7 @@ async fn spread_as_request_body() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn spread_composite_request() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut body = BodyParameter::default();
@@ -31,7 +31,7 @@ async fn spread_composite_request() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn spread_composite_request_mix() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -46,7 +46,7 @@ async fn spread_composite_request_mix() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn spread_composite_request_only_with_body() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut body = BodyParameter::default();
@@ -58,7 +58,7 @@ async fn spread_composite_request_only_with_body() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn spread_composite_request_without_body() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     client

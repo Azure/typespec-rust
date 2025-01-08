@@ -7,7 +7,7 @@ use spector_flattenproperty::models::{
 };
 use spector_flattenproperty::FlattenPropertyClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn put_flatten_model() {
     let client = FlattenPropertyClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut child_model = ChildModel::default();
@@ -25,7 +25,7 @@ async fn put_flatten_model() {
     assert_eq!(props.description, Some(String::from("test")));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn put_nested_flatten_model() {
     let client = FlattenPropertyClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut child_model = ChildModel::default();

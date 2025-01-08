@@ -4,7 +4,7 @@
 
 use spector_collectionfmt::CollectionFormatClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn csv() {
     let client = CollectionFormatClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -17,7 +17,7 @@ async fn csv() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn multi() {
     let client = CollectionFormatClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -30,7 +30,7 @@ async fn multi() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn pipes() {
     let client = CollectionFormatClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -43,7 +43,7 @@ async fn pipes() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn ssv() {
     let client = CollectionFormatClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -56,7 +56,7 @@ async fn ssv() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn tsv() {
     let client = CollectionFormatClient::with_no_credential("http://localhost:3000", None).unwrap();
     client

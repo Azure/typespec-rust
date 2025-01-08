@@ -7,7 +7,7 @@ use spector_xml::{
     XmlClient,
 };
 
-#[async_std::test]
+#[tokio::test]
 async fn get() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
@@ -24,7 +24,7 @@ async fn get() {
     assert_eq!(output_data.name, Some("bar".to_string()));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut input_data = SimpleModel::default();

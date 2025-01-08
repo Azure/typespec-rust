@@ -4,7 +4,7 @@
 
 use spector_collectionfmt::CollectionFormatClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn csv() {
     let client = CollectionFormatClient::with_no_credential("http://localhost:3000", None).unwrap();
     client

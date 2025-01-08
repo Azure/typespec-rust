@@ -67,11 +67,6 @@ export class Adapter {
       this.crate.addDependency(new rust.CrateDependency('typespec_client_core'));
     }
 
-    if (this.crate.clients.length > 0) {
-      // TODO: remove as part of https://github.com/Azure/typespec-rust/issues/127
-      this.crate.addDependency(new rust.CrateDependency('async-std'));
-    }
-
     // TODO: remove once https://github.com/Azure/typespec-rust/issues/22 is fixed
     for (const client of this.crate.clients) {
       let done = false;

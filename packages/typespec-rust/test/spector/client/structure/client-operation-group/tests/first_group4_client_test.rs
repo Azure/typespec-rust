@@ -4,7 +4,7 @@
 
 use spector_clientopgroup::{models::ClientType, FirstClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn four() {
     let client = FirstClient::with_no_credential(
         "http://localhost:3000",

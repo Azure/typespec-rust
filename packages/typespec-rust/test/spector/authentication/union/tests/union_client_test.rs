@@ -33,7 +33,7 @@ impl TokenCredential for FakeTokenCredential {
     }
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn valid_token() {
     let client = UnionClient::new(
         "http://localhost:3000",

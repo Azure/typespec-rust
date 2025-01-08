@@ -4,7 +4,7 @@
 
 use spector_specialwords::SpecialWordsClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn with_and() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -14,7 +14,7 @@ async fn with_and() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_as() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -24,7 +24,7 @@ async fn with_as() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_assert() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -34,7 +34,7 @@ async fn with_assert() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_async() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -44,7 +44,7 @@ async fn with_async() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_await() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -54,7 +54,7 @@ async fn with_await() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_break() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -64,7 +64,7 @@ async fn with_break() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_cancellation_token() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -74,7 +74,7 @@ async fn with_cancellation_token() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_class() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -84,7 +84,7 @@ async fn with_class() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_constructor() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -94,7 +94,7 @@ async fn with_constructor() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_continue() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -104,7 +104,7 @@ async fn with_continue() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_def() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -114,7 +114,7 @@ async fn with_def() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_del() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -124,7 +124,7 @@ async fn with_del() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_elif() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -134,7 +134,7 @@ async fn with_elif() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_else() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -144,7 +144,7 @@ async fn with_else() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_except() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -154,7 +154,7 @@ async fn with_except() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_exec() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -164,7 +164,7 @@ async fn with_exec() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_finally() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -174,7 +174,7 @@ async fn with_finally() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_for() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -184,7 +184,7 @@ async fn with_for() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_from() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -194,7 +194,7 @@ async fn with_from() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_global() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -204,7 +204,7 @@ async fn with_global() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_if() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -214,7 +214,7 @@ async fn with_if() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_import() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -224,7 +224,7 @@ async fn with_import() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_in() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -234,7 +234,7 @@ async fn with_in() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_is() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -244,7 +244,7 @@ async fn with_is() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_lambda() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -254,7 +254,7 @@ async fn with_lambda() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_not() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -264,7 +264,7 @@ async fn with_not() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_or() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -274,7 +274,7 @@ async fn with_or() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_pass() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -284,7 +284,7 @@ async fn with_pass() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_raise() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -294,7 +294,7 @@ async fn with_raise() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_return() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -304,7 +304,7 @@ async fn with_return() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_try() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -314,7 +314,7 @@ async fn with_try() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_while() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -324,7 +324,7 @@ async fn with_while() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_with() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client
@@ -334,7 +334,7 @@ async fn with_with() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_yield() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let _resp = client

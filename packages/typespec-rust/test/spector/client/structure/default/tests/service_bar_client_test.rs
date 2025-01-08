@@ -4,7 +4,7 @@
 
 use spector_default::{models::ClientType, ServiceClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn five() {
     let client =
         ServiceClient::with_no_credential("http://localhost:3000", ClientType::Default, None)
@@ -12,7 +12,7 @@ async fn five() {
     client.get_service_bar_client().five(None).await.unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn six() {
     let client =
         ServiceClient::with_no_credential("http://localhost:3000", ClientType::Default, None)

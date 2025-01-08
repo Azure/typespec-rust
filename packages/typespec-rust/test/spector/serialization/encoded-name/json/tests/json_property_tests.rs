@@ -4,7 +4,7 @@
 
 use spector_jsonencodedname::{models::JsonEncodedNameModel, JsonClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn get() {
     let client = JsonClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.get_json_property_client().get(None).await.unwrap();
@@ -12,7 +12,7 @@ async fn get() {
     assert_eq!(value.default_name, Some(true));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn send() {
     let client = JsonClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut model = JsonEncodedNameModel::default();

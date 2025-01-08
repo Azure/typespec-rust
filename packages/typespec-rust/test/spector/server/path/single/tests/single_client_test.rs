@@ -4,7 +4,7 @@
 
 use spector_single::SingleClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn my_op() {
     let client = SingleClient::with_no_credential("http://localhost:3000", None).unwrap();
     client.my_op(None).await.unwrap();

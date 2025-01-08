@@ -33,7 +33,7 @@ impl TokenCredential for FakeTokenCredential {
     }
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn invalid() {
     let client = OAuth2Client::new(
         "http://localhost:3000",
@@ -45,7 +45,7 @@ async fn invalid() {
     resp.expect_err("server returned error status which will not be retried: 403");
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn valid() {
     let client = OAuth2Client::new(
         "http://localhost:3000",

@@ -4,7 +4,7 @@
 
 use spector_duration::DurationClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn default() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -14,7 +14,7 @@ async fn default() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn float64_seconds() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -24,7 +24,7 @@ async fn float64_seconds() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn float_seconds() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -34,7 +34,7 @@ async fn float_seconds() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn int32_seconds() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -44,7 +44,7 @@ async fn int32_seconds() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn int32_seconds_array() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -54,7 +54,7 @@ async fn int32_seconds_array() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn iso8601() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client

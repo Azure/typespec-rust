@@ -4,7 +4,7 @@
 
 use spector_clientopgroup::{models::ClientType, FirstClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn three() {
     let client = FirstClient::with_no_credential(
         "http://localhost:3000",
@@ -15,7 +15,7 @@ async fn three() {
     client.get_first_group3_client().three(None).await.unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn two() {
     let client = FirstClient::with_no_credential(
         "http://localhost:3000",

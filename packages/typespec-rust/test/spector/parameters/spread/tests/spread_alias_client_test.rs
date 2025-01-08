@@ -6,7 +6,7 @@ use spector_spread::{
     spread_alias_client::SpreadAliasClientSpreadWithMultipleParametersOptions, SpreadClient,
 };
 
-#[async_std::test]
+#[tokio::test]
 async fn spread_as_request_body() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -16,7 +16,7 @@ async fn spread_as_request_body() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn spread_as_request_parameter() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -26,7 +26,7 @@ async fn spread_as_request_parameter() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn spread_parameter_with_inner_alias() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -42,7 +42,7 @@ async fn spread_parameter_with_inner_alias() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn spread_parameter_with_inner_model() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -57,7 +57,7 @@ async fn spread_parameter_with_inner_model() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn spread_with_multiple_parameters() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     client

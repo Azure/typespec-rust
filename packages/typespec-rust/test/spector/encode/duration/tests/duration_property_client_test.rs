@@ -10,7 +10,7 @@ use spector_duration::{
     DurationClient,
 };
 
-#[async_std::test]
+#[tokio::test]
 async fn default() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut body = DefaultDurationProperty::default();
@@ -24,7 +24,7 @@ async fn default() {
     assert_eq!(result.value, Some("P40D".to_string()));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn float64_seconds() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut body = Float64SecondsDurationProperty::default();
@@ -38,7 +38,7 @@ async fn float64_seconds() {
     assert_eq!(result.value, Some(35.625));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn float_seconds() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut body = FloatSecondsDurationProperty::default();
@@ -52,7 +52,7 @@ async fn float_seconds() {
     assert_eq!(result.value, Some(35.625));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn float_seconds_array() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut body = FloatSecondsDurationArrayProperty::default();
@@ -66,7 +66,7 @@ async fn float_seconds_array() {
     assert_eq!(result.value, Some(vec![35.625, 46.75]));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn int32_seconds() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut body = Int32SecondsDurationProperty::default();
@@ -80,7 +80,7 @@ async fn int32_seconds() {
     assert_eq!(result.value, Some(36));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn iso8601() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut body = ISO8601DurationProperty::default();

@@ -4,7 +4,7 @@
 
 use spector_specialwords::{models::SameAsModel, SpecialWordsClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn same_as_model() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut same_as_model = SameAsModel::default();

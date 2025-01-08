@@ -8,5 +8,7 @@ repository.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-async-std = { workspace = true }
 azure_core = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true }

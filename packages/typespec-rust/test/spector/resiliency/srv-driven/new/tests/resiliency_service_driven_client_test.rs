@@ -11,7 +11,7 @@ use spector_srvdrivennew::{
     ResiliencyServiceDrivenClient,
 };
 
-#[async_std::test]
+#[tokio::test]
 async fn add_operation() {
     let client = ResiliencyServiceDrivenClient::with_no_credential(
         "http://localhost:3000",
@@ -22,7 +22,7 @@ async fn add_operation() {
     client.add_operation(None).await.unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn from_none_v1() {
     let client = ResiliencyServiceDrivenClient::with_no_credential(
         "http://localhost:3000",
@@ -42,7 +42,7 @@ async fn from_none_v1() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn from_one_optional_v1() {
     let client = ResiliencyServiceDrivenClient::with_no_credential(
         "http://localhost:3000",
@@ -63,7 +63,7 @@ async fn from_one_optional_v1() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn from_one_required_v1() {
     let client = ResiliencyServiceDrivenClient::with_no_credential(
         "http://localhost:3000",
@@ -86,7 +86,7 @@ async fn from_one_required_v1() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn from_none_v2() {
     let client = ResiliencyServiceDrivenClient::with_no_credential(
         "http://localhost:3000",
@@ -103,7 +103,7 @@ async fn from_none_v2() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn from_one_optional_v2() {
     let client = ResiliencyServiceDrivenClient::with_no_credential(
         "http://localhost:3000",
@@ -121,7 +121,7 @@ async fn from_one_optional_v2() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn from_one_required_v2() {
     let client = ResiliencyServiceDrivenClient::with_no_credential(
         "http://localhost:3000",

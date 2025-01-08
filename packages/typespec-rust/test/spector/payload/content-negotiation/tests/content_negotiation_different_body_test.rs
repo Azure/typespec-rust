@@ -5,7 +5,7 @@
 use spector_contentneg::{models::PngImageAsJson, ContentNegotiationClient};
 use std::fs;
 
-#[async_std::test]
+#[tokio::test]
 async fn get_avatar_as_json() {
     let client =
         ContentNegotiationClient::with_no_credential("http://localhost:3000", None).unwrap();
@@ -20,7 +20,7 @@ async fn get_avatar_as_json() {
     assert_eq!(result.content, Some(image_png));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn get_avatar_as_png() {
     let client =
         ContentNegotiationClient::with_no_credential("http://localhost:3000", None).unwrap();

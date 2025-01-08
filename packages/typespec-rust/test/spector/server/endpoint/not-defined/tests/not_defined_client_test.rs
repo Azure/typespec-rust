@@ -4,7 +4,7 @@
 
 use spector_noendpoint::NotDefinedClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn valid() {
     let client = NotDefinedClient::with_no_credential("http://localhost:3000", None).unwrap();
     client.valid(None).await.unwrap();

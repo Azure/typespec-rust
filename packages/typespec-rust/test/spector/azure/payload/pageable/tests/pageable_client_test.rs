@@ -7,7 +7,7 @@ use spector_azurepageable::{
     models::PagedUser, pageable_client::PageableClientListOptions, PageableClient,
 };
 
-#[async_std::test]
+#[tokio::test]
 async fn list() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut pager = client

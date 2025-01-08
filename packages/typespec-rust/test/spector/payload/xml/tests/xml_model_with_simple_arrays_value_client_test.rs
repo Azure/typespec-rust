@@ -4,7 +4,7 @@
 
 use spector_xml::{models::ModelWithSimpleArrays, XmlClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn get() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
@@ -24,7 +24,7 @@ async fn get() {
     assert_eq!(value.counts, Some(vec![1, 2]));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut input = ModelWithSimpleArrays::default();

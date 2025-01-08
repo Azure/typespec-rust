@@ -5,7 +5,7 @@
 use spector_extensible::models::DaysOfWeekExtensibleEnum;
 use spector_extensible::ExtensibleClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn get_known_value() {
     let client = ExtensibleClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
@@ -17,7 +17,7 @@ async fn get_known_value() {
     assert_eq!(value, DaysOfWeekExtensibleEnum::Monday);
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn get_unknown_value() {
     let client = ExtensibleClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
@@ -32,7 +32,7 @@ async fn get_unknown_value() {
     );
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn put_known_value() {
     let client = ExtensibleClient::with_no_credential("http://localhost:3000", None).unwrap();
     let req = DaysOfWeekExtensibleEnum::Monday.try_into().unwrap();
@@ -43,7 +43,7 @@ async fn put_known_value() {
         .unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn put_unknown_value() {
     let client = ExtensibleClient::with_no_credential("http://localhost:3000", None).unwrap();
     let req = DaysOfWeekExtensibleEnum::UnknownValue("Weekend".to_string())

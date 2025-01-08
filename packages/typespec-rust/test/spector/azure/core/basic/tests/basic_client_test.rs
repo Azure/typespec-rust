@@ -10,7 +10,7 @@ use spector_basic::{
     BasicClient,
 };
 
-#[async_std::test]
+#[tokio::test]
 async fn create_or_replace() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut resource = User::default();
@@ -28,7 +28,7 @@ async fn create_or_replace() {
     assert_eq!(resource.name, Some("Madge".to_string()));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn create_or_update() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut resource = User::default();
@@ -46,13 +46,13 @@ async fn create_or_update() {
     assert_eq!(resource.name, Some("Madge".to_string()));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn delete() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     client.delete(1, None).await.unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn export() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.export(1, "json".to_string(), None).await.unwrap();
@@ -65,7 +65,7 @@ async fn export() {
     assert_eq!(user.name, Some("Madge".to_string()));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn export_all_users() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
@@ -89,7 +89,7 @@ async fn export_all_users() {
     assert_eq!(user_list[1].name, Some("John".to_string()));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn get() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.get(1, None).await.unwrap();
@@ -102,7 +102,7 @@ async fn get() {
     assert_eq!(user.name, Some("Madge".to_string()));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn list() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut pager = client

@@ -4,7 +4,7 @@
 
 use spector_multiclient::{models::ClientType, ClientAClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn renamed_five() {
     let client =
         ClientAClient::with_no_credential("http://localhost:3000", ClientType::MultiClient, None)
@@ -12,7 +12,7 @@ async fn renamed_five() {
     client.renamed_five(None).await.unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn renamed_one() {
     let client =
         ClientAClient::with_no_credential("http://localhost:3000", ClientType::MultiClient, None)
@@ -20,7 +20,7 @@ async fn renamed_one() {
     client.renamed_one(None).await.unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn renamed_three() {
     let client =
         ClientAClient::with_no_credential("http://localhost:3000", ClientType::MultiClient, None)

@@ -4,7 +4,7 @@
 
 use spector_xml::{models::ModelWithText, XmlClient};
 
-#[async_std::test]
+#[tokio::test]
 async fn get() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
@@ -18,7 +18,7 @@ async fn get() {
     assert_eq!(value.language, Some("foo".to_string()));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut input = ModelWithText::default();

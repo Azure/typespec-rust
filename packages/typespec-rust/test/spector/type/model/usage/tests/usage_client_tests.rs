@@ -5,7 +5,7 @@
 use spector_usage::models::{InputOutputRecord, InputRecord, OutputRecord};
 use spector_usage::UsageClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn input() {
     let client = UsageClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut input_record = InputRecord::default();
@@ -14,7 +14,7 @@ async fn input() {
     let _resp = client.input(req, None).await.unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn input_and_output() {
     let client = UsageClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut io_record = InputOutputRecord::default();
@@ -25,7 +25,7 @@ async fn input_and_output() {
     assert_eq!(value.required_prop, Some(String::from("example-value")));
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn output() {
     let client = UsageClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.output(None).await.unwrap();

@@ -71,7 +71,7 @@ fn get_valid_mi_resource() -> ManagedIdentityTrackedResource {
     mi_resource
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn create_with_system_assigned() {
     let client = create_client();
     let mut identity = ManagedServiceIdentity::default();
@@ -113,7 +113,7 @@ async fn create_with_system_assigned() {
     );
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn get() {
     let client = create_client();
     let resp = client
@@ -143,7 +143,7 @@ async fn get() {
     );
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn update_with_user_assigned_and_system_assigned() {
     let client = create_client();
     let mut identity = ManagedServiceIdentity::default();

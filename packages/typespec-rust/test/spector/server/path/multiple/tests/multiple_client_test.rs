@@ -4,13 +4,13 @@
 
 use spector_multiple::MultipleClient;
 
-#[async_std::test]
+#[tokio::test]
 async fn no_operation_params() {
     let client = MultipleClient::with_no_credential("http://localhost:3000", None).unwrap();
     client.no_operation_params(None).await.unwrap();
 }
 
-#[async_std::test]
+#[tokio::test]
 async fn with_operation_path_param() {
     let client = MultipleClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
