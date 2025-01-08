@@ -16,7 +16,7 @@ async fn get_avatar_as_jpeg() {
         .unwrap();
     let body = resp.into_raw_body().collect().await.unwrap();
     let image_jpg =
-        fs::read("../../../../node_modules/@azure-tools/cadl-ranch-specs/assets/image.jpg")
+        fs::read("../../../../node_modules/@typespec/http-specs/assets/image.jpg")
             .unwrap();
     assert_eq!(body, image_jpg)
 }
@@ -32,7 +32,7 @@ async fn get_avatar_as_png() {
         .unwrap();
     let body = resp.into_raw_body().collect().await.unwrap();
     let image_png =
-        fs::read("../../../../node_modules/@azure-tools/cadl-ranch-specs/assets/image.png")
+        fs::read("../../../../node_modules/@typespec/http-specs/assets/image.png")
             .unwrap();
     assert_eq!(body, image_png)
 }

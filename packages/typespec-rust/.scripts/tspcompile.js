@@ -127,7 +127,7 @@ loopSpec(azureHttpSpecsGroup, azureHttpSpecs)
 
 function loopSpec(group, root) {
   for (const crate in group) {
-    const crateSettings = cadlRanch[crate];
+    const crateSettings = group[crate];
     let additionalArgs;
     if (crateSettings.args) {
       additionalArgs = crateSettings.args;
@@ -136,7 +136,7 @@ function loopSpec(group, root) {
     if (crateSettings.output) {
       outDir = crateSettings.output;
     } else {
-      // make the output directory structure the same as the cadl input directory.
+      // make the output directory structure the same as the spector input directory.
       // if the input specifies a .tsp file, remove that first.
       outDir = crateSettings.input;
       if (outDir.lastIndexOf('.tsp') > -1) {
