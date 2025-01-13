@@ -142,9 +142,13 @@ export class Context {
    * @returns the body format
    */
   getModelBodyFormat(model: rust.Model): rust.BodyFormat {
-    const bodyFormat = this.bodyFormatForModels.get(model);
+    let bodyFormat = this.bodyFormatForModels.get(model);
     if (!bodyFormat) {
-      throw new Error(`didn't find body format for model ${model.name}`);
+      // tsp behavior is to default to json when not specified.
+      // we should only hit this for cases where a model isn't
+      // used by an operation and has explicitly been annotated
+      // to not be pruned.
+      bodyFormat = 'json';
     }
     return bodyFormat;
   }

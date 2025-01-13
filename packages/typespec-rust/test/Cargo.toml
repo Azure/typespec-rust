@@ -17,6 +17,7 @@ members = [
     "spector/type/array",
     "spector/type/dictionary",
     "spector/azure/client-generator-core/flatten-property",
+    "spector/azure/client-generator-core/usage",
     "spector/azure/core/basic",
     "spector/azure/example/basic",
     "spector/azure/payload/pageable",
