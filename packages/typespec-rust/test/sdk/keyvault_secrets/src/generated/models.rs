@@ -15,6 +15,7 @@ use time::OffsetDateTime;
 pub struct BackupSecretResult {
     /// The backup blob containing the backed up secret.
     #[serde(
+        default,
         deserialize_with = "base64::deserialize_url_safe",
         serialize_with = "base64::serialize_url_safe",
         skip_serializing_if = "Option::is_none"
@@ -35,7 +36,12 @@ pub struct DeletedSecretBundle {
     pub content_type: Option<String>,
 
     /// The time when the secret was deleted, in UTC
-    #[serde(rename = "deletedDate", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "deletedDate",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::unix_time::option"
+    )]
     pub deleted_date: Option<OffsetDateTime>,
 
     /// The secret id.
@@ -56,7 +62,12 @@ pub struct DeletedSecretBundle {
     pub recovery_id: Option<String>,
 
     /// The time when the secret is scheduled to be purged, in UTC
-    #[serde(rename = "scheduledPurgeDate", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "scheduledPurgeDate",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::unix_time::option"
+    )]
     pub scheduled_purge_date: Option<OffsetDateTime>,
 
     /// Application specific metadata in the form of key-value pairs.
@@ -81,7 +92,12 @@ pub struct DeletedSecretItem {
     pub content_type: Option<String>,
 
     /// The time when the secret was deleted, in UTC
-    #[serde(rename = "deletedDate", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "deletedDate",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::unix_time::option"
+    )]
     pub deleted_date: Option<OffsetDateTime>,
 
     /// Secret identifier.
@@ -97,7 +113,12 @@ pub struct DeletedSecretItem {
     pub recovery_id: Option<String>,
 
     /// The time when the secret is scheduled to be purged, in UTC
-    #[serde(rename = "scheduledPurgeDate", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "scheduledPurgeDate",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::unix_time::option"
+    )]
     pub scheduled_purge_date: Option<OffsetDateTime>,
 
     /// Application specific metadata in the form of key-value pairs.
@@ -124,7 +145,11 @@ pub struct DeletedSecretListResult {
 #[non_exhaustive]
 pub struct SecretAttributes {
     /// Creation time in UTC.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::unix_time::option"
+    )]
     pub created: Option<OffsetDateTime>,
 
     /// Determines whether the object is enabled.
@@ -132,11 +157,21 @@ pub struct SecretAttributes {
     pub enabled: Option<bool>,
 
     /// Expiry date in UTC.
-    #[serde(rename = "exp", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "exp",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::unix_time::option"
+    )]
     pub expires: Option<OffsetDateTime>,
 
     /// Not before date in UTC.
-    #[serde(rename = "nbf", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "nbf",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::unix_time::option"
+    )]
     pub not_before: Option<OffsetDateTime>,
 
     /// softDelete data retention days. Value should be >=7 and <=90 when softDelete enabled, otherwise 0.
@@ -150,7 +185,11 @@ pub struct SecretAttributes {
     pub recovery_level: Option<DeletionRecoveryLevel>,
 
     /// Last updated time in UTC.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::unix_time::option"
+    )]
     pub updated: Option<OffsetDateTime>,
 }
 
@@ -232,8 +271,9 @@ pub struct SecretListResult {
 pub struct SecretRestoreParameters {
     /// The backup blob associated with a secret bundle.
     #[serde(
-        rename = "value",
+        default,
         deserialize_with = "base64::deserialize_url_safe",
+        rename = "value",
         serialize_with = "base64::serialize_url_safe",
         skip_serializing_if = "Option::is_none"
     )]

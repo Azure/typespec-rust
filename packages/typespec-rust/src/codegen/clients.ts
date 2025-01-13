@@ -864,6 +864,17 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     return encoding;
   };
 
+  const encodeDateTime = function(type: rust.OffsetDateTime, param: string): string {
+    use.addType('azure_core', 'date');
+    switch (type.encoding) {
+      case 'rfc3339':
+      case 'rfc7231':
+        return `date::to_${type.encoding}(&${param})`;
+      case 'unix_time':
+        return `${param}.unix_timestamp().to_string()`;
+    }
+  };
+
   if (param.kind === 'headerCollection' || param.kind === 'queryCollection') {
     if (param.format === 'multi') {
       throw new Error('multi should have been handled outside getHeaderPathQueryParamValue');
@@ -872,11 +883,19 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     }
 
     // convert the items to strings
-    let strConv = '|i| i.to_string()';
-    if (param.type.type.kind === 'encodedBytes') {
-      strConv = encodeBytes(param.type.type);
+    let strConv: string;
+    switch (param.type.type.kind) {
+      case 'encodedBytes':
+        strConv = encodeBytes(param.type.type);
+        break;
+      case 'offsetDateTime':
+        strConv = `|i| ${encodeDateTime(param.type.type, 'i')}`;
+        break;
+      default:
+        strConv = '|i| i.to_string()';
     }
-    return `${paramName}.iter().map(${strConv}).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
+
+    return `${param.name}.iter().map(${strConv}).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
   }
 
   switch (param.type.kind) {
@@ -885,14 +904,14 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     case 'encodedBytes':
       return encodeBytes(param.type, paramName);
     case 'enum':
-    case 'hashmap':
-    case 'offsetDateTime':
     case 'scalar':
       return `${paramName}.to_string()`;
     case 'implTrait':
       return `${paramName}.into()`;
     case 'literal':
       return `"${param.type.value}"`;
+    case 'offsetDateTime':
+      return encodeDateTime(param.type, param.name);
     default:
       throw new Error(`unhandled ${param.kind} param type kind ${param.type.kind}`);
   }

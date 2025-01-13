@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 #[non_exhaustive]
 pub struct PngImageAsJson {
     #[serde(
+        default,
         deserialize_with = "base64::deserialize",
         serialize_with = "base64::serialize",
         skip_serializing_if = "Option::is_none"

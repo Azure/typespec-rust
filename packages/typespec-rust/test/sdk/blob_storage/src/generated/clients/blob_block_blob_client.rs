@@ -7,8 +7,8 @@ use crate::models::{
     AccessTier, BlobImmutabilityPolicyMode, BlockListType, BlockLookupList, EncryptionAlgorithmType,
 };
 use azure_core::{
-    base64, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response,
-    Result, Url,
+    base64, date, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
+    Response, Result, Url,
 };
 use std::collections::HashMap;
 use time::OffsetDateTime;
@@ -61,13 +61,16 @@ impl BlobBlockBlobClient {
             request.insert_header("if-match", if_match);
         }
         if let Some(if_modified_since) = options.if_modified_since {
-            request.insert_header("if-modified-since", if_modified_since.to_string());
+            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
         }
         if let Some(if_none_match) = options.if_none_match {
             request.insert_header("if-none-match", if_none_match);
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
-            request.insert_header("if-unmodified-since", if_unmodified_since.to_string());
+            request.insert_header(
+                "if-unmodified-since",
+                date::to_rfc7231(&if_unmodified_since),
+            );
         }
         if let Some(tier) = options.tier {
             request.insert_header("x-ms-access-tier", tier.to_string());
@@ -223,13 +226,16 @@ impl BlobBlockBlobClient {
             request.insert_header("if-match", if_match);
         }
         if let Some(if_modified_since) = options.if_modified_since {
-            request.insert_header("if-modified-since", if_modified_since.to_string());
+            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
         }
         if let Some(if_none_match) = options.if_none_match {
             request.insert_header("if-none-match", if_none_match);
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
-            request.insert_header("if-unmodified-since", if_unmodified_since.to_string());
+            request.insert_header(
+                "if-unmodified-since",
+                date::to_rfc7231(&if_unmodified_since),
+            );
         }
         if let Some(tier) = options.tier {
             request.insert_header("x-ms-access-tier", tier.to_string());
@@ -511,13 +517,16 @@ impl BlobBlockBlobClient {
             request.insert_header("if-match", if_match);
         }
         if let Some(if_modified_since) = options.if_modified_since {
-            request.insert_header("if-modified-since", if_modified_since.to_string());
+            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
         }
         if let Some(if_none_match) = options.if_none_match {
             request.insert_header("if-none-match", if_none_match);
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
-            request.insert_header("if-unmodified-since", if_unmodified_since.to_string());
+            request.insert_header(
+                "if-unmodified-since",
+                date::to_rfc7231(&if_unmodified_since),
+            );
         }
         if let Some(tier) = options.tier {
             request.insert_header("x-ms-access-tier", tier.to_string());

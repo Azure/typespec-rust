@@ -83,7 +83,12 @@ pub struct ManagedServiceIdentity {
 #[non_exhaustive]
 pub struct SystemData {
     /// The timestamp of resource creation (UTC).
-    #[serde(rename = "createdAt", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "createdAt",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc3339::option"
+    )]
     pub created_at: Option<OffsetDateTime>,
 
     /// The identity that created the resource.
@@ -95,7 +100,12 @@ pub struct SystemData {
     pub created_by_type: Option<CreatedByType>,
 
     /// The timestamp of resource last modification (UTC)
-    #[serde(rename = "lastModifiedAt", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "lastModifiedAt",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc3339::option"
+    )]
     pub last_modified_at: Option<OffsetDateTime>,
 
     /// The identity that last modified the resource.

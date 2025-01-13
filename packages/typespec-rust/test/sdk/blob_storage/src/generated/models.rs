@@ -17,7 +17,12 @@ use time::OffsetDateTime;
 #[typespec(format = "xml")]
 pub struct AccessPolicy {
     /// The date-time the policy expires.
-    #[serde(rename = "Expiry", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "Expiry",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc3339::option"
+    )]
     pub expiry: Option<OffsetDateTime>,
 
     /// The permissions for acl the policy.
@@ -25,7 +30,12 @@ pub struct AccessPolicy {
     pub permission: Option<String>,
 
     /// The date-time the policy is active.
-    #[serde(rename = "Start", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "Start",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc3339::option"
+    )]
     pub start: Option<OffsetDateTime>,
 }
 
@@ -36,8 +46,9 @@ pub struct AccessPolicy {
 pub struct ArrowConfiguration {
     /// The Apache Arrow schema
     #[serde(
-        rename = "Schema",
+        default,
         deserialize_with = "SchemaArrowField::unwrap",
+        rename = "Schema",
         serialize_with = "SchemaArrowField::wrap",
         skip_serializing_if = "Option::is_none"
     )]
@@ -90,8 +101,9 @@ pub struct BlobTag {
 pub struct BlobTags {
     /// Represents the blob tags.
     #[serde(
-        rename = "TagSet",
+        default,
         deserialize_with = "Blob_tag_setBlobTag::unwrap",
+        rename = "TagSet",
         serialize_with = "Blob_tag_setBlobTag::wrap",
         skip_serializing_if = "Option::is_none"
     )]
@@ -206,8 +218,9 @@ pub struct FilterBlobItem {
 pub struct FilterBlobSegment {
     /// The blob segment.
     #[serde(
-        rename = "Blobs",
+        default,
         deserialize_with = "BlobsFilterBlobItem::unwrap",
+        rename = "Blobs",
         serialize_with = "BlobsFilterBlobItem::wrap",
         skip_serializing_if = "Option::is_none"
     )]
@@ -446,8 +459,9 @@ pub struct StaticWebsite {
 pub struct StorageServiceProperties {
     /// The CORS properties.
     #[serde(
-        rename = "Cors",
+        default,
         deserialize_with = "CorsCorsRule::unwrap",
+        rename = "Cors",
         serialize_with = "CorsCorsRule::wrap",
         skip_serializing_if = "Option::is_none"
     )]

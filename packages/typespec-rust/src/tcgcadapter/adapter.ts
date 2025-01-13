@@ -5,7 +5,7 @@
 
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
-import { EmitContext } from '@typespec/compiler';
+import { DateTimeKnownEncoding, EmitContext } from '@typespec/compiler';
 import * as http from '@typespec/http';
 import * as helpers from './helpers.js';
 import * as naming from './naming.js';
@@ -232,6 +232,16 @@ export class Adapter {
 
   /** converts a tcgc type to a Rust type */
   private getType(type: tcgc.SdkType): rust.Type {
+    const getDateTimeEncoding = (encoding: DateTimeKnownEncoding): rust.DateTimeEncoding => {
+      switch (encoding) {
+        case 'rfc3339':
+        case 'rfc7231':
+          return encoding;
+        case 'unixTimestamp':
+          return 'unix_time';
+      }
+    };
+
     const getScalar = (kind: 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8'): rust.Scalar => {
       let scalar = this.types.get(kind);
       if (scalar) {
@@ -356,6 +366,16 @@ export class Adapter {
         }
         return getStringType();
       }
+      case 'offsetDateTime': {
+        const keyName = `${type.kind}-${type.encode}`;
+        let timeType = this.types.get(keyName);
+        if (timeType) {
+          return timeType;
+        }
+        timeType = new rust.OffsetDateTime(this.crate, getDateTimeEncoding(type.encode), false);
+        this.types.set(keyName, timeType);
+        return timeType;
+      }
       case 'unknown': {
         let anyType = this.types.get(type.kind);
         if (anyType) {
@@ -371,7 +391,7 @@ export class Adapter {
         if (timeType) {
           return timeType;
         }
-        timeType = new rust.OffsetDateTime(this.crate, type.encode);
+        timeType = new rust.OffsetDateTime(this.crate, getDateTimeEncoding(type.encode), true);
         this.types.set(keyName, timeType);
         return timeType;
       }

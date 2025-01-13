@@ -6,6 +6,7 @@ members = [
     "spector/authentication/oauth2",
     "spector/authentication/union",
     "spector/encode/bytes",
+    "spector/encode/datetime",
     "spector/encode/duration",
     "spector/parameters/basic",
     "spector/parameters/collection-format",
@@ -49,11 +50,11 @@ rust-version = "1.80"
 
 [workspace.dependencies]
 async-trait = "0.1"
-azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "65917adac7d67fea8b4a7197c6a9de2d20c99123", features = ["reqwest"] }
+azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "783e35cb98283fd34519901950cfe584da419b32", features = ["reqwest"] }
 bytes = { version = "1.5.0" }
 futures = "0.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0.118" }
 time = { version = "0.3.36" }
 tokio = { version = "1.43.0", default-features = false, features = ["macros"] }
-typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "65917adac7d67fea8b4a7197c6a9de2d20c99123", features = ["reqwest"] }
+typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "783e35cb98283fd34519901950cfe584da419b32", features = ["reqwest"] }

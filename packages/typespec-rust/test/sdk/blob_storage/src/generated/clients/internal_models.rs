@@ -28,8 +28,9 @@ pub struct GetUserDelegationKeyRequest {
 pub struct SetPropertiesRequest {
     /// The CORS properties.
     #[serde(
-        rename = "Cors",
+        default,
         deserialize_with = "CorsCorsRule::unwrap",
+        rename = "Cors",
         serialize_with = "CorsCorsRule::wrap",
         skip_serializing_if = "Option::is_none"
     )]

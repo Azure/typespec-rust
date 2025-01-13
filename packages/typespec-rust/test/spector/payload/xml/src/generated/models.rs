@@ -16,6 +16,7 @@ use std::collections::HashMap;
 #[typespec(format = "xml")]
 pub struct ModelWithArrayOfModel {
     #[serde(
+        default,
         deserialize_with = "ItemsSimpleModel::unwrap",
         serialize_with = "ItemsSimpleModel::wrap",
         skip_serializing_if = "Option::is_none"
@@ -53,6 +54,7 @@ pub struct ModelWithDictionary {
 #[typespec(format = "xml")]
 pub struct ModelWithEmptyArray {
     #[serde(
+        default,
         deserialize_with = "ItemsSimpleModel::unwrap",
         serialize_with = "ItemsSimpleModel::wrap",
         skip_serializing_if = "Option::is_none"
@@ -67,8 +69,9 @@ pub struct ModelWithEmptyArray {
 #[typespec(format = "xml")]
 pub struct ModelWithEncodedNames {
     #[serde(
-        rename = "PossibleColors",
+        default,
         deserialize_with = "ColorsString::unwrap",
+        rename = "PossibleColors",
         serialize_with = "ColorsString::wrap",
         skip_serializing_if = "Option::is_none"
     )]
@@ -99,8 +102,9 @@ pub struct ModelWithRenamedArrays {
     pub colors: Option<Vec<String>>,
 
     #[serde(
-        rename = "Counts",
+        default,
         deserialize_with = "CountsInt32::unwrap",
+        rename = "Counts",
         serialize_with = "CountsInt32::wrap",
         skip_serializing_if = "Option::is_none"
     )]
@@ -126,6 +130,7 @@ pub struct ModelWithRenamedFields {
 #[typespec(format = "xml")]
 pub struct ModelWithSimpleArrays {
     #[serde(
+        default,
         deserialize_with = "ColorsString::unwrap",
         serialize_with = "ColorsString::wrap",
         skip_serializing_if = "Option::is_none"
@@ -133,6 +138,7 @@ pub struct ModelWithSimpleArrays {
     pub colors: Option<Vec<String>>,
 
     #[serde(
+        default,
         deserialize_with = "CountsInt32::unwrap",
         serialize_with = "CountsInt32::wrap",
         skip_serializing_if = "Option::is_none"
@@ -161,6 +167,7 @@ pub struct ModelWithUnwrappedArray {
     pub colors: Option<Vec<String>>,
 
     #[serde(
+        default,
         deserialize_with = "CountsInt32::unwrap",
         serialize_with = "CountsInt32::wrap",
         skip_serializing_if = "Option::is_none"

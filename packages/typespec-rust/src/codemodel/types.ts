@@ -148,7 +148,7 @@ export interface ModelField extends StructFieldBase {
 }
 
 /** DateTimeEncoding is the wire format of the date/time */
-export type DateTimeEncoding = 'rfc3339' | 'rfc7231' | 'unixTimestamp';
+export type DateTimeEncoding = 'rfc3339' | 'rfc7231' | 'unix_time';
 
 /** OffsetDateTime is a Rust time::OffsetDateTime type */
 export interface OffsetDateTime extends External {
@@ -156,6 +156,9 @@ export interface OffsetDateTime extends External {
 
   /** the encoding format */
   encoding: DateTimeEncoding;
+
+  /** indicates that the value is in UTC format */
+  utc: boolean;
 }
 
 /** Option is a Rust Option<T> */
@@ -495,10 +498,11 @@ export class ModelField extends StructFieldBase implements ModelField {
 }
 
 export class OffsetDateTime extends External implements OffsetDateTime {
-  constructor(crate: Crate, encoding: DateTimeEncoding) {
+  constructor(crate: Crate, encoding: DateTimeEncoding, utc: boolean) {
     super(crate, 'time', 'OffsetDateTime');
     this.kind = 'offsetDateTime';
     this.encoding = encoding;
+    this.utc = utc;
   }
 }
 

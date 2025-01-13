@@ -90,19 +90,28 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
 
       // NOTE: usage of serde annotations like this means that base64 encoded bytes and
       // XML wrapped lists are mutually exclusive. it's not a real scenario at present.
-      if (helpers.unwrapOption(field.type).kind === 'encodedBytes') {
+      if (helpers.unwrapOption(field.type).kind === 'offsetDateTime') {
+        serdeParams.push('default');
+        let optionMod = ''
+        if (field.type.kind === 'option') {
+          optionMod = '::option';
+        }
+        serdeParams.push(`with = "azure_core::date::${(<rust.OffsetDateTime>helpers.unwrapOption(field.type)).encoding}${optionMod}"`);
+      } else if (helpers.unwrapOption(field.type).kind === 'encodedBytes') {
         // TODO: https://github.com/Azure/typespec-rust/issues/56
         // specifically need to handle nested arrays of base64 encoded bytes
         let format = '';
         if ((<rust.EncodedBytes>helpers.unwrapOption(field.type)).encoding === 'url') {
           format = '_url_safe';
         }
+        serdeParams.push('default');
         serdeParams.push(`deserialize_with = "base64::deserialize${format}"`);
         serdeParams.push(`serialize_with = "base64::serialize${format}"`);
         use.addType('azure_core', 'base64');
       } else if (bodyFormat === 'xml' && helpers.unwrapOption(field.type).kind === 'vector' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
+        serdeParams.push('default');
         serdeParams.push(`deserialize_with = "${xmlListWrapper.name}::unwrap"`);
         serdeParams.push(`serialize_with = "${xmlListWrapper.name}::wrap"`);
         use.addType('crate', `generated::xml_helpers::${xmlListWrapper.name}`);
@@ -115,7 +124,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
       }
 
       if (serdeParams.length > 0) {
-        body += `${indent.get()}#[serde(${serdeParams.join(', ')})]\n`;
+        body += `${indent.get()}#[serde(${serdeParams.sort().join(', ')})]\n`;
       }
       body += `${indent.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
     }

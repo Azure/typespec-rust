@@ -1,5 +1,11 @@
 # Release History
 
+## 0.6.1 (unreleased)
+
+### Bugs Fixed
+
+* Use `serde` helpers to encode/decode time types in the specified wire format.
+
 ## 0.6.0 (2025-01-08)
 
 ### Breaking Changes

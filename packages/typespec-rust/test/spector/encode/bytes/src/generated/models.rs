@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 #[non_exhaustive]
 pub struct Base64BytesProperty {
     #[serde(
+        default,
         deserialize_with = "base64::deserialize",
         serialize_with = "base64::serialize",
         skip_serializing_if = "Option::is_none"
@@ -28,6 +29,7 @@ pub struct Base64urlArrayBytesProperty {
 #[non_exhaustive]
 pub struct Base64urlBytesProperty {
     #[serde(
+        default,
         deserialize_with = "base64::deserialize_url_safe",
         serialize_with = "base64::serialize_url_safe",
         skip_serializing_if = "Option::is_none"
@@ -39,6 +41,7 @@ pub struct Base64urlBytesProperty {
 #[non_exhaustive]
 pub struct DefaultBytesProperty {
     #[serde(
+        default,
         deserialize_with = "base64::deserialize",
         serialize_with = "base64::serialize",
         skip_serializing_if = "Option::is_none"

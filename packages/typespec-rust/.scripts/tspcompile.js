@@ -22,7 +22,7 @@ const httpSpecsGroup = {
   'spector_oauth2': {input: 'authentication/oauth2'},
   'spector_unionauth': {input: 'authentication/union'},
   'spector_bytes': {input: 'encode/bytes'}, // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
-  //'spector_datetime': {input: 'encode/datetime'},
+  'spector_datetime': {input: 'encode/datetime'},
   'spector_duration': {input: 'encode/duration'},
   //'spector_bodyoptional': {input: 'parameters/body-optionality'},
   'spector_basicparams': {input: 'parameters/basic'},
