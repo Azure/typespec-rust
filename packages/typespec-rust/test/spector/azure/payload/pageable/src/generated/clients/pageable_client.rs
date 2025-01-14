@@ -89,7 +89,7 @@ pub struct PageableClientListOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-impl<'a> PageableClientListOptions<'a> {
+impl PageableClientListOptions<'_> {
     pub fn into_owned(self) -> PageableClientListOptions<'static> {
         PageableClientListOptions {
             maxpagesize: self.maxpagesize,

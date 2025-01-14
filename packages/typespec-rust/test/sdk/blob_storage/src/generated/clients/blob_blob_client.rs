@@ -427,7 +427,7 @@ impl BlobBlobClient {
         url = url.join(&path)?;
         if let Some(blob_delete_type) = options.blob_delete_type {
             url.query_pairs_mut()
-                .append_pair("deletetype", &blob_delete_type.to_string());
+                .append_pair("deletetype", blob_delete_type.as_ref());
         }
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
