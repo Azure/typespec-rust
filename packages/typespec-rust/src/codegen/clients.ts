@@ -909,13 +909,12 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     case 'encodedBytes':
       return encodeBytes(param.type, paramName);
     case 'enum':
-      if (param.kind === 'query') {
+    case 'scalar':
+      if (param.type.kind === 'enum' && param.kind === 'query') {
         // append_pair wants a reference to the string
         // TODO: https://github.com/Azure/typespec-rust/issues/25
         return `${paramName}.as_ref()`;
       }
-      // intentional fall-through
-    case 'scalar':
       return `${paramName}.to_string()`;
     case 'implTrait':
       return `${paramName}.into()`;
