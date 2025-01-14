@@ -301,7 +301,7 @@ pub struct BasicClientListOptions<'a> {
     pub top: Option<i32>,
 }
 
-impl<'a> BasicClientListOptions<'a> {
+impl BasicClientListOptions<'_> {
     pub fn into_owned(self) -> BasicClientListOptions<'static> {
         BasicClientListOptions {
             expand: self.expand,

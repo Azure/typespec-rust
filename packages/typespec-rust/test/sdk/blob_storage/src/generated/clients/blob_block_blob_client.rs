@@ -165,7 +165,7 @@ impl BlobBlockBlobClient {
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "blocklist");
         url.query_pairs_mut()
-            .append_pair("blocklisttype", &list_type.to_string());
+            .append_pair("blocklisttype", list_type.as_ref());
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
         }

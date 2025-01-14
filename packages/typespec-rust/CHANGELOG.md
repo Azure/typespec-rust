@@ -6,6 +6,10 @@
 
 * Use `serde` helpers to encode/decode time types in the specified wire format.
 
+### Other Changes
+
+* Various codegen changes to clean up Clippy issues.
+
 ## 0.6.0 (2025-01-08)
 
 ### Breaking Changes

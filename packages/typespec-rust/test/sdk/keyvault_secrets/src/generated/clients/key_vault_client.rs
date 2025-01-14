@@ -439,7 +439,7 @@ pub struct KeyVaultClientGetDeletedSecretsOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-impl<'a> KeyVaultClientGetDeletedSecretsOptions<'a> {
+impl KeyVaultClientGetDeletedSecretsOptions<'_> {
     pub fn into_owned(self) -> KeyVaultClientGetDeletedSecretsOptions<'static> {
         KeyVaultClientGetDeletedSecretsOptions {
             maxresults: self.maxresults,
@@ -461,7 +461,7 @@ pub struct KeyVaultClientGetSecretVersionsOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-impl<'a> KeyVaultClientGetSecretVersionsOptions<'a> {
+impl KeyVaultClientGetSecretVersionsOptions<'_> {
     pub fn into_owned(self) -> KeyVaultClientGetSecretVersionsOptions<'static> {
         KeyVaultClientGetSecretVersionsOptions {
             maxresults: self.maxresults,
@@ -478,7 +478,7 @@ pub struct KeyVaultClientGetSecretsOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-impl<'a> KeyVaultClientGetSecretsOptions<'a> {
+impl KeyVaultClientGetSecretsOptions<'_> {
     pub fn into_owned(self) -> KeyVaultClientGetSecretsOptions<'static> {
         KeyVaultClientGetSecretsOptions {
             maxresults: self.maxresults,

@@ -255,7 +255,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
       body += '}\n\n'; // end options
 
       if (method.kind === 'pageable') {
-        body += `impl${getLifetimeAnnotation(method.options.type)} ${helpers.getTypeDeclaration(method.options.type)} {\n`;
+        body += `impl ${helpers.getTypeDeclaration(method.options.type, true)} {\n`;
         body += `${indent.get()}pub fn into_owned(self) -> ${method.options.type.name}<'static> {\n`;
         body += `${indent.push().get()}${method.options.type.name} {\n`;
         indent.push();
@@ -628,7 +628,12 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       });
     } else {
       body += getParamValueHelper(indent, queryParam, () => {
-        return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", &${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional)});\n`;
+        let borrow = '&';
+        if (queryParam.type.kind === 'enum') {
+          // for enums we call .as_ref() which elides the need to borrow
+          borrow = '';
+        }
+        return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${borrow}${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional)});\n`;
       });
     }
   }
@@ -904,6 +909,12 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     case 'encodedBytes':
       return encodeBytes(param.type, paramName);
     case 'enum':
+      if (param.kind === 'query') {
+        // append_pair wants a reference to the string
+        // TODO: https://github.com/Azure/typespec-rust/issues/25
+        return `${paramName}.as_ref()`;
+      }
+      // intentional fall-through
     case 'scalar':
       return `${paramName}.to_string()`;
     case 'implTrait':
@@ -934,20 +945,6 @@ function getCollectionDelimiter(format: rust.CollectionFormat): string {
     case 'tsv':
       return '\t';
   }
-}
-
-/**
- * returns the lifetime annotation for the provide struct.
- * can return the empty string if the struct has no lifetime.
- * 
- * @param type the struct for which to get the annotation
- * @returns the annotation or empty string
- */
-function getLifetimeAnnotation(type: rust.Struct): string {
-  if (type.lifetime) {
-    return `${helpers.getGenericLifetimeAnnotation(type.lifetime)}`;
-  }
-  return '';
 }
 
 /** returns true if the type isn't copyable thus nees to be cloned */
