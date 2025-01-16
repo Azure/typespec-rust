@@ -15,6 +15,7 @@ use std::collections::HashMap;
 use time::OffsetDateTime;
 
 pub struct BlobPageBlobClient {
+    pub(crate) blob: String,
     pub(crate) container_name: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,8 +31,6 @@ impl BlobPageBlobClient {
     /// The Clear Pages operation clears a range of pages from a page blob
     pub async fn clear_pages(
         &self,
-        container_name: String,
-        blob: String,
         content_length: i64,
         options: Option<BlobPageBlobClientClearPagesOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -39,8 +38,8 @@ impl BlobPageBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("clear")
@@ -125,8 +124,6 @@ impl BlobPageBlobClient {
     /// since REST version 2016-05-31.
     pub async fn copy_incremental(
         &self,
-        container_name: String,
-        blob: String,
         copy_source: String,
         options: Option<BlobPageBlobClientCopyIncrementalOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -134,8 +131,8 @@ impl BlobPageBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "incrementalcopy");
         if let Some(timeout) = options.timeout {
@@ -174,8 +171,6 @@ impl BlobPageBlobClient {
     /// The Create operation creates a new page blob.
     pub async fn create(
         &self,
-        container_name: String,
-        blob: String,
         content_length: i64,
         blob_content_length: i64,
         options: Option<BlobPageBlobClientCreateOptions<'_>>,
@@ -184,8 +179,8 @@ impl BlobPageBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_key_only("PageBlob");
         if let Some(timeout) = options.timeout {
@@ -293,8 +288,6 @@ impl BlobPageBlobClient {
     /// The Resize operation increases the size of the page blob to the specified size.
     pub async fn resize(
         &self,
-        container_name: String,
-        blob: String,
         blob_content_length: i64,
         options: Option<BlobPageBlobClientResizeOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -302,8 +295,8 @@ impl BlobPageBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("Resize")
@@ -363,8 +356,6 @@ impl BlobPageBlobClient {
     /// number is less than the current sequence number of the blob.
     pub async fn update_sequence_number(
         &self,
-        container_name: String,
-        blob: String,
         sequence_number_action: SequenceNumberActionType,
         options: Option<BlobPageBlobClientUpdateSequenceNumberOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -372,8 +363,8 @@ impl BlobPageBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("UpdateSequenceNumber")
@@ -426,8 +417,6 @@ impl BlobPageBlobClient {
     /// The Upload Pages operation writes a range of pages to a page blob
     pub async fn upload_pages(
         &self,
-        container_name: String,
-        blob: String,
         body: RequestContent<Bytes>,
         content_length: i64,
         options: Option<BlobPageBlobClientUploadPagesOptions<'_>>,
@@ -436,8 +425,8 @@ impl BlobPageBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "page")
@@ -535,8 +524,6 @@ impl BlobPageBlobClient {
     /// The Upload Pages operation writes a range of pages to a page blob where the contents are read from a URL.
     pub async fn upload_pages_from_url(
         &self,
-        container_name: String,
-        blob: String,
         source_url: String,
         source_range: String,
         content_length: i64,
@@ -547,8 +534,8 @@ impl BlobPageBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "page")

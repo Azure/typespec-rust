@@ -42,7 +42,7 @@ model BlockLookupList {
 }
 
 /** Represents an array of signed identifiers */
-// TODO: do the array elements need xml.unwrapped?
+@Xml.name("SignedIdentifiers")
 model SignedIdentifiers is Array<SignedIdentifier>;
 
 /** The signed identifier. */
@@ -66,7 +66,6 @@ model FilterBlobSegment {
   /** The filter for the blobs. */
   @Xml.name("Where") where: string;
 
-  // TODO: the docs show this as unwrapped but the swagger specified it as wrapped: https://learn.microsoft.com/en-us/rest/api/storageservices/list-blobs?tabs=microsoft-entra-id
   /** The blob segment. */
   @Xml.name("Blobs") blobs: FilterBlobItem[];
 
@@ -85,7 +84,6 @@ model FilterBlobItem {
   @Xml.name("ContainerName") containerName: string;
 
   /** The metadata of the blob. */
-  // TODO: check if this is correct BlobTags has the xml.name on it
   @Xml.unwrapped tags?: BlobTags;
 
   /** The version ID of the blob. */
@@ -163,8 +161,7 @@ union SkuName {
   string,
 }
 
-/** The list container segement response */
-@pagedResult
+/** The list container segment response */
 @Xml.name("EnumerationResults")
 model ListContainersSegmentResponse {
   /** The service endpoint. */
@@ -182,8 +179,6 @@ model ListContainersSegmentResponse {
   @Xml.name("MaxResults") maxResults?: int32;
 
   /** The container segment. */
-  // TODO: should this be unwrapped? The swagger shows it as wrapped. Example in docs: https://learn.microsoft.com/en-us/rest/api/storageservices/list-containers2?tabs=microsoft-entra-id#response-body
-  @Azure.Core.items
   @Xml.name("Containers")
   containerItems: ContainerItem[];
 
@@ -602,7 +597,7 @@ model BlobPropertiesInternal {
   /** Whether the blog is incremental copy. */
   @Xml.name("IncrementalCopy") incrementalCopy?: boolean;
 
-  /** The name of the desination snapshot. */
+  /** The name of the destination snapshot. */
   @Xml.name("DestinationSnapshot") destinationSnapshot?: string;
 
   /** The time the blob was deleted. */
@@ -849,7 +844,6 @@ model RetentionPolicy {
 // List Blobs
 
 /** An enumeration of blobs. */
-@pagedResult
 @Xml.name("EnumerationResults")
 model ListBlobsFlatSegmentResponse {
   /** The service endpoint. */
@@ -871,9 +865,8 @@ model ListBlobsFlatSegmentResponse {
   /** The max results of the blobs. */
   @Xml.name("MaxResults") maxResults?: int32;
 
-  // TODO: is this correct? Looks like the name is wrong...should be "Blobs"
   /** The blob segment. */
-  @Xml.name("Segment") segment: BlobFlatListSegment;
+  segment: BlobFlatListSegment;
 
   /** The next marker of the blobs. */
   @continuationToken
@@ -889,7 +882,6 @@ model BlobFlatListSegment {
 }
 
 /** Represents a page list. */
-@pagedResult
 model PageList {
   /** The page ranges. */
   @Xml.name("PageRange") pageRange?: PageRange[];
@@ -1027,7 +1019,6 @@ model ArrowField {
 }
 
 /** Represents the Parquet configuration. */
-// TODO: in swagger this was a type: object...is record unknown correct?
 #suppress "@azure-tools/typespec-azure-core/bad-record-type" "Existing API"
 model ParquetConfiguration is Record<unknown>;
 
@@ -1252,7 +1243,7 @@ alias ObjectReplicationPolicyIdResponseHeader = {
   objectReplicationPolicyId?: string;
 };
 
-/** The if seuqnce number equal to parameter. */
+/** The if sequence number equal to parameter. */
 alias IfSequenceNumberEqualToParameter = {
   /** Specify this header value to operate only on a blob if it has the specified sequence number. */
   @header("x-ms-if-sequence-number-eq")
@@ -1279,7 +1270,7 @@ union BlockListType {
   Committed: "committed",
 
   /** The list of uncommitted blocks. */
-  Uncomitted: "uncommitted",
+  Uncommitted: "uncommitted",
 
   /** Both lists together. */
   All: "all",
@@ -1906,8 +1897,6 @@ model BlobName {
   @Xml.name("Encoded")
   encoded: boolean;
 
-  // FIXME: does this need the unwrapped decorator around it? Swagger specified this property as x-ms-text
-  // Related issue: https://github.com/microsoft/typespec/issues/2970
   /** The blob name. */
   @Xml.unwrapped content: string;
 }
@@ -1931,7 +1920,6 @@ model BlobHierarchyListSegment {
 }
 
 /** An enumeration of blobs */
-@pagedResult
 @Xml.name("EnumerationResults")
 model ListBlobsHierarchySegmentResponse {
   /** The service endpoint. */
@@ -1956,9 +1944,8 @@ model ListBlobsHierarchySegmentResponse {
   /** The max results of the blobs. */
   @Xml.name("MaxResults") maxResults?: int32;
 
-  // TODO: Is this correct? Looks like it should be blobs
   /** The blob segment. */
-  @Xml.name("Segment") segment: BlobHierarchyListSegment;
+  segment: BlobHierarchyListSegment;
 
   /** The next marker of the blobs. */
   @continuationToken

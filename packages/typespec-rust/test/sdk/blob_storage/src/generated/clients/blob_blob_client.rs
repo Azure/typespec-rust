@@ -15,6 +15,7 @@ use std::collections::HashMap;
 use time::OffsetDateTime;
 
 pub struct BlobBlobClient {
+    pub(crate) blob: String,
     pub(crate) container_name: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -31,8 +32,6 @@ impl BlobBlobClient {
     /// and full metadata.
     pub async fn abort_copy_from_url(
         &self,
-        container_name: String,
-        blob: String,
         copy_id: String,
         options: Option<BlobBlobClientAbortCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -40,8 +39,8 @@ impl BlobBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "copy")
@@ -67,16 +66,14 @@ impl BlobBlobClient {
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn acquire_lease(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientAcquireLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("acquire")
@@ -122,16 +119,14 @@ impl BlobBlobClient {
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn break_lease(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientBreakLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("break")
@@ -174,8 +169,6 @@ impl BlobBlobClient {
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn change_lease(
         &self,
-        container_name: String,
-        blob: String,
         lease_id: String,
         options: Option<BlobBlobClientChangeLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -183,8 +176,8 @@ impl BlobBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("change")
@@ -229,8 +222,6 @@ impl BlobBlobClient {
     /// copy is complete.
     pub async fn copy_from_url(
         &self,
-        container_name: String,
-        blob: String,
         copy_source: String,
         options: Option<BlobBlobClientCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -238,8 +229,8 @@ impl BlobBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "copy")
@@ -336,16 +327,14 @@ impl BlobBlobClient {
     /// The Create Snapshot operation creates a read-only snapshot of a blob
     pub async fn create_snapshot(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientCreateSnapshotOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "snapshot");
         if let Some(timeout) = options.timeout {
@@ -414,16 +403,14 @@ impl BlobBlobClient {
     /// causes the service to return an HTTP status code of 404 (ResourceNotFound).
     pub async fn delete(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientDeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         if let Some(blob_delete_type) = options.blob_delete_type {
             url.query_pairs_mut()
@@ -476,16 +463,14 @@ impl BlobBlobClient {
     /// The Delete Immutability Policy operation deletes the immutability policy on the blob.
     pub async fn delete_immutability_policy(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientDeleteImmutabilityPolicyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "immutabilityPolicies");
@@ -513,16 +498,14 @@ impl BlobBlobClient {
     /// call Download to read a snapshot.
     pub async fn download(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientDownloadOptions<'_>>,
     ) -> Result<Response> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
@@ -597,16 +580,14 @@ impl BlobBlobClient {
     /// Returns the sku name and account kind
     pub async fn get_account_info(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("blob")
@@ -630,16 +611,14 @@ impl BlobBlobClient {
     /// blob. It does not return the content of the blob.
     pub async fn get_properties(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
@@ -697,16 +676,14 @@ impl BlobBlobClient {
     /// The Get Blob Tags operation enables users to get tags on a blob.
     pub async fn get_tags(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientGetTagsOptions<'_>>,
     ) -> Result<Response<BlobTags>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "tags");
         if let Some(snapshot) = options.snapshot {
@@ -738,8 +715,6 @@ impl BlobBlobClient {
     /// The Query operation enables users to select/project on blob data by providing simple query expressions.
     pub async fn query(
         &self,
-        container_name: String,
-        blob: String,
         query_request: RequestContent<QueryRequest>,
         options: Option<BlobBlobClientQueryOptions<'_>>,
     ) -> Result<Response> {
@@ -747,8 +722,8 @@ impl BlobBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "query");
         if let Some(snapshot) = options.snapshot {
@@ -805,8 +780,6 @@ impl BlobBlobClient {
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn release_lease(
         &self,
-        container_name: String,
-        blob: String,
         lease_id: String,
         options: Option<BlobBlobClientReleaseLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -814,8 +787,8 @@ impl BlobBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "lease")
@@ -856,8 +829,6 @@ impl BlobBlobClient {
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn renew_lease(
         &self,
-        container_name: String,
-        blob: String,
         lease_id: String,
         options: Option<BlobBlobClientRenewLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -865,8 +836,8 @@ impl BlobBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "lease")
@@ -907,8 +878,6 @@ impl BlobBlobClient {
     /// Set the expiration time of a blob
     pub async fn set_expiry(
         &self,
-        container_name: String,
-        blob: String,
         expiry_options: BlobExpiryOptions,
         options: Option<BlobBlobClientSetExpiryOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -916,8 +885,8 @@ impl BlobBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "expiry");
         if let Some(timeout) = options.timeout {
@@ -941,16 +910,14 @@ impl BlobBlobClient {
     /// The Set HTTP Headers operation sets system properties on the blob.
     pub async fn set_http_headers(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientSetHttpHeadersOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("SetHTTPHeaders")
@@ -1011,16 +978,14 @@ impl BlobBlobClient {
     /// Set the immutability policy of a blob
     pub async fn set_immutability_policy(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientSetImmutabilityPolicyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "immutabilityPolicies");
@@ -1062,8 +1027,6 @@ impl BlobBlobClient {
     /// The Set Legal Hold operation sets a legal hold on the blob.
     pub async fn set_legal_hold(
         &self,
-        container_name: String,
-        blob: String,
         legal_hold: bool,
         options: Option<BlobBlobClientSetLegalHoldOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -1071,8 +1034,8 @@ impl BlobBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "legalhold");
         if let Some(snapshot) = options.snapshot {
@@ -1099,16 +1062,14 @@ impl BlobBlobClient {
     /// The Set Metadata operation sets user-defined metadata for the specified blob as one or more name-value pairs.
     pub async fn set_metadata(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientSetMetadataOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "metadata");
         if let Some(timeout) = options.timeout {
@@ -1169,8 +1130,6 @@ impl BlobBlobClient {
     /// The Set Tags operation enables users to set tags on a blob.
     pub async fn set_tags(
         &self,
-        container_name: String,
-        blob: String,
         tags: RequestContent<BlobTags>,
         options: Option<BlobBlobClientSetTagsOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -1178,8 +1137,8 @@ impl BlobBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "tags");
         if let Some(timeout) = options.timeout {
@@ -1217,8 +1176,6 @@ impl BlobBlobClient {
     /// ETag.
     pub async fn set_tier(
         &self,
-        container_name: String,
-        blob: String,
         tier: AccessTier,
         options: Option<BlobBlobClientSetTierOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -1226,8 +1183,8 @@ impl BlobBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "tier");
         if let Some(snapshot) = options.snapshot {
@@ -1263,8 +1220,6 @@ impl BlobBlobClient {
     /// The Start Copy From URL operation copies a blob or an internet resource to a new blob.
     pub async fn start_copy_from_url(
         &self,
-        container_name: String,
-        blob: String,
         copy_source: String,
         options: Option<BlobBlobClientStartCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -1272,8 +1227,8 @@ impl BlobBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "copy");
         if let Some(timeout) = options.timeout {
@@ -1365,16 +1320,14 @@ impl BlobBlobClient {
     /// Undelete a blob that was previously soft deleted
     pub async fn undelete(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobBlobClientUndeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "undelete");
         if let Some(timeout) = options.timeout {

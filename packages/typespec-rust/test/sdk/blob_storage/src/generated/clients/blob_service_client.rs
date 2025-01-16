@@ -14,7 +14,6 @@ use azure_core::{
 };
 
 pub struct BlobServiceClient {
-    pub(crate) container_name: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
     pub(crate) version: String,

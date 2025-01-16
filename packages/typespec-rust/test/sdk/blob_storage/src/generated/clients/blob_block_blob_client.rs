@@ -14,6 +14,7 @@ use std::collections::HashMap;
 use time::OffsetDateTime;
 
 pub struct BlobBlockBlobClient {
+    pub(crate) blob: String,
     pub(crate) container_name: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -34,8 +35,6 @@ impl BlobBlockBlobClient {
     /// to.
     pub async fn commit_block_list(
         &self,
-        container_name: String,
-        blob: String,
         blocks: RequestContent<BlockLookupList>,
         options: Option<BlobBlockBlobClientCommitBlockListOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -43,8 +42,8 @@ impl BlobBlockBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "blocklist");
         if let Some(timeout) = options.timeout {
@@ -151,8 +150,6 @@ impl BlobBlockBlobClient {
     /// The Get Block List operation retrieves the list of blocks that have been uploaded as part of a block blob.
     pub async fn get_block_list(
         &self,
-        container_name: String,
-        blob: String,
         list_type: BlockListType,
         options: Option<BlobBlockBlobClientGetBlockListOptions<'_>>,
     ) -> Result<Response<BlockLookupList>> {
@@ -160,8 +157,8 @@ impl BlobBlockBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "blocklist");
         url.query_pairs_mut()
@@ -195,8 +192,6 @@ impl BlobBlockBlobClient {
     /// contents using a source URL, use the Put Block from URL API in conjunction with Put Block List.
     pub async fn put_blob_from_url(
         &self,
-        container_name: String,
-        blob: String,
         content_length: i64,
         copy_source: String,
         options: Option<BlobBlockBlobClientPutBlobFromUrlOptions<'_>>,
@@ -205,8 +200,8 @@ impl BlobBlockBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_key_only("BlockBlob")
@@ -331,8 +326,6 @@ impl BlobBlockBlobClient {
     /// The Stage Block operation creates a new block to be committed as part of a blob
     pub async fn stage_block(
         &self,
-        container_name: String,
-        blob: String,
         block_id: String,
         content_length: i64,
         body: RequestContent<Bytes>,
@@ -342,8 +335,8 @@ impl BlobBlockBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "block");
         url.query_pairs_mut().append_pair("blockid", &block_id);
@@ -400,8 +393,6 @@ impl BlobBlockBlobClient {
     /// a URL.
     pub async fn stage_block_from_url(
         &self,
-        container_name: String,
-        blob: String,
         block_id: String,
         content_length: i64,
         source_url: String,
@@ -411,8 +402,8 @@ impl BlobBlockBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "block")
@@ -488,8 +479,6 @@ impl BlobBlockBlobClient {
     /// Block List operation.
     pub async fn upload(
         &self,
-        container_name: String,
-        blob: String,
         body: RequestContent<Bytes>,
         content_length: i64,
         options: Option<BlobBlockBlobClientUploadOptions<'_>>,
@@ -498,8 +487,8 @@ impl BlobBlockBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_key_only("BlockBlob");
         if let Some(timeout) = options.timeout {

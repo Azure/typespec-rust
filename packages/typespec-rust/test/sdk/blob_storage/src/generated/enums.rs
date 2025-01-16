@@ -69,7 +69,7 @@ create_extensible_enum!(
     BlockListType,
     (All, "all"),
     (Committed, "committed"),
-    (Uncomitted, "uncommitted")
+    (Uncommitted, "uncommitted")
 );
 
 create_extensible_enum!(

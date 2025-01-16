@@ -29,13 +29,12 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn acquire_lease(
         &self,
-        container_name: String,
         options: Option<BlobContainerClientAcquireLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_key_only("acquire")
             .append_pair("comp", "lease")
@@ -70,13 +69,12 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn break_lease(
         &self,
-        container_name: String,
         options: Option<BlobContainerClientBreakLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_key_only("break")
             .append_pair("comp", "lease")
@@ -108,7 +106,6 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn change_lease(
         &self,
-        container_name: String,
         lease_id: String,
         proposed_lease_id: String,
         options: Option<BlobContainerClientChangeLeaseOptions<'_>>,
@@ -116,7 +113,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_key_only("change")
             .append_pair("comp", "lease")
@@ -147,13 +144,12 @@ impl BlobContainerClient {
     /// fails.
     pub async fn create(
         &self,
-        container_name: String,
         options: Option<BlobContainerClientCreateOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -190,13 +186,12 @@ impl BlobContainerClient {
     /// during garbage collection
     pub async fn delete(
         &self,
-        container_name: String,
         options: Option<BlobContainerClientDeleteOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -225,13 +220,12 @@ impl BlobContainerClient {
     /// blobs searches within the given container.
     pub async fn filter_blobs(
         &self,
-        container_name: String,
         options: Option<BlobContainerClientFilterBlobsOptions<'_>>,
     ) -> Result<Response<FilterBlobSegment>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "blobs")
             .append_pair("restype", "container");
@@ -272,13 +266,12 @@ impl BlobContainerClient {
     /// gets the permissions for the specified container. The permissions indicate whether container data may be accessed publicly.
     pub async fn get_access_policy(
         &self,
-        container_name: String,
         options: Option<BlobContainerClientGetAccessPolicyOptions<'_>>,
     ) -> Result<Response<Vec<SignedIdentifier>>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "acl")
             .append_pair("restype", "container");
@@ -302,13 +295,12 @@ impl BlobContainerClient {
     /// Returns the sku name and account kind
     pub async fn get_account_info(
         &self,
-        container_name: String,
         options: Option<BlobContainerClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "properties")
             .append_pair("restype", "account");
@@ -330,13 +322,12 @@ impl BlobContainerClient {
     /// the container's list of blobs
     pub async fn get_properties(
         &self,
-        container_name: String,
         options: Option<BlobContainerClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -359,14 +350,13 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn release_lease(
         &self,
-        container_name: String,
         lease_id: String,
         options: Option<BlobContainerClientReleaseLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "lease")
             .append_key_only("release")
@@ -395,14 +385,13 @@ impl BlobContainerClient {
     /// Renames an existing container.
     pub async fn rename(
         &self,
-        container_name: String,
         source_container_name: String,
         options: Option<BlobContainerClientRenameOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "rename")
             .append_pair("restype", "container");
@@ -428,14 +417,13 @@ impl BlobContainerClient {
     /// or can be infinite
     pub async fn renew_lease(
         &self,
-        container_name: String,
         lease_id: String,
         options: Option<BlobContainerClientRenewLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "lease")
             .append_key_only("renew")
@@ -464,13 +452,12 @@ impl BlobContainerClient {
     /// Restores a previously-deleted container.
     pub async fn restore(
         &self,
-        container_name: String,
         options: Option<BlobContainerClientRestoreOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "undelete")
             .append_pair("restype", "container");
@@ -498,14 +485,13 @@ impl BlobContainerClient {
     /// publicly.
     pub async fn set_access_policy(
         &self,
-        container_name: String,
         container_acl: RequestContent<Vec<SignedIdentifier>>,
         options: Option<BlobContainerClientSetAccessPolicyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "acl")
             .append_pair("restype", "container");
@@ -539,13 +525,12 @@ impl BlobContainerClient {
     /// operation sets one or more user-defined name-value pairs for the specified container.
     pub async fn set_metadata(
         &self,
-        container_name: String,
         options: Option<BlobContainerClientSetMetadataOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "metadata")
             .append_pair("restype", "container");
@@ -577,7 +562,6 @@ impl BlobContainerClient {
     /// The Batch operation allows multiple API calls to be embedded into a single HTTP request.
     pub async fn submit_batch(
         &self,
-        container_name: String,
         body: RequestContent<Bytes>,
         content_length: i64,
         options: Option<BlobContainerClientSubmitBatchOptions<'_>>,
@@ -585,7 +569,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&container_name)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "batch")
             .append_pair("restype", "container");

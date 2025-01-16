@@ -641,7 +641,23 @@ export class Adapter {
       // this is a sub-client. it will share the fields of the parent.
       // NOTE: we must propagate parant params before a potential recursive call
       // to create a child client that will need to inherit our client params.
-      rustClient.fields = parent.fields;
+      // also note that we need to make a copy of the fields array so that
+      // adding client-unique fields don't inadvertently get shared.
+      rustClient.fields = new Array<rust.StructField>(...parent.fields);
+
+      // adapt any unique fields on this client
+      for (const prop of client.initialization.properties) {
+        if (prop.kind !== 'method' || prop.isApiVersionParam) {
+          // we don't need to care about non-method properties (e.g. credential)
+          // or the API version property as these are handled in the parent client.
+          continue;
+        }
+        const name = snakeCaseName(prop.name);
+        if (rustClient.fields.find((v) => v.name === name)) {
+          continue;
+        }
+        rustClient.fields.push(new rust.StructField(name, false, this.getType(prop.type)));
+      }
     } else {
       throw new Error(`uninstantiable client ${client.name} has no parent`);
     }
@@ -649,9 +665,7 @@ export class Adapter {
     for (const method of client.methods) {
       if (method.kind === 'clientaccessor') {
         const subClient = this.recursiveAdaptClient(method.response, rustClient);
-        const clientAccessor = new rust.ClientAccessor(`get_${snakeCaseName(subClient.name)}`, rustClient, subClient);
-        clientAccessor.docs.summary = `Returns a new instance of ${subClient.name}.`;
-        rustClient.methods.push(clientAccessor);
+        this.adaptClientAccessor(method, rustClient, subClient);
       } else {
         this.adaptMethod(method, rustClient);
       }
@@ -716,6 +730,23 @@ export class Adapter {
       case 'path':
         return new rust.ClientEndpointParameter(paramName, paramType, optional, param.serializedName);
     }
+  }
+
+  /**
+   * converts a tcgc client accessor method to a Rust method
+   * 
+   * @param method the tcgc client accessor method to convert
+   * @param rustClient the client to which the method belongs
+   * @param subClient the sub-client type that the method returns
+   */
+  private adaptClientAccessor(method: tcgc.SdkClientAccessor<tcgc.SdkHttpOperation>, rustClient: rust.Client, subClient: rust.Client): void {
+    const clientAccessor = new rust.ClientAccessor(`get_${snakeCaseName(subClient.name)}`, rustClient, subClient);
+    clientAccessor.docs.summary = `Returns a new instance of ${subClient.name}.`;
+    for (const param of method.parameters) {
+      const adaptedParam = new rust.Parameter(snakeCaseName(param.name), this.getType(param.type));
+      clientAccessor.params.push(adaptedParam);
+    }
+    rustClient.methods.push(clientAccessor);
   }
 
   /**
