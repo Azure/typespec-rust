@@ -89,13 +89,26 @@ export class Use {
         }
         break;
       case 'option':
-      case 'requestContent':
-      case 'response':
       case 'result':
       case 'hashmap':
       case 'vector':
         this.addForType(type.type);
         break;
+      case 'requestContent':
+        switch (type.content.kind) {
+          case 'bytes':
+            this.addForType(type.content);
+            break;
+          case 'payload':
+            this.addForType(type.content.type);
+            break;
+        }
+        break;
+      case 'response':
+        switch (type.content.kind) {
+          case 'payload':
+            this.addForType(type.content.type);
+        }
     }
 
     if (type.kind !== 'client') {

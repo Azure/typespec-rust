@@ -85,5 +85,5 @@ async fn unix_timestamp() {
 
 #[tokio::test]
 async fn unix_timestamp_array() {
-    // TODO
+    // TODO: https://github.com/Azure/typespec-rust/issues/221
 }

@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** Type defines a type within the Rust type system */
-export type Type = Arc | EncodedBytes | Enum | Etag | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | Pager | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
+export type Type = Arc | Bytes | EncodedBytes | Enum | Etag | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | Pager | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
 
 /** Arc is a std::sync::Arc<T> */
 export interface Arc extends StdType {
@@ -26,6 +26,11 @@ export interface Arc extends StdType {
    * note that not all types are applicable
    */
   type: Type;
+}
+
+/** Bytes is a azure_core::Bytes type */
+export interface Bytes extends External {
+  kind: 'bytes';
 }
 
 /** BytesEncoding defines the possible types of base64-encoding. */
@@ -183,9 +188,12 @@ export interface Pager extends External {
   format: BodyFormat;
 }
 
-/** RequestContent is a Rust RequestContent<T> from azure_core */
-export interface RequestContent<T extends Type = Type> extends External {
-  kind: 'requestContent';
+/**
+ * Payload<T> is used for operations that send/receive a typed payload.
+ * it's a grouping of the payload type and its wire format.
+ */
+export interface Payload<T extends Type = Type> {
+  kind: 'payload';
 
   /**
    * the generic type param
@@ -197,22 +205,28 @@ export interface RequestContent<T extends Type = Type> extends External {
   format: BodyFormat;
 }
 
+/** RequestContent is a Rust RequestContent<T> from azure_core */
+export interface RequestContent<T = Bytes | Payload> extends External {
+  kind: 'requestContent';
+
+  /** the type of content sent in the request */
+  content: T;
+}
+
 /** Response is a Rust Response<T> from azure_core */
-export interface Response extends External {
+export interface Response<T = Payload | ResponseBody | Unit> extends External {
   kind: 'response';
 
-  /**
-   * the generic type param
-   * note that not all types are applicable
-   */
-  type: Type;
+  /** the type of content sent in the response */
+  content: T;
+}
 
-  /**
-   * the wire format of the response body.
-   * if the response doesn't return a body (i.e. Unit)
-   * the format will be undefined.
-   */
-  format?: BodyFormat;
+/**
+ * ResponseBody is used for operations that receive a streaming response.
+ * it's the default type parameter for Response<T> in azure_core.
+ */
+export interface ResponseBody {
+  kind: 'responseBody';
 }
 
 /** Result is a Rust Result<T> from azure_core */
@@ -235,7 +249,7 @@ export interface Scalar {
 }
 
 /** BodyFormat indicates the wire format for request and response bodies */
-export type BodyFormat = 'binary' | 'json' | 'xml';
+export type BodyFormat = 'json' | 'xml';
 
 /** StringSlice is a Rust string slice */
 export interface StringSlice {
@@ -404,6 +418,13 @@ export class Arc extends StdType implements Arc {
   }
 }
 
+export class Bytes extends External implements Bytes {
+  constructor(crate: Crate) {
+    super(crate, 'azure_core', 'Bytes');
+    this.kind = 'bytes';
+  }
+}
+
 export class EncodedBytes implements EncodedBytes {
   constructor(encoding: BytesEncoding) {
     this.kind = 'encodedBytes';
@@ -540,48 +561,48 @@ export class Pager extends External implements Pager {
   }
 }
 
-export class RequestContent<T> extends External implements RequestContent<T> {
-  constructor(crate: Crate, type: T, format: BodyFormat) {
+export class Payload<T> implements Payload<T> {
+  constructor(type: T, format: BodyFormat) {
     switch (type.kind) {
       case 'String':
       case 'encodedBytes':
       case 'enum':
-      case 'hashmap':
-      case 'model':
-      case 'scalar':
-      case 'vector':
-        super(crate, 'azure_core', 'RequestContent');
-        this.kind = 'requestContent';
-        this.type = type;
-        break;
-      default:
-        throw new Error(`unsupported RequestContent generic type param kind ${type.kind}`);
-    }
-    this.format = format;
-  }
-}
-
-export class Response extends External implements Response {
-  constructor(crate: Crate, type: Type, format?: BodyFormat) {
-    switch (type.kind) {
-      case 'String':
-      case 'encodedBytes':
-      case 'enum':
+      case 'external':
       case 'hashmap':
       case 'jsonValue':
       case 'model':
       case 'offsetDateTime':
       case 'scalar':
-      case 'unit':
       case 'vector':
-        super(crate, 'azure_core', 'Response');
-        this.kind = 'response';
+        this.kind = 'payload';
         this.type = type;
+        this.format = format;
         break;
       default:
-        throw new Error(`unsupported Response generic type param kind ${type.kind}`);
+        throw new Error(`unsupported Payload generic type param kind ${type.kind}`);
     }
-    this.format = format;
+  }
+}
+
+export class RequestContent<T> extends External implements RequestContent<T> {
+  constructor(crate: Crate, content: T) {
+    super(crate, 'azure_core', 'RequestContent');
+    this.kind = 'requestContent';
+    this.content = content;
+  }
+}
+
+export class Response<T> extends External implements Response<T> {
+  constructor(crate: Crate, content: T) {
+    super(crate, 'azure_core', 'Response');
+    this.kind = 'response';
+    this.content = content;
+  }
+}
+
+export class ResponseBody implements ResponseBody {
+  constructor() {
+    this.kind = 'responseBody';
   }
 }
 

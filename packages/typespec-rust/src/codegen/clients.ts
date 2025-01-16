@@ -396,9 +396,9 @@ function formatParamTypeName(param: rust.MethodParameter | rust.Self): string {
     if (methodParam.kind === 'partialBody') {
       // for partial body params, methodParam.type is the model type that's
       // sent in the request. we want the field within the model for this param.
-      const field = methodParam.type.type.fields.find(f => { return f.name === methodParam.name; });
+      const field = methodParam.type.content.type.fields.find(f => { return f.name === methodParam.name; });
       if (!field) {
-        throw new Error(`didn't find spread param field ${methodParam.name} in type ${methodParam.type.type.name}`);
+        throw new Error(`didn't find spread param field ${methodParam.name} in type ${methodParam.type.content.type.name}`);
       }
       paramType = field.type;
       if (paramType.kind === 'option') {
@@ -678,16 +678,16 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
     // all partial body params should point to the same underlying model type.
     const requestContentType = paramGroups.partialBody[0].type;
     use.addForType(requestContentType);
-    body += `${indent.get()}let body: ${helpers.getTypeDeclaration(requestContentType)} = ${requestContentType.type.name} {\n`;
+    body += `${indent.get()}let body: ${helpers.getTypeDeclaration(requestContentType)} = ${requestContentType.content.type.name} {\n`;
     indent.push();
     for (const partialBodyParam of paramGroups.partialBody) {
-      if (partialBodyParam.type.type !== requestContentType.type) {
-        throw new Error(`spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.type.name}, expected model type ${requestContentType.type.name}`);
+      if (partialBodyParam.type.content.type !== requestContentType.content.type) {
+        throw new Error(`spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.content.type.name}, expected model type ${requestContentType.content.type.name}`);
       }
       let initializer = partialBodyParam.name;
       if (partialBodyParam.optional) {
         initializer = `${partialBodyParam.name}: options.${partialBodyParam.name}`;
-      } else if (!requestContentType.type.internal) {
+      } else if (!requestContentType.content.type.internal) {
         // spread param maps to a non-internal model, so it must be wrapped in Some()
         initializer = `${partialBodyParam.name}: Some(${partialBodyParam.name})`;
       }

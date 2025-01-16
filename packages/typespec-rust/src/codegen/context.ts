@@ -58,21 +58,25 @@ export class Context {
 
         for (const param of method.params) {
           if (param.kind === 'body' || param.kind === 'partialBody') {
-            if (param.type.type.kind === 'enum' || param.type.type.kind === 'model') {
-              this.tryFromForRequestTypes.set(helpers.getTypeDeclaration(param.type.type), param.type.format);
+            if (param.type.content.kind === 'bytes') {
+              // no body format to propagate
+              continue;
             }
-            recursiveAddBodyFormat(param.type.type, param.type.format);
+            if (param.type.content.type.kind === 'enum' || param.type.content.type.kind === 'model') {
+              this.tryFromForRequestTypes.set(helpers.getTypeDeclaration(param.type.content.type), param.type.content.format);
+            }
+            recursiveAddBodyFormat(param.type.content.type, param.type.content.format);
           }
         }
 
-        if (method.returns.type.kind === 'response' && method.returns.type.type.kind !== 'unit') {
-          if (!method.returns.type.format) {
+        if (method.returns.type.kind === 'response' && method.returns.type.content.kind === 'payload') {
+          if (!method.returns.type.content.format) {
             throw new Error(`method ${client.name}.${method.name} returns a body but no format was specified`);
           }
-          if (method.returns.type.type.kind === 'enum' || method.returns.type.type.kind === 'model') {
-            this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.type), method.returns.type.format);
+          if (method.returns.type.content.type.kind === 'enum' || method.returns.type.content.type.kind === 'model') {
+            this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.content.type), method.returns.type.content.format);
           }
-          recursiveAddBodyFormat(method.returns.type.type, method.returns.type.format);
+          recursiveAddBodyFormat(method.returns.type.content.type, method.returns.type.content.format);
         } else if (method.returns.type.kind === 'pager') {
           this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.type), method.returns.type.format);
           recursiveAddBodyFormat(method.returns.type.type, method.returns.type.format);
@@ -94,7 +98,6 @@ export class Context {
     if (!format) {
       return '';
     }
-    this.validateBodyFormat(format);
 
     use.addTypes('azure_core', ['RequestContent', 'Result']);
     use.addType('typespec_client_core', `${format}::to_${format}`);
@@ -122,7 +125,6 @@ export class Context {
     if (!format) {
       return '';
     }
-    this.validateBodyFormat(format);
 
     use.addType('azure_core', 'ResponseBody');
 
@@ -151,21 +153,5 @@ export class Context {
       bodyFormat = 'json';
     }
     return bodyFormat;
-  }
-
-  /**
-   * verifies that the body format is JSON or XML as those are
-   * the only formats requiring impl TryFrom<T> helpers.
-   * 
-   * @param format the format to inspect
-   */
-  private validateBodyFormat(format: rust.BodyFormat): void {
-    switch (format) {
-      case 'json':
-      case 'xml':
-        return;
-      default:
-        throw new Error(`unexpected body format ${format}`);
-    }
   }
 }

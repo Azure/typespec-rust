@@ -9,7 +9,8 @@ use crate::models::{
     StaticWebsite, StorageServiceProperties, StorageServiceStats, UserDelegationKey,
 };
 use azure_core::{
-    ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
+    Bytes, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response,
+    Result, Url,
 };
 
 pub struct BlobServiceClient {
@@ -222,9 +223,9 @@ impl BlobServiceClient {
     pub async fn submit_batch(
         &self,
         content_length: i64,
-        body: RequestContent<Vec<u8>>,
+        body: RequestContent<Bytes>,
         options: Option<BlobServiceClientSubmitBatchOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

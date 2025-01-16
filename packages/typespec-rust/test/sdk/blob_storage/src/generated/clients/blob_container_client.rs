@@ -7,7 +7,8 @@ use crate::models::{
     FilterBlobSegment, FilterBlobsIncludeItem, PublicAccessType, SignedIdentifier,
 };
 use azure_core::{
-    ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
+    Bytes, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response,
+    Result, Url,
 };
 use std::collections::HashMap;
 
@@ -577,10 +578,10 @@ impl BlobContainerClient {
     pub async fn submit_batch(
         &self,
         container_name: String,
-        body: RequestContent<Vec<u8>>,
+        body: RequestContent<Bytes>,
         content_length: i64,
         options: Option<BlobContainerClientSubmitBatchOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

@@ -1,6 +1,11 @@
 # Release History
 
-## 0.6.1 (unreleased)
+## 0.7.0 (unreleased)
+
+### Breaking Changes
+
+* Methods that take a binary body now take a `RequestContent<Bytes>` instead of `RequestContent<Vec<u8>>`.
+* Methods that return a binary body now return a `Response` instead of `Response<()>`.
 
 ### Bugs Fixed
 
