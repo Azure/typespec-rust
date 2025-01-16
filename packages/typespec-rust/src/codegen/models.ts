@@ -96,9 +96,11 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
         if (field.type.kind === 'option') {
           optionMod = '::option';
         }
+        // TODO: https://github.com/Azure/typespec-rust/issues/221
+        // specifically need to handle nested arrays of time types that require conversion
         serdeParams.push(`with = "azure_core::date::${(<rust.OffsetDateTime>helpers.unwrapOption(field.type)).encoding}${optionMod}"`);
       } else if (helpers.unwrapOption(field.type).kind === 'encodedBytes') {
-        // TODO: https://github.com/Azure/typespec-rust/issues/56
+        // TODO: https://github.com/Azure/typespec-rust/issues/221
         // specifically need to handle nested arrays of base64 encoded bytes
         let format = '';
         if ((<rust.EncodedBytes>helpers.unwrapOption(field.type)).encoding === 'url') {

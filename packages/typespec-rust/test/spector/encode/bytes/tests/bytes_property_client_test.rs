@@ -41,8 +41,7 @@ async fn base64_url() {
 #[tokio::test]
 #[should_panic]
 async fn base64_url_array() {
-    // TODO: https://github.com/Azure/typespec-rust/issues/56
-    // specifically need to handle nested arrays of base64 encoded bytes
+    // TODO: https://github.com/Azure/typespec-rust/issues/221
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut input = Base64urlArrayBytesProperty::default();
     input.value = Some(vec![
