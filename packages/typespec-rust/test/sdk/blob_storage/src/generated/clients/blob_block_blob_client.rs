@@ -7,7 +7,7 @@ use crate::models::{
     AccessTier, BlobImmutabilityPolicyMode, BlockListType, BlockLookupList, EncryptionAlgorithmType,
 };
 use azure_core::{
-    base64, date, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
+    base64, date, Bytes, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
 use std::collections::HashMap;
@@ -335,7 +335,7 @@ impl BlobBlockBlobClient {
         blob: String,
         block_id: String,
         content_length: i64,
-        body: RequestContent<Vec<u8>>,
+        body: RequestContent<Bytes>,
         options: Option<BlobBlockBlobClientStageBlockOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -490,7 +490,7 @@ impl BlobBlockBlobClient {
         &self,
         container_name: String,
         blob: String,
-        body: RequestContent<Vec<u8>>,
+        body: RequestContent<Bytes>,
         content_length: i64,
         options: Option<BlobBlockBlobClientUploadOptions<'_>>,
     ) -> Result<Response<()>> {

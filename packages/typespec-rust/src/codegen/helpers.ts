@@ -73,6 +73,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Type, withAnonymousL
   switch (type.kind) {
     case 'arc':
       return `${type.name}<dyn ${getTypeDeclaration(type.type)}>`;
+    case 'bytes':
     case 'client':
       return type.name;
     case 'encodedBytes':
@@ -90,9 +91,26 @@ export function getTypeDeclaration(type: rust.Client | rust.Type, withAnonymousL
     case 'pager':
       return `Pager<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'requestContent':
-    case 'response':
+      switch (type.content.kind) {
+        case 'bytes':
+          return `${type.name}<${getTypeDeclaration(type.content)}>`;
+        case 'payload':
+          return `${type.name}<${getTypeDeclaration(type.content.type, withAnonymousLifetime)}>`;
+      }
+      break;
     case 'result':
       return `${type.name}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+    case 'response':
+      switch (type.content.kind) {
+        case 'payload':
+          return `${type.name}<${getTypeDeclaration(type.content.type, withAnonymousLifetime)}>`;
+        case 'responseBody':
+          // for Response<T>, T defaults to ResponseBody so we can elide it
+          return type.name;
+        case 'unit':
+          return `${type.name}<${getTypeDeclaration(type.content)}>`;
+      }
+      break;
     case 'String':
     case 'str':
     case 'Url':

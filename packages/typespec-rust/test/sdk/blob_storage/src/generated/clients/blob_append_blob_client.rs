@@ -5,7 +5,7 @@
 
 use crate::models::{BlobImmutabilityPolicyMode, EncryptionAlgorithmType};
 use azure_core::{
-    base64, date, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
+    base64, date, Bytes, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
 use std::collections::HashMap;
@@ -29,7 +29,7 @@ impl BlobAppendBlobClient {
         &self,
         container_name: String,
         blob: String,
-        body: RequestContent<Vec<u8>>,
+        body: RequestContent<Bytes>,
         content_length: i64,
         options: Option<BlobAppendBlobClientAppendBlockOptions<'_>>,
     ) -> Result<Response<()>> {

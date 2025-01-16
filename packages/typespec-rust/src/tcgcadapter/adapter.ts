@@ -821,9 +821,9 @@ export class Adapter {
           // sent in the request. we want the field within the model for this param.
           // NOTE: if the param is optional then the field is optional, thus it's
           // already wrapped in an Option<T> type.
-          const field = adaptedParam.type.type.fields.find(f => { return f.name === adaptedParam.name; });
+          const field = adaptedParam.type.content.type.fields.find(f => { return f.name === adaptedParam.name; });
           if (!field) {
-            throw new Error(`didn't find spread param field ${adaptedParam.name} in type ${adaptedParam.type.type.name}`);
+            throw new Error(`didn't find spread param field ${adaptedParam.name} in type ${adaptedParam.type.content.type.name}`);
           }
           fieldType = field.type;
         } else {
@@ -859,13 +859,7 @@ export class Adapter {
         throw new Error(`unable to determine content type for method ${method.name}`);
       }
 
-      const bodyFormat = this.adaptBodyFormat(defaultContentType);
-      if (bodyFormat === 'xml') {
-        // XML support is disabled by default
-        this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
-      }
-
-      return bodyFormat;
+      return this.adaptBodyFormat(defaultContentType);
     };
 
     let returnType: rust.Type;
@@ -886,19 +880,12 @@ export class Adapter {
       }
       returnType = new rust.Pager(this.crate, synthesizedModel, format);
     } else if (method.response.type) {
-      const format = getBodyFormat();
-      // until https://github.com/Azure/typespec-azure/issues/614 is resolved
-      // we have to look at the format to determine if the response is a streaming
-      // binary response. at present, it's represented as a base-64 encoded byte
-      // array which is clearly wrong.
-      let respType: rust.Type;
-      if (format === 'binary') {
-        respType = this.getUnitType();
+      if (method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
+        // bytes encoding indicates a streaming binary response
+        returnType = new rust.Response(this.crate, new rust.ResponseBody());
       } else {
-        respType = this.getType(method.response.type);
+        returnType = new rust.Response(this.crate, new rust.Payload(this.getType(method.response.type), getBodyFormat()));
       }
-
-      returnType = new rust.Response(this.crate, respType, format);
     } else {
       returnType = new rust.Response(this.crate, this.getUnitType());
     }
@@ -939,7 +926,14 @@ export class Adapter {
     let adaptedParam: rust.MethodParameter;
     switch (param.kind) {
       case 'body': {
-        adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, paramType, this.adaptBodyFormat(param.defaultContentType)));
+        let requestType: rust.Bytes | rust.Payload;
+        if (param.type.kind === 'bytes' && param.type.encode === 'bytes') {
+          // bytes encoding indicates a streaming binary request
+          requestType = new rust.Bytes(this.crate);
+        } else {
+          requestType = new rust.Payload(paramType, this.adaptBodyFormat(param.defaultContentType));
+        }
+        adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, requestType));
         break;
       }
       case 'cookie':
@@ -1012,8 +1006,6 @@ export class Adapter {
    */
   private adaptMethodSpreadParameter(param: tcgc.SdkMethodParameter, format: rust.BodyFormat, opParamType: tcgc.SdkModelType): rust.PartialBodyParameter {
     switch (format) {
-      case 'binary':
-        throw new Error('binary spread NYI');
       case 'json':
       case 'xml': {
         // find the corresponding field within the model so we can get its index
@@ -1035,7 +1027,7 @@ export class Adapter {
           throw new Error(`unexpected kind ${paramType.kind} for spread body param`);
         }
         const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
-        return new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, new rust.RequestContent(this.crate, paramType, format));
+        return new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, new rust.RequestContent(this.crate, new rust.Payload(paramType, format)));
       }
     }
   }
@@ -1047,18 +1039,17 @@ export class Adapter {
    * @returns a Rust body format
    */
   private adaptBodyFormat(contentType: string): rust.BodyFormat {
-    // we only recognize/support JSON, text, and XML content types, so assume anything else is binary
-    // NOTE: we check XML before text in order to support text/xml
-    let bodyFormat: rust.BodyFormat = 'binary';
+    // we only recognize/support JSON, text, and XML content types.
     if (contentType.match(/json/i)) {
       this.crate.addDependency(new rust.CrateDependency('serde_json'));
-      bodyFormat = 'json';
+      return 'json';
     } else if (contentType.match(/xml/i)) {
-      bodyFormat = 'xml';
-    } else if (contentType.match(/text/i)) {
-      throw new Error(`unhandled contentType ${contentType}`);
+      // XML support is disabled by default
+      this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
+      return 'xml';
+    } else {
+      throw new Error(`unexpected contentType ${contentType}`);
     }
-    return bodyFormat;
   }
 }
 
