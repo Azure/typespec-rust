@@ -15,6 +15,7 @@
 ### Other Changes
 
 * Various codegen changes to clean up Clippy issues.
+* Updated to the latest tsp toolset.
 
 ## 0.6.0 (2025-01-08)
 
