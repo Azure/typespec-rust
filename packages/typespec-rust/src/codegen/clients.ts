@@ -332,8 +332,14 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
   const paramsSig = new Array<string>();
   paramsSig.push(formatParamTypeName(method.self));
 
-  // client accessors only have a self param so skip checking for params
-  if (method.kind !== 'clientaccessor') {
+  if (method.kind === 'clientaccessor') {
+    // client accessor params don't have a concept
+    // of optionality nor do they contain literals
+    for (const param of method.params) {
+      use.addForType(param.type);
+      paramsSig.push(`${param.name}: ${formatParamTypeName(param)}`);
+    }
+  } else {
     for (const param of method.params) {
       if (param.type.kind === 'literal') {
         // literal params are embedded directly in the code (e.g. accept header param)
@@ -382,7 +388,7 @@ function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
  * @param param the parameter for which to create the
  * @returns the parameter's type declaration
  */
-function formatParamTypeName(param: rust.MethodParameter | rust.Self): string {
+function formatParamTypeName(param: rust.MethodParameter | rust.Parameter | rust.Self): string {
   let format = '';
   if (param.ref) {
     format = '&';
@@ -408,7 +414,11 @@ function formatParamTypeName(param: rust.MethodParameter | rust.Self): string {
       }
     }
     format += helpers.getTypeDeclaration(paramType);
+  } else if ((<rust.Parameter>param).type) {
+    const methodParam = <rust.Parameter>param;
+    format += helpers.getTypeDeclaration(methodParam.type);
   } else {
+    // the rust.Self case
     format += param.name;
   }
   return format;
@@ -447,9 +457,25 @@ function getEndpointFieldName(client: rust.Client): string {
  */
 function getClientAccessorMethodBody(indent: helpers.indentation, client: rust.Client, clientAccessor: rust.ClientAccessor): string {
   let body = `${clientAccessor.returns.name} {\n`;
-  indent.push();
+  const initFields = new Array<string>();
+  for (const param of clientAccessor.params) {
+    // by convention, the client accessor params have the
+    // same name as their corresponding client fields. so
+    // we can use short-hand initialization notation
+    initFields.push(param.name);
+  }
+
+  // accessor params and client fields are mutually exclusive
+  // so we don't need to worry about potentials for duplication.
   for (const field of client.fields) {
-    body += `${indent.get()}${field.name}: self.${field.name}${nonCopyableType(field.type) ? '.clone()' : ''},\n`;
+    initFields.push(`${field.name}: self.${field.name}${nonCopyableType(field.type) ? '.clone()' : ''}`);
+  }
+
+  // sort the fields as the fields in the client are also sorted
+  initFields.sort();
+  indent.push();
+  for (const initField of initFields) {
+    body += `${indent.get()}${initField},\n`;
   }
   body += `${indent.pop().get()}}`;
   return body;

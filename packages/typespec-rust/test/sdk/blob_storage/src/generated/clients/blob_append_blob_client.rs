@@ -12,6 +12,7 @@ use std::collections::HashMap;
 use time::OffsetDateTime;
 
 pub struct BlobAppendBlobClient {
+    pub(crate) blob: String,
     pub(crate) container_name: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,8 +28,6 @@ impl BlobAppendBlobClient {
     /// The Append Block operation commits a new block of data to the end of an append blob.
     pub async fn append_block(
         &self,
-        container_name: String,
-        blob: String,
         body: RequestContent<Bytes>,
         content_length: i64,
         options: Option<BlobAppendBlobClientAppendBlockOptions<'_>>,
@@ -37,8 +36,8 @@ impl BlobAppendBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "appendblock");
         if let Some(timeout) = options.timeout {
@@ -118,8 +117,6 @@ impl BlobAppendBlobClient {
     /// read from a URL.
     pub async fn append_block_from_url(
         &self,
-        container_name: String,
-        blob: String,
         source_url: String,
         content_length: i64,
         options: Option<BlobAppendBlobClientAppendBlockFromUrlOptions<'_>>,
@@ -128,8 +125,8 @@ impl BlobAppendBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "appendblock")
@@ -228,8 +225,6 @@ impl BlobAppendBlobClient {
     /// The Create operation creates a new append blob.
     pub async fn create(
         &self,
-        container_name: String,
-        blob: String,
         content_length: i64,
         options: Option<BlobAppendBlobClientCreateOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -237,8 +232,8 @@ impl BlobAppendBlobClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_key_only("AppendBlob");
         if let Some(timeout) = options.timeout {
@@ -337,16 +332,14 @@ impl BlobAppendBlobClient {
     /// later.
     pub async fn seal(
         &self,
-        container_name: String,
-        blob: String,
         options: Option<BlobAppendBlobClientSealOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &blob);
-        path = path.replace("{containerName}", &container_name);
+        path = path.replace("{blob}", &self.blob);
+        path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "seal");
         if let Some(timeout) = options.timeout {

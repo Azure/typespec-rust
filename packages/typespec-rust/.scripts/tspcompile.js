@@ -69,6 +69,7 @@ const azureHttpSpecsGroup = {
   'spector_basic': {input: 'azure/core/basic'},
   //'spector_lrorpc': {input: 'azure/core/lro/rpc'},
   //'spector_lrostd': {input: 'azure/core/lro/standard'},
+  //'spector_coremodel': {input: 'azure/core/model'},
   //'spector_corepage': {input: 'azure/core/page'},
   //'spector_corescalar': {input: 'azure/core/scalar'},
   //'spector_traits': {input: 'azure/core/traits'},

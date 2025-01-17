@@ -6,6 +6,7 @@
 
 * Methods that take a binary body now take a `RequestContent<Bytes>` instead of `RequestContent<Vec<u8>>`.
 * Methods that return a binary body now return a `Response` instead of `Response<()>`.
+* Client accessor methods now include any modeled parameters.
 
 ### Bugs Fixed
 
