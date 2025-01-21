@@ -5,6 +5,7 @@ members = [
     "spector/special-words",
     "spector/authentication/oauth2",
     "spector/authentication/union",
+    "spector/client/naming",
     "spector/encode/bytes",
     "spector/encode/datetime",
     "spector/encode/duration",
