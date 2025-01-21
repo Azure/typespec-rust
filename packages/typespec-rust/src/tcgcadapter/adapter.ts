@@ -1013,6 +1013,7 @@ export class Adapter {
         } else {
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
           adaptedParam = new rust.QueryParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true);
+          adaptedParam.isApiVersion = param.isApiVersionParam;
         }
         break;
     }

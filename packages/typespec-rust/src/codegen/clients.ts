@@ -484,9 +484,13 @@ function getClientAccessorMethodBody(indent: helpers.indentation, client: rust.C
 type ClientMethod = rust.AsyncMethod | rust.PageableMethod;
 type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderHashMapParameter | rust.HeaderParameter;
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryParameter;
+type ApiVersionParamType = rust.QueryParameter;
 
 /** groups method parameters based on their kind */
 interface methodParamGroups {
+  /** the api version parameter if applicable */
+  apiVersion?: ApiVersionParamType;
+
   /** the body parameter if applicable */
   body?: rust.BodyParameter;
 
@@ -511,6 +515,7 @@ interface methodParamGroups {
  */
 function getMethodParamGroup(method: ClientMethod): methodParamGroups {
   // collect and sort all the header/path/query params
+  let apiVersionParam: ApiVersionParamType | undefined;
   const headerParams = new Array<HeaderParamType>();
   const pathParams = new Array<rust.PathParameter>();
   const queryParams = new Array<QueryParamType>();
@@ -534,6 +539,9 @@ function getMethodParamGroup(method: ClientMethod): methodParamGroups {
         queryParams.push(param);
         break;
     }
+    if (param.kind === 'query' && param.isApiVersion) {
+      apiVersionParam = param;
+    }
   }
 
   headerParams.sort((a: HeaderParamType, b: HeaderParamType) => { return helpers.sortAscending(a.header, b.header); });
@@ -551,6 +559,7 @@ function getMethodParamGroup(method: ClientMethod): methodParamGroups {
   }
 
   return {
+    apiVersion: apiVersionParam,
     body: bodyParam,
     header: headerParams,
     partialBody: partialBodyParams,
@@ -790,11 +799,28 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
+  if (paramGroups.apiVersion) {
+    body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n`;
+  }
   body += `${indent.get()}Ok(Pager::from_callback(move |${nextLinkName}: Option<Url>| {\n`;
 
   body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
     pattern: `Some(${nextLinkName})`,
-    body: (indent) => `${indent.get()} ${nextLinkName}\n`
+    body: (indent) => {
+      if (paramGroups.apiVersion) {
+        const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
+        // there are no APIs to set/update an existing query parameter.
+        // so, we filter the existing query params to remove the api-version
+        // query param. we then add back the filtered set and then add the
+        // api-version as specified on the client.
+        let setApiVerBody = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
+        setApiVerBody += `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
+        setApiVerBody += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
+        setApiVerBody += `${indent.get()}${nextLinkName}\n`;
+        return setApiVerBody;
+      }
+      return `${indent.get()} ${nextLinkName}\n`;
+    }
   }, {
     pattern: 'None',
     body: (indent) => `${indent.get()}${urlVar}.clone()\n`

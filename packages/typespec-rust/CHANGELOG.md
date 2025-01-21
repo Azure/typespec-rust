@@ -1,5 +1,11 @@
 # Release History
 
+## 0.7.1 (unreleased)
+
+### Bugs Fixed
+
+* Ensure that the API version query parameter in a pager's next link is set to the version on the client.
+
 ## 0.7.0 (2025-01-17)
 
 ### Breaking Changes
