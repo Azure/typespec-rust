@@ -289,6 +289,12 @@ export interface QueryParameter extends HTTPParameterBase {
 
   /** indicates if the query parameter should be URL encoded */
   encoded: boolean;
+
+  /**
+   * indicates this is an API version parameter 
+   * the default value is false.
+   */
+  isApiVersion: boolean;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -529,6 +535,7 @@ export class QueryParameter extends HTTPParameterBase implements QueryParameter 
     this.kind = 'query';
     this.key = key;
     this.encoded = encoded;
+    this.isApiVersion = false;
   }
 }
 

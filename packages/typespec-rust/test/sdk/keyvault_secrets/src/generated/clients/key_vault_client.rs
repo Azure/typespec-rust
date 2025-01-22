@@ -145,9 +145,21 @@ impl KeyVaultClient {
                 .query_pairs_mut()
                 .append_pair("maxresults", &maxresults.to_string());
         }
+        let api_version = self.api_version.clone();
         Ok(Pager::from_callback(move |next_link: Option<Url>| {
             let url = match next_link {
-                Some(next_link) => next_link,
+                Some(next_link) => {
+                    let qp = next_link
+                        .query_pairs()
+                        .filter(|(name, _)| name.ne("api-version"));
+                    let mut next_link = next_link.clone();
+                    next_link
+                        .query_pairs_mut()
+                        .clear()
+                        .extend_pairs(qp)
+                        .append_pair("api-version", &api_version);
+                    next_link
+                }
                 None => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);
@@ -218,9 +230,21 @@ impl KeyVaultClient {
                 .query_pairs_mut()
                 .append_pair("maxresults", &maxresults.to_string());
         }
+        let api_version = self.api_version.clone();
         Ok(Pager::from_callback(move |next_link: Option<Url>| {
             let url = match next_link {
-                Some(next_link) => next_link,
+                Some(next_link) => {
+                    let qp = next_link
+                        .query_pairs()
+                        .filter(|(name, _)| name.ne("api-version"));
+                    let mut next_link = next_link.clone();
+                    next_link
+                        .query_pairs_mut()
+                        .clear()
+                        .extend_pairs(qp)
+                        .append_pair("api-version", &api_version);
+                    next_link
+                }
                 None => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);
@@ -265,9 +289,21 @@ impl KeyVaultClient {
                 .query_pairs_mut()
                 .append_pair("maxresults", &maxresults.to_string());
         }
+        let api_version = self.api_version.clone();
         Ok(Pager::from_callback(move |next_link: Option<Url>| {
             let url = match next_link {
-                Some(next_link) => next_link,
+                Some(next_link) => {
+                    let qp = next_link
+                        .query_pairs()
+                        .filter(|(name, _)| name.ne("api-version"));
+                    let mut next_link = next_link.clone();
+                    next_link
+                        .query_pairs_mut()
+                        .clear()
+                        .extend_pairs(qp)
+                        .append_pair("api-version", &api_version);
+                    next_link
+                }
                 None => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);
