@@ -10,7 +10,7 @@ create_extensible_enum!(
     (Application, "Application"),
     (Key, "Key"),
     (ManagedIdentity, "ManagedIdentity"),
-    (User, "User")
+    (User, "User"),
 );
 
 create_extensible_enum!(
@@ -18,5 +18,5 @@ create_extensible_enum!(
     (None, "None"),
     (SystemAssigned, "SystemAssigned"),
     (SystemAssignedUserAssigned, "SystemAssigned,UserAssigned"),
-    (UserAssigned, "UserAssigned")
+    (UserAssigned, "UserAssigned"),
 );

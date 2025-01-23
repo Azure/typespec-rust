@@ -22,5 +22,5 @@ create_extensible_enum!(
         RecoverableProtectedSubscription,
         "Recoverable+ProtectedSubscription"
     ),
-    (RecoverablePurgeable, "Recoverable+Purgeable")
+    (RecoverablePurgeable, "Recoverable+Purgeable"),
 );

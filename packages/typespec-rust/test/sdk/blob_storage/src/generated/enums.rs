@@ -22,7 +22,7 @@ create_extensible_enum!(
     (P60, "P60"),
     (P70, "P70"),
     (P80, "P80"),
-    (Premium, "Premium")
+    (Premium, "Premium"),
 );
 
 create_extensible_enum!(
@@ -31,14 +31,14 @@ create_extensible_enum!(
     (BlockBlobStorage, "BlockBlobStorage"),
     (FileStorage, "FileStorage"),
     (Storage, "Storage"),
-    (StorageV2, "StorageV2")
+    (StorageV2, "StorageV2"),
 );
 
 create_extensible_enum!(
     ArchiveStatus,
     (RehydratePendingToCold, "rehydrate-pending-to-cold"),
     (RehydratePendingToCool, "rehydrate-pending-to-cool"),
-    (RehydratePendingToHot, "rehydrate-pending-to-hot")
+    (RehydratePendingToHot, "rehydrate-pending-to-hot"),
 );
 
 create_extensible_enum!(BlobDeleteType, (Permanent, "Permanent"));
@@ -48,28 +48,28 @@ create_extensible_enum!(
     (Absolute, "Absolute"),
     (NeverExpire, "NeverExpire"),
     (RelativeToCreation, "RelativeToCreation"),
-    (RelativeToNow, "RelativeToNow")
+    (RelativeToNow, "RelativeToNow"),
 );
 
 create_extensible_enum!(
     BlobImmutabilityPolicyMode,
     (Locked, "Locked"),
     (Mutable, "Mutable"),
-    (Unlocked, "Unlocked")
+    (Unlocked, "Unlocked"),
 );
 
 create_extensible_enum!(
     BlobType,
     (AppendBlob, "AppendBlob"),
     (BlockBlob, "BlockBlob"),
-    (PageBlob, "PageBlob")
+    (PageBlob, "PageBlob"),
 );
 
 create_extensible_enum!(
     BlockListType,
     (All, "all"),
     (Committed, "committed"),
-    (Uncommitted, "uncommitted")
+    (Uncommitted, "uncommitted"),
 );
 
 create_extensible_enum!(
@@ -77,13 +77,13 @@ create_extensible_enum!(
     (Aborted, "aborted"),
     (Failed, "failed"),
     (Pending, "pending"),
-    (Success, "success")
+    (Success, "success"),
 );
 
 create_extensible_enum!(
     DeleteSnapshotsOptionType,
     (Include, "include"),
-    (Only, "only")
+    (Only, "only"),
 );
 
 create_extensible_enum!(EncryptionAlgorithmType, (AES256, "AES256"));
@@ -91,14 +91,14 @@ create_extensible_enum!(EncryptionAlgorithmType, (AES256, "AES256"));
 create_extensible_enum!(
     FilterBlobsIncludeItem,
     (None, "none"),
-    (Versions, "versions")
+    (Versions, "versions"),
 );
 
 create_extensible_enum!(
     GeoReplicationStatusType,
     (Bootstrap, "bootstrap"),
     (Live, "live"),
-    (Unavailable, "unavailable")
+    (Unavailable, "unavailable"),
 );
 
 create_extensible_enum!(
@@ -107,10 +107,10 @@ create_extensible_enum!(
     (Breaking, "breaking"),
     (Broken, "broken"),
     (Expired, "expired"),
-    (Leased, "leased")
+    (Leased, "leased"),
 );
 
-create_extensible_enum!(LeaseStatus, (Locked, "locked"), (Unlocked, "unlocked"));
+create_extensible_enum!(LeaseStatus, (Locked, "locked"), (Unlocked, "unlocked"),);
 
 create_extensible_enum!(
     PremiumPageBlobAccessTier,
@@ -124,10 +124,10 @@ create_extensible_enum!(
     (P6, "P6"),
     (P60, "P60"),
     (P70, "P70"),
-    (P80, "P80")
+    (P80, "P80"),
 );
 
-create_extensible_enum!(PublicAccessType, (Blob, "blob"), (Container, "container"));
+create_extensible_enum!(PublicAccessType, (Blob, "blob"), (Container, "container"),);
 
 create_extensible_enum!(QueryRequestType, (SQL, "SQL"));
 
@@ -136,16 +136,16 @@ create_extensible_enum!(
     (Arrow, "arrow"),
     (Delimited, "delimited"),
     (JSON, "json"),
-    (Parquet, "parquet")
+    (Parquet, "parquet"),
 );
 
-create_extensible_enum!(RehydratePriority, (High, "High"), (Standard, "Standard"));
+create_extensible_enum!(RehydratePriority, (High, "High"), (Standard, "Standard"),);
 
 create_extensible_enum!(
     SequenceNumberActionType,
     (Increment, "increment"),
     (Max, "max"),
-    (Update, "update")
+    (Update, "update"),
 );
 
 create_extensible_enum!(
@@ -154,5 +154,5 @@ create_extensible_enum!(
     (StandardGRS, "Standard_GRS"),
     (StandardLRS, "Standard_LRS"),
     (StandardRAGRS, "Standard_RAGRS"),
-    (StandardZRS, "Standard_ZRS")
+    (StandardZRS, "Standard_ZRS"),
 );

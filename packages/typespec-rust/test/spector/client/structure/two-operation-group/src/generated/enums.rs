@@ -11,5 +11,5 @@ create_enum!(
     (Default, "default"),
     (MultiClient, "multi-client"),
     (RenamedOperation, "renamed-operation"),
-    (TwoOperationGroup, "two-operation-group")
+    (TwoOperationGroup, "two-operation-group"),
 );

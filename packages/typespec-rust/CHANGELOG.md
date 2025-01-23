@@ -1,10 +1,14 @@
 # Release History
 
-## 0.7.1 (unreleased)
+## 0.8.0 (unreleased)
 
 ### Bugs Fixed
 
 * Ensure that the API version query parameter in a pager's next link is set to the version on the client.
+
+### Other Changes
+
+* Include a trailing comman on the last entry to the `create_enum` macros. This requires the latest core.
 
 ## 0.7.0 (2025-01-17)
 

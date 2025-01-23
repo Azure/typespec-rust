@@ -14,7 +14,7 @@ create_enum!(
     (Sunday, "Sunday"),
     (Thursday, "Thursday"),
     (Tuesday, "Tuesday"),
-    (Wednesday, "Wednesday")
+    (Wednesday, "Wednesday"),
 );
 
 impl TryFrom<DaysOfWeekEnum> for RequestContent<DaysOfWeekEnum> {

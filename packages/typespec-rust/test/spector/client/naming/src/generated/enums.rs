@@ -11,7 +11,7 @@ create_extensible_enum!(ClientExtensibleEnum, (EnumValue1, "value1"));
 create_extensible_enum!(
     ExtensibleEnum,
     (ClientEnumValue1, "value1"),
-    (ClientEnumValue2, "value2")
+    (ClientEnumValue2, "value2"),
 );
 
 impl TryFrom<ClientExtensibleEnum> for RequestContent<ClientExtensibleEnum> {

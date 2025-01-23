@@ -42,19 +42,14 @@ export function emitEnums(crate: rust.Crate, context: Context): string | undefin
     }
     body += `${indent.get()}${rustEnum.name},\n`;
 
-    for (let i = 0; i < rustEnum.values.length; ++i) {
-      const value = rustEnum.values[i];
+    for (const value of rustEnum.values) {
       const docs = helpers.formatDocComment(value.docs);
       if (docs.length > 0) {
         body += `${indent.get()}#[doc = r#"${docs}"#]\n`;
       }
       // TODO: hard-coded String type
       // https://github.com/Azure/typespec-rust/issues/25
-      body += `${indent.get()}(${value.name}, "${value.value}")`;
-      if (i + 1 < rustEnum.values.length) {
-        body += ',';
-      }
-      body += '\n';
+      body += `${indent.get()}(${value.name}, "${value.value}")${rustEnum.values.length > 1 ? ',' : ''}\n`;
     }
 
     body += ');\n\n'; // end enum macro
