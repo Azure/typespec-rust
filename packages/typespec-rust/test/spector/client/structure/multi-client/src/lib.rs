@@ -10,7 +10,3 @@ pub use crate::generated::clients::*;
 pub mod models {
     pub use crate::generated::enums::*;
 }
-
-pub use client_a_client::ClientAClient;
-
-pub use client_b_client::ClientBClient;

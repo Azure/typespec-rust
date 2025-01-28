@@ -49,15 +49,6 @@ export interface CrateDependency {
   features: Array<string>;
 }
 
-/** Module is an entry in a mod.rs file */
-export interface Module {
-  /** the name of the module */
-  name: string;
-
-  /** if the module is public */
-  pub: boolean;
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -123,12 +114,5 @@ export class CrateDependency implements CrateDependency {
   constructor(name: string, features = new Array<string>()) {
     this.name = name;
     this.features = features;
-  }
-}
-
-export class Module implements Module {
-  constructor(name: string, pub: boolean) {
-    this.name = name;
-    this.pub = pub;
   }
 }

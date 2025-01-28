@@ -2,9 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_spread::{
-    spread_alias_client::SpreadAliasClientSpreadWithMultipleParametersOptions, SpreadClient,
-};
+use spector_spread::{SpreadAliasClientSpreadWithMultipleParametersOptions, SpreadClient};
 
 #[tokio::test]
 async fn spread_as_request_body() {

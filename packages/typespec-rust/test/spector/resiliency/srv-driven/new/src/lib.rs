@@ -6,5 +6,3 @@
 mod generated;
 
 pub use crate::generated::clients::*;
-
-pub use resiliency_service_driven_client::ResiliencyServiceDrivenClient;

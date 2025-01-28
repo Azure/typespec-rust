@@ -3,12 +3,9 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use spector_srvdrivennew::{
-    resiliency_service_driven_client::{
-        ResiliencyServiceDrivenClientFromNoneOptions,
-        ResiliencyServiceDrivenClientFromOneOptionalOptions,
-        ResiliencyServiceDrivenClientFromOneRequiredOptions, ResiliencyServiceDrivenClientOptions,
-    },
-    ResiliencyServiceDrivenClient,
+    ResiliencyServiceDrivenClient, ResiliencyServiceDrivenClientFromNoneOptions,
+    ResiliencyServiceDrivenClientFromOneOptionalOptions,
+    ResiliencyServiceDrivenClientFromOneRequiredOptions, ResiliencyServiceDrivenClientOptions,
 };
 
 #[tokio::test]

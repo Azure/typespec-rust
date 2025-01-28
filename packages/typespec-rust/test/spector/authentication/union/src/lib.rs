@@ -6,5 +6,3 @@
 mod generated;
 
 pub use crate::generated::clients::*;
-
-pub use union_client::UnionClient;

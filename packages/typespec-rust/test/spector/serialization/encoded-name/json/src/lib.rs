@@ -10,5 +10,3 @@ pub use crate::generated::clients::*;
 pub mod models {
     pub use crate::generated::models::*;
 }
-
-pub use json_client::JsonClient;

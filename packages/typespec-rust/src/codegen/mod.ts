@@ -3,19 +3,52 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import * as codegen from '@azure-tools/codegen';
 import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
 
 /**
- * emits the contents of a mod.rs file
- * @param modules the list of modules to include in the mod.rs file
+ * emits the contents of the mod.rs file for clients
+ * 
+ * @param crate the crate for which to emit the mod.rs file
  * @returns the contents of the mod.rs file
  */
-export function emitModRs(modules: Array<rust.Module>): string {
-  modules.sort((a, b) => { return helpers.sortAscending(a.name, b.name); });
-  let content = helpers.contentPreamble();
-  for (const module of modules) {
-    content += `${module.pub ? 'pub ' : ''}mod ${module.name};\n`;
+export function emitClientsModRs(crate: rust.Crate, addlMods: Array<string>): string {
+  const content = helpers.contentPreamble();
+  const body = new Array<string>();
+
+  // first add the modules for each client
+  for (const client of crate.clients) {
+    body.push(`mod ${codegen.deconstruct(client.name).join('_')};`);
   }
-  return content;
+
+  // add any additional mod entries
+  for (const addlMod of addlMods) {
+    body.push(`${addlMod};`);
+  }
+
+  // now add re-exports for each client
+  for (const client of crate.clients) {
+    const clientModule = codegen.deconstruct(client.name).join('_');
+    if (client.constructable) {
+      body.push(`pub use ${clientModule}::*;`);
+      continue;
+    }
+
+    // for non-instantiable clients we only re-export method option types
+    const optionsTypes = new Array<string>();
+    for (const method of client.methods) {
+      if (method.kind !== 'clientaccessor') {
+        optionsTypes.push(method.options.type.name);
+      }
+    }
+    if (optionsTypes.length > 0) {
+      body.push(`pub use ${clientModule}::{${optionsTypes.join()}};`);
+    }
+  }
+  return content + body.join('\n');
+}
+
+export function emitGeneratedMod(modules: Array<string>): string {
+  return helpers.contentPreamble() + modules.join(';\n') + ';\n';
 }

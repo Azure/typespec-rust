@@ -3,9 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use futures::StreamExt;
-use spector_azurepageable::{
-    models::PagedUser, pageable_client::PageableClientListOptions, PageableClient,
-};
+use spector_azurepageable::{models::PagedUser, PageableClient, PageableClientListOptions};
 
 #[tokio::test]
 async fn list() {

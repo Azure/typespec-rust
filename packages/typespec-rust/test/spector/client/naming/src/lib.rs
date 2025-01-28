@@ -11,5 +11,3 @@ pub mod models {
     pub use crate::generated::enums::*;
     pub use crate::generated::models::*;
 }
-
-pub use naming_client::NamingClient;

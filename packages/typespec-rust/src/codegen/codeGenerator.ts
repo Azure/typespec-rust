@@ -8,7 +8,7 @@ import { emitClients } from './clients.js';
 import { Context } from './context.js';
 import { emitEnums } from './enums.js';
 import { emitLibRs } from './lib.js';
-import { emitModRs } from './mod.js';
+import { emitClientsModRs, emitGeneratedMod } from './mod.js';
 import { emitModels } from './models.js';
 
 import * as rust from '../codemodel/index.js';
@@ -60,48 +60,47 @@ export class CodeGenerator {
    * @returns an array of files to emit
    */
   emitContent(): Array<File> {
-    const clientsModRS = new Array<rust.Module>();
-    const generatedModRS = new Array<rust.Module>();
+    const generatedModRS = new Array<string>();
+    const clientsModRS = new Array<string>();
     const files = new Array<File>();
     const clientsSubDir = 'clients';
 
     const clients = emitClients(this.crate, clientsSubDir);
     if (clients) {
-      clientsModRS.push(...clients.modules);
-      generatedModRS.push(new rust.Module('clients', true));
+      generatedModRS.push('pub mod clients');
       files.push(...clients.clients);
     }
 
     const enums = emitEnums(this.crate, this.context);
     if (enums) {
-      generatedModRS.push(new rust.Module('enums', true));
+      generatedModRS.push('pub mod enums');
       files.push({name: 'enums.rs', content: enums});
     }
 
     const models = emitModels(this.crate, this.context);
     if (models.public) {
-      generatedModRS.push(new rust.Module('models', true));
+      generatedModRS.push('pub mod models');
       files.push({name: 'models.rs', content: models.public});
     }
     if (models.serde) {
-      generatedModRS.push(new rust.Module('models_serde', true));
+      generatedModRS.push('pub mod models_serde');
       files.push({name: 'models_serde.rs', content: models.serde});
     }
     if (models.internal) {
-      clientsModRS.push(new rust.Module('internal_models', false));
+      clientsModRS.push('mod internal_models');
       files.push({name: `${clientsSubDir}/internal_models.rs`, content: models.internal});
     }
     if (models.xmlHelpers) {
-      generatedModRS.push(new rust.Module('xml_helpers', false));
+      generatedModRS.push('mod xml_helpers');
       files.push({name: 'xml_helpers.rs', content: models.xmlHelpers});
     }
 
-    if (clientsModRS.length > 0) {
-      files.push({name: `${clientsSubDir}/mod.rs`, content: emitModRs(clientsModRS)});
+    if (clients) {
+      files.push({name: `${clientsSubDir}/mod.rs`, content: emitClientsModRs(this.crate, clientsModRS)});
     }
 
     // there will always be something in the generated/mod.rs file
-    files.push({name: 'mod.rs', content: emitModRs(generatedModRS)});
+    files.push({name: 'mod.rs', content: emitGeneratedMod(generatedModRS)});
 
     return files;
   }

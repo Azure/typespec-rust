@@ -5,6 +5,7 @@
 ### Breaking Changes
 
 * Required `String` parameters are now emitted as `&str`.
+* Sub-clients and their containing modules are no longer publicly exported.
 
 ### Bugs Fixed
 

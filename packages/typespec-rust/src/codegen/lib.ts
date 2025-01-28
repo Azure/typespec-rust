@@ -3,7 +3,6 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import * as codegen from '@azure-tools/codegen';
 import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
 
@@ -39,13 +38,6 @@ export function emitLibRs(crate: rust.Crate): string {
 
   if (closeModels) {
     content += '}\n';
-  }
-
-  // add all instantiable clients to the crate's root namespace
-  for (const client of crate.clients) {
-    if (client.constructable) {
-      content += `\npub use ${codegen.deconstruct(client.name).join('_')}::${client.name};\n`;
-    }
   }
 
   return content;

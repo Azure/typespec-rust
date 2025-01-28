@@ -3,9 +3,8 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use spector_jmergepatch::{
-    json_merge_patch_client,
     models::{InnerModel, Resource, ResourcePatch},
-    JsonMergePatchClient,
+    JsonMergePatchClient, JsonMergePatchClientUpdateOptionalResourceOptions,
 };
 use std::collections::HashMap;
 
@@ -68,7 +67,7 @@ async fn update_optional_resource() {
     let resource_patch = ResourcePatch::default();
     // TODO: https://github.com/Azure/azure-sdk-for-rust/issues/1649 to send JSON nulls
 
-    let options = json_merge_patch_client::JsonMergePatchClientUpdateOptionalResourceOptions {
+    let options = JsonMergePatchClientUpdateOptionalResourceOptions {
         body: Some(resource_patch.try_into().unwrap()),
         ..Default::default()
     };

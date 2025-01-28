@@ -2,7 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_versioned::{versioned_client::VersionedClientOptions, VersionedClient};
+use spector_versioned::{VersionedClient, VersionedClientOptions};
 
 #[tokio::test]
 async fn with_path_api_version() {
