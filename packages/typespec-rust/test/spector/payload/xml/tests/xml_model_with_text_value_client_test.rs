@@ -21,9 +21,10 @@ async fn get() {
 #[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut input = ModelWithText::default();
-    input.content = Some("\n  This is some text.\n".to_string());
-    input.language = Some("foo".to_string());
+    let input = ModelWithText {
+        content: Some("\n  This is some text.\n".to_string()),
+        language: Some("foo".to_string()),
+    };
     client
         .get_xml_model_with_text_value_client()
         .put(input.try_into().unwrap(), None)

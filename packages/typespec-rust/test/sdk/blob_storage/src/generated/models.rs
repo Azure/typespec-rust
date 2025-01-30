@@ -13,7 +13,6 @@ use time::OffsetDateTime;
 
 /// Represents an access policy.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct AccessPolicy {
     /// The date-time the policy expires.
@@ -41,7 +40,6 @@ pub struct AccessPolicy {
 
 /// Represents the Apache Arrow configuration.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct ArrowConfiguration {
     /// The Apache Arrow schema
@@ -57,7 +55,6 @@ pub struct ArrowConfiguration {
 
 /// Represents an Apache Arrow field.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[serde(rename = "Field")]
 #[typespec(format = "xml")]
 pub struct ArrowField {
@@ -80,7 +77,6 @@ pub struct ArrowField {
 
 /// The blob tags.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[serde(rename = "Tag")]
 #[typespec(format = "xml")]
 pub struct BlobTag {
@@ -95,7 +91,6 @@ pub struct BlobTag {
 
 /// Represents blob tags.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[serde(rename = "Tags")]
 #[typespec(format = "xml")]
 pub struct BlobTags {
@@ -112,7 +107,6 @@ pub struct BlobTags {
 
 /// The Block lookup list.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[serde(rename = "BlockList")]
 #[typespec(format = "xml")]
 pub struct BlockLookupList {
@@ -133,7 +127,6 @@ pub struct BlockLookupList {
 /// Web browsers implement a security restriction known as same-origin policy that prevents a web page from calling APIs in
 /// a different domain; CORS provides a secure way to allow one domain (the origin domain) to call APIs in another domain
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct CorsRule {
     /// The allowed headers.
@@ -159,7 +152,6 @@ pub struct CorsRule {
 
 /// Represents the delimited text configuration.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct DelimitedTextConfiguration {
     /// The string used to separate columns.
@@ -256,7 +248,6 @@ pub struct GeoReplication {
 
 /// Represents the JSON text configuration.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct JsonTextConfiguration {
     /// The string used to separate records.
@@ -266,7 +257,6 @@ pub struct JsonTextConfiguration {
 
 /// Azure Analytics Logging settings.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct Logging {
     /// Whether delete operation is logged.
@@ -292,7 +282,6 @@ pub struct Logging {
 
 /// The metrics properties.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct Metrics {
     /// Whether it is enabled.
@@ -314,13 +303,11 @@ pub struct Metrics {
 
 /// Represents the Parquet configuration.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct ParquetConfiguration {}
 
 /// The query format settings.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct QueryFormat {
     /// The Apache Arrow configuration.
@@ -355,7 +342,6 @@ pub struct QueryFormat {
 
 /// Groups the set of query request settings.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct QueryRequest {
     /// The query expression in SQL. The maximum size of the query expression is 256KiB.
@@ -380,7 +366,6 @@ pub struct QueryRequest {
 
 /// The query serialization settings.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct QuerySerialization {
     /// The query format.
@@ -390,7 +375,6 @@ pub struct QuerySerialization {
 
 /// The retention policy.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct RetentionPolicy {
     /// Whether to allow permanent delete.
@@ -411,7 +395,6 @@ pub struct RetentionPolicy {
 
 /// The signed identifier.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[serde(rename = "SignedIdentifier")]
 #[typespec(format = "xml")]
 pub struct SignedIdentifier {
@@ -426,7 +409,6 @@ pub struct SignedIdentifier {
 
 /// The properties that enable an account to host a static website
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 #[typespec(format = "xml")]
 pub struct StaticWebsite {
     /// Absolute path of the default index page

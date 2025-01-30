@@ -6,7 +6,6 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct ClientModel {
     /// Pass in true
     #[serde(rename = "defaultName", skip_serializing_if = "Option::is_none")]
@@ -14,7 +13,6 @@ pub struct ClientModel {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct ClientNameAndJsonEncodedNameModel {
     /// Pass in true
     #[serde(rename = "wireName", skip_serializing_if = "Option::is_none")]
@@ -22,7 +20,6 @@ pub struct ClientNameAndJsonEncodedNameModel {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct ClientNameModel {
     /// Pass in true
     #[serde(rename = "defaultName", skip_serializing_if = "Option::is_none")]
@@ -30,7 +27,6 @@ pub struct ClientNameModel {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct LanguageClientNameModel {
     /// Pass in true
     #[serde(rename = "defaultName", skip_serializing_if = "Option::is_none")]
@@ -38,7 +34,6 @@ pub struct LanguageClientNameModel {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct RustName {
     /// Pass in true
     #[serde(rename = "defaultName", skip_serializing_if = "Option::is_none")]

@@ -69,7 +69,10 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
 
     body += helpers.formatDocComment(model.docs);
     body += helpers.annotationDerive('Default', 'azure_core::Model');
-    body += helpers.AnnotationNonExhaustive;
+    if (<rust.ModelFlags>(model.flags & rust.ModelFlags.Output) === rust.ModelFlags.Output && (model.flags & rust.ModelFlags.Input) === 0) {
+      // output-only models get the non_exhaustive annotation
+      body += helpers.AnnotationNonExhaustive;
+    }
     if (model.xmlName) {
       body += `#[serde(rename = "${model.xmlName}")]\n`;
     }

@@ -21,7 +21,6 @@ pub struct PagedUser {
 
 /// Details about a user.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct User {
     /// The entity tag for this resource.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -49,7 +48,6 @@ pub struct UserList {
 
 /// UserOrder for testing list with expand.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct UserOrder {
     /// The user's order detail
     #[serde(skip_serializing_if = "Option::is_none")]

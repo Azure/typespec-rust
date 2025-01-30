@@ -13,8 +13,9 @@ use spector_specialwords::models::{
 #[tokio::test]
 async fn with_and() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = And::default();
-    body.name = Some(String::from("ok"));
+    let body = And {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -26,8 +27,9 @@ async fn with_and() {
 #[tokio::test]
 async fn with_as() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = As::default();
-    body.name = Some(String::from("ok"));
+    let body = As {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -39,8 +41,9 @@ async fn with_as() {
 #[tokio::test]
 async fn with_assert() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Assert::default();
-    body.name = Some(String::from("ok"));
+    let body = Assert {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -52,8 +55,9 @@ async fn with_assert() {
 #[tokio::test]
 async fn with_async() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Async::default();
-    body.name = Some(String::from("ok"));
+    let body = Async {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -65,8 +69,9 @@ async fn with_async() {
 #[tokio::test]
 async fn with_await() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Await::default();
-    body.name = Some(String::from("ok"));
+    let body = Await {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -78,8 +83,9 @@ async fn with_await() {
 #[tokio::test]
 async fn with_break() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Break::default();
-    body.name = Some(String::from("ok"));
+    let body = Break {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -91,8 +97,9 @@ async fn with_break() {
 #[tokio::test]
 async fn with_class() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Class::default();
-    body.name = Some(String::from("ok"));
+    let body = Class {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -104,8 +111,9 @@ async fn with_class() {
 #[tokio::test]
 async fn with_constructor() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Constructor::default();
-    body.name = Some(String::from("ok"));
+    let body = Constructor {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -117,8 +125,9 @@ async fn with_constructor() {
 #[tokio::test]
 async fn with_continue() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Continue::default();
-    body.name = Some(String::from("ok"));
+    let body = Continue {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -130,8 +139,9 @@ async fn with_continue() {
 #[tokio::test]
 async fn with_def() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Def::default();
-    body.name = Some(String::from("ok"));
+    let body = Def {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -143,8 +153,9 @@ async fn with_def() {
 #[tokio::test]
 async fn with_del() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Del::default();
-    body.name = Some(String::from("ok"));
+    let body = Del {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -156,8 +167,9 @@ async fn with_del() {
 #[tokio::test]
 async fn with_elif() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Elif::default();
-    body.name = Some(String::from("ok"));
+    let body = Elif {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -169,8 +181,9 @@ async fn with_elif() {
 #[tokio::test]
 async fn with_else() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Else::default();
-    body.name = Some(String::from("ok"));
+    let body = Else {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -182,8 +195,9 @@ async fn with_else() {
 #[tokio::test]
 async fn with_except() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Except::default();
-    body.name = Some(String::from("ok"));
+    let body = Except {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -195,8 +209,9 @@ async fn with_except() {
 #[tokio::test]
 async fn with_exec() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Exec::default();
-    body.name = Some(String::from("ok"));
+    let body = Exec {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -208,8 +223,9 @@ async fn with_exec() {
 #[tokio::test]
 async fn with_finally() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Finally::default();
-    body.name = Some(String::from("ok"));
+    let body = Finally {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -221,8 +237,9 @@ async fn with_finally() {
 #[tokio::test]
 async fn with_for() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = For::default();
-    body.name = Some(String::from("ok"));
+    let body = For {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -234,8 +251,9 @@ async fn with_for() {
 #[tokio::test]
 async fn with_from() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = From::default();
-    body.name = Some(String::from("ok"));
+    let body = From {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -247,8 +265,9 @@ async fn with_from() {
 #[tokio::test]
 async fn with_global() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Global::default();
-    body.name = Some(String::from("ok"));
+    let body = Global {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -260,8 +279,9 @@ async fn with_global() {
 #[tokio::test]
 async fn with_if() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = If::default();
-    body.name = Some(String::from("ok"));
+    let body = If {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -273,8 +293,9 @@ async fn with_if() {
 #[tokio::test]
 async fn with_import() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Import::default();
-    body.name = Some(String::from("ok"));
+    let body = Import {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -286,8 +307,9 @@ async fn with_import() {
 #[tokio::test]
 async fn with_in() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = In::default();
-    body.name = Some(String::from("ok"));
+    let body = In {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -299,8 +321,9 @@ async fn with_in() {
 #[tokio::test]
 async fn with_is() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Is::default();
-    body.name = Some(String::from("ok"));
+    let body = Is {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -312,8 +335,9 @@ async fn with_is() {
 #[tokio::test]
 async fn with_lambda() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Lambda::default();
-    body.name = Some(String::from("ok"));
+    let body = Lambda {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -325,8 +349,9 @@ async fn with_lambda() {
 #[tokio::test]
 async fn with_not() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Not::default();
-    body.name = Some(String::from("ok"));
+    let body = Not {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -338,8 +363,9 @@ async fn with_not() {
 #[tokio::test]
 async fn with_or() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Or::default();
-    body.name = Some(String::from("ok"));
+    let body = Or {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -351,8 +377,9 @@ async fn with_or() {
 #[tokio::test]
 async fn with_pass() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Pass::default();
-    body.name = Some(String::from("ok"));
+    let body = Pass {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -364,8 +391,9 @@ async fn with_pass() {
 #[tokio::test]
 async fn with_raise() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Raise::default();
-    body.name = Some(String::from("ok"));
+    let body = Raise {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -377,8 +405,9 @@ async fn with_raise() {
 #[tokio::test]
 async fn with_return() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Return::default();
-    body.name = Some(String::from("ok"));
+    let body = Return {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -390,8 +419,9 @@ async fn with_return() {
 #[tokio::test]
 async fn with_try() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Try::default();
-    body.name = Some(String::from("ok"));
+    let body = Try {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -403,8 +433,9 @@ async fn with_try() {
 #[tokio::test]
 async fn with_while() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = While::default();
-    body.name = Some(String::from("ok"));
+    let body = While {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -416,8 +447,9 @@ async fn with_while() {
 #[tokio::test]
 async fn with_with() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = With::default();
-    body.name = Some(String::from("ok"));
+    let body = With {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()
@@ -429,8 +461,9 @@ async fn with_with() {
 #[tokio::test]
 async fn with_yield() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Yield::default();
-    body.name = Some(String::from("ok"));
+    let body = Yield {
+        name: Some(String::from("ok")),
+    };
     let req = body.try_into().unwrap();
     let _resp = client
         .get_special_words_models_client()

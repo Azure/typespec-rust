@@ -27,13 +27,14 @@ async fn get() {
 #[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut input = ModelWithUnwrappedArray::default();
-    input.colors = Some(vec![
-        "red".to_string(),
-        "green".to_string(),
-        "blue".to_string(),
-    ]);
-    input.counts = Some(vec![1, 2]);
+    let input = ModelWithUnwrappedArray {
+        colors: Some(vec![
+            "red".to_string(),
+            "green".to_string(),
+            "blue".to_string(),
+        ]),
+        counts: Some(vec![1, 2]),
+    };
     client
         .get_xml_model_with_unwrapped_array_value_client()
         .put(input.try_into().unwrap(), None)

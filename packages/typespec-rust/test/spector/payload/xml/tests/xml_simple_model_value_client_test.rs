@@ -20,9 +20,10 @@ async fn get() {
 #[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut input = SimpleModel::default();
-    input.age = Some(123);
-    input.name = Some("foo".to_string());
+    let input = SimpleModel {
+        age: Some(123),
+        name: Some("foo".to_string()),
+    };
     client
         .get_xml_simple_model_value_client()
         .put(input.try_into().unwrap(), None)

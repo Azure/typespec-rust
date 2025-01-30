@@ -13,8 +13,9 @@ use spector_duration::{
 #[tokio::test]
 async fn default() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = DefaultDurationProperty::default();
-    body.value = Some("P40D".to_string());
+    let body = DefaultDurationProperty {
+        value: Some("P40D".to_string()),
+    };
     let resp = client
         .get_duration_property_client()
         .default(body.try_into().unwrap(), None)
@@ -27,8 +28,9 @@ async fn default() {
 #[tokio::test]
 async fn float64_seconds() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Float64SecondsDurationProperty::default();
-    body.value = Some(35.625);
+    let body = Float64SecondsDurationProperty {
+        value: Some(35.625),
+    };
     let resp = client
         .get_duration_property_client()
         .float64_seconds(body.try_into().unwrap(), None)
@@ -41,8 +43,9 @@ async fn float64_seconds() {
 #[tokio::test]
 async fn float_seconds() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = FloatSecondsDurationProperty::default();
-    body.value = Some(35.625);
+    let body = FloatSecondsDurationProperty {
+        value: Some(35.625),
+    };
     let resp = client
         .get_duration_property_client()
         .float_seconds(body.try_into().unwrap(), None)
@@ -55,8 +58,9 @@ async fn float_seconds() {
 #[tokio::test]
 async fn float_seconds_array() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = FloatSecondsDurationArrayProperty::default();
-    body.value = Some(vec![35.625, 46.75]);
+    let body = FloatSecondsDurationArrayProperty {
+        value: Some(vec![35.625, 46.75]),
+    };
     let resp = client
         .get_duration_property_client()
         .float_seconds_array(body.try_into().unwrap(), None)
@@ -69,8 +73,7 @@ async fn float_seconds_array() {
 #[tokio::test]
 async fn int32_seconds() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = Int32SecondsDurationProperty::default();
-    body.value = Some(36);
+    let body = Int32SecondsDurationProperty { value: Some(36) };
     let resp = client
         .get_duration_property_client()
         .int32_seconds(body.try_into().unwrap(), None)
@@ -83,8 +86,9 @@ async fn int32_seconds() {
 #[tokio::test]
 async fn iso8601() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = ISO8601DurationProperty::default();
-    body.value = Some("P40D".to_string());
+    let body = ISO8601DurationProperty {
+        value: Some("P40D".to_string()),
+    };
     let resp = client
         .get_duration_property_client()
         .iso8601(body.try_into().unwrap(), None)

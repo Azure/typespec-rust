@@ -25,12 +25,13 @@ async fn get() {
 #[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut input = ModelWithDictionary::default();
-    input.metadata = Some(HashMap::from([
-        ("Color".to_string(), "blue".to_string()),
-        ("Count".to_string(), "123".to_string()),
-        ("Enabled".to_string(), "false".to_string()),
-    ]));
+    let input = ModelWithDictionary {
+        metadata: Some(HashMap::from([
+            ("Color".to_string(), "blue".to_string()),
+            ("Count".to_string(), "123".to_string()),
+            ("Enabled".to_string(), "false".to_string()),
+        ])),
+    };
     client
         .get_xml_model_with_dictionary_value_client()
         .put(input.try_into().unwrap(), None)

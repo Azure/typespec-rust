@@ -7,7 +7,6 @@ use serde::{Deserialize, Serialize};
 
 /// This is a simple model.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct BodyParameter {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,

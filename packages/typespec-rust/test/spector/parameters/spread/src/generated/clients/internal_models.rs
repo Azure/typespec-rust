@@ -8,25 +8,21 @@ use serde::{Deserialize, Serialize};
 use typespec_client_core::json::to_json;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct SpreadAsRequestBodyRequest {
     pub name: String,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct SpreadAsRequestParameterRequest {
     pub name: String,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct SpreadCompositeRequestMixRequest {
     pub prop: String,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct SpreadParameterWithInnerAliasRequest {
     /// age of the Thing
     pub age: i32,
@@ -36,13 +32,11 @@ pub struct SpreadParameterWithInnerAliasRequest {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct SpreadParameterWithInnerModelRequest {
     pub name: String,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct SpreadWithMultipleParametersRequest {
     /// optional int
     #[serde(rename = "optionalInt", skip_serializing_if = "Option::is_none")]

@@ -8,7 +8,6 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct ActionRequest {
     #[serde(rename = "arrayProperty", skip_serializing_if = "Option::is_none")]
     pub array_property: Option<Vec<String>>,
@@ -40,7 +39,6 @@ pub struct ActionResponse {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct Model {
     #[serde(rename = "enumProperty", skip_serializing_if = "Option::is_none")]
     pub enum_property: Option<Enum>,

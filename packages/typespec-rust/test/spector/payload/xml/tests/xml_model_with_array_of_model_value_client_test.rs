@@ -28,16 +28,20 @@ async fn get() {
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
 
-    let mut item0 = SimpleModel::default();
-    item0.age = Some(123);
-    item0.name = Some("foo".to_string());
+    let item0 = SimpleModel {
+        age: Some(123),
+        name: Some("foo".to_string()),
+    };
 
-    let mut item1 = SimpleModel::default();
-    item1.age = Some(456);
-    item1.name = Some("bar".to_string());
+    let item1 = SimpleModel {
+        age: Some(456),
+        name: Some("bar".to_string()),
+    };
 
-    let mut m = ModelWithArrayOfModel::default();
-    m.items = Some(vec![item0, item1]);
+    let m = ModelWithArrayOfModel {
+        items: Some(vec![item0, item1]),
+    };
+
     client
         .get_xml_model_with_array_of_model_value_client()
         .put(m.try_into().unwrap(), None)

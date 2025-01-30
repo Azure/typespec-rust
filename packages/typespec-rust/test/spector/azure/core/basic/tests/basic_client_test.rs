@@ -13,8 +13,10 @@ use spector_basic::{
 #[tokio::test]
 async fn create_or_replace() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut resource = User::default();
-    resource.name = Some("Madge".to_string());
+    let mut resource = User {
+        name: Some("Madge".to_string()),
+        ..Default::default()
+    };
     let resp = client
         .create_or_replace(1, resource.try_into().unwrap(), None)
         .await
@@ -31,8 +33,10 @@ async fn create_or_replace() {
 #[tokio::test]
 async fn create_or_update() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut resource = User::default();
-    resource.name = Some("Madge".to_string());
+    let mut resource = User {
+        name: Some("Madge".to_string()),
+        ..Default::default()
+    };
     let resp = client
         .create_or_update(1, resource.try_into().unwrap(), None)
         .await

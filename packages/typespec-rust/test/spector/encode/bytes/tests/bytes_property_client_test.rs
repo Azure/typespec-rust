@@ -13,8 +13,9 @@ use spector_bytes::{
 #[tokio::test]
 async fn base64() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut input = Base64BytesProperty::default();
-    input.value = Some("test".as_bytes().to_owned());
+    let input = Base64BytesProperty {
+        value: Some("test".as_bytes().to_owned()),
+    };
     let resp = client
         .get_bytes_property_client()
         .base64(input.try_into().unwrap(), None)
@@ -27,8 +28,9 @@ async fn base64() {
 #[tokio::test]
 async fn base64_url() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut input = Base64urlBytesProperty::default();
-    input.value = Some("test".as_bytes().to_owned());
+    let input = Base64urlBytesProperty {
+        value: Some("test".as_bytes().to_owned()),
+    };
     let resp = client
         .get_bytes_property_client()
         .base64_url(input.try_into().unwrap(), None)
@@ -43,11 +45,12 @@ async fn base64_url() {
 async fn base64_url_array() {
     // TODO: https://github.com/Azure/typespec-rust/issues/221
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut input = Base64urlArrayBytesProperty::default();
-    input.value = Some(vec![
-        "test".as_bytes().to_owned(),
-        "test".as_bytes().to_owned(),
-    ]);
+    let input = Base64urlArrayBytesProperty {
+        value: Some(vec![
+            "test".as_bytes().to_owned(),
+            "test".as_bytes().to_owned(),
+        ]),
+    };
     let resp = client
         .get_bytes_property_client()
         .base64_url_array(input.try_into().unwrap(), None)
@@ -66,8 +69,9 @@ async fn base64_url_array() {
 #[tokio::test]
 async fn default() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut input = DefaultBytesProperty::default();
-    input.value = Some("test".as_bytes().to_owned());
+    let input = DefaultBytesProperty {
+        value: Some("test".as_bytes().to_owned()),
+    };
     let resp = client
         .get_bytes_property_client()
         .default(input.try_into().unwrap(), None)

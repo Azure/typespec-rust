@@ -8,7 +8,6 @@ use std::collections::HashMap;
 
 /// Dictionary inner model
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct InnerModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub children: Option<HashMap<String, InnerModel>>,

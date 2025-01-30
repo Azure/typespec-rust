@@ -7,8 +7,9 @@ use spector_specialwords::{models::SameAsModel, SpecialWordsClient};
 #[tokio::test]
 async fn same_as_model() {
     let client = SpecialWordsClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut same_as_model = SameAsModel::default();
-    same_as_model.same_as_model = Some(String::from("ok"));
+    let same_as_model = SameAsModel {
+        same_as_model: Some(String::from("ok")),
+    };
     let req = same_as_model.try_into().unwrap();
     let _resp = client
         .get_special_words_model_properties_client()

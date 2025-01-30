@@ -136,6 +136,9 @@ export interface Model extends StructBase {
   /** fields contains the fields within the struct */
   fields: Array<ModelField>;
 
+  /** the flags set for this model */
+  flags: ModelFlags;
+
   /**
    * the name of the type over the wire if it's
    * different from the type's name.
@@ -150,6 +153,17 @@ export interface ModelField extends StructFieldBase {
 
   /** contains XML-specific serde info */
   xmlKind?: XMLKind;
+}
+
+/** ModelFlags contains bit flags describing model usage */
+export enum ModelFlags {
+  Unspecified = 0,
+
+  /** model is used as input to a method */
+  Input = 1,
+
+  /** model is used as output from a method */
+  Output = 2,
 }
 
 /** DateTimeEncoding is the wire format of the date/time */
@@ -505,9 +519,10 @@ export class Literal implements Literal {
 }
 
 export class Model extends StructBase implements Model {
-  constructor(name: string, internal: boolean) {
+  constructor(name: string, internal: boolean, flags: ModelFlags) {
     super('model', name, internal);
     this.fields = new Array<ModelField>();
+    this.flags = flags;
   }
 }
 

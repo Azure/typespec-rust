@@ -7,7 +7,6 @@ use serde::{Deserialize, Serialize};
 
 /// Usage override to roundtrip.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct InputModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -15,7 +14,6 @@ pub struct InputModel {
 
 /// Not used anywhere, but access is override to public so still need to be generated and exported with serialization.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct OrphanModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -23,7 +21,6 @@ pub struct OrphanModel {
 
 /// Usage override to roundtrip.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct OutputModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -37,7 +34,6 @@ pub struct ResultModel {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct RoundTripModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<ResultModel>,

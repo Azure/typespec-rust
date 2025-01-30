@@ -12,19 +12,21 @@ use std::collections::HashMap;
 #[tokio::test]
 async fn create_resource() {
     let client = JsonMergePatchClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut inner_model = InnerModel::default();
-    inner_model.name = Some(String::from("InnerMadge"));
-    inner_model.description = Some(String::from("innerDesc"));
+    let inner_model = InnerModel {
+        name: Some(String::from("InnerMadge")),
+        description: Some(String::from("innerDesc")),
+    };
 
-    let mut resource = Resource::default();
-    resource.name = Some(String::from("Madge"));
-    resource.description = Some(String::from("desc"));
-    resource.map = Some(HashMap::from([(String::from("key"), inner_model.clone())]));
-    resource.array = Some(vec![inner_model.clone()]);
-    resource.int_value = Some(1);
-    resource.float_value = Some(1.1);
-    resource.inner_model = Some(inner_model);
-    resource.int_array = Some(vec![1, 2, 3]);
+    let resource = Resource {
+        name: Some(String::from("Madge")),
+        description: Some(String::from("desc")),
+        map: Some(HashMap::from([(String::from("key"), inner_model.clone())])),
+        array: Some(vec![inner_model.clone()]),
+        int_value: Some(1),
+        float_value: Some(1.1),
+        inner_model: Some(inner_model),
+        int_array: Some(vec![1, 2, 3]),
+    };
 
     let resp = client
         .create_resource(resource.try_into().unwrap(), None)

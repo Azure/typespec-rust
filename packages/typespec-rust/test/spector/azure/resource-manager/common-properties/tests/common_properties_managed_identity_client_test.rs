@@ -49,38 +49,39 @@ fn create_client() -> CommonPropertiesClient {
 }
 
 fn get_valid_mi_resource() -> ManagedIdentityTrackedResource {
-    let mut mi_identity = ManagedServiceIdentity::default();
-    mi_identity.principal_id = Some("00000000-0000-0000-0000-000000000000".to_string());
-    mi_identity.tenant_id = Some("00000000-0000-0000-0000-000000000000".to_string());
-    mi_identity.type_prop =
-        Some(spector_armcommon::models::ManagedServiceIdentityType::SystemAssigned);
-
-    let mut mi_properties = ManagedIdentityTrackedResourceProperties::default();
-    mi_properties.provisioning_state = Some("Succeeded".to_string());
-
-    let mut mi_resource = ManagedIdentityTrackedResource::default();
-    mi_resource.id = Some("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.CommonProperties/managedIdentityTrackedResources/identity".to_string());
-    mi_resource.identity = Some(mi_identity);
-    mi_resource.location = Some("eastus".to_string());
-    mi_resource.properties = Some(mi_properties);
-    mi_resource.tags = Some(HashMap::from([(
-        "tagKey1".to_string(),
-        "tagValue1".to_string(),
-    )]));
-
-    mi_resource
+    ManagedIdentityTrackedResource {
+        id: Some("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.CommonProperties/managedIdentityTrackedResources/identity".to_string()),
+        identity: Some(ManagedServiceIdentity {
+            principal_id: Some("00000000-0000-0000-0000-000000000000".to_string()),
+            tenant_id: Some("00000000-0000-0000-0000-000000000000".to_string()),
+            type_prop:
+                Some(spector_armcommon::models::ManagedServiceIdentityType::SystemAssigned),
+            ..Default::default()
+        }),
+        location: Some("eastus".to_string()),
+        properties: Some(ManagedIdentityTrackedResourceProperties {
+            provisioning_state: Some("Succeeded".to_string()),
+        }),
+        tags: Some(HashMap::from([(
+            "tagKey1".to_string(),
+            "tagValue1".to_string(),
+        )])),
+        ..Default::default()
+    }
 }
 
 #[tokio::test]
 async fn create_with_system_assigned() {
-    let client = create_client();
-    let mut identity = ManagedServiceIdentity::default();
-    identity.type_prop =
-        Some(spector_armcommon::models::ManagedServiceIdentityType::SystemAssigned);
-    let mut resource = ManagedIdentityTrackedResource::default();
-    resource.identity = Some(identity);
-    resource.location = Some("eastus".to_string());
+    let resource = ManagedIdentityTrackedResource {
+        identity: Some(ManagedServiceIdentity {
+            type_prop: Some(spector_armcommon::models::ManagedServiceIdentityType::SystemAssigned),
+            ..Default::default()
+        }),
+        location: Some("eastus".to_string()),
+        ..Default::default()
+    };
 
+    let client = create_client();
     let resp = client
         .get_common_properties_managed_identity_client()
         .create_with_system_assigned(
@@ -145,16 +146,19 @@ async fn get() {
 
 #[tokio::test]
 async fn update_with_user_assigned_and_system_assigned() {
-    let client = create_client();
-    let mut identity = ManagedServiceIdentity::default();
-    identity.type_prop = Some(ManagedServiceIdentityType::SystemAssignedUserAssigned);
-    identity.user_assigned_identities = Some(HashMap::from([
-        ("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id1".to_string(), UserAssignedIdentity::default()),
-    ]));
-    let mut resource = ManagedIdentityTrackedResource::default();
-    resource.identity = Some(identity);
-    resource.location = Some("eastus".to_string());
+    let resource = ManagedIdentityTrackedResource {
+        identity: Some(ManagedServiceIdentity {
+            type_prop: Some(ManagedServiceIdentityType::SystemAssignedUserAssigned),
+             user_assigned_identities: Some(HashMap::from([
+            ("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id1".to_string(), UserAssignedIdentity::default()),
+        ])),
+        ..Default::default()
+            }),
+            location: Some("eastus".to_string()),
+            ..Default::default()
+    };
 
+    let client = create_client();
     let resp = client
         .get_common_properties_managed_identity_client()
         .update_with_user_assigned_and_system_assigned(

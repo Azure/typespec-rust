@@ -11,8 +11,9 @@ use spector_naming::{
 #[tokio::test]
 async fn client() {
     let client = NamingClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = ClientNameModel::default();
-    body.client_name = Some(true);
+    let body = ClientNameModel {
+        client_name: Some(true),
+    };
     client.client(body.try_into().unwrap(), None).await.unwrap();
 }
 
@@ -25,8 +26,9 @@ async fn client_name() {
 #[tokio::test]
 async fn compatible_with_encoded_name() {
     let client = NamingClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = ClientNameAndJsonEncodedNameModel::default();
-    body.client_name = Some(true);
+    let body = ClientNameAndJsonEncodedNameModel {
+        client_name: Some(true),
+    };
     client
         .compatible_with_encoded_name(body.try_into().unwrap(), None)
         .await
@@ -36,8 +38,9 @@ async fn compatible_with_encoded_name() {
 #[tokio::test]
 async fn language() {
     let client = NamingClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = LanguageClientNameModel::default();
-    body.rust_name = Some(true);
+    let body = LanguageClientNameModel {
+        rust_name: Some(true),
+    };
     client
         .language(body.try_into().unwrap(), None)
         .await

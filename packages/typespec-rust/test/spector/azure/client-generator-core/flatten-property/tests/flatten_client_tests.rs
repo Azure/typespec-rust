@@ -10,12 +10,13 @@ use spector_flattenproperty::FlattenPropertyClient;
 #[tokio::test]
 async fn put_flatten_model() {
     let client = FlattenPropertyClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut child_model = ChildModel::default();
-    child_model.age = Some(10);
-    child_model.description = Some(String::from("bar"));
-    let mut flatten_model = FlattenModel::default();
-    flatten_model.name = Some(String::from("foo"));
-    flatten_model.properties = Some(child_model);
+    let flatten_model = FlattenModel {
+        name: Some(String::from("foo")),
+        properties: Some(ChildModel {
+            age: Some(10),
+            description: Some(String::from("bar")),
+        }),
+    };
     let req = flatten_model.try_into().unwrap();
     let resp = client.put_flatten_model(req, None).await.unwrap();
     let value: FlattenModel = resp.into_body().await.unwrap();

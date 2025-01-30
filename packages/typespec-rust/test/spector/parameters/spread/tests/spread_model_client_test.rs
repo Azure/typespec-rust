@@ -17,8 +17,9 @@ async fn spread_as_request_body() {
 #[tokio::test]
 async fn spread_composite_request() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = BodyParameter::default();
-    body.name = Some("foo".to_string());
+    let body = BodyParameter {
+        name: Some("foo".to_string()),
+    };
     client
         .get_spread_model_client()
         .spread_composite_request(
@@ -49,8 +50,9 @@ async fn spread_composite_request_mix() {
 #[tokio::test]
 async fn spread_composite_request_only_with_body() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = BodyParameter::default();
-    body.name = Some("foo".to_string());
+    let body = BodyParameter {
+        name: Some("foo".to_string()),
+    };
     client
         .get_spread_model_client()
         .spread_composite_request_only_with_body(body.try_into().unwrap(), None)

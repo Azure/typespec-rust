@@ -10,7 +10,6 @@ use time::OffsetDateTime;
 
 /// Concrete tracked resource types can be created by aliasing this type using a specific property type.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct ManagedIdentityTrackedResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -47,7 +46,6 @@ pub struct ManagedIdentityTrackedResource {
 
 /// Managed Identity Arm Resource Properties.
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct ManagedIdentityTrackedResourceProperties {
     /// The status of the last operation.
     #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
@@ -56,7 +54,6 @@ pub struct ManagedIdentityTrackedResourceProperties {
 
 /// Managed service identity (system assigned and/or user assigned identities)
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct ManagedServiceIdentity {
     /// The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.
     #[serde(rename = "principalId", skip_serializing_if = "Option::is_none")]
@@ -119,7 +116,6 @@ pub struct SystemData {
 
 /// User assigned identity properties
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct UserAssignedIdentity {
     /// The client ID of the assigned identity.
     #[serde(rename = "clientId", skip_serializing_if = "Option::is_none")]

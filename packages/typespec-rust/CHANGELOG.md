@@ -6,6 +6,10 @@
 
 * Ensure that the API version query parameter in a pager's next link is set to the version on the client.
 
+### Other Changes
+
+* Input models are no longer `non_exhaustive`.
+
 ## 0.7.0 (2025-01-17)
 
 ### Breaking Changes

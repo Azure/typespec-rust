@@ -7,7 +7,6 @@ use azure_core::base64;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct Base64BytesProperty {
     #[serde(
         default,
@@ -19,14 +18,12 @@ pub struct Base64BytesProperty {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct Base64urlArrayBytesProperty {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<Vec<Vec<u8>>>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct Base64urlBytesProperty {
     #[serde(
         default,
@@ -38,7 +35,6 @@ pub struct Base64urlBytesProperty {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct DefaultBytesProperty {
     #[serde(
         default,

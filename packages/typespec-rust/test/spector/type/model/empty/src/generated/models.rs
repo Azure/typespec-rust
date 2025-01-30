@@ -7,12 +7,10 @@ use serde::{Deserialize, Serialize};
 
 /// Empty model used in operation parameters
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct EmptyInput {}
 
 /// Empty model used in both parameter and return type
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct EmptyInputOutput {}
 
 /// Empty model used in operation return type

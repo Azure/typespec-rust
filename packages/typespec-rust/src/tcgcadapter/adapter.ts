@@ -152,7 +152,16 @@ export class Adapter {
     if (rustModel) {
       return <rust.Model>rustModel;
     }
-    rustModel = new rust.Model(modelName, model.access === 'internal');
+
+    let modelFlags = rust.ModelFlags.Unspecified;
+    if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Input) === tcgc.UsageFlags.Input) {
+      modelFlags |= rust.ModelFlags.Input;
+    }
+    if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Output) === tcgc.UsageFlags.Output) {
+      modelFlags |= rust.ModelFlags.Output;
+    }
+
+    rustModel = new rust.Model(modelName, model.access === 'internal', modelFlags);
     rustModel.docs.summary = model.summary;
     rustModel.docs.description = model.doc;
     rustModel.xmlName = getXMLName(model.decorators);

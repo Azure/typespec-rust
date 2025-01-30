@@ -20,8 +20,10 @@ async fn get() {
 #[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut input = ModelWithOptionalField::default();
-    input.item = Some("widget".to_string());
+    let input = ModelWithOptionalField {
+        item: Some("widget".to_string()),
+        ..Default::default()
+    };
     client
         .get_xml_model_with_optional_field_value_client()
         .put(input.try_into().unwrap(), None)

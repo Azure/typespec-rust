@@ -6,42 +6,36 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct DefaultDurationProperty {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct Float64SecondsDurationProperty {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<f64>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct FloatSecondsDurationArrayProperty {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<Vec<f32>>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct FloatSecondsDurationProperty {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<f32>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct ISO8601DurationProperty {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct Int32SecondsDurationProperty {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<i32>,

@@ -21,8 +21,9 @@ async fn get() {
 #[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut input = ModelWithEmptyArray::default();
-    input.items = Some(Vec::new());
+    let input = ModelWithEmptyArray {
+        items: Some(Vec::new()),
+    };
     client
         .get_xml_model_with_empty_array_value_client()
         .put(input.try_into().unwrap(), None)

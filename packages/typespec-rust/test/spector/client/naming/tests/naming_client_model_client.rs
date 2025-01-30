@@ -10,8 +10,9 @@ use spector_naming::{
 #[tokio::test]
 async fn client() {
     let client = NamingClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = ClientModel::default();
-    body.default_name = Some(true);
+    let body = ClientModel {
+        default_name: Some(true),
+    };
     client
         .get_naming_client_model_client()
         .client(body.try_into().unwrap(), None)
@@ -22,8 +23,9 @@ async fn client() {
 #[tokio::test]
 async fn language() {
     let client = NamingClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = RustName::default();
-    body.default_name = Some(true);
+    let body = RustName {
+        default_name: Some(true),
+    };
     client
         .get_naming_client_model_client()
         .language(body.try_into().unwrap(), None)

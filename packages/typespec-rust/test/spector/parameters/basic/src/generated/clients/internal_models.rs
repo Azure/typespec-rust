@@ -8,7 +8,6 @@ use serde::{Deserialize, Serialize};
 use typespec_client_core::json::to_json;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
-#[non_exhaustive]
 pub struct SimpleRequest {
     pub name: String,
 }

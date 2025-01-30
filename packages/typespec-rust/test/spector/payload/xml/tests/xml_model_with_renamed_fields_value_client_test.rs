@@ -27,15 +27,16 @@ async fn get() {
 #[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut input_data = SimpleModel::default();
-    input_data.age = Some(123);
-    input_data.name = Some("foo".to_string());
-    let mut output_data = SimpleModel::default();
-    output_data.age = Some(456);
-    output_data.name = Some("bar".to_string());
-    let mut input = ModelWithRenamedFields::default();
-    input.input_data = Some(input_data);
-    input.output_data = Some(output_data);
+    let input = ModelWithRenamedFields {
+        input_data: Some(SimpleModel {
+            age: Some(123),
+            name: Some("foo".to_string()),
+        }),
+        output_data: Some(SimpleModel {
+            age: Some(456),
+            name: Some("bar".to_string()),
+        }),
+    };
     client
         .get_xml_model_with_renamed_fields_value_client()
         .put(input.try_into().unwrap(), None)

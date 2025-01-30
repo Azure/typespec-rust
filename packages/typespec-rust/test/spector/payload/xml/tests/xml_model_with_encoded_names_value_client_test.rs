@@ -32,16 +32,17 @@ async fn get() {
 #[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut model_data = SimpleModel::default();
-    model_data.age = Some(123);
-    model_data.name = Some("foo".to_string());
-    let mut input = ModelWithEncodedNames::default();
-    input.colors = Some(vec![
-        "red".to_string(),
-        "green".to_string(),
-        "blue".to_string(),
-    ]);
-    input.model_data = Some(model_data);
+    let input = ModelWithEncodedNames {
+        colors: Some(vec![
+            "red".to_string(),
+            "green".to_string(),
+            "blue".to_string(),
+        ]),
+        model_data: Some(SimpleModel {
+            age: Some(123),
+            name: Some("foo".to_string()),
+        }),
+    };
     client
         .get_xml_model_with_encoded_names_value_client()
         .put(input.try_into().unwrap(), None)
