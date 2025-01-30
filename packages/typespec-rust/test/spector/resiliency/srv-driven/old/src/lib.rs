@@ -5,4 +5,12 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
+
+pub use crate::generated::clients::{
+    ResiliencyServiceDrivenClient, ResiliencyServiceDrivenClientFromNoneOptions,
+    ResiliencyServiceDrivenClientFromOneOptionalOptions,
+    ResiliencyServiceDrivenClientFromOneRequiredOptions, ResiliencyServiceDrivenClientOptions,
+};

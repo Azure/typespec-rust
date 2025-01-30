@@ -7,16 +7,6 @@ mod internal_models;
 mod spread_alias_client;
 mod spread_client;
 mod spread_model_client;
-pub use spread_alias_client::{
-    SpreadAliasClientSpreadAsRequestBodyOptions, SpreadAliasClientSpreadAsRequestParameterOptions,
-    SpreadAliasClientSpreadParameterWithInnerAliasOptions,
-    SpreadAliasClientSpreadParameterWithInnerModelOptions,
-    SpreadAliasClientSpreadWithMultipleParametersOptions,
-};
+pub use spread_alias_client::*;
 pub use spread_client::*;
-pub use spread_model_client::{
-    SpreadModelClientSpreadAsRequestBodyOptions, SpreadModelClientSpreadCompositeRequestMixOptions,
-    SpreadModelClientSpreadCompositeRequestOnlyWithBodyOptions,
-    SpreadModelClientSpreadCompositeRequestOptions,
-    SpreadModelClientSpreadCompositeRequestWithoutBodyOptions,
-};
+pub use spread_model_client::*;

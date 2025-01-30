@@ -5,8 +5,17 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::enums::*;
 }
+
+pub use crate::generated::clients::{
+    ServiceBarClientFiveOptions, ServiceBarClientSixOptions, ServiceBazFooClientSevenOptions,
+    ServiceClient, ServiceClientOneOptions, ServiceClientOptions, ServiceClientTwoOptions,
+    ServiceFooClientFourOptions, ServiceFooClientThreeOptions, ServiceQuxBarClientNineOptions,
+    ServiceQuxClientEightOptions,
+};

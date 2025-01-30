@@ -7,11 +7,5 @@ mod two_operation_group_client;
 mod two_operation_group_group1_client;
 mod two_operation_group_group2_client;
 pub use two_operation_group_client::*;
-pub use two_operation_group_group1_client::{
-    TwoOperationGroupGroup1ClientFourOptions, TwoOperationGroupGroup1ClientOneOptions,
-    TwoOperationGroupGroup1ClientThreeOptions,
-};
-pub use two_operation_group_group2_client::{
-    TwoOperationGroupGroup2ClientFiveOptions, TwoOperationGroupGroup2ClientSixOptions,
-    TwoOperationGroupGroup2ClientTwoOptions,
-};
+pub use two_operation_group_group1_client::*;
+pub use two_operation_group_group2_client::*;

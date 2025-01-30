@@ -7,9 +7,5 @@ mod naming_client;
 mod naming_client_model_client;
 mod naming_union_enum_client;
 pub use naming_client::*;
-pub use naming_client_model_client::{
-    NamingClientModelClientClientOptions, NamingClientModelClientLanguageOptions,
-};
-pub use naming_union_enum_client::{
-    NamingUnionEnumClientUnionEnumMemberNameOptions, NamingUnionEnumClientUnionEnumNameOptions,
-};
+pub use naming_client_model_client::*;
+pub use naming_union_enum_client::*;

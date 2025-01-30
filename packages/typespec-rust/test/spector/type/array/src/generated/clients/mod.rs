@@ -18,46 +18,18 @@ mod array_nullable_model_value_client;
 mod array_nullable_string_value_client;
 mod array_string_value_client;
 mod array_unknown_value_client;
-pub use array_boolean_value_client::{
-    ArrayBooleanValueClientGetOptions, ArrayBooleanValueClientPutOptions,
-};
+pub use array_boolean_value_client::*;
 pub use array_client::*;
-pub use array_datetime_value_client::{
-    ArrayDatetimeValueClientGetOptions, ArrayDatetimeValueClientPutOptions,
-};
-pub use array_duration_value_client::{
-    ArrayDurationValueClientGetOptions, ArrayDurationValueClientPutOptions,
-};
-pub use array_float32_value_client::{
-    ArrayFloat32ValueClientGetOptions, ArrayFloat32ValueClientPutOptions,
-};
-pub use array_int32_value_client::{
-    ArrayInt32ValueClientGetOptions, ArrayInt32ValueClientPutOptions,
-};
-pub use array_int64_value_client::{
-    ArrayInt64ValueClientGetOptions, ArrayInt64ValueClientPutOptions,
-};
-pub use array_model_value_client::{
-    ArrayModelValueClientGetOptions, ArrayModelValueClientPutOptions,
-};
-pub use array_nullable_boolean_value_client::{
-    ArrayNullableBooleanValueClientGetOptions, ArrayNullableBooleanValueClientPutOptions,
-};
-pub use array_nullable_float_value_client::{
-    ArrayNullableFloatValueClientGetOptions, ArrayNullableFloatValueClientPutOptions,
-};
-pub use array_nullable_int32_value_client::{
-    ArrayNullableInt32ValueClientGetOptions, ArrayNullableInt32ValueClientPutOptions,
-};
-pub use array_nullable_model_value_client::{
-    ArrayNullableModelValueClientGetOptions, ArrayNullableModelValueClientPutOptions,
-};
-pub use array_nullable_string_value_client::{
-    ArrayNullableStringValueClientGetOptions, ArrayNullableStringValueClientPutOptions,
-};
-pub use array_string_value_client::{
-    ArrayStringValueClientGetOptions, ArrayStringValueClientPutOptions,
-};
-pub use array_unknown_value_client::{
-    ArrayUnknownValueClientGetOptions, ArrayUnknownValueClientPutOptions,
-};
+pub use array_datetime_value_client::*;
+pub use array_duration_value_client::*;
+pub use array_float32_value_client::*;
+pub use array_int32_value_client::*;
+pub use array_int64_value_client::*;
+pub use array_model_value_client::*;
+pub use array_nullable_boolean_value_client::*;
+pub use array_nullable_float_value_client::*;
+pub use array_nullable_int32_value_client::*;
+pub use array_nullable_model_value_client::*;
+pub use array_nullable_string_value_client::*;
+pub use array_string_value_client::*;
+pub use array_unknown_value_client::*;

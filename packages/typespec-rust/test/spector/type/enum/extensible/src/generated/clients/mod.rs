@@ -6,7 +6,4 @@
 mod extensible_client;
 mod extensible_string_client;
 pub use extensible_client::*;
-pub use extensible_string_client::{
-    ExtensibleStringClientGetKnownValueOptions, ExtensibleStringClientGetUnknownValueOptions,
-    ExtensibleStringClientPutKnownValueOptions, ExtensibleStringClientPutUnknownValueOptions,
-};
+pub use extensible_string_client::*;

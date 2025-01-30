@@ -5,8 +5,14 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::models::*;
 }
+
+pub use crate::generated::clients::{
+    JsonClient, JsonClientOptions, JsonPropertyClientGetOptions, JsonPropertyClientSendOptions,
+};

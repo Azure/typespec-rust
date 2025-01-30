@@ -5,8 +5,27 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::models::*;
 }
+
+pub use crate::generated::clients::{
+    ArrayBooleanValueClientGetOptions, ArrayBooleanValueClientPutOptions, ArrayClient,
+    ArrayClientOptions, ArrayDatetimeValueClientGetOptions, ArrayDatetimeValueClientPutOptions,
+    ArrayDurationValueClientGetOptions, ArrayDurationValueClientPutOptions,
+    ArrayFloat32ValueClientGetOptions, ArrayFloat32ValueClientPutOptions,
+    ArrayInt32ValueClientGetOptions, ArrayInt32ValueClientPutOptions,
+    ArrayInt64ValueClientGetOptions, ArrayInt64ValueClientPutOptions,
+    ArrayModelValueClientGetOptions, ArrayModelValueClientPutOptions,
+    ArrayNullableBooleanValueClientGetOptions, ArrayNullableBooleanValueClientPutOptions,
+    ArrayNullableFloatValueClientGetOptions, ArrayNullableFloatValueClientPutOptions,
+    ArrayNullableInt32ValueClientGetOptions, ArrayNullableInt32ValueClientPutOptions,
+    ArrayNullableModelValueClientGetOptions, ArrayNullableModelValueClientPutOptions,
+    ArrayNullableStringValueClientGetOptions, ArrayNullableStringValueClientPutOptions,
+    ArrayStringValueClientGetOptions, ArrayStringValueClientPutOptions,
+    ArrayUnknownValueClientGetOptions, ArrayUnknownValueClientPutOptions,
+};

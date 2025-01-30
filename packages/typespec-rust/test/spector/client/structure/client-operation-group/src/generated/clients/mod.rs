@@ -7,5 +7,5 @@ mod first_client;
 mod first_group3_client;
 mod first_group4_client;
 pub use first_client::*;
-pub use first_group3_client::{FirstGroup3ClientThreeOptions, FirstGroup3ClientTwoOptions};
-pub use first_group4_client::FirstGroup4ClientFourOptions;
+pub use first_group3_client::*;
+pub use first_group4_client::*;

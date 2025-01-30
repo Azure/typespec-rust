@@ -6,8 +6,4 @@
 mod usage_client;
 mod usage_model_in_operation_client;
 pub use usage_client::*;
-pub use usage_model_in_operation_client::{
-    UsageModelInOperationClientInputToInputOutputOptions,
-    UsageModelInOperationClientModelInReadOnlyPropertyOptions,
-    UsageModelInOperationClientOutputToInputOutputOptions,
-};
+pub use usage_model_in_operation_client::*;

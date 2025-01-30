@@ -15,37 +15,15 @@ mod dictionary_nullable_float_value_client;
 mod dictionary_recursive_model_value_client;
 mod dictionary_string_value_client;
 mod dictionary_unknown_value_client;
-pub use dictionary_boolean_value_client::{
-    DictionaryBooleanValueClientGetOptions, DictionaryBooleanValueClientPutOptions,
-};
+pub use dictionary_boolean_value_client::*;
 pub use dictionary_client::*;
-pub use dictionary_datetime_value_client::{
-    DictionaryDatetimeValueClientGetOptions, DictionaryDatetimeValueClientPutOptions,
-};
-pub use dictionary_duration_value_client::{
-    DictionaryDurationValueClientGetOptions, DictionaryDurationValueClientPutOptions,
-};
-pub use dictionary_float32_value_client::{
-    DictionaryFloat32ValueClientGetOptions, DictionaryFloat32ValueClientPutOptions,
-};
-pub use dictionary_int32_value_client::{
-    DictionaryInt32ValueClientGetOptions, DictionaryInt32ValueClientPutOptions,
-};
-pub use dictionary_int64_value_client::{
-    DictionaryInt64ValueClientGetOptions, DictionaryInt64ValueClientPutOptions,
-};
-pub use dictionary_model_value_client::{
-    DictionaryModelValueClientGetOptions, DictionaryModelValueClientPutOptions,
-};
-pub use dictionary_nullable_float_value_client::{
-    DictionaryNullableFloatValueClientGetOptions, DictionaryNullableFloatValueClientPutOptions,
-};
-pub use dictionary_recursive_model_value_client::{
-    DictionaryRecursiveModelValueClientGetOptions, DictionaryRecursiveModelValueClientPutOptions,
-};
-pub use dictionary_string_value_client::{
-    DictionaryStringValueClientGetOptions, DictionaryStringValueClientPutOptions,
-};
-pub use dictionary_unknown_value_client::{
-    DictionaryUnknownValueClientGetOptions, DictionaryUnknownValueClientPutOptions,
-};
+pub use dictionary_datetime_value_client::*;
+pub use dictionary_duration_value_client::*;
+pub use dictionary_float32_value_client::*;
+pub use dictionary_int32_value_client::*;
+pub use dictionary_int64_value_client::*;
+pub use dictionary_model_value_client::*;
+pub use dictionary_nullable_float_value_client::*;
+pub use dictionary_recursive_model_value_client::*;
+pub use dictionary_string_value_client::*;
+pub use dictionary_unknown_value_client::*;

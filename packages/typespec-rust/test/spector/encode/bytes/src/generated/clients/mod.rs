@@ -10,25 +10,8 @@ mod bytes_query_client;
 mod bytes_request_body_client;
 mod bytes_response_body_client;
 pub use bytes_client::*;
-pub use bytes_header_client::{
-    BytesHeaderClientBase64Options, BytesHeaderClientBase64UrlArrayOptions,
-    BytesHeaderClientBase64UrlOptions, BytesHeaderClientDefaultOptions,
-};
-pub use bytes_property_client::{
-    BytesPropertyClientBase64Options, BytesPropertyClientBase64UrlArrayOptions,
-    BytesPropertyClientBase64UrlOptions, BytesPropertyClientDefaultOptions,
-};
-pub use bytes_query_client::{
-    BytesQueryClientBase64Options, BytesQueryClientBase64UrlArrayOptions,
-    BytesQueryClientBase64UrlOptions, BytesQueryClientDefaultOptions,
-};
-pub use bytes_request_body_client::{
-    BytesRequestBodyClientBase64Options, BytesRequestBodyClientBase64UrlOptions,
-    BytesRequestBodyClientCustomContentTypeOptions, BytesRequestBodyClientDefaultOptions,
-    BytesRequestBodyClientOctetStreamOptions,
-};
-pub use bytes_response_body_client::{
-    BytesResponseBodyClientBase64Options, BytesResponseBodyClientBase64UrlOptions,
-    BytesResponseBodyClientCustomContentTypeOptions, BytesResponseBodyClientDefaultOptions,
-    BytesResponseBodyClientOctetStreamOptions,
-};
+pub use bytes_header_client::*;
+pub use bytes_property_client::*;
+pub use bytes_query_client::*;
+pub use bytes_request_body_client::*;
+pub use bytes_response_body_client::*;

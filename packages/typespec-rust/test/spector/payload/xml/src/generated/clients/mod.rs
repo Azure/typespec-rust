@@ -17,40 +17,15 @@ mod xml_model_with_text_value_client;
 mod xml_model_with_unwrapped_array_value_client;
 mod xml_simple_model_value_client;
 pub use xml_client::*;
-pub use xml_model_with_array_of_model_value_client::{
-    XmlModelWithArrayOfModelValueClientGetOptions, XmlModelWithArrayOfModelValueClientPutOptions,
-};
-pub use xml_model_with_attributes_value_client::{
-    XmlModelWithAttributesValueClientGetOptions, XmlModelWithAttributesValueClientPutOptions,
-};
-pub use xml_model_with_dictionary_value_client::{
-    XmlModelWithDictionaryValueClientGetOptions, XmlModelWithDictionaryValueClientPutOptions,
-};
-pub use xml_model_with_empty_array_value_client::{
-    XmlModelWithEmptyArrayValueClientGetOptions, XmlModelWithEmptyArrayValueClientPutOptions,
-};
-pub use xml_model_with_encoded_names_value_client::{
-    XmlModelWithEncodedNamesValueClientGetOptions, XmlModelWithEncodedNamesValueClientPutOptions,
-};
-pub use xml_model_with_optional_field_value_client::{
-    XmlModelWithOptionalFieldValueClientGetOptions, XmlModelWithOptionalFieldValueClientPutOptions,
-};
-pub use xml_model_with_renamed_arrays_value_client::{
-    XmlModelWithRenamedArraysValueClientGetOptions, XmlModelWithRenamedArraysValueClientPutOptions,
-};
-pub use xml_model_with_renamed_fields_value_client::{
-    XmlModelWithRenamedFieldsValueClientGetOptions, XmlModelWithRenamedFieldsValueClientPutOptions,
-};
-pub use xml_model_with_simple_arrays_value_client::{
-    XmlModelWithSimpleArraysValueClientGetOptions, XmlModelWithSimpleArraysValueClientPutOptions,
-};
-pub use xml_model_with_text_value_client::{
-    XmlModelWithTextValueClientGetOptions, XmlModelWithTextValueClientPutOptions,
-};
-pub use xml_model_with_unwrapped_array_value_client::{
-    XmlModelWithUnwrappedArrayValueClientGetOptions,
-    XmlModelWithUnwrappedArrayValueClientPutOptions,
-};
-pub use xml_simple_model_value_client::{
-    XmlSimpleModelValueClientGetOptions, XmlSimpleModelValueClientPutOptions,
-};
+pub use xml_model_with_array_of_model_value_client::*;
+pub use xml_model_with_attributes_value_client::*;
+pub use xml_model_with_dictionary_value_client::*;
+pub use xml_model_with_empty_array_value_client::*;
+pub use xml_model_with_encoded_names_value_client::*;
+pub use xml_model_with_optional_field_value_client::*;
+pub use xml_model_with_renamed_arrays_value_client::*;
+pub use xml_model_with_renamed_fields_value_client::*;
+pub use xml_model_with_simple_arrays_value_client::*;
+pub use xml_model_with_text_value_client::*;
+pub use xml_model_with_unwrapped_array_value_client::*;
+pub use xml_simple_model_value_client::*;

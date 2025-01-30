@@ -5,8 +5,17 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::enums::*;
 }
+
+pub use crate::generated::clients::{
+    TwoOperationGroupClient, TwoOperationGroupClientOptions,
+    TwoOperationGroupGroup1ClientFourOptions, TwoOperationGroupGroup1ClientOneOptions,
+    TwoOperationGroupGroup1ClientThreeOptions, TwoOperationGroupGroup2ClientFiveOptions,
+    TwoOperationGroupGroup2ClientSixOptions, TwoOperationGroupGroup2ClientTwoOptions,
+};

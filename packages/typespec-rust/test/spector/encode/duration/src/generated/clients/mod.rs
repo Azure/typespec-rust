@@ -8,18 +8,6 @@ mod duration_header_client;
 mod duration_property_client;
 mod duration_query_client;
 pub use duration_client::*;
-pub use duration_header_client::{
-    DurationHeaderClientDefaultOptions, DurationHeaderClientFloat64SecondsOptions,
-    DurationHeaderClientFloatSecondsOptions, DurationHeaderClientInt32SecondsOptions,
-    DurationHeaderClientIso8601ArrayOptions, DurationHeaderClientIso8601Options,
-};
-pub use duration_property_client::{
-    DurationPropertyClientDefaultOptions, DurationPropertyClientFloat64SecondsOptions,
-    DurationPropertyClientFloatSecondsArrayOptions, DurationPropertyClientFloatSecondsOptions,
-    DurationPropertyClientInt32SecondsOptions, DurationPropertyClientIso8601Options,
-};
-pub use duration_query_client::{
-    DurationQueryClientDefaultOptions, DurationQueryClientFloat64SecondsOptions,
-    DurationQueryClientFloatSecondsOptions, DurationQueryClientInt32SecondsArrayOptions,
-    DurationQueryClientInt32SecondsOptions, DurationQueryClientIso8601Options,
-};
+pub use duration_header_client::*;
+pub use duration_property_client::*;
+pub use duration_query_client::*;

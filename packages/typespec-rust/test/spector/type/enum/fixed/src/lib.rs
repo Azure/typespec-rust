@@ -5,8 +5,15 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::enums::*;
 }
+
+pub use crate::generated::clients::{
+    FixedClient, FixedClientOptions, FixedStringClientGetKnownValueOptions,
+    FixedStringClientPutKnownValueOptions, FixedStringClientPutUnknownValueOptions,
+};

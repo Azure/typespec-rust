@@ -6,7 +6,4 @@
 mod fixed_client;
 mod fixed_string_client;
 pub use fixed_client::*;
-pub use fixed_string_client::{
-    FixedStringClientGetKnownValueOptions, FixedStringClientPutKnownValueOptions,
-    FixedStringClientPutUnknownValueOptions,
-};
+pub use fixed_string_client::*;

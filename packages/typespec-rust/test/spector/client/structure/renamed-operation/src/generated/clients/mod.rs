@@ -6,7 +6,4 @@
 mod renamed_operation_client;
 mod renamed_operation_group_client;
 pub use renamed_operation_client::*;
-pub use renamed_operation_group_client::{
-    RenamedOperationGroupClientRenamedFourOptions, RenamedOperationGroupClientRenamedSixOptions,
-    RenamedOperationGroupClientRenamedTwoOptions,
-};
+pub use renamed_operation_group_client::*;

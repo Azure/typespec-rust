@@ -6,6 +6,8 @@
 
 * Required `String` parameters are now emitted as `&str`.
 * Sub-clients and their containing modules are no longer publicly exported.
+  * All clients are now exported in the `clients` module.
+  * Instantiable clients will remain in the crate's root.
 
 ### Bugs Fixed
 

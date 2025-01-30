@@ -6,4 +6,4 @@
 mod json_client;
 mod json_property_client;
 pub use json_client::*;
-pub use json_property_client::{JsonPropertyClientGetOptions, JsonPropertyClientSendOptions};
+pub use json_property_client::*;

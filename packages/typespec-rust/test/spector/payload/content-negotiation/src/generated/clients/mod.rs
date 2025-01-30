@@ -7,11 +7,5 @@ mod content_negotiation_client;
 mod content_negotiation_different_body_client;
 mod content_negotiation_same_body_client;
 pub use content_negotiation_client::*;
-pub use content_negotiation_different_body_client::{
-    ContentNegotiationDifferentBodyClientGetAvatarAsJsonOptions,
-    ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions,
-};
-pub use content_negotiation_same_body_client::{
-    ContentNegotiationSameBodyClientGetAvatarAsJpegOptions,
-    ContentNegotiationSameBodyClientGetAvatarAsPngOptions,
-};
+pub use content_negotiation_different_body_client::*;
+pub use content_negotiation_same_body_client::*;
