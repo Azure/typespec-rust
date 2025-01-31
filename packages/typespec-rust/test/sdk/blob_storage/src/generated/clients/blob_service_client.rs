@@ -152,8 +152,8 @@ impl BlobServiceClient {
     /// Retrieves a user delegation key for the Blob service. This is only a valid operation when using bearer token authentication.
     pub async fn get_user_delegation_key(
         &self,
-        start: String,
-        expiry: String,
+        start: &str,
+        expiry: &str,
         options: Option<BlobServiceClientGetUserDelegationKeyOptions<'_>>,
     ) -> Result<Response<UserDelegationKey>> {
         let options = options.unwrap_or_default();
@@ -174,8 +174,11 @@ impl BlobServiceClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", &self.version);
-        let body: RequestContent<GetUserDelegationKeyRequest> =
-            GetUserDelegationKeyRequest { start, expiry }.try_into()?;
+        let body: RequestContent<GetUserDelegationKeyRequest> = GetUserDelegationKeyRequest {
+            start: start.to_owned(),
+            expiry: expiry.to_owned(),
+        }
+        .try_into()?;
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }

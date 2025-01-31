@@ -193,7 +193,7 @@ impl BlobBlockBlobClient {
     pub async fn put_blob_from_url(
         &self,
         content_length: i64,
-        copy_source: String,
+        copy_source: &str,
         options: Option<BlobBlockBlobClientPutBlobFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -256,7 +256,7 @@ impl BlobBlockBlobClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-copy-source", copy_source);
+        request.insert_header("x-ms-copy-source", copy_source.to_owned());
         if let Some(copy_source_authorization) = options.copy_source_authorization {
             request.insert_header("x-ms-copy-source-authorization", copy_source_authorization);
         }
@@ -326,7 +326,7 @@ impl BlobBlockBlobClient {
     /// The Stage Block operation creates a new block to be committed as part of a blob
     pub async fn stage_block(
         &self,
-        block_id: String,
+        block_id: &str,
         content_length: i64,
         body: RequestContent<Bytes>,
         options: Option<BlobBlockBlobClientStageBlockOptions<'_>>,
@@ -339,7 +339,7 @@ impl BlobBlockBlobClient {
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "block");
-        url.query_pairs_mut().append_pair("blockid", &block_id);
+        url.query_pairs_mut().append_pair("blockid", block_id);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -393,9 +393,9 @@ impl BlobBlockBlobClient {
     /// a URL.
     pub async fn stage_block_from_url(
         &self,
-        block_id: String,
+        block_id: &str,
         content_length: i64,
-        source_url: String,
+        source_url: &str,
         options: Option<BlobBlockBlobClientStageBlockFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -408,7 +408,7 @@ impl BlobBlockBlobClient {
         url.query_pairs_mut()
             .append_pair("comp", "block")
             .append_key_only("fromURL");
-        url.query_pairs_mut().append_pair("blockid", &block_id);
+        url.query_pairs_mut().append_pair("blockid", block_id);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -420,7 +420,7 @@ impl BlobBlockBlobClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-copy-source", source_url);
+        request.insert_header("x-ms-copy-source", source_url.to_owned());
         if let Some(copy_source_authorization) = options.copy_source_authorization {
             request.insert_header("x-ms-copy-source-authorization", copy_source_authorization);
         }

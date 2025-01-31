@@ -121,7 +121,7 @@ impl BasicClient {
     pub async fn export(
         &self,
         id: i32,
-        format: String,
+        format: &str,
         options: Option<BasicClientExportOptions<'_>>,
     ) -> Result<Response<User>> {
         let options = options.unwrap_or_default();
@@ -132,7 +132,7 @@ impl BasicClient {
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        url.query_pairs_mut().append_pair("format", &format);
+        url.query_pairs_mut().append_pair("format", format);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&ctx, &mut request).await
@@ -143,7 +143,7 @@ impl BasicClient {
     /// Exports all users
     pub async fn export_all_users(
         &self,
-        format: String,
+        format: &str,
         options: Option<BasicClientExportAllUsersOptions<'_>>,
     ) -> Result<Response<UserList>> {
         let options = options.unwrap_or_default();
@@ -152,7 +152,7 @@ impl BasicClient {
         url = url.join("azure/core/basic/users:exportallusers")?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        url.query_pairs_mut().append_pair("format", &format);
+        url.query_pairs_mut().append_pair("format", format);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         self.pipeline.send(&ctx, &mut request).await

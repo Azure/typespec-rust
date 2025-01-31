@@ -21,7 +21,7 @@ impl BasicImplicitBodyClient {
 
     pub async fn simple(
         &self,
-        name: String,
+        name: &str,
         options: Option<BasicImplicitBodyClientSimpleOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -30,7 +30,10 @@ impl BasicImplicitBodyClient {
         url = url.join("parameters/basic/implicit-body/simple")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
-        let body: RequestContent<SimpleRequest> = SimpleRequest { name }.try_into()?;
+        let body: RequestContent<SimpleRequest> = SimpleRequest {
+            name: name.to_owned(),
+        }
+        .try_into()?;
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }

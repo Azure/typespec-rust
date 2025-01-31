@@ -84,12 +84,7 @@ async fn create_with_system_assigned() {
     let client = create_client();
     let resp = client
         .get_common_properties_managed_identity_client()
-        .create_with_system_assigned(
-            "test-rg".to_string(),
-            "identity".to_string(),
-            resource.try_into().unwrap(),
-            None,
-        )
+        .create_with_system_assigned("test-rg", "identity", resource.try_into().unwrap(), None)
         .await
         .unwrap();
 
@@ -119,7 +114,7 @@ async fn get() {
     let client = create_client();
     let resp = client
         .get_common_properties_managed_identity_client()
-        .get("test-rg".to_string(), "identity".to_string(), None)
+        .get("test-rg", "identity", None)
         .await
         .unwrap();
 
@@ -162,8 +157,8 @@ async fn update_with_user_assigned_and_system_assigned() {
     let resp = client
         .get_common_properties_managed_identity_client()
         .update_with_user_assigned_and_system_assigned(
-            "test-rg".to_string(),
-            "identity".to_string(),
+            "test-rg",
+            "identity",
             resource.try_into().unwrap(),
             None,
         )

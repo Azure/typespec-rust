@@ -121,7 +121,7 @@ impl NamingClient {
 
     pub async fn parameter(
         &self,
-        client_name: String,
+        client_name: &str,
         options: Option<NamingClientParameterOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -129,14 +129,14 @@ impl NamingClient {
         let mut url = self.endpoint.clone();
         url = url.join("client/naming/parameter")?;
         url.query_pairs_mut()
-            .append_pair("defaultName", &client_name);
+            .append_pair("defaultName", client_name);
         let mut request = Request::new(url, Method::Post);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn request(
         &self,
-        client_name: String,
+        client_name: &str,
         options: Option<NamingClientRequestOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -144,7 +144,7 @@ impl NamingClient {
         let mut url = self.endpoint.clone();
         url = url.join("client/naming/header")?;
         let mut request = Request::new(url, Method::Post);
-        request.insert_header("default-name", client_name);
+        request.insert_header("default-name", client_name.to_owned());
         self.pipeline.send(&ctx, &mut request).await
     }
 

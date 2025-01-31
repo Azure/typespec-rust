@@ -101,7 +101,7 @@ impl ResiliencyServiceDrivenClient {
     /// Operation that grew up from accepting one required parameter to accepting a required parameter and an optional parameter.
     pub async fn from_one_required(
         &self,
-        parameter: String,
+        parameter: &str,
         options: Option<ResiliencyServiceDrivenClientFromOneRequiredOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -112,7 +112,7 @@ impl ResiliencyServiceDrivenClient {
             url.query_pairs_mut()
                 .append_pair("new-parameter", &new_parameter);
         }
-        url.query_pairs_mut().append_pair("parameter", &parameter);
+        url.query_pairs_mut().append_pair("parameter", parameter);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }

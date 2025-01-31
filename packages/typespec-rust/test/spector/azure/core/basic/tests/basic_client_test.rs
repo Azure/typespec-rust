@@ -59,7 +59,7 @@ async fn delete() {
 #[tokio::test]
 async fn export() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let resp = client.export(1, "json".to_string(), None).await.unwrap();
+    let resp = client.export(1, "json", None).await.unwrap();
     let user: User = resp.into_body().await.unwrap();
     assert_eq!(
         user.etag,
@@ -72,10 +72,7 @@ async fn export() {
 #[tokio::test]
 async fn export_all_users() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let resp = client
-        .export_all_users("json".to_string(), None)
-        .await
-        .unwrap();
+    let resp = client.export_all_users("json", None).await.unwrap();
     let user_list: UserList = resp.into_body().await.unwrap();
     let user_list = user_list.users.unwrap();
     assert_eq!(2, user_list.len());

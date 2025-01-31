@@ -76,7 +76,7 @@ async fn from_one_required_v1() {
     .unwrap();
     client
         .from_one_required(
-            "required".to_string(),
+            "required",
             Some(ResiliencyServiceDrivenClientFromOneRequiredOptions {
                 new_parameter: Some("new".to_string()),
                 ..Default::default()
@@ -131,7 +131,7 @@ async fn from_one_required_v2() {
     .unwrap();
     client
         .from_one_required(
-            "required".to_string(),
+            "required",
             Some(ResiliencyServiceDrivenClientFromOneRequiredOptions {
                 new_parameter: Some("new".to_string()),
                 ..Default::default()

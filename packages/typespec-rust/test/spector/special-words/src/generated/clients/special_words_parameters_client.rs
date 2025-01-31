@@ -18,91 +18,91 @@ impl SpecialWordsParametersClient {
 
     pub async fn with_and(
         &self,
-        and: String,
+        and: &str,
         options: Option<SpecialWordsParametersClientWithAndOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/and")?;
-        url.query_pairs_mut().append_pair("and", &and);
+        url.query_pairs_mut().append_pair("and", and);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_as(
         &self,
-        as_param: String,
+        as_param: &str,
         options: Option<SpecialWordsParametersClientWithAsOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/as")?;
-        url.query_pairs_mut().append_pair("as", &as_param);
+        url.query_pairs_mut().append_pair("as", as_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_assert(
         &self,
-        assert: String,
+        assert: &str,
         options: Option<SpecialWordsParametersClientWithAssertOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/assert")?;
-        url.query_pairs_mut().append_pair("assert", &assert);
+        url.query_pairs_mut().append_pair("assert", assert);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_async(
         &self,
-        async_param: String,
+        async_param: &str,
         options: Option<SpecialWordsParametersClientWithAsyncOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/async")?;
-        url.query_pairs_mut().append_pair("async", &async_param);
+        url.query_pairs_mut().append_pair("async", async_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_await(
         &self,
-        await_param: String,
+        await_param: &str,
         options: Option<SpecialWordsParametersClientWithAwaitOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/await")?;
-        url.query_pairs_mut().append_pair("await", &await_param);
+        url.query_pairs_mut().append_pair("await", await_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_break(
         &self,
-        break_param: String,
+        break_param: &str,
         options: Option<SpecialWordsParametersClientWithBreakOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/break")?;
-        url.query_pairs_mut().append_pair("break", &break_param);
+        url.query_pairs_mut().append_pair("break", break_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_cancellation_token(
         &self,
-        cancellation_token: String,
+        cancellation_token: &str,
         options: Option<SpecialWordsParametersClientWithCancellationTokenOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -110,28 +110,28 @@ impl SpecialWordsParametersClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/cancellationToken")?;
         url.query_pairs_mut()
-            .append_pair("cancellationToken", &cancellation_token);
+            .append_pair("cancellationToken", cancellation_token);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_class(
         &self,
-        class: String,
+        class: &str,
         options: Option<SpecialWordsParametersClientWithClassOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/class")?;
-        url.query_pairs_mut().append_pair("class", &class);
+        url.query_pairs_mut().append_pair("class", class);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_constructor(
         &self,
-        constructor: String,
+        constructor: &str,
         options: Option<SpecialWordsParametersClientWithConstructorOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -139,14 +139,14 @@ impl SpecialWordsParametersClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/constructor")?;
         url.query_pairs_mut()
-            .append_pair("constructor", &constructor);
+            .append_pair("constructor", constructor);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_continue(
         &self,
-        continue_param: String,
+        continue_param: &str,
         options: Option<SpecialWordsParametersClientWithContinueOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -154,343 +154,343 @@ impl SpecialWordsParametersClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/continue")?;
         url.query_pairs_mut()
-            .append_pair("continue", &continue_param);
+            .append_pair("continue", continue_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_def(
         &self,
-        def: String,
+        def: &str,
         options: Option<SpecialWordsParametersClientWithDefOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/def")?;
-        url.query_pairs_mut().append_pair("def", &def);
+        url.query_pairs_mut().append_pair("def", def);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_del(
         &self,
-        del: String,
+        del: &str,
         options: Option<SpecialWordsParametersClientWithDelOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/del")?;
-        url.query_pairs_mut().append_pair("del", &del);
+        url.query_pairs_mut().append_pair("del", del);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_elif(
         &self,
-        elif: String,
+        elif: &str,
         options: Option<SpecialWordsParametersClientWithElifOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/elif")?;
-        url.query_pairs_mut().append_pair("elif", &elif);
+        url.query_pairs_mut().append_pair("elif", elif);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_else(
         &self,
-        else_param: String,
+        else_param: &str,
         options: Option<SpecialWordsParametersClientWithElseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/else")?;
-        url.query_pairs_mut().append_pair("else", &else_param);
+        url.query_pairs_mut().append_pair("else", else_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_except(
         &self,
-        except: String,
+        except: &str,
         options: Option<SpecialWordsParametersClientWithExceptOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/except")?;
-        url.query_pairs_mut().append_pair("except", &except);
+        url.query_pairs_mut().append_pair("except", except);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_exec(
         &self,
-        exec: String,
+        exec: &str,
         options: Option<SpecialWordsParametersClientWithExecOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/exec")?;
-        url.query_pairs_mut().append_pair("exec", &exec);
+        url.query_pairs_mut().append_pair("exec", exec);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_finally(
         &self,
-        finally: String,
+        finally: &str,
         options: Option<SpecialWordsParametersClientWithFinallyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/finally")?;
-        url.query_pairs_mut().append_pair("finally", &finally);
+        url.query_pairs_mut().append_pair("finally", finally);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_for(
         &self,
-        for_param: String,
+        for_param: &str,
         options: Option<SpecialWordsParametersClientWithForOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/for")?;
-        url.query_pairs_mut().append_pair("for", &for_param);
+        url.query_pairs_mut().append_pair("for", for_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_from(
         &self,
-        from: String,
+        from: &str,
         options: Option<SpecialWordsParametersClientWithFromOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/from")?;
-        url.query_pairs_mut().append_pair("from", &from);
+        url.query_pairs_mut().append_pair("from", from);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_global(
         &self,
-        global: String,
+        global: &str,
         options: Option<SpecialWordsParametersClientWithGlobalOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/global")?;
-        url.query_pairs_mut().append_pair("global", &global);
+        url.query_pairs_mut().append_pair("global", global);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_if(
         &self,
-        if_param: String,
+        if_param: &str,
         options: Option<SpecialWordsParametersClientWithIfOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/if")?;
-        url.query_pairs_mut().append_pair("if", &if_param);
+        url.query_pairs_mut().append_pair("if", if_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_import(
         &self,
-        import: String,
+        import: &str,
         options: Option<SpecialWordsParametersClientWithImportOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/import")?;
-        url.query_pairs_mut().append_pair("import", &import);
+        url.query_pairs_mut().append_pair("import", import);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_in(
         &self,
-        in_param: String,
+        in_param: &str,
         options: Option<SpecialWordsParametersClientWithInOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/in")?;
-        url.query_pairs_mut().append_pair("in", &in_param);
+        url.query_pairs_mut().append_pair("in", in_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_is(
         &self,
-        is: String,
+        is: &str,
         options: Option<SpecialWordsParametersClientWithIsOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/is")?;
-        url.query_pairs_mut().append_pair("is", &is);
+        url.query_pairs_mut().append_pair("is", is);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_lambda(
         &self,
-        lambda: String,
+        lambda: &str,
         options: Option<SpecialWordsParametersClientWithLambdaOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/lambda")?;
-        url.query_pairs_mut().append_pair("lambda", &lambda);
+        url.query_pairs_mut().append_pair("lambda", lambda);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_not(
         &self,
-        not: String,
+        not: &str,
         options: Option<SpecialWordsParametersClientWithNotOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/not")?;
-        url.query_pairs_mut().append_pair("not", &not);
+        url.query_pairs_mut().append_pair("not", not);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_or(
         &self,
-        or: String,
+        or: &str,
         options: Option<SpecialWordsParametersClientWithOrOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/or")?;
-        url.query_pairs_mut().append_pair("or", &or);
+        url.query_pairs_mut().append_pair("or", or);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_pass(
         &self,
-        pass: String,
+        pass: &str,
         options: Option<SpecialWordsParametersClientWithPassOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/pass")?;
-        url.query_pairs_mut().append_pair("pass", &pass);
+        url.query_pairs_mut().append_pair("pass", pass);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_raise(
         &self,
-        raise: String,
+        raise: &str,
         options: Option<SpecialWordsParametersClientWithRaiseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/raise")?;
-        url.query_pairs_mut().append_pair("raise", &raise);
+        url.query_pairs_mut().append_pair("raise", raise);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_return(
         &self,
-        return_param: String,
+        return_param: &str,
         options: Option<SpecialWordsParametersClientWithReturnOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/return")?;
-        url.query_pairs_mut().append_pair("return", &return_param);
+        url.query_pairs_mut().append_pair("return", return_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_try(
         &self,
-        try_param: String,
+        try_param: &str,
         options: Option<SpecialWordsParametersClientWithTryOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/try")?;
-        url.query_pairs_mut().append_pair("try", &try_param);
+        url.query_pairs_mut().append_pair("try", try_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_while(
         &self,
-        while_param: String,
+        while_param: &str,
         options: Option<SpecialWordsParametersClientWithWhileOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/while")?;
-        url.query_pairs_mut().append_pair("while", &while_param);
+        url.query_pairs_mut().append_pair("while", while_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_with(
         &self,
-        with: String,
+        with: &str,
         options: Option<SpecialWordsParametersClientWithOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/with")?;
-        url.query_pairs_mut().append_pair("with", &with);
+        url.query_pairs_mut().append_pair("with", with);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
 
     pub async fn with_yield(
         &self,
-        yield_param: String,
+        yield_param: &str,
         options: Option<SpecialWordsParametersClientWithYieldOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/yield")?;
-        url.query_pairs_mut().append_pair("yield", &yield_param);
+        url.query_pairs_mut().append_pair("yield", yield_param);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }

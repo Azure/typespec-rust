@@ -18,7 +18,7 @@ impl DurationHeaderClient {
 
     pub async fn default(
         &self,
-        duration: String,
+        duration: &str,
         options: Option<DurationHeaderClientDefaultOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -26,7 +26,7 @@ impl DurationHeaderClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/header/default")?;
         let mut request = Request::new(url, Method::Get);
-        request.insert_header("duration", duration);
+        request.insert_header("duration", duration.to_owned());
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -74,7 +74,7 @@ impl DurationHeaderClient {
 
     pub async fn iso8601(
         &self,
-        duration: String,
+        duration: &str,
         options: Option<DurationHeaderClientIso8601Options<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -82,7 +82,7 @@ impl DurationHeaderClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/header/iso8601")?;
         let mut request = Request::new(url, Method::Get);
-        request.insert_header("duration", duration);
+        request.insert_header("duration", duration.to_owned());
         self.pipeline.send(&ctx, &mut request).await
     }
 

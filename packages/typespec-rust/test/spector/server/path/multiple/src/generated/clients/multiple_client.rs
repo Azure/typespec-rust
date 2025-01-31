@@ -59,13 +59,13 @@ impl MultipleClient {
 
     pub async fn with_operation_path_param(
         &self,
-        keyword: String,
+        keyword: &str,
         options: Option<MultipleClientWithOperationPathParamOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join(&keyword)?;
+        url = url.join(keyword)?;
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }

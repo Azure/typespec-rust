@@ -9,7 +9,7 @@ async fn default() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_duration_header_client()
-        .default("P40D".to_string(), None)
+        .default("P40D", None)
         .await
         .unwrap();
 }
@@ -49,7 +49,7 @@ async fn iso8601() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_duration_header_client()
-        .iso8601("P40D".to_string(), None)
+        .iso8601("P40D", None)
         .await
         .unwrap();
 }

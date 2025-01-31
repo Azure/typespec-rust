@@ -22,8 +22,8 @@ impl BasicServiceOperationGroupClient {
 
     pub async fn basic(
         &self,
-        query_param: String,
-        header_param: String,
+        query_param: &str,
+        header_param: &str,
         body: RequestContent<ActionRequest>,
         options: Option<BasicServiceOperationGroupClientBasicOptions<'_>>,
     ) -> Result<Response<ActionResponse>> {
@@ -34,11 +34,11 @@ impl BasicServiceOperationGroupClient {
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         url.query_pairs_mut()
-            .append_pair("query-param", &query_param);
+            .append_pair("query-param", query_param);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
-        request.insert_header("header-param", header_param);
+        request.insert_header("header-param", header_param.to_owned());
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }

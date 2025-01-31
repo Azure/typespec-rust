@@ -233,6 +233,12 @@ export interface MethodOptions extends types.Option {
 export interface PartialBodyParameter extends HTTPParameterBase {
   kind: 'partialBody';
 
+  /**
+   * the type of the spread param as it appears in a method signature
+   * note that not all types are applicable
+   */
+  paramType: types.Type;
+
   /** the model in which the partial param is placed */
   type: types.RequestContent<types.Payload<types.Model>>;
 
@@ -500,10 +506,11 @@ export class PageableStrategyNextLink implements PageableStrategyNextLink {
 }
 
 export class PartialBodyParameter extends HTTPParameterBase implements PartialBodyParameter {
-  constructor(name: string, location: ParameterLocation, optional: boolean, serde: string, type: types.RequestContent<types.Payload<types.Model>>) {
+  constructor(name: string, location: ParameterLocation, optional: boolean, serde: string, paramType: types.Type, type: types.RequestContent<types.Payload<types.Model>>) {
     super(name, location, optional, type);
     this.kind = 'partialBody';
     this.serde = serde;
+    this.paramType = paramType;
   }
 }
 
@@ -554,6 +561,7 @@ function validateHeaderPathQueryParamKind(type: types.Type, paramKind: string) {
     case 'literal':
     case 'offsetDateTime':
     case 'scalar':
+    case 'str':
       return;
     case 'hashmap':
       if (paramKind === 'headerHashMap') {
