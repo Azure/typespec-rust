@@ -5,10 +5,67 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::models::*;
 }
 
-pub use special_words_client::SpecialWordsClient;
+pub use crate::generated::clients::{
+    SpecialWordsClient, SpecialWordsClientOptions,
+    SpecialWordsModelPropertiesClientSameAsModelOptions, SpecialWordsModelsClientWithAndOptions,
+    SpecialWordsModelsClientWithAsOptions, SpecialWordsModelsClientWithAssertOptions,
+    SpecialWordsModelsClientWithAsyncOptions, SpecialWordsModelsClientWithAwaitOptions,
+    SpecialWordsModelsClientWithBreakOptions, SpecialWordsModelsClientWithClassOptions,
+    SpecialWordsModelsClientWithConstructorOptions, SpecialWordsModelsClientWithContinueOptions,
+    SpecialWordsModelsClientWithDefOptions, SpecialWordsModelsClientWithDelOptions,
+    SpecialWordsModelsClientWithElifOptions, SpecialWordsModelsClientWithElseOptions,
+    SpecialWordsModelsClientWithExceptOptions, SpecialWordsModelsClientWithExecOptions,
+    SpecialWordsModelsClientWithFinallyOptions, SpecialWordsModelsClientWithForOptions,
+    SpecialWordsModelsClientWithFromOptions, SpecialWordsModelsClientWithGlobalOptions,
+    SpecialWordsModelsClientWithIfOptions, SpecialWordsModelsClientWithImportOptions,
+    SpecialWordsModelsClientWithInOptions, SpecialWordsModelsClientWithIsOptions,
+    SpecialWordsModelsClientWithLambdaOptions, SpecialWordsModelsClientWithNotOptions,
+    SpecialWordsModelsClientWithOptions, SpecialWordsModelsClientWithOrOptions,
+    SpecialWordsModelsClientWithPassOptions, SpecialWordsModelsClientWithRaiseOptions,
+    SpecialWordsModelsClientWithReturnOptions, SpecialWordsModelsClientWithTryOptions,
+    SpecialWordsModelsClientWithWhileOptions, SpecialWordsModelsClientWithYieldOptions,
+    SpecialWordsOperationsClientAndOptions, SpecialWordsOperationsClientAsOptions,
+    SpecialWordsOperationsClientAssertOptions, SpecialWordsOperationsClientAsyncOptions,
+    SpecialWordsOperationsClientAwaitOptions, SpecialWordsOperationsClientBreakOptions,
+    SpecialWordsOperationsClientClassOptions, SpecialWordsOperationsClientConstructorOptions,
+    SpecialWordsOperationsClientContinueOptions, SpecialWordsOperationsClientDefOptions,
+    SpecialWordsOperationsClientDelOptions, SpecialWordsOperationsClientElifOptions,
+    SpecialWordsOperationsClientElseOptions, SpecialWordsOperationsClientExceptOptions,
+    SpecialWordsOperationsClientExecOptions, SpecialWordsOperationsClientFinallyOptions,
+    SpecialWordsOperationsClientForOptions, SpecialWordsOperationsClientFromOptions,
+    SpecialWordsOperationsClientGlobalOptions, SpecialWordsOperationsClientIfOptions,
+    SpecialWordsOperationsClientImportOptions, SpecialWordsOperationsClientInOptions,
+    SpecialWordsOperationsClientIsOptions, SpecialWordsOperationsClientLambdaOptions,
+    SpecialWordsOperationsClientNotOptions, SpecialWordsOperationsClientOrOptions,
+    SpecialWordsOperationsClientPassOptions, SpecialWordsOperationsClientRaiseOptions,
+    SpecialWordsOperationsClientReturnOptions, SpecialWordsOperationsClientTryOptions,
+    SpecialWordsOperationsClientWhileOptions, SpecialWordsOperationsClientWithOptions,
+    SpecialWordsOperationsClientYieldOptions, SpecialWordsParametersClientWithAndOptions,
+    SpecialWordsParametersClientWithAsOptions, SpecialWordsParametersClientWithAssertOptions,
+    SpecialWordsParametersClientWithAsyncOptions, SpecialWordsParametersClientWithAwaitOptions,
+    SpecialWordsParametersClientWithBreakOptions,
+    SpecialWordsParametersClientWithCancellationTokenOptions,
+    SpecialWordsParametersClientWithClassOptions,
+    SpecialWordsParametersClientWithConstructorOptions,
+    SpecialWordsParametersClientWithContinueOptions, SpecialWordsParametersClientWithDefOptions,
+    SpecialWordsParametersClientWithDelOptions, SpecialWordsParametersClientWithElifOptions,
+    SpecialWordsParametersClientWithElseOptions, SpecialWordsParametersClientWithExceptOptions,
+    SpecialWordsParametersClientWithExecOptions, SpecialWordsParametersClientWithFinallyOptions,
+    SpecialWordsParametersClientWithForOptions, SpecialWordsParametersClientWithFromOptions,
+    SpecialWordsParametersClientWithGlobalOptions, SpecialWordsParametersClientWithIfOptions,
+    SpecialWordsParametersClientWithImportOptions, SpecialWordsParametersClientWithInOptions,
+    SpecialWordsParametersClientWithIsOptions, SpecialWordsParametersClientWithLambdaOptions,
+    SpecialWordsParametersClientWithNotOptions, SpecialWordsParametersClientWithOptions,
+    SpecialWordsParametersClientWithOrOptions, SpecialWordsParametersClientWithPassOptions,
+    SpecialWordsParametersClientWithRaiseOptions, SpecialWordsParametersClientWithReturnOptions,
+    SpecialWordsParametersClientWithTryOptions, SpecialWordsParametersClientWithWhileOptions,
+    SpecialWordsParametersClientWithYieldOptions,
+};

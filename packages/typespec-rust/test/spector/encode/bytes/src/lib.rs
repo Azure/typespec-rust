@@ -5,10 +5,25 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::models::*;
 }
 
-pub use bytes_client::BytesClient;
+pub use crate::generated::clients::{
+    BytesClient, BytesClientOptions, BytesHeaderClientBase64Options,
+    BytesHeaderClientBase64UrlArrayOptions, BytesHeaderClientBase64UrlOptions,
+    BytesHeaderClientDefaultOptions, BytesPropertyClientBase64Options,
+    BytesPropertyClientBase64UrlArrayOptions, BytesPropertyClientBase64UrlOptions,
+    BytesPropertyClientDefaultOptions, BytesQueryClientBase64Options,
+    BytesQueryClientBase64UrlArrayOptions, BytesQueryClientBase64UrlOptions,
+    BytesQueryClientDefaultOptions, BytesRequestBodyClientBase64Options,
+    BytesRequestBodyClientBase64UrlOptions, BytesRequestBodyClientCustomContentTypeOptions,
+    BytesRequestBodyClientDefaultOptions, BytesRequestBodyClientOctetStreamOptions,
+    BytesResponseBodyClientBase64Options, BytesResponseBodyClientBase64UrlOptions,
+    BytesResponseBodyClientCustomContentTypeOptions, BytesResponseBodyClientDefaultOptions,
+    BytesResponseBodyClientOctetStreamOptions,
+};

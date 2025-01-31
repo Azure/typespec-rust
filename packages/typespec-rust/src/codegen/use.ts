@@ -73,7 +73,7 @@ export class Use {
         return this.addForType(type.type);
       case 'client': {
         const mod = codegen.deconstruct(type.name).join('_');
-        this.addType(`crate::${mod}`, type.name);
+        this.addType(`crate::generated::clients::${mod}`, type.name);
         break;
       }
       case 'enum':

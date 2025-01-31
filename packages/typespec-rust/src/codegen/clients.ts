@@ -23,9 +23,6 @@ export interface File {
 export interface ClientsContent {
   /** the list of client files */
   clients: Array<File>;
-
-  /** the list of client modules */
-  modules: Array<rust.Module>;
 }
 
 /**
@@ -41,7 +38,6 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
   }
 
   const clientFiles = new Array<File>();
-  const clientMods = new Array<rust.Module>();
 
   // emit the clients, one file per client
   for (const client of crate.clients) {
@@ -286,10 +282,9 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
 
     const clientMod = codegen.deconstruct(client.name).join('_');
     clientFiles.push({name: `${targetDir}/${clientMod}.rs`, content: content});
-    clientMods.push(new rust.Module(clientMod, true));
   }
 
-  return {clients: clientFiles, modules: clientMods};
+  return {clients: clientFiles};
 }
 
 /**

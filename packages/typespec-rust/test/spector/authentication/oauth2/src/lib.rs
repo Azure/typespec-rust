@@ -5,6 +5,10 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
-pub use o_auth2_client::OAuth2Client;
+pub use crate::generated::clients::{
+    OAuth2Client, OAuth2ClientInvalidOptions, OAuth2ClientOptions, OAuth2ClientValidOptions,
+};

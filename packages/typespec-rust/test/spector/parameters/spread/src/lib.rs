@@ -5,10 +5,21 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::models::*;
 }
 
-pub use spread_client::SpreadClient;
+pub use crate::generated::clients::{
+    SpreadAliasClientSpreadAsRequestBodyOptions, SpreadAliasClientSpreadAsRequestParameterOptions,
+    SpreadAliasClientSpreadParameterWithInnerAliasOptions,
+    SpreadAliasClientSpreadParameterWithInnerModelOptions,
+    SpreadAliasClientSpreadWithMultipleParametersOptions, SpreadClient, SpreadClientOptions,
+    SpreadModelClientSpreadAsRequestBodyOptions, SpreadModelClientSpreadCompositeRequestMixOptions,
+    SpreadModelClientSpreadCompositeRequestOnlyWithBodyOptions,
+    SpreadModelClientSpreadCompositeRequestOptions,
+    SpreadModelClientSpreadCompositeRequestWithoutBodyOptions,
+};

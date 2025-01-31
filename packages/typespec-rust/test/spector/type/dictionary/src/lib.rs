@@ -5,10 +5,25 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::models::*;
 }
 
-pub use dictionary_client::DictionaryClient;
+pub use crate::generated::clients::{
+    DictionaryBooleanValueClientGetOptions, DictionaryBooleanValueClientPutOptions,
+    DictionaryClient, DictionaryClientOptions, DictionaryDatetimeValueClientGetOptions,
+    DictionaryDatetimeValueClientPutOptions, DictionaryDurationValueClientGetOptions,
+    DictionaryDurationValueClientPutOptions, DictionaryFloat32ValueClientGetOptions,
+    DictionaryFloat32ValueClientPutOptions, DictionaryInt32ValueClientGetOptions,
+    DictionaryInt32ValueClientPutOptions, DictionaryInt64ValueClientGetOptions,
+    DictionaryInt64ValueClientPutOptions, DictionaryModelValueClientGetOptions,
+    DictionaryModelValueClientPutOptions, DictionaryNullableFloatValueClientGetOptions,
+    DictionaryNullableFloatValueClientPutOptions, DictionaryRecursiveModelValueClientGetOptions,
+    DictionaryRecursiveModelValueClientPutOptions, DictionaryStringValueClientGetOptions,
+    DictionaryStringValueClientPutOptions, DictionaryUnknownValueClientGetOptions,
+    DictionaryUnknownValueClientPutOptions,
+};

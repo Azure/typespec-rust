@@ -5,10 +5,16 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::enums::*;
 }
 
-pub use extensible_client::ExtensibleClient;
+pub use crate::generated::clients::{
+    ExtensibleClient, ExtensibleClientOptions, ExtensibleStringClientGetKnownValueOptions,
+    ExtensibleStringClientGetUnknownValueOptions, ExtensibleStringClientPutKnownValueOptions,
+    ExtensibleStringClientPutUnknownValueOptions,
+};

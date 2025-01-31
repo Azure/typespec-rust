@@ -5,10 +5,23 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::models::*;
 }
 
-pub use datetime_client::DatetimeClient;
+pub use crate::generated::clients::{
+    DatetimeClient, DatetimeClientOptions, DatetimeHeaderClientDefaultOptions,
+    DatetimeHeaderClientRfc3339Options, DatetimeHeaderClientRfc7231Options,
+    DatetimeHeaderClientUnixTimestampArrayOptions, DatetimeHeaderClientUnixTimestampOptions,
+    DatetimePropertyClientDefaultOptions, DatetimePropertyClientRfc3339Options,
+    DatetimePropertyClientRfc7231Options, DatetimePropertyClientUnixTimestampArrayOptions,
+    DatetimePropertyClientUnixTimestampOptions, DatetimeQueryClientDefaultOptions,
+    DatetimeQueryClientRfc3339Options, DatetimeQueryClientRfc7231Options,
+    DatetimeQueryClientUnixTimestampArrayOptions, DatetimeQueryClientUnixTimestampOptions,
+    DatetimeResponseHeaderClientDefaultOptions, DatetimeResponseHeaderClientRfc3339Options,
+    DatetimeResponseHeaderClientRfc7231Options, DatetimeResponseHeaderClientUnixTimestampOptions,
+};

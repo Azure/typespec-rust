@@ -5,11 +5,20 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::enums::*;
     pub use crate::generated::models::*;
 }
 
-pub use naming_client::NamingClient;
+pub use crate::generated::clients::{
+    NamingClient, NamingClientClientNameOptions, NamingClientClientOptions,
+    NamingClientCompatibleWithEncodedNameOptions, NamingClientLanguageOptions,
+    NamingClientModelClientClientOptions, NamingClientModelClientLanguageOptions,
+    NamingClientOptions, NamingClientParameterOptions, NamingClientRequestOptions,
+    NamingClientResponseOptions, NamingUnionEnumClientUnionEnumMemberNameOptions,
+    NamingUnionEnumClientUnionEnumNameOptions,
+};

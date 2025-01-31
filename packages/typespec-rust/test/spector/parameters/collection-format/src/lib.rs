@@ -5,6 +5,13 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
-pub use collection_format_client::CollectionFormatClient;
+pub use crate::generated::clients::{
+    CollectionFormatClient, CollectionFormatClientOptions, CollectionFormatHeaderClientCsvOptions,
+    CollectionFormatQueryClientCsvOptions, CollectionFormatQueryClientMultiOptions,
+    CollectionFormatQueryClientPipesOptions, CollectionFormatQueryClientSsvOptions,
+    CollectionFormatQueryClientTsvOptions,
+};

@@ -5,6 +5,10 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
-pub use union_client::UnionClient;
+pub use crate::generated::clients::{
+    UnionClient, UnionClientOptions, UnionClientValidKeyOptions, UnionClientValidTokenOptions,
+};

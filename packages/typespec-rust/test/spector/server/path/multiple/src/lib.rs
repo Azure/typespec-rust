@@ -5,6 +5,11 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
-pub use multiple_client::MultipleClient;
+pub use crate::generated::clients::{
+    MultipleClient, MultipleClientNoOperationParamsOptions, MultipleClientOptions,
+    MultipleClientWithOperationPathParamOptions,
+};

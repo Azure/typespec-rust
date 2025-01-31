@@ -5,10 +5,15 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::models::*;
 }
 
-pub use json_merge_patch_client::JsonMergePatchClient;
+pub use crate::generated::clients::{
+    JsonMergePatchClient, JsonMergePatchClientCreateResourceOptions, JsonMergePatchClientOptions,
+    JsonMergePatchClientUpdateOptionalResourceOptions, JsonMergePatchClientUpdateResourceOptions,
+};

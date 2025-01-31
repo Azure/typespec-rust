@@ -3,7 +3,6 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import * as codegen from '@azure-tools/codegen';
 import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
 
@@ -14,11 +13,14 @@ import * as rust from '../codemodel/index.js';
  * @returns the contents of the lib.rs file
  */
 export function emitLibRs(crate: rust.Crate): string {
+  const indent = new helpers.indentation();
   let content = helpers.contentPreamble();
   content += 'mod generated;\n\n';
 
   if (crate.clients.length > 0) {
-    content += 'pub use crate::generated::clients::*;\n\n';
+    content += 'pub mod clients {\n';
+    content += `${indent.get()}pub use crate::generated::clients::*;\n`;
+    content += '}\n\n';
   }
 
   let closeModels = false;
@@ -26,8 +28,6 @@ export function emitLibRs(crate: rust.Crate): string {
     closeModels = true;
     content += 'pub mod models {\n';
   }
-
-  const indent = new helpers.indentation();
 
   if (crate.enums.length > 0) {
     content += `${indent.get()}pub use crate::generated::enums::*;\n`;
@@ -38,14 +38,25 @@ export function emitLibRs(crate: rust.Crate): string {
   }
 
   if (closeModels) {
-    content += '}\n';
+    content += '}\n\n';
   }
 
-  // add all instantiable clients to the crate's root namespace
-  for (const client of crate.clients) {
-    if (client.constructable) {
-      content += `\npub use ${codegen.deconstruct(client.name).join('_')}::${client.name};\n`;
+  // re-export all instantiable clients and client options, and all client method options.
+  // the idea here is that anything a caller can construct should be exposed in the root.
+  if (crate.clients.length > 0) {
+    content += 'pub use crate::generated::clients::{\n';
+    for (const client of crate.clients) {
+      if (client.constructable) {
+        content += `${indent.get()}${client.name}, ${client.constructable.options.type.name},\n`;
+      }
+      for (const method of client.methods) {
+        if (!method.pub || method.kind === 'clientaccessor') {
+          continue;
+        }
+        content += `${indent.get()}${method.options.type.name},\n`;
+      }
     }
+    content += '};\n\n';
   }
 
   return content;

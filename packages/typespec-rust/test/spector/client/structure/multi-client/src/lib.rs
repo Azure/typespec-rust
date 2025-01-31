@@ -5,12 +5,17 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::enums::*;
 }
 
-pub use client_a_client::ClientAClient;
-
-pub use client_b_client::ClientBClient;
+pub use crate::generated::clients::{
+    ClientAClient, ClientAClientOptions, ClientAClientRenamedFiveOptions,
+    ClientAClientRenamedOneOptions, ClientAClientRenamedThreeOptions, ClientBClient,
+    ClientBClientOptions, ClientBClientRenamedFourOptions, ClientBClientRenamedSixOptions,
+    ClientBClientRenamedTwoOptions,
+};

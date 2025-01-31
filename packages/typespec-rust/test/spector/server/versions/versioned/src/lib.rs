@@ -5,6 +5,12 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
-pub use versioned_client::VersionedClient;
+pub use crate::generated::clients::{
+    VersionedClient, VersionedClientOptions, VersionedClientWithPathApiVersionOptions,
+    VersionedClientWithQueryApiVersionOptions, VersionedClientWithQueryOldApiVersionOptions,
+    VersionedClientWithoutApiVersionOptions,
+};

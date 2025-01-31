@@ -5,10 +5,15 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::enums::*;
 }
 
-pub use first_client::FirstClient;
+pub use crate::generated::clients::{
+    FirstClient, FirstClientOneOptions, FirstClientOptions, FirstGroup3ClientThreeOptions,
+    FirstGroup3ClientTwoOptions, FirstGroup4ClientFourOptions,
+};

@@ -5,11 +5,18 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::enums::*;
     pub use crate::generated::models::*;
 }
 
-pub use common_properties_client::CommonPropertiesClient;
+pub use crate::generated::clients::{
+    CommonPropertiesClient, CommonPropertiesClientOptions,
+    CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions,
+    CommonPropertiesManagedIdentityClientGetOptions,
+    CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedOptions,
+};

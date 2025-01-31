@@ -5,11 +5,21 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::enums::*;
     pub use crate::generated::models::*;
 }
 
-pub use key_vault_client::KeyVaultClient;
+pub use crate::generated::clients::{
+    KeyVaultClient, KeyVaultClientBackupSecretOptions, KeyVaultClientDeleteSecretOptions,
+    KeyVaultClientGetDeletedSecretOptions, KeyVaultClientGetDeletedSecretsOptions,
+    KeyVaultClientGetSecretOptions, KeyVaultClientGetSecretVersionsOptions,
+    KeyVaultClientGetSecretsOptions, KeyVaultClientOptions,
+    KeyVaultClientPurgeDeletedSecretOptions, KeyVaultClientRecoverDeletedSecretOptions,
+    KeyVaultClientRestoreSecretOptions, KeyVaultClientSetSecretOptions,
+    KeyVaultClientUpdateSecretOptions,
+};

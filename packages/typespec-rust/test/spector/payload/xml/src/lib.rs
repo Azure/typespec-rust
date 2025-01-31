@@ -5,10 +5,26 @@
 
 mod generated;
 
-pub use crate::generated::clients::*;
+pub mod clients {
+    pub use crate::generated::clients::*;
+}
 
 pub mod models {
     pub use crate::generated::models::*;
 }
 
-pub use xml_client::XmlClient;
+pub use crate::generated::clients::{
+    XmlClient, XmlClientOptions, XmlModelWithArrayOfModelValueClientGetOptions,
+    XmlModelWithArrayOfModelValueClientPutOptions, XmlModelWithAttributesValueClientGetOptions,
+    XmlModelWithAttributesValueClientPutOptions, XmlModelWithDictionaryValueClientGetOptions,
+    XmlModelWithDictionaryValueClientPutOptions, XmlModelWithEmptyArrayValueClientGetOptions,
+    XmlModelWithEmptyArrayValueClientPutOptions, XmlModelWithEncodedNamesValueClientGetOptions,
+    XmlModelWithEncodedNamesValueClientPutOptions, XmlModelWithOptionalFieldValueClientGetOptions,
+    XmlModelWithOptionalFieldValueClientPutOptions, XmlModelWithRenamedArraysValueClientGetOptions,
+    XmlModelWithRenamedArraysValueClientPutOptions, XmlModelWithRenamedFieldsValueClientGetOptions,
+    XmlModelWithRenamedFieldsValueClientPutOptions, XmlModelWithSimpleArraysValueClientGetOptions,
+    XmlModelWithSimpleArraysValueClientPutOptions, XmlModelWithTextValueClientGetOptions,
+    XmlModelWithTextValueClientPutOptions, XmlModelWithUnwrappedArrayValueClientGetOptions,
+    XmlModelWithUnwrappedArrayValueClientPutOptions, XmlSimpleModelValueClientGetOptions,
+    XmlSimpleModelValueClientPutOptions,
+};
