@@ -398,21 +398,7 @@ function formatParamTypeName(param: rust.MethodParameter | rust.Parameter | rust
   }
   if ((<rust.MethodParameter>param).kind) {
     const methodParam = <rust.MethodParameter>param;
-    let paramType = methodParam.type;
-    if (methodParam.kind === 'partialBody') {
-      // for partial body params, methodParam.type is the model type that's
-      // sent in the request. we want the field within the model for this param.
-      const field = methodParam.type.content.type.fields.find(f => { return f.name === methodParam.name; });
-      if (!field) {
-        throw new Error(`didn't find spread param field ${methodParam.name} in type ${methodParam.type.content.type.name}`);
-      }
-      paramType = field.type;
-      if (paramType.kind === 'option') {
-        // this is the case where the spread param maps to a non-internal model.
-        // for this case, we unwrap the Option<T> to get the underlying type.
-        paramType = paramType.type;
-      }
-    }
+    const paramType = methodParam.kind === 'partialBody' ? methodParam.paramType : methodParam.type;
     format += helpers.getTypeDeclaration(paramType);
   } else if ((<rust.Parameter>param).type) {
     const methodParam = <rust.Parameter>param;
@@ -609,6 +595,12 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
   if (pathChunks.length > 2) {
     throw new Error('too many HTTP path chunks');
   }
+
+  /** returns & if the param needs to be borrowed (which is the majority of cases), else the empty string */
+  const borrowOrNot = function(param: rust.Parameter): string {
+    return param.ref ? '' : '&';
+  };
+
   let body = '';
 
   // if path is just "/" no need to set it again, we're already there
@@ -619,12 +611,13 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
     } else if (paramGroups.path.length === 1 && pathChunks[0] === `{${paramGroups.path[0].segment}}`) {
       // for a single path param (i.e. "{foo}") we can directly join the path param's value
-      body += `${indent.get()}${urlVarName} = ${urlVarName}.join(&${getHeaderPathQueryParamValue(use, paramGroups.path[0], true)})?;\n`;
+      const pathParam = paramGroups.path[0];
+      body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)})?;\n`;
     } else {
       // we have path params that need to have their segments replaced with the param values
       body += `${indent.get()}let mut path = String::from(${path});\n`;
       for (const pathParam of paramGroups.path) {
-        body += `${indent.get()}path = path.replace("{${pathParam.segment}}", &${getHeaderPathQueryParamValue(use, pathParam, true)});\n`;
+        body += `${indent.get()}path = path.replace("{${pathParam.segment}}", ${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)});\n`;
       }
       path = '&path';
       body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
@@ -663,11 +656,8 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       });
     } else {
       body += getParamValueHelper(indent, queryParam, () => {
-        let borrow = '&';
-        if (queryParam.type.kind === 'enum') {
-          // for enums we call .as_ref() which elides the need to borrow
-          borrow = '';
-        }
+        // for enums we call .as_ref() which elides the need to borrow
+        const borrow = queryParam.type.kind === 'enum' ? '' : borrowOrNot(queryParam);
         return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${borrow}${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional)});\n`;
       });
     }
@@ -700,7 +690,8 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
         return setter;
       }
       const borrow = headerParam.location === 'client' && nonCopyableType(headerParam.type) ? '&' : '';
-      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, fromSelf)});\n`;
+      const toOwned = headerParam.ref ? '.to_owned()' : '';
+      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, fromSelf)}${toOwned});\n`;
     });
   }
 
@@ -719,13 +710,26 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       if (partialBodyParam.type.content.type !== requestContentType.content.type) {
         throw new Error(`spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.content.type.name}, expected model type ${requestContentType.content.type.name}`);
       }
-      let initializer = partialBodyParam.name;
+
       if (partialBodyParam.optional) {
-        initializer = `${partialBodyParam.name}: options.${partialBodyParam.name}`;
-      } else if (!requestContentType.content.type.internal) {
-        // spread param maps to a non-internal model, so it must be wrapped in Some()
-        initializer = `${partialBodyParam.name}: Some(${partialBodyParam.name})`;
+        body += `${indent.get()}${partialBodyParam.name}: options.${partialBodyParam.name},\n`;
+        continue;
       }
+
+      let initializer = partialBodyParam.name;
+      if (partialBodyParam.ref) {
+        initializer = `${initializer}.to_owned()`;
+      }
+      if (!requestContentType.content.type.internal) {
+        // spread param maps to a non-internal model, so it must be wrapped in Some()
+        initializer = `Some(${initializer})`;
+      }
+
+      // can't use shorthand init if it's more than just the param name
+      if (initializer !== partialBodyParam.name) {
+        initializer = `${partialBodyParam.name}: ${initializer}`;
+      }
+
       body += `${indent.get()}${initializer},\n`;
     }
     body += `${indent.pop().get()}}.try_into()?;\n`;
@@ -957,6 +961,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
 
   switch (param.type.kind) {
     case 'String':
+    case 'str':
       return paramName;
     case 'encodedBytes':
       return encodeBytes(param.type, paramName);

@@ -14,7 +14,7 @@ async fn no_operation_params() {
 async fn with_operation_path_param() {
     let client = MultipleClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
-        .with_operation_path_param("test".to_string(), None)
+        .with_operation_path_param("test", None)
         .await
         .unwrap();
 }

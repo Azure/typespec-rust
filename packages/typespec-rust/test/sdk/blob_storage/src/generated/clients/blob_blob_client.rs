@@ -32,7 +32,7 @@ impl BlobBlobClient {
     /// and full metadata.
     pub async fn abort_copy_from_url(
         &self,
-        copy_id: String,
+        copy_id: &str,
         options: Option<BlobBlobClientAbortCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -45,7 +45,7 @@ impl BlobBlobClient {
         url.query_pairs_mut()
             .append_pair("comp", "copy")
             .append_key_only("copyid");
-        url.query_pairs_mut().append_pair("copyid", &copy_id);
+        url.query_pairs_mut().append_pair("copyid", copy_id);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -169,7 +169,7 @@ impl BlobBlobClient {
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn change_lease(
         &self,
-        lease_id: String,
+        lease_id: &str,
         options: Option<BlobBlobClientChangeLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -210,7 +210,7 @@ impl BlobBlobClient {
         if let Some(if_tags) = options.if_tags {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        request.insert_header("x-ms-lease-id", lease_id);
+        request.insert_header("x-ms-lease-id", lease_id.to_owned());
         if let Some(proposed_lease_id) = options.proposed_lease_id {
             request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         }
@@ -222,7 +222,7 @@ impl BlobBlobClient {
     /// copy is complete.
     pub async fn copy_from_url(
         &self,
-        copy_source: String,
+        copy_source: &str,
         options: Option<BlobBlobClientCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -263,7 +263,7 @@ impl BlobBlobClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-copy-source", copy_source);
+        request.insert_header("x-ms-copy-source", copy_source.to_owned());
         if let Some(copy_source_authorization) = options.copy_source_authorization {
             request.insert_header("x-ms-copy-source-authorization", copy_source_authorization);
         }
@@ -780,7 +780,7 @@ impl BlobBlobClient {
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn release_lease(
         &self,
-        lease_id: String,
+        lease_id: &str,
         options: Option<BlobBlobClientReleaseLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -821,7 +821,7 @@ impl BlobBlobClient {
         if let Some(if_tags) = options.if_tags {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        request.insert_header("x-ms-lease-id", lease_id);
+        request.insert_header("x-ms-lease-id", lease_id.to_owned());
         request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -829,7 +829,7 @@ impl BlobBlobClient {
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
     pub async fn renew_lease(
         &self,
-        lease_id: String,
+        lease_id: &str,
         options: Option<BlobBlobClientRenewLeaseOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -870,7 +870,7 @@ impl BlobBlobClient {
         if let Some(if_tags) = options.if_tags {
             request.insert_header("x-ms-if-tags", if_tags);
         }
-        request.insert_header("x-ms-lease-id", lease_id);
+        request.insert_header("x-ms-lease-id", lease_id.to_owned());
         request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -1220,7 +1220,7 @@ impl BlobBlobClient {
     /// The Start Copy From URL operation copies a blob or an internet resource to a new blob.
     pub async fn start_copy_from_url(
         &self,
-        copy_source: String,
+        copy_source: &str,
         options: Option<BlobBlobClientStartCopyFromUrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -1259,7 +1259,7 @@ impl BlobBlobClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-copy-source", copy_source);
+        request.insert_header("x-ms-copy-source", copy_source.to_owned());
         if let Some(if_tags) = options.if_tags {
             request.insert_header("x-ms-if-tags", if_tags);
         }

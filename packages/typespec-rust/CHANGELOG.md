@@ -1,6 +1,10 @@
 # Release History
 
-## 0.7.1 (unreleased)
+## 0.8.0 (unreleased)
+
+### Breaking Changes
+
+* Required `String` parameters are now emitted as `&str`.
 
 ### Bugs Fixed
 

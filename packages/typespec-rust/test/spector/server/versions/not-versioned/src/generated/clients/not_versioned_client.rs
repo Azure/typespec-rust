@@ -44,7 +44,7 @@ impl NotVersionedClient {
 
     pub async fn with_path_api_version(
         &self,
-        api_version: String,
+        api_version: &str,
         options: Option<NotVersionedClientWithPathApiVersionOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -52,7 +52,7 @@ impl NotVersionedClient {
         let mut url = self.endpoint.clone();
         let mut path =
             String::from("server/versions/not-versioned/with-path-api-version/{apiVersion}");
-        path = path.replace("{apiVersion}", &api_version);
+        path = path.replace("{apiVersion}", api_version);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Head);
         self.pipeline.send(&ctx, &mut request).await
@@ -60,7 +60,7 @@ impl NotVersionedClient {
 
     pub async fn with_query_api_version(
         &self,
-        api_version: String,
+        api_version: &str,
         options: Option<NotVersionedClientWithQueryApiVersionOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -68,7 +68,7 @@ impl NotVersionedClient {
         let mut url = self.endpoint.clone();
         url = url.join("server/versions/not-versioned/with-query-api-version")?;
         url.query_pairs_mut()
-            .append_pair("api-version", &api_version);
+            .append_pair("api-version", api_version);
         let mut request = Request::new(url, Method::Head);
         self.pipeline.send(&ctx, &mut request).await
     }

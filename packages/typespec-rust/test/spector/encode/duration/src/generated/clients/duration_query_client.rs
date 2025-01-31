@@ -18,14 +18,14 @@ impl DurationQueryClient {
 
     pub async fn default(
         &self,
-        input: String,
+        input: &str,
         options: Option<DurationQueryClientDefaultOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/query/default")?;
-        url.query_pairs_mut().append_pair("input", &input);
+        url.query_pairs_mut().append_pair("input", input);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -98,14 +98,14 @@ impl DurationQueryClient {
 
     pub async fn iso8601(
         &self,
-        input: String,
+        input: &str,
         options: Option<DurationQueryClientIso8601Options<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/query/iso8601")?;
-        url.query_pairs_mut().append_pair("input", &input);
+        url.query_pairs_mut().append_pair("input", input);
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await
     }

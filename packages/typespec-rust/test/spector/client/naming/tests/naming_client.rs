@@ -50,13 +50,13 @@ async fn language() {
 #[tokio::test]
 async fn parameter() {
     let client = NamingClient::with_no_credential("http://localhost:3000", None).unwrap();
-    client.parameter("true".to_string(), None).await.unwrap();
+    client.parameter("true", None).await.unwrap();
 }
 
 #[tokio::test]
 async fn request() {
     let client = NamingClient::with_no_credential("http://localhost:3000", None).unwrap();
-    client.request("true".to_string(), None).await.unwrap();
+    client.request("true", None).await.unwrap();
 }
 
 #[tokio::test]

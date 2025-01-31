@@ -24,8 +24,8 @@ impl CommonPropertiesManagedIdentityClient {
     /// Create a ManagedIdentityTrackedResource
     pub async fn create_with_system_assigned(
         &self,
-        resource_group_name: String,
-        managed_identity_tracked_resource_name: String,
+        resource_group_name: &str,
+        managed_identity_tracked_resource_name: &str,
         resource: RequestContent<ManagedIdentityTrackedResource>,
         options: Option<CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions<'_>>,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
@@ -35,9 +35,9 @@ impl CommonPropertiesManagedIdentityClient {
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/managedIdentityTrackedResources/{managedIdentityTrackedResourceName}");
         path = path.replace(
             "{managedIdentityTrackedResourceName}",
-            &managed_identity_tracked_resource_name,
+            managed_identity_tracked_resource_name,
         );
-        path = path.replace("{resourceGroupName}", &resource_group_name);
+        path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         url = url.join(&path)?;
         url.query_pairs_mut()
@@ -52,8 +52,8 @@ impl CommonPropertiesManagedIdentityClient {
     /// Get a ManagedIdentityTrackedResource
     pub async fn get(
         &self,
-        resource_group_name: String,
-        managed_identity_tracked_resource_name: String,
+        resource_group_name: &str,
+        managed_identity_tracked_resource_name: &str,
         options: Option<CommonPropertiesManagedIdentityClientGetOptions<'_>>,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
         let options = options.unwrap_or_default();
@@ -62,9 +62,9 @@ impl CommonPropertiesManagedIdentityClient {
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/managedIdentityTrackedResources/{managedIdentityTrackedResourceName}");
         path = path.replace(
             "{managedIdentityTrackedResourceName}",
-            &managed_identity_tracked_resource_name,
+            managed_identity_tracked_resource_name,
         );
-        path = path.replace("{resourceGroupName}", &resource_group_name);
+        path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         url = url.join(&path)?;
         url.query_pairs_mut()
@@ -77,8 +77,8 @@ impl CommonPropertiesManagedIdentityClient {
     /// Update a ManagedIdentityTrackedResource
     pub async fn update_with_user_assigned_and_system_assigned(
         &self,
-        resource_group_name: String,
-        managed_identity_tracked_resource_name: String,
+        resource_group_name: &str,
+        managed_identity_tracked_resource_name: &str,
         properties: RequestContent<ManagedIdentityTrackedResource>,
         options: Option<
             CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedOptions<'_>,
@@ -90,9 +90,9 @@ impl CommonPropertiesManagedIdentityClient {
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/managedIdentityTrackedResources/{managedIdentityTrackedResourceName}");
         path = path.replace(
             "{managedIdentityTrackedResourceName}",
-            &managed_identity_tracked_resource_name,
+            managed_identity_tracked_resource_name,
         );
-        path = path.replace("{resourceGroupName}", &resource_group_name);
+        path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         url = url.join(&path)?;
         url.query_pairs_mut()

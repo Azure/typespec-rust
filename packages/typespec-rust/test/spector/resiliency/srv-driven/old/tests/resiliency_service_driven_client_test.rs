@@ -43,10 +43,7 @@ async fn from_one_required_v1() {
         None,
     )
     .unwrap();
-    client
-        .from_one_required("required".to_string(), None)
-        .await
-        .unwrap();
+    client.from_one_required("required", None).await.unwrap();
 }
 
 #[tokio::test]
@@ -85,8 +82,5 @@ async fn from_one_required_v2() {
         None,
     )
     .unwrap();
-    client
-        .from_one_required("required".to_string(), None)
-        .await
-        .unwrap();
+    client.from_one_required("required", None).await.unwrap();
 }
