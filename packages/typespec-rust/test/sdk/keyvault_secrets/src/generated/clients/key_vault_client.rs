@@ -13,6 +13,7 @@ use azure_core::{
     Pipeline, Policy, Request, RequestContent, Response, Result, Url,
 };
 use std::sync::Arc;
+use typespec_client_core::fmt::SafeDebug;
 use typespec_client_core::http::PagerResult;
 use typespec_client_core::json;
 
@@ -22,7 +23,7 @@ pub struct KeyVaultClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, SafeDebug)]
 pub struct KeyVaultClientOptions {
     pub api_version: String,
     pub client_options: ClientOptions,
@@ -454,22 +455,22 @@ impl Default for KeyVaultClientOptions {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientBackupSecretOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientDeleteSecretOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientGetDeletedSecretOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientGetDeletedSecretsOptions<'a> {
     pub maxresults: Option<i32>,
     pub method_options: ClientMethodOptions<'a>,
@@ -486,12 +487,12 @@ impl KeyVaultClientGetDeletedSecretsOptions<'_> {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientGetSecretOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientGetSecretVersionsOptions<'a> {
     pub maxresults: Option<i32>,
     pub method_options: ClientMethodOptions<'a>,
@@ -508,7 +509,7 @@ impl KeyVaultClientGetSecretVersionsOptions<'_> {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientGetSecretsOptions<'a> {
     pub maxresults: Option<i32>,
     pub method_options: ClientMethodOptions<'a>,
@@ -525,27 +526,27 @@ impl KeyVaultClientGetSecretsOptions<'_> {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientPurgeDeletedSecretOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientRecoverDeletedSecretOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientRestoreSecretOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientSetSecretOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientUpdateSecretOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

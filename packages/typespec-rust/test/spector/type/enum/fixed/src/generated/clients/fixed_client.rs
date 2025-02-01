@@ -5,13 +5,14 @@
 
 use crate::generated::clients::fixed_string_client::FixedStringClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct FixedClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct FixedClientOptions {
     pub client_options: ClientOptions,
 }

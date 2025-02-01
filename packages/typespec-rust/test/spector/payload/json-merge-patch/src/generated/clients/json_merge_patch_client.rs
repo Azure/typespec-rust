@@ -8,13 +8,14 @@ use azure_core::{
     ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct JsonMergePatchClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientOptions {
     pub client_options: ClientOptions,
 }
@@ -97,18 +98,18 @@ impl JsonMergePatchClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientCreateResourceOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientUpdateOptionalResourceOptions<'a> {
     pub body: Option<RequestContent<ResourcePatch>>,
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientUpdateResourceOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

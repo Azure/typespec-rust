@@ -7,6 +7,7 @@ use crate::models::InnerModel;
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct ArrayNullableModelValueClient {
     pub(crate) endpoint: Url,
@@ -48,12 +49,12 @@ impl ArrayNullableModelValueClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableModelValueClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableModelValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -11,6 +11,7 @@ use super::internal_models::{
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct SpreadAliasClient {
     pub(crate) endpoint: Url,
@@ -150,27 +151,27 @@ impl SpreadAliasClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpreadAliasClientSpreadAsRequestBodyOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpreadAliasClientSpreadAsRequestParameterOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpreadAliasClientSpreadParameterWithInnerAliasOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpreadAliasClientSpreadParameterWithInnerModelOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpreadAliasClientSpreadWithMultipleParametersOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
     pub optional_int: Option<i32>,

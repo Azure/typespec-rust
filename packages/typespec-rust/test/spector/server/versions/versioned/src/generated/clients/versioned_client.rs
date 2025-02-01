@@ -6,6 +6,7 @@
 use azure_core::{
     ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct VersionedClient {
     api_version: String,
@@ -13,7 +14,7 @@ pub struct VersionedClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, SafeDebug)]
 pub struct VersionedClientOptions {
     pub api_version: String,
     pub client_options: ClientOptions,
@@ -109,22 +110,22 @@ impl Default for VersionedClientOptions {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct VersionedClientWithPathApiVersionOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct VersionedClientWithQueryApiVersionOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct VersionedClientWithQueryOldApiVersionOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct VersionedClientWithoutApiVersionOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -6,6 +6,7 @@
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct ArrayInt64ValueClient {
     pub(crate) endpoint: Url,
@@ -47,12 +48,12 @@ impl ArrayInt64ValueClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ArrayInt64ValueClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ArrayInt64ValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

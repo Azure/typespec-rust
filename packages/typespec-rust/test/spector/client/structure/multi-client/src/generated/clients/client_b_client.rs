@@ -7,13 +7,14 @@ use crate::models::ClientType;
 use azure_core::{
     ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct ClientBClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ClientBClientOptions {
     pub client_options: ClientOptions,
 }
@@ -84,17 +85,17 @@ impl ClientBClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ClientBClientRenamedFourOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ClientBClientRenamedSixOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ClientBClientRenamedTwoOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

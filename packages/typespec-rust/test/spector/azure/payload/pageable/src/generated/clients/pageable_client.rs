@@ -7,6 +7,7 @@ use crate::models::PagedUser;
 use azure_core::{
     ClientMethodOptions, ClientOptions, Method, Pager, Pipeline, Request, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 use typespec_client_core::http::PagerResult;
 use typespec_client_core::json;
 
@@ -15,7 +16,7 @@ pub struct PageableClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct PageableClientOptions {
     pub client_options: ClientOptions,
 }
@@ -83,7 +84,7 @@ impl PageableClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct PageableClientListOptions<'a> {
     pub maxpagesize: Option<i32>,
     pub method_options: ClientMethodOptions<'a>,

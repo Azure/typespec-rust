@@ -6,13 +6,14 @@
 use azure_core::{
     ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct ResiliencyServiceDrivenClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientOptions {
     pub api_version: String,
     pub client_options: ClientOptions,
@@ -104,18 +105,18 @@ impl Default for ResiliencyServiceDrivenClientOptions {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientFromNoneOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientFromOneOptionalOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
     pub parameter: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientFromOneRequiredOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

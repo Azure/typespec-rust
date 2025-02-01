@@ -8,13 +8,14 @@ use azure_core::{
     ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct UsageClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct UsageClientOptions {
     pub client_options: ClientOptions,
 }
@@ -86,17 +87,17 @@ impl UsageClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct UsageClientInputOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct UsageClientInputAndOutputOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct UsageClientOutputOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

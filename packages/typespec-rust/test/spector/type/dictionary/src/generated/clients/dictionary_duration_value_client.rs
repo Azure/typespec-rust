@@ -7,6 +7,7 @@ use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
 use std::collections::HashMap;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct DictionaryDurationValueClient {
     pub(crate) endpoint: Url,
@@ -48,12 +49,12 @@ impl DictionaryDurationValueClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryDurationValueClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryDurationValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

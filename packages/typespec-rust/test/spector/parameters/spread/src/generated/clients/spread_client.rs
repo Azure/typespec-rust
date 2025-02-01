@@ -6,13 +6,14 @@
 use crate::generated::clients::spread_alias_client::SpreadAliasClient;
 use crate::generated::clients::spread_model_client::SpreadModelClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct SpreadClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpreadClientOptions {
     pub client_options: ClientOptions,
 }

@@ -16,13 +16,14 @@ use crate::generated::clients::xml_model_with_text_value_client::XmlModelWithTex
 use crate::generated::clients::xml_model_with_unwrapped_array_value_client::XmlModelWithUnwrappedArrayValueClient;
 use crate::generated::clients::xml_simple_model_value_client::XmlSimpleModelValueClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct XmlClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct XmlClientOptions {
     pub client_options: ClientOptions,
 }

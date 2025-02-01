@@ -5,6 +5,7 @@
 
 use crate::generated::clients::service_qux_bar_client::ServiceQuxBarClient;
 use azure_core::{ClientMethodOptions, Context, Method, Pipeline, Request, Response, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct ServiceQuxClient {
     pub(crate) endpoint: Url,
@@ -38,7 +39,7 @@ impl ServiceQuxClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ServiceQuxClientEightOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

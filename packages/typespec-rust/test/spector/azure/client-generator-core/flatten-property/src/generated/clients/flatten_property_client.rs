@@ -8,13 +8,14 @@ use azure_core::{
     ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct FlattenPropertyClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct FlattenPropertyClientOptions {
     pub client_options: ClientOptions,
 }
@@ -77,12 +78,12 @@ impl FlattenPropertyClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct FlattenPropertyClientPutFlattenModelOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct FlattenPropertyClientPutNestedFlattenModelOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

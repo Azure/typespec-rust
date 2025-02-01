@@ -7,6 +7,7 @@ use crate::models::ManagedIdentityTrackedResource;
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct CommonPropertiesManagedIdentityClient {
     pub(crate) api_version: String,
@@ -105,17 +106,17 @@ impl CommonPropertiesManagedIdentityClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesManagedIdentityClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

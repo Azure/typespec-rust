@@ -56,6 +56,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
   // for the internal models we might need to use public model types
   const use = new Use(pub ? 'models' : undefined);
   use.addTypes('serde', ['Deserialize', 'Serialize']);
+  use.addType('typespec_client_core::fmt', 'SafeDebug');
 
   const indent = new helpers.indentation();
 

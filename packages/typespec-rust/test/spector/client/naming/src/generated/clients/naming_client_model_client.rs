@@ -7,6 +7,7 @@ use crate::models::{ClientModel, RustName};
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct NamingClientModelClient {
     pub(crate) endpoint: Url,
@@ -50,12 +51,12 @@ impl NamingClientModelClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientModelClientClientOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientModelClientLanguageOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

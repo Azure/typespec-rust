@@ -7,6 +7,7 @@ use crate::models::SameAsModel;
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct SpecialWordsModelPropertiesClient {
     pub(crate) endpoint: Url,
@@ -35,7 +36,7 @@ impl SpecialWordsModelPropertiesClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelPropertiesClientSameAsModelOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

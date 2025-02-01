@@ -8,6 +8,7 @@ use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
 use std::collections::HashMap;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct DictionaryRecursiveModelValueClient {
     pub(crate) endpoint: Url,
@@ -49,12 +50,12 @@ impl DictionaryRecursiveModelValueClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryRecursiveModelValueClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryRecursiveModelValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

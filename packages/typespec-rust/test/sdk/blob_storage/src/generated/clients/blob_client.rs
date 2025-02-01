@@ -12,6 +12,7 @@ use crate::generated::clients::blob_service_client::BlobServiceClient;
 use azure_core::credentials::TokenCredential;
 use azure_core::{BearerTokenCredentialPolicy, ClientOptions, Pipeline, Policy, Result, Url};
 use std::sync::Arc;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BlobClient {
     endpoint: Url,
@@ -19,7 +20,7 @@ pub struct BlobClient {
     version: String,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, SafeDebug)]
 pub struct BlobClientOptions {
     pub client_options: ClientOptions,
     pub version: String,

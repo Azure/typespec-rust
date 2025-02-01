@@ -7,6 +7,7 @@ use crate::models::ModelWithEmptyArray;
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct XmlModelWithEmptyArrayValueClient {
     pub(crate) endpoint: Url,
@@ -48,12 +49,12 @@ impl XmlModelWithEmptyArrayValueClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithEmptyArrayValueClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithEmptyArrayValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

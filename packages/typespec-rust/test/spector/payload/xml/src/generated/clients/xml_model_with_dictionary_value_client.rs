@@ -7,6 +7,7 @@ use crate::models::ModelWithDictionary;
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct XmlModelWithDictionaryValueClient {
     pub(crate) endpoint: Url,
@@ -48,12 +49,12 @@ impl XmlModelWithDictionaryValueClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithDictionaryValueClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithDictionaryValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

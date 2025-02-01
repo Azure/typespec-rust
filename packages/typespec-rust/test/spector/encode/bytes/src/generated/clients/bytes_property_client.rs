@@ -9,6 +9,7 @@ use crate::models::{
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BytesPropertyClient {
     pub(crate) endpoint: Url,
@@ -86,22 +87,22 @@ impl BytesPropertyClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesPropertyClientBase64Options<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesPropertyClientBase64UrlOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesPropertyClientBase64UrlArrayOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesPropertyClientDefaultOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

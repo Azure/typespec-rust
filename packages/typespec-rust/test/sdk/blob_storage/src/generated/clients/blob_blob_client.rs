@@ -13,6 +13,7 @@ use azure_core::{
 };
 use std::collections::HashMap;
 use time::OffsetDateTime;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BlobBlobClient {
     pub(crate) blob: String,
@@ -1345,7 +1346,7 @@ impl BlobBlobClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientAbortCopyFromUrlOptions<'a> {
     pub client_request_id: Option<String>,
     pub lease_id: Option<String>,
@@ -1353,7 +1354,7 @@ pub struct BlobBlobClientAbortCopyFromUrlOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientAcquireLeaseOptions<'a> {
     pub client_request_id: Option<String>,
     pub duration: Option<i32>,
@@ -1367,7 +1368,7 @@ pub struct BlobBlobClientAcquireLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientBreakLeaseOptions<'a> {
     pub break_period: Option<i32>,
     pub client_request_id: Option<String>,
@@ -1380,7 +1381,7 @@ pub struct BlobBlobClientBreakLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientChangeLeaseOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_match: Option<String>,
@@ -1393,7 +1394,7 @@ pub struct BlobBlobClientChangeLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientCopyFromUrlOptions<'a> {
     pub blob_tags_string: Option<String>,
     pub client_request_id: Option<String>,
@@ -1420,7 +1421,7 @@ pub struct BlobBlobClientCopyFromUrlOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientCreateSnapshotOptions<'a> {
     pub client_request_id: Option<String>,
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
@@ -1438,7 +1439,7 @@ pub struct BlobBlobClientCreateSnapshotOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientDeleteOptions<'a> {
     pub blob_delete_type: Option<BlobDeleteType>,
     pub client_request_id: Option<String>,
@@ -1455,7 +1456,7 @@ pub struct BlobBlobClientDeleteOptions<'a> {
     pub version_id: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientDeleteImmutabilityPolicyOptions<'a> {
     pub client_request_id: Option<String>,
     pub method_options: ClientMethodOptions<'a>,
@@ -1464,7 +1465,7 @@ pub struct BlobBlobClientDeleteImmutabilityPolicyOptions<'a> {
     pub version_id: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientDownloadOptions<'a> {
     pub client_request_id: Option<String>,
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
@@ -1486,14 +1487,14 @@ pub struct BlobBlobClientDownloadOptions<'a> {
     pub version_id: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientGetAccountInfoOptions<'a> {
     pub client_request_id: Option<String>,
     pub method_options: ClientMethodOptions<'a>,
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientGetPropertiesOptions<'a> {
     pub client_request_id: Option<String>,
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
@@ -1511,7 +1512,7 @@ pub struct BlobBlobClientGetPropertiesOptions<'a> {
     pub version_id: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientGetTagsOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_tags: Option<String>,
@@ -1522,7 +1523,7 @@ pub struct BlobBlobClientGetTagsOptions<'a> {
     pub version_id: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientQueryOptions<'a> {
     pub client_request_id: Option<String>,
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
@@ -1539,7 +1540,7 @@ pub struct BlobBlobClientQueryOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientReleaseLeaseOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_match: Option<String>,
@@ -1551,7 +1552,7 @@ pub struct BlobBlobClientReleaseLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientRenewLeaseOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_match: Option<String>,
@@ -1563,7 +1564,7 @@ pub struct BlobBlobClientRenewLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetExpiryOptions<'a> {
     pub client_request_id: Option<String>,
     pub expires_on: Option<String>,
@@ -1571,7 +1572,7 @@ pub struct BlobBlobClientSetExpiryOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetHttpHeadersOptions<'a> {
     pub blob_cache_control: Option<String>,
     pub blob_content_disposition: Option<String>,
@@ -1590,7 +1591,7 @@ pub struct BlobBlobClientSetHttpHeadersOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetImmutabilityPolicyOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_unmodified_since: Option<String>,
@@ -1602,7 +1603,7 @@ pub struct BlobBlobClientSetImmutabilityPolicyOptions<'a> {
     pub version_id: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetLegalHoldOptions<'a> {
     pub client_request_id: Option<String>,
     pub method_options: ClientMethodOptions<'a>,
@@ -1611,7 +1612,7 @@ pub struct BlobBlobClientSetLegalHoldOptions<'a> {
     pub version_id: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetMetadataOptions<'a> {
     pub client_request_id: Option<String>,
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
@@ -1629,7 +1630,7 @@ pub struct BlobBlobClientSetMetadataOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetTagsOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_tags: Option<String>,
@@ -1641,7 +1642,7 @@ pub struct BlobBlobClientSetTagsOptions<'a> {
     pub version_id: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetTierOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_tags: Option<String>,
@@ -1653,7 +1654,7 @@ pub struct BlobBlobClientSetTierOptions<'a> {
     pub version_id: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientStartCopyFromUrlOptions<'a> {
     pub blob_tags_string: Option<String>,
     pub client_request_id: Option<String>,
@@ -1679,7 +1680,7 @@ pub struct BlobBlobClientStartCopyFromUrlOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientUndeleteOptions<'a> {
     pub client_request_id: Option<String>,
     pub method_options: ClientMethodOptions<'a>,

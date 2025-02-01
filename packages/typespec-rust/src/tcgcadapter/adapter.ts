@@ -63,7 +63,7 @@ export class Adapter {
       this.crate.addDependency(new rust.CrateDependency('serde'));
     }
 
-    if (this.crate.enums.length > 0 || this.crate.models.length > 0) {
+    if (this.crate.clients.length > 0 || this.crate.enums.length > 0 || this.crate.models.length > 0) {
       this.crate.addDependency(new rust.CrateDependency('typespec_client_core'));
     }
 

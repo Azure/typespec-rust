@@ -12,6 +12,7 @@ use azure_core::{
     Bytes, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response,
     Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BlobServiceClient {
     pub(crate) endpoint: Url,
@@ -250,7 +251,7 @@ impl BlobServiceClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientFilterBlobsOptions<'a> {
     pub client_request_id: Option<String>,
     pub include: Option<Vec<FilterBlobsIncludeItem>>,
@@ -261,35 +262,35 @@ pub struct BlobServiceClientFilterBlobsOptions<'a> {
     pub where_param: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientGetAccountInfoOptions<'a> {
     pub client_request_id: Option<String>,
     pub method_options: ClientMethodOptions<'a>,
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientGetPropertiesOptions<'a> {
     pub client_request_id: Option<String>,
     pub method_options: ClientMethodOptions<'a>,
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientGetStatisticsOptions<'a> {
     pub client_request_id: Option<String>,
     pub method_options: ClientMethodOptions<'a>,
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientGetUserDelegationKeyOptions<'a> {
     pub client_request_id: Option<String>,
     pub method_options: ClientMethodOptions<'a>,
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientSetPropertiesOptions<'a> {
     pub client_request_id: Option<String>,
     pub cors: Option<Vec<CorsRule>>,
@@ -303,7 +304,7 @@ pub struct BlobServiceClientSetPropertiesOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientSubmitBatchOptions<'a> {
     pub client_request_id: Option<String>,
     pub method_options: ClientMethodOptions<'a>,

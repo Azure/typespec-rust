@@ -5,8 +5,9 @@
 
 use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
+use typespec_client_core::fmt::SafeDebug;
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct DefaultDatetimeProperty {
     #[serde(
         default,
@@ -16,7 +17,7 @@ pub struct DefaultDatetimeProperty {
     pub value: Option<OffsetDateTime>,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct Rfc3339DatetimeProperty {
     #[serde(
         default,
@@ -26,7 +27,7 @@ pub struct Rfc3339DatetimeProperty {
     pub value: Option<OffsetDateTime>,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct Rfc7231DatetimeProperty {
     #[serde(
         default,
@@ -36,13 +37,13 @@ pub struct Rfc7231DatetimeProperty {
     pub value: Option<OffsetDateTime>,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct UnixTimestampArrayDatetimeProperty {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<Vec<OffsetDateTime>>,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct UnixTimestampDatetimeProperty {
     #[serde(
         default,

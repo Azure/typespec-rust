@@ -7,6 +7,7 @@ use crate::models::User;
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BasicExplicitBodyClient {
     pub(crate) endpoint: Url,
@@ -35,7 +36,7 @@ impl BasicExplicitBodyClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BasicExplicitBodyClientSimpleOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -11,6 +11,7 @@ use azure_core::{
     Result, Url,
 };
 use std::collections::HashMap;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BlobContainerClient {
     pub(crate) container_name: String,
@@ -593,7 +594,7 @@ impl BlobContainerClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientAcquireLeaseOptions<'a> {
     pub client_request_id: Option<String>,
     pub duration: Option<i32>,
@@ -604,7 +605,7 @@ pub struct BlobContainerClientAcquireLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientBreakLeaseOptions<'a> {
     pub break_period: Option<i32>,
     pub client_request_id: Option<String>,
@@ -614,7 +615,7 @@ pub struct BlobContainerClientBreakLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientChangeLeaseOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_modified_since: Option<String>,
@@ -623,7 +624,7 @@ pub struct BlobContainerClientChangeLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientCreateOptions<'a> {
     pub access: Option<PublicAccessType>,
     pub client_request_id: Option<String>,
@@ -634,7 +635,7 @@ pub struct BlobContainerClientCreateOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientDeleteOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_modified_since: Option<String>,
@@ -644,7 +645,7 @@ pub struct BlobContainerClientDeleteOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientFilterBlobsOptions<'a> {
     pub client_request_id: Option<String>,
     pub include: Option<Vec<FilterBlobsIncludeItem>>,
@@ -655,7 +656,7 @@ pub struct BlobContainerClientFilterBlobsOptions<'a> {
     pub where_param: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientGetAccessPolicyOptions<'a> {
     pub client_request_id: Option<String>,
     pub lease_id: Option<String>,
@@ -663,14 +664,14 @@ pub struct BlobContainerClientGetAccessPolicyOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientGetAccountInfoOptions<'a> {
     pub client_request_id: Option<String>,
     pub method_options: ClientMethodOptions<'a>,
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientGetPropertiesOptions<'a> {
     pub client_request_id: Option<String>,
     pub lease_id: Option<String>,
@@ -678,7 +679,7 @@ pub struct BlobContainerClientGetPropertiesOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientReleaseLeaseOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_modified_since: Option<String>,
@@ -687,7 +688,7 @@ pub struct BlobContainerClientReleaseLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientRenameOptions<'a> {
     pub client_request_id: Option<String>,
     pub method_options: ClientMethodOptions<'a>,
@@ -695,7 +696,7 @@ pub struct BlobContainerClientRenameOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientRenewLeaseOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_modified_since: Option<String>,
@@ -704,7 +705,7 @@ pub struct BlobContainerClientRenewLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientRestoreOptions<'a> {
     pub client_request_id: Option<String>,
     pub deleted_container_name: Option<String>,
@@ -713,7 +714,7 @@ pub struct BlobContainerClientRestoreOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientSetAccessPolicyOptions<'a> {
     pub access: Option<PublicAccessType>,
     pub client_request_id: Option<String>,
@@ -724,7 +725,7 @@ pub struct BlobContainerClientSetAccessPolicyOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientSetMetadataOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_modified_since: Option<String>,
@@ -734,7 +735,7 @@ pub struct BlobContainerClientSetMetadataOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientSubmitBatchOptions<'a> {
     pub client_request_id: Option<String>,
     pub method_options: ClientMethodOptions<'a>,

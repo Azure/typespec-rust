@@ -5,9 +5,10 @@
 
 use azure_core::{RequestContent, Result};
 use serde::{Deserialize, Serialize};
+use typespec_client_core::fmt::SafeDebug;
 use typespec_client_core::json::to_json;
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct SimpleRequest {
     pub name: String,
 }

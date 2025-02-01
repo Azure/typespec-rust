@@ -16,6 +16,7 @@
 ### Other Changes
 
 * Input models are no longer `non_exhaustive`.
+* Models and options types derive `SafeDebug` instead of `Debug`.
 
 ## 0.7.0 (2025-01-17)
 

@@ -10,6 +10,7 @@ use azure_core::{
 };
 use std::collections::HashMap;
 use time::OffsetDateTime;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BlobAppendBlobClient {
     pub(crate) blob: String,
@@ -378,7 +379,7 @@ impl BlobAppendBlobClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobAppendBlobClientAppendBlockOptions<'a> {
     pub append_position: Option<i64>,
     pub client_request_id: Option<String>,
@@ -401,7 +402,7 @@ pub struct BlobAppendBlobClientAppendBlockOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobAppendBlobClientAppendBlockFromUrlOptions<'a> {
     pub append_position: Option<i64>,
     pub client_request_id: Option<String>,
@@ -429,7 +430,7 @@ pub struct BlobAppendBlobClientAppendBlockFromUrlOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobAppendBlobClientCreateOptions<'a> {
     pub blob_cache_control: Option<String>,
     pub blob_content_disposition: Option<String>,
@@ -457,7 +458,7 @@ pub struct BlobAppendBlobClientCreateOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobAppendBlobClientSealOptions<'a> {
     pub append_position: Option<i64>,
     pub client_request_id: Option<String>,

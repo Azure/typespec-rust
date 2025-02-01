@@ -6,6 +6,7 @@
 use azure_core::{
     base64, ClientMethodOptions, Context, Method, Pipeline, Request, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BytesQueryClient {
     pub(crate) endpoint: Url,
@@ -85,22 +86,22 @@ impl BytesQueryClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesQueryClientBase64Options<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesQueryClientBase64UrlOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesQueryClientBase64UrlArrayOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesQueryClientDefaultOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

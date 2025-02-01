@@ -7,13 +7,14 @@ use crate::generated::clients::two_operation_group_group1_client::TwoOperationGr
 use crate::generated::clients::two_operation_group_group2_client::TwoOperationGroupGroup2Client;
 use crate::models::ClientType;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct TwoOperationGroupClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupClientOptions {
     pub client_options: ClientOptions,
 }

@@ -5,8 +5,9 @@
 
 use azure_core::base64;
 use serde::{Deserialize, Serialize};
+use typespec_client_core::fmt::SafeDebug;
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct PngImageAsJson {
     #[serde(

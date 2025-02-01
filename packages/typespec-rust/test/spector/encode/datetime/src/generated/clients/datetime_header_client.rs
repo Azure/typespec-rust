@@ -7,6 +7,7 @@ use azure_core::{
     date, ClientMethodOptions, Context, Method, Pipeline, Request, Response, Result, Url,
 };
 use time::OffsetDateTime;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct DatetimeHeaderClient {
     pub(crate) endpoint: Url,
@@ -97,27 +98,27 @@ impl DatetimeHeaderClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeHeaderClientDefaultOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeHeaderClientRfc3339Options<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeHeaderClientRfc7231Options<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeHeaderClientUnixTimestampOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeHeaderClientUnixTimestampArrayOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

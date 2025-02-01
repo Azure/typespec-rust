@@ -6,13 +6,14 @@
 use crate::generated::clients::collection_format_header_client::CollectionFormatHeaderClient;
 use crate::generated::clients::collection_format_query_client::CollectionFormatQueryClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct CollectionFormatClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatClientOptions {
     pub client_options: ClientOptions,
 }

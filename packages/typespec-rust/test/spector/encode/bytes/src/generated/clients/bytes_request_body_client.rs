@@ -7,6 +7,7 @@ use azure_core::{
     Bytes, ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response,
     Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BytesRequestBodyClient {
     pub(crate) endpoint: Url,
@@ -95,27 +96,27 @@ impl BytesRequestBodyClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesRequestBodyClientBase64Options<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesRequestBodyClientBase64UrlOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesRequestBodyClientCustomContentTypeOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesRequestBodyClientDefaultOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesRequestBodyClientOctetStreamOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

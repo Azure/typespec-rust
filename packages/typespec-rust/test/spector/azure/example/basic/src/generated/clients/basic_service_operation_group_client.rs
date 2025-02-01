@@ -7,6 +7,7 @@ use crate::models::{ActionRequest, ActionResponse};
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BasicServiceOperationGroupClient {
     pub(crate) api_version: String,
@@ -44,7 +45,7 @@ impl BasicServiceOperationGroupClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BasicServiceOperationGroupClientBasicOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

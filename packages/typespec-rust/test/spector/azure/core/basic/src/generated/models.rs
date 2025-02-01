@@ -5,9 +5,10 @@
 
 use azure_core::Etag;
 use serde::{Deserialize, Serialize};
+use typespec_client_core::fmt::SafeDebug;
 
 /// Paged collection of User items
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct PagedUser {
     /// The link to the next page of items
@@ -20,7 +21,7 @@ pub struct PagedUser {
 }
 
 /// Details about a user.
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct User {
     /// The entity tag for this resource.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -39,7 +40,7 @@ pub struct User {
     pub orders: Option<Vec<UserOrder>>,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct UserList {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -47,7 +48,7 @@ pub struct UserList {
 }
 
 /// UserOrder for testing list with expand.
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct UserOrder {
     /// The user's order detail
     #[serde(skip_serializing_if = "Option::is_none")]

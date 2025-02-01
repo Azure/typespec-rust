@@ -7,6 +7,7 @@ use crate::models::DaysOfWeekExtensibleEnum;
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct ExtensibleStringClient {
     pub(crate) endpoint: Url,
@@ -76,22 +77,22 @@ impl ExtensibleStringClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleStringClientGetKnownValueOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleStringClientGetUnknownValueOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleStringClientPutKnownValueOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleStringClientPutUnknownValueOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

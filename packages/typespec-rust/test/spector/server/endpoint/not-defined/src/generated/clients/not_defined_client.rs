@@ -6,13 +6,14 @@
 use azure_core::{
     ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct NotDefinedClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct NotDefinedClientOptions {
     pub client_options: ClientOptions,
 }
@@ -55,7 +56,7 @@ impl NotDefinedClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct NotDefinedClientValidOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

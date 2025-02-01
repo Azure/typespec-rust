@@ -6,13 +6,14 @@
 use azure_core::{
     ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct SingleClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SingleClientOptions {
     pub client_options: ClientOptions,
 }
@@ -55,7 +56,7 @@ impl SingleClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SingleClientMyOpOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -5,8 +5,9 @@
 
 use azure_core::base64;
 use serde::{Deserialize, Serialize};
+use typespec_client_core::fmt::SafeDebug;
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct Base64BytesProperty {
     #[serde(
         default,
@@ -17,13 +18,13 @@ pub struct Base64BytesProperty {
     pub value: Option<Vec<u8>>,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct Base64urlArrayBytesProperty {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<Vec<Vec<u8>>>,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct Base64urlBytesProperty {
     #[serde(
         default,
@@ -34,7 +35,7 @@ pub struct Base64urlBytesProperty {
     pub value: Option<Vec<u8>>,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct DefaultBytesProperty {
     #[serde(
         default,

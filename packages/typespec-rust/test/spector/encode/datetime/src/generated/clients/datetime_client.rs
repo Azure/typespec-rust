@@ -8,13 +8,14 @@ use crate::generated::clients::datetime_property_client::DatetimePropertyClient;
 use crate::generated::clients::datetime_query_client::DatetimeQueryClient;
 use crate::generated::clients::datetime_response_header_client::DatetimeResponseHeaderClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct DatetimeClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeClientOptions {
     pub client_options: ClientOptions,
 }

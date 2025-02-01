@@ -15,13 +15,14 @@ use crate::generated::clients::dictionary_recursive_model_value_client::Dictiona
 use crate::generated::clients::dictionary_string_value_client::DictionaryStringValueClient;
 use crate::generated::clients::dictionary_unknown_value_client::DictionaryUnknownValueClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct DictionaryClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryClientOptions {
     pub client_options: ClientOptions,
 }

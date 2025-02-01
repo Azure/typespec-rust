@@ -7,13 +7,14 @@ use crate::generated::clients::duration_header_client::DurationHeaderClient;
 use crate::generated::clients::duration_property_client::DurationPropertyClient;
 use crate::generated::clients::duration_query_client::DurationQueryClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct DurationClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DurationClientOptions {
     pub client_options: ClientOptions,
 }

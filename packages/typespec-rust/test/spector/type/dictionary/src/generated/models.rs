@@ -5,9 +5,10 @@
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use typespec_client_core::fmt::SafeDebug;
 
 /// Dictionary inner model
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct InnerModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub children: Option<HashMap<String, InnerModel>>,

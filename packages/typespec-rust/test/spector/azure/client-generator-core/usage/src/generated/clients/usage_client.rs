@@ -5,13 +5,14 @@
 
 use crate::generated::clients::usage_model_in_operation_client::UsageModelInOperationClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct UsageClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct UsageClientOptions {
     pub client_options: ClientOptions,
 }

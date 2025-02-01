@@ -7,6 +7,7 @@ use crate::models::ModelWithRenamedArrays;
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct XmlModelWithRenamedArraysValueClient {
     pub(crate) endpoint: Url,
@@ -48,12 +49,12 @@ impl XmlModelWithRenamedArraysValueClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithRenamedArraysValueClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithRenamedArraysValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

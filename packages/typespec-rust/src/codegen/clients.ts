@@ -60,11 +60,12 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
     if (client.constructable) {
       // if client options contains only one field (the azure_core::ClientOptions type)
       // then we can simply derive Default and elide the manual implementation.
-      let deriveDefault = ', Default';
+      let deriveDefault = 'Default, ';
       if (client.constructable.options.type.fields.length > 1) {
         deriveDefault = '';
       }
-      body += `#[derive(Clone, Debug${deriveDefault})]\n`;
+      use.addType('typespec_client_core::fmt', 'SafeDebug');
+      body += `#[derive(Clone, ${deriveDefault}SafeDebug)]\n`;
       body += `pub struct ${client.constructable.options.type.name}`;
       if (client.constructable.options.type.fields.length > 0) {
         body += ' {\n';
@@ -242,7 +243,8 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         continue;
       }
 
-      body += '#[derive(Clone, Debug, Default)]\n';
+      use.addType('typespec_client_core::fmt', 'SafeDebug');
+      body += '#[derive(Clone, Default, SafeDebug)]\n';
       body += `${helpers.emitPub(method.pub)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
       for (const field of method.options.type.fields) {
         use.addForType(field.type);

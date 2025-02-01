@@ -7,6 +7,7 @@ use crate::models::DaysOfWeekEnum;
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct FixedStringClient {
     pub(crate) endpoint: Url,
@@ -66,17 +67,17 @@ impl FixedStringClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct FixedStringClientGetKnownValueOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct FixedStringClientPutKnownValueOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct FixedStringClientPutUnknownValueOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

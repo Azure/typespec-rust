@@ -9,13 +9,14 @@ use azure_core::{
     Policy, Request, Response, Result, Url,
 };
 use std::sync::Arc;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct UnionClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct UnionClientOptions {
     pub client_options: ClientOptions,
 }
@@ -77,12 +78,12 @@ impl UnionClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct UnionClientValidKeyOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct UnionClientValidTokenOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -8,13 +8,14 @@ use azure_core::{
     ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request, RequestContent,
     Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct EmptyClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientOptions {
     pub client_options: ClientOptions,
 }
@@ -86,17 +87,17 @@ impl EmptyClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientGetEmptyOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientPostRoundTripEmptyOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientPutEmptyOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

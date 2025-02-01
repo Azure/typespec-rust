@@ -18,13 +18,14 @@ use crate::generated::clients::array_nullable_string_value_client::ArrayNullable
 use crate::generated::clients::array_string_value_client::ArrayStringValueClient;
 use crate::generated::clients::array_unknown_value_client::ArrayUnknownValueClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct ArrayClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ArrayClientOptions {
     pub client_options: ClientOptions,
 }

@@ -8,6 +8,7 @@ use crate::models::BodyParameter;
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct SpreadModelClient {
     pub(crate) endpoint: Url,
@@ -118,27 +119,27 @@ impl SpreadModelClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadAsRequestBodyOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadCompositeRequestOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadCompositeRequestMixOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadCompositeRequestOnlyWithBodyOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadCompositeRequestWithoutBodyOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

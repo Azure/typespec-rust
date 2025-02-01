@@ -5,13 +5,14 @@
 
 use crate::generated::clients::extensible_string_client::ExtensibleStringClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct ExtensibleClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleClientOptions {
     pub client_options: ClientOptions,
 }

@@ -13,6 +13,7 @@ use azure_core::{
 };
 use std::collections::HashMap;
 use time::OffsetDateTime;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BlobPageBlobClient {
     pub(crate) blob: String,
@@ -643,7 +644,7 @@ impl BlobPageBlobClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientClearPagesOptions<'a> {
     pub client_request_id: Option<String>,
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
@@ -664,7 +665,7 @@ pub struct BlobPageBlobClientClearPagesOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientCopyIncrementalOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_match: Option<String>,
@@ -676,7 +677,7 @@ pub struct BlobPageBlobClientCopyIncrementalOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientCreateOptions<'a> {
     pub blob_cache_control: Option<String>,
     pub blob_content_disposition: Option<String>,
@@ -706,7 +707,7 @@ pub struct BlobPageBlobClientCreateOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientResizeOptions<'a> {
     pub client_request_id: Option<String>,
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
@@ -723,7 +724,7 @@ pub struct BlobPageBlobClientResizeOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientUpdateSequenceNumberOptions<'a> {
     pub blob_sequence_number: Option<i64>,
     pub client_request_id: Option<String>,
@@ -737,7 +738,7 @@ pub struct BlobPageBlobClientUpdateSequenceNumberOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientUploadPagesOptions<'a> {
     pub client_request_id: Option<String>,
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
@@ -762,7 +763,7 @@ pub struct BlobPageBlobClientUploadPagesOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientUploadPagesFromUrlOptions<'a> {
     pub client_request_id: Option<String>,
     pub copy_source_authorization: Option<String>,

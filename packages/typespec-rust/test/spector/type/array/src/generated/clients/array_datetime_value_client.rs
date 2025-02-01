@@ -7,6 +7,7 @@ use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
 use time::OffsetDateTime;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct ArrayDatetimeValueClient {
     pub(crate) endpoint: Url,
@@ -48,12 +49,12 @@ impl ArrayDatetimeValueClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ArrayDatetimeValueClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ArrayDatetimeValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

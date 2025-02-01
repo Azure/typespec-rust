@@ -8,6 +8,7 @@ use azure_core::{
 };
 use serde_json::Value;
 use std::collections::HashMap;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct DictionaryUnknownValueClient {
     pub(crate) endpoint: Url,
@@ -49,12 +50,12 @@ impl DictionaryUnknownValueClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryUnknownValueClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryUnknownValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

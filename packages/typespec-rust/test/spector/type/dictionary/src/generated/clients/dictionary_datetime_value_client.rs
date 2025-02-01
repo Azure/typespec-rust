@@ -8,6 +8,7 @@ use azure_core::{
 };
 use std::collections::HashMap;
 use time::OffsetDateTime;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct DictionaryDatetimeValueClient {
     pub(crate) endpoint: Url,
@@ -49,12 +50,12 @@ impl DictionaryDatetimeValueClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryDatetimeValueClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryDatetimeValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

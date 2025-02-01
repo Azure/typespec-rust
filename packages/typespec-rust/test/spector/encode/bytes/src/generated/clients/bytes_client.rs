@@ -9,13 +9,14 @@ use crate::generated::clients::bytes_query_client::BytesQueryClient;
 use crate::generated::clients::bytes_request_body_client::BytesRequestBodyClient;
 use crate::generated::clients::bytes_response_body_client::BytesResponseBodyClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BytesClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BytesClientOptions {
     pub client_options: ClientOptions,
 }

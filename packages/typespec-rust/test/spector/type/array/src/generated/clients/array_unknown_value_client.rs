@@ -7,6 +7,7 @@ use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
 use serde_json::Value;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct ArrayUnknownValueClient {
     pub(crate) endpoint: Url,
@@ -48,12 +49,12 @@ impl ArrayUnknownValueClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ArrayUnknownValueClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ArrayUnknownValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

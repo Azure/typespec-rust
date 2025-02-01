@@ -6,13 +6,14 @@
 use crate::generated::clients::content_negotiation_different_body_client::ContentNegotiationDifferentBodyClient;
 use crate::generated::clients::content_negotiation_same_body_client::ContentNegotiationSameBodyClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct ContentNegotiationClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ContentNegotiationClientOptions {
     pub client_options: ClientOptions,
 }

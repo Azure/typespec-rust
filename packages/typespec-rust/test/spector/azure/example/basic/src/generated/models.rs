@@ -6,8 +6,9 @@
 use crate::models::Enum;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use typespec_client_core::fmt::SafeDebug;
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct ActionRequest {
     #[serde(rename = "arrayProperty", skip_serializing_if = "Option::is_none")]
     pub array_property: Option<Vec<String>>,
@@ -22,7 +23,7 @@ pub struct ActionRequest {
     pub string_property: Option<String>,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct ActionResponse {
     #[serde(rename = "arrayProperty", skip_serializing_if = "Option::is_none")]
@@ -38,7 +39,7 @@ pub struct ActionResponse {
     pub string_property: Option<String>,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct Model {
     #[serde(rename = "enumProperty", skip_serializing_if = "Option::is_none")]
     pub enum_property: Option<Enum>,

@@ -6,13 +6,14 @@
 use crate::generated::clients::basic_explicit_body_client::BasicExplicitBodyClient;
 use crate::generated::clients::basic_implicit_body_client::BasicImplicitBodyClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BasicClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientOptions {
     pub client_options: ClientOptions,
 }

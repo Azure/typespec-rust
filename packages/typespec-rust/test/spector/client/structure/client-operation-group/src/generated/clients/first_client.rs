@@ -9,13 +9,14 @@ use crate::models::ClientType;
 use azure_core::{
     ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct FirstClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct FirstClientOptions {
     pub client_options: ClientOptions,
 }
@@ -75,7 +76,7 @@ impl FirstClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct FirstClientOneOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

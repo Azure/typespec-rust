@@ -198,7 +198,7 @@ export class indentation {
  * @returns a derive macro
  */
 export function annotationDerive(...extra: Array<string>): string {
-  const derive = new Array<string>('Clone', 'Debug', 'Deserialize', 'Serialize');
+  const derive = new Array<string>('Clone', 'Deserialize', 'SafeDebug', 'Serialize');
   // remove any empty values
   extra = extra.filter(entry => entry.trim() !== '');
   derive.push(...extra);

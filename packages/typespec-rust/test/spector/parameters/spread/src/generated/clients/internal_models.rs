@@ -5,24 +5,25 @@
 
 use azure_core::{RequestContent, Result};
 use serde::{Deserialize, Serialize};
+use typespec_client_core::fmt::SafeDebug;
 use typespec_client_core::json::to_json;
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct SpreadAsRequestBodyRequest {
     pub name: String,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct SpreadAsRequestParameterRequest {
     pub name: String,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct SpreadCompositeRequestMixRequest {
     pub prop: String,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct SpreadParameterWithInnerAliasRequest {
     /// age of the Thing
     pub age: i32,
@@ -31,12 +32,12 @@ pub struct SpreadParameterWithInnerAliasRequest {
     pub name: String,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct SpreadParameterWithInnerModelRequest {
     pub name: String,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct SpreadWithMultipleParametersRequest {
     /// optional int
     #[serde(rename = "optionalInt", skip_serializing_if = "Option::is_none")]

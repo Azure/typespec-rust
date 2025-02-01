@@ -6,6 +6,7 @@
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct ArrayNullableStringValueClient {
     pub(crate) endpoint: Url,
@@ -47,12 +48,12 @@ impl ArrayNullableStringValueClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableStringValueClientGetOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableStringValueClientPutOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

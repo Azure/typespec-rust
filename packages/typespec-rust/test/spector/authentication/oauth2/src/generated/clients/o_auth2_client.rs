@@ -9,13 +9,14 @@ use azure_core::{
     Policy, Request, Response, Result, Url,
 };
 use std::sync::Arc;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct OAuth2Client {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct OAuth2ClientOptions {
     pub client_options: ClientOptions,
 }
@@ -78,12 +79,12 @@ impl OAuth2Client {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct OAuth2ClientInvalidOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct OAuth2ClientValidOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

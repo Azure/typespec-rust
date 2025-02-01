@@ -7,6 +7,7 @@ use crate::models::{InputModel, OutputModel, RoundTripModel};
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct UsageModelInOperationClient {
     pub(crate) endpoint: Url,
@@ -90,17 +91,17 @@ impl UsageModelInOperationClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct UsageModelInOperationClientInputToInputOutputOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct UsageModelInOperationClientModelInReadOnlyPropertyOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct UsageModelInOperationClientOutputToInputOutputOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

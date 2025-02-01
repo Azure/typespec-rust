@@ -7,6 +7,7 @@ use crate::generated::clients::common_properties_managed_identity_client::Common
 use azure_core::credentials::TokenCredential;
 use azure_core::{BearerTokenCredentialPolicy, ClientOptions, Pipeline, Policy, Result, Url};
 use std::sync::Arc;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct CommonPropertiesClient {
     api_version: String,
@@ -15,7 +16,7 @@ pub struct CommonPropertiesClient {
     subscription_id: String,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, SafeDebug)]
 pub struct CommonPropertiesClientOptions {
     pub api_version: String,
     pub client_options: ClientOptions,

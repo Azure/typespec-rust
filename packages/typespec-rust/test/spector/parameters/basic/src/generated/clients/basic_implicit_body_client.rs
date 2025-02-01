@@ -7,6 +7,7 @@ use super::internal_models::SimpleRequest;
 use azure_core::{
     ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BasicImplicitBodyClient {
     pub(crate) endpoint: Url,
@@ -39,7 +40,7 @@ impl BasicImplicitBodyClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BasicImplicitBodyClientSimpleOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }

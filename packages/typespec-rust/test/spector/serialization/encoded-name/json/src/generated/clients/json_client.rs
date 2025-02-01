@@ -5,13 +5,14 @@
 
 use crate::generated::clients::json_property_client::JsonPropertyClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct JsonClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct JsonClientOptions {
     pub client_options: ClientOptions,
 }

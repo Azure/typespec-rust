@@ -12,6 +12,7 @@ use azure_core::{
 };
 use std::collections::HashMap;
 use time::OffsetDateTime;
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BlobBlockBlobClient {
     pub(crate) blob: String,
@@ -603,7 +604,7 @@ impl BlobBlockBlobClient {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlockBlobClientCommitBlockListOptions<'a> {
     pub blob_cache_control: Option<String>,
     pub blob_content_disposition: Option<String>,
@@ -634,7 +635,7 @@ pub struct BlobBlockBlobClientCommitBlockListOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlockBlobClientGetBlockListOptions<'a> {
     pub client_request_id: Option<String>,
     pub if_tags: Option<String>,
@@ -644,7 +645,7 @@ pub struct BlobBlockBlobClientGetBlockListOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlockBlobClientPutBlobFromUrlOptions<'a> {
     pub blob_cache_control: Option<String>,
     pub blob_content_disposition: Option<String>,
@@ -680,7 +681,7 @@ pub struct BlobBlockBlobClientPutBlobFromUrlOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlockBlobClientStageBlockOptions<'a> {
     pub client_request_id: Option<String>,
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
@@ -696,7 +697,7 @@ pub struct BlobBlockBlobClientStageBlockOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlockBlobClientStageBlockFromUrlOptions<'a> {
     pub client_request_id: Option<String>,
     pub copy_source_authorization: Option<String>,
@@ -716,7 +717,7 @@ pub struct BlobBlockBlobClientStageBlockFromUrlOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlockBlobClientUploadOptions<'a> {
     pub blob_cache_control: Option<String>,
     pub blob_content_disposition: Option<String>,

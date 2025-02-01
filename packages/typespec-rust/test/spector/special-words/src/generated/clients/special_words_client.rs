@@ -8,13 +8,14 @@ use crate::generated::clients::special_words_models_client::SpecialWordsModelsCl
 use crate::generated::clients::special_words_operations_client::SpecialWordsOperationsClient;
 use crate::generated::clients::special_words_parameters_client::SpecialWordsParametersClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct SpecialWordsClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsClientOptions {
     pub client_options: ClientOptions,
 }

@@ -5,6 +5,7 @@
 
 use crate::generated::clients::basic_service_operation_group_client::BasicServiceOperationGroupClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
+use typespec_client_core::fmt::SafeDebug;
 
 pub struct BasicClient {
     api_version: String,
@@ -12,7 +13,7 @@ pub struct BasicClient {
     pipeline: Pipeline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, SafeDebug)]
 pub struct BasicClientOptions {
     pub api_version: String,
     pub client_options: ClientOptions,
