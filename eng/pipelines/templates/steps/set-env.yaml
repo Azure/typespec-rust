@@ -15,6 +15,7 @@ steps:
     displayName: Cache pnpm store
 
   - script: |
+      npm i -g corepack@latest
       corepack enable
       corepack prepare pnpm@latest-9 --activate
     displayName: Install pnpm

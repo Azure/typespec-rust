@@ -53,8 +53,9 @@
     "@azure-tools/typespec-azure-core": "0.50.0",
     "@azure-tools/typespec-azure-resource-manager": "0.50.0",
     "@azure-tools/typespec-client-generator-core": "0.50.0",
-    "@types/js-yaml": "~4.0.9",
-    "@types/node": "^20.14.10",
+    "@eslint/js": "^9.19.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.17.16",
     "@typespec/compiler": "0.64.0",
     "@typespec/http": "0.64.0",
     "@typespec/http-specs": "0.1.0-alpha.7",
@@ -63,12 +64,12 @@
     "@typespec/spector": "0.1.0-alpha.6",
     "@typespec/versioning": "0.64.0",
     "@typespec/xml": "0.64.0",
-    "@vitest/coverage-v8": "^1.6.0",
-    "@vitest/ui": "^1.6.0",
+    "@vitest/coverage-v8": "^1.6.1",
+    "@vitest/ui": "^1.6.1",
     "c8": "^9.1.0",
-    "eslint": "~9.16.0",
-    "typescript": "~5.7.2",
-    "typescript-eslint": "~8.17.0"
+    "eslint": "^9.19.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.23.0"
   },
   "peerDependencies": {
     "@azure-tools/typespec-client-generator-core": ">=0.50.0 <1.0.0",
@@ -77,9 +78,9 @@
   "dependencies": {
     "@azure-tools/codegen": "~2.9.2",
     "@azure-tools/linq": "~3.1.263",
-    "js-yaml": "~4.1.0",
+    "js-yaml": "^4.1.0",
     "query-string": "9.1.1",
     "source-map-support": "0.5.21",
-    "vitest": "^1.6.0"
+    "vitest": "^1.6.1"
   }
 }
