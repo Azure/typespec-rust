@@ -1,5 +1,5 @@
 parameters:
-  nodeVersion: "22.x"
+  nodeVersion: "20.x"
   pnpmStorePath: $(Pipeline.Workspace)/.pnpm-store
 
 steps:
