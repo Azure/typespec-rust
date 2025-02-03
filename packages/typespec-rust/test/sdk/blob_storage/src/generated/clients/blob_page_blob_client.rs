@@ -235,6 +235,7 @@ impl BlobPageBlobClient {
                 blob_sequence_number.to_string(),
             );
         }
+        request.insert_header("x-ms-blob-type", "PageBlob");
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
