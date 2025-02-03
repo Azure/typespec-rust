@@ -15,6 +15,7 @@ describe('typespec-rust: tcgcadapter', () => {
       strictEqual(helpers.fixUpEnumValueName('foo_bar'), 'FooBar');
       strictEqual(helpers.fixUpEnumValueName('V2022_12_01_preview'), 'V2022_12_01Preview');
       strictEqual(helpers.fixUpEnumValueName('V7.6_preview.1'), 'V7Dot6Preview1');
+      strictEqual(helpers.fixUpEnumValueName('RSA_AES_KEY_WRAP_256'), 'RsaAesKeyWrap256');
     });
 
     it('sortClientParameters', () => {

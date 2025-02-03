@@ -37,9 +37,13 @@ export function fixUpEnumValueName(name: string): string {
   if (parts.length > 1) {
     name = '';
     for (let i = 0; i < parts.length; ++i) {
-      parts[i] = codegen.capitalize(parts[i]);
+      if (parts[i].match(/^[a-zA-Z]{2,}$/)) {
+        parts[i] = codegen.pascalCase(parts[i]);
+      } else {
+        parts[i] = codegen.capitalize(parts[i]);
+      }
       name += parts[i];
-      if (i + 1 < parts.length && parts[i + 1].match(/^\d/)) {
+      if (i + 1 < parts.length && parts[i].match(/\d+$/) && parts[i + 1].match(/^\d/)) {
         name += '_';
       }
     }

@@ -1,5 +1,11 @@
 # Release History
 
+## 0.8.1 (2025-02-03)
+
+### Bug Fixes
+
+* Fixed bad codegen for certain cases of enum names.
+
 ## 0.8.0 (2025-02-03)
 
 ### Breaking Changes
