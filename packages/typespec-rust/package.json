@@ -53,6 +53,7 @@
     "@azure-tools/typespec-azure-core": "0.50.0",
     "@azure-tools/typespec-azure-resource-manager": "0.50.0",
     "@azure-tools/typespec-client-generator-core": "0.50.0",
+    "@eslint/js": "^9.19.0",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.17.16",
     "@typespec/compiler": "0.64.0",

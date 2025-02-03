@@ -42,6 +42,9 @@ importers:
       '@azure-tools/typespec-client-generator-core':
         specifier: 0.50.0
         version: 0.50.0(@azure-tools/typespec-azure-core@0.50.0(@typespec/compiler@0.64.0)(@typespec/http@0.64.0(@typespec/compiler@0.64.0))(@typespec/rest@0.64.0(@typespec/compiler@0.64.0)(@typespec/http@0.64.0(@typespec/compiler@0.64.0))))(@typespec/compiler@0.64.0)(@typespec/http@0.64.0(@typespec/compiler@0.64.0))(@typespec/openapi@0.64.0(@typespec/compiler@0.64.0)(@typespec/http@0.64.0(@typespec/compiler@0.64.0)))(@typespec/rest@0.64.0(@typespec/compiler@0.64.0)(@typespec/http@0.64.0(@typespec/compiler@0.64.0)))(@typespec/versioning@0.64.0(@typespec/compiler@0.64.0))
+      '@eslint/js':
+        specifier: ^9.19.0
+        version: 9.19.0
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
