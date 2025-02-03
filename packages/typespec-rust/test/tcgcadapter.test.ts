@@ -16,6 +16,11 @@ describe('typespec-rust: tcgcadapter', () => {
       strictEqual(helpers.fixUpEnumValueName('V2022_12_01_preview'), 'V2022_12_01Preview');
       strictEqual(helpers.fixUpEnumValueName('V7.6_preview.1'), 'V7Dot6Preview1');
       strictEqual(helpers.fixUpEnumValueName('RSA_AES_KEY_WRAP_256'), 'RsaAesKeyWrap256');
+      strictEqual(helpers.fixUpEnumValueName('CKM_AES_KEY_WRAP'), 'CkmAesKeyWrap');
+      strictEqual(helpers.fixUpEnumValueName('RSA1_5'), 'RSA1_5');
+      strictEqual(helpers.fixUpEnumValueName('RSA-OAEP'), 'RsaOaep');
+      strictEqual(helpers.fixUpEnumValueName('RSA-OAEP-256'), 'RsaOaep256');
+      strictEqual(helpers.fixUpEnumValueName('P-256K'), 'P256K');
     });
 
     it('sortClientParameters', () => {

@@ -33,7 +33,7 @@ export function fixUpEnumValueName(name: string): string {
 
   // if we have a name like V2022_12_01_preview, we want to
   // turn this into V2022_12_01Preview to make the linter happy
-  const parts = name.split('_');
+  const parts = name.split(/(?:_|-)/);
   if (parts.length > 1) {
     name = '';
     for (let i = 0; i < parts.length; ++i) {
