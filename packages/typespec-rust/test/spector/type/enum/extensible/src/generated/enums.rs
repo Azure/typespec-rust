@@ -7,29 +7,21 @@ use azure_core::{RequestContent, ResponseBody, Result};
 use typespec_client_core::{create_enum, create_extensible_enum, json::to_json};
 
 create_extensible_enum!(
-    #[doc = r#"/// Days of the week
-"#]
+    #[doc = r#"/// Days of the week"#]
     DaysOfWeekExtensibleEnum,
-    #[doc = r#"/// Friday.
-"#]
+    #[doc = r#"/// Friday."#]
     (Friday, "Friday"),
-    #[doc = r#"/// Monday.
-"#]
+    #[doc = r#"/// Monday."#]
     (Monday, "Monday"),
-    #[doc = r#"/// Saturday.
-"#]
+    #[doc = r#"/// Saturday."#]
     (Saturday, "Saturday"),
-    #[doc = r#"/// Sunday.
-"#]
+    #[doc = r#"/// Sunday."#]
     (Sunday, "Sunday"),
-    #[doc = r#"/// Thursday.
-"#]
+    #[doc = r#"/// Thursday."#]
     (Thursday, "Thursday"),
-    #[doc = r#"/// Tuesday.
-"#]
+    #[doc = r#"/// Tuesday."#]
     (Tuesday, "Tuesday"),
-    #[doc = r#"/// Wednesday.
-"#]
+    #[doc = r#"/// Wednesday."#]
     (Wednesday, "Wednesday")
 );
 
