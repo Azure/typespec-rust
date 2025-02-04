@@ -8,6 +8,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Array of boolean values
 pub struct ArrayBooleanValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -19,6 +20,10 @@ impl ArrayBooleanValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<ArrayBooleanValueClientGetOptions<'_>>,
@@ -32,6 +37,10 @@ impl ArrayBooleanValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<Vec<bool>>,
@@ -48,12 +57,16 @@ impl ArrayBooleanValueClient {
     }
 }
 
+/// Options to be passed to [`ArrayBooleanValueClient::get()`](crate::clients::ArrayBooleanValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayBooleanValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ArrayBooleanValueClient::put()`](crate::clients::ArrayBooleanValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayBooleanValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

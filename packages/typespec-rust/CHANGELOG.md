@@ -1,5 +1,11 @@
 # Release History
 
+## 0.8.2 (2025-02-04)
+
+### Other Changes
+
+* Added various missing doc comments.
+
 ## 0.8.1 (2025-02-03)
 
 ### Bug Fixes

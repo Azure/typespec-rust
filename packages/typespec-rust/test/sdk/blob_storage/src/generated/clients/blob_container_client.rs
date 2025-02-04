@@ -28,6 +28,10 @@ impl BlobContainerClient {
 
     /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
     /// or can be infinite
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn acquire_lease(
         &self,
         options: Option<BlobContainerClientAcquireLeaseOptions<'_>>,
@@ -68,6 +72,10 @@ impl BlobContainerClient {
 
     /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
     /// or can be infinite
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn break_lease(
         &self,
         options: Option<BlobContainerClientBreakLeaseOptions<'_>>,
@@ -105,6 +113,13 @@ impl BlobContainerClient {
 
     /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
     /// or can be infinite
+    ///
+    /// # Arguments
+    ///
+    /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
+    ///   lease ID must match.
+    /// * `proposed_lease_id` - Required. The proposed lease ID for the container.
+    /// * `options` - Optional parameters for the request.
     pub async fn change_lease(
         &self,
         lease_id: &str,
@@ -143,6 +158,10 @@ impl BlobContainerClient {
 
     /// Creates a new container under the specified account. If the container with the same name already exists, the operation
     /// fails.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn create(
         &self,
         options: Option<BlobContainerClientCreateOptions<'_>>,
@@ -185,6 +204,10 @@ impl BlobContainerClient {
 
     /// operation marks the specified container for deletion. The container and any blobs contained within it are later deleted
     /// during garbage collection
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn delete(
         &self,
         options: Option<BlobContainerClientDeleteOptions<'_>>,
@@ -219,6 +242,10 @@ impl BlobContainerClient {
 
     /// The Filter Blobs operation enables callers to list blobs in a container whose tags match a given search expression. Filter
     /// blobs searches within the given container.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn filter_blobs(
         &self,
         options: Option<BlobContainerClientFilterBlobsOptions<'_>>,
@@ -265,6 +292,10 @@ impl BlobContainerClient {
     }
 
     /// gets the permissions for the specified container. The permissions indicate whether container data may be accessed publicly.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_access_policy(
         &self,
         options: Option<BlobContainerClientGetAccessPolicyOptions<'_>>,
@@ -294,6 +325,10 @@ impl BlobContainerClient {
     }
 
     /// Returns the sku name and account kind
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_account_info(
         &self,
         options: Option<BlobContainerClientGetAccountInfoOptions<'_>>,
@@ -321,6 +356,10 @@ impl BlobContainerClient {
 
     /// returns all user-defined metadata and system properties for the specified container. The data returned does not include
     /// the container's list of blobs
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_properties(
         &self,
         options: Option<BlobContainerClientGetPropertiesOptions<'_>>,
@@ -349,6 +388,12 @@ impl BlobContainerClient {
 
     /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
     /// or can be infinite
+    ///
+    /// # Arguments
+    ///
+    /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
+    ///   lease ID must match.
+    /// * `options` - Optional parameters for the request.
     pub async fn release_lease(
         &self,
         lease_id: &str,
@@ -384,6 +429,11 @@ impl BlobContainerClient {
     }
 
     /// Renames an existing container.
+    ///
+    /// # Arguments
+    ///
+    /// * `source_container_name` - Required. Specifies the name of the container to rename.
+    /// * `options` - Optional parameters for the request.
     pub async fn rename(
         &self,
         source_container_name: &str,
@@ -419,6 +469,12 @@ impl BlobContainerClient {
 
     /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
     /// or can be infinite
+    ///
+    /// # Arguments
+    ///
+    /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
+    ///   lease ID must match.
+    /// * `options` - Optional parameters for the request.
     pub async fn renew_lease(
         &self,
         lease_id: &str,
@@ -454,6 +510,10 @@ impl BlobContainerClient {
     }
 
     /// Restores a previously-deleted container.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn restore(
         &self,
         options: Option<BlobContainerClientRestoreOptions<'_>>,
@@ -487,6 +547,11 @@ impl BlobContainerClient {
 
     /// sets the permissions for the specified container. The permissions indicate whether blobs in a container may be accessed
     /// publicly.
+    ///
+    /// # Arguments
+    ///
+    /// * `container_acl` - The access control list for the container.
+    /// * `options` - Optional parameters for the request.
     pub async fn set_access_policy(
         &self,
         container_acl: RequestContent<Vec<SignedIdentifier>>,
@@ -527,6 +592,10 @@ impl BlobContainerClient {
     }
 
     /// operation sets one or more user-defined name-value pairs for the specified container.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn set_metadata(
         &self,
         options: Option<BlobContainerClientSetMetadataOptions<'_>>,
@@ -564,6 +633,12 @@ impl BlobContainerClient {
     }
 
     /// The Batch operation allows multiple API calls to be embedded into a single HTTP request.
+    ///
+    /// # Arguments
+    ///
+    /// * `body` - The body of the request.
+    /// * `content_length` - The length of the request.
+    /// * `options` - Optional parameters for the request.
     pub async fn submit_batch(
         &self,
         body: RequestContent<Bytes>,
@@ -594,150 +669,345 @@ impl BlobContainerClient {
     }
 }
 
+/// Options to be passed to [`BlobContainerClient::acquire_lease()`](crate::clients::BlobContainerClient::acquire_lease())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientAcquireLeaseOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease
+    /// can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change.
     pub duration: Option<i32>,
+
+    /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
     pub if_modified_since: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
     pub if_unmodified_since: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// Optional. The proposed lease ID for the container.
     pub proposed_lease_id: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::break_lease()`](crate::clients::BlobContainerClient::break_lease())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientBreakLeaseOptions<'a> {
+    /// For a break operation, proposed duration the lease should continue before it is broken, in seconds, between 0 and 60.
+    /// This break period is only used if it is shorter than the time remaining on the lease. If longer, the time remaining on
+    /// the lease is used. A new lease will not be available before the break period has expired, but the lease may be held for
+    /// longer than the break period. If this header does not appear with a break operation, a fixed-duration lease breaks after
+    /// the remaining lease period elapses, and an infinite lease breaks immediately.
     pub break_period: Option<i32>,
+
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
     pub if_modified_since: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
     pub if_unmodified_since: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::change_lease()`](crate::clients::BlobContainerClient::change_lease())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientChangeLeaseOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
     pub if_modified_since: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
     pub if_unmodified_since: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::create()`](crate::clients::BlobContainerClient::create())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientCreateOptions<'a> {
+    /// The public access setting for the container.
     pub access: Option<PublicAccessType>,
+
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the default encryption scope to set on the container and use for all
+    /// future writes.
     pub default_encryption_scope: Option<String>,
+
+    /// The metadata headers.
     pub metadata: Option<HashMap<String, String>>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// If a blob has a lease and the lease is of infinite duration then the value of this header is set to true, otherwise it
+    /// is set to false.
     pub prevent_encryption_scope_override: Option<bool>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::delete()`](crate::clients::BlobContainerClient::delete())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientDeleteOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
     pub if_modified_since: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
     pub if_unmodified_since: Option<String>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::filter_blobs()`](crate::clients::BlobContainerClient::filter_blobs())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientFilterBlobsOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Include this parameter to specify one or more datasets to include in the response.
     pub include: Option<Vec<FilterBlobsIncludeItem>>,
+
+    /// A string value that identifies the portion of the list of containers to be returned with the next listing operation. The
+    /// operation returns the NextMarker value within the response body if the listing operation did not return all containers
+    /// remaining to be listed with the current page. The NextMarker value can be used as the value for the marker parameter in
+    /// a subsequent call to request the next page of list items. The marker value is opaque to the client.
     pub marker: Option<String>,
+
+    /// Specifies the maximum number of containers to return. If the request does not specify maxresults, or specifies a value
+    /// greater than 5000, the server will return up to 5000 items.
     pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
+
+    /// Filters the results to return only to return only blobs whose tags match the specified expression.
     pub where_param: Option<String>,
 }
 
+/// Options to be passed to [`BlobContainerClient::get_access_policy()`](crate::clients::BlobContainerClient::get_access_policy())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientGetAccessPolicyOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::get_account_info()`](crate::clients::BlobContainerClient::get_account_info())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientGetAccountInfoOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::get_properties()`](crate::clients::BlobContainerClient::get_properties())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientGetPropertiesOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::release_lease()`](crate::clients::BlobContainerClient::release_lease())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientReleaseLeaseOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
     pub if_modified_since: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
     pub if_unmodified_since: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::rename()`](crate::clients::BlobContainerClient::rename())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientRenameOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// A lease ID for the source path. If specified, the source path must have an active lease and the lease ID must match.
     pub source_lease_id: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::renew_lease()`](crate::clients::BlobContainerClient::renew_lease())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientRenewLeaseOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
     pub if_modified_since: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
     pub if_unmodified_since: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::restore()`](crate::clients::BlobContainerClient::restore())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientRestoreOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Optional. Version 2019-12-12 and later. Specifies the name of the deleted container to restore.
     pub deleted_container_name: Option<String>,
+
+    /// Optional. Version 2019-12-12 and later. Specifies the version of the deleted container to restore.
     pub deleted_container_version: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::set_access_policy()`](crate::clients::BlobContainerClient::set_access_policy())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientSetAccessPolicyOptions<'a> {
+    /// The public access setting for the container.
     pub access: Option<PublicAccessType>,
+
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
     pub if_modified_since: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
     pub if_unmodified_since: Option<String>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::set_metadata()`](crate::clients::BlobContainerClient::set_metadata())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientSetMetadataOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
     pub if_modified_since: Option<String>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// The metadata headers.
     pub metadata: Option<HashMap<String, String>>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::submit_batch()`](crate::clients::BlobContainerClient::submit_batch())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientSubmitBatchOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }

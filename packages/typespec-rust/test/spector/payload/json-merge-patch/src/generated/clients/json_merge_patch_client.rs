@@ -10,17 +10,25 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Test for merge-patch+json content-type
 pub struct JsonMergePatchClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`JsonMergePatchClient`](crate::JsonMergePatchClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl JsonMergePatchClient {
+    /// Creates a new JsonMergePatchClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<JsonMergePatchClientOptions>,
@@ -46,6 +54,10 @@ impl JsonMergePatchClient {
     }
 
     /// Test content-type: application/merge-patch+json with required body
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn create_resource(
         &self,
         body: RequestContent<Resource>,
@@ -63,6 +75,10 @@ impl JsonMergePatchClient {
     }
 
     /// Test content-type: application/merge-patch+json with optional body
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn update_optional_resource(
         &self,
         options: Option<JsonMergePatchClientUpdateOptionalResourceOptions<'_>>,
@@ -81,6 +97,10 @@ impl JsonMergePatchClient {
     }
 
     /// Test content-type: application/merge-patch+json with required body
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn update_resource(
         &self,
         body: RequestContent<ResourcePatch>,
@@ -98,18 +118,25 @@ impl JsonMergePatchClient {
     }
 }
 
+/// Options to be passed to [`JsonMergePatchClient::create_resource()`](crate::JsonMergePatchClient::create_resource())
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientCreateResourceOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`JsonMergePatchClient::update_optional_resource()`](crate::JsonMergePatchClient::update_optional_resource())
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientUpdateOptionalResourceOptions<'a> {
     pub body: Option<RequestContent<ResourcePatch>>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`JsonMergePatchClient::update_resource()`](crate::JsonMergePatchClient::update_resource())
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientUpdateResourceOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

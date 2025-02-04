@@ -23,6 +23,10 @@ impl DurationPropertyClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn default(
         &self,
         body: RequestContent<DefaultDurationProperty>,
@@ -39,6 +43,10 @@ impl DurationPropertyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn float64_seconds(
         &self,
         body: RequestContent<Float64SecondsDurationProperty>,
@@ -55,6 +63,10 @@ impl DurationPropertyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn float_seconds(
         &self,
         body: RequestContent<FloatSecondsDurationProperty>,
@@ -71,6 +83,10 @@ impl DurationPropertyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn float_seconds_array(
         &self,
         body: RequestContent<FloatSecondsDurationArrayProperty>,
@@ -87,6 +103,10 @@ impl DurationPropertyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn int32_seconds(
         &self,
         body: RequestContent<Int32SecondsDurationProperty>,
@@ -103,6 +123,10 @@ impl DurationPropertyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn iso8601(
         &self,
         body: RequestContent<ISO8601DurationProperty>,
@@ -120,32 +144,44 @@ impl DurationPropertyClient {
     }
 }
 
+/// Options to be passed to [`DurationPropertyClient::default()`](crate::clients::DurationPropertyClient::default())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationPropertyClientDefaultOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationPropertyClient::float64_seconds()`](crate::clients::DurationPropertyClient::float64_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationPropertyClientFloat64SecondsOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationPropertyClient::float_seconds()`](crate::clients::DurationPropertyClient::float_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationPropertyClientFloatSecondsOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationPropertyClient::float_seconds_array()`](crate::clients::DurationPropertyClient::float_seconds_array())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationPropertyClientFloatSecondsArrayOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationPropertyClient::int32_seconds()`](crate::clients::DurationPropertyClient::int32_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationPropertyClientInt32SecondsOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationPropertyClient::iso8601()`](crate::clients::DurationPropertyClient::iso8601())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationPropertyClientIso8601Options<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

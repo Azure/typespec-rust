@@ -7,17 +7,25 @@ use crate::generated::clients::json_property_client::JsonPropertyClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Projection
 pub struct JsonClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`JsonClient`](crate::JsonClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl JsonClient {
+    /// Creates a new JsonClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(endpoint: &str, options: Option<JsonClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;

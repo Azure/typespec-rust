@@ -27,6 +27,10 @@ impl BlobServiceClient {
     }
 
     /// The Filter Blobs operation enables callers to list blobs across all containers whose tags match a given search expression.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn filter_blobs(
         &self,
         options: Option<BlobServiceClientFilterBlobsOptions<'_>>,
@@ -71,6 +75,10 @@ impl BlobServiceClient {
     }
 
     /// Returns the sku name and account kind.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_account_info(
         &self,
         options: Option<BlobServiceClientGetAccountInfoOptions<'_>>,
@@ -98,6 +106,10 @@ impl BlobServiceClient {
 
     /// Retrieves properties of a storage account's Blob service, including properties for Storage Analytics and CORS (Cross-Origin
     /// Resource Sharing) rules.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_properties(
         &self,
         options: Option<BlobServiceClientGetPropertiesOptions<'_>>,
@@ -125,6 +137,10 @@ impl BlobServiceClient {
 
     /// Retrieves statistics related to replication for the Blob service. It is only available on the secondary location endpoint
     /// when read-access geo-redundant replication is enabled for the storage account.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_statistics(
         &self,
         options: Option<BlobServiceClientGetStatisticsOptions<'_>>,
@@ -151,6 +167,12 @@ impl BlobServiceClient {
     }
 
     /// Retrieves a user delegation key for the Blob service. This is only a valid operation when using bearer token authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `start` - The date-time the key is active.
+    /// * `expiry` - The date-time the key expires.
+    /// * `options` - Optional parameters for the request.
     pub async fn get_user_delegation_key(
         &self,
         start: &str,
@@ -186,6 +208,10 @@ impl BlobServiceClient {
 
     /// Sets properties for a storage account's Blob service endpoint, including properties for Storage Analytics and CORS (Cross-Origin
     /// Resource Sharing) rules
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn set_properties(
         &self,
         options: Option<BlobServiceClientSetPropertiesOptions<'_>>,
@@ -223,6 +249,12 @@ impl BlobServiceClient {
     }
 
     /// The Batch operation allows multiple API calls to be embedded into a single HTTP request.
+    ///
+    /// # Arguments
+    ///
+    /// * `content_length` - The length of the request.
+    /// * `body` - The body of the request.
+    /// * `options` - Optional parameters for the request.
     pub async fn submit_batch(
         &self,
         content_length: i64,
@@ -251,62 +283,137 @@ impl BlobServiceClient {
     }
 }
 
+/// Options to be passed to [`BlobServiceClient::filter_blobs()`](crate::clients::BlobServiceClient::filter_blobs())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientFilterBlobsOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Include this parameter to specify one or more datasets to include in the response.
     pub include: Option<Vec<FilterBlobsIncludeItem>>,
+
+    /// A string value that identifies the portion of the list of containers to be returned with the next listing operation. The
+    /// operation returns the NextMarker value within the response body if the listing operation did not return all containers
+    /// remaining to be listed with the current page. The NextMarker value can be used as the value for the marker parameter in
+    /// a subsequent call to request the next page of list items. The marker value is opaque to the client.
     pub marker: Option<String>,
+
+    /// Specifies the maximum number of containers to return. If the request does not specify maxresults, or specifies a value
+    /// greater than 5000, the server will return up to 5000 items.
     pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
+
+    /// Filters the results to return only to return only blobs whose tags match the specified expression.
     pub where_param: Option<String>,
 }
 
+/// Options to be passed to [`BlobServiceClient::get_account_info()`](crate::clients::BlobServiceClient::get_account_info())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientGetAccountInfoOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobServiceClient::get_properties()`](crate::clients::BlobServiceClient::get_properties())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientGetPropertiesOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobServiceClient::get_statistics()`](crate::clients::BlobServiceClient::get_statistics())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientGetStatisticsOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobServiceClient::get_user_delegation_key()`](crate::clients::BlobServiceClient::get_user_delegation_key())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientGetUserDelegationKeyOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobServiceClient::set_properties()`](crate::clients::BlobServiceClient::set_properties())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientSetPropertiesOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// The CORS properties.
     pub cors: Option<Vec<CorsRule>>,
+
+    /// The default service version.
     pub default_service_version: Option<String>,
+
+    /// The delete retention policy.
     pub delete_retention_policy: Option<RetentionPolicy>,
+
+    /// The hour metrics properties.
     pub hour_metrics: Option<Metrics>,
+
+    /// The logging properties.
     pub logging: Option<Logging>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The minute metrics properties.
     pub minute_metrics: Option<Metrics>,
+
+    /// The static website properties.
     pub static_website: Option<StaticWebsite>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobServiceClient::submit_batch()`](crate::clients::BlobServiceClient::submit_batch())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientSubmitBatchOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }

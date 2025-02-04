@@ -21,6 +21,10 @@ impl FixedStringClient {
     }
 
     /// getKnownValue
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_known_value(
         &self,
         options: Option<FixedStringClientGetKnownValueOptions<'_>>,
@@ -35,6 +39,11 @@ impl FixedStringClient {
     }
 
     /// putKnownValue
+    ///
+    /// # Arguments
+    ///
+    /// * `body` - _
+    /// * `options` - Optional parameters for the request.
     pub async fn put_known_value(
         &self,
         body: RequestContent<DaysOfWeekEnum>,
@@ -51,6 +60,11 @@ impl FixedStringClient {
     }
 
     /// putUnknownValue
+    ///
+    /// # Arguments
+    ///
+    /// * `body` - _
+    /// * `options` - Optional parameters for the request.
     pub async fn put_unknown_value(
         &self,
         body: RequestContent<DaysOfWeekEnum>,
@@ -67,17 +81,23 @@ impl FixedStringClient {
     }
 }
 
+/// Options to be passed to [`FixedStringClient::get_known_value()`](crate::clients::FixedStringClient::get_known_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FixedStringClientGetKnownValueOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`FixedStringClient::put_known_value()`](crate::clients::FixedStringClient::put_known_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FixedStringClientPutKnownValueOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`FixedStringClient::put_unknown_value()`](crate::clients::FixedStringClient::put_unknown_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FixedStringClientPutUnknownValueOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

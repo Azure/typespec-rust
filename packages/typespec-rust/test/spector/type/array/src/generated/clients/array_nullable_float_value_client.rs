@@ -8,6 +8,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Array of nullable float values
 pub struct ArrayNullableFloatValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -19,6 +20,10 @@ impl ArrayNullableFloatValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<ArrayNullableFloatValueClientGetOptions<'_>>,
@@ -32,6 +37,10 @@ impl ArrayNullableFloatValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<Vec<f32>>,
@@ -48,12 +57,16 @@ impl ArrayNullableFloatValueClient {
     }
 }
 
+/// Options to be passed to [`ArrayNullableFloatValueClient::get()`](crate::clients::ArrayNullableFloatValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableFloatValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ArrayNullableFloatValueClient::put()`](crate::clients::ArrayNullableFloatValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableFloatValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

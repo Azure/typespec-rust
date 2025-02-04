@@ -9,6 +9,7 @@ use azure_core::{
 use std::collections::HashMap;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Dictionary of boolean values
 pub struct DictionaryBooleanValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl DictionaryBooleanValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<DictionaryBooleanValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl DictionaryBooleanValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, bool>>,
@@ -49,12 +58,16 @@ impl DictionaryBooleanValueClient {
     }
 }
 
+/// Options to be passed to [`DictionaryBooleanValueClient::get()`](crate::clients::DictionaryBooleanValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryBooleanValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DictionaryBooleanValueClient::put()`](crate::clients::DictionaryBooleanValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryBooleanValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

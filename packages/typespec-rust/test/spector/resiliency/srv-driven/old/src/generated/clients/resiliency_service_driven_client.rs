@@ -8,11 +8,13 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Test that we can grow up a service spec and service deployment into a multi-versioned service with full client support.
 pub struct ResiliencyServiceDrivenClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`ResiliencyServiceDrivenClient`](crate::ResiliencyServiceDrivenClient)
 #[derive(Clone, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientOptions {
     pub api_version: String,
@@ -20,6 +22,15 @@ pub struct ResiliencyServiceDrivenClientOptions {
 }
 
 impl ResiliencyServiceDrivenClient {
+    /// Creates a new ResiliencyServiceDrivenClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `service_deployment_version` - Pass in either 'v1' or 'v2'. This represents a version of the service deployment in history.
+    ///   'v1' is for the deployment when the service had only one api version. 'v2' is for the deployment when the service had
+    ///   api-versions 'v1' and 'v2'.
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         service_deployment_version: String,
@@ -50,6 +61,10 @@ impl ResiliencyServiceDrivenClient {
     }
 
     /// Test that currently accepts no parameters, will be updated in next spec to accept a new optional parameter as well
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn from_none(
         &self,
         options: Option<ResiliencyServiceDrivenClientFromNoneOptions<'_>>,
@@ -64,6 +79,10 @@ impl ResiliencyServiceDrivenClient {
 
     /// Test that currently accepts one optional parameter, will be updated in next spec to accept a new optional parameter as
     /// well
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn from_one_optional(
         &self,
         options: Option<ResiliencyServiceDrivenClientFromOneOptionalOptions<'_>>,
@@ -81,6 +100,11 @@ impl ResiliencyServiceDrivenClient {
 
     /// Test that currently accepts one required parameter, will be updated in next spec to accept a new optional parameter as
     /// well
+    ///
+    /// # Arguments
+    ///
+    /// * `parameter` - I am a required parameter
+    /// * `options` - Optional parameters for the request.
     pub async fn from_one_required(
         &self,
         parameter: &str,
@@ -105,18 +129,26 @@ impl Default for ResiliencyServiceDrivenClientOptions {
     }
 }
 
+/// Options to be passed to [`ResiliencyServiceDrivenClient::from_none()`](crate::ResiliencyServiceDrivenClient::from_none())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientFromNoneOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ResiliencyServiceDrivenClient::from_one_optional()`](crate::ResiliencyServiceDrivenClient::from_one_optional())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientFromOneOptionalOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// I am an optional parameter
     pub parameter: Option<String>,
 }
 
+/// Options to be passed to [`ResiliencyServiceDrivenClient::from_one_required()`](crate::ResiliencyServiceDrivenClient::from_one_required())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientFromOneRequiredOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -17,17 +17,25 @@ use crate::generated::clients::dictionary_unknown_value_client::DictionaryUnknow
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Illustrates various of dictionaries.
 pub struct DictionaryClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`DictionaryClient`](crate::DictionaryClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl DictionaryClient {
+    /// Creates a new DictionaryClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<DictionaryClientOptions>,

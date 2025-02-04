@@ -6,17 +6,37 @@
 use typespec_client_core::{create_enum, create_extensible_enum};
 
 create_extensible_enum!(
+    #[doc = r#"/// The kind of entity that created the resource.
+"#]
     CreatedByType,
+    #[doc = r#"/// The entity was created by an application.
+"#]
     (Application, "Application"),
+    #[doc = r#"/// The entity was created by a key.
+"#]
     (Key, "Key"),
+    #[doc = r#"/// The entity was created by a managed identity.
+"#]
     (ManagedIdentity, "ManagedIdentity"),
+    #[doc = r#"/// The entity was created by a user.
+"#]
     (User, "User")
 );
 
 create_extensible_enum!(
+    #[doc = r#"/// Type of managed service identity (where both SystemAssigned and UserAssigned types are allowed).
+"#]
     ManagedServiceIdentityType,
+    #[doc = r#"/// No managed identity.
+"#]
     (None, "None"),
+    #[doc = r#"/// System assigned managed identity.
+"#]
     (SystemAssigned, "SystemAssigned"),
+    #[doc = r#"/// System and user assigned managed identity.
+"#]
     (SystemAssignedUserAssigned, "SystemAssigned,UserAssigned"),
+    #[doc = r#"/// User assigned managed identity.
+"#]
     (UserAssigned, "UserAssigned")
 );

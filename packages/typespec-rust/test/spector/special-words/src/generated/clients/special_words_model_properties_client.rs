@@ -9,6 +9,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Verify model names
 pub struct SpecialWordsModelPropertiesClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl SpecialWordsModelPropertiesClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn same_as_model(
         &self,
         body: RequestContent<SameAsModel>,
@@ -36,7 +41,9 @@ impl SpecialWordsModelPropertiesClient {
     }
 }
 
+/// Options to be passed to [`SpecialWordsModelPropertiesClient::same_as_model()`](crate::clients::SpecialWordsModelPropertiesClient::same_as_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelPropertiesClientSameAsModelOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

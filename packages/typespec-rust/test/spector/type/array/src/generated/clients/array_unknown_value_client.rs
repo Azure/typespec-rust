@@ -9,6 +9,7 @@ use azure_core::{
 use serde_json::Value;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Array of unknown values
 pub struct ArrayUnknownValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl ArrayUnknownValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<ArrayUnknownValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl ArrayUnknownValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<Vec<Value>>,
@@ -49,12 +58,16 @@ impl ArrayUnknownValueClient {
     }
 }
 
+/// Options to be passed to [`ArrayUnknownValueClient::get()`](crate::clients::ArrayUnknownValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayUnknownValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ArrayUnknownValueClient::put()`](crate::clients::ArrayUnknownValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayUnknownValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

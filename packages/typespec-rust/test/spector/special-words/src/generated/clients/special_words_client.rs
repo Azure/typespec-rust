@@ -10,17 +10,61 @@ use crate::generated::clients::special_words_parameters_client::SpecialWordsPara
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Scenarios to verify that reserved words can be used in service and generators will handle it appropriately.
+/// Current list of special words
+/// ```txt
+/// and
+/// as
+/// assert
+/// async
+/// await
+/// break
+/// class
+/// constructor
+/// continue
+/// def
+/// del
+/// elif
+/// else
+/// except
+/// exec
+/// finally
+/// for
+/// from
+/// global
+/// if
+/// import
+/// in
+/// is
+/// lambda
+/// not
+/// or
+/// pass
+/// raise
+/// return
+/// try
+/// while
+/// with
+/// yield
+/// ```
 pub struct SpecialWordsClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`SpecialWordsClient`](crate::SpecialWordsClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl SpecialWordsClient {
+    /// Creates a new SpecialWordsClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<SpecialWordsClientOptions>,

@@ -12,17 +12,25 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Describe changing names of types in a client with `@clientName`
 pub struct NamingClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`NamingClient`](crate::NamingClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl NamingClient {
+    /// Creates a new NamingClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NamingClientOptions>,
@@ -47,6 +55,10 @@ impl NamingClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn client(
         &self,
         body: RequestContent<ClientNameModel>,
@@ -62,6 +74,10 @@ impl NamingClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn client_name(
         &self,
         options: Option<NamingClientClientNameOptions<'_>>,
@@ -74,6 +90,10 @@ impl NamingClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn compatible_with_encoded_name(
         &self,
         body: RequestContent<ClientNameAndJsonEncodedNameModel>,
@@ -105,6 +125,10 @@ impl NamingClient {
         }
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn language(
         &self,
         body: RequestContent<LanguageClientNameModel>,
@@ -120,6 +144,10 @@ impl NamingClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn parameter(
         &self,
         client_name: &str,
@@ -135,6 +163,10 @@ impl NamingClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn request(
         &self,
         client_name: &str,
@@ -149,6 +181,10 @@ impl NamingClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn response(
         &self,
         options: Option<NamingClientResponseOptions<'_>>,
@@ -162,37 +198,51 @@ impl NamingClient {
     }
 }
 
+/// Options to be passed to [`NamingClient::client()`](crate::NamingClient::client())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientClientOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`NamingClient::client_name()`](crate::NamingClient::client_name())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientClientNameOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`NamingClient::compatible_with_encoded_name()`](crate::NamingClient::compatible_with_encoded_name())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientCompatibleWithEncodedNameOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`NamingClient::language()`](crate::NamingClient::language())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientLanguageOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`NamingClient::parameter()`](crate::NamingClient::parameter())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientParameterOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`NamingClient::request()`](crate::NamingClient::request())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientRequestOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`NamingClient::response()`](crate::NamingClient::response())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientResponseOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -17,6 +17,10 @@ impl FirstGroup4Client {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn four(
         &self,
         options: Option<FirstGroup4ClientFourOptions<'_>>,
@@ -30,7 +34,9 @@ impl FirstGroup4Client {
     }
 }
 
+/// Options to be passed to [`FirstGroup4Client::four()`](crate::clients::FirstGroup4Client::four())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FirstGroup4ClientFourOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

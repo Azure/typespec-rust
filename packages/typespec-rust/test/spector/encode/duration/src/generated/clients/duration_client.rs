@@ -9,17 +9,25 @@ use crate::generated::clients::duration_query_client::DurationQueryClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Test for encode decorator on duration.
 pub struct DurationClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`DurationClient`](crate::DurationClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl DurationClient {
+    /// Creates a new DurationClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<DurationClientOptions>,

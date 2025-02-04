@@ -9,6 +9,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Operations for the ModelWithText type.
 pub struct XmlModelWithTextValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl XmlModelWithTextValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<XmlModelWithTextValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl XmlModelWithTextValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         input: RequestContent<ModelWithText>,
@@ -49,12 +58,16 @@ impl XmlModelWithTextValueClient {
     }
 }
 
+/// Options to be passed to [`XmlModelWithTextValueClient::get()`](crate::clients::XmlModelWithTextValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithTextValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`XmlModelWithTextValueClient::put()`](crate::clients::XmlModelWithTextValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithTextValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

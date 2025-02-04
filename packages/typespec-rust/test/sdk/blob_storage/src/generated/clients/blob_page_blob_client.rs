@@ -30,6 +30,11 @@ impl BlobPageBlobClient {
     }
 
     /// The Clear Pages operation clears a range of pages from a page blob
+    ///
+    /// # Arguments
+    ///
+    /// * `content_length` - The length of the request.
+    /// * `options` - Optional parameters for the request.
     pub async fn clear_pages(
         &self,
         content_length: i64,
@@ -123,6 +128,13 @@ impl BlobPageBlobClient {
     /// such that only the differential changes between the previously copied snapshot are transferred to the destination. The
     /// copied snapshots are complete copies of the original snapshot and can be read or copied from as usual. This API is supported
     /// since REST version 2016-05-31.
+    ///
+    /// # Arguments
+    ///
+    /// * `copy_source` - Specifies the name of the source page blob snapshot. This value is a URL of up to 2 KB in length that
+    ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
+    ///   either be public or must be authenticated via a shared access signature.
+    /// * `options` - Optional parameters for the request.
     pub async fn copy_incremental(
         &self,
         copy_source: &str,
@@ -170,6 +182,13 @@ impl BlobPageBlobClient {
     }
 
     /// The Create operation creates a new page blob.
+    ///
+    /// # Arguments
+    ///
+    /// * `content_length` - The length of the request.
+    /// * `blob_content_length` - This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must
+    ///   be aligned to a 512-byte boundary.
+    /// * `options` - Optional parameters for the request.
     pub async fn create(
         &self,
         content_length: i64,
@@ -288,6 +307,12 @@ impl BlobPageBlobClient {
     }
 
     /// The Resize operation increases the size of the page blob to the specified size.
+    ///
+    /// # Arguments
+    ///
+    /// * `blob_content_length` - This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must
+    ///   be aligned to a 512-byte boundary.
+    /// * `options` - Optional parameters for the request.
     pub async fn resize(
         &self,
         blob_content_length: i64,
@@ -356,6 +381,12 @@ impl BlobPageBlobClient {
 
     /// The Update Sequence Number operation sets the blob's sequence number. The operation will fail if the specified sequence
     /// number is less than the current sequence number of the blob.
+    ///
+    /// # Arguments
+    ///
+    /// * `sequence_number_action` - Required if the x-ms-blob-sequence-number header is set for the request. This property applies
+    ///   to page blobs only. This property indicates how the service should modify the blob's sequence number
+    /// * `options` - Optional parameters for the request.
     pub async fn update_sequence_number(
         &self,
         sequence_number_action: SequenceNumberActionType,
@@ -417,6 +448,12 @@ impl BlobPageBlobClient {
     }
 
     /// The Upload Pages operation writes a range of pages to a page blob
+    ///
+    /// # Arguments
+    ///
+    /// * `body` - The body of the request.
+    /// * `content_length` - The length of the request.
+    /// * `options` - Optional parameters for the request.
     pub async fn upload_pages(
         &self,
         body: RequestContent<Bytes>,
@@ -524,6 +561,16 @@ impl BlobPageBlobClient {
     }
 
     /// The Upload Pages operation writes a range of pages to a page blob where the contents are read from a URL.
+    ///
+    /// # Arguments
+    ///
+    /// * `source_url` - Specify a URL to the copy source.
+    /// * `source_range` - Bytes of source data in the specified range. The length of this range should match the ContentLength
+    ///   header and x-ms-range/Range destination range header.
+    /// * `content_length` - The length of the request.
+    /// * `range` - Bytes of source data in the specified range. The length of this range should match the ContentLength header
+    ///   and x-ms-range/Range destination range header.
+    /// * `options` - Optional parameters for the request.
     pub async fn upload_pages_from_url(
         &self,
         source_url: &str,
@@ -645,148 +692,425 @@ impl BlobPageBlobClient {
     }
 }
 
+/// Options to be passed to [`BlobPageBlobClient::clear_pages()`](crate::clients::BlobPageBlobClient::clear_pages())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientClearPagesOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the algorithm to use for encryption. If not specified, the default is
+    /// AES256.
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption key to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_key: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the SHA256 hash of the encryption key used to encrypt the data provided
+    /// in the request. This header is only used for encryption with a customer-provided key. If the request is authenticated
+    /// with a client token, this header should be specified using the SHA256 hash of the encryption key.
     pub encryption_key_sha256: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption scope to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_scope: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify this header value to operate only on a blob if it has the specified sequence number.
     pub if_sequence_number_equal_to: Option<i64>,
+
+    /// Specify this header value to operate only on a blob if it has a sequence number less than the specified.
     pub if_sequence_number_less_than: Option<i64>,
+
+    /// Specify this header value to operate only on a blob if it has a sequence number less than or equal to the specified.
     pub if_sequence_number_less_than_or_equal_to: Option<i64>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// Return only the bytes of the blob in the specified range.
     pub range: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobPageBlobClient::copy_incremental()`](crate::clients::BlobPageBlobClient::copy_incremental())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientCopyIncrementalOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobPageBlobClient::create()`](crate::clients::BlobPageBlobClient::create())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientCreateOptions<'a> {
+    /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
+    /// request.
     pub blob_cache_control: Option<String>,
+
+    /// Optional. Sets the blob's content disposition. If specified, this property is stored with the blob and returned with a
+    /// read request.
     pub blob_content_disposition: Option<String>,
+
+    /// Optional. Sets the blob's content encoding. If specified, this property is stored with the blob and returned with a read
+    /// request.
     pub blob_content_encoding: Option<String>,
+
+    /// Optional. Set the blob's content language. If specified, this property is stored with the blob and returned with a read
+    /// request.
     pub blob_content_language: Option<String>,
+
+    /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
+    /// were validated when each was uploaded.
     pub blob_content_md5: Option<Vec<u8>>,
+
+    /// Optional. Sets the blob's content type. If specified, this property is stored with the blob and returned with a read request.
     pub blob_content_type: Option<String>,
+
+    /// Optional. The sequence number is a user-controlled property that you can use to track requests. The value of the sequence
+    /// number must be between 0 and 2^63 - 1. The default value is 0.
     pub blob_sequence_number: Option<i64>,
+
+    /// Optional. Used to set blob tags in various blob operations.
     pub blob_tags_string: Option<String>,
+
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the algorithm to use for encryption. If not specified, the default is
+    /// AES256.
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption key to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_key: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the SHA256 hash of the encryption key used to encrypt the data provided
+    /// in the request. This header is only used for encryption with a customer-provided key. If the request is authenticated
+    /// with a client token, this header should be specified using the SHA256 hash of the encryption key.
     pub encryption_key_sha256: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption scope to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_scope: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// Specifies the date time when the blobs immutability policy is set to expire.
     pub immutability_policy_expiry: Option<String>,
+
+    /// Specifies the immutability policy mode to set on the blob.
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Specified if a legal hold should be set on the blob.
     pub legal_hold: Option<bool>,
+
+    /// The metadata headers.
     pub metadata: Option<HashMap<String, String>>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// Optional. Indicates the tier to be set on the page blob.
     pub tier: Option<PremiumPageBlobAccessTier>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobPageBlobClient::resize()`](crate::clients::BlobPageBlobClient::resize())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientResizeOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the algorithm to use for encryption. If not specified, the default is
+    /// AES256.
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption key to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_key: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the SHA256 hash of the encryption key used to encrypt the data provided
+    /// in the request. This header is only used for encryption with a customer-provided key. If the request is authenticated
+    /// with a client token, this header should be specified using the SHA256 hash of the encryption key.
     pub encryption_key_sha256: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption scope to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_scope: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobPageBlobClient::update_sequence_number()`](crate::clients::BlobPageBlobClient::update_sequence_number())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientUpdateSequenceNumberOptions<'a> {
+    /// Set for page blobs only. The sequence number is a user-controlled value that you can use to track requests. The value
+    /// of the sequence number must be between 0 and 2^63 - 1.
     pub blob_sequence_number: Option<i64>,
+
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobPageBlobClient::upload_pages()`](crate::clients::BlobPageBlobClient::upload_pages())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientUploadPagesOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the algorithm to use for encryption. If not specified, the default is
+    /// AES256.
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption key to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_key: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the SHA256 hash of the encryption key used to encrypt the data provided
+    /// in the request. This header is only used for encryption with a customer-provided key. If the request is authenticated
+    /// with a client token, this header should be specified using the SHA256 hash of the encryption key.
     pub encryption_key_sha256: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption scope to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_scope: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify this header value to operate only on a blob if it has the specified sequence number.
     pub if_sequence_number_equal_to: Option<i64>,
+
+    /// Specify this header value to operate only on a blob if it has a sequence number less than the specified.
     pub if_sequence_number_less_than: Option<i64>,
+
+    /// Specify this header value to operate only on a blob if it has a sequence number less than or equal to the specified.
     pub if_sequence_number_less_than_or_equal_to: Option<i64>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// Return only the bytes of the blob in the specified range.
     pub range: Option<String>,
+
+    /// Required if the request body is a structured message. Specifies the message schema version and properties.
     pub structured_body_type: Option<String>,
+
+    /// Required if the request body is a structured message. Specifies the length of the blob/file content inside the message
+    /// body. Will always be smaller than Content-Length.
     pub structured_content_length: Option<i64>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
+
+    /// Specify the transactional crc64 for the body, to be validated by the service.
     pub transactional_content_crc64: Option<String>,
+
+    /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
+    /// were validated when each was uploaded.
     pub transactional_content_md5: Option<String>,
 }
 
+/// Options to be passed to [`BlobPageBlobClient::upload_pages_from_url()`](crate::clients::BlobPageBlobClient::upload_pages_from_url())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobPageBlobClientUploadPagesFromUrlOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Only Bearer type is supported. Credentials should be a valid OAuth access token to copy source.
     pub copy_source_authorization: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the algorithm to use for encryption. If not specified, the default is
+    /// AES256.
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption key to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_key: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the SHA256 hash of the encryption key used to encrypt the data provided
+    /// in the request. This header is only used for encryption with a customer-provided key. If the request is authenticated
+    /// with a client token, this header should be specified using the SHA256 hash of the encryption key.
     pub encryption_key_sha256: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption scope to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_scope: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify this header value to operate only on a blob if it has the specified sequence number.
     pub if_sequence_number_equal_to: Option<i64>,
+
+    /// Specify this header value to operate only on a blob if it has a sequence number less than the specified.
     pub if_sequence_number_less_than: Option<i64>,
+
+    /// Specify this header value to operate only on a blob if it has a sequence number less than or equal to the specified.
     pub if_sequence_number_less_than_or_equal_to: Option<i64>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// Specify the crc64 calculated for the range of bytes that must be read from the copy source.
     pub source_content_crc64: Option<Vec<u8>>,
+
+    /// Specify the md5 calculated for the range of bytes that must be read from the copy source.
     pub source_content_md5: Option<String>,
+
+    /// Specify an ETag value to operate only on blobs with a matching value.
     pub source_if_match: Option<String>,
+
+    /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
     pub source_if_modified_since: Option<String>,
+
+    /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
     pub source_if_none_match: Option<String>,
+
+    /// Specify this header value to operate only on a blob if it has not been modified since the specified date/time.
     pub source_if_unmodified_since: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }

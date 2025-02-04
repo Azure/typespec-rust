@@ -9,6 +9,7 @@ use azure_core::{
 use time::OffsetDateTime;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Array of datetime values
 pub struct ArrayDatetimeValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl ArrayDatetimeValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<ArrayDatetimeValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl ArrayDatetimeValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<Vec<OffsetDateTime>>,
@@ -49,12 +58,16 @@ impl ArrayDatetimeValueClient {
     }
 }
 
+/// Options to be passed to [`ArrayDatetimeValueClient::get()`](crate::clients::ArrayDatetimeValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayDatetimeValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ArrayDatetimeValueClient::put()`](crate::clients::ArrayDatetimeValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayDatetimeValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

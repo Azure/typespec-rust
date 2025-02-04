@@ -26,6 +26,10 @@ impl UsageModelInOperationClient {
     /// "name": "Madge"
     /// }
     /// ```
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn input_to_input_output(
         &self,
         body: RequestContent<InputModel>,
@@ -55,6 +59,10 @@ impl UsageModelInOperationClient {
     /// }
     /// }
     /// ```
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn model_in_read_only_property(
         &self,
         body: RequestContent<RoundTripModel>,
@@ -77,6 +85,10 @@ impl UsageModelInOperationClient {
     /// "name": "Madge"
     /// }
     /// ```
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn output_to_input_output(
         &self,
         options: Option<UsageModelInOperationClientOutputToInputOutputOptions<'_>>,
@@ -91,17 +103,23 @@ impl UsageModelInOperationClient {
     }
 }
 
+/// Options to be passed to [`UsageModelInOperationClient::input_to_input_output()`](crate::clients::UsageModelInOperationClient::input_to_input_output())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageModelInOperationClientInputToInputOutputOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`UsageModelInOperationClient::model_in_read_only_property()`](crate::clients::UsageModelInOperationClient::model_in_read_only_property())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageModelInOperationClientModelInReadOnlyPropertyOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`UsageModelInOperationClient::output_to_input_output()`](crate::clients::UsageModelInOperationClient::output_to_input_output())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageModelInOperationClientOutputToInputOutputOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -14,12 +14,20 @@ pub struct ClientAClient {
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`ClientAClient`](crate::ClientAClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientAClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl ClientAClient {
+    /// Creates a new ClientAClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -48,6 +56,10 @@ impl ClientAClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn renamed_five(
         &self,
         options: Option<ClientAClientRenamedFiveOptions<'_>>,
@@ -60,6 +72,10 @@ impl ClientAClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn renamed_one(
         &self,
         options: Option<ClientAClientRenamedOneOptions<'_>>,
@@ -72,6 +88,10 @@ impl ClientAClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn renamed_three(
         &self,
         options: Option<ClientAClientRenamedThreeOptions<'_>>,
@@ -85,17 +105,23 @@ impl ClientAClient {
     }
 }
 
+/// Options to be passed to [`ClientAClient::renamed_five()`](crate::ClientAClient::renamed_five())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientAClientRenamedFiveOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ClientAClient::renamed_one()`](crate::ClientAClient::renamed_one())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientAClientRenamedOneOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ClientAClient::renamed_three()`](crate::ClientAClient::renamed_three())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientAClientRenamedThreeOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

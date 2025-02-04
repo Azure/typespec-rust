@@ -18,17 +18,25 @@ use crate::generated::clients::xml_simple_model_value_client::XmlSimpleModelValu
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Sends and receives bodies in XML format.
 pub struct XmlClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`XmlClient`](crate::XmlClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl XmlClient {
+    /// Creates a new XmlClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(endpoint: &str, options: Option<XmlClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;

@@ -10,17 +10,25 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Illustrates usage of empty model used in operation's parameters and responses.
 pub struct EmptyClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`EmptyClient`](crate::EmptyClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl EmptyClient {
+    /// Creates a new EmptyClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(endpoint: &str, options: Option<EmptyClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -42,6 +50,10 @@ impl EmptyClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_empty(
         &self,
         options: Option<EmptyClientGetEmptyOptions<'_>>,
@@ -55,6 +67,10 @@ impl EmptyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn post_round_trip_empty(
         &self,
         body: RequestContent<EmptyInputOutput>,
@@ -71,6 +87,10 @@ impl EmptyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put_empty(
         &self,
         input: RequestContent<EmptyInput>,
@@ -87,17 +107,23 @@ impl EmptyClient {
     }
 }
 
+/// Options to be passed to [`EmptyClient::get_empty()`](crate::EmptyClient::get_empty())
 #[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientGetEmptyOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`EmptyClient::post_round_trip_empty()`](crate::EmptyClient::post_round_trip_empty())
 #[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientPostRoundTripEmptyOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`EmptyClient::put_empty()`](crate::EmptyClient::put_empty())
 #[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientPutEmptyOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -10,17 +10,25 @@ use crate::generated::clients::datetime_response_header_client::DatetimeResponse
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Test for encode decorator on datetime.
 pub struct DatetimeClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`DatetimeClient`](crate::DatetimeClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl DatetimeClient {
+    /// Creates a new DatetimeClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<DatetimeClientOptions>,

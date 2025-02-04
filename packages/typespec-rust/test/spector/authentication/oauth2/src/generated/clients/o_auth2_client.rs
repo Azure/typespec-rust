@@ -11,17 +11,27 @@ use azure_core::{
 use std::sync::Arc;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Illustrates clients generated with OAuth2 authentication.
 pub struct OAuth2Client {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`OAuth2Client`](crate::OAuth2Client)
 #[derive(Clone, Default, SafeDebug)]
 pub struct OAuth2ClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl OAuth2Client {
+    /// Creates a new OAuth2Client, using Entra ID authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
+    ///   Entra ID token to use when authenticating.
+    /// * `options` - Optional configuration for the client.
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -52,6 +62,10 @@ impl OAuth2Client {
     }
 
     /// Check whether client is authenticated. Will return an invalid bearer error.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn invalid(
         &self,
         options: Option<OAuth2ClientInvalidOptions<'_>>,
@@ -66,6 +80,10 @@ impl OAuth2Client {
     }
 
     /// Check whether client is authenticated
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn valid(
         &self,
         options: Option<OAuth2ClientValidOptions<'_>>,
@@ -79,12 +97,16 @@ impl OAuth2Client {
     }
 }
 
+/// Options to be passed to [`OAuth2Client::invalid()`](crate::OAuth2Client::invalid())
 #[derive(Clone, Default, SafeDebug)]
 pub struct OAuth2ClientInvalidOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`OAuth2Client::valid()`](crate::OAuth2Client::valid())
 #[derive(Clone, Default, SafeDebug)]
 pub struct OAuth2ClientValidOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

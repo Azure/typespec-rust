@@ -13,6 +13,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Verify model names
 pub struct SpecialWordsModelsClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -24,6 +25,10 @@ impl SpecialWordsModelsClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_and(
         &self,
         body: RequestContent<And>,
@@ -39,6 +44,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_as(
         &self,
         body: RequestContent<As>,
@@ -54,6 +63,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_assert(
         &self,
         body: RequestContent<Assert>,
@@ -69,6 +82,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_async(
         &self,
         body: RequestContent<Async>,
@@ -84,6 +101,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_await(
         &self,
         body: RequestContent<Await>,
@@ -99,6 +120,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_break(
         &self,
         body: RequestContent<Break>,
@@ -114,6 +139,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_class(
         &self,
         body: RequestContent<Class>,
@@ -129,6 +158,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_constructor(
         &self,
         body: RequestContent<Constructor>,
@@ -144,6 +177,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_continue(
         &self,
         body: RequestContent<Continue>,
@@ -159,6 +196,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_def(
         &self,
         body: RequestContent<Def>,
@@ -174,6 +215,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_del(
         &self,
         body: RequestContent<Del>,
@@ -189,6 +234,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_elif(
         &self,
         body: RequestContent<Elif>,
@@ -204,6 +253,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_else(
         &self,
         body: RequestContent<Else>,
@@ -219,6 +272,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_except(
         &self,
         body: RequestContent<Except>,
@@ -234,6 +291,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_exec(
         &self,
         body: RequestContent<Exec>,
@@ -249,6 +310,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_finally(
         &self,
         body: RequestContent<Finally>,
@@ -264,6 +329,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_for(
         &self,
         body: RequestContent<For>,
@@ -279,6 +348,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_from(
         &self,
         body: RequestContent<From>,
@@ -294,6 +367,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_global(
         &self,
         body: RequestContent<Global>,
@@ -309,6 +386,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_if(
         &self,
         body: RequestContent<If>,
@@ -324,6 +405,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_import(
         &self,
         body: RequestContent<Import>,
@@ -339,6 +424,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_in(
         &self,
         body: RequestContent<In>,
@@ -354,6 +443,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_is(
         &self,
         body: RequestContent<Is>,
@@ -369,6 +462,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_lambda(
         &self,
         body: RequestContent<Lambda>,
@@ -384,6 +481,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_not(
         &self,
         body: RequestContent<Not>,
@@ -399,6 +500,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_or(
         &self,
         body: RequestContent<Or>,
@@ -414,6 +519,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_pass(
         &self,
         body: RequestContent<Pass>,
@@ -429,6 +538,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_raise(
         &self,
         body: RequestContent<Raise>,
@@ -444,6 +557,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_return(
         &self,
         body: RequestContent<Return>,
@@ -459,6 +576,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_try(
         &self,
         body: RequestContent<Try>,
@@ -474,6 +595,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_while(
         &self,
         body: RequestContent<While>,
@@ -489,6 +614,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_with(
         &self,
         body: RequestContent<With>,
@@ -504,6 +633,10 @@ impl SpecialWordsModelsClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_yield(
         &self,
         body: RequestContent<Yield>,
@@ -520,167 +653,233 @@ impl SpecialWordsModelsClient {
     }
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_and()`](crate::clients::SpecialWordsModelsClient::with_and())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithAndOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_as()`](crate::clients::SpecialWordsModelsClient::with_as())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithAsOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_assert()`](crate::clients::SpecialWordsModelsClient::with_assert())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithAssertOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_async()`](crate::clients::SpecialWordsModelsClient::with_async())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithAsyncOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_await()`](crate::clients::SpecialWordsModelsClient::with_await())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithAwaitOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_break()`](crate::clients::SpecialWordsModelsClient::with_break())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithBreakOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_class()`](crate::clients::SpecialWordsModelsClient::with_class())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithClassOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_constructor()`](crate::clients::SpecialWordsModelsClient::with_constructor())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithConstructorOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_continue()`](crate::clients::SpecialWordsModelsClient::with_continue())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithContinueOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_def()`](crate::clients::SpecialWordsModelsClient::with_def())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithDefOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_del()`](crate::clients::SpecialWordsModelsClient::with_del())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithDelOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_elif()`](crate::clients::SpecialWordsModelsClient::with_elif())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithElifOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_else()`](crate::clients::SpecialWordsModelsClient::with_else())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithElseOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_except()`](crate::clients::SpecialWordsModelsClient::with_except())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithExceptOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_exec()`](crate::clients::SpecialWordsModelsClient::with_exec())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithExecOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_finally()`](crate::clients::SpecialWordsModelsClient::with_finally())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithFinallyOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_for()`](crate::clients::SpecialWordsModelsClient::with_for())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithForOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_from()`](crate::clients::SpecialWordsModelsClient::with_from())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithFromOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_global()`](crate::clients::SpecialWordsModelsClient::with_global())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithGlobalOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_if()`](crate::clients::SpecialWordsModelsClient::with_if())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithIfOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_import()`](crate::clients::SpecialWordsModelsClient::with_import())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithImportOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_in()`](crate::clients::SpecialWordsModelsClient::with_in())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithInOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_is()`](crate::clients::SpecialWordsModelsClient::with_is())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithIsOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_lambda()`](crate::clients::SpecialWordsModelsClient::with_lambda())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithLambdaOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_not()`](crate::clients::SpecialWordsModelsClient::with_not())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithNotOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_or()`](crate::clients::SpecialWordsModelsClient::with_or())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithOrOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_pass()`](crate::clients::SpecialWordsModelsClient::with_pass())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithPassOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_raise()`](crate::clients::SpecialWordsModelsClient::with_raise())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithRaiseOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_return()`](crate::clients::SpecialWordsModelsClient::with_return())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithReturnOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_try()`](crate::clients::SpecialWordsModelsClient::with_try())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithTryOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_while()`](crate::clients::SpecialWordsModelsClient::with_while())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithWhileOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_with()`](crate::clients::SpecialWordsModelsClient::with_with())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpecialWordsModelsClient::with_yield()`](crate::clients::SpecialWordsModelsClient::with_yield())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithYieldOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

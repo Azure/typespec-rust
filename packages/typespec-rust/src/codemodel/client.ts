@@ -63,11 +63,16 @@ export type ClientParameter = ClientEndpointParameter | ClientMethodParameter;
 
 /** represents a client constructor function */
 export interface Constructor {
+  kind: 'constructor';
+
   /** name of the constructor */
   name: string;
 
   /** the modeled parameters. at minimum, an endpoint param */
-  parameters: Array<ClientParameter>;
+  params: Array<ClientParameter>;
+
+  /** any docs for the constructor */
+  docs: types.Docs;
 }
 
 /** ClientMethodParameter is a Rust client parameter that's used in method bodies */
@@ -319,6 +324,9 @@ interface ClientParameterBase {
    * optional params will be surfaced in the client options type.
    */
   optional: boolean;
+
+  /** any docs for the parameter */
+  docs: types.Docs;
 }
 
 /** base type for HTTP-based methods */
@@ -353,6 +361,7 @@ class ClientParameterBase implements ClientParameterBase {
     this.name = name;
     this.type = type;
     this.optional = optional;
+    this.docs = {};
   }
 }
 
@@ -435,8 +444,10 @@ export class ClientMethodParameter extends ClientParameterBase implements Client
 
 export class Constructor implements Constructor {
   constructor(name: string) {
+    this.kind = 'constructor';
     this.name = name;
-    this.parameters = new Array<ClientParameter>();
+    this.params = new Array<ClientParameter>();
+    this.docs = {};
   }
 }
 

@@ -9,6 +9,7 @@ use azure_core::{
 use std::collections::HashMap;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Dictionary of float values
 pub struct DictionaryFloat32ValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl DictionaryFloat32ValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<DictionaryFloat32ValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl DictionaryFloat32ValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, f32>>,
@@ -49,12 +58,16 @@ impl DictionaryFloat32ValueClient {
     }
 }
 
+/// Options to be passed to [`DictionaryFloat32ValueClient::get()`](crate::clients::DictionaryFloat32ValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryFloat32ValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DictionaryFloat32ValueClient::put()`](crate::clients::DictionaryFloat32ValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryFloat32ValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

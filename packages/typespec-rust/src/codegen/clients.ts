@@ -50,7 +50,8 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
       pubInClients = 'pub(crate) ';
     }
 
-    let body = `pub struct ${client.name} {\n`;
+    let body = helpers.formatDocComment(client.docs);
+    body += `pub struct ${client.name} {\n`;
     for (const field of client.fields) {
       use.addForType(field.type);
       body += `${indent.get()}${pubInClients}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
@@ -64,6 +65,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
       if (client.constructable.options.type.fields.length > 1) {
         deriveDefault = '';
       }
+      body += helpers.formatDocComment(client.constructable.options.type.docs);
       use.addType('typespec_client_core::fmt', 'SafeDebug');
       body += `#[derive(Clone, ${deriveDefault}SafeDebug)]\n`;
       body += `pub struct ${client.constructable.options.type.name}`;
@@ -87,10 +89,15 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
 
       for (let i = 0; i < client.constructable.constructors.length; ++i) {
         const constructor = client.constructable.constructors[i];
-        body += `${indent.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.parameters, client.constructable.options, use)}) -> Result<Self> {\n`;
+        body += `${indent.get()}${helpers.formatDocComment(constructor.docs)}`;
+        const paramsDocs = getParamsBlockDocComment(indent, constructor);
+        if (paramsDocs) {
+          body += paramsDocs;
+        }
+        body += `${indent.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.params, client.constructable.options, use)}) -> Result<Self> {\n`;
         body += `${indent.get()}let options = options.unwrap_or_default();\n`;
         // by convention, the endpoint param is always the first ctor param
-        const endpointParamName = constructor.parameters[0].name;
+        const endpointParamName = constructor.params[0].name;
         body += `${indent.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
         body += `${indent.get()}${endpointParamName}.set_query(None);\n`;
 
@@ -116,7 +123,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         // propagate the required client params to the initializer
         // NOTE: we do this on a sorted copy of the client params as we must preserve their order.
         // exclude endpoint params as they aren't propagated to clients (they're consumed when creating the complete endpoint)
-        const sortedParams = values([...constructor.parameters]
+        const sortedParams = values([...constructor.params]
           .sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); }))
           .where((each) => each.kind !== 'clientEndpoint').toArray();
 
@@ -206,6 +213,10 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
           break;
       }
       body += `${indent.get()}${helpers.formatDocComment(method.docs)}`;
+      const paramsDocs = getParamsBlockDocComment(indent, method);
+      if (paramsDocs) {
+        body += paramsDocs;
+      }
       body += `${indent.get()}${helpers.emitPub(method.pub)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
       body += `${indent.push().get()}${methodBody(indent)}\n`;
       body += `${indent.pop().get()}}\n`; // end method
@@ -243,12 +254,21 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         continue;
       }
 
+      body += helpers.formatDocComment(method.options.type.docs);
       use.addType('typespec_client_core::fmt', 'SafeDebug');
       body += '#[derive(Clone, Default, SafeDebug)]\n';
       body += `${helpers.emitPub(method.pub)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
-      for (const field of method.options.type.fields) {
+      for (let i = 0; i < method.options.type.fields.length; ++i) {
+        const field = method.options.type.fields[i];
         use.addForType(field.type);
+        const fieldDocs = helpers.formatDocComment(field.docs);
+        if (fieldDocs.length > 0) {
+          body += `${indent.get()}${fieldDocs}`;
+        }
         body += `${indent.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+        if (i + 1 < method.options.type.fields.length) {
+          body += '\n';
+        }
       }
       body += '}\n\n'; // end options
 
@@ -287,6 +307,74 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
   }
 
   return {clients: clientFiles};
+}
+
+/**
+ * builds the block of doc comments for a callable's parameters.
+ * if the callable has no parameters, undefined is returned.
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param callable the callable containing parameters to document
+ * @returns the parameters doc comments or undefined
+ */
+function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Constructor | rust.MethodType): string | undefined {
+  const formatParamBullet = function(paramName: string): string {
+    return `* \`${paramName}\` - `;
+  };
+
+  let paramsContent = '';
+  for (const param of callable.params) {
+    let optional = false;
+    if ('optional' in param) {
+      optional = param.optional;
+    }
+
+    let location: rust.ParameterLocation = 'method';
+    if ('location' in param) {
+      location = param.location;
+    }
+
+    if (optional || param.type.kind === 'literal' || location === 'client') {
+      // none of these are in the method sig so skip them
+      continue;
+    }
+
+    // first create the comment block. note that it can be multi-line depending on length:
+    //
+    // * foo - some comment first line
+    // and it finishes here.
+    let forParam = helpers.formatDocComment(param.docs, formatParamBullet(param.name), indent);
+
+    // transform the above to look like this:
+    //
+    // * foo - some comment first line
+    //   and it finishes here.
+    if (values(forParam).where((e) => e === '\n').count() > 1) {
+      const chunks = forParam.split('\n');
+      for (let i = 1; i < chunks.length; ++i) {
+        chunks[i] = chunks[i].replace('/// ', '///   ');
+      }
+      forParam = chunks.join('\n');
+    }
+    paramsContent += forParam;
+  }
+
+  if (callable.kind === 'constructor') {
+    paramsContent += helpers.formatDocComment({summary: 'Optional configuration for the client.'}, formatParamBullet('options'), indent);
+  } else if (callable.kind !== 'clientaccessor') {
+    paramsContent += helpers.formatDocComment({summary: 'Optional parameters for the request.'}, formatParamBullet('options'), indent);
+  }
+
+  if (paramsContent.length === 0) {
+    return undefined;
+  }
+
+  let paramsBlock = `${indent.get()}///\n`;
+  paramsBlock += `${indent.get()}/// # Arguments\n`;
+  paramsBlock += `${indent.get()}///\n`;
+  paramsBlock += paramsContent;
+
+  return paramsBlock;
 }
 
 /**
@@ -365,7 +453,7 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
  * @returns the auth policy instantiation code or undefined if not required
  */
 function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
-  for (const param of ctor.parameters) {
+  for (const param of ctor.params) {
     if (param.type.kind === 'arc' && param.type.type.kind === 'tokenCredential') {
       use.addTypes('azure_core', ['BearerTokenCredentialPolicy', 'Policy']);
       const scopes = new Array<string>();

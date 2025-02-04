@@ -10,6 +10,7 @@ use serde_json::Value;
 use std::collections::HashMap;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Dictionary of unknown values
 pub struct DictionaryUnknownValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -21,6 +22,10 @@ impl DictionaryUnknownValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<DictionaryUnknownValueClientGetOptions<'_>>,
@@ -34,6 +39,10 @@ impl DictionaryUnknownValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, Value>>,
@@ -50,12 +59,16 @@ impl DictionaryUnknownValueClient {
     }
 }
 
+/// Options to be passed to [`DictionaryUnknownValueClient::get()`](crate::clients::DictionaryUnknownValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryUnknownValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DictionaryUnknownValueClient::put()`](crate::clients::DictionaryUnknownValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryUnknownValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

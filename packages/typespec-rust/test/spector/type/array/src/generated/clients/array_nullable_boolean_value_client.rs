@@ -8,6 +8,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Array of nullable boolean values
 pub struct ArrayNullableBooleanValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -19,6 +20,10 @@ impl ArrayNullableBooleanValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<ArrayNullableBooleanValueClientGetOptions<'_>>,
@@ -32,6 +37,10 @@ impl ArrayNullableBooleanValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<Vec<bool>>,
@@ -48,12 +57,16 @@ impl ArrayNullableBooleanValueClient {
     }
 }
 
+/// Options to be passed to [`ArrayNullableBooleanValueClient::get()`](crate::clients::ArrayNullableBooleanValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableBooleanValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ArrayNullableBooleanValueClient::put()`](crate::clients::ArrayNullableBooleanValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableBooleanValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

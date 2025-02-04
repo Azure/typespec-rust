@@ -17,6 +17,10 @@ impl BytesResponseBodyClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn base64(
         &self,
         options: Option<BytesResponseBodyClientBase64Options<'_>>,
@@ -30,6 +34,10 @@ impl BytesResponseBodyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn base64_url(
         &self,
         options: Option<BytesResponseBodyClientBase64UrlOptions<'_>>,
@@ -43,6 +51,10 @@ impl BytesResponseBodyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn custom_content_type(
         &self,
         options: Option<BytesResponseBodyClientCustomContentTypeOptions<'_>>,
@@ -56,6 +68,10 @@ impl BytesResponseBodyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn default(
         &self,
         options: Option<BytesResponseBodyClientDefaultOptions<'_>>,
@@ -69,6 +85,10 @@ impl BytesResponseBodyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn octet_stream(
         &self,
         options: Option<BytesResponseBodyClientOctetStreamOptions<'_>>,
@@ -83,27 +103,37 @@ impl BytesResponseBodyClient {
     }
 }
 
+/// Options to be passed to [`BytesResponseBodyClient::base64()`](crate::clients::BytesResponseBodyClient::base64())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesResponseBodyClientBase64Options<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BytesResponseBodyClient::base64_url()`](crate::clients::BytesResponseBodyClient::base64_url())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesResponseBodyClientBase64UrlOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BytesResponseBodyClient::custom_content_type()`](crate::clients::BytesResponseBodyClient::custom_content_type())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesResponseBodyClientCustomContentTypeOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BytesResponseBodyClient::default()`](crate::clients::BytesResponseBodyClient::default())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesResponseBodyClientDefaultOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BytesResponseBodyClient::octet_stream()`](crate::clients::BytesResponseBodyClient::octet_stream())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesResponseBodyClientOctetStreamOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

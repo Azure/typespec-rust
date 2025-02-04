@@ -17,6 +17,10 @@ impl ServiceBazFooClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn seven(
         &self,
         options: Option<ServiceBazFooClientSevenOptions<'_>>,
@@ -30,7 +34,9 @@ impl ServiceBazFooClient {
     }
 }
 
+/// Options to be passed to [`ServiceBazFooClient::seven()`](crate::clients::ServiceBazFooClient::seven())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceBazFooClientSevenOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

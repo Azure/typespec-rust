@@ -22,6 +22,10 @@ impl BytesPropertyClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn base64(
         &self,
         body: RequestContent<Base64BytesProperty>,
@@ -38,6 +42,10 @@ impl BytesPropertyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn base64_url(
         &self,
         body: RequestContent<Base64urlBytesProperty>,
@@ -54,6 +62,10 @@ impl BytesPropertyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn base64_url_array(
         &self,
         body: RequestContent<Base64urlArrayBytesProperty>,
@@ -70,6 +82,10 @@ impl BytesPropertyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn default(
         &self,
         body: RequestContent<DefaultBytesProperty>,
@@ -87,22 +103,30 @@ impl BytesPropertyClient {
     }
 }
 
+/// Options to be passed to [`BytesPropertyClient::base64()`](crate::clients::BytesPropertyClient::base64())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesPropertyClientBase64Options<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BytesPropertyClient::base64_url()`](crate::clients::BytesPropertyClient::base64_url())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesPropertyClientBase64UrlOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BytesPropertyClient::base64_url_array()`](crate::clients::BytesPropertyClient::base64_url_array())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesPropertyClientBase64UrlArrayOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BytesPropertyClient::default()`](crate::clients::BytesPropertyClient::default())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesPropertyClientDefaultOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

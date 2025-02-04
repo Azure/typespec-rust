@@ -20,6 +20,10 @@ impl JsonPropertyClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<JsonPropertyClientGetOptions<'_>>,
@@ -33,6 +37,10 @@ impl JsonPropertyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn send(
         &self,
         body: RequestContent<JsonEncodedNameModel>,
@@ -49,12 +57,16 @@ impl JsonPropertyClient {
     }
 }
 
+/// Options to be passed to [`JsonPropertyClient::get()`](crate::clients::JsonPropertyClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonPropertyClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`JsonPropertyClient::send()`](crate::clients::JsonPropertyClient::send())
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonPropertyClientSendOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

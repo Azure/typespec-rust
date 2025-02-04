@@ -16,12 +16,20 @@ pub struct FirstClient {
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`FirstClient`](crate::FirstClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct FirstClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl FirstClient {
+    /// Creates a new FirstClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -66,6 +74,10 @@ impl FirstClient {
         }
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn one(&self, options: Option<FirstClientOneOptions<'_>>) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
@@ -76,7 +88,9 @@ impl FirstClient {
     }
 }
 
+/// Options to be passed to [`FirstClient::one()`](crate::FirstClient::one())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FirstClientOneOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -8,17 +8,25 @@ use crate::generated::clients::content_negotiation_same_body_client::ContentNego
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Test describing optionality of the request body.
 pub struct ContentNegotiationClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`ContentNegotiationClient`](crate::ContentNegotiationClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ContentNegotiationClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl ContentNegotiationClient {
+    /// Creates a new ContentNegotiationClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<ContentNegotiationClientOptions>,

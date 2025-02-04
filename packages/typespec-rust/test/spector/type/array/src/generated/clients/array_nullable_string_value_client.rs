@@ -8,6 +8,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Array of nullable string values
 pub struct ArrayNullableStringValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -19,6 +20,10 @@ impl ArrayNullableStringValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<ArrayNullableStringValueClientGetOptions<'_>>,
@@ -32,6 +37,10 @@ impl ArrayNullableStringValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<Vec<String>>,
@@ -48,12 +57,16 @@ impl ArrayNullableStringValueClient {
     }
 }
 
+/// Options to be passed to [`ArrayNullableStringValueClient::get()`](crate::clients::ArrayNullableStringValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableStringValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ArrayNullableStringValueClient::put()`](crate::clients::ArrayNullableStringValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableStringValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

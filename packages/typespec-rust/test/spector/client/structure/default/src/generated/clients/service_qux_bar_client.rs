@@ -17,6 +17,10 @@ impl ServiceQuxBarClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn nine(
         &self,
         options: Option<ServiceQuxBarClientNineOptions<'_>>,
@@ -30,7 +34,9 @@ impl ServiceQuxBarClient {
     }
 }
 
+/// Options to be passed to [`ServiceQuxBarClient::nine()`](crate::clients::ServiceQuxBarClient::nine())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceQuxBarClientNineOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -7,12 +7,14 @@ use crate::generated::clients::basic_service_operation_group_client::BasicServic
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Test for loading JSON example and generating sample code.
 pub struct BasicClient {
     api_version: String,
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`BasicClient`](crate::BasicClient)
 #[derive(Clone, SafeDebug)]
 pub struct BasicClientOptions {
     pub api_version: String,
@@ -20,6 +22,12 @@ pub struct BasicClientOptions {
 }
 
 impl BasicClient {
+    /// Creates a new BasicClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(endpoint: &str, options: Option<BasicClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;

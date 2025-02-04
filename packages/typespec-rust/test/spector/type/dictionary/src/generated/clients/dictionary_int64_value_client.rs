@@ -9,6 +9,7 @@ use azure_core::{
 use std::collections::HashMap;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Dictionary of int64 values
 pub struct DictionaryInt64ValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl DictionaryInt64ValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<DictionaryInt64ValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl DictionaryInt64ValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, i64>>,
@@ -49,12 +58,16 @@ impl DictionaryInt64ValueClient {
     }
 }
 
+/// Options to be passed to [`DictionaryInt64ValueClient::get()`](crate::clients::DictionaryInt64ValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryInt64ValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DictionaryInt64ValueClient::put()`](crate::clients::DictionaryInt64ValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryInt64ValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -14,12 +14,20 @@ pub struct ClientBClient {
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`ClientBClient`](crate::ClientBClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientBClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl ClientBClient {
+    /// Creates a new ClientBClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -48,6 +56,10 @@ impl ClientBClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn renamed_four(
         &self,
         options: Option<ClientBClientRenamedFourOptions<'_>>,
@@ -60,6 +72,10 @@ impl ClientBClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn renamed_six(
         &self,
         options: Option<ClientBClientRenamedSixOptions<'_>>,
@@ -72,6 +88,10 @@ impl ClientBClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn renamed_two(
         &self,
         options: Option<ClientBClientRenamedTwoOptions<'_>>,
@@ -85,17 +105,23 @@ impl ClientBClient {
     }
 }
 
+/// Options to be passed to [`ClientBClient::renamed_four()`](crate::ClientBClient::renamed_four())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientBClientRenamedFourOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ClientBClient::renamed_six()`](crate::ClientBClient::renamed_six())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientBClientRenamedSixOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ClientBClient::renamed_two()`](crate::ClientBClient::renamed_two())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientBClientRenamedTwoOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

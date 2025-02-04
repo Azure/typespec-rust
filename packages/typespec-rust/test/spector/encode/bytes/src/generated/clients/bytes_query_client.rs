@@ -19,6 +19,10 @@ impl BytesQueryClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn base64(
         &self,
         value: Vec<u8>,
@@ -34,6 +38,10 @@ impl BytesQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn base64_url(
         &self,
         value: Vec<u8>,
@@ -49,6 +57,10 @@ impl BytesQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn base64_url_array(
         &self,
         value: Vec<Vec<u8>>,
@@ -70,6 +82,10 @@ impl BytesQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn default(
         &self,
         value: Vec<u8>,
@@ -86,22 +102,30 @@ impl BytesQueryClient {
     }
 }
 
+/// Options to be passed to [`BytesQueryClient::base64()`](crate::clients::BytesQueryClient::base64())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesQueryClientBase64Options<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BytesQueryClient::base64_url()`](crate::clients::BytesQueryClient::base64_url())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesQueryClientBase64UrlOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BytesQueryClient::base64_url_array()`](crate::clients::BytesQueryClient::base64_url_array())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesQueryClientBase64UrlArrayOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BytesQueryClient::default()`](crate::clients::BytesQueryClient::default())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesQueryClientDefaultOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -10,17 +10,25 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Illustrates usage of Record in different places(Operation parameters, return type or both).
 pub struct UsageClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`UsageClient`](crate::UsageClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl UsageClient {
+    /// Creates a new UsageClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(endpoint: &str, options: Option<UsageClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -42,6 +50,10 @@ impl UsageClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn input(
         &self,
         input: RequestContent<InputRecord>,
@@ -57,6 +69,10 @@ impl UsageClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn input_and_output(
         &self,
         body: RequestContent<InputOutputRecord>,
@@ -73,6 +89,10 @@ impl UsageClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn output(
         &self,
         options: Option<UsageClientOutputOptions<'_>>,
@@ -87,17 +107,23 @@ impl UsageClient {
     }
 }
 
+/// Options to be passed to [`UsageClient::input()`](crate::UsageClient::input())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageClientInputOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`UsageClient::input_and_output()`](crate::UsageClient::input_and_output())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageClientInputAndOutputOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`UsageClient::output()`](crate::UsageClient::output())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageClientOutputOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

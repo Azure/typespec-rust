@@ -8,17 +8,25 @@ use crate::generated::clients::basic_implicit_body_client::BasicImplicitBodyClie
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Test for basic parameters cases.
 pub struct BasicClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`BasicClient`](crate::BasicClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl BasicClient {
+    /// Creates a new BasicClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(endpoint: &str, options: Option<BasicClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;

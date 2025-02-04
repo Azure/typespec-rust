@@ -15,12 +15,20 @@ pub struct RenamedOperationClient {
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`RenamedOperationClient`](crate::RenamedOperationClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl RenamedOperationClient {
+    /// Creates a new RenamedOperationClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -57,6 +65,10 @@ impl RenamedOperationClient {
         }
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn renamed_five(
         &self,
         options: Option<RenamedOperationClientRenamedFiveOptions<'_>>,
@@ -69,6 +81,10 @@ impl RenamedOperationClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn renamed_one(
         &self,
         options: Option<RenamedOperationClientRenamedOneOptions<'_>>,
@@ -81,6 +97,10 @@ impl RenamedOperationClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn renamed_three(
         &self,
         options: Option<RenamedOperationClientRenamedThreeOptions<'_>>,
@@ -94,17 +114,23 @@ impl RenamedOperationClient {
     }
 }
 
+/// Options to be passed to [`RenamedOperationClient::renamed_five()`](crate::RenamedOperationClient::renamed_five())
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationClientRenamedFiveOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`RenamedOperationClient::renamed_one()`](crate::RenamedOperationClient::renamed_one())
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationClientRenamedOneOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`RenamedOperationClient::renamed_three()`](crate::RenamedOperationClient::renamed_three())
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationClientRenamedThreeOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

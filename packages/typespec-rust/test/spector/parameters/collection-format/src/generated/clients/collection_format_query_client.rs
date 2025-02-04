@@ -17,6 +17,11 @@ impl CollectionFormatQueryClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `colors` - Possible values for colors are [blue,red,green]
+    /// * `options` - Optional parameters for the request.
     pub async fn csv(
         &self,
         colors: Vec<String>,
@@ -32,6 +37,11 @@ impl CollectionFormatQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `colors` - Possible values for colors are [blue,red,green]
+    /// * `options` - Optional parameters for the request.
     pub async fn multi(
         &self,
         colors: Vec<String>,
@@ -48,6 +58,11 @@ impl CollectionFormatQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `colors` - Possible values for colors are [blue,red,green]
+    /// * `options` - Optional parameters for the request.
     pub async fn pipes(
         &self,
         colors: Vec<String>,
@@ -63,6 +78,11 @@ impl CollectionFormatQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `colors` - Possible values for colors are [blue,red,green]
+    /// * `options` - Optional parameters for the request.
     pub async fn ssv(
         &self,
         colors: Vec<String>,
@@ -78,6 +98,11 @@ impl CollectionFormatQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `colors` - Possible values for colors are [blue,red,green]
+    /// * `options` - Optional parameters for the request.
     pub async fn tsv(
         &self,
         colors: Vec<String>,
@@ -94,27 +119,37 @@ impl CollectionFormatQueryClient {
     }
 }
 
+/// Options to be passed to [`CollectionFormatQueryClient::csv()`](crate::clients::CollectionFormatQueryClient::csv())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatQueryClientCsvOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`CollectionFormatQueryClient::multi()`](crate::clients::CollectionFormatQueryClient::multi())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatQueryClientMultiOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`CollectionFormatQueryClient::pipes()`](crate::clients::CollectionFormatQueryClient::pipes())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatQueryClientPipesOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`CollectionFormatQueryClient::ssv()`](crate::clients::CollectionFormatQueryClient::ssv())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatQueryClientSsvOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`CollectionFormatQueryClient::tsv()`](crate::clients::CollectionFormatQueryClient::tsv())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatQueryClientTsvOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

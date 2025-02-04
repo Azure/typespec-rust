@@ -12,12 +12,19 @@ pub struct ExtensibleClient {
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`ExtensibleClient`](crate::ExtensibleClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl ExtensibleClient {
+    /// Creates a new ExtensibleClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<ExtensibleClientOptions>,

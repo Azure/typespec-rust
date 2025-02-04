@@ -17,6 +17,11 @@ impl CollectionFormatHeaderClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `colors` - Possible values for colors are [blue,red,green]
+    /// * `options` - Optional parameters for the request.
     pub async fn csv(
         &self,
         colors: Vec<String>,
@@ -32,7 +37,9 @@ impl CollectionFormatHeaderClient {
     }
 }
 
+/// Options to be passed to [`CollectionFormatHeaderClient::csv()`](crate::clients::CollectionFormatHeaderClient::csv())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatHeaderClientCsvOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -17,6 +17,10 @@ impl DurationQueryClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn default(
         &self,
         input: &str,
@@ -31,6 +35,10 @@ impl DurationQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn float64_seconds(
         &self,
         input: f64,
@@ -46,6 +54,10 @@ impl DurationQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn float_seconds(
         &self,
         input: f32,
@@ -61,6 +73,10 @@ impl DurationQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn int32_seconds(
         &self,
         input: i32,
@@ -76,6 +92,10 @@ impl DurationQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn int32_seconds_array(
         &self,
         input: Vec<i32>,
@@ -97,6 +117,10 @@ impl DurationQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn iso8601(
         &self,
         input: &str,
@@ -112,32 +136,44 @@ impl DurationQueryClient {
     }
 }
 
+/// Options to be passed to [`DurationQueryClient::default()`](crate::clients::DurationQueryClient::default())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationQueryClientDefaultOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationQueryClient::float64_seconds()`](crate::clients::DurationQueryClient::float64_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationQueryClientFloat64SecondsOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationQueryClient::float_seconds()`](crate::clients::DurationQueryClient::float_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationQueryClientFloatSecondsOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationQueryClient::int32_seconds()`](crate::clients::DurationQueryClient::int32_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationQueryClientInt32SecondsOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationQueryClient::int32_seconds_array()`](crate::clients::DurationQueryClient::int32_seconds_array())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationQueryClientInt32SecondsArrayOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationQueryClient::iso8601()`](crate::clients::DurationQueryClient::iso8601())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationQueryClientIso8601Options<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

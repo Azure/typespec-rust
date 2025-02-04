@@ -18,6 +18,10 @@ impl ContentNegotiationDifferentBodyClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_avatar_as_json(
         &self,
         options: Option<ContentNegotiationDifferentBodyClientGetAvatarAsJsonOptions<'_>>,
@@ -31,6 +35,10 @@ impl ContentNegotiationDifferentBodyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_avatar_as_png(
         &self,
         options: Option<ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions<'_>>,
@@ -45,12 +53,16 @@ impl ContentNegotiationDifferentBodyClient {
     }
 }
 
+/// Options to be passed to [`ContentNegotiationDifferentBodyClient::get_avatar_as_json()`](crate::clients::ContentNegotiationDifferentBodyClient::get_avatar_as_json())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ContentNegotiationDifferentBodyClientGetAvatarAsJsonOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ContentNegotiationDifferentBodyClient::get_avatar_as_png()`](crate::clients::ContentNegotiationDifferentBodyClient::get_avatar_as_png())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -20,6 +20,7 @@ pub struct BlobClient {
     version: String,
 }
 
+/// Options used when creating a [`BlobClient`](crate::BlobClient)
 #[derive(Clone, SafeDebug)]
 pub struct BlobClientOptions {
     pub client_options: ClientOptions,
@@ -27,6 +28,14 @@ pub struct BlobClientOptions {
 }
 
 impl BlobClient {
+    /// Creates a new BlobClient, using Entra ID authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
+    ///   Entra ID token to use when authenticating.
+    /// * `options` - Optional configuration for the client.
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -58,6 +67,11 @@ impl BlobClient {
     }
 
     /// Returns a new instance of BlobAppendBlobClient.
+    ///
+    /// # Arguments
+    ///
+    /// * `container_name` - The name of the container.
+    /// * `blob` - The name of the blob.
     pub fn get_blob_append_blob_client(
         &self,
         container_name: String,
@@ -73,6 +87,11 @@ impl BlobClient {
     }
 
     /// Returns a new instance of BlobBlobClient.
+    ///
+    /// # Arguments
+    ///
+    /// * `container_name` - The name of the container.
+    /// * `blob` - The name of the blob.
     pub fn get_blob_blob_client(&self, container_name: String, blob: String) -> BlobBlobClient {
         BlobBlobClient {
             blob,
@@ -84,6 +103,11 @@ impl BlobClient {
     }
 
     /// Returns a new instance of BlobBlockBlobClient.
+    ///
+    /// # Arguments
+    ///
+    /// * `container_name` - The name of the container.
+    /// * `blob` - The name of the blob.
     pub fn get_blob_block_blob_client(
         &self,
         container_name: String,
@@ -99,6 +123,10 @@ impl BlobClient {
     }
 
     /// Returns a new instance of BlobContainerClient.
+    ///
+    /// # Arguments
+    ///
+    /// * `container_name` - The name of the container.
     pub fn get_blob_container_client(&self, container_name: String) -> BlobContainerClient {
         BlobContainerClient {
             container_name,
@@ -109,6 +137,11 @@ impl BlobClient {
     }
 
     /// Returns a new instance of BlobPageBlobClient.
+    ///
+    /// # Arguments
+    ///
+    /// * `container_name` - The name of the container.
+    /// * `blob` - The name of the blob.
     pub fn get_blob_page_blob_client(
         &self,
         container_name: String,

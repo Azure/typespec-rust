@@ -8,17 +8,25 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Illustrates server with a single path parameter @server
 pub struct SingleClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`SingleClient`](crate::SingleClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct SingleClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl SingleClient {
+    /// Creates a new SingleClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<SingleClientOptions>,
@@ -43,6 +51,10 @@ impl SingleClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn my_op(
         &self,
         options: Option<SingleClientMyOpOptions<'_>>,
@@ -56,7 +68,9 @@ impl SingleClient {
     }
 }
 
+/// Options to be passed to [`SingleClient::my_op()`](crate::SingleClient::my_op())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SingleClientMyOpOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

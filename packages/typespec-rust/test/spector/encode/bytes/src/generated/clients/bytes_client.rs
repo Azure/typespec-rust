@@ -11,17 +11,25 @@ use crate::generated::clients::bytes_response_body_client::BytesResponseBodyClie
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Test for encode decorator on bytes.
 pub struct BytesClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`BytesClient`](crate::BytesClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl BytesClient {
+    /// Creates a new BytesClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(endpoint: &str, options: Option<BytesClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;

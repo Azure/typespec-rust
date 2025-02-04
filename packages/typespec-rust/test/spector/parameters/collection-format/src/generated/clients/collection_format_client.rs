@@ -8,17 +8,25 @@ use crate::generated::clients::collection_format_query_client::CollectionFormatQ
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Test for collectionFormat.
 pub struct CollectionFormatClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`CollectionFormatClient`](crate::CollectionFormatClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl CollectionFormatClient {
+    /// Creates a new CollectionFormatClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<CollectionFormatClientOptions>,

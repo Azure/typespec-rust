@@ -8,12 +8,14 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Illustrates versioned server.
 pub struct VersionedClient {
     api_version: String,
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`VersionedClient`](crate::VersionedClient)
 #[derive(Clone, SafeDebug)]
 pub struct VersionedClientOptions {
     pub api_version: String,
@@ -21,6 +23,12 @@ pub struct VersionedClientOptions {
 }
 
 impl VersionedClient {
+    /// Creates a new VersionedClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<VersionedClientOptions>,
@@ -46,6 +54,10 @@ impl VersionedClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_path_api_version(
         &self,
         options: Option<VersionedClientWithPathApiVersionOptions<'_>>,
@@ -60,6 +72,10 @@ impl VersionedClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_query_api_version(
         &self,
         options: Option<VersionedClientWithQueryApiVersionOptions<'_>>,
@@ -74,6 +90,10 @@ impl VersionedClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_query_old_api_version(
         &self,
         options: Option<VersionedClientWithQueryOldApiVersionOptions<'_>>,
@@ -88,6 +108,10 @@ impl VersionedClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn without_api_version(
         &self,
         options: Option<VersionedClientWithoutApiVersionOptions<'_>>,
@@ -110,22 +134,30 @@ impl Default for VersionedClientOptions {
     }
 }
 
+/// Options to be passed to [`VersionedClient::with_path_api_version()`](crate::VersionedClient::with_path_api_version())
 #[derive(Clone, Default, SafeDebug)]
 pub struct VersionedClientWithPathApiVersionOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`VersionedClient::with_query_api_version()`](crate::VersionedClient::with_query_api_version())
 #[derive(Clone, Default, SafeDebug)]
 pub struct VersionedClientWithQueryApiVersionOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`VersionedClient::with_query_old_api_version()`](crate::VersionedClient::with_query_old_api_version())
 #[derive(Clone, Default, SafeDebug)]
 pub struct VersionedClientWithQueryOldApiVersionOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`VersionedClient::without_api_version()`](crate::VersionedClient::without_api_version())
 #[derive(Clone, Default, SafeDebug)]
 pub struct VersionedClientWithoutApiVersionOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

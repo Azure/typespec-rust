@@ -10,17 +10,25 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Illustrates the model flatten cases.
 pub struct FlattenPropertyClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`FlattenPropertyClient`](crate::FlattenPropertyClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct FlattenPropertyClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl FlattenPropertyClient {
+    /// Creates a new FlattenPropertyClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<FlattenPropertyClientOptions>,
@@ -45,6 +53,10 @@ impl FlattenPropertyClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put_flatten_model(
         &self,
         input: RequestContent<FlattenModel>,
@@ -61,6 +73,10 @@ impl FlattenPropertyClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put_nested_flatten_model(
         &self,
         input: RequestContent<NestedFlattenModel>,
@@ -78,12 +94,16 @@ impl FlattenPropertyClient {
     }
 }
 
+/// Options to be passed to [`FlattenPropertyClient::put_flatten_model()`](crate::FlattenPropertyClient::put_flatten_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FlattenPropertyClientPutFlattenModelOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`FlattenPropertyClient::put_nested_flatten_model()`](crate::FlattenPropertyClient::put_nested_flatten_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FlattenPropertyClientPutNestedFlattenModelOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

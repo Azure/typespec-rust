@@ -20,6 +20,10 @@ impl ExtensibleStringClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_known_value(
         &self,
         options: Option<ExtensibleStringClientGetKnownValueOptions<'_>>,
@@ -33,6 +37,10 @@ impl ExtensibleStringClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_unknown_value(
         &self,
         options: Option<ExtensibleStringClientGetUnknownValueOptions<'_>>,
@@ -46,6 +54,10 @@ impl ExtensibleStringClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put_known_value(
         &self,
         body: RequestContent<DaysOfWeekExtensibleEnum>,
@@ -61,6 +73,10 @@ impl ExtensibleStringClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put_unknown_value(
         &self,
         body: RequestContent<DaysOfWeekExtensibleEnum>,
@@ -77,22 +93,30 @@ impl ExtensibleStringClient {
     }
 }
 
+/// Options to be passed to [`ExtensibleStringClient::get_known_value()`](crate::clients::ExtensibleStringClient::get_known_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleStringClientGetKnownValueOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ExtensibleStringClient::get_unknown_value()`](crate::clients::ExtensibleStringClient::get_unknown_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleStringClientGetUnknownValueOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ExtensibleStringClient::put_known_value()`](crate::clients::ExtensibleStringClient::put_known_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleStringClientPutKnownValueOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ExtensibleStringClient::put_unknown_value()`](crate::clients::ExtensibleStringClient::put_unknown_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleStringClientPutUnknownValueOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

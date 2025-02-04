@@ -9,6 +9,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Operations for the ModelWithArrayOfModel type.
 pub struct XmlModelWithArrayOfModelValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl XmlModelWithArrayOfModelValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<XmlModelWithArrayOfModelValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl XmlModelWithArrayOfModelValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         input: RequestContent<ModelWithArrayOfModel>,
@@ -49,12 +58,16 @@ impl XmlModelWithArrayOfModelValueClient {
     }
 }
 
+/// Options to be passed to [`XmlModelWithArrayOfModelValueClient::get()`](crate::clients::XmlModelWithArrayOfModelValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithArrayOfModelValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`XmlModelWithArrayOfModelValueClient::put()`](crate::clients::XmlModelWithArrayOfModelValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithArrayOfModelValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

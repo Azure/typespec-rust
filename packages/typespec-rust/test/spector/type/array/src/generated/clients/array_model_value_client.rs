@@ -9,6 +9,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Array of model values
 pub struct ArrayModelValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl ArrayModelValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<ArrayModelValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl ArrayModelValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<Vec<InnerModel>>,
@@ -49,12 +58,16 @@ impl ArrayModelValueClient {
     }
 }
 
+/// Options to be passed to [`ArrayModelValueClient::get()`](crate::clients::ArrayModelValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayModelValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ArrayModelValueClient::put()`](crate::clients::ArrayModelValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayModelValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

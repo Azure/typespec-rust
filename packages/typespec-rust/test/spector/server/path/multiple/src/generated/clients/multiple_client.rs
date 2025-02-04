@@ -13,6 +13,7 @@ pub struct MultipleClient {
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`MultipleClient`](crate::MultipleClient)
 #[derive(Clone, SafeDebug)]
 pub struct MultipleClientOptions {
     pub api_version: String,
@@ -20,6 +21,12 @@ pub struct MultipleClientOptions {
 }
 
 impl MultipleClient {
+    /// Creates a new MultipleClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<MultipleClientOptions>,
@@ -47,6 +54,10 @@ impl MultipleClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn no_operation_params(
         &self,
         options: Option<MultipleClientNoOperationParamsOptions<'_>>,
@@ -58,6 +69,10 @@ impl MultipleClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn with_operation_path_param(
         &self,
         keyword: &str,
@@ -81,12 +96,16 @@ impl Default for MultipleClientOptions {
     }
 }
 
+/// Options to be passed to [`MultipleClient::no_operation_params()`](crate::MultipleClient::no_operation_params())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MultipleClientNoOperationParamsOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`MultipleClient::with_operation_path_param()`](crate::MultipleClient::with_operation_path_param())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MultipleClientWithOperationPathParamOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

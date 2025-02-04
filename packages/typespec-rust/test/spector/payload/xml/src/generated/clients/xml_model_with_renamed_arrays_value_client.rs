@@ -9,6 +9,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Operations for the ModelWithRenamedArrays type.
 pub struct XmlModelWithRenamedArraysValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl XmlModelWithRenamedArraysValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<XmlModelWithRenamedArraysValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl XmlModelWithRenamedArraysValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         input: RequestContent<ModelWithRenamedArrays>,
@@ -49,12 +58,16 @@ impl XmlModelWithRenamedArraysValueClient {
     }
 }
 
+/// Options to be passed to [`XmlModelWithRenamedArraysValueClient::get()`](crate::clients::XmlModelWithRenamedArraysValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithRenamedArraysValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`XmlModelWithRenamedArraysValueClient::put()`](crate::clients::XmlModelWithRenamedArraysValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithRenamedArraysValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

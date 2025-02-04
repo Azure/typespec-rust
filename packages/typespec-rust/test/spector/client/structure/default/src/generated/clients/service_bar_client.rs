@@ -17,6 +17,10 @@ impl ServiceBarClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn five(
         &self,
         options: Option<ServiceBarClientFiveOptions<'_>>,
@@ -29,6 +33,10 @@ impl ServiceBarClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn six(
         &self,
         options: Option<ServiceBarClientSixOptions<'_>>,
@@ -42,12 +50,16 @@ impl ServiceBarClient {
     }
 }
 
+/// Options to be passed to [`ServiceBarClient::five()`](crate::clients::ServiceBarClient::five())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceBarClientFiveOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ServiceBarClient::six()`](crate::clients::ServiceBarClient::six())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceBarClientSixOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

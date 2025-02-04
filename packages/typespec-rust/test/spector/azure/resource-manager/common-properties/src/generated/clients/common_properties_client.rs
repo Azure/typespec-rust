@@ -9,6 +9,7 @@ use azure_core::{BearerTokenCredentialPolicy, ClientOptions, Pipeline, Policy, R
 use std::sync::Arc;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Arm Managed Identity Provider management API.
 pub struct CommonPropertiesClient {
     api_version: String,
     endpoint: Url,
@@ -16,6 +17,7 @@ pub struct CommonPropertiesClient {
     subscription_id: String,
 }
 
+/// Options used when creating a [`CommonPropertiesClient`](crate::CommonPropertiesClient)
 #[derive(Clone, SafeDebug)]
 pub struct CommonPropertiesClientOptions {
     pub api_version: String,
@@ -23,6 +25,15 @@ pub struct CommonPropertiesClientOptions {
 }
 
 impl CommonPropertiesClient {
+    /// Creates a new CommonPropertiesClient, using Entra ID authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
+    ///   Entra ID token to use when authenticating.
+    /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
+    /// * `options` - Optional configuration for the client.
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,

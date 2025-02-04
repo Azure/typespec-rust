@@ -9,6 +9,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Operations for the ModelWithDictionary type.
 pub struct XmlModelWithDictionaryValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl XmlModelWithDictionaryValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<XmlModelWithDictionaryValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl XmlModelWithDictionaryValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         input: RequestContent<ModelWithDictionary>,
@@ -49,12 +58,16 @@ impl XmlModelWithDictionaryValueClient {
     }
 }
 
+/// Options to be passed to [`XmlModelWithDictionaryValueClient::get()`](crate::clients::XmlModelWithDictionaryValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithDictionaryValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`XmlModelWithDictionaryValueClient::put()`](crate::clients::XmlModelWithDictionaryValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithDictionaryValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

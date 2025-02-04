@@ -20,6 +20,10 @@ impl NamingUnionEnumClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn union_enum_member_name(
         &self,
         body: RequestContent<ExtensibleEnum>,
@@ -35,6 +39,10 @@ impl NamingUnionEnumClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn union_enum_name(
         &self,
         body: RequestContent<ClientExtensibleEnum>,
@@ -51,12 +59,16 @@ impl NamingUnionEnumClient {
     }
 }
 
+/// Options to be passed to [`NamingUnionEnumClient::union_enum_member_name()`](crate::clients::NamingUnionEnumClient::union_enum_member_name())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingUnionEnumClientUnionEnumMemberNameOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`NamingUnionEnumClient::union_enum_name()`](crate::clients::NamingUnionEnumClient::union_enum_name())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingUnionEnumClientUnionEnumNameOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

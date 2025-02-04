@@ -17,6 +17,10 @@ impl ServiceFooClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn four(
         &self,
         options: Option<ServiceFooClientFourOptions<'_>>,
@@ -29,6 +33,10 @@ impl ServiceFooClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn three(
         &self,
         options: Option<ServiceFooClientThreeOptions<'_>>,
@@ -42,12 +50,16 @@ impl ServiceFooClient {
     }
 }
 
+/// Options to be passed to [`ServiceFooClient::four()`](crate::clients::ServiceFooClient::four())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceFooClientFourOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ServiceFooClient::three()`](crate::clients::ServiceFooClient::three())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceFooClientThreeOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -20,6 +20,10 @@ impl DatetimeQueryClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn default(
         &self,
         value: OffsetDateTime,
@@ -35,6 +39,10 @@ impl DatetimeQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn rfc3339(
         &self,
         value: OffsetDateTime,
@@ -50,6 +58,10 @@ impl DatetimeQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn rfc7231(
         &self,
         value: OffsetDateTime,
@@ -65,6 +77,10 @@ impl DatetimeQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn unix_timestamp(
         &self,
         value: OffsetDateTime,
@@ -80,6 +96,10 @@ impl DatetimeQueryClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn unix_timestamp_array(
         &self,
         value: Vec<OffsetDateTime>,
@@ -102,27 +122,37 @@ impl DatetimeQueryClient {
     }
 }
 
+/// Options to be passed to [`DatetimeQueryClient::default()`](crate::clients::DatetimeQueryClient::default())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeQueryClientDefaultOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DatetimeQueryClient::rfc3339()`](crate::clients::DatetimeQueryClient::rfc3339())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeQueryClientRfc3339Options<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DatetimeQueryClient::rfc7231()`](crate::clients::DatetimeQueryClient::rfc7231())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeQueryClientRfc7231Options<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DatetimeQueryClient::unix_timestamp()`](crate::clients::DatetimeQueryClient::unix_timestamp())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeQueryClientUnixTimestampOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DatetimeQueryClient::unix_timestamp_array()`](crate::clients::DatetimeQueryClient::unix_timestamp_array())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeQueryClientUnixTimestampArrayOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

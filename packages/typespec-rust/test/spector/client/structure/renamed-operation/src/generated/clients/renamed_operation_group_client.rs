@@ -17,6 +17,10 @@ impl RenamedOperationGroupClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn renamed_four(
         &self,
         options: Option<RenamedOperationGroupClientRenamedFourOptions<'_>>,
@@ -29,6 +33,10 @@ impl RenamedOperationGroupClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn renamed_six(
         &self,
         options: Option<RenamedOperationGroupClientRenamedSixOptions<'_>>,
@@ -41,6 +49,10 @@ impl RenamedOperationGroupClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn renamed_two(
         &self,
         options: Option<RenamedOperationGroupClientRenamedTwoOptions<'_>>,
@@ -54,17 +66,23 @@ impl RenamedOperationGroupClient {
     }
 }
 
+/// Options to be passed to [`RenamedOperationGroupClient::renamed_four()`](crate::clients::RenamedOperationGroupClient::renamed_four())
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationGroupClientRenamedFourOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`RenamedOperationGroupClient::renamed_six()`](crate::clients::RenamedOperationGroupClient::renamed_six())
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationGroupClientRenamedSixOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`RenamedOperationGroupClient::renamed_two()`](crate::clients::RenamedOperationGroupClient::renamed_two())
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationGroupClientRenamedTwoOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

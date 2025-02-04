@@ -12,12 +12,19 @@ pub struct FixedClient {
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`FixedClient`](crate::FixedClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct FixedClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl FixedClient {
+    /// Creates a new FixedClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(endpoint: &str, options: Option<FixedClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;

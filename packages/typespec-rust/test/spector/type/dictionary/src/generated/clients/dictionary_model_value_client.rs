@@ -10,6 +10,7 @@ use azure_core::{
 use std::collections::HashMap;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Dictionary of model values
 pub struct DictionaryModelValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -21,6 +22,10 @@ impl DictionaryModelValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<DictionaryModelValueClientGetOptions<'_>>,
@@ -34,6 +39,10 @@ impl DictionaryModelValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, InnerModel>>,
@@ -50,12 +59,16 @@ impl DictionaryModelValueClient {
     }
 }
 
+/// Options to be passed to [`DictionaryModelValueClient::get()`](crate::clients::DictionaryModelValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryModelValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DictionaryModelValueClient::put()`](crate::clients::DictionaryModelValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryModelValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

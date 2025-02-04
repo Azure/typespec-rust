@@ -8,6 +8,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Array of int32 values
 pub struct ArrayInt32ValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -19,6 +20,10 @@ impl ArrayInt32ValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<ArrayInt32ValueClientGetOptions<'_>>,
@@ -32,6 +37,10 @@ impl ArrayInt32ValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<Vec<i32>>,
@@ -48,12 +57,16 @@ impl ArrayInt32ValueClient {
     }
 }
 
+/// Options to be passed to [`ArrayInt32ValueClient::get()`](crate::clients::ArrayInt32ValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayInt32ValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ArrayInt32ValueClient::put()`](crate::clients::ArrayInt32ValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayInt32ValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

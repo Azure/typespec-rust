@@ -11,17 +11,25 @@ use typespec_client_core::fmt::SafeDebug;
 use typespec_client_core::http::PagerResult;
 use typespec_client_core::json;
 
+/// Test describing pageable.
 pub struct PageableClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`PageableClient`](crate::PageableClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageableClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl PageableClient {
+    /// Creates a new PageableClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<PageableClientOptions>,
@@ -47,6 +55,10 @@ impl PageableClient {
     }
 
     /// List users
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub fn list(&self, options: Option<PageableClientListOptions<'_>>) -> Result<Pager<PagedUser>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -84,9 +96,13 @@ impl PageableClient {
     }
 }
 
+/// Options to be passed to [`PageableClient::list()`](crate::PageableClient::list())
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageableClientListOptions<'a> {
+    /// The maximum number of result items per page.
     pub maxpagesize: Option<i32>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 

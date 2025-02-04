@@ -9,6 +9,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Operations for the ModelWithUnwrappedArray type.
 pub struct XmlModelWithUnwrappedArrayValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl XmlModelWithUnwrappedArrayValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<XmlModelWithUnwrappedArrayValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl XmlModelWithUnwrappedArrayValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         input: RequestContent<ModelWithUnwrappedArray>,
@@ -49,12 +58,16 @@ impl XmlModelWithUnwrappedArrayValueClient {
     }
 }
 
+/// Options to be passed to [`XmlModelWithUnwrappedArrayValueClient::get()`](crate::clients::XmlModelWithUnwrappedArrayValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithUnwrappedArrayValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`XmlModelWithUnwrappedArrayValueClient::put()`](crate::clients::XmlModelWithUnwrappedArrayValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithUnwrappedArrayValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

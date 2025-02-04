@@ -12,12 +12,14 @@ use typespec_client_core::fmt::SafeDebug;
 use typespec_client_core::http::PagerResult;
 use typespec_client_core::json;
 
+/// Illustrates bodies templated with Azure Core
 pub struct BasicClient {
     api_version: String,
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`BasicClient`](crate::BasicClient)
 #[derive(Clone, SafeDebug)]
 pub struct BasicClientOptions {
     pub api_version: String,
@@ -25,6 +27,12 @@ pub struct BasicClientOptions {
 }
 
 impl BasicClient {
+    /// Creates a new BasicClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(endpoint: &str, options: Option<BasicClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -50,6 +58,12 @@ impl BasicClient {
     /// Adds a user or replaces a user's fields.
     ///
     /// Creates or replaces a User
+    ///
+    /// # Arguments
+    ///
+    /// * `id` - The user's id.
+    /// * `resource` - The resource instance.
+    /// * `options` - Optional parameters for the request.
     pub async fn create_or_replace(
         &self,
         id: i32,
@@ -74,6 +88,12 @@ impl BasicClient {
     /// Adds a user or updates a user's fields.
     ///
     /// Creates or updates a User
+    ///
+    /// # Arguments
+    ///
+    /// * `id` - The user's id.
+    /// * `resource` - The resource instance.
+    /// * `options` - Optional parameters for the request.
     pub async fn create_or_update(
         &self,
         id: i32,
@@ -98,6 +118,11 @@ impl BasicClient {
     /// Deletes a user.
     ///
     /// Deletes a User
+    ///
+    /// # Arguments
+    ///
+    /// * `id` - The user's id.
+    /// * `options` - Optional parameters for the request.
     pub async fn delete(
         &self,
         id: i32,
@@ -119,6 +144,12 @@ impl BasicClient {
     /// Exports a user.
     ///
     /// Exports a User
+    ///
+    /// # Arguments
+    ///
+    /// * `id` - The user's id.
+    /// * `format` - The format of the data.
+    /// * `options` - Optional parameters for the request.
     pub async fn export(
         &self,
         id: i32,
@@ -142,6 +173,11 @@ impl BasicClient {
     /// Exports all users.
     ///
     /// Exports all users
+    ///
+    /// # Arguments
+    ///
+    /// * `format` - The format of the data.
+    /// * `options` - Optional parameters for the request.
     pub async fn export_all_users(
         &self,
         format: &str,
@@ -162,6 +198,11 @@ impl BasicClient {
     /// Gets a user.
     ///
     /// Gets a User
+    ///
+    /// # Arguments
+    ///
+    /// * `id` - The user's id.
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         id: i32,
@@ -183,6 +224,10 @@ impl BasicClient {
     /// Lists all users.
     ///
     /// Lists all Users
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub fn list(&self, options: Option<BasicClientListOptions<'_>>) -> Result<Pager<PagedUser>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -272,45 +317,73 @@ impl Default for BasicClientOptions {
     }
 }
 
+/// Options to be passed to [`BasicClient::create_or_replace()`](crate::BasicClient::create_or_replace())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientCreateOrReplaceOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BasicClient::create_or_update()`](crate::BasicClient::create_or_update())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientCreateOrUpdateOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BasicClient::delete()`](crate::BasicClient::delete())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientDeleteOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BasicClient::export()`](crate::BasicClient::export())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientExportOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BasicClient::export_all_users()`](crate::BasicClient::export_all_users())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientExportAllUsersOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BasicClient::get()`](crate::BasicClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`BasicClient::list()`](crate::BasicClient::list())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientListOptions<'a> {
+    /// Expand the indicated resources into the response.
     pub expand: Option<Vec<String>>,
+
+    /// Filter the result list using the given expression.
     pub filter: Option<String>,
+
+    /// The maximum number of result items per page.
     pub maxpagesize: Option<i32>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// Expressions that specify the order of returned results.
     pub orderby: Option<Vec<String>>,
+
+    /// Select the specified fields to be included in the response.
     pub select: Option<Vec<String>>,
+
+    /// The number of result items to skip.
     pub skip: Option<i32>,
+
+    /// The number of result items to return.
     pub top: Option<i32>,
 }
 

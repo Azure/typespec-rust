@@ -21,6 +21,10 @@ impl SpreadModelClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn spread_as_request_body(
         &self,
         name: &str,
@@ -40,6 +44,10 @@ impl SpreadModelClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn spread_composite_request(
         &self,
         name: &str,
@@ -60,6 +68,10 @@ impl SpreadModelClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn spread_composite_request_mix(
         &self,
         name: &str,
@@ -85,6 +97,10 @@ impl SpreadModelClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn spread_composite_request_only_with_body(
         &self,
         body: RequestContent<BodyParameter>,
@@ -100,6 +116,10 @@ impl SpreadModelClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn spread_composite_request_without_body(
         &self,
         name: &str,
@@ -119,27 +139,37 @@ impl SpreadModelClient {
     }
 }
 
+/// Options to be passed to [`SpreadModelClient::spread_as_request_body()`](crate::clients::SpreadModelClient::spread_as_request_body())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadAsRequestBodyOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpreadModelClient::spread_composite_request()`](crate::clients::SpreadModelClient::spread_composite_request())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadCompositeRequestOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpreadModelClient::spread_composite_request_mix()`](crate::clients::SpreadModelClient::spread_composite_request_mix())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadCompositeRequestMixOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpreadModelClient::spread_composite_request_only_with_body()`](crate::clients::SpreadModelClient::spread_composite_request_only_with_body())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadCompositeRequestOnlyWithBodyOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`SpreadModelClient::spread_composite_request_without_body()`](crate::clients::SpreadModelClient::spread_composite_request_without_body())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadCompositeRequestWithoutBodyOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

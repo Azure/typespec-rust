@@ -17,6 +17,10 @@ impl DurationHeaderClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn default(
         &self,
         duration: &str,
@@ -31,6 +35,10 @@ impl DurationHeaderClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn float64_seconds(
         &self,
         duration: f64,
@@ -45,6 +53,10 @@ impl DurationHeaderClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn float_seconds(
         &self,
         duration: f32,
@@ -59,6 +71,10 @@ impl DurationHeaderClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn int32_seconds(
         &self,
         duration: i32,
@@ -73,6 +89,10 @@ impl DurationHeaderClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn iso8601(
         &self,
         duration: &str,
@@ -87,6 +107,10 @@ impl DurationHeaderClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn iso8601_array(
         &self,
         duration: Vec<String>,
@@ -102,32 +126,44 @@ impl DurationHeaderClient {
     }
 }
 
+/// Options to be passed to [`DurationHeaderClient::default()`](crate::clients::DurationHeaderClient::default())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationHeaderClientDefaultOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationHeaderClient::float64_seconds()`](crate::clients::DurationHeaderClient::float64_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationHeaderClientFloat64SecondsOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationHeaderClient::float_seconds()`](crate::clients::DurationHeaderClient::float_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationHeaderClientFloatSecondsOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationHeaderClient::int32_seconds()`](crate::clients::DurationHeaderClient::int32_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationHeaderClientInt32SecondsOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationHeaderClient::iso8601()`](crate::clients::DurationHeaderClient::iso8601())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationHeaderClientIso8601Options<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationHeaderClient::iso8601_array()`](crate::clients::DurationHeaderClient::iso8601_array())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationHeaderClientIso8601ArrayOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

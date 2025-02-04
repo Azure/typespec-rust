@@ -31,6 +31,11 @@ impl BlobBlobClient {
 
     /// The Abort Copy From URL operation aborts a pending Copy From URL operation, and leaves a destination blob with zero length
     /// and full metadata.
+    ///
+    /// # Arguments
+    ///
+    /// * `copy_id` - The copy identifier provided in the x-ms-copy-id header of the original Copy Blob operation.
+    /// * `options` - Optional parameters for the request.
     pub async fn abort_copy_from_url(
         &self,
         copy_id: &str,
@@ -65,6 +70,10 @@ impl BlobBlobClient {
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn acquire_lease(
         &self,
         options: Option<BlobBlobClientAcquireLeaseOptions<'_>>,
@@ -118,6 +127,10 @@ impl BlobBlobClient {
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn break_lease(
         &self,
         options: Option<BlobBlobClientBreakLeaseOptions<'_>>,
@@ -168,6 +181,12 @@ impl BlobBlobClient {
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
+    ///
+    /// # Arguments
+    ///
+    /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
+    ///   lease ID must match.
+    /// * `options` - Optional parameters for the request.
     pub async fn change_lease(
         &self,
         lease_id: &str,
@@ -221,6 +240,13 @@ impl BlobBlobClient {
 
     /// The Copy From URL operation copies a blob or an internet resource to a new blob. It will not return a response until the
     /// copy is complete.
+    ///
+    /// # Arguments
+    ///
+    /// * `copy_source` - Specifies the name of the source page blob snapshot. This value is a URL of up to 2 KB in length that
+    ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
+    ///   either be public or must be authenticated via a shared access signature.
+    /// * `options` - Optional parameters for the request.
     pub async fn copy_from_url(
         &self,
         copy_source: &str,
@@ -326,6 +352,10 @@ impl BlobBlobClient {
     }
 
     /// The Create Snapshot operation creates a read-only snapshot of a blob
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn create_snapshot(
         &self,
         options: Option<BlobBlobClientCreateSnapshotOptions<'_>>,
@@ -402,6 +432,10 @@ impl BlobBlobClient {
     /// and specify the \"include=deleted\" query parameter to discover which blobs and snapshots have been soft deleted. You
     /// can then use the Undelete Blob API to restore a soft-deleted blob. All other operations on a soft-deleted blob or snapshot
     /// causes the service to return an HTTP status code of 404 (ResourceNotFound).
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn delete(
         &self,
         options: Option<BlobBlobClientDeleteOptions<'_>>,
@@ -462,6 +496,10 @@ impl BlobBlobClient {
     }
 
     /// The Delete Immutability Policy operation deletes the immutability policy on the blob.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn delete_immutability_policy(
         &self,
         options: Option<BlobBlobClientDeleteImmutabilityPolicyOptions<'_>>,
@@ -497,6 +535,10 @@ impl BlobBlobClient {
 
     /// The Download operation reads or downloads a blob from the system, including its metadata and properties. You can also
     /// call Download to read a snapshot.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn download(
         &self,
         options: Option<BlobBlobClientDownloadOptions<'_>>,
@@ -579,6 +621,10 @@ impl BlobBlobClient {
     }
 
     /// Returns the sku name and account kind
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_account_info(
         &self,
         options: Option<BlobBlobClientGetAccountInfoOptions<'_>>,
@@ -610,6 +656,10 @@ impl BlobBlobClient {
 
     /// The Get Properties operation returns all user-defined metadata, standard HTTP properties, and system properties for the
     /// blob. It does not return the content of the blob.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_properties(
         &self,
         options: Option<BlobBlobClientGetPropertiesOptions<'_>>,
@@ -675,6 +725,10 @@ impl BlobBlobClient {
     }
 
     /// The Get Blob Tags operation enables users to get tags on a blob.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get_tags(
         &self,
         options: Option<BlobBlobClientGetTagsOptions<'_>>,
@@ -714,6 +768,11 @@ impl BlobBlobClient {
     }
 
     /// The Query operation enables users to select/project on blob data by providing simple query expressions.
+    ///
+    /// # Arguments
+    ///
+    /// * `query_request` - The query request
+    /// * `options` - Optional parameters for the request.
     pub async fn query(
         &self,
         query_request: RequestContent<QueryRequest>,
@@ -779,6 +838,12 @@ impl BlobBlobClient {
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
+    ///
+    /// # Arguments
+    ///
+    /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
+    ///   lease ID must match.
+    /// * `options` - Optional parameters for the request.
     pub async fn release_lease(
         &self,
         lease_id: &str,
@@ -828,6 +893,12 @@ impl BlobBlobClient {
     }
 
     /// [Update] The Lease Blob operation establishes and manages a lock on a blob for write and delete operations.
+    ///
+    /// # Arguments
+    ///
+    /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
+    ///   lease ID must match.
+    /// * `options` - Optional parameters for the request.
     pub async fn renew_lease(
         &self,
         lease_id: &str,
@@ -877,6 +948,11 @@ impl BlobBlobClient {
     }
 
     /// Set the expiration time of a blob
+    ///
+    /// # Arguments
+    ///
+    /// * `expiry_options` - Required. Indicates mode of the expiry time
+    /// * `options` - Optional parameters for the request.
     pub async fn set_expiry(
         &self,
         expiry_options: BlobExpiryOptions,
@@ -909,6 +985,10 @@ impl BlobBlobClient {
     }
 
     /// The Set HTTP Headers operation sets system properties on the blob.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn set_http_headers(
         &self,
         options: Option<BlobBlobClientSetHttpHeadersOptions<'_>>,
@@ -977,6 +1057,10 @@ impl BlobBlobClient {
     }
 
     /// Set the immutability policy of a blob
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn set_immutability_policy(
         &self,
         options: Option<BlobBlobClientSetImmutabilityPolicyOptions<'_>>,
@@ -1026,6 +1110,11 @@ impl BlobBlobClient {
     }
 
     /// The Set Legal Hold operation sets a legal hold on the blob.
+    ///
+    /// # Arguments
+    ///
+    /// * `legal_hold` - Required. Specifies the legal hold status to set on the blob.
+    /// * `options` - Optional parameters for the request.
     pub async fn set_legal_hold(
         &self,
         legal_hold: bool,
@@ -1061,6 +1150,10 @@ impl BlobBlobClient {
     }
 
     /// The Set Metadata operation sets user-defined metadata for the specified blob as one or more name-value pairs.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn set_metadata(
         &self,
         options: Option<BlobBlobClientSetMetadataOptions<'_>>,
@@ -1129,6 +1222,11 @@ impl BlobBlobClient {
     }
 
     /// The Set Tags operation enables users to set tags on a blob.
+    ///
+    /// # Arguments
+    ///
+    /// * `tags` - The blob tags.
+    /// * `options` - Optional parameters for the request.
     pub async fn set_tags(
         &self,
         tags: RequestContent<BlobTags>,
@@ -1175,6 +1273,11 @@ impl BlobBlobClient {
     /// The Set Tier operation sets the tier on a block blob. The operation is allowed on a page blob or block blob, but not on
     /// an append blob. A block blob's tier determines Hot/Cool/Archive storage type. This operation does not update the blob's
     /// ETag.
+    ///
+    /// # Arguments
+    ///
+    /// * `tier` - Indicates the tier to be set on the blob.
+    /// * `options` - Optional parameters for the request.
     pub async fn set_tier(
         &self,
         tier: AccessTier,
@@ -1219,6 +1322,13 @@ impl BlobBlobClient {
     }
 
     /// The Start Copy From URL operation copies a blob or an internet resource to a new blob.
+    ///
+    /// # Arguments
+    ///
+    /// * `copy_source` - Specifies the name of the source page blob snapshot. This value is a URL of up to 2 KB in length that
+    ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
+    ///   either be public or must be authenticated via a shared access signature.
+    /// * `options` - Optional parameters for the request.
     pub async fn start_copy_from_url(
         &self,
         copy_source: &str,
@@ -1319,6 +1429,10 @@ impl BlobBlobClient {
     }
 
     /// Undelete a blob that was previously soft deleted
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn undelete(
         &self,
         options: Option<BlobBlobClientUndeleteOptions<'_>>,
@@ -1346,343 +1460,924 @@ impl BlobBlobClient {
     }
 }
 
+/// Options to be passed to [`BlobBlobClient::abort_copy_from_url()`](crate::clients::BlobBlobClient::abort_copy_from_url())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientAbortCopyFromUrlOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::acquire_lease()`](crate::clients::BlobBlobClient::acquire_lease())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientAcquireLeaseOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease
+    /// can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change.
     pub duration: Option<i32>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// Optional. The proposed lease ID for the container.
     pub proposed_lease_id: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::break_lease()`](crate::clients::BlobBlobClient::break_lease())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientBreakLeaseOptions<'a> {
+    /// For a break operation, proposed duration the lease should continue before it is broken, in seconds, between 0 and 60.
+    /// This break period is only used if it is shorter than the time remaining on the lease. If longer, the time remaining on
+    /// the lease is used. A new lease will not be available before the break period has expired, but the lease may be held for
+    /// longer than the break period. If this header does not appear with a break operation, a fixed-duration lease breaks after
+    /// the remaining lease period elapses, and an infinite lease breaks immediately.
     pub break_period: Option<i32>,
+
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::change_lease()`](crate::clients::BlobBlobClient::change_lease())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientChangeLeaseOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// Optional. The proposed lease ID for the container.
     pub proposed_lease_id: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::copy_from_url()`](crate::clients::BlobBlobClient::copy_from_url())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientCopyFromUrlOptions<'a> {
+    /// Optional. Used to set blob tags in various blob operations.
     pub blob_tags_string: Option<String>,
+
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Only Bearer type is supported. Credentials should be a valid OAuth access token to copy source.
     pub copy_source_authorization: Option<String>,
+
+    /// Optional, default 'replace'. Indicates if source tags should be copied or replaced with the tags specified by x-ms-tags.
     pub copy_source_tags: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption scope to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_scope: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// Specifies the date time when the blobs immutability policy is set to expire.
     pub immutability_policy_expiry: Option<String>,
+
+    /// Specifies the immutability policy mode to set on the blob.
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Specified if a legal hold should be set on the blob.
     pub legal_hold: Option<bool>,
+
+    /// The metadata headers.
     pub metadata: Option<HashMap<String, String>>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// Specify the md5 calculated for the range of bytes that must be read from the copy source.
     pub source_content_md5: Option<String>,
+
+    /// Specify an ETag value to operate only on blobs with a matching value.
     pub source_if_match: Option<String>,
+
+    /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
     pub source_if_modified_since: Option<String>,
+
+    /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
     pub source_if_none_match: Option<String>,
+
+    /// Specify this header value to operate only on a blob if it has not been modified since the specified date/time.
     pub source_if_unmodified_since: Option<String>,
+
+    /// The tier to be set on the blob.
     pub tier: Option<AccessTier>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::create_snapshot()`](crate::clients::BlobBlobClient::create_snapshot())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientCreateSnapshotOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the algorithm to use for encryption. If not specified, the default is
+    /// AES256.
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption key to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_key: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the SHA256 hash of the encryption key used to encrypt the data provided
+    /// in the request. This header is only used for encryption with a customer-provided key. If the request is authenticated
+    /// with a client token, this header should be specified using the SHA256 hash of the encryption key.
     pub encryption_key_sha256: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption scope to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_scope: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// The metadata headers.
     pub metadata: Option<HashMap<String, String>>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::delete()`](crate::clients::BlobBlobClient::delete())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientDeleteOptions<'a> {
+    /// Optional. Only possible value is 'permanent', which specifies to permanently delete a blob if blob soft delete is enabled.
     pub blob_delete_type: Option<BlobDeleteType>,
+
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Required if the blob has associated snapshots. Specify one of the following two options: include: Delete the base blob
+    /// and all of its snapshots. only: Delete only the blob's snapshots and not the blob itself
     pub delete_snapshots: Option<DeleteSnapshotsOptionType>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
+    /// information on working with blob snapshots, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob">Creating
+    /// a Snapshot of a Blob.</a>
     pub snapshot: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
+
+    /// The version id parameter is an opaque DateTime value that, when present, specifies the version of the blob to operate
+    /// on. It's for service version 2019-10-10 and newer.
     pub version_id: Option<String>,
 }
 
+/// Options to be passed to [`BlobBlobClient::delete_immutability_policy()`](crate::clients::BlobBlobClient::delete_immutability_policy())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientDeleteImmutabilityPolicyOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
+    /// information on working with blob snapshots, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob">Creating
+    /// a Snapshot of a Blob.</a>
     pub snapshot: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
+
+    /// The version id parameter is an opaque DateTime value that, when present, specifies the version of the blob to operate
+    /// on. It's for service version 2019-10-10 and newer.
     pub version_id: Option<String>,
 }
 
+/// Options to be passed to [`BlobBlobClient::download()`](crate::clients::BlobBlobClient::download())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientDownloadOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the algorithm to use for encryption. If not specified, the default is
+    /// AES256.
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption key to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_key: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the SHA256 hash of the encryption key used to encrypt the data provided
+    /// in the request. This header is only used for encryption with a customer-provided key. If the request is authenticated
+    /// with a client token, this header should be specified using the SHA256 hash of the encryption key.
     pub encryption_key_sha256: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// Return only the bytes of the blob in the specified range.
     pub range: Option<String>,
+
+    /// Optional. When this header is set to true and specified together with the Range header, the service returns the CRC64
+    /// hash for the range, as long as the range is less than or equal to 4 MB in size.
     pub range_get_content_crc64: Option<bool>,
+
+    /// When set to true and specified together with the Range, the service returns the MD5 hash for the range, as long as the
+    /// range is less than or equal to 4 MB in size.
     pub range_get_content_md5: Option<bool>,
+
+    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
+    /// information on working with blob snapshots, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob">Creating
+    /// a Snapshot of a Blob.</a>
     pub snapshot: Option<String>,
+
+    /// Specifies the response content should be returned as a structured message and specifies the message schema version and
+    /// properties.
     pub structured_body_type: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
+
+    /// The version id parameter is an opaque DateTime value that, when present, specifies the version of the blob to operate
+    /// on. It's for service version 2019-10-10 and newer.
     pub version_id: Option<String>,
 }
 
+/// Options to be passed to [`BlobBlobClient::get_account_info()`](crate::clients::BlobBlobClient::get_account_info())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientGetAccountInfoOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::get_properties()`](crate::clients::BlobBlobClient::get_properties())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientGetPropertiesOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the algorithm to use for encryption. If not specified, the default is
+    /// AES256.
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption key to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_key: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the SHA256 hash of the encryption key used to encrypt the data provided
+    /// in the request. This header is only used for encryption with a customer-provided key. If the request is authenticated
+    /// with a client token, this header should be specified using the SHA256 hash of the encryption key.
     pub encryption_key_sha256: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
+    /// information on working with blob snapshots, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob">Creating
+    /// a Snapshot of a Blob.</a>
     pub snapshot: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
+
+    /// The version id parameter is an opaque DateTime value that, when present, specifies the version of the blob to operate
+    /// on. It's for service version 2019-10-10 and newer.
     pub version_id: Option<String>,
 }
 
+/// Options to be passed to [`BlobBlobClient::get_tags()`](crate::clients::BlobBlobClient::get_tags())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientGetTagsOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
+    /// information on working with blob snapshots, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob">Creating
+    /// a Snapshot of a Blob.</a>
     pub snapshot: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
+
+    /// The version id parameter is an opaque DateTime value that, when present, specifies the version of the blob to operate
+    /// on. It's for service version 2019-10-10 and newer.
     pub version_id: Option<String>,
 }
 
+/// Options to be passed to [`BlobBlobClient::query()`](crate::clients::BlobBlobClient::query())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientQueryOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the algorithm to use for encryption. If not specified, the default is
+    /// AES256.
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption key to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_key: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the SHA256 hash of the encryption key used to encrypt the data provided
+    /// in the request. This header is only used for encryption with a customer-provided key. If the request is authenticated
+    /// with a client token, this header should be specified using the SHA256 hash of the encryption key.
     pub encryption_key_sha256: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
+    /// information on working with blob snapshots, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob">Creating
+    /// a Snapshot of a Blob.</a>
     pub snapshot: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::release_lease()`](crate::clients::BlobBlobClient::release_lease())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientReleaseLeaseOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::renew_lease()`](crate::clients::BlobBlobClient::renew_lease())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientRenewLeaseOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::set_expiry()`](crate::clients::BlobBlobClient::set_expiry())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetExpiryOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// The time this blob will expire.
     pub expires_on: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::set_http_headers()`](crate::clients::BlobBlobClient::set_http_headers())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetHttpHeadersOptions<'a> {
+    /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
+    /// request.
     pub blob_cache_control: Option<String>,
+
+    /// Optional. Sets the blob's content disposition. If specified, this property is stored with the blob and returned with a
+    /// read request.
     pub blob_content_disposition: Option<String>,
+
+    /// Optional. Sets the blob's content encoding. If specified, this property is stored with the blob and returned with a read
+    /// request.
     pub blob_content_encoding: Option<String>,
+
+    /// Optional. Set the blob's content language. If specified, this property is stored with the blob and returned with a read
+    /// request.
     pub blob_content_language: Option<String>,
+
+    /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
+    /// were validated when each was uploaded.
     pub blob_content_md5: Option<Vec<u8>>,
+
+    /// Optional. Sets the blob's content type. If specified, this property is stored with the blob and returned with a read request.
     pub blob_content_type: Option<String>,
+
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::set_immutability_policy()`](crate::clients::BlobBlobClient::set_immutability_policy())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetImmutabilityPolicyOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
     pub if_unmodified_since: Option<String>,
+
+    /// Specifies the date time when the blobs immutability policy is set to expire.
     pub immutability_policy_expiry: Option<String>,
+
+    /// Specifies the immutability policy mode to set on the blob.
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
+    /// information on working with blob snapshots, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob">Creating
+    /// a Snapshot of a Blob.</a>
     pub snapshot: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
+
+    /// The version id parameter is an opaque DateTime value that, when present, specifies the version of the blob to operate
+    /// on. It's for service version 2019-10-10 and newer.
     pub version_id: Option<String>,
 }
 
+/// Options to be passed to [`BlobBlobClient::set_legal_hold()`](crate::clients::BlobBlobClient::set_legal_hold())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetLegalHoldOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
+    /// information on working with blob snapshots, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob">Creating
+    /// a Snapshot of a Blob.</a>
     pub snapshot: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
+
+    /// The version id parameter is an opaque DateTime value that, when present, specifies the version of the blob to operate
+    /// on. It's for service version 2019-10-10 and newer.
     pub version_id: Option<String>,
 }
 
+/// Options to be passed to [`BlobBlobClient::set_metadata()`](crate::clients::BlobBlobClient::set_metadata())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetMetadataOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the algorithm to use for encryption. If not specified, the default is
+    /// AES256.
     pub encryption_algorithm: Option<EncryptionAlgorithmType>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption key to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_key: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the SHA256 hash of the encryption key used to encrypt the data provided
+    /// in the request. This header is only used for encryption with a customer-provided key. If the request is authenticated
+    /// with a client token, this header should be specified using the SHA256 hash of the encryption key.
     pub encryption_key_sha256: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption scope to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
     pub encryption_scope: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// The metadata headers.
     pub metadata: Option<HashMap<String, String>>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::set_tags()`](crate::clients::BlobBlobClient::set_tags())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetTagsOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
+
+    /// Specify the transactional crc64 for the body, to be validated by the service.
     pub transactional_content_crc64: Option<String>,
+
+    /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
+    /// were validated when each was uploaded.
     pub transactional_content_md5: Option<String>,
+
+    /// The version id parameter is an opaque DateTime value that, when present, specifies the version of the blob to operate
+    /// on. It's for service version 2019-10-10 and newer.
     pub version_id: Option<String>,
 }
 
+/// Options to be passed to [`BlobBlobClient::set_tier()`](crate::clients::BlobBlobClient::set_tier())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientSetTierOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// If an object is in rehydrate pending state then this header is returned with priority of rehydrate. Valid values are High
+    /// and Standard.
     pub rehydrate_priority: Option<RehydratePriority>,
+
+    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
+    /// information on working with blob snapshots, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob">Creating
+    /// a Snapshot of a Blob.</a>
     pub snapshot: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
+
+    /// The version id parameter is an opaque DateTime value that, when present, specifies the version of the blob to operate
+    /// on. It's for service version 2019-10-10 and newer.
     pub version_id: Option<String>,
 }
 
+/// Options to be passed to [`BlobBlobClient::start_copy_from_url()`](crate::clients::BlobBlobClient::start_copy_from_url())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientStartCopyFromUrlOptions<'a> {
+    /// Optional. Used to set blob tags in various blob operations.
     pub blob_tags_string: Option<String>,
+
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
     pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
     pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
     pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// Specifies the date time when the blobs immutability policy is set to expire.
     pub immutability_policy_expiry: Option<String>,
+
+    /// Specifies the immutability policy mode to set on the blob.
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
+
+    /// Specified if a legal hold should be set on the blob.
     pub legal_hold: Option<bool>,
+
+    /// The metadata headers.
     pub metadata: Option<HashMap<String, String>>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// If an object is in rehydrate pending state then this header is returned with priority of rehydrate. Valid values are High
+    /// and Standard.
     pub rehydrate_priority: Option<RehydratePriority>,
+
+    /// Overrides the sealed state of the destination blob. Service version 2019-12-12 and newer.
     pub seal_blob: Option<bool>,
+
+    /// Specify an ETag value to operate only on blobs with a matching value.
     pub source_if_match: Option<String>,
+
+    /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
     pub source_if_modified_since: Option<String>,
+
+    /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
     pub source_if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
     pub source_if_tags: Option<String>,
+
+    /// Specify this header value to operate only on a blob if it has not been modified since the specified date/time.
     pub source_if_unmodified_since: Option<String>,
+
+    /// The tier to be set on the blob.
     pub tier: Option<AccessTier>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobBlobClient::undelete()`](crate::clients::BlobBlobClient::undelete())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientUndeleteOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
+    /// Timeouts for Blob Service Operations.</a>
     pub timeout: Option<i32>,
 }

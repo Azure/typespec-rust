@@ -128,10 +128,14 @@ export class Adapter {
     const values = new Array<rust.EnumValue>();
     for (const value of sdkEnum.values) {
       const rustEnumValue = new rust.EnumValue(helpers.fixUpEnumValueName(value.name), value.value);
+      rustEnumValue.docs.summary = value.summary;
+      rustEnumValue.docs.description = value.doc;
       values.push(rustEnumValue);
     }
 
     rustEnum = new rust.Enum(enumName, sdkEnum.access === 'public', values, !sdkEnum.isFixed);
+    rustEnum.docs.summary = sdkEnum.summary;
+    rustEnum.docs.description = sdkEnum.doc;
     this.types.set(enumName, rustEnum);
 
     return rustEnum;
@@ -510,6 +514,8 @@ export class Adapter {
       clientOptionsField.defaultValue = 'ClientOptions::default()';
       clientOptionsStruct.fields.push(clientOptionsField);
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
+      // NOTE: must call buildClientDocPath() after setting rustClient.constructable
+      clientOptionsStruct.docs.summary = `Options used when creating a [\`${rustClient.name}\`](${buildClientDocPath(rustClient)})`;
 
       // NOTE: per tcgc convention, if there is no param of kind credential
       // it means that the client doesn't require any kind of authentication.
@@ -534,12 +540,12 @@ export class Adapter {
        * @param throwOnDefault when true, throws an error on unsupported credential types
        * @returns the AuthTypes enum for the credential that was handled, or AuthTypes.Default if none were
        */
-      const processCredential = (cred: http.HttpAuth, constructable: rust.ClientConstruction, throwOnDefault: boolean): AuthTypes => {
+      const processCredential = (rustClient: rust.Client, cred: http.HttpAuth, constructable: rust.ClientConstruction, throwOnDefault: boolean): AuthTypes => {
         switch (cred.type) {
           case 'noAuth':
             return AuthTypes.NoAuth;
           case 'oauth2': {
-            constructable.constructors.push(this.createTokenCredentialCtor(cred));
+            constructable.constructors.push(this.createTokenCredentialCtor(rustClient, cred));
             return AuthTypes.WithAut;
           }
           default:
@@ -556,7 +562,7 @@ export class Adapter {
           case 'credential':
             switch (param.type.kind) {
               case 'credential':
-                authType |= processCredential(param.type.scheme, rustClient.constructable, true);
+                authType |= processCredential(rustClient, param.type.scheme, rustClient.constructable, true);
                 break;
               case 'union': {
                 const variantKinds = new Array<string>();
@@ -565,7 +571,7 @@ export class Adapter {
                   // if OAuth2 is specified then emit that and skip any unsupported ones.
                   // this prevents emitting the with_no_credential constructor in cases
                   // where it might not actually be supported.
-                  authType |= processCredential(variantType.scheme, rustClient.constructable, false);
+                  authType |= processCredential(rustClient, variantType.scheme, rustClient.constructable, false);
                 }
 
                 // no supported credential types were specified
@@ -599,7 +605,10 @@ export class Adapter {
                 // note that the types of the param and the field are different.
                 // NOTE: we use param.name here instead of templateArg.name as
                 // the former has the fixed name "endpoint" which is what we want.
-                ctorParams.push(new rust.ClientMethodParameter(param.name, this.getStringSlice(), false, true));
+                const adaptedParam = new rust.ClientMethodParameter(param.name, this.getStringSlice(), false, true);
+                adaptedParam.docs.summary = param.summary;
+                adaptedParam.docs.description = param.doc;
+                ctorParams.push(adaptedParam);
                 rustClient.fields.push(new rust.StructField(param.name, false, new rust.Url(this.crate)));
 
                 // if the server's URL is *only* the endpoint parameter then we're done.
@@ -648,14 +657,15 @@ export class Adapter {
 
       if (authType === AuthTypes.Default || <AuthTypes>(authType & AuthTypes.NoAuth) === AuthTypes.NoAuth) {
         const ctorWithNoCredential = new rust.Constructor('with_no_credential');
+        ctorWithNoCredential.docs.summary = `Creates a new ${rustClient.name} requiring no authentication.`;
         rustClient.constructable.constructors.push(ctorWithNoCredential);
       }
 
       // propagate ctor params to all client ctors
       for (const constructor of rustClient.constructable.constructors) {
-        constructor.parameters.push(...ctorParams);
+        constructor.params.push(...ctorParams);
         // ensure param order of endpoint, credential, other
-        helpers.sortClientParameters(constructor.parameters);
+        helpers.sortClientParameters(constructor.params);
       }
     } else if (parent) {
       // this is a sub-client. it will share the fields of the parent.
@@ -702,7 +712,7 @@ export class Adapter {
    * @param cred the OAuth2 credential to adapt
    * @returns a client constructor for TokenCredential
    */
-  private createTokenCredentialCtor(cred: http.Oauth2Auth<http.OAuth2Flow[]>): rust.Constructor {
+  private createTokenCredentialCtor(rustClient: rust.Client, cred: http.Oauth2Auth<http.OAuth2Flow[]>): rust.Constructor {
     if (cred.flows.length === 0) {
       throw new Error(`no flows defined for credential type ${cred.type}`);
     }
@@ -711,7 +721,10 @@ export class Adapter {
       scopes.push(scope.value);
     }
     const ctorTokenCredential = new rust.Constructor('new');
-    ctorTokenCredential.parameters.push(new rust.ClientMethodParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), false));
+    const tokenCredParam = new rust.ClientMethodParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), false);
+    tokenCredParam.docs.summary = `An implementation of [\`TokenCredential\`](azure_core::credentials::TokenCredential) that can provide an Entra ID token to use when authenticating.`;
+    ctorTokenCredential.params.push(tokenCredParam);
+    ctorTokenCredential.docs.summary = `Creates a new ${rustClient.name}, using Entra ID authentication.`;
     return ctorTokenCredential;
   }
 
@@ -744,12 +757,20 @@ export class Adapter {
       }
     }
 
+    let adaptedParam: rust.ClientParameter;
     switch (param.kind) {
       case 'method':
-        return new rust.ClientMethodParameter(paramName, paramType, optional);
+        adaptedParam = new rust.ClientMethodParameter(paramName, paramType, optional);
+        break;
       case 'path':
-        return new rust.ClientEndpointParameter(paramName, paramType, optional, param.serializedName);
+        adaptedParam = new rust.ClientEndpointParameter(paramName, paramType, optional, param.serializedName);
+        break;
     }
+
+    adaptedParam.docs.summary = param.summary;
+    adaptedParam.docs.description = param.doc;
+
+    return adaptedParam;
   }
 
   /**
@@ -764,6 +785,8 @@ export class Adapter {
     clientAccessor.docs.summary = `Returns a new instance of ${subClient.name}.`;
     for (const param of method.parameters) {
       const adaptedParam = new rust.Parameter(snakeCaseName(param.name), this.getType(param.type));
+      adaptedParam.docs.summary = param.summary;
+      adaptedParam.docs.description = param.doc;
       clientAccessor.params.push(adaptedParam);
     }
     rustClient.methods.push(clientAccessor);
@@ -777,15 +800,18 @@ export class Adapter {
    */
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
     let rustMethod: rust.MethodType;
+    const methodName = naming.getEscapedReservedName(snakeCaseName(method.name), 'fn');
     const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(method.name)}Options`, true);
     methodOptionsStruct.lifetime = optionsLifetime;
+    methodOptionsStruct.docs.summary = `Options to be passed to [\`${rustClient.name}::${methodName}()\`](${buildClientDocPath(rustClient)}::${methodName}())`;
 
     const clientMethodOptions = new rust.ExternalType(this.crate, 'azure_core', 'ClientMethodOptions');
     clientMethodOptions.lifetime = optionsLifetime;
-    methodOptionsStruct.fields.push(new rust.StructField('method_options', true, clientMethodOptions));
+    const methodOptionsField = new rust.StructField('method_options', true, clientMethodOptions);
+    methodOptionsField.docs.summary = 'Allows customization of the method call.';
+    methodOptionsStruct.fields.push(methodOptionsField);
 
-    const methodName = naming.getEscapedReservedName(snakeCaseName(method.name), 'fn');
     const pub = method.access === 'public';
     const methodOptions = new rust.MethodOptions(methodOptionsStruct);
     const httpMethod = method.operation.verb;
@@ -880,7 +906,10 @@ export class Adapter {
         } else {
           fieldType = new rust.Option(adaptedParam.type);
         }
-        rustMethod.options.type.fields.push(new rust.StructField(adaptedParam.name, true, fieldType));
+
+        const optionsField = new rust.StructField(adaptedParam.name, true, fieldType);
+        optionsField.docs = adaptedParam.docs;
+        rustMethod.options.type.fields.push(optionsField);
       }
     }
 
@@ -1239,4 +1268,14 @@ function getXMLKind(decorators: Array<tcgc.DecoratorInfo>, field: rust.ModelFiel
   }
 
   return undefined;
+}
+
+/**
+ * contructs the fully qualified path to a client to be used in doc comments
+ * 
+ * @param client the client to build the path to
+ * @returns the fully qualified client path (e.g. crate::Client, crate::clients::SubClient)
+ */
+function buildClientDocPath(client: rust.Client): string {
+  return `crate::${client.constructable ? '' : 'clients::'}${client.name}`;
 }

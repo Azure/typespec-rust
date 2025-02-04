@@ -10,6 +10,7 @@ use azure_core::{
 use std::collections::HashMap;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Dictionary of model values
 pub struct DictionaryRecursiveModelValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -21,6 +22,10 @@ impl DictionaryRecursiveModelValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<DictionaryRecursiveModelValueClientGetOptions<'_>>,
@@ -34,6 +39,10 @@ impl DictionaryRecursiveModelValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, InnerModel>>,
@@ -50,12 +59,16 @@ impl DictionaryRecursiveModelValueClient {
     }
 }
 
+/// Options to be passed to [`DictionaryRecursiveModelValueClient::get()`](crate::clients::DictionaryRecursiveModelValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryRecursiveModelValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DictionaryRecursiveModelValueClient::put()`](crate::clients::DictionaryRecursiveModelValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryRecursiveModelValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

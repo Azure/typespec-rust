@@ -23,6 +23,13 @@ impl CommonPropertiesManagedIdentityClient {
     }
 
     /// Create a ManagedIdentityTrackedResource
+    ///
+    /// # Arguments
+    ///
+    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
+    /// * `managed_identity_tracked_resource_name` - arm resource name for path
+    /// * `resource` - Resource create parameters.
+    /// * `options` - Optional parameters for the request.
     pub async fn create_with_system_assigned(
         &self,
         resource_group_name: &str,
@@ -51,6 +58,12 @@ impl CommonPropertiesManagedIdentityClient {
     }
 
     /// Get a ManagedIdentityTrackedResource
+    ///
+    /// # Arguments
+    ///
+    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
+    /// * `managed_identity_tracked_resource_name` - arm resource name for path
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         resource_group_name: &str,
@@ -76,6 +89,13 @@ impl CommonPropertiesManagedIdentityClient {
     }
 
     /// Update a ManagedIdentityTrackedResource
+    ///
+    /// # Arguments
+    ///
+    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
+    /// * `managed_identity_tracked_resource_name` - arm resource name for path
+    /// * `properties` - The resource properties to be updated.
+    /// * `options` - Optional parameters for the request.
     pub async fn update_with_user_assigned_and_system_assigned(
         &self,
         resource_group_name: &str,
@@ -106,17 +126,23 @@ impl CommonPropertiesManagedIdentityClient {
     }
 }
 
+/// Options to be passed to [`CommonPropertiesManagedIdentityClient::create_with_system_assigned()`](crate::clients::CommonPropertiesManagedIdentityClient::create_with_system_assigned())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`CommonPropertiesManagedIdentityClient::get()`](crate::clients::CommonPropertiesManagedIdentityClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesManagedIdentityClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`CommonPropertiesManagedIdentityClient::update_with_user_assigned_and_system_assigned()`](crate::clients::CommonPropertiesManagedIdentityClient::update_with_user_assigned_and_system_assigned())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

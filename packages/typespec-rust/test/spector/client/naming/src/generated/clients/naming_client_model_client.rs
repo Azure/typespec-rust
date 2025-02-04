@@ -20,6 +20,10 @@ impl NamingClientModelClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn client(
         &self,
         body: RequestContent<ClientModel>,
@@ -35,6 +39,10 @@ impl NamingClientModelClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn language(
         &self,
         body: RequestContent<RustName>,
@@ -51,12 +59,16 @@ impl NamingClientModelClient {
     }
 }
 
+/// Options to be passed to [`NamingClientModelClient::client()`](crate::clients::NamingClientModelClient::client())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientModelClientClientOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`NamingClientModelClient::language()`](crate::clients::NamingClientModelClient::language())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientModelClientLanguageOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

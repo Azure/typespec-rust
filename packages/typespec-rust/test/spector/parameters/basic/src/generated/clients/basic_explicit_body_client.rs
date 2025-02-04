@@ -20,6 +20,10 @@ impl BasicExplicitBodyClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn simple(
         &self,
         body: RequestContent<User>,
@@ -36,7 +40,9 @@ impl BasicExplicitBodyClient {
     }
 }
 
+/// Options to be passed to [`BasicExplicitBodyClient::simple()`](crate::clients::BasicExplicitBodyClient::simple())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicExplicitBodyClientSimpleOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

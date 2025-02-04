@@ -9,6 +9,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Operations for the ModelWithRenamedFields type.
 pub struct XmlModelWithRenamedFieldsValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl XmlModelWithRenamedFieldsValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<XmlModelWithRenamedFieldsValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl XmlModelWithRenamedFieldsValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         input: RequestContent<ModelWithRenamedFields>,
@@ -49,12 +58,16 @@ impl XmlModelWithRenamedFieldsValueClient {
     }
 }
 
+/// Options to be passed to [`XmlModelWithRenamedFieldsValueClient::get()`](crate::clients::XmlModelWithRenamedFieldsValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithRenamedFieldsValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`XmlModelWithRenamedFieldsValueClient::put()`](crate::clients::XmlModelWithRenamedFieldsValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithRenamedFieldsValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

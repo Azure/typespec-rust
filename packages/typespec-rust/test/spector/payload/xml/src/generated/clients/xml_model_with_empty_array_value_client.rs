@@ -9,6 +9,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Operations for the ModelWithEmptyArray type.
 pub struct XmlModelWithEmptyArrayValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl XmlModelWithEmptyArrayValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<XmlModelWithEmptyArrayValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl XmlModelWithEmptyArrayValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         input: RequestContent<ModelWithEmptyArray>,
@@ -49,12 +58,16 @@ impl XmlModelWithEmptyArrayValueClient {
     }
 }
 
+/// Options to be passed to [`XmlModelWithEmptyArrayValueClient::get()`](crate::clients::XmlModelWithEmptyArrayValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithEmptyArrayValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`XmlModelWithEmptyArrayValueClient::put()`](crate::clients::XmlModelWithEmptyArrayValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithEmptyArrayValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

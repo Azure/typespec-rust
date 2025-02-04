@@ -21,6 +21,10 @@ impl BasicServiceOperationGroupClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn basic(
         &self,
         query_param: &str,
@@ -45,7 +49,9 @@ impl BasicServiceOperationGroupClient {
     }
 }
 
+/// Options to be passed to [`BasicServiceOperationGroupClient::basic()`](crate::clients::BasicServiceOperationGroupClient::basic())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicServiceOperationGroupClientBasicOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

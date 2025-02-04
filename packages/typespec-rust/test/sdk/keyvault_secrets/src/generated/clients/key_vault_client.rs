@@ -17,12 +17,14 @@ use typespec_client_core::fmt::SafeDebug;
 use typespec_client_core::http::PagerResult;
 use typespec_client_core::json;
 
+/// The key vault client performs cryptographic key operations and vault operations against the Key Vault service.
 pub struct KeyVaultClient {
     api_version: String,
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`KeyVaultClient`](crate::KeyVaultClient)
 #[derive(Clone, SafeDebug)]
 pub struct KeyVaultClientOptions {
     pub api_version: String,
@@ -30,6 +32,14 @@ pub struct KeyVaultClientOptions {
 }
 
 impl KeyVaultClient {
+    /// Creates a new KeyVaultClient, using Entra ID authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
+    ///   Entra ID token to use when authenticating.
+    /// * `options` - Optional configuration for the client.
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -64,6 +74,11 @@ impl KeyVaultClient {
     ///
     /// Requests that a backup of the specified secret be downloaded to the client. All versions of the secret will be downloaded.
     /// This operation requires the secrets/backup permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `secret_name` - The name of the secret.
+    /// * `options` - Optional parameters for the request.
     pub async fn backup_secret(
         &self,
         secret_name: &str,
@@ -86,6 +101,11 @@ impl KeyVaultClient {
     ///
     /// The DELETE operation applies to any secret stored in Azure Key Vault. DELETE cannot be applied to an individual version
     /// of a secret. This operation requires the secrets/delete permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `secret_name` - The name of the secret.
+    /// * `options` - Optional parameters for the request.
     pub async fn delete_secret(
         &self,
         secret_name: &str,
@@ -108,6 +128,11 @@ impl KeyVaultClient {
     ///
     /// The Get Deleted Secret operation returns the specified deleted secret along with its attributes. This operation requires
     /// the secrets/get permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `secret_name` - The name of the secret.
+    /// * `options` - Optional parameters for the request.
     pub async fn get_deleted_secret(
         &self,
         secret_name: &str,
@@ -130,6 +155,10 @@ impl KeyVaultClient {
     ///
     /// The Get Deleted Secrets operation returns the secrets that have been deleted for a vault enabled for soft-delete. This
     /// operation requires the secrets/list permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub fn get_deleted_secrets(
         &self,
         options: Option<KeyVaultClientGetDeletedSecretsOptions<'_>>,
@@ -188,6 +217,13 @@ impl KeyVaultClient {
     /// Get a specified secret from a given key vault.
     ///
     /// The GET operation is applicable to any secret stored in Azure Key Vault. This operation requires the secrets/get permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `secret_name` - The name of the secret.
+    /// * `secret_version` - The version of the secret. This URI fragment is optional. If not specified, the latest version of
+    ///   the secret is returned.
+    /// * `options` - Optional parameters for the request.
     pub async fn get_secret(
         &self,
         secret_name: &str,
@@ -212,6 +248,11 @@ impl KeyVaultClient {
     ///
     /// The full secret identifier and attributes are provided in the response. No values are returned for the secrets. This operations
     /// requires the secrets/list permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `secret_name` - The name of the secret.
+    /// * `options` - Optional parameters for the request.
     pub fn get_secret_versions(
         &self,
         secret_name: &str,
@@ -274,6 +315,10 @@ impl KeyVaultClient {
     /// The Get Secrets operation is applicable to the entire vault. However, only the base secret identifier and its attributes
     /// are provided in the response. Individual secret versions are not listed in the response. This operation requires the secrets/list
     /// permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub fn get_secrets(
         &self,
         options: Option<KeyVaultClientGetSecretsOptions<'_>>,
@@ -332,6 +377,11 @@ impl KeyVaultClient {
     ///
     /// The purge deleted secret operation removes the secret permanently, without the possibility of recovery. This operation
     /// can only be enabled on a soft-delete enabled vault. This operation requires the secrets/purge permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `secret_name` - The name of the secret.
+    /// * `options` - Optional parameters for the request.
     pub async fn purge_deleted_secret(
         &self,
         secret_name: &str,
@@ -354,6 +404,11 @@ impl KeyVaultClient {
     ///
     /// Recovers the deleted secret in the specified vault. This operation can only be performed on a soft-delete enabled vault.
     /// This operation requires the secrets/recover permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `secret_name` - The name of the deleted secret.
+    /// * `options` - Optional parameters for the request.
     pub async fn recover_deleted_secret(
         &self,
         secret_name: &str,
@@ -375,6 +430,11 @@ impl KeyVaultClient {
     /// Restores a backed up secret to a vault.
     ///
     /// Restores a backed up secret, and all its versions, to a vault. This operation requires the secrets/restore permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `parameters` - The parameters to restore the secret.
+    /// * `options` - Optional parameters for the request.
     pub async fn restore_secret(
         &self,
         parameters: RequestContent<SecretRestoreParameters>,
@@ -397,6 +457,13 @@ impl KeyVaultClient {
     ///
     /// The SET operation adds a secret to the Azure Key Vault. If the named secret already exists, Azure Key Vault creates a
     /// new version of that secret. This operation requires the secrets/set permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `secret_name` - The name of the secret. The value you provide may be copied globally for the purpose of running the
+    ///   service. The value provided should not include personally identifiable or sensitive information.
+    /// * `parameters` - The parameters for setting the secret.
+    /// * `options` - Optional parameters for the request.
     pub async fn set_secret(
         &self,
         secret_name: &str,
@@ -422,6 +489,13 @@ impl KeyVaultClient {
     ///
     /// The UPDATE operation changes specified attributes of an existing stored secret. Attributes that are not specified in the
     /// request are left unchanged. The value of a secret itself cannot be changed. This operation requires the secrets/set permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `secret_name` - The name of the secret.
+    /// * `secret_version` - The version of the secret.
+    /// * `parameters` - The parameters for update secret operation.
+    /// * `options` - Optional parameters for the request.
     pub async fn update_secret(
         &self,
         secret_name: &str,
@@ -455,24 +529,34 @@ impl Default for KeyVaultClientOptions {
     }
 }
 
+/// Options to be passed to [`KeyVaultClient::backup_secret()`](crate::KeyVaultClient::backup_secret())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientBackupSecretOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`KeyVaultClient::delete_secret()`](crate::KeyVaultClient::delete_secret())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientDeleteSecretOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`KeyVaultClient::get_deleted_secret()`](crate::KeyVaultClient::get_deleted_secret())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientGetDeletedSecretOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`KeyVaultClient::get_deleted_secrets()`](crate::KeyVaultClient::get_deleted_secrets())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientGetDeletedSecretsOptions<'a> {
+    /// Maximum number of results to return in a page. If not specified the service will return up to 25 results.
     pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
@@ -487,14 +571,20 @@ impl KeyVaultClientGetDeletedSecretsOptions<'_> {
     }
 }
 
+/// Options to be passed to [`KeyVaultClient::get_secret()`](crate::KeyVaultClient::get_secret())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientGetSecretOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`KeyVaultClient::get_secret_versions()`](crate::KeyVaultClient::get_secret_versions())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientGetSecretVersionsOptions<'a> {
+    /// Maximum number of results to return in a page. If not specified the service will return up to 25 results.
     pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
@@ -509,9 +599,13 @@ impl KeyVaultClientGetSecretVersionsOptions<'_> {
     }
 }
 
+/// Options to be passed to [`KeyVaultClient::get_secrets()`](crate::KeyVaultClient::get_secrets())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientGetSecretsOptions<'a> {
+    /// Maximum number of results to return in a page. If not specified the service will return up to 25 results.
     pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
@@ -526,27 +620,37 @@ impl KeyVaultClientGetSecretsOptions<'_> {
     }
 }
 
+/// Options to be passed to [`KeyVaultClient::purge_deleted_secret()`](crate::KeyVaultClient::purge_deleted_secret())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientPurgeDeletedSecretOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`KeyVaultClient::recover_deleted_secret()`](crate::KeyVaultClient::recover_deleted_secret())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientRecoverDeletedSecretOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`KeyVaultClient::restore_secret()`](crate::KeyVaultClient::restore_secret())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientRestoreSecretOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`KeyVaultClient::set_secret()`](crate::KeyVaultClient::set_secret())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientSetSecretOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`KeyVaultClient::update_secret()`](crate::KeyVaultClient::update_secret())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientUpdateSecretOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

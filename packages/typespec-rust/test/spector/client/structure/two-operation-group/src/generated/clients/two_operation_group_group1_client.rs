@@ -17,6 +17,10 @@ impl TwoOperationGroupGroup1Client {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn four(
         &self,
         options: Option<TwoOperationGroupGroup1ClientFourOptions<'_>>,
@@ -29,6 +33,10 @@ impl TwoOperationGroupGroup1Client {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn one(
         &self,
         options: Option<TwoOperationGroupGroup1ClientOneOptions<'_>>,
@@ -41,6 +49,10 @@ impl TwoOperationGroupGroup1Client {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn three(
         &self,
         options: Option<TwoOperationGroupGroup1ClientThreeOptions<'_>>,
@@ -54,17 +66,23 @@ impl TwoOperationGroupGroup1Client {
     }
 }
 
+/// Options to be passed to [`TwoOperationGroupGroup1Client::four()`](crate::clients::TwoOperationGroupGroup1Client::four())
 #[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupGroup1ClientFourOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`TwoOperationGroupGroup1Client::one()`](crate::clients::TwoOperationGroupGroup1Client::one())
 #[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupGroup1ClientOneOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`TwoOperationGroupGroup1Client::three()`](crate::clients::TwoOperationGroupGroup1Client::three())
 #[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupGroup1ClientThreeOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -8,6 +8,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Array of duration values
 pub struct ArrayDurationValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -19,6 +20,10 @@ impl ArrayDurationValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<ArrayDurationValueClientGetOptions<'_>>,
@@ -32,6 +37,10 @@ impl ArrayDurationValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<Vec<String>>,
@@ -48,12 +57,16 @@ impl ArrayDurationValueClient {
     }
 }
 
+/// Options to be passed to [`ArrayDurationValueClient::get()`](crate::clients::ArrayDurationValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayDurationValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ArrayDurationValueClient::put()`](crate::clients::ArrayDurationValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayDurationValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

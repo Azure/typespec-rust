@@ -8,17 +8,25 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Illustrates server doesn't define endpoint. Client should automatically add an endpoint to let user pass in.
 pub struct NotDefinedClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`NotDefinedClient`](crate::NotDefinedClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct NotDefinedClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl NotDefinedClient {
+    /// Creates a new NotDefinedClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NotDefinedClientOptions>,
@@ -43,6 +51,10 @@ impl NotDefinedClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn valid(
         &self,
         options: Option<NotDefinedClientValidOptions<'_>>,
@@ -56,7 +68,9 @@ impl NotDefinedClient {
     }
 }
 
+/// Options to be passed to [`NotDefinedClient::valid()`](crate::NotDefinedClient::valid())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NotDefinedClientValidOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -13,17 +13,32 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Test that we can use @client and @operationGroup decorators to customize client side code structure, such as:
+/// 1. have everything as default.
+/// 2. to rename client or operation group
+/// 3. one client can have more than one operations groups
+/// 4. split one interface into two clients
+/// 5. have two clients with operations come from different interfaces
+/// 6. have two clients with a hierarchy relation.
 pub struct ServiceClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`ServiceClient`](crate::ServiceClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl ServiceClient {
+    /// Creates a new ServiceClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -84,6 +99,10 @@ impl ServiceClient {
         }
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn one(&self, options: Option<ServiceClientOneOptions<'_>>) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
@@ -93,6 +112,10 @@ impl ServiceClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn two(&self, options: Option<ServiceClientTwoOptions<'_>>) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
@@ -103,12 +126,16 @@ impl ServiceClient {
     }
 }
 
+/// Options to be passed to [`ServiceClient::one()`](crate::ServiceClient::one())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceClientOneOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`ServiceClient::two()`](crate::ServiceClient::two())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceClientTwoOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

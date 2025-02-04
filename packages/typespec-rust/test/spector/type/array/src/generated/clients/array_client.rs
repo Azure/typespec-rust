@@ -20,17 +20,25 @@ use crate::generated::clients::array_unknown_value_client::ArrayUnknownValueClie
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Illustrates various types of arrays.
 pub struct ArrayClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`ArrayClient`](crate::ArrayClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl ArrayClient {
+    /// Creates a new ArrayClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(endpoint: &str, options: Option<ArrayClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;

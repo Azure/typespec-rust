@@ -10,6 +10,7 @@ use std::collections::HashMap;
 use time::OffsetDateTime;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Dictionary of datetime values
 pub struct DictionaryDatetimeValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -21,6 +22,10 @@ impl DictionaryDatetimeValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<DictionaryDatetimeValueClientGetOptions<'_>>,
@@ -34,6 +39,10 @@ impl DictionaryDatetimeValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, OffsetDateTime>>,
@@ -50,12 +59,16 @@ impl DictionaryDatetimeValueClient {
     }
 }
 
+/// Options to be passed to [`DictionaryDatetimeValueClient::get()`](crate::clients::DictionaryDatetimeValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryDatetimeValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DictionaryDatetimeValueClient::put()`](crate::clients::DictionaryDatetimeValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryDatetimeValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -30,23 +30,38 @@ export function contentPreamble(): string {
  * formats doc comments if available
  * 
  * @param docs contains any doc comments
+ * @param prefix optional prefix to insert before the docs
+ * @param indent optional indentation helper to set per-line indentation
  * @returns formatted doc comments or the empty string
  */
-export function formatDocComment(docs: rust.Docs): string {
+export function formatDocComment(docs: rust.Docs, prefix?: string, indent?: indentation): string {
   if (!docs.summary && !docs.description) {
     return '';
   }
 
+  let indentLevel = '';
+  if (indent) {
+    indentLevel = indent.get();
+  }
+
   let docStr = '';
   if (docs.summary) {
-    docStr = codegen.comment(docs.summary, '/// ', undefined, 120) + '\n';
+    let summary = docs.summary;
+    if (prefix) {
+      summary = `${prefix}${summary}`;
+    }
+    docStr = codegen.comment(summary, `${indentLevel}/// `, undefined, 120) + '\n';
   }
 
   if (docs.description) {
+    let description = docs.description;
     if (docs.summary) {
-      docStr += '///\n';
+      docStr += `${indentLevel}///\n`;
+    } else if (prefix) {
+      // only apply the prefix to the description if there was no summary
+      description = `${prefix}${description}`;
     }
-    docStr += codegen.comment(docs.description, '/// ', undefined, 120) + '\n';
+    docStr += codegen.comment(description, `${indentLevel}/// `, undefined, 120) + '\n';
   }
 
   return docStr;

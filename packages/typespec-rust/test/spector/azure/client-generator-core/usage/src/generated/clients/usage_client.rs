@@ -7,17 +7,25 @@ use crate::generated::clients::usage_model_in_operation_client::UsageModelInOper
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
+/// Test for internal decorator.
 pub struct UsageClient {
     endpoint: Url,
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`UsageClient`](crate::UsageClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl UsageClient {
+    /// Creates a new UsageClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(endpoint: &str, options: Option<UsageClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;

@@ -14,12 +14,20 @@ pub struct TwoOperationGroupClient {
     pipeline: Pipeline,
 }
 
+/// Options used when creating a [`TwoOperationGroupClient`](crate::TwoOperationGroupClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupClientOptions {
     pub client_options: ClientOptions,
 }
 
 impl TwoOperationGroupClient {
+    /// Creates a new TwoOperationGroupClient requiring no authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
+    /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,

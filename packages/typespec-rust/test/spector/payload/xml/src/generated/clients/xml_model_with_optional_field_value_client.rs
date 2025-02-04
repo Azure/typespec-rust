@@ -9,6 +9,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Operations for the ModelWithOptionalField type.
 pub struct XmlModelWithOptionalFieldValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl XmlModelWithOptionalFieldValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<XmlModelWithOptionalFieldValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl XmlModelWithOptionalFieldValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         input: RequestContent<ModelWithOptionalField>,
@@ -49,12 +58,16 @@ impl XmlModelWithOptionalFieldValueClient {
     }
 }
 
+/// Options to be passed to [`XmlModelWithOptionalFieldValueClient::get()`](crate::clients::XmlModelWithOptionalFieldValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithOptionalFieldValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`XmlModelWithOptionalFieldValueClient::put()`](crate::clients::XmlModelWithOptionalFieldValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlModelWithOptionalFieldValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

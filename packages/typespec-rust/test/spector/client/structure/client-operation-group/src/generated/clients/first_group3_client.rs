@@ -17,6 +17,10 @@ impl FirstGroup3Client {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn three(
         &self,
         options: Option<FirstGroup3ClientThreeOptions<'_>>,
@@ -29,6 +33,10 @@ impl FirstGroup3Client {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn two(
         &self,
         options: Option<FirstGroup3ClientTwoOptions<'_>>,
@@ -42,12 +50,16 @@ impl FirstGroup3Client {
     }
 }
 
+/// Options to be passed to [`FirstGroup3Client::three()`](crate::clients::FirstGroup3Client::three())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FirstGroup3ClientThreeOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`FirstGroup3Client::two()`](crate::clients::FirstGroup3Client::two())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FirstGroup3ClientTwoOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

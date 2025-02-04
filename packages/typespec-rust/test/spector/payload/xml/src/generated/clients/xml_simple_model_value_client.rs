@@ -9,6 +9,7 @@ use azure_core::{
 };
 use typespec_client_core::fmt::SafeDebug;
 
+/// Operations for the SimpleModel type.
 pub struct XmlSimpleModelValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -20,6 +21,10 @@ impl XmlSimpleModelValueClient {
         &self.endpoint
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn get(
         &self,
         options: Option<XmlSimpleModelValueClientGetOptions<'_>>,
@@ -33,6 +38,10 @@ impl XmlSimpleModelValueClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     pub async fn put(
         &self,
         input: RequestContent<SimpleModel>,
@@ -49,12 +58,16 @@ impl XmlSimpleModelValueClient {
     }
 }
 
+/// Options to be passed to [`XmlSimpleModelValueClient::get()`](crate::clients::XmlSimpleModelValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlSimpleModelValueClientGetOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`XmlSimpleModelValueClient::put()`](crate::clients::XmlSimpleModelValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlSimpleModelValueClientPutOptions<'a> {
+    /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
