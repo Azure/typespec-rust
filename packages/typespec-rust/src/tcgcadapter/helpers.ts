@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
+import * as linkifyjs from 'linkifyjs';
 import turndownService from 'turndown';
 import * as rust from '../codemodel/index.js';
 
@@ -94,14 +95,20 @@ const tds = new turndownService({codeBlockStyle: 'fenced', fence: '```'});
  */
 export function formatDocs(docs: string): string {
   // if the docs contain any HTML, convert it to markdown
-  if (docs.match(/<[a-zA-Z]+/)) {
+  if (docs.match(/<[a-z]+[\s\S]+\/[a-z]+>/i)) {
     docs = tds.turndown(docs);
   }
 
   // enclose any hyperlinks in angle brackets
-  const match = docs.match(/\s(http[s]?:\/\/[^\s]+)\s/i);
-  if (match) {
-    docs = docs.replace(match[1], `<${match[1]}>`);
+  const links = linkifyjs.find(docs, 'url');
+  for (const link of links) {
+    const enclosed = `<${link.href}>`;
+
+    // don't enclose hyperlinks that are already enclosed or are markdown
+    if (!docs.includes(enclosed) && !docs.includes(`(${link.href})`)) {
+      docs = docs.replace(link.href, enclosed);
+    }
   }
+
   return docs;
 }
