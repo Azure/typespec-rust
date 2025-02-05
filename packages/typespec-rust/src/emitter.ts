@@ -6,6 +6,7 @@
 import { CodeGenerator } from './codegen/codeGenerator.js';
 import { Adapter } from './tcgcadapter/adapter.js';
 import { RustEmitterOptions } from './lib.js';
+import { execSync } from 'child_process';
 import { existsSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
 import * as path from 'path';
@@ -31,8 +32,8 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   const cargoTomlPath = `${context.emitterOutputDir}/Cargo.toml`;
   if (existsSync(cargoTomlPath) && !context.options['overwrite-cargo-toml']) {
     context.program.reportDiagnostic({
-      code: "FileAlreadyExists",
-      severity: "warning",
+      code: 'FileAlreadyExists',
+      severity: 'warning',
       message: `skip overwriting file ${cargoTomlPath}`,
       target: NoTarget,
     });
@@ -48,6 +49,30 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   const files = codegen.emitContent();
   for (const file of files) {
     await writeToGeneratedDir(context.emitterOutputDir, file.name, file.content);
+  }
+
+  // probe to see if cargo is on the path before executing cargo fmt
+  try {
+    execSync('cargo --version', { encoding: 'ascii' });
+  } catch {
+    context.program.reportDiagnostic({
+      code: 'CargoFmt',
+      severity: 'warning',
+      message: 'skip executing cargo fmt (is cargo on the path?)',
+      target: NoTarget,
+    });
+    return;
+  }
+
+  try {
+    execSync('cargo fmt -- --emit files', { cwd: context.emitterOutputDir, encoding: 'ascii' });
+  } catch (err) {
+    context.program.reportDiagnostic({
+      code: 'CargoFmt',
+      severity: 'error',
+      message: (<Error>err).message,
+      target: NoTarget,
+    });
   }
 }
 
