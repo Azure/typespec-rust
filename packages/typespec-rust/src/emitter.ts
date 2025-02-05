@@ -61,6 +61,8 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
       message: 'skip executing cargo fmt (is cargo on the path?)',
       target: NoTarget,
     });
+
+    // no cargo available so exit
     return;
   }
 
