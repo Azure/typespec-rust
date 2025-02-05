@@ -56,5 +56,11 @@ describe('typespec-rust: tcgcadapter', () => {
       helpers.sortClientParameters(params);
       deepEqual(params, [endpointParam, someOtherParam]);
     });
+
+    it('formatDocs', () => {
+      strictEqual(helpers.formatDocs('does not change'), 'does not change');
+      strictEqual(helpers.formatDocs('make https://contoso.com/some-link a hyperlink'), 'make <https://contoso.com/some-link> a hyperlink');
+      strictEqual(helpers.formatDocs('anchor <a href="https://contoso.com/fake/link">to markdown.</a> inline'), 'anchor [to markdown.](https://contoso.com/fake/link) inline');
+    });
   });
 });

@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
+import turndownService from 'turndown';
 import * as rust from '../codemodel/index.js';
 
 /**
@@ -78,4 +79,29 @@ export function unwrapOption(type: rust.Type): rust.Type {
     return type.type;
   }
   return type;
+}
+
+// used by formatDocs
+const tds = new turndownService({codeBlockStyle: 'fenced', fence: '```'});
+
+/**
+ * applies certain formatting to a doc string.
+ * if the doc string doesn't require formatting
+ * the original doc string is returned.
+ * 
+ * @param docs the doc string to format
+ * @returns the original or formatted doc string
+ */
+export function formatDocs(docs: string): string {
+  // if the docs contain any HTML, convert it to markdown
+  if (docs.match(/<[a-zA-Z]+/)) {
+    docs = tds.turndown(docs);
+  }
+
+  // enclose any hyperlinks in angle brackets
+  const match = docs.match(/\s(http[s]?:\/\/[^\s]+)\s/i);
+  if (match) {
+    docs = docs.replace(match[1], `<${match[1]}>`);
+  }
+  return docs;
 }

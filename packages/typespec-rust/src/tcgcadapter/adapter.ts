@@ -87,6 +87,20 @@ export class Adapter {
     return this.crate;
   }
 
+  /** converts tcgc docs to formatted rust.Docs */
+  private adaptDocs(summary?: string, doc?: string): rust.Docs {
+    if (summary) {
+      summary = helpers.formatDocs(summary);
+    }
+    if (doc) {
+      doc = helpers.formatDocs(doc);
+    }
+    return {
+      summary: summary,
+      description: doc,
+    }
+  }
+
   /** converts all tcgc types to their Rust type equivalent */
   private adaptTypes(): void {
     for (const sdkEnum of this.ctx.sdkPackage.enums) {
@@ -128,14 +142,12 @@ export class Adapter {
     const values = new Array<rust.EnumValue>();
     for (const value of sdkEnum.values) {
       const rustEnumValue = new rust.EnumValue(helpers.fixUpEnumValueName(value.name), value.value);
-      rustEnumValue.docs.summary = value.summary;
-      rustEnumValue.docs.description = value.doc;
+      rustEnumValue.docs = this.adaptDocs(value.summary, value.doc);
       values.push(rustEnumValue);
     }
 
     rustEnum = new rust.Enum(enumName, sdkEnum.access === 'public', values, !sdkEnum.isFixed);
-    rustEnum.docs.summary = sdkEnum.summary;
-    rustEnum.docs.description = sdkEnum.doc;
+    rustEnum.docs = this.adaptDocs(sdkEnum.summary, sdkEnum.doc);
     this.types.set(enumName, rustEnum);
 
     return rustEnum;
@@ -166,8 +178,7 @@ export class Adapter {
     }
 
     rustModel = new rust.Model(modelName, model.access === 'internal', modelFlags);
-    rustModel.docs.summary = model.summary;
-    rustModel.docs.description = model.doc;
+    rustModel.docs = this.adaptDocs(model.summary, model.doc);
     rustModel.xmlName = getXMLName(model.decorators);
     this.types.set(modelName, rustModel);
 
@@ -230,8 +241,7 @@ export class Adapter {
     }
 
     const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, true, fieldType);
-    modelField.docs.summary = property.summary;
-    modelField.docs.description = property.doc;
+    modelField.docs = this.adaptDocs(property.summary, property.doc);
 
     const xmlName = getXMLName(property.decorators);
     if (xmlName) {
@@ -502,8 +512,7 @@ export class Adapter {
     }
 
     const rustClient = new rust.Client(clientName);
-    rustClient.docs.summary = client.summary;
-    rustClient.docs.description = client.doc;
+    rustClient.docs = this.adaptDocs(client.summary, client.doc);
     rustClient.parent = parent;
     rustClient.fields.push(new rust.StructField('pipeline', false, new rust.ExternalType(this.crate, 'azure_core', 'Pipeline')));
 
@@ -606,8 +615,7 @@ export class Adapter {
                 // NOTE: we use param.name here instead of templateArg.name as
                 // the former has the fixed name "endpoint" which is what we want.
                 const adaptedParam = new rust.ClientMethodParameter(param.name, this.getStringSlice(), false, true);
-                adaptedParam.docs.summary = param.summary;
-                adaptedParam.docs.description = param.doc;
+                adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
                 ctorParams.push(adaptedParam);
                 rustClient.fields.push(new rust.StructField(param.name, false, new rust.Url(this.crate)));
 
@@ -767,8 +775,7 @@ export class Adapter {
         break;
     }
 
-    adaptedParam.docs.summary = param.summary;
-    adaptedParam.docs.description = param.doc;
+    adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
 
     return adaptedParam;
   }
@@ -785,8 +792,7 @@ export class Adapter {
     clientAccessor.docs.summary = `Returns a new instance of ${subClient.name}.`;
     for (const param of method.parameters) {
       const adaptedParam = new rust.Parameter(snakeCaseName(param.name), this.getType(param.type));
-      adaptedParam.docs.summary = param.summary;
-      adaptedParam.docs.description = param.doc;
+      adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
       clientAccessor.params.push(adaptedParam);
     }
     rustClient.methods.push(clientAccessor);
@@ -849,8 +855,7 @@ export class Adapter {
         throw new Error(`method kind ${method.kind} NYI`);
     }
 
-    rustMethod.docs.summary = method.summary;
-    rustMethod.docs.description = method.doc;
+    rustMethod.docs = this.adaptDocs(method.summary, method.doc);
     rustClient.methods.push(rustMethod);
 
     // stuff all of the operation parameters into one array for easy traversal
@@ -887,8 +892,7 @@ export class Adapter {
         adaptedParam = this.adaptMethodParameter(opParam);
       }
 
-      adaptedParam.docs.summary = param.summary;
-      adaptedParam.docs.description = param.doc;
+      adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
       rustMethod.params.push(adaptedParam);
 
       if (adaptedParam.optional) {
@@ -918,8 +922,7 @@ export class Adapter {
     for (const opParam of allOpParams) {
       if (opParam.onClient) {
         const adaptedParam = this.adaptMethodParameter(opParam);
-        adaptedParam.docs.summary = opParam.summary;
-        adaptedParam.docs.description = opParam.doc;
+        adaptedParam.docs = this.adaptDocs(opParam.summary, opParam.doc);
         rustMethod.params.push(adaptedParam);
       }
     }
@@ -1074,8 +1077,7 @@ export class Adapter {
         break;
     }
 
-    adaptedParam.docs.summary = param.summary;
-    adaptedParam.docs.description = param.doc;
+    adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
     adaptedParam.ref = paramByRef;
 
     if (paramLoc === 'client') {

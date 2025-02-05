@@ -1,5 +1,13 @@
 # Release History
 
+## 0.8.3 (2025-02-05)
+
+### Other Changes
+
+* Fixed formatting of some doc comments.
+  * HTML elements are converted to markdown equivalents.
+  * Bare URLs are converted to Rust docs hyperlinks.
+
 ## 0.8.2 (2025-02-04)
 
 ### Other Changes

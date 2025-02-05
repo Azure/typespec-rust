@@ -1,6 +1,6 @@
 {
   "name": "@azure-tools/typespec-rust",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "TypeSpec emitter for Rust SDKs",
   "type": "module",
   "main": "dist/src/index.js",
@@ -78,9 +78,11 @@
   "dependencies": {
     "@azure-tools/codegen": "~2.9.2",
     "@azure-tools/linq": "~3.1.263",
+    "@types/turndown": "^5.0.5",
     "js-yaml": "^4.1.0",
     "query-string": "9.1.1",
     "source-map-support": "0.5.21",
+    "turndown": "^7.2.0",
     "vitest": "^1.6.1"
   }
 }
