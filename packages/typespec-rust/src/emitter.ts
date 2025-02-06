@@ -51,7 +51,10 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
     await writeToGeneratedDir(context.emitterOutputDir, file.name, file.content);
   }
 
-  // probe to see if cargo is on the path before executing cargo fmt
+  // probe to see if cargo is on the path before executing cargo fmt.
+  // we do this to avoid having to parse any output from cargo fmt to
+  // distinguish between failure due to not on the path vs a legit failure
+  // like choking on malformed code.
   try {
     execSync('cargo --version', { encoding: 'ascii' });
   } catch {
