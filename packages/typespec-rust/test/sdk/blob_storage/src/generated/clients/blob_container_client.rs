@@ -691,8 +691,7 @@ pub struct BlobContainerClientAcquireLeaseOptions<'a> {
     /// Optional. The proposed lease ID for the container.
     pub proposed_lease_id: Option<String>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -718,8 +717,7 @@ pub struct BlobContainerClientBreakLeaseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -738,8 +736,7 @@ pub struct BlobContainerClientChangeLeaseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -766,8 +763,7 @@ pub struct BlobContainerClientCreateOptions<'a> {
     /// is set to false.
     pub prevent_encryption_scope_override: Option<bool>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -789,8 +785,7 @@ pub struct BlobContainerClientDeleteOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -816,8 +811,7 @@ pub struct BlobContainerClientFilterBlobsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 
     /// Filters the results to return only to return only blobs whose tags match the specified expression.
@@ -836,8 +830,7 @@ pub struct BlobContainerClientGetAccessPolicyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -850,8 +843,7 @@ pub struct BlobContainerClientGetAccountInfoOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -867,8 +859,7 @@ pub struct BlobContainerClientGetPropertiesOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -887,8 +878,7 @@ pub struct BlobContainerClientReleaseLeaseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -904,8 +894,7 @@ pub struct BlobContainerClientRenameOptions<'a> {
     /// A lease ID for the source path. If specified, the source path must have an active lease and the lease ID must match.
     pub source_lease_id: Option<String>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -924,8 +913,7 @@ pub struct BlobContainerClientRenewLeaseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -944,8 +932,7 @@ pub struct BlobContainerClientRestoreOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -970,8 +957,7 @@ pub struct BlobContainerClientSetAccessPolicyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -993,8 +979,7 @@ pub struct BlobContainerClientSetMetadataOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -1007,7 +992,6 @@ pub struct BlobContainerClientSubmitBatchOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }

@@ -4,6 +4,8 @@
 *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
+import * as linkifyjs from 'linkifyjs';
+import turndownService from 'turndown';
 import * as rust from '../codemodel/index.js';
 
 /**
@@ -78,4 +80,35 @@ export function unwrapOption(type: rust.Type): rust.Type {
     return type.type;
   }
   return type;
+}
+
+// used by formatDocs
+const tds = new turndownService({codeBlockStyle: 'fenced', fence: '```'});
+
+/**
+ * applies certain formatting to a doc string.
+ * if the doc string doesn't require formatting
+ * the original doc string is returned.
+ * 
+ * @param docs the doc string to format
+ * @returns the original or formatted doc string
+ */
+export function formatDocs(docs: string): string {
+  // if the docs contain any HTML, convert it to markdown
+  if (docs.match(/<[a-z]+[\s\S]+\/[a-z]+>/i)) {
+    docs = tds.turndown(docs);
+  }
+
+  // enclose any hyperlinks in angle brackets
+  const links = linkifyjs.find(docs, 'url');
+  for (const link of links) {
+    const enclosed = `<${link.href}>`;
+
+    // don't enclose hyperlinks that are already enclosed or are markdown
+    if (!docs.includes(enclosed) && !docs.includes(`(${link.href})`)) {
+      docs = docs.replace(link.href, enclosed);
+    }
+  }
+
+  return docs;
 }

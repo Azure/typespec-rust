@@ -734,8 +734,7 @@ pub struct BlobBlockBlobClientCommitBlockListOptions<'a> {
     /// The tier to be set on the blob.
     pub tier: Option<AccessTier>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 
     /// Specify the transactional crc64 for the body, to be validated by the service.
@@ -762,12 +761,10 @@ pub struct BlobBlockBlobClientGetBlockListOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 
     /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
-    /// information on working with blob snapshots, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob">Creating
-    /// a Snapshot of a Blob.</a>
+    /// information on working with blob snapshots, see [Creating a Snapshot of a Blob.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob)
     pub snapshot: Option<String>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -874,8 +871,7 @@ pub struct BlobBlockBlobClientPutBlobFromUrlOptions<'a> {
     /// The tier to be set on the blob.
     pub tier: Option<AccessTier>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 
     /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
@@ -919,8 +915,7 @@ pub struct BlobBlockBlobClientStageBlockOptions<'a> {
     /// body. Will always be smaller than Content-Length.
     pub structured_content_length: Option<i64>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 
     /// Specify the transactional crc64 for the body, to be validated by the service.
@@ -984,8 +979,7 @@ pub struct BlobBlockBlobClientStageBlockFromUrlOptions<'a> {
     /// Bytes of source data in the specified range.
     pub source_range: Option<String>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
 
@@ -1081,8 +1075,7 @@ pub struct BlobBlockBlobClientUploadOptions<'a> {
     /// The tier to be set on the blob.
     pub tier: Option<AccessTier>,
 
-    /// The timeout parameter is expressed in seconds. For more information, see <a href="https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations">Setting
-    /// Timeouts for Blob Service Operations.</a>
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 
     /// Specify the transactional crc64 for the body, to be validated by the service.
