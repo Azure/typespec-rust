@@ -2,6 +2,10 @@
 
 ## 0.8.3 (unreleased)
 
+### Features Added
+
+* Merge preexisting `lib.rs` content with generated content.
+
 ### Other Changes
 
 * Fixed formatting of some doc comments.

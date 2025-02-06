@@ -7,7 +7,7 @@ import { CodeGenerator } from './codegen/codeGenerator.js';
 import { Adapter } from './tcgcadapter/adapter.js';
 import { RustEmitterOptions } from './lib.js';
 import { execSync } from 'child_process';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
 import * as path from 'path';
 import { EmitContext, NoTarget } from '@typespec/compiler';
@@ -41,10 +41,12 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
     await writeFile(cargoTomlPath, codegen.emitCargoToml());
   }
 
-  // TODO: this will overwrite an existing lib.rs file.
-  // we will likely need to support merging generated content with a preexisting lib.rs
-  // https://github.com/Azure/typespec-rust/issues/20
-  await writeFile(`${context.emitterOutputDir}/src/lib.rs`, codegen.emitLibRs());
+  let existingLibRs: string | undefined;
+  const libRsPath = `${context.emitterOutputDir}/src/lib.rs`;
+  if (existsSync(libRsPath)) {
+    existingLibRs = readFileSync(libRsPath, { encoding: 'ascii' });
+  }
+  await writeFile(libRsPath, codegen.emitLibRs(existingLibRs));
 
   const files = codegen.emitContent();
   for (const file of files) {

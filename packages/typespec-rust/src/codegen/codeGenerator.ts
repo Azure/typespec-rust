@@ -48,10 +48,11 @@ export class CodeGenerator {
   /**
    * generates the lib.rs file for crate
    * 
+   * @param existingLibRs contents of preexisting lib.rs file
    * @returns the content for lib.rs
    */
-  emitLibRs(): string {
-    return emitLibRs(this.crate);
+  emitLibRs(existingLibRs?: string): string {
+    return emitLibRs(this.crate, existingLibRs);
   }
 
   /**
