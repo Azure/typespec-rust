@@ -12,6 +12,7 @@
   * HTML elements are converted to markdown equivalents.
   * Bare URLs are converted to Rust docs hyperlinks.
 * The emitter will attempt to execute `cargo fmt` after files are written.
+* Add `derive` feature for `typespec_client_core` dependency.
 
 ## 0.8.2 (2025-02-04)
 
