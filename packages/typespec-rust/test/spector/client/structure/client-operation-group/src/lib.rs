@@ -7,15 +7,18 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        FirstClient, FirstClientOptions, FirstGroup3Client, FirstGroup4Client,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        FirstClientOneOptions, FirstGroup3ClientThreeOptions, FirstGroup3ClientTwoOptions,
+        FirstGroup4ClientFourOptions,
+    };
     pub use crate::generated::enums::*;
 }
 
-pub use crate::generated::clients::{
-    FirstClient, FirstClientOneOptions, FirstClientOptions, FirstGroup3ClientThreeOptions,
-    FirstGroup3ClientTwoOptions, FirstGroup4ClientFourOptions,
-};
+pub use crate::generated::clients::{FirstClient, FirstClientOptions};
 // END GENERATED CODE

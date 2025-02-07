@@ -7,17 +7,20 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        TwoOperationGroupClient, TwoOperationGroupClientOptions, TwoOperationGroupGroup1Client,
+        TwoOperationGroupGroup2Client,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        TwoOperationGroupGroup1ClientFourOptions, TwoOperationGroupGroup1ClientOneOptions,
+        TwoOperationGroupGroup1ClientThreeOptions, TwoOperationGroupGroup2ClientFiveOptions,
+        TwoOperationGroupGroup2ClientSixOptions, TwoOperationGroupGroup2ClientTwoOptions,
+    };
     pub use crate::generated::enums::*;
 }
 
-pub use crate::generated::clients::{
-    TwoOperationGroupClient, TwoOperationGroupClientOptions,
-    TwoOperationGroupGroup1ClientFourOptions, TwoOperationGroupGroup1ClientOneOptions,
-    TwoOperationGroupGroup1ClientThreeOptions, TwoOperationGroupGroup2ClientFiveOptions,
-    TwoOperationGroupGroup2ClientSixOptions, TwoOperationGroupGroup2ClientTwoOptions,
-};
+pub use crate::generated::clients::{TwoOperationGroupClient, TwoOperationGroupClientOptions};
 // END GENERATED CODE

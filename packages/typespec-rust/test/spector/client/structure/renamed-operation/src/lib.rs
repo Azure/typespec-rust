@@ -7,17 +7,19 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        RenamedOperationClient, RenamedOperationClientOptions, RenamedOperationGroupClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        RenamedOperationClientRenamedFiveOptions, RenamedOperationClientRenamedOneOptions,
+        RenamedOperationClientRenamedThreeOptions, RenamedOperationGroupClientRenamedFourOptions,
+        RenamedOperationGroupClientRenamedSixOptions, RenamedOperationGroupClientRenamedTwoOptions,
+    };
     pub use crate::generated::enums::*;
 }
 
-pub use crate::generated::clients::{
-    RenamedOperationClient, RenamedOperationClientOptions,
-    RenamedOperationClientRenamedFiveOptions, RenamedOperationClientRenamedOneOptions,
-    RenamedOperationClientRenamedThreeOptions, RenamedOperationGroupClientRenamedFourOptions,
-    RenamedOperationGroupClientRenamedSixOptions, RenamedOperationGroupClientRenamedTwoOptions,
-};
+pub use crate::generated::clients::{RenamedOperationClient, RenamedOperationClientOptions};
 // END GENERATED CODE

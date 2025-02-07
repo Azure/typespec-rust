@@ -247,7 +247,36 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
       body += '}\n\n'; // end impl
     }
 
-    // emit method options
+    body += '\n';
+
+    // add using for method_options as required
+    for (const method of client.methods) {
+      if (method.kind !== 'clientaccessor') {
+        use.addType('crate::generated::clients::method_options', '*');
+        break;
+      }
+    }
+
+    let content = helpers.contentPreamble();
+    content += use.text();
+    content += body;
+
+    const clientMod = codegen.deconstruct(client.name).join('_');
+    clientFiles.push({name: `${targetDir}/${clientMod}.rs`, content: content});
+  }
+
+  // emit method options into method_options.rs
+  clientFiles.push({name: `${targetDir}/method_options.rs`, content: getMethodOptionsRs(crate)});
+
+  return {clients: clientFiles};
+}
+
+function getMethodOptionsRs(crate: rust.Crate): string {
+  const use = new Use();
+  const indent = new helpers.indentation();
+
+  let body = '';
+  for (const client of crate.clients) {
     for (let i = 0; i < client.methods.length; ++i) {
       const method = client.methods[i];
       if (method.kind === 'clientaccessor') {
@@ -295,18 +324,13 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         body += '\n';
       }
     }
-
-    body += '\n';
-
-    let content = helpers.contentPreamble();
-    content += use.text();
-    content += body;
-
-    const clientMod = codegen.deconstruct(client.name).join('_');
-    clientFiles.push({name: `${targetDir}/${clientMod}.rs`, content: content});
   }
 
-  return {clients: clientFiles};
+  let content = helpers.contentPreamble();
+  content += use.text();
+  content += body;
+
+  return content;
 }
 
 /**

@@ -7,11 +7,15 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{NotVersionedClient, NotVersionedClientOptions};
 }
 
-pub use crate::generated::clients::{
-    NotVersionedClient, NotVersionedClientOptions, NotVersionedClientWithPathApiVersionOptions,
-    NotVersionedClientWithQueryApiVersionOptions, NotVersionedClientWithoutApiVersionOptions,
-};
+pub mod models {
+    pub use crate::generated::clients::method_options::{
+        NotVersionedClientWithPathApiVersionOptions, NotVersionedClientWithQueryApiVersionOptions,
+        NotVersionedClientWithoutApiVersionOptions,
+    };
+}
+
+pub use crate::generated::clients::{NotVersionedClient, NotVersionedClientOptions};
 // END GENERATED CODE

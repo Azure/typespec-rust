@@ -7,15 +7,16 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{FlattenPropertyClient, FlattenPropertyClientOptions};
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        FlattenPropertyClientPutFlattenModelOptions,
+        FlattenPropertyClientPutNestedFlattenModelOptions,
+    };
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    FlattenPropertyClient, FlattenPropertyClientOptions,
-    FlattenPropertyClientPutFlattenModelOptions, FlattenPropertyClientPutNestedFlattenModelOptions,
-};
+pub use crate::generated::clients::{FlattenPropertyClient, FlattenPropertyClientOptions};
 // END GENERATED CODE

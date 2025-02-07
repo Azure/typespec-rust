@@ -15,6 +15,7 @@ mod dictionary_nullable_float_value_client;
 mod dictionary_recursive_model_value_client;
 mod dictionary_string_value_client;
 mod dictionary_unknown_value_client;
+pub mod method_options;
 pub use dictionary_boolean_value_client::*;
 pub use dictionary_client::*;
 pub use dictionary_datetime_value_client::*;

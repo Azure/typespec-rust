@@ -7,14 +7,13 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{PageableClient, PageableClientOptions};
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::PageableClientListOptions;
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    PageableClient, PageableClientListOptions, PageableClientOptions,
-};
+pub use crate::generated::clients::{PageableClient, PageableClientOptions};
 // END GENERATED CODE

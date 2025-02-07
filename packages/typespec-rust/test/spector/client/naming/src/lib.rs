@@ -7,20 +7,22 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        NamingClient, NamingClientModelClient, NamingClientOptions, NamingUnionEnumClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        NamingClientClientNameOptions, NamingClientClientOptions,
+        NamingClientCompatibleWithEncodedNameOptions, NamingClientLanguageOptions,
+        NamingClientModelClientClientOptions, NamingClientModelClientLanguageOptions,
+        NamingClientParameterOptions, NamingClientRequestOptions, NamingClientResponseOptions,
+        NamingUnionEnumClientUnionEnumMemberNameOptions, NamingUnionEnumClientUnionEnumNameOptions,
+    };
     pub use crate::generated::enums::*;
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    NamingClient, NamingClientClientNameOptions, NamingClientClientOptions,
-    NamingClientCompatibleWithEncodedNameOptions, NamingClientLanguageOptions,
-    NamingClientModelClientClientOptions, NamingClientModelClientLanguageOptions,
-    NamingClientOptions, NamingClientParameterOptions, NamingClientRequestOptions,
-    NamingClientResponseOptions, NamingUnionEnumClientUnionEnumMemberNameOptions,
-    NamingUnionEnumClientUnionEnumNameOptions,
-};
+pub use crate::generated::clients::{NamingClient, NamingClientOptions};
 // END GENERATED CODE

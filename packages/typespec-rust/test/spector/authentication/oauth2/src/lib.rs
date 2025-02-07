@@ -7,10 +7,14 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{OAuth2Client, OAuth2ClientOptions};
 }
 
-pub use crate::generated::clients::{
-    OAuth2Client, OAuth2ClientInvalidOptions, OAuth2ClientOptions, OAuth2ClientValidOptions,
-};
+pub mod models {
+    pub use crate::generated::clients::method_options::{
+        OAuth2ClientInvalidOptions, OAuth2ClientValidOptions,
+    };
+}
+
+pub use crate::generated::clients::{OAuth2Client, OAuth2ClientOptions};
 // END GENERATED CODE

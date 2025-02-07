@@ -7,25 +7,32 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        DictionaryBooleanValueClient, DictionaryClient, DictionaryClientOptions,
+        DictionaryDatetimeValueClient, DictionaryDurationValueClient, DictionaryFloat32ValueClient,
+        DictionaryInt32ValueClient, DictionaryInt64ValueClient, DictionaryModelValueClient,
+        DictionaryNullableFloatValueClient, DictionaryRecursiveModelValueClient,
+        DictionaryStringValueClient, DictionaryUnknownValueClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        DictionaryBooleanValueClientGetOptions, DictionaryBooleanValueClientPutOptions,
+        DictionaryDatetimeValueClientGetOptions, DictionaryDatetimeValueClientPutOptions,
+        DictionaryDurationValueClientGetOptions, DictionaryDurationValueClientPutOptions,
+        DictionaryFloat32ValueClientGetOptions, DictionaryFloat32ValueClientPutOptions,
+        DictionaryInt32ValueClientGetOptions, DictionaryInt32ValueClientPutOptions,
+        DictionaryInt64ValueClientGetOptions, DictionaryInt64ValueClientPutOptions,
+        DictionaryModelValueClientGetOptions, DictionaryModelValueClientPutOptions,
+        DictionaryNullableFloatValueClientGetOptions, DictionaryNullableFloatValueClientPutOptions,
+        DictionaryRecursiveModelValueClientGetOptions,
+        DictionaryRecursiveModelValueClientPutOptions, DictionaryStringValueClientGetOptions,
+        DictionaryStringValueClientPutOptions, DictionaryUnknownValueClientGetOptions,
+        DictionaryUnknownValueClientPutOptions,
+    };
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    DictionaryBooleanValueClientGetOptions, DictionaryBooleanValueClientPutOptions,
-    DictionaryClient, DictionaryClientOptions, DictionaryDatetimeValueClientGetOptions,
-    DictionaryDatetimeValueClientPutOptions, DictionaryDurationValueClientGetOptions,
-    DictionaryDurationValueClientPutOptions, DictionaryFloat32ValueClientGetOptions,
-    DictionaryFloat32ValueClientPutOptions, DictionaryInt32ValueClientGetOptions,
-    DictionaryInt32ValueClientPutOptions, DictionaryInt64ValueClientGetOptions,
-    DictionaryInt64ValueClientPutOptions, DictionaryModelValueClientGetOptions,
-    DictionaryModelValueClientPutOptions, DictionaryNullableFloatValueClientGetOptions,
-    DictionaryNullableFloatValueClientPutOptions, DictionaryRecursiveModelValueClientGetOptions,
-    DictionaryRecursiveModelValueClientPutOptions, DictionaryStringValueClientGetOptions,
-    DictionaryStringValueClientPutOptions, DictionaryUnknownValueClientGetOptions,
-    DictionaryUnknownValueClientPutOptions,
-};
+pub use crate::generated::clients::{DictionaryClient, DictionaryClientOptions};
 // END GENERATED CODE

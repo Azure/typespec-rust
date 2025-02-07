@@ -3,8 +3,10 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use spector_jmergepatch::{
-    models::{InnerModel, Resource, ResourcePatch},
-    JsonMergePatchClient, JsonMergePatchClientUpdateOptionalResourceOptions,
+    models::{
+        InnerModel, JsonMergePatchClientUpdateOptionalResourceOptions, Resource, ResourcePatch,
+    },
+    JsonMergePatchClient,
 };
 use std::collections::HashMap;
 

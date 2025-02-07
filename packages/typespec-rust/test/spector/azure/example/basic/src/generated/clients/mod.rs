@@ -5,5 +5,6 @@
 
 mod basic_client;
 mod basic_service_operation_group_client;
+pub mod method_options;
 pub use basic_client::*;
 pub use basic_service_operation_group_client::*;

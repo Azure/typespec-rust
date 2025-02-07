@@ -7,17 +7,20 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        ServiceBarClient, ServiceBazClient, ServiceBazFooClient, ServiceClient,
+        ServiceClientOptions, ServiceFooClient, ServiceQuxBarClient, ServiceQuxClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        ServiceBarClientFiveOptions, ServiceBarClientSixOptions, ServiceBazFooClientSevenOptions,
+        ServiceClientOneOptions, ServiceClientTwoOptions, ServiceFooClientFourOptions,
+        ServiceFooClientThreeOptions, ServiceQuxBarClientNineOptions, ServiceQuxClientEightOptions,
+    };
     pub use crate::generated::enums::*;
 }
 
-pub use crate::generated::clients::{
-    ServiceBarClientFiveOptions, ServiceBarClientSixOptions, ServiceBazFooClientSevenOptions,
-    ServiceClient, ServiceClientOneOptions, ServiceClientOptions, ServiceClientTwoOptions,
-    ServiceFooClientFourOptions, ServiceFooClientThreeOptions, ServiceQuxBarClientNineOptions,
-    ServiceQuxClientEightOptions,
-};
+pub use crate::generated::clients::{ServiceClient, ServiceClientOptions};
 // END GENERATED CODE

@@ -7,13 +7,19 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        CollectionFormatClient, CollectionFormatClientOptions, CollectionFormatHeaderClient,
+        CollectionFormatQueryClient,
+    };
 }
 
-pub use crate::generated::clients::{
-    CollectionFormatClient, CollectionFormatClientOptions, CollectionFormatHeaderClientCsvOptions,
-    CollectionFormatQueryClientCsvOptions, CollectionFormatQueryClientMultiOptions,
-    CollectionFormatQueryClientPipesOptions, CollectionFormatQueryClientSsvOptions,
-    CollectionFormatQueryClientTsvOptions,
-};
+pub mod models {
+    pub use crate::generated::clients::method_options::{
+        CollectionFormatHeaderClientCsvOptions, CollectionFormatQueryClientCsvOptions,
+        CollectionFormatQueryClientMultiOptions, CollectionFormatQueryClientPipesOptions,
+        CollectionFormatQueryClientSsvOptions, CollectionFormatQueryClientTsvOptions,
+    };
+}
+
+pub use crate::generated::clients::{CollectionFormatClient, CollectionFormatClientOptions};
 // END GENERATED CODE

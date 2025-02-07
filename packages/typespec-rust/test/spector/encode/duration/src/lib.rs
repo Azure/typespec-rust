@@ -7,23 +7,26 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        DurationClient, DurationClientOptions, DurationHeaderClient, DurationPropertyClient,
+        DurationQueryClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        DurationHeaderClientDefaultOptions, DurationHeaderClientFloat64SecondsOptions,
+        DurationHeaderClientFloatSecondsOptions, DurationHeaderClientInt32SecondsOptions,
+        DurationHeaderClientIso8601ArrayOptions, DurationHeaderClientIso8601Options,
+        DurationPropertyClientDefaultOptions, DurationPropertyClientFloat64SecondsOptions,
+        DurationPropertyClientFloatSecondsArrayOptions, DurationPropertyClientFloatSecondsOptions,
+        DurationPropertyClientInt32SecondsOptions, DurationPropertyClientIso8601Options,
+        DurationQueryClientDefaultOptions, DurationQueryClientFloat64SecondsOptions,
+        DurationQueryClientFloatSecondsOptions, DurationQueryClientInt32SecondsArrayOptions,
+        DurationQueryClientInt32SecondsOptions, DurationQueryClientIso8601Options,
+    };
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    DurationClient, DurationClientOptions, DurationHeaderClientDefaultOptions,
-    DurationHeaderClientFloat64SecondsOptions, DurationHeaderClientFloatSecondsOptions,
-    DurationHeaderClientInt32SecondsOptions, DurationHeaderClientIso8601ArrayOptions,
-    DurationHeaderClientIso8601Options, DurationPropertyClientDefaultOptions,
-    DurationPropertyClientFloat64SecondsOptions, DurationPropertyClientFloatSecondsArrayOptions,
-    DurationPropertyClientFloatSecondsOptions, DurationPropertyClientInt32SecondsOptions,
-    DurationPropertyClientIso8601Options, DurationQueryClientDefaultOptions,
-    DurationQueryClientFloat64SecondsOptions, DurationQueryClientFloatSecondsOptions,
-    DurationQueryClientInt32SecondsArrayOptions, DurationQueryClientInt32SecondsOptions,
-    DurationQueryClientIso8601Options,
-};
+pub use crate::generated::clients::{DurationClient, DurationClientOptions};
 // END GENERATED CODE

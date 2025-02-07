@@ -9,6 +9,7 @@ mod bytes_property_client;
 mod bytes_query_client;
 mod bytes_request_body_client;
 mod bytes_response_body_client;
+pub mod method_options;
 pub use bytes_client::*;
 pub use bytes_header_client::*;
 pub use bytes_property_client::*;

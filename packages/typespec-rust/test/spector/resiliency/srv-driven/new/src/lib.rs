@@ -7,13 +7,21 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        ResiliencyServiceDrivenClient, ResiliencyServiceDrivenClientOptions,
+    };
+}
+
+pub mod models {
+    pub use crate::generated::clients::method_options::{
+        ResiliencyServiceDrivenClientAddOperationOptions,
+        ResiliencyServiceDrivenClientFromNoneOptions,
+        ResiliencyServiceDrivenClientFromOneOptionalOptions,
+        ResiliencyServiceDrivenClientFromOneRequiredOptions,
+    };
 }
 
 pub use crate::generated::clients::{
-    ResiliencyServiceDrivenClient, ResiliencyServiceDrivenClientAddOperationOptions,
-    ResiliencyServiceDrivenClientFromNoneOptions,
-    ResiliencyServiceDrivenClientFromOneOptionalOptions,
-    ResiliencyServiceDrivenClientFromOneRequiredOptions, ResiliencyServiceDrivenClientOptions,
+    ResiliencyServiceDrivenClient, ResiliencyServiceDrivenClientOptions,
 };
 // END GENERATED CODE

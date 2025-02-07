@@ -7,10 +7,12 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{NotDefinedClient, NotDefinedClientOptions};
 }
 
-pub use crate::generated::clients::{
-    NotDefinedClient, NotDefinedClientOptions, NotDefinedClientValidOptions,
-};
+pub mod models {
+    pub use crate::generated::clients::method_options::NotDefinedClientValidOptions;
+}
+
+pub use crate::generated::clients::{NotDefinedClient, NotDefinedClientOptions};
 // END GENERATED CODE

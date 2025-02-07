@@ -7,18 +7,21 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        ContentNegotiationClient, ContentNegotiationClientOptions,
+        ContentNegotiationDifferentBodyClient, ContentNegotiationSameBodyClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        ContentNegotiationDifferentBodyClientGetAvatarAsJsonOptions,
+        ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions,
+        ContentNegotiationSameBodyClientGetAvatarAsJpegOptions,
+        ContentNegotiationSameBodyClientGetAvatarAsPngOptions,
+    };
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    ContentNegotiationClient, ContentNegotiationClientOptions,
-    ContentNegotiationDifferentBodyClientGetAvatarAsJsonOptions,
-    ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions,
-    ContentNegotiationSameBodyClientGetAvatarAsJpegOptions,
-    ContentNegotiationSameBodyClientGetAvatarAsPngOptions,
-};
+pub use crate::generated::clients::{ContentNegotiationClient, ContentNegotiationClientOptions};
 // END GENERATED CODE
