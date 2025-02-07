@@ -7,16 +7,17 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{BasicClient, BasicClientOptions};
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        BasicClientCreateOrReplaceOptions, BasicClientCreateOrUpdateOptions,
+        BasicClientDeleteOptions, BasicClientExportAllUsersOptions, BasicClientExportOptions,
+        BasicClientGetOptions, BasicClientListOptions,
+    };
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    BasicClient, BasicClientCreateOrReplaceOptions, BasicClientCreateOrUpdateOptions,
-    BasicClientDeleteOptions, BasicClientExportAllUsersOptions, BasicClientExportOptions,
-    BasicClientGetOptions, BasicClientListOptions, BasicClientOptions,
-};
+pub use crate::generated::clients::{BasicClient, BasicClientOptions};
 // END GENERATED CODE

@@ -5,10 +5,9 @@
 
 use crate::generated::clients::first_group3_client::FirstGroup3Client;
 use crate::generated::clients::first_group4_client::FirstGroup4Client;
+use crate::generated::clients::method_options::*;
 use crate::models::ClientType;
-use azure_core::{
-    ClientMethodOptions, ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url,
-};
+use azure_core::{ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
 pub struct FirstClient {
@@ -86,11 +85,4 @@ impl FirstClient {
         let mut request = Request::new(url, Method::Post);
         self.pipeline.send(&ctx, &mut request).await
     }
-}
-
-/// Options to be passed to [`FirstClient::one()`](crate::FirstClient::one())
-#[derive(Clone, Default, SafeDebug)]
-pub struct FirstClientOneOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
 }

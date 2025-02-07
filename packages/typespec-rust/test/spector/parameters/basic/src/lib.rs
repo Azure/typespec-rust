@@ -7,15 +7,17 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        BasicClient, BasicClientOptions, BasicExplicitBodyClient, BasicImplicitBodyClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        BasicExplicitBodyClientSimpleOptions, BasicImplicitBodyClientSimpleOptions,
+    };
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    BasicClient, BasicClientOptions, BasicExplicitBodyClientSimpleOptions,
-    BasicImplicitBodyClientSimpleOptions,
-};
+pub use crate::generated::clients::{BasicClient, BasicClientOptions};
 // END GENERATED CODE

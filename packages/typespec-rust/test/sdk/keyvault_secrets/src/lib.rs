@@ -9,23 +9,23 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{KeyVaultClient, KeyVaultClientOptions};
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        KeyVaultClientBackupSecretOptions, KeyVaultClientDeleteSecretOptions,
+        KeyVaultClientGetDeletedSecretOptions, KeyVaultClientGetDeletedSecretsOptions,
+        KeyVaultClientGetSecretOptions, KeyVaultClientGetSecretVersionsOptions,
+        KeyVaultClientGetSecretsOptions, KeyVaultClientPurgeDeletedSecretOptions,
+        KeyVaultClientRecoverDeletedSecretOptions, KeyVaultClientRestoreSecretOptions,
+        KeyVaultClientSetSecretOptions, KeyVaultClientUpdateSecretOptions,
+    };
     pub use crate::generated::enums::*;
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    KeyVaultClient, KeyVaultClientBackupSecretOptions, KeyVaultClientDeleteSecretOptions,
-    KeyVaultClientGetDeletedSecretOptions, KeyVaultClientGetDeletedSecretsOptions,
-    KeyVaultClientGetSecretOptions, KeyVaultClientGetSecretVersionsOptions,
-    KeyVaultClientGetSecretsOptions, KeyVaultClientOptions,
-    KeyVaultClientPurgeDeletedSecretOptions, KeyVaultClientRecoverDeletedSecretOptions,
-    KeyVaultClientRestoreSecretOptions, KeyVaultClientSetSecretOptions,
-    KeyVaultClientUpdateSecretOptions,
-};
+pub use crate::generated::clients::{KeyVaultClient, KeyVaultClientOptions};
 // END GENERATED CODE
 
 // this should also be preserved and is not next to the end delimiter.

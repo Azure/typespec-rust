@@ -7,23 +7,28 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        DatetimeClient, DatetimeClientOptions, DatetimeHeaderClient, DatetimePropertyClient,
+        DatetimeQueryClient, DatetimeResponseHeaderClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        DatetimeHeaderClientDefaultOptions, DatetimeHeaderClientRfc3339Options,
+        DatetimeHeaderClientRfc7231Options, DatetimeHeaderClientUnixTimestampArrayOptions,
+        DatetimeHeaderClientUnixTimestampOptions, DatetimePropertyClientDefaultOptions,
+        DatetimePropertyClientRfc3339Options, DatetimePropertyClientRfc7231Options,
+        DatetimePropertyClientUnixTimestampArrayOptions,
+        DatetimePropertyClientUnixTimestampOptions, DatetimeQueryClientDefaultOptions,
+        DatetimeQueryClientRfc3339Options, DatetimeQueryClientRfc7231Options,
+        DatetimeQueryClientUnixTimestampArrayOptions, DatetimeQueryClientUnixTimestampOptions,
+        DatetimeResponseHeaderClientDefaultOptions, DatetimeResponseHeaderClientRfc3339Options,
+        DatetimeResponseHeaderClientRfc7231Options,
+        DatetimeResponseHeaderClientUnixTimestampOptions,
+    };
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    DatetimeClient, DatetimeClientOptions, DatetimeHeaderClientDefaultOptions,
-    DatetimeHeaderClientRfc3339Options, DatetimeHeaderClientRfc7231Options,
-    DatetimeHeaderClientUnixTimestampArrayOptions, DatetimeHeaderClientUnixTimestampOptions,
-    DatetimePropertyClientDefaultOptions, DatetimePropertyClientRfc3339Options,
-    DatetimePropertyClientRfc7231Options, DatetimePropertyClientUnixTimestampArrayOptions,
-    DatetimePropertyClientUnixTimestampOptions, DatetimeQueryClientDefaultOptions,
-    DatetimeQueryClientRfc3339Options, DatetimeQueryClientRfc7231Options,
-    DatetimeQueryClientUnixTimestampArrayOptions, DatetimeQueryClientUnixTimestampOptions,
-    DatetimeResponseHeaderClientDefaultOptions, DatetimeResponseHeaderClientRfc3339Options,
-    DatetimeResponseHeaderClientRfc7231Options, DatetimeResponseHeaderClientUnixTimestampOptions,
-};
+pub use crate::generated::clients::{DatetimeClient, DatetimeClientOptions};
 // END GENERATED CODE

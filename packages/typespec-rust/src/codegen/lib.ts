@@ -48,19 +48,46 @@ export function emitLibRs(crate: rust.Crate, existingLibRs?: string): string {
  */
 function getGeneratedContent(crate: rust.Crate): string {
   const indent = new helpers.indentation();
+
+  // DO NOT emit any content before beginDelimiter!!
   let content = beginDelimiter;
   content += '\nmod generated;\n\n';
 
   if (crate.clients.length > 0) {
     content += 'pub mod clients {\n';
-    content += `${indent.get()}pub use crate::generated::clients::*;\n`;
+    // we want to reexport all clients and client options, not method_options
+    const clientsAndClientOptions = new Array<string>();
+    for (const client of crate.clients) {
+      clientsAndClientOptions.push(client.name);
+      if (client.constructable) {
+        clientsAndClientOptions.push(client.constructable.options.type.name);
+      }
+    }
+    content += `${indent.get()}pub use crate::generated::clients::{${clientsAndClientOptions.join(', ')}};\n`;
     content += '}\n\n';
   }
 
+  // emit pub mod models section
   let closeModels = false;
-  if (crate.enums.length > 0 || crate.models.length > 0) {
+  if (crate.clients.length > 0 || crate.enums.length > 0 || crate.models.length > 0) {
     closeModels = true;
     content += 'pub mod models {\n';
+  }
+
+  if (crate.clients.length > 0) {
+    // all client method options are reexported from models
+    content += `${indent.get()}pub use crate::generated::clients::method_options::{\n`;
+    indent.push();
+    for (const client of crate.clients) {
+      for (const method of client.methods) {
+        if (!method.pub || method.kind === 'clientaccessor') {
+          continue;
+        }
+        content += `${indent.get()}${method.options.type.name},\n`;
+      }
+    }
+    indent.pop();
+    content += `${indent.get()}};\n`;
   }
 
   if (crate.enums.length > 0) {
@@ -74,25 +101,22 @@ function getGeneratedContent(crate: rust.Crate): string {
   if (closeModels) {
     content += '}\n\n';
   }
+  // end pub mod models section
 
-  // re-export all instantiable clients and client options, and all client method options.
-  // the idea here is that anything a caller can construct should be exposed in the root.
+  // now reexport all instantiable clients and their client options types from the root
   if (crate.clients.length > 0) {
-    content += 'pub use crate::generated::clients::{\n';
+    const clientsAndClientOptions = new Array<string>();
     for (const client of crate.clients) {
       if (client.constructable) {
-        content += `${indent.get()}${client.name}, ${client.constructable.options.type.name},\n`;
-      }
-      for (const method of client.methods) {
-        if (!method.pub || method.kind === 'clientaccessor') {
-          continue;
-        }
-        content += `${indent.get()}${method.options.type.name},\n`;
+        clientsAndClientOptions.push(client.name);
+        clientsAndClientOptions.push(client.constructable.options.type.name);
       }
     }
-    content += '};\n';
+    content += `${indent.get()}pub use crate::generated::clients::{${clientsAndClientOptions.join(', ')}};\n`;
   }
 
   content += endDelimiter + '\n';
+  // DO NOT emit any content after endDelimiter!!
+
   return content;
 }

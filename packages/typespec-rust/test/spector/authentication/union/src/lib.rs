@@ -7,10 +7,14 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{UnionClient, UnionClientOptions};
 }
 
-pub use crate::generated::clients::{
-    UnionClient, UnionClientOptions, UnionClientValidKeyOptions, UnionClientValidTokenOptions,
-};
+pub mod models {
+    pub use crate::generated::clients::method_options::{
+        UnionClientValidKeyOptions, UnionClientValidTokenOptions,
+    };
+}
+
+pub use crate::generated::clients::{UnionClient, UnionClientOptions};
 // END GENERATED CODE

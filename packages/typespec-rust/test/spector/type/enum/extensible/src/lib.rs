@@ -7,16 +7,18 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        ExtensibleClient, ExtensibleClientOptions, ExtensibleStringClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        ExtensibleStringClientGetKnownValueOptions, ExtensibleStringClientGetUnknownValueOptions,
+        ExtensibleStringClientPutKnownValueOptions, ExtensibleStringClientPutUnknownValueOptions,
+    };
     pub use crate::generated::enums::*;
 }
 
-pub use crate::generated::clients::{
-    ExtensibleClient, ExtensibleClientOptions, ExtensibleStringClientGetKnownValueOptions,
-    ExtensibleStringClientGetUnknownValueOptions, ExtensibleStringClientPutKnownValueOptions,
-    ExtensibleStringClientPutUnknownValueOptions,
-};
+pub use crate::generated::clients::{ExtensibleClient, ExtensibleClientOptions};
 // END GENERATED CODE

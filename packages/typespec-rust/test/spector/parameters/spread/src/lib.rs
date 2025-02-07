@@ -7,21 +7,26 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        SpreadAliasClient, SpreadClient, SpreadClientOptions, SpreadModelClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        SpreadAliasClientSpreadAsRequestBodyOptions,
+        SpreadAliasClientSpreadAsRequestParameterOptions,
+        SpreadAliasClientSpreadParameterWithInnerAliasOptions,
+        SpreadAliasClientSpreadParameterWithInnerModelOptions,
+        SpreadAliasClientSpreadWithMultipleParametersOptions,
+        SpreadModelClientSpreadAsRequestBodyOptions,
+        SpreadModelClientSpreadCompositeRequestMixOptions,
+        SpreadModelClientSpreadCompositeRequestOnlyWithBodyOptions,
+        SpreadModelClientSpreadCompositeRequestOptions,
+        SpreadModelClientSpreadCompositeRequestWithoutBodyOptions,
+    };
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    SpreadAliasClientSpreadAsRequestBodyOptions, SpreadAliasClientSpreadAsRequestParameterOptions,
-    SpreadAliasClientSpreadParameterWithInnerAliasOptions,
-    SpreadAliasClientSpreadParameterWithInnerModelOptions,
-    SpreadAliasClientSpreadWithMultipleParametersOptions, SpreadClient, SpreadClientOptions,
-    SpreadModelClientSpreadAsRequestBodyOptions, SpreadModelClientSpreadCompositeRequestMixOptions,
-    SpreadModelClientSpreadCompositeRequestOnlyWithBodyOptions,
-    SpreadModelClientSpreadCompositeRequestOptions,
-    SpreadModelClientSpreadCompositeRequestWithoutBodyOptions,
-};
+pub use crate::generated::clients::{SpreadClient, SpreadClientOptions};
 // END GENERATED CODE

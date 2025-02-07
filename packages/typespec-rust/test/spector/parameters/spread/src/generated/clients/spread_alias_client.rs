@@ -8,10 +8,8 @@ use super::internal_models::{
     SpreadParameterWithInnerAliasRequest, SpreadParameterWithInnerModelRequest,
     SpreadWithMultipleParametersRequest,
 };
-use azure_core::{
-    ClientMethodOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
-};
-use typespec_client_core::fmt::SafeDebug;
+use crate::generated::clients::method_options::*;
+use azure_core::{Context, Method, Pipeline, Request, RequestContent, Response, Result, Url};
 
 pub struct SpreadAliasClient {
     pub(crate) endpoint: Url,
@@ -173,45 +171,4 @@ impl SpreadAliasClient {
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
-}
-
-/// Options to be passed to [`SpreadAliasClient::spread_as_request_body()`](crate::clients::SpreadAliasClient::spread_as_request_body())
-#[derive(Clone, Default, SafeDebug)]
-pub struct SpreadAliasClientSpreadAsRequestBodyOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
-/// Options to be passed to [`SpreadAliasClient::spread_as_request_parameter()`](crate::clients::SpreadAliasClient::spread_as_request_parameter())
-#[derive(Clone, Default, SafeDebug)]
-pub struct SpreadAliasClientSpreadAsRequestParameterOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
-/// Options to be passed to [`SpreadAliasClient::spread_parameter_with_inner_alias()`](crate::clients::SpreadAliasClient::spread_parameter_with_inner_alias())
-#[derive(Clone, Default, SafeDebug)]
-pub struct SpreadAliasClientSpreadParameterWithInnerAliasOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
-/// Options to be passed to [`SpreadAliasClient::spread_parameter_with_inner_model()`](crate::clients::SpreadAliasClient::spread_parameter_with_inner_model())
-#[derive(Clone, Default, SafeDebug)]
-pub struct SpreadAliasClientSpreadParameterWithInnerModelOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
-/// Options to be passed to [`SpreadAliasClient::spread_with_multiple_parameters()`](crate::clients::SpreadAliasClient::spread_with_multiple_parameters())
-#[derive(Clone, Default, SafeDebug)]
-pub struct SpreadAliasClientSpreadWithMultipleParametersOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// optional int
-    pub optional_int: Option<i32>,
-
-    /// optional string
-    pub optional_string_list: Option<Vec<String>>,
 }

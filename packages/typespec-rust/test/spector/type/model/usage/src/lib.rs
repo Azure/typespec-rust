@@ -7,15 +7,15 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{UsageClient, UsageClientOptions};
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        UsageClientInputAndOutputOptions, UsageClientInputOptions, UsageClientOutputOptions,
+    };
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    UsageClient, UsageClientInputAndOutputOptions, UsageClientInputOptions, UsageClientOptions,
-    UsageClientOutputOptions,
-};
+pub use crate::generated::clients::{UsageClient, UsageClientOptions};
 // END GENERATED CODE

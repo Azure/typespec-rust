@@ -5,8 +5,8 @@
 use azure_core::Etag;
 use futures::StreamExt;
 use spector_basic::{
-    models::{PagedUser, User, UserList},
-    BasicClient, BasicClientListOptions,
+    models::{BasicClientListOptions, PagedUser, User, UserList},
+    BasicClient,
 };
 
 #[tokio::test]

@@ -1,6 +1,10 @@
 # Release History
 
-## 0.8.3 (unreleased)
+## 0.9.0 (unreleased)
+
+### Breaking Changes
+
+* All client method option types are now exported from the `models` module (they are no longer in the root).
 
 ### Features Added
 

@@ -7,6 +7,7 @@ mod duration_client;
 mod duration_header_client;
 mod duration_property_client;
 mod duration_query_client;
+pub mod method_options;
 pub use duration_client::*;
 pub use duration_header_client::*;
 pub use duration_property_client::*;

@@ -7,18 +7,21 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        CommonPropertiesClient, CommonPropertiesClientOptions,
+        CommonPropertiesManagedIdentityClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions,
+        CommonPropertiesManagedIdentityClientGetOptions,
+        CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedOptions,
+    };
     pub use crate::generated::enums::*;
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    CommonPropertiesClient, CommonPropertiesClientOptions,
-    CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions,
-    CommonPropertiesManagedIdentityClientGetOptions,
-    CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedOptions,
-};
+pub use crate::generated::clients::{CommonPropertiesClient, CommonPropertiesClientOptions};
 // END GENERATED CODE

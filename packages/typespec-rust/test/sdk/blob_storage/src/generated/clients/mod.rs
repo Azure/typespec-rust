@@ -11,6 +11,7 @@ mod blob_container_client;
 mod blob_page_blob_client;
 mod blob_service_client;
 mod internal_models;
+pub mod method_options;
 pub use blob_append_blob_client::*;
 pub use blob_blob_client::*;
 pub use blob_block_blob_client::*;

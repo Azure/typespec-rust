@@ -7,27 +7,35 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        ArrayBooleanValueClient, ArrayClient, ArrayClientOptions, ArrayDatetimeValueClient,
+        ArrayDurationValueClient, ArrayFloat32ValueClient, ArrayInt32ValueClient,
+        ArrayInt64ValueClient, ArrayModelValueClient, ArrayNullableBooleanValueClient,
+        ArrayNullableFloatValueClient, ArrayNullableInt32ValueClient,
+        ArrayNullableModelValueClient, ArrayNullableStringValueClient, ArrayStringValueClient,
+        ArrayUnknownValueClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        ArrayBooleanValueClientGetOptions, ArrayBooleanValueClientPutOptions,
+        ArrayDatetimeValueClientGetOptions, ArrayDatetimeValueClientPutOptions,
+        ArrayDurationValueClientGetOptions, ArrayDurationValueClientPutOptions,
+        ArrayFloat32ValueClientGetOptions, ArrayFloat32ValueClientPutOptions,
+        ArrayInt32ValueClientGetOptions, ArrayInt32ValueClientPutOptions,
+        ArrayInt64ValueClientGetOptions, ArrayInt64ValueClientPutOptions,
+        ArrayModelValueClientGetOptions, ArrayModelValueClientPutOptions,
+        ArrayNullableBooleanValueClientGetOptions, ArrayNullableBooleanValueClientPutOptions,
+        ArrayNullableFloatValueClientGetOptions, ArrayNullableFloatValueClientPutOptions,
+        ArrayNullableInt32ValueClientGetOptions, ArrayNullableInt32ValueClientPutOptions,
+        ArrayNullableModelValueClientGetOptions, ArrayNullableModelValueClientPutOptions,
+        ArrayNullableStringValueClientGetOptions, ArrayNullableStringValueClientPutOptions,
+        ArrayStringValueClientGetOptions, ArrayStringValueClientPutOptions,
+        ArrayUnknownValueClientGetOptions, ArrayUnknownValueClientPutOptions,
+    };
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    ArrayBooleanValueClientGetOptions, ArrayBooleanValueClientPutOptions, ArrayClient,
-    ArrayClientOptions, ArrayDatetimeValueClientGetOptions, ArrayDatetimeValueClientPutOptions,
-    ArrayDurationValueClientGetOptions, ArrayDurationValueClientPutOptions,
-    ArrayFloat32ValueClientGetOptions, ArrayFloat32ValueClientPutOptions,
-    ArrayInt32ValueClientGetOptions, ArrayInt32ValueClientPutOptions,
-    ArrayInt64ValueClientGetOptions, ArrayInt64ValueClientPutOptions,
-    ArrayModelValueClientGetOptions, ArrayModelValueClientPutOptions,
-    ArrayNullableBooleanValueClientGetOptions, ArrayNullableBooleanValueClientPutOptions,
-    ArrayNullableFloatValueClientGetOptions, ArrayNullableFloatValueClientPutOptions,
-    ArrayNullableInt32ValueClientGetOptions, ArrayNullableInt32ValueClientPutOptions,
-    ArrayNullableModelValueClientGetOptions, ArrayNullableModelValueClientPutOptions,
-    ArrayNullableStringValueClientGetOptions, ArrayNullableStringValueClientPutOptions,
-    ArrayStringValueClientGetOptions, ArrayStringValueClientPutOptions,
-    ArrayUnknownValueClientGetOptions, ArrayUnknownValueClientPutOptions,
-};
+pub use crate::generated::clients::{ArrayClient, ArrayClientOptions};
 // END GENERATED CODE

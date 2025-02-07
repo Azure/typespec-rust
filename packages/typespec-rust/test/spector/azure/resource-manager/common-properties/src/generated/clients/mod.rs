@@ -5,5 +5,6 @@
 
 mod common_properties_client;
 mod common_properties_managed_identity_client;
+pub mod method_options;
 pub use common_properties_client::*;
 pub use common_properties_managed_identity_client::*;

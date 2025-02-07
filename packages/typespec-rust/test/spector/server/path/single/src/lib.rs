@@ -7,8 +7,12 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{SingleClient, SingleClientOptions};
 }
 
-pub use crate::generated::clients::{SingleClient, SingleClientMyOpOptions, SingleClientOptions};
+pub mod models {
+    pub use crate::generated::clients::method_options::SingleClientMyOpOptions;
+}
+
+pub use crate::generated::clients::{SingleClient, SingleClientOptions};
 // END GENERATED CODE

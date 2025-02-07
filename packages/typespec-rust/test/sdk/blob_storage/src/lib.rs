@@ -10,48 +10,52 @@
 mod generated;
 
 pub mod clients {
-    pub use crate::generated::clients::*;
+    pub use crate::generated::clients::{
+        BlobAppendBlobClient, BlobBlobClient, BlobBlockBlobClient, BlobClient, BlobClientOptions,
+        BlobContainerClient, BlobPageBlobClient, BlobServiceClient,
+    };
 }
 
 pub mod models {
+    pub use crate::generated::clients::method_options::{
+        BlobAppendBlobClientAppendBlockFromUrlOptions, BlobAppendBlobClientAppendBlockOptions,
+        BlobAppendBlobClientCreateOptions, BlobAppendBlobClientSealOptions,
+        BlobBlobClientAbortCopyFromUrlOptions, BlobBlobClientAcquireLeaseOptions,
+        BlobBlobClientBreakLeaseOptions, BlobBlobClientChangeLeaseOptions,
+        BlobBlobClientCopyFromUrlOptions, BlobBlobClientCreateSnapshotOptions,
+        BlobBlobClientDeleteImmutabilityPolicyOptions, BlobBlobClientDeleteOptions,
+        BlobBlobClientDownloadOptions, BlobBlobClientGetAccountInfoOptions,
+        BlobBlobClientGetPropertiesOptions, BlobBlobClientGetTagsOptions,
+        BlobBlobClientQueryOptions, BlobBlobClientReleaseLeaseOptions,
+        BlobBlobClientRenewLeaseOptions, BlobBlobClientSetExpiryOptions,
+        BlobBlobClientSetHttpHeadersOptions, BlobBlobClientSetImmutabilityPolicyOptions,
+        BlobBlobClientSetLegalHoldOptions, BlobBlobClientSetMetadataOptions,
+        BlobBlobClientSetTagsOptions, BlobBlobClientSetTierOptions,
+        BlobBlobClientStartCopyFromUrlOptions, BlobBlobClientUndeleteOptions,
+        BlobBlockBlobClientCommitBlockListOptions, BlobBlockBlobClientGetBlockListOptions,
+        BlobBlockBlobClientPutBlobFromUrlOptions, BlobBlockBlobClientStageBlockFromUrlOptions,
+        BlobBlockBlobClientStageBlockOptions, BlobBlockBlobClientUploadOptions,
+        BlobContainerClientAcquireLeaseOptions, BlobContainerClientBreakLeaseOptions,
+        BlobContainerClientChangeLeaseOptions, BlobContainerClientCreateOptions,
+        BlobContainerClientDeleteOptions, BlobContainerClientFilterBlobsOptions,
+        BlobContainerClientGetAccessPolicyOptions, BlobContainerClientGetAccountInfoOptions,
+        BlobContainerClientGetPropertiesOptions, BlobContainerClientReleaseLeaseOptions,
+        BlobContainerClientRenameOptions, BlobContainerClientRenewLeaseOptions,
+        BlobContainerClientRestoreOptions, BlobContainerClientSetAccessPolicyOptions,
+        BlobContainerClientSetMetadataOptions, BlobContainerClientSubmitBatchOptions,
+        BlobPageBlobClientClearPagesOptions, BlobPageBlobClientCopyIncrementalOptions,
+        BlobPageBlobClientCreateOptions, BlobPageBlobClientResizeOptions,
+        BlobPageBlobClientUpdateSequenceNumberOptions, BlobPageBlobClientUploadPagesFromUrlOptions,
+        BlobPageBlobClientUploadPagesOptions, BlobServiceClientFilterBlobsOptions,
+        BlobServiceClientGetAccountInfoOptions, BlobServiceClientGetPropertiesOptions,
+        BlobServiceClientGetStatisticsOptions, BlobServiceClientGetUserDelegationKeyOptions,
+        BlobServiceClientSetPropertiesOptions, BlobServiceClientSubmitBatchOptions,
+    };
     pub use crate::generated::enums::*;
     pub use crate::generated::models::*;
 }
 
-pub use crate::generated::clients::{
-    BlobAppendBlobClientAppendBlockFromUrlOptions, BlobAppendBlobClientAppendBlockOptions,
-    BlobAppendBlobClientCreateOptions, BlobAppendBlobClientSealOptions,
-    BlobBlobClientAbortCopyFromUrlOptions, BlobBlobClientAcquireLeaseOptions,
-    BlobBlobClientBreakLeaseOptions, BlobBlobClientChangeLeaseOptions,
-    BlobBlobClientCopyFromUrlOptions, BlobBlobClientCreateSnapshotOptions,
-    BlobBlobClientDeleteImmutabilityPolicyOptions, BlobBlobClientDeleteOptions,
-    BlobBlobClientDownloadOptions, BlobBlobClientGetAccountInfoOptions,
-    BlobBlobClientGetPropertiesOptions, BlobBlobClientGetTagsOptions, BlobBlobClientQueryOptions,
-    BlobBlobClientReleaseLeaseOptions, BlobBlobClientRenewLeaseOptions,
-    BlobBlobClientSetExpiryOptions, BlobBlobClientSetHttpHeadersOptions,
-    BlobBlobClientSetImmutabilityPolicyOptions, BlobBlobClientSetLegalHoldOptions,
-    BlobBlobClientSetMetadataOptions, BlobBlobClientSetTagsOptions, BlobBlobClientSetTierOptions,
-    BlobBlobClientStartCopyFromUrlOptions, BlobBlobClientUndeleteOptions,
-    BlobBlockBlobClientCommitBlockListOptions, BlobBlockBlobClientGetBlockListOptions,
-    BlobBlockBlobClientPutBlobFromUrlOptions, BlobBlockBlobClientStageBlockFromUrlOptions,
-    BlobBlockBlobClientStageBlockOptions, BlobBlockBlobClientUploadOptions, BlobClient,
-    BlobClientOptions, BlobContainerClientAcquireLeaseOptions,
-    BlobContainerClientBreakLeaseOptions, BlobContainerClientChangeLeaseOptions,
-    BlobContainerClientCreateOptions, BlobContainerClientDeleteOptions,
-    BlobContainerClientFilterBlobsOptions, BlobContainerClientGetAccessPolicyOptions,
-    BlobContainerClientGetAccountInfoOptions, BlobContainerClientGetPropertiesOptions,
-    BlobContainerClientReleaseLeaseOptions, BlobContainerClientRenameOptions,
-    BlobContainerClientRenewLeaseOptions, BlobContainerClientRestoreOptions,
-    BlobContainerClientSetAccessPolicyOptions, BlobContainerClientSetMetadataOptions,
-    BlobContainerClientSubmitBatchOptions, BlobPageBlobClientClearPagesOptions,
-    BlobPageBlobClientCopyIncrementalOptions, BlobPageBlobClientCreateOptions,
-    BlobPageBlobClientResizeOptions, BlobPageBlobClientUpdateSequenceNumberOptions,
-    BlobPageBlobClientUploadPagesFromUrlOptions, BlobPageBlobClientUploadPagesOptions,
-    BlobServiceClientFilterBlobsOptions, BlobServiceClientGetAccountInfoOptions,
-    BlobServiceClientGetPropertiesOptions, BlobServiceClientGetStatisticsOptions,
-    BlobServiceClientGetUserDelegationKeyOptions, BlobServiceClientSetPropertiesOptions,
-    BlobServiceClientSubmitBatchOptions,
-};
+pub use crate::generated::clients::{BlobClient, BlobClientOptions};
 // END GENERATED CODE
 // this should also be preserved right next to the end delimiter.
 
