@@ -5,6 +5,6 @@
 
 mod extensible_client;
 mod extensible_string_client;
-pub mod method_options;
+pub(crate) mod method_options;
 pub use extensible_client::*;
 pub use extensible_string_client::*;

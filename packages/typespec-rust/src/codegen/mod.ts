@@ -27,7 +27,7 @@ export function emitClientsModRs(crate: rust.Crate, addlMods: Array<string>): st
   }
 
   // add module for method options
-  body.push('pub mod method_options;');
+  body.push('pub(crate) mod method_options;');
 
   // add any additional mod entries
   for (const addlMod of addlMods) {

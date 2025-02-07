@@ -68,23 +68,23 @@ export class CodeGenerator {
 
     const clients = emitClients(this.crate, clientsSubDir);
     if (clients) {
-      generatedModRS.push('pub mod clients');
+      generatedModRS.push('pub(crate) mod clients');
       files.push(...clients.clients);
     }
 
     const enums = emitEnums(this.crate, this.context);
     if (enums) {
-      generatedModRS.push('pub mod enums');
+      generatedModRS.push('pub(crate) mod enums');
       files.push({name: 'enums.rs', content: enums});
     }
 
     const models = emitModels(this.crate, this.context);
     if (models.public) {
-      generatedModRS.push('pub mod models');
+      generatedModRS.push('pub(crate) mod models');
       files.push({name: 'models.rs', content: models.public});
     }
     if (models.serde) {
-      generatedModRS.push('pub mod models_serde');
+      generatedModRS.push('pub(crate) mod models_serde');
       files.push({name: 'models_serde.rs', content: models.serde});
     }
     if (models.internal) {

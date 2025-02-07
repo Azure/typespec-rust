@@ -5,6 +5,6 @@
 
 mod fixed_client;
 mod fixed_string_client;
-pub mod method_options;
+pub(crate) mod method_options;
 pub use fixed_client::*;
 pub use fixed_string_client::*;

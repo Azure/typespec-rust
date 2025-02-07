@@ -5,6 +5,6 @@
 
 mod client_a_client;
 mod client_b_client;
-pub mod method_options;
+pub(crate) mod method_options;
 pub use client_a_client::*;
 pub use client_b_client::*;
