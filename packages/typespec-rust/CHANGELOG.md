@@ -1,6 +1,6 @@
 # Release History
 
-## 0.9.1 (unreleased)
+## 0.9.1 (2025-02-12)
 
 ### Bugs Fixed
 
