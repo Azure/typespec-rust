@@ -1087,7 +1087,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
       }
       return `${paramName}.to_string()`;
     case 'enumValue':
-      return `${param.type.type.name}::${param.type.name}.as_ref()`;
+      return `${param.type.type.name}::${param.type.name}.to_string()`;
     case 'implTrait':
       return `${paramName}.into()`;
     case 'literal':

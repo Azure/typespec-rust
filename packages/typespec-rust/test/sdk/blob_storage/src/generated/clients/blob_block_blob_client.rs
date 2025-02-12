@@ -268,7 +268,7 @@ impl BlobBlockBlobClient {
         if let Some(blob_content_type) = options.blob_content_type {
             request.insert_header("x-ms-blob-content-type", blob_content_type);
         }
-        request.insert_header("x-ms-blob-type", BlobType::BlockBlob.as_ref());
+        request.insert_header("x-ms-blob-type", BlobType::BlockBlob.to_string());
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
@@ -578,7 +578,7 @@ impl BlobBlockBlobClient {
         if let Some(blob_content_type) = options.blob_content_type {
             request.insert_header("x-ms-blob-content-type", blob_content_type);
         }
-        request.insert_header("x-ms-blob-type", BlobType::BlockBlob.as_ref());
+        request.insert_header("x-ms-blob-type", BlobType::BlockBlob.to_string());
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
