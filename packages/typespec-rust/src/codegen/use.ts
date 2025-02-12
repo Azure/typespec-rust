@@ -79,6 +79,9 @@ export class Use {
       case 'enum':
         this.addType('crate::models', type.name);
         break;
+      case 'enumValue':
+        this.addForType(type.type);
+        break;
       case 'model':
         if (this.scope !== 'models') {
           let module = 'crate::models';

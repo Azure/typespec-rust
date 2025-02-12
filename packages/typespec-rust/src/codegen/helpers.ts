@@ -93,6 +93,8 @@ export function getTypeDeclaration(type: rust.Client | rust.Type, withAnonymousL
       return type.name;
     case 'encodedBytes':
       return 'Vec<u8>';
+    case 'enumValue':
+      return `${type.type.name}`;
     case 'Etag':
       return type.kind;
     case 'hashmap':

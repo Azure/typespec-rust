@@ -1,5 +1,11 @@
 # Release History
 
+## 0.9.1 (unreleased)
+
+### Bugs Fixed
+
+* Added support for `enumvalue` types in method parameters.
+
 ## 0.9.0 (2025-02-10)
 
 ### Breaking Changes

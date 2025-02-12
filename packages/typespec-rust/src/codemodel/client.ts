@@ -569,6 +569,7 @@ function validateHeaderPathQueryParamKind(type: types.Type, paramKind: string) {
     case 'String':
     case 'encodedBytes':
     case 'enum':
+    case 'enumValue':
     case 'literal':
     case 'offsetDateTime':
     case 'scalar':

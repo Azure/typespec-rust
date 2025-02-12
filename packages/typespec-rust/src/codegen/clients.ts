@@ -358,7 +358,7 @@ function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Co
       location = param.location;
     }
 
-    if (optional || param.type.kind === 'literal' || location === 'client') {
+    if (optional || param.type.kind === 'enumValue' || param.type.kind === 'literal' || location === 'client') {
       // none of these are in the method sig so skip them
       continue;
     }
@@ -452,6 +452,10 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
     for (const param of method.params) {
       if (param.type.kind === 'literal') {
         // literal params are embedded directly in the code (e.g. accept header param)
+        continue;
+      } else if (param.type.kind === 'enumValue') {
+        // enum values are treated like literals, we just need to use their type
+        use.addForType(param.type.type);
         continue;
       }
 
@@ -1082,6 +1086,8 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
         return `${paramName}.as_ref()`;
       }
       return `${paramName}.to_string()`;
+    case 'enumValue':
+      return `${param.type.type.name}::${param.type.name}.as_ref()`;
     case 'implTrait':
       return `${paramName}.into()`;
     case 'literal':
