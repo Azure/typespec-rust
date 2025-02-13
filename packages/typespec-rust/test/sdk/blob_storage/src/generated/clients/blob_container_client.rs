@@ -22,8 +22,8 @@ impl BlobContainerClient {
         &self.endpoint
     }
 
-    /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
-    /// or can be infinite
+    /// The Acquire Lease operation requests a new lease on a container. The lease lock duration can be 15 to 60 seconds, or can
+    /// be infinite.
     ///
     /// # Arguments
     ///
@@ -66,8 +66,8 @@ impl BlobContainerClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
-    /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
-    /// or can be infinite
+    /// The Break Lease operation ends a lease and ensures that another client can't acquire a new lease until the current lease
+    /// period has expired.
     ///
     /// # Arguments
     ///
@@ -107,8 +107,7 @@ impl BlobContainerClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
-    /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
-    /// or can be infinite
+    /// The Change Lease operation is used to change the ID of an existing lease.
     ///
     /// # Arguments
     ///
@@ -382,8 +381,8 @@ impl BlobContainerClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
-    /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
-    /// or can be infinite
+    /// The Release Lease operation frees the lease if it's no longer needed, so that another client can immediately acquire a
+    /// lease against the container.
     ///
     /// # Arguments
     ///
@@ -463,8 +462,7 @@ impl BlobContainerClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
-    /// [Update] establishes and manages a lock on a container for delete operations. The lock duration can be 15 to 60 seconds,
-    /// or can be infinite
+    /// The Renew Lease operation renews an existing lease.
     ///
     /// # Arguments
     ///

@@ -138,19 +138,35 @@ export class Adapter {
       return <rust.Enum>rustEnum;
     }
 
-    // first create all of the enum values
-    const values = new Array<rust.EnumValue>();
-    for (const value of sdkEnum.values) {
-      const rustEnumValue = new rust.EnumValue(helpers.fixUpEnumValueName(value.name), value.value);
-      rustEnumValue.docs = this.adaptDocs(value.summary, value.doc);
-      values.push(rustEnumValue);
-    }
-
-    rustEnum = new rust.Enum(enumName, sdkEnum.access === 'public', values, !sdkEnum.isFixed);
+    rustEnum = new rust.Enum(enumName, sdkEnum.access === 'public', !sdkEnum.isFixed);
     rustEnum.docs = this.adaptDocs(sdkEnum.summary, sdkEnum.doc);
     this.types.set(enumName, rustEnum);
 
+    for (const value of sdkEnum.values) {
+      const rustEnumValue = new rust.EnumValue(helpers.fixUpEnumValueName(value.name), rustEnum, value.value);
+      rustEnumValue.docs = this.adaptDocs(value.summary, value.doc);
+      rustEnum.values.push(rustEnumValue);
+    }
+
     return rustEnum;
+  }
+
+  /**
+   * converts a tcgc enumvalue to a Rust enum value.
+   * this is typically used when a literal enum value is specified.
+   * 
+   * @param sdkEnumValue the tcgc enumvalue to convert
+   * @returns a Rust enum value
+   */
+  private getEnumValue(sdkEnumValue: tcgc.SdkEnumValueType): rust.EnumValue {
+    const enumType = this.getEnum(sdkEnumValue.enumType);
+    // find the specified enum value
+    for (const value of enumType.values) {
+      if (value.name === helpers.fixUpEnumValueName(sdkEnumValue.name)) {
+        return value;
+      }
+    }
+    throw new Error(`didn't find enum value for name ${sdkEnumValue.name} in enum ${enumType.name}`);
   }
 
   /**
@@ -372,6 +388,8 @@ export class Adapter {
         return getScalar(type.kind);
       case 'enum':
         return this.getEnum(type);
+      case 'enumvalue':
+        return this.getEnumValue(type);
       case 'model':
         return this.getModel(type);
       case 'endpoint':

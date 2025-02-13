@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** Type defines a type within the Rust type system */
-export type Type = Arc | Bytes | EncodedBytes | Enum | Etag | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | Pager | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
+export type Type = Arc | Bytes | EncodedBytes | Enum | EnumValue | Etag | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | Pager | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
 
 /** Arc is a std::sync::Arc<T> */
 export interface Arc extends StdType {
@@ -66,11 +66,16 @@ export interface Enum {
 
 /** EnumValue is an enum value for a specific Enum */
 export interface EnumValue {
+  kind: 'enumValue';
+
   /** the name of the enum value */
   name: string;
 
   /** any docs for the value */
   docs: Docs;
+
+  /** the enum to which this value belongs */
+  type: Enum;
 
   /** the value used in SerDe operations */
   value: number | string;
@@ -447,22 +452,21 @@ export class EncodedBytes implements EncodedBytes {
 }
 
 export class Enum implements Enum {
-  constructor(name: string, pub: boolean, values: Array<EnumValue>, extensible: boolean) {
+  constructor(name: string, pub: boolean, extensible: boolean) {
     this.kind = 'enum';
     this.name = name;
     this.pub = pub;
-    if (values.length < 1) {
-      throw new Error('must provide at least one enum value');
-    }
-    this.values = values;
+    this.values = new Array<EnumValue>();
     this.extensible = extensible;
     this.docs = {};
   }
 }
 
 export class EnumValue implements EnumValue {
-  constructor(name: string, value: number | string) {
+  constructor(name: string, type: Enum, value: number | string) {
+    this.kind = 'enumValue';
     this.name = name;
+    this.type = type;
     this.value = value;
     this.docs = {};
   }
@@ -548,6 +552,7 @@ export class Option implements Option {
       case 'String':
       case 'encodedBytes':
       case 'enum':
+      case 'enumValue':
       case 'Etag':
       case 'external':
       case 'hashmap':
