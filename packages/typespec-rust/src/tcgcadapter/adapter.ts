@@ -490,7 +490,7 @@ export class Adapter {
       }
 
       // start with instantiable clients and recursively work down
-      if (client.initialization.access === 'public') {
+      if (client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
         this.recursiveAdaptClient(client);
       }
     }
@@ -535,7 +535,7 @@ export class Adapter {
     rustClient.fields.push(new rust.StructField('pipeline', false, new rust.ExternalType(this.crate, 'azure_core', 'Pipeline')));
 
     // anything other than public means non-instantiable client
-    if (client.initialization.access === 'public') {
+    if (client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
       const clientOptionsStruct = new rust.Struct(`${rustClient.name}Options`, true);
       const clientOptionsField = new rust.StructField('client_options', true, new rust.ExternalType(this.crate, 'azure_core', 'ClientOptions'));
       clientOptionsField.defaultValue = 'ClientOptions::default()';
@@ -584,7 +584,7 @@ export class Adapter {
       };
 
       const ctorParams = new Array<rust.ClientParameter>();
-      for (const param of client.initialization.properties) {
+      for (const param of client.clientInitialization.parameters) {
         switch (param.kind) {
           case 'credential':
             switch (param.type.kind) {
@@ -702,7 +702,7 @@ export class Adapter {
       rustClient.fields = new Array<rust.StructField>(...parent.fields);
 
       // adapt any unique fields on this client
-      for (const prop of client.initialization.properties) {
+      for (const prop of client.clientInitialization.parameters) {
         if (prop.kind !== 'method' || prop.isApiVersionParam) {
           // we don't need to care about non-method properties (e.g. credential)
           // or the API version property as these are handled in the parent client.
@@ -1077,7 +1077,7 @@ export class Adapter {
         }
         break;
       case 'path':
-        adaptedParam = new rust.PathParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.urlEncode);
+        adaptedParam = new rust.PathParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved);
         break;
       case 'query':
         if (param.collectionFormat) {
