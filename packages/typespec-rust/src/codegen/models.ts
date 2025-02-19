@@ -62,6 +62,18 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
 
   let body = '';
   for (const model of crate.models) {
+    if (pub && model.kind === 'marker') {
+      body += helpers.formatDocComment(model.docs);
+      // marker types don't have any fields
+      // and don't participate in serde.
+      body += '#[derive(SafeDebug)]\n';
+      body += `pub struct ${model.name};\n\n`;
+      continue;
+    } else if (model.kind === 'marker') {
+      // marker types are always public, so we skip them for the internal models file
+      continue;
+    }
+
     if (model.internal === pub) {
       continue;
     }
@@ -156,7 +168,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
   // public models will have their helpers in a separate file.
   if (!pub) {
     for (const model of crate.models) {
-      if (!model.internal) {
+      if (model.kind === 'marker' || !model.internal) {
         continue;
       }
 
@@ -185,7 +197,7 @@ function emitModelsSerde(crate: rust.Crate, context: Context): string | undefine
 
   // emit TryFrom as required
   for (const model of crate.models) {
-    if (model.internal) {
+    if (model.kind === 'marker' || model.internal) {
       // skip internal models as their serde helpers are in the same file
       continue;
     }

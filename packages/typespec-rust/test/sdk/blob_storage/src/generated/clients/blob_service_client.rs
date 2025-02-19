@@ -6,8 +6,9 @@
 use super::internal_models::{GetUserDelegationKeyRequest, SetPropertiesRequest};
 use crate::generated::clients::method_options::*;
 use crate::models::{
-    FilterBlobSegment, ListContainersSegmentResponse, StorageServiceProperties,
-    StorageServiceStats, UserDelegationKey,
+    BlobServiceClientGetAccountInfoResult, BlobServiceClientSetPropertiesResult,
+    BlobServiceClientSubmitBatchResult, FilterBlobSegment, ListContainersSegmentResponse,
+    StorageServiceProperties, StorageServiceStats, UserDelegationKey,
 };
 use azure_core::{
     Bytes, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
@@ -81,7 +82,7 @@ impl BlobServiceClient {
     pub async fn get_account_info(
         &self,
         options: Option<BlobServiceClientGetAccountInfoOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<BlobServiceClientGetAccountInfoResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -262,7 +263,7 @@ impl BlobServiceClient {
     pub async fn set_properties(
         &self,
         options: Option<BlobServiceClientSetPropertiesOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<BlobServiceClientSetPropertiesResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -307,7 +308,7 @@ impl BlobServiceClient {
         content_length: i64,
         body: RequestContent<Bytes>,
         options: Option<BlobServiceClientSubmitBatchOptions<'_>>,
-    ) -> Result<Response> {
+    ) -> Result<Response<BlobServiceClientSubmitBatchResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

@@ -34,6 +34,10 @@ pub struct LanguageClientNameModel {
     pub rust_name: Option<bool>,
 }
 
+/// Contains results for [`NamingClient::response()`](crate::NamingClient::response())
+#[derive(SafeDebug)]
+pub struct NamingClientResponseResult;
+
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct RustName {
     /// Pass in true

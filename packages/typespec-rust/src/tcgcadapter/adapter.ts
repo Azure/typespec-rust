@@ -965,6 +965,41 @@ export class Adapter {
       return this.adaptBodyFormat(defaultContentType);
     };
 
+    // add any response headers
+    const addedHeaders = new Set<string>();
+    for (const httpResp of method.operation.responses) {
+      for (const header of httpResp.headers) {
+        if (addedHeaders.has(header.serializedName)) {
+          continue;
+        } else if (header.type.kind === 'constant') {
+          // omit response headers that have a constant value
+          // which is typically the content-type header. modeling
+          // it isn't very useful by itself, plus it has the
+          // side-effect of adding marker types and/or header
+          // traits to all non application/json method repsonses.
+          // callers can still retrieve the value from the raw
+          // response headers if they need it.
+          continue;
+        }
+
+        let responseHeader: rust.ResponseHeader;
+        if (header.type.kind === 'dict') {
+          if (header.serializedName !== 'x-ms-meta' && header.serializedName !== 'x-ms-or') {
+            throw new Error(`unexpected response header collection ${header.serializedName}`);
+          }
+          // TODO: don't use __raw.name, https://github.com/Azure/typespec-azure/issues/2234
+          responseHeader = new rust.ResponseHeaderHashMap(header.__raw.name, header.serializedName);
+        } else {
+          // TODO: don't use __raw.name, https://github.com/Azure/typespec-azure/issues/2234
+          responseHeader = new rust.ResponseHeaderScalar(header.__raw.name, header.serializedName, this.getType(header.type));
+        }
+
+        responseHeader.docs = this.adaptDocs(header.summary, header.doc);
+        rustMethod.responseHeaders.push(responseHeader);
+        addedHeaders.add(header.serializedName);
+      }
+    }
+
     let returnType: rust.Type;
     if (method.kind === 'paging') {
       // for paged methods, tcgc models method.response.type as an Array<T>.
@@ -982,13 +1017,18 @@ export class Adapter {
         this.crate.models.push(synthesizedModel);
       }
       returnType = new rust.Pager(this.crate, synthesizedModel, format);
-    } else if (method.response.type) {
-      if (method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
-        // bytes encoding indicates a streaming binary response
-        returnType = new rust.Response(this.crate, new rust.ResponseBody());
-      } else {
-        returnType = new rust.Response(this.crate, new rust.Payload(this.getType(method.response.type), getBodyFormat()));
-      }
+    } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
+      returnType = new rust.Response(this.crate, new rust.Payload(this.getType(method.response.type), getBodyFormat()));
+    } else if (rustMethod.responseHeaders.length > 0) {
+      // for methods that don't return a modeled type but return headers,
+      // we need to return a marker type
+      const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name)}Result`);
+      markerType.docs.summary = `Contains results for [\`${rustClient.name}::${methodName}()\`](${buildClientDocPath(rustClient)}::${methodName}())`;
+      returnType = new rust.Response(this.crate, markerType);
+      this.crate.models.push(markerType);
+    } else if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
+      // bytes encoding indicates a streaming binary response
+      returnType = new rust.Response(this.crate, new rust.ResponseBody());
     } else {
       returnType = new rust.Response(this.crate, this.getUnitType());
     }

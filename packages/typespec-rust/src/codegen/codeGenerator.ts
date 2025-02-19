@@ -8,6 +8,7 @@ import { emitClients } from './clients.js';
 import { Context } from './context.js';
 import { emitEnums } from './enums.js';
 import { emitLibRs } from './lib.js';
+import { emitHeaderTraits } from './headerTraits.js';
 import { emitClientsModRs, emitGeneratedMod } from './mod.js';
 import { emitModels } from './models.js';
 
@@ -90,6 +91,11 @@ export class CodeGenerator {
     if (models.internal) {
       clientsModRS.push('mod internal_models');
       files.push({name: `${clientsSubDir}/internal_models.rs`, content: models.internal});
+    }
+    const headerTraits = emitHeaderTraits(this.crate);
+    if (headerTraits) {
+      generatedModRS.push('pub(crate) mod header_traits');
+      files.push({name: 'header_traits.rs', content: headerTraits});
     }
     if (models.xmlHelpers) {
       generatedModRS.push('mod xml_helpers');

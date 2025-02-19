@@ -134,6 +134,20 @@ export interface Literal {
   value: boolean | null | number | string;
 }
 
+/**
+ * MarkerType is a special response type for methods
+ * that don't return a model but return typed headers
+ */
+export interface MarkerType {
+  kind: 'marker';
+
+  /** the name of the marker type */
+  name: string;
+
+  /** any docs for the marker type */
+  docs: Docs;
+}
+
 /** Model is a Rust struct that participates in serde */
 export interface Model extends StructBase {
   kind: 'model';
@@ -233,7 +247,7 @@ export interface RequestContent<T = Bytes | Payload> extends External {
 }
 
 /** Response is a Rust Response<T> from azure_core */
-export interface Response<T = Payload | ResponseBody | Unit> extends External {
+export interface Response<T = MarkerType | Payload | ResponseBody | Unit> extends External {
   kind: 'response';
 
   /** the type of content sent in the response */
@@ -519,6 +533,14 @@ export class Literal implements Literal {
   constructor(value: boolean | null | number | string) {
     this.kind = 'literal';
     this.value = value;
+  }
+}
+
+export class MarkerType implements MarkerType {
+  constructor(name: string) {
+    this.kind = 'marker';
+    this.name = name;
+    this.docs = {};
   }
 }
 

@@ -119,6 +119,8 @@ export function getTypeDeclaration(type: rust.Client | rust.Type, withAnonymousL
       return `${type.name}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'response':
       switch (type.content.kind) {
+        case 'marker':
+          return `${type.name}<${type.content.name}>`;
         case 'payload':
           return `${type.name}<${getTypeDeclaration(type.content.type, withAnonymousLifetime)}>`;
         case 'responseBody':

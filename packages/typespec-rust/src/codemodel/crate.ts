@@ -27,7 +27,7 @@ export interface Crate {
   enums: Array<types.Enum>;
 
   /** models contains all of the models for this crate. can be empty */
-  models: Array<types.Model>;
+  models: Array<types.MarkerType | types.Model>;
 
   /** clients contains all the clients for this crate. can be empty */
   clients: Array<client.Client>;
@@ -89,8 +89,11 @@ export class Crate implements Crate {
     for (const rustEnum of this.enums) {
       rustEnum.values.sort((a: types.EnumValue, b: types.EnumValue) => { return sortAscending(a.name, b.name); });
     }
-    this.models.sort((a: types.Model, b: types.Model) => { return sortAscending(a.name, b.name); });
+    this.models.sort((a: types.MarkerType | types.Model, b: types.MarkerType | types.Model) => { return sortAscending(a.name, b.name); });
     for (const model of this.models) {
+      if (model.kind === 'marker') {
+        continue;
+      }
       model.fields.sort((a: types.ModelField, b: types.ModelField) => { return sortAscending(a.name, b.name); });
     }
     this.clients.sort((a: client.Client, b: client.Client) => { return sortAscending(a.name, b.name); });
@@ -105,6 +108,7 @@ export class Crate implements Crate {
           continue;
         }
         method.options.type.fields.sort((a: types.StructField, b: types.StructField) => { return sortAscending(a.name, b.name); });
+        method.responseHeaders.sort((a: client.ResponseHeader, b: client.ResponseHeader) => sortAscending(a.header, b.header));
       }
     }
   }

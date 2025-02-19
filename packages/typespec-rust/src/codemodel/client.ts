@@ -308,6 +308,49 @@ export interface QueryParameter extends HTTPParameterBase {
   isApiVersion: boolean;
 }
 
+/** ResponseHeader defines the possible typed headers returned in a HTTP response */
+export type ResponseHeader = ResponseHeaderHashMap | ResponseHeaderScalar;
+
+/**
+ * ResponseHeaderHashMap is a collection of typed header responses.
+ * NOTE: this is a specialized response type to support storage.
+ */
+export interface ResponseHeaderHashMap {
+  kind: 'responseHeaderHashMap';
+
+  /** the name to use for the trait method */
+  name: string;
+
+  /** the header prefix for each header name in type */
+  header: string;
+
+  /** contains key/value pairs of header names/values */
+  type: types.HashMap;
+
+  /** any docs for the header */
+  docs: types.Docs;
+}
+
+/** ResponseHeaderScalar is a typed header returned in a HTTP response */
+export interface ResponseHeaderScalar {
+  kind: 'responseHeaderScalar';
+
+  /** the name to use for the trait method */
+  name: string;
+
+  /** the header in the HTTP response */
+  header: string;
+
+  /**
+   * the type of the response header
+   * note that not all types are applicable
+   */
+  type: types.Type;
+
+  /** any docs for the header */
+  docs: types.Docs;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // base types
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -340,6 +383,9 @@ interface HTTPMethodBase extends method.Method<types.Type> {
   /** the type returned by the method */
   returns: types.Result;
 
+  /** contains zero or more response headers */
+  responseHeaders: Array<ResponseHeader>;
+
   /** the HTTP verb used for the request */
   httpMethod: HTTPMethod;
 
@@ -371,6 +417,7 @@ class HTTPMethodBase extends method.Method<types.Type> implements HTTPMethodBase
     this.httpMethod = httpMethod;
     this.httpPath = httpPath;
     this.docs = {};
+    this.responseHeaders = new Array<ResponseHeader>();
   }
 }
 
@@ -554,6 +601,27 @@ export class QueryParameter extends HTTPParameterBase implements QueryParameter 
     this.key = key;
     this.encoded = encoded;
     this.isApiVersion = false;
+  }
+}
+
+export class ResponseHeaderHashMap {
+  constructor(name: string, header: string) {
+    this.kind = 'responseHeaderHashMap';
+    this.name = name;
+    this.header = header;
+    this.type = new types.HashMap(new types.StringType());
+    this.docs = {};
+  }
+}
+
+export class ResponseHeaderScalar {
+  constructor(name: string, header: string, type: types.Type) {
+    validateHeaderPathQueryParamKind(type, 'header');
+    this.kind = 'responseHeaderScalar';
+    this.name = name;
+    this.header = header;
+    this.type = type;
+    this.docs = {};
   }
 }
 

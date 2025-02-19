@@ -74,6 +74,7 @@ function getGeneratedContent(crate: rust.Crate): string {
     content += 'pub mod models {\n';
   }
 
+  let needsHeaderTraits = false;
   if (crate.clients.length > 0) {
     // all client method options are reexported from models
     content += `${indent.get()}pub use crate::generated::clients::method_options::{\n`;
@@ -84,6 +85,10 @@ function getGeneratedContent(crate: rust.Crate): string {
           continue;
         }
         content += `${indent.get()}${method.options.type.name},\n`;
+        if (method.responseHeaders.length > 0) {
+          // at least one method has response headers, so export their traits
+          needsHeaderTraits = true;
+        }
       }
     }
     indent.pop();
@@ -92,6 +97,10 @@ function getGeneratedContent(crate: rust.Crate): string {
 
   if (crate.enums.length > 0) {
     content += `${indent.get()}pub use crate::generated::enums::*;\n`;
+  }
+
+  if (needsHeaderTraits) {
+    content += `${indent.get()}pub use crate::generated::header_traits::*;\n`
   }
 
   if (crate.models.length > 0) {

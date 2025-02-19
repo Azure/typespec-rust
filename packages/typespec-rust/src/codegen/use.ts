@@ -109,6 +109,9 @@ export class Use {
         break;
       case 'response':
         switch (type.content.kind) {
+          case 'marker':
+            this.addType('crate::models', type.content.name);
+            break;
           case 'payload':
             this.addForType(type.content.type);
         }

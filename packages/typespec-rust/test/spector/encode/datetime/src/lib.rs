@@ -27,6 +27,7 @@ pub mod models {
         DatetimeResponseHeaderClientRfc7231Options,
         DatetimeResponseHeaderClientUnixTimestampOptions,
     };
+    pub use crate::generated::header_traits::*;
     pub use crate::generated::models::*;
 }
 

@@ -2,9 +2,11 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use azure_core::headers::HeaderName;
 use spector_naming::{
-    models::{ClientNameAndJsonEncodedNameModel, ClientNameModel, LanguageClientNameModel},
+    models::{
+        ClientNameAndJsonEncodedNameModel, ClientNameModel, LanguageClientNameModel,
+        NamingClientResponseResultHeaders,
+    },
     NamingClient,
 };
 
@@ -63,9 +65,6 @@ async fn request() {
 async fn response() {
     let client = NamingClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.response(None).await.unwrap();
-    let h = resp
-        .headers()
-        .get_str(&HeaderName::from_static("default-name"))
-        .unwrap();
-    assert_eq!(h, "true");
+    let h = resp.default_name().unwrap();
+    assert_eq!(h, Some("true".to_string()));
 }

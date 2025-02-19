@@ -21,6 +21,7 @@ pub mod models {
         NamingUnionEnumClientUnionEnumMemberNameOptions, NamingUnionEnumClientUnionEnumNameOptions,
     };
     pub use crate::generated::enums::*;
+    pub use crate::generated::header_traits::*;
     pub use crate::generated::models::*;
 }
 

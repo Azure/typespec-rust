@@ -6,6 +6,10 @@
 
 * Model fields of type `HashMap` or `Vec` are no longer wrapped in an `Option<T>`.
 
+### Features Added
+
+* Added response types/traits for methods that return typed headers.
+
 ### Other Changes
 
 * Updated to the latest tsp toolset.

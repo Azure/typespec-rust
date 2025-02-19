@@ -55,6 +55,7 @@ pub mod models {
         BlobServiceClientSubmitBatchOptions,
     };
     pub use crate::generated::enums::*;
+    pub use crate::generated::header_traits::*;
     pub use crate::generated::models::*;
 }
 

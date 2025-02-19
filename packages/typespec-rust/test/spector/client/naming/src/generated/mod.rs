@@ -5,5 +5,6 @@
 
 pub(crate) mod clients;
 pub(crate) mod enums;
+pub(crate) mod header_traits;
 pub(crate) mod models;
 pub(crate) mod models_serde;
