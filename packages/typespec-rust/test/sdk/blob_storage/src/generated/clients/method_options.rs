@@ -5,8 +5,9 @@
 
 use crate::models::{
     AccessTier, BlobDeleteType, BlobImmutabilityPolicyMode, CorsRule, DeleteSnapshotsOptionType,
-    EncryptionAlgorithmType, FilterBlobsIncludeItem, Logging, Metrics, PremiumPageBlobAccessTier,
-    PublicAccessType, RehydratePriority, RetentionPolicy, StaticWebsite,
+    EncryptionAlgorithmType, FilterBlobsIncludeItem, ListBlobsIncludeItem,
+    ListContainersIncludeType, Logging, Metrics, PremiumPageBlobAccessTier, PublicAccessType,
+    RehydratePriority, RetentionPolicy, StaticWebsite,
 };
 use azure_core::ClientMethodOptions;
 use std::collections::HashMap;
@@ -758,54 +759,6 @@ pub struct BlobBlobClientGetTagsOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlobClient::query()`](crate::clients::BlobBlobClient::query())
-#[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientQueryOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
-    /// Optional. Version 2019-07-07 and later. Specifies the algorithm to use for encryption. If not specified, the default is
-    /// AES256.
-    pub encryption_algorithm: Option<EncryptionAlgorithmType>,
-
-    /// Optional. Version 2019-07-07 and later. Specifies the encryption key to use to encrypt the data provided in the request.
-    /// If not specified, the request will be encrypted with the root account key.
-    pub encryption_key: Option<String>,
-
-    /// Optional. Version 2019-07-07 and later. Specifies the SHA256 hash of the encryption key used to encrypt the data provided
-    /// in the request. This header is only used for encryption with a customer-provided key. If the request is authenticated
-    /// with a client token, this header should be specified using the SHA256 hash of the encryption key.
-    pub encryption_key_sha256: Option<String>,
-
-    /// The request should only proceed if an entity matches this string.
-    pub if_match: Option<String>,
-
-    /// The request should only proceed if the entity was modified after this time.
-    pub if_modified_since: Option<OffsetDateTime>,
-
-    /// The request should only proceed if no entity matches this string.
-    pub if_none_match: Option<String>,
-
-    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
-    pub if_tags: Option<String>,
-
-    /// The request should only proceed if the entity was not modified after this time.
-    pub if_unmodified_since: Option<OffsetDateTime>,
-
-    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
-    pub lease_id: Option<String>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
-    /// information on working with blob snapshots, see [Creating a Snapshot of a Blob.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob)
-    pub snapshot: Option<String>,
-
-    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
-}
-
 /// Options to be passed to [`BlobBlobClient::release_lease()`](crate::clients::BlobBlobClient::release_lease())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlobClientReleaseLeaseOptions<'a> {
@@ -1409,6 +1362,54 @@ pub struct BlobBlockBlobClientPutBlobFromUrlOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
+/// Options to be passed to [`BlobBlockBlobClient::query()`](crate::clients::BlobBlockBlobClient::query())
+#[derive(Clone, Default, SafeDebug)]
+pub struct BlobBlockBlobClientQueryOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the algorithm to use for encryption. If not specified, the default is
+    /// AES256.
+    pub encryption_algorithm: Option<EncryptionAlgorithmType>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the encryption key to use to encrypt the data provided in the request.
+    /// If not specified, the request will be encrypted with the root account key.
+    pub encryption_key: Option<String>,
+
+    /// Optional. Version 2019-07-07 and later. Specifies the SHA256 hash of the encryption key used to encrypt the data provided
+    /// in the request. This header is only used for encryption with a customer-provided key. If the request is authenticated
+    /// with a client token, this header should be specified using the SHA256 hash of the encryption key.
+    pub encryption_key_sha256: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
+    pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
+    pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
+    pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
+    pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
+    pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
+    pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
+    /// information on working with blob snapshots, see [Creating a Snapshot of a Blob.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob)
+    pub snapshot: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
 /// Options to be passed to [`BlobBlockBlobClient::stage_block()`](crate::clients::BlobBlockBlobClient::stage_block())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobBlockBlobClientStageBlockOptions<'a> {
@@ -1810,6 +1811,64 @@ pub struct BlobContainerClientGetPropertiesOptions<'a> {
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to [`BlobContainerClient::list_blob_flat_segment()`](crate::clients::BlobContainerClient::list_blob_flat_segment())
+#[derive(Clone, Default, SafeDebug)]
+pub struct BlobContainerClientListBlobFlatSegmentOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// Include this parameter to specify one or more datasets to include in the response.
+    pub include: Option<Vec<ListBlobsIncludeItem>>,
+
+    /// A string value that identifies the portion of the list of containers to be returned with the next listing operation. The
+    /// operation returns the NextMarker value within the response body if the listing operation did not return all containers
+    /// remaining to be listed with the current page. The NextMarker value can be used as the value for the marker parameter in
+    /// a subsequent call to request the next page of list items. The marker value is opaque to the client.
+    pub marker: Option<String>,
+
+    /// Specifies the maximum number of containers to return. If the request does not specify maxresults, or specifies a value
+    /// greater than 5000, the server will return up to 5000 items.
+    pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// Filters the results to return only containers whose name begins with the specified prefix.
+    pub prefix: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
+/// Options to be passed to [`BlobContainerClient::list_blob_hierarchy_segment()`](crate::clients::BlobContainerClient::list_blob_hierarchy_segment())
+#[derive(Clone, Default, SafeDebug)]
+pub struct BlobContainerClientListBlobHierarchySegmentOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// Include this parameter to specify one or more datasets to include in the response.
+    pub include: Option<Vec<ListBlobsIncludeItem>>,
+
+    /// A string value that identifies the portion of the list of containers to be returned with the next listing operation. The
+    /// operation returns the NextMarker value within the response body if the listing operation did not return all containers
+    /// remaining to be listed with the current page. The NextMarker value can be used as the value for the marker parameter in
+    /// a subsequent call to request the next page of list items. The marker value is opaque to the client.
+    pub marker: Option<String>,
+
+    /// Specifies the maximum number of containers to return. If the request does not specify maxresults, or specifies a value
+    /// greater than 5000, the server will return up to 5000 items.
+    pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// Filters the results to return only containers whose name begins with the specified prefix.
+    pub prefix: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
 /// Options to be passed to [`BlobContainerClient::release_lease()`](crate::clients::BlobContainerClient::release_lease())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientReleaseLeaseOptions<'a> {
@@ -2119,6 +2178,112 @@ pub struct BlobPageBlobClientCreateOptions<'a> {
 
     /// Optional. Indicates the tier to be set on the page blob.
     pub tier: Option<PremiumPageBlobAccessTier>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
+/// Options to be passed to [`BlobPageBlobClient::get_page_ranges()`](crate::clients::BlobPageBlobClient::get_page_ranges())
+#[derive(Clone, Default, SafeDebug)]
+pub struct BlobPageBlobClientGetPageRangesOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
+    pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
+    pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
+    pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
+    pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
+    pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
+    pub lease_id: Option<String>,
+
+    /// A string value that identifies the portion of the list of containers to be returned with the next listing operation. The
+    /// operation returns the NextMarker value within the response body if the listing operation did not return all containers
+    /// remaining to be listed with the current page. The NextMarker value can be used as the value for the marker parameter in
+    /// a subsequent call to request the next page of list items. The marker value is opaque to the client.
+    pub marker: Option<String>,
+
+    /// Specifies the maximum number of containers to return. If the request does not specify maxresults, or specifies a value
+    /// greater than 5000, the server will return up to 5000 items.
+    pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// Return only the bytes of the blob in the specified range.
+    pub range: Option<String>,
+
+    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
+    /// information on working with blob snapshots, see [Creating a Snapshot of a Blob.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob)
+    pub snapshot: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
+/// Options to be passed to [`BlobPageBlobClient::get_page_ranges_diff()`](crate::clients::BlobPageBlobClient::get_page_ranges_diff())
+#[derive(Clone, Default, SafeDebug)]
+pub struct BlobPageBlobClientGetPageRangesDiffOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
+    pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
+    pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
+    pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
+    pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
+    pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
+    pub lease_id: Option<String>,
+
+    /// A string value that identifies the portion of the list of containers to be returned with the next listing operation. The
+    /// operation returns the NextMarker value within the response body if the listing operation did not return all containers
+    /// remaining to be listed with the current page. The NextMarker value can be used as the value for the marker parameter in
+    /// a subsequent call to request the next page of list items. The marker value is opaque to the client.
+    pub marker: Option<String>,
+
+    /// Specifies the maximum number of containers to return. If the request does not specify maxresults, or specifies a value
+    /// greater than 5000, the server will return up to 5000 items.
+    pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// Optional. This header is only supported in service versions 2019-04-19 and after and specifies the URL of a previous snapshot
+    /// of the target blob. The response will only contain pages that were changed between the target blob and its previous snapshot.
+    pub prev_snapshot_url: Option<String>,
+
+    /// Optional in version 2015-07-08 and newer. The prevsnapshot parameter is a DateTime value that specifies that the response
+    /// will contain only pages that were changed between target blob and previous snapshot. Changed pages include both updated
+    /// and cleared pages. The target blob may be a snapshot, as long as the snapshot specified by prevsnapshot is the older of
+    /// the two. Note that incremental snapshots are currently supported only for blobs created on or after January 1, 2016.
+    pub prevsnapshot: Option<String>,
+
+    /// Return only the bytes of the blob in the specified range.
+    pub range: Option<String>,
+
+    /// The snapshot parameter is an opaque DateTime value that, when present, specifies the blob snapshot to retrieve. For more
+    /// information on working with blob snapshots, see [Creating a Snapshot of a Blob.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob)
+    pub snapshot: Option<String>,
 
     /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
@@ -2435,6 +2600,35 @@ pub struct BlobServiceClientGetUserDelegationKeyOptions<'a> {
 
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
+/// Options to be passed to [`BlobServiceClient::list_containers_segment()`](crate::clients::BlobServiceClient::list_containers_segment())
+#[derive(Clone, Default, SafeDebug)]
+pub struct BlobServiceClientListContainersSegmentOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// Include this parameter to specify that the container's metadata be returned as part of the response body.
+    pub include: Option<Vec<ListContainersIncludeType>>,
+
+    /// A string value that identifies the portion of the list of containers to be returned with the next listing operation. The
+    /// operation returns the NextMarker value within the response body if the listing operation did not return all containers
+    /// remaining to be listed with the current page. The NextMarker value can be used as the value for the marker parameter in
+    /// a subsequent call to request the next page of list items. The marker value is opaque to the client.
+    pub marker: Option<String>,
+
+    /// Specifies the maximum number of containers to return. If the request does not specify maxresults, or specifies a value
+    /// greater than 5000, the server will return up to 5000 items.
+    pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// Filters the results to return only containers whose name begins with the specified prefix.
+    pub prefix: Option<String>,
 
     /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,

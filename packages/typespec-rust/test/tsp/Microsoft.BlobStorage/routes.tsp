@@ -24,13 +24,14 @@ alias ApiVersionHeader = {
 op StorageOperation<
   TParams extends TypeSpec.Reflection.Model | void,
   TResponse extends TypeSpec.Reflection.Model | void,
-  MediaType extends string = "application/xml",
+  RequestMediaType extends string = "application/xml",
+  ResponseMediaType extends string = "application/xml",
   TError = StorageError
 >(
   /** Content-Type header */
   #suppress "@typespec/http/content-type-ignored" "Template for existing API"
   @header("Content-Type")
-  contentType: MediaType,
+  contentType: RequestMediaType,
 
   ...ApiVersionHeader,
   ...TParams,
@@ -39,7 +40,7 @@ op StorageOperation<
   /** Content-Type header */
   #suppress "@typespec/http/content-type-ignored" "Template for existing API"
   @header("Content-Type")
-  contentType: MediaType;
+  contentType: ResponseMediaType;
 
   ...RequestIdResponseHeader;
   ...ClientRequestIdHeader;
@@ -72,6 +73,24 @@ interface Service {
   getStatistics is StorageOperation<
     TimeoutParameter,
     DateResponseHeader & StorageServiceStats
+  >;
+
+  /** The List Containers Segment operation returns a list of the containers under the specified account */
+  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
+  #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
+  @get
+  @route("/?comp=list")
+  listContainersSegment is StorageOperation<
+    {
+      ...PrefixParameter;
+      ...MarkerParameter;
+      ...MaxResultsParameter;
+      ...TimeoutParameter;
+
+      /** Include this parameter to specify that the container's metadata be returned as part of the response body. */
+      @query include?: Array<ListContainersIncludeType>;
+    },
+    ListContainersSegmentResponse
   >;
 
   /** Retrieves a user delegation key for the Blob service. This is only a valid operation when using bearer token authentication. */
@@ -504,6 +523,44 @@ interface Container {
       ...LastModifiedResponseHeader;
       ...DateResponseHeader;
     }
+  >;
+
+  /** The List Blobs operation returns a list of the blobs under the specified container. */
+  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
+  #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
+  @get
+  @route("/{containerName}?restype=container&comp=list&flat")
+  listBlobFlatSegment is StorageOperation<
+    {
+      ...ContainerNamePathParameter;
+      ...PrefixParameter;
+      ...MarkerParameter;
+      ...MaxResultsParameter;
+      ...ListBlobsIncludeParameter;
+      ...TimeoutParameter;
+    },
+    ListBlobsFlatSegmentResponse & DateResponseHeader
+  >;
+
+  /** The List Blobs operation returns a list of the blobs under the specified container. A delimiter can be used to traverse a virtual hierarchy of blobs as though it were a file system. */
+  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
+  #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
+  @get
+  @route("/{containerName}?restype=container&comp=list&hierarchy")
+  listBlobHierarchySegment is StorageOperation<
+    {
+      ...ContainerNamePathParameter;
+
+      /** When the request includes this parameter, the operation returns a BlobPrefix element in the response body that acts as a placeholder for all blobs whose names begin with the same substring up to the appearance of the delimiter character. The delimiter may be a single character or a string. */
+      @query delimiter: string;
+
+      ...PrefixParameter;
+      ...MarkerParameter;
+      ...MaxResultsParameter;
+      ...ListBlobsIncludeParameter;
+      ...TimeoutParameter;
+    },
+    ListBlobsHierarchySegmentResponse & DateResponseHeader
   >;
 
   /** Returns the sku name and account kind */
@@ -1247,64 +1304,6 @@ interface Blob {
     }
   >;
 
-  /** The Query operation enables users to select/project on blob data by providing simple query expressions. */
-  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
-  #suppress "@azure-tools/typespec-azure-core/byos" "Existing API"
-  @post
-  @route("/{containerName}/{blob}?comp=query")
-  query is StorageOperation<
-    {
-      ...ContainerNamePathParameter;
-      ...BlobPathParameter;
-
-      /** The query request */
-      @body
-      queryRequest: QueryRequest;
-
-      ...SnapshotParameter;
-      ...TimeoutParameter;
-      ...LeaseIdOptionalParameter;
-      ...EncryptionKeyParameter;
-      ...EncryptionKeySha256Parameter;
-      ...EncryptionAlgorithmParameter;
-      ...ConditionalRequestHeaders;
-      ...IfTagsParameter;
-    },
-    BodyParameter & {
-      #suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Following standard pattern"
-      @statusCode statusCode: 200 | 206;
-      ...MetadataHeaders;
-      ...LastModifiedResponseHeader;
-      ...ContentLengthResponseHeader;
-      ...ContentRangeResponseHeader;
-      ...EtagResponseHeader;
-      ...ContentMd5ResponseHeader;
-      ...ContentEncodingResponseParameter;
-      ...CacheControlResponseHeader;
-      ...ContentDispositionResponseHeader;
-      ...ContentLanguageResponseHeader;
-      ...BlobSequenceNumberResponseHeader;
-      ...BlobTypeResponseHeader;
-      ...ContentCrc64ResponseHeader;
-      ...CopyCompletionTimeResponseHeader;
-      ...CopyStatusDescriptionResponseHeader;
-      ...CopyIdResponseHeader;
-      ...CopyProgressResponseHeader;
-      ...CopySourceResponseHeader;
-      ...CopyStatusResponseHeader;
-      ...LeaseDurationHeader;
-      ...LeaseStateResponseHeader;
-      ...LeaseStatusResponseHeader;
-      ...AcceptRangesResponseHeader;
-      ...DateResponseHeader;
-      ...BlobCommittedBlockCountResponseHeader;
-      ...IsServerEncryptedResponseHeader;
-      ...EncryptionKeySha256ResponseHeader;
-      ...EncryptionScopeResponseHeader;
-      ...BlobContentMd5ResponseHeader;
-    }
-  >;
-
   /** The Get Blob Tags operation enables users to get tags on a blob. */
   #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
   @get
@@ -1544,6 +1543,67 @@ interface PageBlob {
       ...EncryptionScopeResponseHeader;
     },
     "application/octet-stream"
+  >;
+
+  /** The Get Page Ranges operation returns the list of valid page ranges for a page blob or snapshot of a page blob. */
+  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
+  #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
+  @get
+  @route("/{containerName}/{blob}?comp=pagelist")
+  getPageRanges is StorageOperation<
+    {
+      ...ContainerNamePathParameter;
+      ...BlobPathParameter;
+      ...SnapshotParameter;
+      ...TimeoutParameter;
+      ...RangeParameter;
+      ...LeaseIdOptionalParameter;
+      ...ConditionalRequestHeaders;
+      ...IfTagsParameter;
+      ...MarkerParameter;
+      ...MaxResultsParameter;
+    },
+    PageList & {
+      ...LastModifiedResponseHeader;
+      ...EtagResponseHeader;
+      ...BlobContentLengthRequired;
+      ...DateResponseHeader;
+    }
+  >;
+
+  /** The Get Page Ranges Diff operation returns the list of valid page ranges for a page blob or snapshot of a page blob. */
+  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
+  #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
+  @get
+  @route("/{containerName}/{blob}?comp=pagelist&diff")
+  getPageRangesDiff is StorageOperation<
+    {
+      ...ContainerNamePathParameter;
+      ...BlobPathParameter;
+      ...SnapshotParameter;
+      ...TimeoutParameter;
+
+      /** Optional in version 2015-07-08 and newer. The prevsnapshot parameter is a DateTime value that specifies that the response will contain only pages that were changed between target blob and previous snapshot. Changed pages include both updated and cleared pages. The target blob may be a snapshot, as long as the snapshot specified by prevsnapshot is the older of the two. Note that incremental snapshots are currently supported only for blobs created on or after January 1, 2016. */
+      @query
+      prevsnapshot?: string;
+
+      /** Optional. This header is only supported in service versions 2019-04-19 and after and specifies the URL of a previous snapshot of the target blob. The response will only contain pages that were changed between the target blob and its previous snapshot. */
+      @header("x-ms-previous-snapshot-url")
+      prevSnapshotUrl?: string;
+
+      ...RangeParameter;
+      ...LeaseIdOptionalParameter;
+      ...ConditionalRequestHeaders;
+      ...IfTagsParameter;
+      ...MarkerParameter;
+      ...MaxResultsParameter;
+    },
+    PageList & {
+      ...LastModifiedResponseHeader;
+      ...EtagResponseHeader;
+      ...BlobContentLengthRequired;
+      ...DateResponseHeader;
+    }
   >;
 
   /** The Resize operation increases the size of the page blob to the specified size. */
@@ -2062,5 +2122,65 @@ interface BlockBlob {
       ...BlobContentLengthRequired;
       ...DateResponseHeader;
     }
+  >;
+
+  /** The Query operation enables users to select/project on blob data by providing simple query expressions. */
+  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
+  #suppress "@azure-tools/typespec-azure-core/byos" "Existing API"
+  @post
+  @route("/{containerName}/{blob}?comp=query")
+  query is StorageOperation<
+    {
+      ...ContainerNamePathParameter;
+      ...BlobPathParameter;
+
+      /** The query request */
+      @body
+      queryRequest: QueryRequest;
+
+      ...SnapshotParameter;
+      ...TimeoutParameter;
+      ...LeaseIdOptionalParameter;
+      ...EncryptionKeyParameter;
+      ...EncryptionKeySha256Parameter;
+      ...EncryptionAlgorithmParameter;
+      ...ConditionalRequestHeaders;
+      ...IfTagsParameter;
+    },
+    BodyParameter & {
+      #suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Following standard pattern"
+      @statusCode statusCode: 200 | 206;
+      ...MetadataHeaders;
+      ...LastModifiedResponseHeader;
+      ...ContentLengthResponseHeader;
+      ...ContentRangeResponseHeader;
+      ...EtagResponseHeader;
+      ...ContentMd5ResponseHeader;
+      ...ContentEncodingResponseParameter;
+      ...CacheControlResponseHeader;
+      ...ContentDispositionResponseHeader;
+      ...ContentLanguageResponseHeader;
+      ...BlobSequenceNumberResponseHeader;
+      ...BlobTypeResponseHeader;
+      ...ContentCrc64ResponseHeader;
+      ...CopyCompletionTimeResponseHeader;
+      ...CopyStatusDescriptionResponseHeader;
+      ...CopyIdResponseHeader;
+      ...CopyProgressResponseHeader;
+      ...CopySourceResponseHeader;
+      ...CopyStatusResponseHeader;
+      ...LeaseDurationHeader;
+      ...LeaseStateResponseHeader;
+      ...LeaseStatusResponseHeader;
+      ...AcceptRangesResponseHeader;
+      ...DateResponseHeader;
+      ...BlobCommittedBlockCountResponseHeader;
+      ...IsServerEncryptedResponseHeader;
+      ...EncryptionKeySha256ResponseHeader;
+      ...EncryptionScopeResponseHeader;
+      ...BlobContentMd5ResponseHeader;
+    },
+    "application/xml",
+    "application/octet-stream"
   >;
 }

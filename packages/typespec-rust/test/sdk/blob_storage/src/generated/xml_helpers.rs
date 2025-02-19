@@ -6,8 +6,66 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-use crate::models::{ArrowField, BlobTag, CorsRule, FilterBlobItem};
+use crate::models::{
+    ArrowField, BlobItemInternal, BlobPrefix, BlobTag, ClearRange, ContainerItem, CorsRule,
+    FilterBlobItem, PageRange,
+};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+#[derive(Deserialize, Serialize)]
+#[serde(rename = "BlobItems")]
+pub struct Blob_itemsBlobItemInternal {
+    #[serde(default)]
+    BlobItemInternal: Option<Vec<BlobItemInternal>>,
+}
+
+impl Blob_itemsBlobItemInternal {
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<BlobItemInternal>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(Blob_itemsBlobItemInternal::deserialize(deserializer)?.BlobItemInternal)
+    }
+
+    pub fn wrap<S>(
+        to_serialize: &Option<Vec<BlobItemInternal>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        Blob_itemsBlobItemInternal {
+            BlobItemInternal: to_serialize.to_owned(),
+        }
+        .serialize(serializer)
+    }
+}
+
+#[derive(Deserialize, Serialize)]
+#[serde(rename = "BlobPrefixes")]
+pub struct Blob_prefixesBlobPrefix {
+    #[serde(default)]
+    BlobPrefix: Option<Vec<BlobPrefix>>,
+}
+
+impl Blob_prefixesBlobPrefix {
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<BlobPrefix>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(Blob_prefixesBlobPrefix::deserialize(deserializer)?.BlobPrefix)
+    }
+
+    pub fn wrap<S>(to_serialize: &Option<Vec<BlobPrefix>>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        Blob_prefixesBlobPrefix {
+            BlobPrefix: to_serialize.to_owned(),
+        }
+        .serialize(serializer)
+    }
+}
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "TagSet")]
@@ -65,6 +123,61 @@ impl BlobsFilterBlobItem {
 }
 
 #[derive(Deserialize, Serialize)]
+#[serde(rename = "ClearRange")]
+pub struct Clear_rangeClearRange {
+    #[serde(default)]
+    ClearRange: Option<Vec<ClearRange>>,
+}
+
+impl Clear_rangeClearRange {
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<ClearRange>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(Clear_rangeClearRange::deserialize(deserializer)?.ClearRange)
+    }
+
+    pub fn wrap<S>(to_serialize: &Option<Vec<ClearRange>>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        Clear_rangeClearRange {
+            ClearRange: to_serialize.to_owned(),
+        }
+        .serialize(serializer)
+    }
+}
+
+#[derive(Deserialize, Serialize)]
+#[serde(rename = "Containers")]
+pub struct Container_itemsContainerItem {
+    #[serde(default)]
+    ContainerItem: Option<Vec<ContainerItem>>,
+}
+
+impl Container_itemsContainerItem {
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<ContainerItem>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(Container_itemsContainerItem::deserialize(deserializer)?.ContainerItem)
+    }
+
+    pub fn wrap<S>(
+        to_serialize: &Option<Vec<ContainerItem>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        Container_itemsContainerItem {
+            ContainerItem: to_serialize.to_owned(),
+        }
+        .serialize(serializer)
+    }
+}
+
+#[derive(Deserialize, Serialize)]
 #[serde(rename = "Cors")]
 pub struct CorsCorsRule {
     #[serde(default)]
@@ -85,6 +198,32 @@ impl CorsCorsRule {
     {
         CorsCorsRule {
             CorsRule: to_serialize.to_owned(),
+        }
+        .serialize(serializer)
+    }
+}
+
+#[derive(Deserialize, Serialize)]
+#[serde(rename = "PageRange")]
+pub struct Page_rangePageRange {
+    #[serde(default)]
+    PageRange: Option<Vec<PageRange>>,
+}
+
+impl Page_rangePageRange {
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<PageRange>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(Page_rangePageRange::deserialize(deserializer)?.PageRange)
+    }
+
+    pub fn wrap<S>(to_serialize: &Option<Vec<PageRange>>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        Page_rangePageRange {
+            PageRange: to_serialize.to_owned(),
         }
         .serialize(serializer)
     }
