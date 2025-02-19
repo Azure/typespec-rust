@@ -130,27 +130,31 @@ export class Use {
   /**
    * emits Rust use statements for the contents of this Use object
    * 
+   * @param indent optional indentation helper currently in scope, else defauls to a start of zero indentation
    * @returns returns Rust formatted use statements
    */
-  text(): string {
+  text(indent?: helpers.indentation): string {
     if (this.uses.length === 0) {
       return '';
     }
 
-    let content = '';
+    if (!indent) {
+      // default to no indentation
+      indent = new helpers.indentation(0);
+    }
 
-    const indent = new helpers.indentation();
+    let content = '';
 
     // sort by module name, then sort types if more than one type
     const sortedMods = this.uses.sort((a: moduleTypes, b: moduleTypes) => { return helpers.sortAscending(a.module, b.module); });
     for (const sortedMod of sortedMods) {
       if (sortedMod.types.length === 1) {
-        content += `use ${sortedMod.module}::${sortedMod.types[0]};\n`;
+        content += `${indent.get()}use ${sortedMod.module}::${sortedMod.types[0]};\n`;
       } else {
         const sortedTypes = sortedMod.types.sort((a: string, b: string) => { return helpers.sortAscending(a, b); });
-        content += `use ${sortedMod.module}::{\n`;
-        content += `${indent.get()}${sortedTypes.join(', ')}`;
-        content += ',\n};\n';
+        content += `${indent.get()}use ${sortedMod.module}::{\n`;
+        content += `${indent.push().get()}${sortedTypes.join(', ')}`;
+        content += `,\n${indent.pop().get()}};\n`;
       }
     }
 
