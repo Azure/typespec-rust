@@ -130,7 +130,7 @@ export class Use {
   /**
    * emits Rust use statements for the contents of this Use object
    * 
-   * @param indent optional indentation helper currently in scope, else defauls to a start of zero indentation
+   * @param indent optional indentation helper currently in scope, else defauls to no indentation
    * @returns returns Rust formatted use statements
    */
   text(indent?: helpers.indentation): string {
