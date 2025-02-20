@@ -12,8 +12,10 @@ use crate::{
     generated::xml_helpers::Blob_itemsBlobItemInternal,
     generated::xml_helpers::Blob_prefixesBlobPrefix, generated::xml_helpers::Blob_tag_setBlobTag,
     generated::xml_helpers::BlobsFilterBlobItem, generated::xml_helpers::Clear_rangeClearRange,
+    generated::xml_helpers::Committed_blocksBlock,
     generated::xml_helpers::Container_itemsContainerItem, generated::xml_helpers::CorsCorsRule,
     generated::xml_helpers::Page_rangePageRange, generated::xml_helpers::SchemaArrowField,
+    generated::xml_helpers::Uncommitted_blocksBlock,
 };
 use azure_core::base64;
 use serde::{Deserialize, Serialize};
@@ -441,6 +443,46 @@ pub struct BlobTags {
         skip_serializing_if = "Option::is_none"
     )]
     pub blob_tag_set: Option<Vec<BlobTag>>,
+}
+
+/// Represents a single block in a block blob. It describes the block's ID and size.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
+#[non_exhaustive]
+#[typespec(format = "xml")]
+pub struct Block {
+    /// The base64 encoded block ID.
+    #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// The block size in bytes.
+    #[serde(rename = "Size", skip_serializing_if = "Option::is_none")]
+    pub size: Option<i64>,
+}
+
+/// Contains the committed and uncommitted blocks in a block blob.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
+#[non_exhaustive]
+#[typespec(format = "xml")]
+pub struct BlockList {
+    /// The list of committed blocks.
+    #[serde(
+        default,
+        deserialize_with = "Committed_blocksBlock::unwrap",
+        rename = "CommittedBlocks",
+        serialize_with = "Committed_blocksBlock::wrap",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub committed_blocks: Option<Vec<Block>>,
+
+    /// The list of uncommitted blocks.
+    #[serde(
+        default,
+        deserialize_with = "Uncommitted_blocksBlock::unwrap",
+        rename = "UncommittedBlocks",
+        serialize_with = "Uncommitted_blocksBlock::wrap",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub uncommitted_blocks: Option<Vec<Block>>,
 }
 
 /// The Block lookup list.

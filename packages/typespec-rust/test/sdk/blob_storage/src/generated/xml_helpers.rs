@@ -7,7 +7,7 @@
 #![allow(non_snake_case)]
 
 use crate::models::{
-    ArrowField, BlobItemInternal, BlobPrefix, BlobTag, ClearRange, ContainerItem, CorsRule,
+    ArrowField, BlobItemInternal, BlobPrefix, BlobTag, Block, ClearRange, ContainerItem, CorsRule,
     FilterBlobItem, PageRange,
 };
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -149,6 +149,32 @@ impl Clear_rangeClearRange {
 }
 
 #[derive(Deserialize, Serialize)]
+#[serde(rename = "CommittedBlocks")]
+pub struct Committed_blocksBlock {
+    #[serde(default)]
+    Block: Option<Vec<Block>>,
+}
+
+impl Committed_blocksBlock {
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<Block>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(Committed_blocksBlock::deserialize(deserializer)?.Block)
+    }
+
+    pub fn wrap<S>(to_serialize: &Option<Vec<Block>>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        Committed_blocksBlock {
+            Block: to_serialize.to_owned(),
+        }
+        .serialize(serializer)
+    }
+}
+
+#[derive(Deserialize, Serialize)]
 #[serde(rename = "Containers")]
 pub struct Container_itemsContainerItem {
     #[serde(default)]
@@ -250,6 +276,32 @@ impl SchemaArrowField {
     {
         SchemaArrowField {
             ArrowField: to_serialize.to_owned(),
+        }
+        .serialize(serializer)
+    }
+}
+
+#[derive(Deserialize, Serialize)]
+#[serde(rename = "UncommittedBlocks")]
+pub struct Uncommitted_blocksBlock {
+    #[serde(default)]
+    Block: Option<Vec<Block>>,
+}
+
+impl Uncommitted_blocksBlock {
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<Block>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(Uncommitted_blocksBlock::deserialize(deserializer)?.Block)
+    }
+
+    pub fn wrap<S>(to_serialize: &Option<Vec<Block>>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        Uncommitted_blocksBlock {
+            Block: to_serialize.to_owned(),
         }
         .serialize(serializer)
     }
