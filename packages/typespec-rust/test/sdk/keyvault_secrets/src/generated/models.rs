@@ -72,8 +72,8 @@ pub struct DeletedSecretBundle {
     pub scheduled_purge_date: Option<OffsetDateTime>,
 
     /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tags: Option<HashMap<String, String>>,
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    pub tags: HashMap<String, String>,
 
     /// The secret value.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -123,8 +123,8 @@ pub struct DeletedSecretItem {
     pub scheduled_purge_date: Option<OffsetDateTime>,
 
     /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tags: Option<HashMap<String, String>>,
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    pub tags: HashMap<String, String>,
 }
 
 /// The deleted secret list result
@@ -137,8 +137,8 @@ pub struct DeletedSecretListResult {
 
     /// A response message containing a list of deleted secrets in the key vault along with a link to the next page of deleted
     /// secrets.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Vec<DeletedSecretItem>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub value: Vec<DeletedSecretItem>,
 }
 
 /// The secret management attributes.
@@ -219,8 +219,8 @@ pub struct SecretBundle {
     pub managed: Option<bool>,
 
     /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tags: Option<HashMap<String, String>>,
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    pub tags: HashMap<String, String>,
 
     /// The secret value.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -248,8 +248,8 @@ pub struct SecretItem {
     pub managed: Option<bool>,
 
     /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tags: Option<HashMap<String, String>>,
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    pub tags: HashMap<String, String>,
 }
 
 /// The secret list result.
@@ -261,8 +261,8 @@ pub struct SecretListResult {
     pub next_link: Option<String>,
 
     /// A response message containing a list of secrets in the key vault along with a link to the next page of secrets.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Vec<SecretItem>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub value: Vec<SecretItem>,
 }
 
 /// The secret restore parameters.
@@ -291,8 +291,8 @@ pub struct SecretSetParameters {
     pub secret_attributes: Option<SecretAttributes>,
 
     /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tags: Option<HashMap<String, String>>,
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    pub tags: HashMap<String, String>,
 
     /// The value of the secret.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -311,6 +311,6 @@ pub struct SecretUpdateParameters {
     pub secret_attributes: Option<SecretAttributes>,
 
     /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tags: Option<HashMap<String, String>>,
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    pub tags: HashMap<String, String>,
 }

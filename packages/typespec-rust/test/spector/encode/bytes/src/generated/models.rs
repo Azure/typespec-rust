@@ -20,8 +20,8 @@ pub struct Base64BytesProperty {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct Base64urlArrayBytesProperty {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Vec<Vec<u8>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub value: Vec<Vec<u8>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]

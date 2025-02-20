@@ -251,8 +251,10 @@ export class Adapter {
   private getModelField(property: tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, isPubMod: boolean): rust.ModelField {
     let fieldType = this.getType(property.type);
 
-    // for public models each field is always an Option<T>
-    if (isPubMod || property.optional) {
+    // for public models each field is always an Option<T>.
+    // the only exception is for HashMap and Vec since an
+    // empty collection conveys the same semantics.
+    if ((isPubMod || property.optional) && fieldType.kind !== 'hashmap' && fieldType.kind !== 'vector') {
       fieldType = new rust.Option(fieldType);
     }
 

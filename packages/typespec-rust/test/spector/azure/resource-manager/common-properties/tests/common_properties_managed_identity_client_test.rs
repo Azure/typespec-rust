@@ -62,10 +62,10 @@ fn get_valid_mi_resource() -> ManagedIdentityTrackedResource {
         properties: Some(ManagedIdentityTrackedResourceProperties {
             provisioning_state: Some("Succeeded".to_string()),
         }),
-        tags: Some(HashMap::from([(
+        tags: HashMap::from([(
             "tagKey1".to_string(),
             "tagValue1".to_string(),
-        )])),
+        )]),
         ..Default::default()
     }
 }
@@ -144,9 +144,9 @@ async fn update_with_user_assigned_and_system_assigned() {
     let resource = ManagedIdentityTrackedResource {
         identity: Some(ManagedServiceIdentity {
             type_prop: Some(ManagedServiceIdentityType::SystemAssignedUserAssigned),
-             user_assigned_identities: Some(HashMap::from([
+             user_assigned_identities: HashMap::from([
             ("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id1".to_string(), UserAssignedIdentity::default()),
-        ])),
+        ]),
         ..Default::default()
             }),
             location: Some("eastus".to_string()),

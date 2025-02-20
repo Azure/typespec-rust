@@ -86,23 +86,23 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
     for (const field of model.fields) {
       use.addForType(field.type);
       body += helpers.formatDocComment(field.docs);
-      const serdeParams = new Array<string>();
+      const serdeParams = new Set<string>();
       const fieldRename = getSerDeRename(field);
       if (fieldRename) {
-        serdeParams.push(`rename = "${fieldRename}"`);
+        serdeParams.add(`rename = "${fieldRename}"`);
       }
 
       // NOTE: usage of serde annotations like this means that base64 encoded bytes and
       // XML wrapped lists are mutually exclusive. it's not a real scenario at present.
       if (helpers.unwrapOption(field.type).kind === 'offsetDateTime') {
-        serdeParams.push('default');
+        serdeParams.add('default');
         let optionMod = ''
         if (field.type.kind === 'option') {
           optionMod = '::option';
         }
         // TODO: https://github.com/Azure/typespec-rust/issues/221
         // specifically need to handle nested arrays of time types that require conversion
-        serdeParams.push(`with = "azure_core::date::${(<rust.OffsetDateTime>helpers.unwrapOption(field.type)).encoding}${optionMod}"`);
+        serdeParams.add(`with = "azure_core::date::${(<rust.OffsetDateTime>helpers.unwrapOption(field.type)).encoding}${optionMod}"`);
       } else if (helpers.unwrapOption(field.type).kind === 'encodedBytes') {
         // TODO: https://github.com/Azure/typespec-rust/issues/221
         // specifically need to handle nested arrays of base64 encoded bytes
@@ -110,27 +110,36 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
         if ((<rust.EncodedBytes>helpers.unwrapOption(field.type)).encoding === 'url') {
           format = '_url_safe';
         }
-        serdeParams.push('default');
-        serdeParams.push(`deserialize_with = "base64::deserialize${format}"`);
-        serdeParams.push(`serialize_with = "base64::serialize${format}"`);
+        serdeParams.add('default');
+        serdeParams.add(`deserialize_with = "base64::deserialize${format}"`);
+        serdeParams.add(`serialize_with = "base64::serialize${format}"`);
         use.addType('azure_core', 'base64');
       } else if (bodyFormat === 'xml' && helpers.unwrapOption(field.type).kind === 'vector' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
-        serdeParams.push('default');
-        serdeParams.push(`deserialize_with = "${xmlListWrapper.name}::unwrap"`);
-        serdeParams.push(`serialize_with = "${xmlListWrapper.name}::wrap"`);
+        serdeParams.add('default');
+        serdeParams.add(`deserialize_with = "${xmlListWrapper.name}::unwrap"`);
+        serdeParams.add(`serialize_with = "${xmlListWrapper.name}::wrap"`);
         use.addType('crate', `generated::xml_helpers::${xmlListWrapper.name}`);
       }
 
       // TODO: omit skip_serializing_if if we need to send explicit JSON null
       // https://github.com/Azure/typespec-rust/issues/78
       if (field.type.kind === 'option') {
-        serdeParams.push('skip_serializing_if = "Option::is_none"');
+        serdeParams.add('skip_serializing_if = "Option::is_none"');
+      } else if (field.type.kind === 'hashmap') {
+        serdeParams.add('default');
+        serdeParams.add('skip_serializing_if = "HashMap::is_empty"');
+      } else if (field.type.kind === 'vector') {
+        serdeParams.add('default');
+        // NOTE: we want to send an empty array for XML payloads
+        if (bodyFormat !== 'xml') {
+          serdeParams.add('skip_serializing_if = "Vec::is_empty"');
+        }
       }
 
-      if (serdeParams.length > 0) {
-        body += `${indent.get()}#[serde(${serdeParams.sort().join(', ')})]\n`;
+      if (serdeParams.size > 0) {
+        body += `${indent.get()}#[serde(${Array.from(serdeParams).sort().join(', ')})]\n`;
       }
       body += `${indent.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
     }

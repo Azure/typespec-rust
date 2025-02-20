@@ -9,8 +9,8 @@ use typespec_client_core::fmt::SafeDebug;
 /// Array inner model
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct InnerModel {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub children: Option<Vec<InnerModel>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub children: Vec<InnerModel>,
 
     /// Required string property
     #[serde(skip_serializing_if = "Option::is_none")]

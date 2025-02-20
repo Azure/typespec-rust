@@ -73,7 +73,7 @@ async fn export_all_users() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.export_all_users("json", None).await.unwrap();
     let user_list: UserList = resp.into_body().await.unwrap();
-    let user_list = user_list.users.unwrap();
+    let user_list = user_list.users;
     assert_eq!(2, user_list.len());
     assert_eq!(
         user_list[0].etag,
@@ -125,7 +125,7 @@ async fn list() {
         let page = page.unwrap();
         page_count += 1;
         let paged_user: PagedUser = page.into_body().await.unwrap();
-        let users = paged_user.value.unwrap();
+        let users = paged_user.value;
         assert_eq!(users.len(), 2);
         assert_eq!(
             users[0].etag,
@@ -133,28 +133,25 @@ async fn list() {
         );
         assert_eq!(users[0].id, Some(1));
         assert_eq!(users[0].name, Some("Madge".to_string()));
-        if let Some(orders) = &users[0].orders {
-            assert_eq!(orders.len(), 1);
-            assert_eq!(orders[0].detail, Some("a recorder".to_string()));
-            assert_eq!(orders[0].id, Some(1));
-            assert_eq!(orders[0].user_id, Some(1));
-        } else {
-            panic!("missing orders for Madge");
-        }
+
+        let orders = &users[0].orders;
+        assert_eq!(orders.len(), 1);
+        assert_eq!(orders[0].detail, Some("a recorder".to_string()));
+        assert_eq!(orders[0].id, Some(1));
+        assert_eq!(orders[0].user_id, Some(1));
+
         assert_eq!(
             users[1].etag,
             Some(Etag::from("11bdc430-65e8-45ad-81d9-8ffa60d55b5a"))
         );
         assert_eq!(users[1].id, Some(2));
         assert_eq!(users[1].name, Some("John".to_string()));
-        if let Some(orders) = &users[1].orders {
-            assert_eq!(orders.len(), 1);
-            assert_eq!(orders[0].detail, Some("a TV".to_string()));
-            assert_eq!(orders[0].id, Some(2));
-            assert_eq!(orders[0].user_id, Some(2));
-        } else {
-            panic!("missing orders for John");
-        }
+
+        let orders = &users[1].orders;
+        assert_eq!(orders.len(), 1);
+        assert_eq!(orders[0].detail, Some("a TV".to_string()));
+        assert_eq!(orders[0].id, Some(2));
+        assert_eq!(orders[0].user_id, Some(2));
     }
     assert_eq!(page_count, 1);
 }

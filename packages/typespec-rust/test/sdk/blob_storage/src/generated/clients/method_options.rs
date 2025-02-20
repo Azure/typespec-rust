@@ -2641,7 +2641,7 @@ pub struct BlobServiceClientSetPropertiesOptions<'a> {
     pub client_request_id: Option<String>,
 
     /// The CORS properties.
-    pub cors: Option<Vec<CorsRule>>,
+    pub cors: Vec<CorsRule>,
 
     /// The default service version.
     pub default_service_version: Option<String>,

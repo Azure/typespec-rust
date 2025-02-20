@@ -15,7 +15,7 @@ async fn get() {
         .await
         .unwrap();
     let value: ModelWithDictionary = resp.into_body().await.unwrap();
-    let metadata = value.metadata.unwrap();
+    let metadata = value.metadata;
     assert_eq!(metadata.len(), 3);
     assert_eq!(metadata.get("Color"), Some(&"blue".to_string()));
     assert_eq!(metadata.get("Count"), Some(&"123".to_string()));
@@ -26,11 +26,11 @@ async fn get() {
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = ModelWithDictionary {
-        metadata: Some(HashMap::from([
+        metadata: HashMap::from([
             ("Color".to_string(), "blue".to_string()),
             ("Count".to_string(), "123".to_string()),
             ("Enabled".to_string(), "false".to_string()),
-        ])),
+        ]),
     };
     client
         .get_xml_model_with_dictionary_value_client()

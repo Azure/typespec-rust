@@ -16,8 +16,8 @@ pub struct PagedUser {
     pub next_link: Option<String>,
 
     /// The User items on this page
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Vec<User>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub value: Vec<User>,
 }
 
 /// Details about a user.
@@ -36,15 +36,15 @@ pub struct User {
     pub name: Option<String>,
 
     /// The user's order list
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub orders: Option<Vec<UserOrder>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub orders: Vec<UserOrder>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct UserList {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub users: Option<Vec<User>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub users: Vec<User>,
 }
 
 /// UserOrder for testing list with expand.

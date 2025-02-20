@@ -59,7 +59,7 @@ async fn float_seconds() {
 async fn float_seconds_array() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     let body = FloatSecondsDurationArrayProperty {
-        value: Some(vec![35.625, 46.75]),
+        value: vec![35.625, 46.75],
     };
     let resp = client
         .get_duration_property_client()
@@ -67,7 +67,7 @@ async fn float_seconds_array() {
         .await
         .unwrap();
     let result: FloatSecondsDurationArrayProperty = resp.into_body().await.unwrap();
-    assert_eq!(result.value, Some(vec![35.625, 46.75]));
+    assert_eq!(result.value, vec![35.625, 46.75]);
 }
 
 #[tokio::test]

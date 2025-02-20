@@ -10,14 +10,22 @@ use typespec_client_core::fmt::SafeDebug;
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct ActionRequest {
-    #[serde(rename = "arrayProperty", skip_serializing_if = "Option::is_none")]
-    pub array_property: Option<Vec<String>>,
+    #[serde(
+        default,
+        rename = "arrayProperty",
+        skip_serializing_if = "Vec::is_empty"
+    )]
+    pub array_property: Vec<String>,
 
     #[serde(rename = "modelProperty", skip_serializing_if = "Option::is_none")]
     pub model_property: Option<Model>,
 
-    #[serde(rename = "recordProperty", skip_serializing_if = "Option::is_none")]
-    pub record_property: Option<HashMap<String, String>>,
+    #[serde(
+        default,
+        rename = "recordProperty",
+        skip_serializing_if = "HashMap::is_empty"
+    )]
+    pub record_property: HashMap<String, String>,
 
     #[serde(rename = "stringProperty", skip_serializing_if = "Option::is_none")]
     pub string_property: Option<String>,
@@ -26,14 +34,22 @@ pub struct ActionRequest {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 #[non_exhaustive]
 pub struct ActionResponse {
-    #[serde(rename = "arrayProperty", skip_serializing_if = "Option::is_none")]
-    pub array_property: Option<Vec<String>>,
+    #[serde(
+        default,
+        rename = "arrayProperty",
+        skip_serializing_if = "Vec::is_empty"
+    )]
+    pub array_property: Vec<String>,
 
     #[serde(rename = "modelProperty", skip_serializing_if = "Option::is_none")]
     pub model_property: Option<Model>,
 
-    #[serde(rename = "recordProperty", skip_serializing_if = "Option::is_none")]
-    pub record_property: Option<HashMap<String, String>>,
+    #[serde(
+        default,
+        rename = "recordProperty",
+        skip_serializing_if = "HashMap::is_empty"
+    )]
+    pub record_property: HashMap<String, String>,
 
     #[serde(rename = "stringProperty", skip_serializing_if = "Option::is_none")]
     pub string_property: Option<String>,

@@ -44,7 +44,7 @@ pub struct SpreadAliasClientSpreadWithMultipleParametersOptions<'a> {
     pub optional_int: Option<i32>,
 
     /// optional string
-    pub optional_string_list: Option<Vec<String>>,
+    pub optional_string_list: Vec<String>,
 }
 
 /// Options to be passed to [`SpreadModelClient::spread_as_request_body()`](crate::clients::SpreadModelClient::spread_as_request_body())

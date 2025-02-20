@@ -1,6 +1,10 @@
 # Release History
 
-## 0.9.2 (unreleased)
+## 0.10.0 (unreleased)
+
+### Breaking Changes
+
+* Model fields of type `HashMap` or `Vec` are no longer wrapped in an `Option<T>`.
 
 ### Other Changes
 

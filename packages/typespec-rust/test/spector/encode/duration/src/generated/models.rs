@@ -20,8 +20,8 @@ pub struct Float64SecondsDurationProperty {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct FloatSecondsDurationArrayProperty {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Vec<f32>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub value: Vec<f32>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
