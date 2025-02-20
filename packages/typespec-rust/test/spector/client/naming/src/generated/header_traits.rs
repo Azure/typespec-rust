@@ -6,7 +6,7 @@
 use crate::models::NamingClientResponseResult;
 use azure_core::{headers::HeaderName, Response, Result};
 
-const DEFAULTNAMEHEADER: HeaderName = HeaderName::from_static("default-name");
+const DEFAULT_NAME: HeaderName = HeaderName::from_static("default-name");
 
 /// Provides access to typed response headers for [`NamingClient::response()`](crate::clients::NamingClient::response())
 pub trait NamingClientResponseResultHeaders: private::Sealed {
@@ -15,7 +15,7 @@ pub trait NamingClientResponseResultHeaders: private::Sealed {
 
 impl NamingClientResponseResultHeaders for Response<NamingClientResponseResult> {
     fn client_name(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DEFAULTNAMEHEADER))
+        Ok(self.headers().get_optional_string(&DEFAULT_NAME))
     }
 }
 

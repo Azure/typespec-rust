@@ -195,7 +195,7 @@ export function emitHeaderTraits(crate: rust.Crate): string | undefined {
  */
 function getHeaderConstName(header: string): string {
   const chunks = codegen.deconstruct(header);
-  return `${chunks.map(i => i.toUpperCase()).join('')}HEADER`;
+  return `${chunks.map(i => i.toUpperCase()).join('_')}`;
 }
 
 /**

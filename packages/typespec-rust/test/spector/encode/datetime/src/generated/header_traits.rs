@@ -10,7 +10,7 @@ use crate::models::{
 use azure_core::{date, headers::HeaderName, Response, Result};
 use time::OffsetDateTime;
 
-const VALUEHEADER: HeaderName = HeaderName::from_static("value");
+const VALUE: HeaderName = HeaderName::from_static("value");
 
 /// Provides access to typed response headers for [`DatetimeResponseHeaderClient::default()`](crate::clients::DatetimeResponseHeaderClient::default())
 pub trait DatetimeResponseHeaderClientDefaultResultHeaders: private::Sealed {
@@ -21,7 +21,7 @@ impl DatetimeResponseHeaderClientDefaultResultHeaders
     for Response<DatetimeResponseHeaderClientDefaultResult>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&VALUEHEADER) {
+        match self.headers().get_optional_string(&VALUE) {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
         }
@@ -37,7 +37,7 @@ impl DatetimeResponseHeaderClientRfc3339ResultHeaders
     for Response<DatetimeResponseHeaderClientRfc3339Result>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&VALUEHEADER) {
+        match self.headers().get_optional_string(&VALUE) {
             Some(v) => Ok(Some(date::parse_rfc3339(&v)?)),
             None => Ok(None),
         }
@@ -53,7 +53,7 @@ impl DatetimeResponseHeaderClientRfc7231ResultHeaders
     for Response<DatetimeResponseHeaderClientRfc7231Result>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&VALUEHEADER) {
+        match self.headers().get_optional_string(&VALUE) {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
         }
@@ -69,7 +69,7 @@ impl DatetimeResponseHeaderClientUnixTimestampResultHeaders
     for Response<DatetimeResponseHeaderClientUnixTimestampResult>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&VALUEHEADER) {
+        match self.headers().get_optional_string(&VALUE) {
             Some(v) => Ok(Some(date::parse_unix_time(&v)?)),
             None => Ok(None),
         }

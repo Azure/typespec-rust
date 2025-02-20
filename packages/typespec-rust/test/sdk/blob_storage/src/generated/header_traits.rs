@@ -41,87 +41,84 @@ use azure_core::{base64, headers::HeaderName, Response, Result};
 use std::collections::HashMap;
 use std::str::FromStr;
 
-const CONTENTMD5HEADER: HeaderName = HeaderName::from_static("content-md5");
-const DATEHEADER: HeaderName = HeaderName::from_static("date");
-const ETAGHEADER: HeaderName = HeaderName::from_static("etag");
-const LASTMODIFIEDHEADER: HeaderName = HeaderName::from_static("last-modified");
-const XMSBLOBAPPENDOFFSETHEADER: HeaderName = HeaderName::from_static("x-ms-blob-append-offset");
-const XMSBLOBCOMMITTEDBLOCKCOUNTHEADER: HeaderName =
+const CONTENT_MD5: HeaderName = HeaderName::from_static("content-md5");
+const DATE: HeaderName = HeaderName::from_static("date");
+const E_TAG: HeaderName = HeaderName::from_static("etag");
+const LAST_MODIFIED: HeaderName = HeaderName::from_static("last-modified");
+const X_MS_BLOB_APPEND_OFFSET: HeaderName = HeaderName::from_static("x-ms-blob-append-offset");
+const X_MS_BLOB_COMMITTED_BLOCK_COUNT: HeaderName =
     HeaderName::from_static("x-ms-blob-committed-block-count");
-const XMSCLIENTREQUESTIDHEADER: HeaderName = HeaderName::from_static("x-ms-client-request-id");
-const XMSCONTENTCRC64HEADER: HeaderName = HeaderName::from_static("x-ms-content-crc64");
-const XMSENCRYPTIONKEYSHA256HEADER: HeaderName =
+const X_MS_CLIENT_REQUEST_ID: HeaderName = HeaderName::from_static("x-ms-client-request-id");
+const X_MS_CONTENT_CRC64: HeaderName = HeaderName::from_static("x-ms-content-crc64");
+const X_MS_ENCRYPTION_KEY_SHA256: HeaderName =
     HeaderName::from_static("x-ms-encryption-key-sha256");
-const XMSENCRYPTIONSCOPEHEADER: HeaderName = HeaderName::from_static("x-ms-encryption-scope");
-const XMSREQUESTIDHEADER: HeaderName = HeaderName::from_static("x-ms-request-id");
-const XMSREQUESTSERVERENCRYPTEDHEADER: HeaderName =
+const X_MS_ENCRYPTION_SCOPE: HeaderName = HeaderName::from_static("x-ms-encryption-scope");
+const X_MS_REQUEST_ID: HeaderName = HeaderName::from_static("x-ms-request-id");
+const X_MS_REQUEST_SERVER_ENCRYPTED: HeaderName =
     HeaderName::from_static("x-ms-request-server-encrypted");
-const XMSSTRUCTUREDBODYHEADER: HeaderName = HeaderName::from_static("x-ms-structured-body");
-const XMSVERSIONIDHEADER: HeaderName = HeaderName::from_static("x-ms-version-id");
-const XMSBLOBSEALEDHEADER: HeaderName = HeaderName::from_static("x-ms-blob-sealed");
-const XMSLEASEIDHEADER: HeaderName = HeaderName::from_static("x-ms-lease-id");
-const XMSLEASETIMEHEADER: HeaderName = HeaderName::from_static("x-ms-lease-time");
-const XMSCOPYIDHEADER: HeaderName = HeaderName::from_static("x-ms-copy-id");
-const XMSCOPYSTATUSHEADER: HeaderName = HeaderName::from_static("x-ms-copy-status");
-const XMSSNAPSHOTHEADER: HeaderName = HeaderName::from_static("x-ms-snapshot");
-const ACCEPTRANGESHEADER: HeaderName = HeaderName::from_static("accept-ranges");
-const CACHECONTROLHEADER: HeaderName = HeaderName::from_static("cache-control");
-const CONTENTDISPOSITIONHEADER: HeaderName = HeaderName::from_static("content-disposition");
-const CONTENTENCODINGHEADER: HeaderName = HeaderName::from_static("content-encoding");
-const CONTENTLANGUAGEHEADER: HeaderName = HeaderName::from_static("content-language");
-const CONTENTLENGTHHEADER: HeaderName = HeaderName::from_static("content-length");
-const CONTENTRANGEHEADER: HeaderName = HeaderName::from_static("content-range");
-const XMSBLOBCONTENTMD5HEADER: HeaderName = HeaderName::from_static("x-ms-blob-content-md5");
-const XMSBLOBSEQUENCENUMBERHEADER: HeaderName =
-    HeaderName::from_static("x-ms-blob-sequence-number");
-const XMSBLOBTYPEHEADER: HeaderName = HeaderName::from_static("x-ms-blob-type");
-const XMSCOPYCOMPLETIONTIMEHEADER: HeaderName =
-    HeaderName::from_static("x-ms-copy-completion-time");
-const XMSCOPYPROGRESSHEADER: HeaderName = HeaderName::from_static("x-ms-copy-progress");
-const XMSCOPYSOURCEHEADER: HeaderName = HeaderName::from_static("x-ms-copy-source");
-const XMSCOPYSTATUSDESCRIPTIONHEADER: HeaderName =
+const X_MS_STRUCTURED_BODY: HeaderName = HeaderName::from_static("x-ms-structured-body");
+const X_MS_VERSION_ID: HeaderName = HeaderName::from_static("x-ms-version-id");
+const X_MS_BLOB_SEALED: HeaderName = HeaderName::from_static("x-ms-blob-sealed");
+const X_MS_LEASE_ID: HeaderName = HeaderName::from_static("x-ms-lease-id");
+const X_MS_LEASE_TIME: HeaderName = HeaderName::from_static("x-ms-lease-time");
+const X_MS_COPY_ID: HeaderName = HeaderName::from_static("x-ms-copy-id");
+const X_MS_COPY_STATUS: HeaderName = HeaderName::from_static("x-ms-copy-status");
+const X_MS_SNAPSHOT: HeaderName = HeaderName::from_static("x-ms-snapshot");
+const ACCEPT_RANGES: HeaderName = HeaderName::from_static("accept-ranges");
+const CACHE_CONTROL: HeaderName = HeaderName::from_static("cache-control");
+const CONTENT_DISPOSITION: HeaderName = HeaderName::from_static("content-disposition");
+const CONTENT_ENCODING: HeaderName = HeaderName::from_static("content-encoding");
+const CONTENT_LANGUAGE: HeaderName = HeaderName::from_static("content-language");
+const CONTENT_LENGTH: HeaderName = HeaderName::from_static("content-length");
+const CONTENT_RANGE: HeaderName = HeaderName::from_static("content-range");
+const X_MS_BLOB_CONTENT_MD5: HeaderName = HeaderName::from_static("x-ms-blob-content-md5");
+const X_MS_BLOB_SEQUENCE_NUMBER: HeaderName = HeaderName::from_static("x-ms-blob-sequence-number");
+const X_MS_BLOB_TYPE: HeaderName = HeaderName::from_static("x-ms-blob-type");
+const X_MS_COPY_COMPLETION_TIME: HeaderName = HeaderName::from_static("x-ms-copy-completion-time");
+const X_MS_COPY_PROGRESS: HeaderName = HeaderName::from_static("x-ms-copy-progress");
+const X_MS_COPY_SOURCE: HeaderName = HeaderName::from_static("x-ms-copy-source");
+const X_MS_COPY_STATUS_DESCRIPTION: HeaderName =
     HeaderName::from_static("x-ms-copy-status-description");
-const XMSCREATIONTIMEHEADER: HeaderName = HeaderName::from_static("x-ms-creation-time");
-const XMSIMMUTABILITYPOLICYMODEHEADER: HeaderName =
+const X_MS_CREATION_TIME: HeaderName = HeaderName::from_static("x-ms-creation-time");
+const X_MS_IMMUTABILITY_POLICY_MODE: HeaderName =
     HeaderName::from_static("x-ms-immutability-policy-mode");
-const XMSIMMUTABILITYPOLICYUNTILDATEHEADER: HeaderName =
+const X_MS_IMMUTABILITY_POLICY_UNTIL_DATE: HeaderName =
     HeaderName::from_static("x-ms-immutability-policy-until-date");
-const XMSISCURRENTVERSIONHEADER: HeaderName = HeaderName::from_static("x-ms-is-current-version");
-const XMSLASTACCESSTIMEHEADER: HeaderName = HeaderName::from_static("x-ms-last-access-time");
-const XMSLEASEDURATIONHEADER: HeaderName = HeaderName::from_static("x-ms-lease-duration");
-const XMSLEASESTATEHEADER: HeaderName = HeaderName::from_static("x-ms-lease-state");
-const XMSLEASESTATUSHEADER: HeaderName = HeaderName::from_static("x-ms-lease-status");
-const XMSLEGALHOLDHEADER: HeaderName = HeaderName::from_static("x-ms-legal-hold");
-const XMSMETAHEADER: &str = "x-ms-meta-";
-const XMSORHEADER: &str = "x-ms-or-";
-const XMSORPOLICYIDHEADER: HeaderName = HeaderName::from_static("x-ms-or-policy-id");
-const XMSSTRUCTUREDCONTENTLENGTHHEADER: HeaderName =
+const X_MS_IS_CURRENT_VERSION: HeaderName = HeaderName::from_static("x-ms-is-current-version");
+const X_MS_LAST_ACCESS_TIME: HeaderName = HeaderName::from_static("x-ms-last-access-time");
+const X_MS_LEASE_DURATION: HeaderName = HeaderName::from_static("x-ms-lease-duration");
+const X_MS_LEASE_STATE: HeaderName = HeaderName::from_static("x-ms-lease-state");
+const X_MS_LEASE_STATUS: HeaderName = HeaderName::from_static("x-ms-lease-status");
+const X_MS_LEGAL_HOLD: HeaderName = HeaderName::from_static("x-ms-legal-hold");
+const X_MS_META: &str = "x-ms-meta-";
+const X_MS_OR: &str = "x-ms-or-";
+const X_MS_OR_POLICY_ID: HeaderName = HeaderName::from_static("x-ms-or-policy-id");
+const X_MS_STRUCTURED_CONTENT_LENGTH: HeaderName =
     HeaderName::from_static("x-ms-structured-content-length");
-const XMSTAGCOUNTHEADER: HeaderName = HeaderName::from_static("x-ms-tag-count");
-const XMSACCOUNTKINDHEADER: HeaderName = HeaderName::from_static("x-ms-account-kind");
-const XMSISHNSENABLEDHEADER: HeaderName = HeaderName::from_static("x-ms-is-hns-enabled");
-const XMSSKUNAMEHEADER: HeaderName = HeaderName::from_static("x-ms-sku-name");
-const XMSACCESSTIERHEADER: HeaderName = HeaderName::from_static("x-ms-access-tier");
-const XMSACCESSTIERCHANGETIMEHEADER: HeaderName =
+const X_MS_TAG_COUNT: HeaderName = HeaderName::from_static("x-ms-tag-count");
+const X_MS_ACCOUNT_KIND: HeaderName = HeaderName::from_static("x-ms-account-kind");
+const X_MS_IS_HNS_ENABLED: HeaderName = HeaderName::from_static("x-ms-is-hns-enabled");
+const X_MS_SKU_NAME: HeaderName = HeaderName::from_static("x-ms-sku-name");
+const X_MS_ACCESS_TIER: HeaderName = HeaderName::from_static("x-ms-access-tier");
+const X_MS_ACCESS_TIER_CHANGE_TIME: HeaderName =
     HeaderName::from_static("x-ms-access-tier-change-time");
-const XMSACCESSTIERINFERREDHEADER: HeaderName =
-    HeaderName::from_static("x-ms-access-tier-inferred");
-const XMSARCHIVESTATUSHEADER: HeaderName = HeaderName::from_static("x-ms-archive-status");
-const XMSCOPYDESTINATIONSNAPSHOTHEADER: HeaderName =
+const X_MS_ACCESS_TIER_INFERRED: HeaderName = HeaderName::from_static("x-ms-access-tier-inferred");
+const X_MS_ARCHIVE_STATUS: HeaderName = HeaderName::from_static("x-ms-archive-status");
+const X_MS_COPY_DESTINATION_SNAPSHOT: HeaderName =
     HeaderName::from_static("x-ms-copy-destination-snapshot");
-const XMSEXPIRYTIMEHEADER: HeaderName = HeaderName::from_static("x-ms-expiry-time");
-const XMSINCREMENTALCOPYHEADER: HeaderName = HeaderName::from_static("x-ms-incremental-copy");
-const XMSREHYDRATEPRIORITYHEADER: HeaderName = HeaderName::from_static("x-ms-rehydrate-priority");
-const XMSBLOBCONTENTLENGTHHEADER: HeaderName = HeaderName::from_static("x-ms-blob-content-length");
-const XMSBLOBPUBLICACCESSHEADER: HeaderName = HeaderName::from_static("x-ms-blob-public-access");
-const XMSDEFAULTENCRYPTIONSCOPEHEADER: HeaderName =
+const X_MS_EXPIRY_TIME: HeaderName = HeaderName::from_static("x-ms-expiry-time");
+const X_MS_INCREMENTAL_COPY: HeaderName = HeaderName::from_static("x-ms-incremental-copy");
+const X_MS_REHYDRATE_PRIORITY: HeaderName = HeaderName::from_static("x-ms-rehydrate-priority");
+const X_MS_BLOB_CONTENT_LENGTH: HeaderName = HeaderName::from_static("x-ms-blob-content-length");
+const X_MS_BLOB_PUBLIC_ACCESS: HeaderName = HeaderName::from_static("x-ms-blob-public-access");
+const X_MS_DEFAULT_ENCRYPTION_SCOPE: HeaderName =
     HeaderName::from_static("x-ms-default-encryption-scope");
-const XMSDENYENCRYPTIONSCOPEOVERRIDEHEADER: HeaderName =
+const X_MS_DENY_ENCRYPTION_SCOPE_OVERRIDE: HeaderName =
     HeaderName::from_static("x-ms-deny-encryption-scope-override");
-const XMSHASIMMUTABILITYPOLICYHEADER: HeaderName =
+const X_MS_HAS_IMMUTABILITY_POLICY: HeaderName =
     HeaderName::from_static("x-ms-has-immutability-policy");
-const XMSHASLEGALHOLDHEADER: HeaderName = HeaderName::from_static("x-ms-has-legal-hold");
-const XMSIMMUTABLESTORAGEWITHVERSIONINGENABLEDHEADER: HeaderName =
+const X_MS_HAS_LEGAL_HOLD: HeaderName = HeaderName::from_static("x-ms-has-legal-hold");
+const X_MS_IMMUTABLE_STORAGE_WITH_VERSIONING_ENABLED: HeaderName =
     HeaderName::from_static("x-ms-immutable-storage-with-versioning-enabled");
 
 /// Provides access to typed response headers for [`BlobAppendBlobClient::append_block_from_url()`](crate::clients::BlobAppendBlobClient::append_block_from_url())
@@ -146,37 +143,35 @@ impl BlobAppendBlobClientAppendBlockFromUrlResultHeaders
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// This response header is returned only for append operations. It returns the offset at which the block was committed, in
     /// bytes.
     fn blob_append_offset(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSBLOBAPPENDOFFSETHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_BLOB_APPEND_OFFSET))
     }
 
     /// The number of committed blocks present in the blob. This header is returned only for append blobs.
     fn blob_committed_block_count(&self) -> Result<Option<i32>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBCOMMITTEDBLOCKCOUNTHEADER)
+            .get_optional_string(&X_MS_BLOB_COMMITTED_BLOCK_COUNT)
         {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
@@ -185,14 +180,12 @@ impl BlobAppendBlobClientAppendBlockFromUrlResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCONTENTCRC64HEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -200,21 +193,19 @@ impl BlobAppendBlobClientAppendBlockFromUrlResultHeaders
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -222,7 +213,7 @@ impl BlobAppendBlobClientAppendBlockFromUrlResultHeaders
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -253,37 +244,35 @@ impl BlobAppendBlobClientAppendBlockResultHeaders
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// This response header is returned only for append operations. It returns the offset at which the block was committed, in
     /// bytes.
     fn blob_append_offset(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSBLOBAPPENDOFFSETHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_BLOB_APPEND_OFFSET))
     }
 
     /// The number of committed blocks present in the blob. This header is returned only for append blobs.
     fn blob_committed_block_count(&self) -> Result<Option<i32>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBCOMMITTEDBLOCKCOUNTHEADER)
+            .get_optional_string(&X_MS_BLOB_COMMITTED_BLOCK_COUNT)
         {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
@@ -292,14 +281,12 @@ impl BlobAppendBlobClientAppendBlockResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCONTENTCRC64HEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -307,21 +294,19 @@ impl BlobAppendBlobClientAppendBlockResultHeaders
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -329,7 +314,7 @@ impl BlobAppendBlobClientAppendBlockResultHeaders
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -338,7 +323,7 @@ impl BlobAppendBlobClientAppendBlockResultHeaders
 
     /// Indicates the response body contains a structured message and specifies the message schema version and properties.
     fn structured_body_type(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSSTRUCTUREDBODYHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_STRUCTURED_BODY))
     }
 }
 
@@ -360,29 +345,27 @@ impl BlobAppendBlobClientCreateResultHeaders for Response<BlobAppendBlobClientCr
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -390,21 +373,19 @@ impl BlobAppendBlobClientCreateResultHeaders for Response<BlobAppendBlobClientCr
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -412,7 +393,7 @@ impl BlobAppendBlobClientCreateResultHeaders for Response<BlobAppendBlobClientCr
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -422,7 +403,7 @@ impl BlobAppendBlobClientCreateResultHeaders for Response<BlobAppendBlobClientCr
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSVERSIONIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
     }
 }
 
@@ -439,22 +420,22 @@ pub trait BlobAppendBlobClientSealResultHeaders: private::Sealed {
 impl BlobAppendBlobClientSealResultHeaders for Response<BlobAppendBlobClientSealResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// If this blob has been sealed
     fn is_sealed(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&XMSBLOBSEALEDHEADER) {
+        match self.headers().get_optional_string(&X_MS_BLOB_SEALED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -462,14 +443,12 @@ impl BlobAppendBlobClientSealResultHeaders for Response<BlobAppendBlobClientSeal
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -485,19 +464,17 @@ impl BlobBlobClientAbortCopyFromUrlResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -514,34 +491,32 @@ pub trait BlobBlobClientAcquireLeaseResultHeaders: private::Sealed {
 impl BlobBlobClientAcquireLeaseResultHeaders for Response<BlobBlobClientAcquireLeaseResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSLEASEIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -558,29 +533,27 @@ pub trait BlobBlobClientBreakLeaseResultHeaders: private::Sealed {
 impl BlobBlobClientBreakLeaseResultHeaders for Response<BlobBlobClientBreakLeaseResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Approximate time remaining in the lease period, in seconds.
     fn lease_time(&self) -> Result<Option<i32>> {
-        match self.headers().get_optional_string(&XMSLEASETIMEHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_TIME) {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
         }
@@ -588,7 +561,7 @@ impl BlobBlobClientBreakLeaseResultHeaders for Response<BlobBlobClientBreakLease
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -605,34 +578,32 @@ pub trait BlobBlobClientChangeLeaseResultHeaders: private::Sealed {
 impl BlobBlobClientChangeLeaseResultHeaders for Response<BlobBlobClientChangeLeaseResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSLEASEIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -655,45 +626,43 @@ impl BlobBlobClientCopyFromUrlResultHeaders for Response<BlobBlobClientCopyFromU
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCONTENTCRC64HEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
     }
 
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
     /// pass to Abort Copy Blob to abort a pending copy.
     fn copy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCOPYIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_COPY_ID))
     }
 
     /// State of the copy operation identified by x-ms-copy-id.
     fn copy_status(&self) -> Result<Option<CopyStatus>> {
-        match self.headers().get_optional_string(&XMSCOPYSTATUSHEADER) {
+        match self.headers().get_optional_string(&X_MS_COPY_STATUS) {
             Some(v) => Ok(Some(CopyStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -703,20 +672,18 @@ impl BlobBlobClientCopyFromUrlResultHeaders for Response<BlobBlobClientCopyFromU
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSVERSIONIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
     }
 }
 
@@ -735,29 +702,27 @@ pub trait BlobBlobClientCreateSnapshotResultHeaders: private::Sealed {
 impl BlobBlobClientCreateSnapshotResultHeaders for Response<BlobBlobClientCreateSnapshotResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -765,7 +730,7 @@ impl BlobBlobClientCreateSnapshotResultHeaders for Response<BlobBlobClientCreate
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -775,13 +740,13 @@ impl BlobBlobClientCreateSnapshotResultHeaders for Response<BlobBlobClientCreate
     /// Uniquely identifies the snapshot and indicates the snapshot version. It may be used in subsequent requests to access the
     /// snapshot.
     fn snapshot(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSSNAPSHOTHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_SNAPSHOT))
     }
 
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSVERSIONIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
     }
 }
 
@@ -797,19 +762,17 @@ impl BlobBlobClientDeleteImmutabilityPolicyResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -823,19 +786,17 @@ pub trait BlobBlobClientDeleteResultHeaders: private::Sealed {
 impl BlobBlobClientDeleteResultHeaders for Response<BlobBlobClientDeleteResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -890,12 +851,12 @@ pub trait BlobBlobClientDownloadResultHeaders: private::Sealed {
 impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResult> {
     /// Indicates that the service supports requests for partial blob content.
     fn accept_ranges(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ACCEPTRANGESHEADER))
+        Ok(self.headers().get_optional_string(&ACCEPT_RANGES))
     }
 
     /// This header is returned if it was previously specified for the blob.
     fn cache_control(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CACHECONTROLHEADER))
+        Ok(self.headers().get_optional_string(&CACHE_CONTROL))
     }
 
     /// This header returns the value that was specified for the 'x-ms-blob-content-disposition' header. The Content-Disposition
@@ -903,24 +864,22 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// attach additional metadata. For example, if set to attachment, it indicates that the user-agent should not display the
     /// response, but instead show a Save As dialog with a filename other than the blob name specified.
     fn content_disposition(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&CONTENTDISPOSITIONHEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_DISPOSITION))
     }
 
     /// This header returns the value that was specified for the Content-Encoding request header
     fn content_encoding(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTENCODINGHEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_ENCODING))
     }
 
     /// This header returns the value that was specified for the Content-Language request header.
     fn content_language(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTLANGUAGEHEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_LANGUAGE))
     }
 
     /// The number of bytes present in the response body.
     fn content_length(&self) -> Result<Option<i64>> {
-        match self.headers().get_optional_string(&CONTENTLENGTHHEADER) {
+        match self.headers().get_optional_string(&CONTENT_LENGTH) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -929,35 +888,35 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// Indicates the range of bytes returned in the event that the client requested a subset of the blob by setting the 'Range'
     /// request header.
     fn content_range(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTRANGEHEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_RANGE))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// The number of committed blocks present in the blob. This header is returned only for append blobs.
     fn blob_committed_block_count(&self) -> Result<Option<i32>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBCOMMITTEDBLOCKCOUNTHEADER)
+            .get_optional_string(&X_MS_BLOB_COMMITTED_BLOCK_COUNT)
         {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
@@ -968,7 +927,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn blob_content_md5(&self) -> Result<Option<Vec<u8>>> {
-        match self.headers().get_optional_string(&XMSBLOBCONTENTMD5HEADER) {
+        match self.headers().get_optional_string(&X_MS_BLOB_CONTENT_MD5) {
             Some(v) => Ok(Some(base64::decode(v)?)),
             None => Ok(None),
         }
@@ -976,7 +935,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// If this blob has been sealed
     fn is_sealed(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&XMSBLOBSEALEDHEADER) {
+        match self.headers().get_optional_string(&X_MS_BLOB_SEALED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -986,7 +945,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBSEQUENCENUMBERHEADER)
+            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -995,7 +954,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// The type of the blob.
     fn blob_type(&self) -> Result<Option<BlobType>> {
-        match self.headers().get_optional_string(&XMSBLOBTYPEHEADER) {
+        match self.headers().get_optional_string(&X_MS_BLOB_TYPE) {
             Some(v) => Ok(Some(BlobType::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1003,14 +962,12 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCONTENTCRC64HEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
     }
 
     /// Conclusion time of the last attempted Copy Blob operation where this blob was the destination blob. This value can specify
@@ -1020,13 +977,13 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     fn copy_completion_time(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSCOPYCOMPLETIONTIMEHEADER))
+            .get_optional_string(&X_MS_COPY_COMPLETION_TIME))
     }
 
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
     /// pass to Abort Copy Blob to abort a pending copy.
     fn copy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCOPYIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_COPY_ID))
     }
 
     /// Contains the number of bytes copied and the total bytes in the source in the last attempted Copy Blob operation where
@@ -1034,7 +991,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// this blob has never been the destination in a Copy Blob operation, or if this blob has been modified after a concluded
     /// Copy Blob operation using Set Blob Properties, Put Blob, or Put Block List
     fn copy_progress(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCOPYPROGRESSHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_COPY_PROGRESS))
     }
 
     /// URL up to 2 KB in length that specifies the source blob or file used in the last attempted Copy Blob operation where this
@@ -1042,12 +999,12 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// operation, or if this blob has been modified after a concluded Copy Blob operation using Set Blob Properties, Put Blob,
     /// or Put Block List.
     fn copy_source(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCOPYSOURCEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_COPY_SOURCE))
     }
 
     /// State of the copy operation identified by x-ms-copy-id.
     fn copy_status(&self) -> Result<Option<CopyStatus>> {
-        match self.headers().get_optional_string(&XMSCOPYSTATUSHEADER) {
+        match self.headers().get_optional_string(&X_MS_COPY_STATUS) {
             Some(v) => Ok(Some(CopyStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1059,12 +1016,12 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     fn copy_status_description(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSCOPYSTATUSDESCRIPTIONHEADER))
+            .get_optional_string(&X_MS_COPY_STATUS_DESCRIPTION))
     }
 
     /// Returns the date and time the blob was created.
     fn creation_time(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCREATIONTIMEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CREATION_TIME))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -1072,23 +1029,21 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// Indicates the immutability policy mode of the blob.
     fn immutability_policy_mode(&self) -> Result<Option<BlobImmutabilityPolicyMode>> {
         match self
             .headers()
-            .get_optional_string(&XMSIMMUTABILITYPOLICYMODEHEADER)
+            .get_optional_string(&X_MS_IMMUTABILITY_POLICY_MODE)
         {
             Some(v) => Ok(Some(BlobImmutabilityPolicyMode::from_str(&v)?)),
             None => Ok(None),
@@ -1099,15 +1054,12 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     fn immutability_policy_expires_on(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSIMMUTABILITYPOLICYUNTILDATEHEADER))
+            .get_optional_string(&X_MS_IMMUTABILITY_POLICY_UNTIL_DATE))
     }
 
     /// The value of this header indicates whether version of this blob is a current version, see also x-ms-version-id header.
     fn is_current_version(&self) -> Result<Option<bool>> {
-        match self
-            .headers()
-            .get_optional_string(&XMSISCURRENTVERSIONHEADER)
-        {
+        match self.headers().get_optional_string(&X_MS_IS_CURRENT_VERSION) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1115,13 +1067,13 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// UTC date/time value generated by the service that indicates the time at which the blob was last read or written to
     fn last_accessed(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSLASTACCESSTIMEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_LAST_ACCESS_TIME))
     }
 
     /// Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease
     /// can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change.
     fn duration(&self) -> Result<Option<i32>> {
-        match self.headers().get_optional_string(&XMSLEASEDURATIONHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_DURATION) {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1129,7 +1081,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// Lease state of the blob.
     fn lease_state(&self) -> Result<Option<LeaseState>> {
-        match self.headers().get_optional_string(&XMSLEASESTATEHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_STATE) {
             Some(v) => Ok(Some(LeaseState::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1137,7 +1089,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// The lease status of the blob.
     fn lease_status(&self) -> Result<Option<LeaseStatus>> {
-        match self.headers().get_optional_string(&XMSLEASESTATUSHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_STATUS) {
             Some(v) => Ok(Some(LeaseStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1145,7 +1097,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// Specifies the legal hold status to set on the blob.
     fn legal_hold(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&XMSLEGALHOLDHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEGAL_HOLD) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1156,11 +1108,8 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
         let mut values = HashMap::new();
         for h in self.headers().iter() {
             let name = h.0.as_str();
-            if name.len() > XMSMETAHEADER.len() && name.starts_with(XMSMETAHEADER) {
-                values.insert(
-                    name[XMSMETAHEADER.len()..].to_owned(),
-                    h.1.as_str().to_owned(),
-                );
+            if name.len() > X_MS_META.len() && name.starts_with(X_MS_META) {
+                values.insert(name[X_MS_META.len()..].to_owned(), h.1.as_str().to_owned());
             }
         }
         Ok(values)
@@ -1173,11 +1122,8 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
         let mut values = HashMap::new();
         for h in self.headers().iter() {
             let name = h.0.as_str();
-            if name.len() > XMSORHEADER.len() && name.starts_with(XMSORHEADER) {
-                values.insert(
-                    name[XMSORHEADER.len()..].to_owned(),
-                    h.1.as_str().to_owned(),
-                );
+            if name.len() > X_MS_OR.len() && name.starts_with(X_MS_OR) {
+                values.insert(name[X_MS_OR.len()..].to_owned(), h.1.as_str().to_owned());
             }
         }
         Ok(values)
@@ -1185,12 +1131,12 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// Optional. Only valid when Object Replication is enabled for the storage container and on the destination blob of the replication.
     fn object_replication_policy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSORPOLICYIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_OR_POLICY_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -1198,7 +1144,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -1207,7 +1153,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// Indicates the response body contains a structured message and specifies the message schema version and properties.
     fn structured_body_type(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSSTRUCTUREDBODYHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_STRUCTURED_BODY))
     }
 
     /// The length of the blob/file content inside the message body when the response body is returned as a structured message.
@@ -1215,7 +1161,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     fn structured_content_length(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&XMSSTRUCTUREDCONTENTLENGTHHEADER)
+            .get_optional_string(&X_MS_STRUCTURED_CONTENT_LENGTH)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -1224,7 +1170,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// The number of tags associated with the blob
     fn tag_count(&self) -> Result<Option<i64>> {
-        match self.headers().get_optional_string(&XMSTAGCOUNTHEADER) {
+        match self.headers().get_optional_string(&X_MS_TAG_COUNT) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1233,7 +1179,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSVERSIONIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
     }
 }
 
@@ -1250,12 +1196,12 @@ pub trait BlobBlobClientGetAccountInfoResultHeaders: private::Sealed {
 impl BlobBlobClientGetAccountInfoResultHeaders for Response<BlobBlobClientGetAccountInfoResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// Identifies the account kind
     fn account_kind(&self) -> Result<Option<AccountKind>> {
-        match self.headers().get_optional_string(&XMSACCOUNTKINDHEADER) {
+        match self.headers().get_optional_string(&X_MS_ACCOUNT_KIND) {
             Some(v) => Ok(Some(AccountKind::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1263,14 +1209,12 @@ impl BlobBlobClientGetAccountInfoResultHeaders for Response<BlobBlobClientGetAcc
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Version 2019-07-07 and newer. Indicates if the account has a hierarchical namespace enabled.
     fn is_hierarchical_namespace_enabled(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&XMSISHNSENABLEDHEADER) {
+        match self.headers().get_optional_string(&X_MS_IS_HNS_ENABLED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1278,12 +1222,12 @@ impl BlobBlobClientGetAccountInfoResultHeaders for Response<BlobBlobClientGetAcc
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// Identifies the sku name of the account
     fn sku_name(&self) -> Result<Option<SkuName>> {
-        match self.headers().get_optional_string(&XMSSKUNAMEHEADER) {
+        match self.headers().get_optional_string(&X_MS_SKU_NAME) {
             Some(v) => Ok(Some(SkuName::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1344,12 +1288,12 @@ pub trait BlobBlobClientGetPropertiesResultHeaders: private::Sealed {
 impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetPropertiesResult> {
     /// Indicates that the service supports requests for partial blob content.
     fn accept_ranges(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ACCEPTRANGESHEADER))
+        Ok(self.headers().get_optional_string(&ACCEPT_RANGES))
     }
 
     /// This header is returned if it was previously specified for the blob.
     fn cache_control(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CACHECONTROLHEADER))
+        Ok(self.headers().get_optional_string(&CACHE_CONTROL))
     }
 
     /// This header returns the value that was specified for the 'x-ms-blob-content-disposition' header. The Content-Disposition
@@ -1357,24 +1301,22 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// attach additional metadata. For example, if set to attachment, it indicates that the user-agent should not display the
     /// response, but instead show a Save As dialog with a filename other than the blob name specified.
     fn content_disposition(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&CONTENTDISPOSITIONHEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_DISPOSITION))
     }
 
     /// This header returns the value that was specified for the Content-Encoding request header
     fn content_encoding(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTENCODINGHEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_ENCODING))
     }
 
     /// This header returns the value that was specified for the Content-Language request header.
     fn content_language(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTLANGUAGEHEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_LANGUAGE))
     }
 
     /// The number of bytes present in the response body.
     fn content_length(&self) -> Result<Option<i64>> {
-        match self.headers().get_optional_string(&CONTENTLENGTHHEADER) {
+        match self.headers().get_optional_string(&CONTENT_LENGTH) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1383,27 +1325,27 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// The tier to be set on the blob.
     fn tier(&self) -> Result<Option<AccessTier>> {
-        match self.headers().get_optional_string(&XMSACCESSTIERHEADER) {
+        match self.headers().get_optional_string(&X_MS_ACCESS_TIER) {
             Some(v) => Ok(Some(AccessTier::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1413,7 +1355,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn access_tier_change_time(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSACCESSTIERCHANGETIMEHEADER))
+            .get_optional_string(&X_MS_ACCESS_TIER_CHANGE_TIME))
     }
 
     /// For page blobs on a premium storage account only. If the access tier is not explicitly set on the blob, the tier is inferred
@@ -1421,7 +1363,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn access_tier_inferred(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSACCESSTIERINFERREDHEADER)
+            .get_optional_string(&X_MS_ACCESS_TIER_INFERRED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -1432,7 +1374,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// rehydrated and is not complete then this header is returned indicating that rehydrate is pending and also tells the destination
     /// tier.
     fn archive_status(&self) -> Result<Option<ArchiveStatus>> {
-        match self.headers().get_optional_string(&XMSARCHIVESTATUSHEADER) {
+        match self.headers().get_optional_string(&X_MS_ARCHIVE_STATUS) {
             Some(v) => Ok(Some(ArchiveStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1442,7 +1384,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn blob_committed_block_count(&self) -> Result<Option<i32>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBCOMMITTEDBLOCKCOUNTHEADER)
+            .get_optional_string(&X_MS_BLOB_COMMITTED_BLOCK_COUNT)
         {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
@@ -1451,7 +1393,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// If this blob has been sealed
     fn is_sealed(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&XMSBLOBSEALEDHEADER) {
+        match self.headers().get_optional_string(&X_MS_BLOB_SEALED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1461,7 +1403,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBSEQUENCENUMBERHEADER)
+            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -1470,7 +1412,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// The type of the blob.
     fn blob_type(&self) -> Result<Option<BlobType>> {
-        match self.headers().get_optional_string(&XMSBLOBTYPEHEADER) {
+        match self.headers().get_optional_string(&X_MS_BLOB_TYPE) {
             Some(v) => Ok(Some(BlobType::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1478,9 +1420,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Conclusion time of the last attempted Copy Blob operation where this blob was the destination blob. This value can specify
@@ -1490,7 +1430,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn copy_completion_time(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSCOPYCOMPLETIONTIMEHEADER))
+            .get_optional_string(&X_MS_COPY_COMPLETION_TIME))
     }
 
     /// Included if the blob is incremental copy blob or incremental copy snapshot, if x-ms-copy-status is success. Snapshot time
@@ -1498,13 +1438,13 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn destination_snapshot(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSCOPYDESTINATIONSNAPSHOTHEADER))
+            .get_optional_string(&X_MS_COPY_DESTINATION_SNAPSHOT))
     }
 
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
     /// pass to Abort Copy Blob to abort a pending copy.
     fn copy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCOPYIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_COPY_ID))
     }
 
     /// Contains the number of bytes copied and the total bytes in the source in the last attempted Copy Blob operation where
@@ -1512,7 +1452,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// this blob has never been the destination in a Copy Blob operation, or if this blob has been modified after a concluded
     /// Copy Blob operation using Set Blob Properties, Put Blob, or Put Block List
     fn copy_progress(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCOPYPROGRESSHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_COPY_PROGRESS))
     }
 
     /// URL up to 2 KB in length that specifies the source blob or file used in the last attempted Copy Blob operation where this
@@ -1520,12 +1460,12 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// operation, or if this blob has been modified after a concluded Copy Blob operation using Set Blob Properties, Put Blob,
     /// or Put Block List.
     fn copy_source(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCOPYSOURCEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_COPY_SOURCE))
     }
 
     /// State of the copy operation identified by x-ms-copy-id.
     fn copy_status(&self) -> Result<Option<CopyStatus>> {
-        match self.headers().get_optional_string(&XMSCOPYSTATUSHEADER) {
+        match self.headers().get_optional_string(&X_MS_COPY_STATUS) {
             Some(v) => Ok(Some(CopyStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1537,12 +1477,12 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn copy_status_description(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSCOPYSTATUSDESCRIPTIONHEADER))
+            .get_optional_string(&X_MS_COPY_STATUS_DESCRIPTION))
     }
 
     /// Returns the date and time the blob was created.
     fn creation_time(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCREATIONTIMEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CREATION_TIME))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -1550,28 +1490,26 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// The time this blob will expire.
     fn expires_on(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSEXPIRYTIMEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_EXPIRY_TIME))
     }
 
     /// Indicates the immutability policy mode of the blob.
     fn immutability_policy_mode(&self) -> Result<Option<BlobImmutabilityPolicyMode>> {
         match self
             .headers()
-            .get_optional_string(&XMSIMMUTABILITYPOLICYMODEHEADER)
+            .get_optional_string(&X_MS_IMMUTABILITY_POLICY_MODE)
         {
             Some(v) => Ok(Some(BlobImmutabilityPolicyMode::from_str(&v)?)),
             None => Ok(None),
@@ -1582,15 +1520,12 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn immutability_policy_expires_on(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSIMMUTABILITYPOLICYUNTILDATEHEADER))
+            .get_optional_string(&X_MS_IMMUTABILITY_POLICY_UNTIL_DATE))
     }
 
     /// Included if the blob is incremental copy blob.
     fn is_incremental_copy(&self) -> Result<Option<bool>> {
-        match self
-            .headers()
-            .get_optional_string(&XMSINCREMENTALCOPYHEADER)
-        {
+        match self.headers().get_optional_string(&X_MS_INCREMENTAL_COPY) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1598,10 +1533,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// The value of this header indicates whether version of this blob is a current version, see also x-ms-version-id header.
     fn is_current_version(&self) -> Result<Option<bool>> {
-        match self
-            .headers()
-            .get_optional_string(&XMSISCURRENTVERSIONHEADER)
-        {
+        match self.headers().get_optional_string(&X_MS_IS_CURRENT_VERSION) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1609,13 +1541,13 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// UTC date/time value generated by the service that indicates the time at which the blob was last read or written to
     fn last_accessed(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSLASTACCESSTIMEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_LAST_ACCESS_TIME))
     }
 
     /// Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease
     /// can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change.
     fn duration(&self) -> Result<Option<i32>> {
-        match self.headers().get_optional_string(&XMSLEASEDURATIONHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_DURATION) {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1623,7 +1555,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// Lease state of the blob.
     fn lease_state(&self) -> Result<Option<LeaseState>> {
-        match self.headers().get_optional_string(&XMSLEASESTATEHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_STATE) {
             Some(v) => Ok(Some(LeaseState::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1631,7 +1563,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// The lease status of the blob.
     fn lease_status(&self) -> Result<Option<LeaseStatus>> {
-        match self.headers().get_optional_string(&XMSLEASESTATUSHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_STATUS) {
             Some(v) => Ok(Some(LeaseStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1639,7 +1571,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// Specifies the legal hold status to set on the blob.
     fn legal_hold(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&XMSLEGALHOLDHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEGAL_HOLD) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1650,11 +1582,8 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
         let mut values = HashMap::new();
         for h in self.headers().iter() {
             let name = h.0.as_str();
-            if name.len() > XMSMETAHEADER.len() && name.starts_with(XMSMETAHEADER) {
-                values.insert(
-                    name[XMSMETAHEADER.len()..].to_owned(),
-                    h.1.as_str().to_owned(),
-                );
+            if name.len() > X_MS_META.len() && name.starts_with(X_MS_META) {
+                values.insert(name[X_MS_META.len()..].to_owned(), h.1.as_str().to_owned());
             }
         }
         Ok(values)
@@ -1667,11 +1596,8 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
         let mut values = HashMap::new();
         for h in self.headers().iter() {
             let name = h.0.as_str();
-            if name.len() > XMSORHEADER.len() && name.starts_with(XMSORHEADER) {
-                values.insert(
-                    name[XMSORHEADER.len()..].to_owned(),
-                    h.1.as_str().to_owned(),
-                );
+            if name.len() > X_MS_OR.len() && name.starts_with(X_MS_OR) {
+                values.insert(name[X_MS_OR.len()..].to_owned(), h.1.as_str().to_owned());
             }
         }
         Ok(values)
@@ -1679,16 +1605,13 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// Optional. Only valid when Object Replication is enabled for the storage container and on the destination blob of the replication.
     fn object_replication_policy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSORPOLICYIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_OR_POLICY_ID))
     }
 
     /// If an object is in rehydrate pending state then this header is returned with priority of rehydrate. Valid values are High
     /// and Standard.
     fn rehydrate_priority(&self) -> Result<Option<RehydratePriority>> {
-        match self
-            .headers()
-            .get_optional_string(&XMSREHYDRATEPRIORITYHEADER)
-        {
+        match self.headers().get_optional_string(&X_MS_REHYDRATE_PRIORITY) {
             Some(v) => Ok(Some(RehydratePriority::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1696,7 +1619,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -1704,7 +1627,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -1713,7 +1636,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// The number of tags associated with the blob
     fn tag_count(&self) -> Result<Option<i64>> {
-        match self.headers().get_optional_string(&XMSTAGCOUNTHEADER) {
+        match self.headers().get_optional_string(&X_MS_TAG_COUNT) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1722,7 +1645,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSVERSIONIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
     }
 }
 
@@ -1738,29 +1661,27 @@ pub trait BlobBlobClientReleaseLeaseResultHeaders: private::Sealed {
 impl BlobBlobClientReleaseLeaseResultHeaders for Response<BlobBlobClientReleaseLeaseResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -1777,34 +1698,32 @@ pub trait BlobBlobClientRenewLeaseResultHeaders: private::Sealed {
 impl BlobBlobClientRenewLeaseResultHeaders for Response<BlobBlobClientRenewLeaseResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSLEASEIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -1820,29 +1739,27 @@ pub trait BlobBlobClientSetExpiryResultHeaders: private::Sealed {
 impl BlobBlobClientSetExpiryResultHeaders for Response<BlobBlobClientSetExpiryResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -1859,24 +1776,24 @@ pub trait BlobBlobClientSetHttpHeadersResultHeaders: private::Sealed {
 impl BlobBlobClientSetHttpHeadersResultHeaders for Response<BlobBlobClientSetHttpHeadersResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBSEQUENCENUMBERHEADER)
+            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -1885,14 +1802,12 @@ impl BlobBlobClientSetHttpHeadersResultHeaders for Response<BlobBlobClientSetHtt
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -1910,21 +1825,19 @@ impl BlobBlobClientSetImmutabilityPolicyResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Indicates the immutability policy mode of the blob.
     fn immutability_policy_mode(&self) -> Result<Option<BlobImmutabilityPolicyMode>> {
         match self
             .headers()
-            .get_optional_string(&XMSIMMUTABILITYPOLICYMODEHEADER)
+            .get_optional_string(&X_MS_IMMUTABILITY_POLICY_MODE)
         {
             Some(v) => Ok(Some(BlobImmutabilityPolicyMode::from_str(&v)?)),
             None => Ok(None),
@@ -1935,12 +1848,12 @@ impl BlobBlobClientSetImmutabilityPolicyResultHeaders
     fn immutability_policy_expiry(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSIMMUTABILITYPOLICYUNTILDATEHEADER))
+            .get_optional_string(&X_MS_IMMUTABILITY_POLICY_UNTIL_DATE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -1955,19 +1868,17 @@ pub trait BlobBlobClientSetLegalHoldResultHeaders: private::Sealed {
 impl BlobBlobClientSetLegalHoldResultHeaders for Response<BlobBlobClientSetLegalHoldResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Specifies the legal hold status to set on the blob.
     fn legal_hold(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&XMSLEGALHOLDHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEGAL_HOLD) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1975,7 +1886,7 @@ impl BlobBlobClientSetLegalHoldResultHeaders for Response<BlobBlobClientSetLegal
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -1995,24 +1906,22 @@ pub trait BlobBlobClientSetMetadataResultHeaders: private::Sealed {
 impl BlobBlobClientSetMetadataResultHeaders for Response<BlobBlobClientSetMetadataResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -2020,21 +1929,19 @@ impl BlobBlobClientSetMetadataResultHeaders for Response<BlobBlobClientSetMetada
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2042,7 +1949,7 @@ impl BlobBlobClientSetMetadataResultHeaders for Response<BlobBlobClientSetMetada
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2052,7 +1959,7 @@ impl BlobBlobClientSetMetadataResultHeaders for Response<BlobBlobClientSetMetada
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSVERSIONIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
     }
 }
 
@@ -2066,19 +1973,17 @@ pub trait BlobBlobClientSetTagsResultHeaders: private::Sealed {
 impl BlobBlobClientSetTagsResultHeaders for Response<BlobBlobClientSetTagsResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -2091,14 +1996,12 @@ pub trait BlobBlobClientSetTierResultHeaders: private::Sealed {
 impl BlobBlobClientSetTierResultHeaders for Response<BlobBlobClientSetTierResult> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -2119,35 +2022,33 @@ impl BlobBlobClientStartCopyFromUrlResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
     /// pass to Abort Copy Blob to abort a pending copy.
     fn copy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCOPYIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_COPY_ID))
     }
 
     /// State of the copy operation identified by x-ms-copy-id.
     fn copy_status(&self) -> Result<Option<CopyStatus>> {
-        match self.headers().get_optional_string(&XMSCOPYSTATUSHEADER) {
+        match self.headers().get_optional_string(&X_MS_COPY_STATUS) {
             Some(v) => Ok(Some(CopyStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2155,13 +2056,13 @@ impl BlobBlobClientStartCopyFromUrlResultHeaders
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSVERSIONIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
     }
 }
 
@@ -2175,19 +2076,17 @@ pub trait BlobBlobClientUndeleteResultHeaders: private::Sealed {
 impl BlobBlobClientUndeleteResultHeaders for Response<BlobBlobClientUndeleteResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -2212,34 +2111,32 @@ impl BlobBlockBlobClientCommitBlockListResultHeaders
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCONTENTCRC64HEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -2247,21 +2144,19 @@ impl BlobBlockBlobClientCommitBlockListResultHeaders
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2269,7 +2164,7 @@ impl BlobBlockBlobClientCommitBlockListResultHeaders
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2279,7 +2174,7 @@ impl BlobBlockBlobClientCommitBlockListResultHeaders
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSVERSIONIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
     }
 }
 
@@ -2303,29 +2198,27 @@ impl BlobBlockBlobClientPutBlobFromUrlResultHeaders
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -2333,21 +2226,19 @@ impl BlobBlockBlobClientPutBlobFromUrlResultHeaders
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2355,7 +2246,7 @@ impl BlobBlockBlobClientPutBlobFromUrlResultHeaders
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2365,7 +2256,7 @@ impl BlobBlockBlobClientPutBlobFromUrlResultHeaders
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSVERSIONIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
     }
 }
 
@@ -2407,12 +2298,12 @@ pub trait BlobBlockBlobClientQueryResultHeaders: private::Sealed {
 impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQueryResult> {
     /// Indicates that the service supports requests for partial blob content.
     fn accept_ranges(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ACCEPTRANGESHEADER))
+        Ok(self.headers().get_optional_string(&ACCEPT_RANGES))
     }
 
     /// This header is returned if it was previously specified for the blob.
     fn cache_control(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CACHECONTROLHEADER))
+        Ok(self.headers().get_optional_string(&CACHE_CONTROL))
     }
 
     /// This header returns the value that was specified for the 'x-ms-blob-content-disposition' header. The Content-Disposition
@@ -2420,24 +2311,22 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     /// attach additional metadata. For example, if set to attachment, it indicates that the user-agent should not display the
     /// response, but instead show a Save As dialog with a filename other than the blob name specified.
     fn content_disposition(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&CONTENTDISPOSITIONHEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_DISPOSITION))
     }
 
     /// This header returns the value that was specified for the Content-Encoding request header
     fn content_encoding(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTENCODINGHEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_ENCODING))
     }
 
     /// This header returns the value that was specified for the Content-Language request header.
     fn content_language(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTLANGUAGEHEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_LANGUAGE))
     }
 
     /// The number of bytes present in the response body.
     fn content_length(&self) -> Result<Option<i64>> {
-        match self.headers().get_optional_string(&CONTENTLENGTHHEADER) {
+        match self.headers().get_optional_string(&CONTENT_LENGTH) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2446,35 +2335,35 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// Indicates the range of bytes returned in the event that the client requested a subset of the blob by setting the 'Range'
     /// request header.
     fn content_range(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTRANGEHEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_RANGE))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// The number of committed blocks present in the blob. This header is returned only for append blobs.
     fn blob_committed_block_count(&self) -> Result<Option<i32>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBCOMMITTEDBLOCKCOUNTHEADER)
+            .get_optional_string(&X_MS_BLOB_COMMITTED_BLOCK_COUNT)
         {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
@@ -2485,7 +2374,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn blob_content_md5(&self) -> Result<Option<Vec<u8>>> {
-        match self.headers().get_optional_string(&XMSBLOBCONTENTMD5HEADER) {
+        match self.headers().get_optional_string(&X_MS_BLOB_CONTENT_MD5) {
             Some(v) => Ok(Some(base64::decode(v)?)),
             None => Ok(None),
         }
@@ -2495,7 +2384,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBSEQUENCENUMBERHEADER)
+            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -2504,7 +2393,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
 
     /// The type of the blob.
     fn blob_type(&self) -> Result<Option<BlobType>> {
-        match self.headers().get_optional_string(&XMSBLOBTYPEHEADER) {
+        match self.headers().get_optional_string(&X_MS_BLOB_TYPE) {
             Some(v) => Ok(Some(BlobType::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2512,14 +2401,12 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCONTENTCRC64HEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
     }
 
     /// Conclusion time of the last attempted Copy Blob operation where this blob was the destination blob. This value can specify
@@ -2529,13 +2416,13 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     fn copy_completion_time(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSCOPYCOMPLETIONTIMEHEADER))
+            .get_optional_string(&X_MS_COPY_COMPLETION_TIME))
     }
 
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
     /// pass to Abort Copy Blob to abort a pending copy.
     fn copy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCOPYIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_COPY_ID))
     }
 
     /// Contains the number of bytes copied and the total bytes in the source in the last attempted Copy Blob operation where
@@ -2543,7 +2430,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     /// this blob has never been the destination in a Copy Blob operation, or if this blob has been modified after a concluded
     /// Copy Blob operation using Set Blob Properties, Put Blob, or Put Block List
     fn copy_progress(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCOPYPROGRESSHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_COPY_PROGRESS))
     }
 
     /// URL up to 2 KB in length that specifies the source blob or file used in the last attempted Copy Blob operation where this
@@ -2551,12 +2438,12 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     /// operation, or if this blob has been modified after a concluded Copy Blob operation using Set Blob Properties, Put Blob,
     /// or Put Block List.
     fn copy_source(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCOPYSOURCEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_COPY_SOURCE))
     }
 
     /// State of the copy operation identified by x-ms-copy-id.
     fn copy_status(&self) -> Result<Option<CopyStatus>> {
-        match self.headers().get_optional_string(&XMSCOPYSTATUSHEADER) {
+        match self.headers().get_optional_string(&X_MS_COPY_STATUS) {
             Some(v) => Ok(Some(CopyStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2568,7 +2455,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     fn copy_status_description(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSCOPYSTATUSDESCRIPTIONHEADER))
+            .get_optional_string(&X_MS_COPY_STATUS_DESCRIPTION))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -2576,22 +2463,20 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease
     /// can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change.
     fn duration(&self) -> Result<Option<i32>> {
-        match self.headers().get_optional_string(&XMSLEASEDURATIONHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_DURATION) {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2599,7 +2484,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
 
     /// Lease state of the blob.
     fn lease_state(&self) -> Result<Option<LeaseState>> {
-        match self.headers().get_optional_string(&XMSLEASESTATEHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_STATE) {
             Some(v) => Ok(Some(LeaseState::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2607,7 +2492,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
 
     /// The lease status of the blob.
     fn lease_status(&self) -> Result<Option<LeaseStatus>> {
-        match self.headers().get_optional_string(&XMSLEASESTATUSHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_STATUS) {
             Some(v) => Ok(Some(LeaseStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2618,11 +2503,8 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
         let mut values = HashMap::new();
         for h in self.headers().iter() {
             let name = h.0.as_str();
-            if name.len() > XMSMETAHEADER.len() && name.starts_with(XMSMETAHEADER) {
-                values.insert(
-                    name[XMSMETAHEADER.len()..].to_owned(),
-                    h.1.as_str().to_owned(),
-                );
+            if name.len() > X_MS_META.len() && name.starts_with(X_MS_META) {
+                values.insert(name[X_MS_META.len()..].to_owned(), h.1.as_str().to_owned());
             }
         }
         Ok(values)
@@ -2630,7 +2512,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2638,7 +2520,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2664,24 +2546,22 @@ impl BlobBlockBlobClientStageBlockFromUrlResultHeaders
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCONTENTCRC64HEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -2689,21 +2569,19 @@ impl BlobBlockBlobClientStageBlockFromUrlResultHeaders
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2711,7 +2589,7 @@ impl BlobBlockBlobClientStageBlockFromUrlResultHeaders
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2736,24 +2614,22 @@ impl BlobBlockBlobClientStageBlockResultHeaders for Response<BlobBlockBlobClient
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCONTENTCRC64HEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -2761,21 +2637,19 @@ impl BlobBlockBlobClientStageBlockResultHeaders for Response<BlobBlockBlobClient
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2783,7 +2657,7 @@ impl BlobBlockBlobClientStageBlockResultHeaders for Response<BlobBlockBlobClient
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2792,7 +2666,7 @@ impl BlobBlockBlobClientStageBlockResultHeaders for Response<BlobBlockBlobClient
 
     /// Indicates the response body contains a structured message and specifies the message schema version and properties.
     fn structured_body_type(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSSTRUCTUREDBODYHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_STRUCTURED_BODY))
     }
 }
 
@@ -2815,29 +2689,27 @@ impl BlobBlockBlobClientUploadResultHeaders for Response<BlobBlockBlobClientUplo
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -2845,21 +2717,19 @@ impl BlobBlockBlobClientUploadResultHeaders for Response<BlobBlockBlobClientUplo
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2867,7 +2737,7 @@ impl BlobBlockBlobClientUploadResultHeaders for Response<BlobBlockBlobClientUplo
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2876,13 +2746,13 @@ impl BlobBlockBlobClientUploadResultHeaders for Response<BlobBlockBlobClientUplo
 
     /// Indicates the response body contains a structured message and specifies the message schema version and properties.
     fn structured_body_type(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSSTRUCTUREDBODYHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_STRUCTURED_BODY))
     }
 
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSVERSIONIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
     }
 }
 
@@ -2901,34 +2771,32 @@ impl BlobContainerClientAcquireLeaseResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSLEASEIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -2946,34 +2814,32 @@ pub trait BlobContainerClientBreakLeaseResultHeaders: private::Sealed {
 impl BlobContainerClientBreakLeaseResultHeaders for Response<BlobContainerClientBreakLeaseResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSLEASEIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
     }
 
     /// Approximate time remaining in the lease period, in seconds.
     fn lease_time(&self) -> Result<Option<i32>> {
-        match self.headers().get_optional_string(&XMSLEASETIMEHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_TIME) {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2981,7 +2847,7 @@ impl BlobContainerClientBreakLeaseResultHeaders for Response<BlobContainerClient
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3000,34 +2866,32 @@ impl BlobContainerClientChangeLeaseResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSLEASEIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3043,29 +2907,27 @@ pub trait BlobContainerClientCreateResultHeaders: private::Sealed {
 impl BlobContainerClientCreateResultHeaders for Response<BlobContainerClientCreateResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3079,19 +2941,17 @@ pub trait BlobContainerClientDeleteResultHeaders: private::Sealed {
 impl BlobContainerClientDeleteResultHeaders for Response<BlobContainerClientDeleteResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3110,12 +2970,12 @@ impl BlobContainerClientGetAccountInfoResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// Identifies the account kind
     fn account_kind(&self) -> Result<Option<AccountKind>> {
-        match self.headers().get_optional_string(&XMSACCOUNTKINDHEADER) {
+        match self.headers().get_optional_string(&X_MS_ACCOUNT_KIND) {
             Some(v) => Ok(Some(AccountKind::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3123,14 +2983,12 @@ impl BlobContainerClientGetAccountInfoResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Version 2019-07-07 and newer. Indicates if the account has a hierarchical namespace enabled.
     fn is_hierarchical_namespace_enabled(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&XMSISHNSENABLEDHEADER) {
+        match self.headers().get_optional_string(&X_MS_IS_HNS_ENABLED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3138,12 +2996,12 @@ impl BlobContainerClientGetAccountInfoResultHeaders
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// Identifies the sku name of the account
     fn sku_name(&self) -> Result<Option<SkuName>> {
-        match self.headers().get_optional_string(&XMSSKUNAMEHEADER) {
+        match self.headers().get_optional_string(&X_MS_SKU_NAME) {
             Some(v) => Ok(Some(SkuName::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3174,25 +3032,22 @@ impl BlobContainerClientGetPropertiesResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// The public access setting for the container.
     fn access(&self) -> Result<Option<PublicAccessType>> {
-        match self
-            .headers()
-            .get_optional_string(&XMSBLOBPUBLICACCESSHEADER)
-        {
+        match self.headers().get_optional_string(&X_MS_BLOB_PUBLIC_ACCESS) {
             Some(v) => Ok(Some(PublicAccessType::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3200,16 +3055,14 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// The default encryption scope for the container.
     fn default_encryption_scope(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSDEFAULTENCRYPTIONSCOPEHEADER))
+            .get_optional_string(&X_MS_DEFAULT_ENCRYPTION_SCOPE))
     }
 
     /// If a blob has a lease and the lease is of infinite duration then the value of this header is set to true, otherwise it
@@ -3217,7 +3070,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
     fn prevent_encryption_scope_override(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSDENYENCRYPTIONSCOPEOVERRIDEHEADER)
+            .get_optional_string(&X_MS_DENY_ENCRYPTION_SCOPE_OVERRIDE)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -3228,7 +3081,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
     fn has_immutability_policy(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSHASIMMUTABILITYPOLICYHEADER)
+            .get_optional_string(&X_MS_HAS_IMMUTABILITY_POLICY)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -3237,7 +3090,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// Indicates whether the container has a legal hold.
     fn has_legal_hold(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&XMSHASLEGALHOLDHEADER) {
+        match self.headers().get_optional_string(&X_MS_HAS_LEGAL_HOLD) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3247,7 +3100,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
     fn is_immutable_storage_with_versioning_enabled(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSIMMUTABLESTORAGEWITHVERSIONINGENABLEDHEADER)
+            .get_optional_string(&X_MS_IMMUTABLE_STORAGE_WITH_VERSIONING_ENABLED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -3257,7 +3110,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
     /// Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease
     /// can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change.
     fn duration(&self) -> Result<Option<i32>> {
-        match self.headers().get_optional_string(&XMSLEASEDURATIONHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_DURATION) {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3265,7 +3118,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// Lease state of the blob.
     fn lease_state(&self) -> Result<Option<LeaseState>> {
-        match self.headers().get_optional_string(&XMSLEASESTATEHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_STATE) {
             Some(v) => Ok(Some(LeaseState::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3273,7 +3126,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// The lease status of the blob.
     fn lease_status(&self) -> Result<Option<LeaseStatus>> {
-        match self.headers().get_optional_string(&XMSLEASESTATUSHEADER) {
+        match self.headers().get_optional_string(&X_MS_LEASE_STATUS) {
             Some(v) => Ok(Some(LeaseStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3284,11 +3137,8 @@ impl BlobContainerClientGetPropertiesResultHeaders
         let mut values = HashMap::new();
         for h in self.headers().iter() {
             let name = h.0.as_str();
-            if name.len() > XMSMETAHEADER.len() && name.starts_with(XMSMETAHEADER) {
-                values.insert(
-                    name[XMSMETAHEADER.len()..].to_owned(),
-                    h.1.as_str().to_owned(),
-                );
+            if name.len() > X_MS_META.len() && name.starts_with(X_MS_META) {
+                values.insert(name[X_MS_META.len()..].to_owned(), h.1.as_str().to_owned());
             }
         }
         Ok(values)
@@ -3296,7 +3146,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3314,29 +3164,27 @@ impl BlobContainerClientReleaseLeaseResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3350,19 +3198,17 @@ pub trait BlobContainerClientRenameResultHeaders: private::Sealed {
 impl BlobContainerClientRenameResultHeaders for Response<BlobContainerClientRenameResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3379,34 +3225,32 @@ pub trait BlobContainerClientRenewLeaseResultHeaders: private::Sealed {
 impl BlobContainerClientRenewLeaseResultHeaders for Response<BlobContainerClientRenewLeaseResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSLEASEIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3420,19 +3264,17 @@ pub trait BlobContainerClientRestoreResultHeaders: private::Sealed {
 impl BlobContainerClientRestoreResultHeaders for Response<BlobContainerClientRestoreResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3450,29 +3292,27 @@ impl BlobContainerClientSetAccessPolicyResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3490,29 +3330,27 @@ impl BlobContainerClientSetMetadataResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3526,7 +3364,7 @@ impl BlobContainerClientSubmitBatchResultHeaders
 {
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3546,29 +3384,29 @@ impl BlobPageBlobClientClearPagesResultHeaders for Response<BlobPageBlobClientCl
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBSEQUENCENUMBERHEADER)
+            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -3577,19 +3415,17 @@ impl BlobPageBlobClientClearPagesResultHeaders for Response<BlobPageBlobClientCl
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCONTENTCRC64HEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3609,35 +3445,33 @@ impl BlobPageBlobClientCopyIncrementalResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
     /// pass to Abort Copy Blob to abort a pending copy.
     fn copy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCOPYIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_COPY_ID))
     }
 
     /// State of the copy operation identified by x-ms-copy-id.
     fn copy_status(&self) -> Result<Option<CopyStatus>> {
-        match self.headers().get_optional_string(&XMSCOPYSTATUSHEADER) {
+        match self.headers().get_optional_string(&X_MS_COPY_STATUS) {
             Some(v) => Ok(Some(CopyStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3645,7 +3479,7 @@ impl BlobPageBlobClientCopyIncrementalResultHeaders
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3667,29 +3501,27 @@ impl BlobPageBlobClientCreateResultHeaders for Response<BlobPageBlobClientCreate
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -3697,21 +3529,19 @@ impl BlobPageBlobClientCreateResultHeaders for Response<BlobPageBlobClientCreate
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -3719,7 +3549,7 @@ impl BlobPageBlobClientCreateResultHeaders for Response<BlobPageBlobClientCreate
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -3729,7 +3559,7 @@ impl BlobPageBlobClientCreateResultHeaders for Response<BlobPageBlobClientCreate
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSVERSIONIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
     }
 }
 
@@ -3746,24 +3576,24 @@ pub trait BlobPageBlobClientResizeResultHeaders: private::Sealed {
 impl BlobPageBlobClientResizeResultHeaders for Response<BlobPageBlobClientResizeResult> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBSEQUENCENUMBERHEADER)
+            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -3772,14 +3602,12 @@ impl BlobPageBlobClientResizeResultHeaders for Response<BlobPageBlobClientResize
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3798,24 +3626,24 @@ impl BlobPageBlobClientUpdateSequenceNumberResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBSEQUENCENUMBERHEADER)
+            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -3824,14 +3652,12 @@ impl BlobPageBlobClientUpdateSequenceNumberResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -3856,29 +3682,29 @@ impl BlobPageBlobClientUploadPagesFromUrlResultHeaders
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBSEQUENCENUMBERHEADER)
+            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -3887,14 +3713,12 @@ impl BlobPageBlobClientUploadPagesFromUrlResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCONTENTCRC64HEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -3902,21 +3726,19 @@ impl BlobPageBlobClientUploadPagesFromUrlResultHeaders
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -3924,7 +3746,7 @@ impl BlobPageBlobClientUploadPagesFromUrlResultHeaders
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -3952,29 +3774,29 @@ impl BlobPageBlobClientUploadPagesResultHeaders for Response<BlobPageBlobClientU
     /// If the blob has an MD5 hash and this operation is to read the full blob, this response header is returned so that the
     /// client can check for message content integrity.
     fn content_md5(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&CONTENTMD5HEADER))
+        Ok(self.headers().get_optional_string(&CONTENT_MD5))
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBSEQUENCENUMBERHEADER)
+            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -3983,14 +3805,12 @@ impl BlobPageBlobClientUploadPagesResultHeaders for Response<BlobPageBlobClientU
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSCONTENTCRC64HEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
@@ -3998,21 +3818,19 @@ impl BlobPageBlobClientUploadPagesResultHeaders for Response<BlobPageBlobClientU
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&XMSENCRYPTIONKEYSHA256HEADER))
+            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSENCRYPTIONSCOPEHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -4020,7 +3838,7 @@ impl BlobPageBlobClientUploadPagesResultHeaders for Response<BlobPageBlobClientU
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
+            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -4029,7 +3847,7 @@ impl BlobPageBlobClientUploadPagesResultHeaders for Response<BlobPageBlobClientU
 
     /// Indicates the response body contains a structured message and specifies the message schema version and properties.
     fn structured_body_type(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSSTRUCTUREDBODYHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_STRUCTURED_BODY))
     }
 }
 
@@ -4048,12 +3866,12 @@ impl BlobServiceClientGetAccountInfoResultHeaders
 {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// Identifies the account kind
     fn account_kind(&self) -> Result<Option<AccountKind>> {
-        match self.headers().get_optional_string(&XMSACCOUNTKINDHEADER) {
+        match self.headers().get_optional_string(&X_MS_ACCOUNT_KIND) {
             Some(v) => Ok(Some(AccountKind::from_str(&v)?)),
             None => Ok(None),
         }
@@ -4061,14 +3879,12 @@ impl BlobServiceClientGetAccountInfoResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// Version 2019-07-07 and newer. Indicates if the account has a hierarchical namespace enabled.
     fn is_hierarchical_namespace_enabled(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&XMSISHNSENABLEDHEADER) {
+        match self.headers().get_optional_string(&X_MS_IS_HNS_ENABLED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -4076,12 +3892,12 @@ impl BlobServiceClientGetAccountInfoResultHeaders
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 
     /// Identifies the sku name of the account
     fn sku_name(&self) -> Result<Option<SkuName>> {
-        match self.headers().get_optional_string(&XMSSKUNAMEHEADER) {
+        match self.headers().get_optional_string(&X_MS_SKU_NAME) {
             Some(v) => Ok(Some(SkuName::from_str(&v)?)),
             None => Ok(None),
         }
@@ -4099,14 +3915,12 @@ impl BlobServiceClientSetPropertiesResultHeaders
 {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -4119,14 +3933,12 @@ pub trait BlobServiceClientSubmitBatchResultHeaders: private::Sealed {
 impl BlobServiceClientSubmitBatchResultHeaders for Response<BlobServiceClientSubmitBatchResult> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -4140,19 +3952,17 @@ pub trait BlobTagsHeaders: private::Sealed {
 impl BlobTagsHeaders for Response<BlobTags> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -4169,17 +3979,17 @@ pub trait BlockLookupListHeaders: private::Sealed {
 impl BlockLookupListHeaders for Response<BlockLookupList> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must be aligned to a 512-byte
@@ -4187,7 +3997,7 @@ impl BlockLookupListHeaders for Response<BlockLookupList> {
     fn blob_content_length(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBCONTENTLENGTHHEADER)
+            .get_optional_string(&X_MS_BLOB_CONTENT_LENGTH)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -4196,14 +4006,12 @@ impl BlockLookupListHeaders for Response<BlockLookupList> {
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -4217,19 +4025,17 @@ pub trait FilterBlobSegmentHeaders: private::Sealed {
 impl FilterBlobSegmentHeaders for Response<FilterBlobSegment> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -4243,19 +4049,17 @@ pub trait ListBlobsFlatSegmentResponseHeaders: private::Sealed {
 impl ListBlobsFlatSegmentResponseHeaders for Response<ListBlobsFlatSegmentResponse> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -4269,19 +4073,17 @@ pub trait ListBlobsHierarchySegmentResponseHeaders: private::Sealed {
 impl ListBlobsHierarchySegmentResponseHeaders for Response<ListBlobsHierarchySegmentResponse> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -4294,14 +4096,12 @@ pub trait ListContainersSegmentResponseHeaders: private::Sealed {
 impl ListContainersSegmentResponseHeaders for Response<ListContainersSegmentResponse> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -4318,17 +4118,17 @@ pub trait PageListHeaders: private::Sealed {
 impl PageListHeaders for Response<PageList> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must be aligned to a 512-byte
@@ -4336,7 +4136,7 @@ impl PageListHeaders for Response<PageList> {
     fn blob_content_length(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&XMSBLOBCONTENTLENGTHHEADER)
+            .get_optional_string(&X_MS_BLOB_CONTENT_LENGTH)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -4345,14 +4145,12 @@ impl PageListHeaders for Response<PageList> {
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -4365,14 +4163,12 @@ pub trait StorageServicePropertiesHeaders: private::Sealed {
 impl StorageServicePropertiesHeaders for Response<StorageServiceProperties> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -4386,19 +4182,17 @@ pub trait StorageServiceStatsHeaders: private::Sealed {
 impl StorageServiceStatsHeaders for Response<StorageServiceStats> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -4412,19 +4206,17 @@ pub trait UserDelegationKeyHeaders: private::Sealed {
 impl UserDelegationKeyHeaders for Response<UserDelegationKey> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
@@ -4441,25 +4233,22 @@ pub trait VecSignedIdentifierHeaders: private::Sealed {
 impl VecSignedIdentifierHeaders for Response<Vec<SignedIdentifier>> {
     /// UTC date/time value generated by the service that indicates the time at which the response was initiated
     fn date(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&DATEHEADER))
+        Ok(self.headers().get_optional_string(&DATE))
     }
 
     /// The ETag contains a value that you can use to perform operations conditionally.
     fn e_tag(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&ETAGHEADER))
+        Ok(self.headers().get_optional_string(&E_TAG))
     }
 
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&LASTMODIFIEDHEADER))
+        Ok(self.headers().get_optional_string(&LAST_MODIFIED))
     }
 
     /// The public access setting for the container.
     fn access(&self) -> Result<Option<PublicAccessType>> {
-        match self
-            .headers()
-            .get_optional_string(&XMSBLOBPUBLICACCESSHEADER)
-        {
+        match self.headers().get_optional_string(&X_MS_BLOB_PUBLIC_ACCESS) {
             Some(v) => Ok(Some(PublicAccessType::from_str(&v)?)),
             None => Ok(None),
         }
@@ -4467,14 +4256,12 @@ impl VecSignedIdentifierHeaders for Response<Vec<SignedIdentifier>> {
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&XMSCLIENTREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&XMSREQUESTIDHEADER))
+        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
     }
 }
 
