@@ -320,7 +320,7 @@ impl BlobBlobClient {
         if let Some(immutability_policy_expiry) = options.immutability_policy_expiry {
             request.insert_header(
                 "x-ms-immutability-policy-until-date",
-                immutability_policy_expiry,
+                date::to_rfc7231(&immutability_policy_expiry),
             );
         }
         if let Some(lease_id) = options.lease_id {
@@ -341,7 +341,10 @@ impl BlobBlobClient {
             request.insert_header("x-ms-source-if-match", source_if_match);
         }
         if let Some(source_if_modified_since) = options.source_if_modified_since {
-            request.insert_header("x-ms-source-if-modified-since", source_if_modified_since);
+            request.insert_header(
+                "x-ms-source-if-modified-since",
+                date::to_rfc7231(&source_if_modified_since),
+            );
         }
         if let Some(source_if_none_match) = options.source_if_none_match {
             request.insert_header("x-ms-source-if-none-match", source_if_none_match);
@@ -349,7 +352,7 @@ impl BlobBlobClient {
         if let Some(source_if_unmodified_since) = options.source_if_unmodified_since {
             request.insert_header(
                 "x-ms-source-if-unmodified-since",
-                source_if_unmodified_since,
+                date::to_rfc7231(&source_if_unmodified_since),
             );
         }
         if let Some(blob_tags_string) = options.blob_tags_string {
@@ -917,7 +920,7 @@ impl BlobBlobClient {
         }
         request.insert_header("x-ms-expiry-option", expiry_options.to_string());
         if let Some(expires_on) = options.expires_on {
-            request.insert_header("x-ms-expiry-time", expires_on);
+            request.insert_header("x-ms-expiry-time", date::to_rfc7231(&expires_on));
         }
         request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
@@ -1027,7 +1030,10 @@ impl BlobBlobClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/xml");
         if let Some(if_unmodified_since) = options.if_unmodified_since {
-            request.insert_header("if-unmodified-since", if_unmodified_since);
+            request.insert_header(
+                "if-unmodified-since",
+                date::to_rfc7231(&if_unmodified_since),
+            );
         }
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
@@ -1041,7 +1047,7 @@ impl BlobBlobClient {
         if let Some(immutability_policy_expiry) = options.immutability_policy_expiry {
             request.insert_header(
                 "x-ms-immutability-policy-until-date",
-                immutability_policy_expiry,
+                date::to_rfc7231(&immutability_policy_expiry),
             );
         }
         request.insert_header("x-ms-version", &self.version);
@@ -1322,7 +1328,7 @@ impl BlobBlobClient {
         if let Some(immutability_policy_expiry) = options.immutability_policy_expiry {
             request.insert_header(
                 "x-ms-immutability-policy-until-date",
-                immutability_policy_expiry,
+                date::to_rfc7231(&immutability_policy_expiry),
             );
         }
         if let Some(lease_id) = options.lease_id {
@@ -1346,7 +1352,10 @@ impl BlobBlobClient {
             request.insert_header("x-ms-source-if-match", source_if_match);
         }
         if let Some(source_if_modified_since) = options.source_if_modified_since {
-            request.insert_header("x-ms-source-if-modified-since", source_if_modified_since);
+            request.insert_header(
+                "x-ms-source-if-modified-since",
+                date::to_rfc7231(&source_if_modified_since),
+            );
         }
         if let Some(source_if_none_match) = options.source_if_none_match {
             request.insert_header("x-ms-source-if-none-match", source_if_none_match);
@@ -1357,7 +1366,7 @@ impl BlobBlobClient {
         if let Some(source_if_unmodified_since) = options.source_if_unmodified_since {
             request.insert_header(
                 "x-ms-source-if-unmodified-since",
-                source_if_unmodified_since,
+                date::to_rfc7231(&source_if_unmodified_since),
             );
         }
         if let Some(blob_tags_string) = options.blob_tags_string {

@@ -284,7 +284,7 @@ impl BlobPageBlobClient {
         if let Some(immutability_policy_expiry) = options.immutability_policy_expiry {
             request.insert_header(
                 "x-ms-immutability-policy-until-date",
-                immutability_policy_expiry,
+                date::to_rfc7231(&immutability_policy_expiry),
             );
         }
         if let Some(lease_id) = options.lease_id {
@@ -813,7 +813,10 @@ impl BlobPageBlobClient {
             request.insert_header("x-ms-source-if-match", source_if_match);
         }
         if let Some(source_if_modified_since) = options.source_if_modified_since {
-            request.insert_header("x-ms-source-if-modified-since", source_if_modified_since);
+            request.insert_header(
+                "x-ms-source-if-modified-since",
+                date::to_rfc7231(&source_if_modified_since),
+            );
         }
         if let Some(source_if_none_match) = options.source_if_none_match {
             request.insert_header("x-ms-source-if-none-match", source_if_none_match);
@@ -821,7 +824,7 @@ impl BlobPageBlobClient {
         if let Some(source_if_unmodified_since) = options.source_if_unmodified_since {
             request.insert_header(
                 "x-ms-source-if-unmodified-since",
-                source_if_unmodified_since,
+                date::to_rfc7231(&source_if_unmodified_since),
             );
         }
         request.insert_header("x-ms-source-range", source_range.to_owned());

@@ -15,7 +15,7 @@ use crate::models::{
     ListBlobsFlatSegmentResponse, ListBlobsHierarchySegmentResponse, SignedIdentifier,
 };
 use azure_core::{
-    Bytes, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
+    date, Bytes, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
 };
 
 pub struct BlobContainerClient {
@@ -57,10 +57,13 @@ impl BlobContainerClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
-            request.insert_header("if-modified-since", if_modified_since);
+            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
-            request.insert_header("if-unmodified-since", if_unmodified_since);
+            request.insert_header(
+                "if-unmodified-since",
+                date::to_rfc7231(&if_unmodified_since),
+            );
         }
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
@@ -101,10 +104,13 @@ impl BlobContainerClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
-            request.insert_header("if-modified-since", if_modified_since);
+            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
-            request.insert_header("if-unmodified-since", if_unmodified_since);
+            request.insert_header(
+                "if-unmodified-since",
+                date::to_rfc7231(&if_unmodified_since),
+            );
         }
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
@@ -146,10 +152,13 @@ impl BlobContainerClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
-            request.insert_header("if-modified-since", if_modified_since);
+            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
-            request.insert_header("if-unmodified-since", if_unmodified_since);
+            request.insert_header(
+                "if-unmodified-since",
+                date::to_rfc7231(&if_unmodified_since),
+            );
         }
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
@@ -229,10 +238,13 @@ impl BlobContainerClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
-            request.insert_header("if-modified-since", if_modified_since);
+            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
-            request.insert_header("if-unmodified-since", if_unmodified_since);
+            request.insert_header(
+                "if-unmodified-since",
+                date::to_rfc7231(&if_unmodified_since),
+            );
         }
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
@@ -527,10 +539,13 @@ impl BlobContainerClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
-            request.insert_header("if-modified-since", if_modified_since);
+            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
-            request.insert_header("if-unmodified-since", if_unmodified_since);
+            request.insert_header(
+                "if-unmodified-since",
+                date::to_rfc7231(&if_unmodified_since),
+            );
         }
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
@@ -607,10 +622,13 @@ impl BlobContainerClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
-            request.insert_header("if-modified-since", if_modified_since);
+            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
-            request.insert_header("if-unmodified-since", if_unmodified_since);
+            request.insert_header(
+                "if-unmodified-since",
+                date::to_rfc7231(&if_unmodified_since),
+            );
         }
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
@@ -683,10 +701,13 @@ impl BlobContainerClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
-            request.insert_header("if-modified-since", if_modified_since);
+            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
         }
         if let Some(if_unmodified_since) = options.if_unmodified_since {
-            request.insert_header("if-unmodified-since", if_unmodified_since);
+            request.insert_header(
+                "if-unmodified-since",
+                date::to_rfc7231(&if_unmodified_since),
+            );
         }
         if let Some(access) = options.access {
             request.insert_header("x-ms-blob-public-access", access.to_string());
@@ -726,7 +747,7 @@ impl BlobContainerClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
-            request.insert_header("if-modified-since", if_modified_since);
+            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
         }
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);

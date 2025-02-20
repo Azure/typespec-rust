@@ -153,13 +153,13 @@ pub struct BlobAppendBlobClientAppendBlockFromUrlOptions<'a> {
     pub source_if_match: Option<String>,
 
     /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
-    pub source_if_modified_since: Option<String>,
+    pub source_if_modified_since: Option<OffsetDateTime>,
 
     /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
     pub source_if_none_match: Option<String>,
 
     /// Specify this header value to operate only on a blob if it has not been modified since the specified date/time.
-    pub source_if_unmodified_since: Option<String>,
+    pub source_if_unmodified_since: Option<OffsetDateTime>,
 
     /// Bytes of source data in the specified range.
     pub source_range: Option<String>,
@@ -237,7 +237,7 @@ pub struct BlobAppendBlobClientCreateOptions<'a> {
     pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// Specifies the date time when the blobs immutability policy is set to expire.
-    pub immutability_policy_expiry: Option<String>,
+    pub immutability_policy_expiry: Option<OffsetDateTime>,
 
     /// Specifies the immutability policy mode to set on the blob.
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
@@ -443,7 +443,7 @@ pub struct BlobBlobClientCopyFromUrlOptions<'a> {
     pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// Specifies the date time when the blobs immutability policy is set to expire.
-    pub immutability_policy_expiry: Option<String>,
+    pub immutability_policy_expiry: Option<OffsetDateTime>,
 
     /// Specifies the immutability policy mode to set on the blob.
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
@@ -467,13 +467,13 @@ pub struct BlobBlobClientCopyFromUrlOptions<'a> {
     pub source_if_match: Option<String>,
 
     /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
-    pub source_if_modified_since: Option<String>,
+    pub source_if_modified_since: Option<OffsetDateTime>,
 
     /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
     pub source_if_none_match: Option<String>,
 
     /// Specify this header value to operate only on a blob if it has not been modified since the specified date/time.
-    pub source_if_unmodified_since: Option<String>,
+    pub source_if_unmodified_since: Option<OffsetDateTime>,
 
     /// The tier to be set on the blob.
     pub tier: Option<AccessTier>,
@@ -822,7 +822,7 @@ pub struct BlobBlobClientSetExpiryOptions<'a> {
     pub client_request_id: Option<String>,
 
     /// The time this blob will expire.
-    pub expires_on: Option<String>,
+    pub expires_on: Option<OffsetDateTime>,
 
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
@@ -892,10 +892,10 @@ pub struct BlobBlobClientSetImmutabilityPolicyOptions<'a> {
     pub client_request_id: Option<String>,
 
     /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
-    pub if_unmodified_since: Option<String>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// Specifies the date time when the blobs immutability policy is set to expire.
-    pub immutability_policy_expiry: Option<String>,
+    pub immutability_policy_expiry: Option<OffsetDateTime>,
 
     /// Specifies the immutability policy mode to set on the blob.
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
@@ -1073,7 +1073,7 @@ pub struct BlobBlobClientStartCopyFromUrlOptions<'a> {
     pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// Specifies the date time when the blobs immutability policy is set to expire.
-    pub immutability_policy_expiry: Option<String>,
+    pub immutability_policy_expiry: Option<OffsetDateTime>,
 
     /// Specifies the immutability policy mode to set on the blob.
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
@@ -1101,7 +1101,7 @@ pub struct BlobBlobClientStartCopyFromUrlOptions<'a> {
     pub source_if_match: Option<String>,
 
     /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
-    pub source_if_modified_since: Option<String>,
+    pub source_if_modified_since: Option<OffsetDateTime>,
 
     /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
     pub source_if_none_match: Option<String>,
@@ -1110,7 +1110,7 @@ pub struct BlobBlobClientStartCopyFromUrlOptions<'a> {
     pub source_if_tags: Option<String>,
 
     /// Specify this header value to operate only on a blob if it has not been modified since the specified date/time.
-    pub source_if_unmodified_since: Option<String>,
+    pub source_if_unmodified_since: Option<OffsetDateTime>,
 
     /// The tier to be set on the blob.
     pub tier: Option<AccessTier>,
@@ -1197,7 +1197,7 @@ pub struct BlobBlockBlobClientCommitBlockListOptions<'a> {
     pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// Specifies the date time when the blobs immutability policy is set to expire.
-    pub immutability_policy_expiry: Option<String>,
+    pub immutability_policy_expiry: Option<OffsetDateTime>,
 
     /// Specifies the immutability policy mode to set on the blob.
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
@@ -1340,7 +1340,7 @@ pub struct BlobBlockBlobClientPutBlobFromUrlOptions<'a> {
     pub source_if_match: Option<String>,
 
     /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
-    pub source_if_modified_since: Option<String>,
+    pub source_if_modified_since: Option<OffsetDateTime>,
 
     /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
     pub source_if_none_match: Option<String>,
@@ -1349,7 +1349,7 @@ pub struct BlobBlockBlobClientPutBlobFromUrlOptions<'a> {
     pub source_if_tags: Option<String>,
 
     /// Specify this header value to operate only on a blob if it has not been modified since the specified date/time.
-    pub source_if_unmodified_since: Option<String>,
+    pub source_if_unmodified_since: Option<OffsetDateTime>,
 
     /// The tier to be set on the blob.
     pub tier: Option<AccessTier>,
@@ -1499,13 +1499,13 @@ pub struct BlobBlockBlobClientStageBlockFromUrlOptions<'a> {
     pub source_if_match: Option<String>,
 
     /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
-    pub source_if_modified_since: Option<String>,
+    pub source_if_modified_since: Option<OffsetDateTime>,
 
     /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
     pub source_if_none_match: Option<String>,
 
     /// Specify this header value to operate only on a blob if it has not been modified since the specified date/time.
-    pub source_if_unmodified_since: Option<String>,
+    pub source_if_unmodified_since: Option<OffsetDateTime>,
 
     /// Bytes of source data in the specified range.
     pub source_range: Option<String>,
@@ -1579,7 +1579,7 @@ pub struct BlobBlockBlobClientUploadOptions<'a> {
     pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// Specifies the date time when the blobs immutability policy is set to expire.
-    pub immutability_policy_expiry: Option<String>,
+    pub immutability_policy_expiry: Option<OffsetDateTime>,
 
     /// Specifies the immutability policy mode to set on the blob.
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
@@ -1628,10 +1628,10 @@ pub struct BlobContainerClientAcquireLeaseOptions<'a> {
     pub duration: Option<i32>,
 
     /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
-    pub if_modified_since: Option<String>,
+    pub if_modified_since: Option<OffsetDateTime>,
 
     /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
-    pub if_unmodified_since: Option<String>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
@@ -1657,10 +1657,10 @@ pub struct BlobContainerClientBreakLeaseOptions<'a> {
     pub client_request_id: Option<String>,
 
     /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
-    pub if_modified_since: Option<String>,
+    pub if_modified_since: Option<OffsetDateTime>,
 
     /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
-    pub if_unmodified_since: Option<String>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
@@ -1676,10 +1676,10 @@ pub struct BlobContainerClientChangeLeaseOptions<'a> {
     pub client_request_id: Option<String>,
 
     /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
-    pub if_modified_since: Option<String>,
+    pub if_modified_since: Option<OffsetDateTime>,
 
     /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
-    pub if_unmodified_since: Option<String>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
@@ -1722,10 +1722,10 @@ pub struct BlobContainerClientDeleteOptions<'a> {
     pub client_request_id: Option<String>,
 
     /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
-    pub if_modified_since: Option<String>,
+    pub if_modified_since: Option<OffsetDateTime>,
 
     /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
-    pub if_unmodified_since: Option<String>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
@@ -1876,10 +1876,10 @@ pub struct BlobContainerClientReleaseLeaseOptions<'a> {
     pub client_request_id: Option<String>,
 
     /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
-    pub if_modified_since: Option<String>,
+    pub if_modified_since: Option<OffsetDateTime>,
 
     /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
-    pub if_unmodified_since: Option<String>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
@@ -1911,10 +1911,10 @@ pub struct BlobContainerClientRenewLeaseOptions<'a> {
     pub client_request_id: Option<String>,
 
     /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
-    pub if_modified_since: Option<String>,
+    pub if_modified_since: Option<OffsetDateTime>,
 
     /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
-    pub if_unmodified_since: Option<String>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
@@ -1952,10 +1952,10 @@ pub struct BlobContainerClientSetAccessPolicyOptions<'a> {
     pub client_request_id: Option<String>,
 
     /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
-    pub if_modified_since: Option<String>,
+    pub if_modified_since: Option<OffsetDateTime>,
 
     /// A date-time value. A request is made under the condition that the resource has not been modified since the specified date-time.
-    pub if_unmodified_since: Option<String>,
+    pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
@@ -1974,7 +1974,7 @@ pub struct BlobContainerClientSetMetadataOptions<'a> {
     pub client_request_id: Option<String>,
 
     /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
-    pub if_modified_since: Option<String>,
+    pub if_modified_since: Option<OffsetDateTime>,
 
     /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
     pub lease_id: Option<String>,
@@ -2159,7 +2159,7 @@ pub struct BlobPageBlobClientCreateOptions<'a> {
     pub if_unmodified_since: Option<OffsetDateTime>,
 
     /// Specifies the date time when the blobs immutability policy is set to expire.
-    pub immutability_policy_expiry: Option<String>,
+    pub immutability_policy_expiry: Option<OffsetDateTime>,
 
     /// Specifies the immutability policy mode to set on the blob.
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
@@ -2512,13 +2512,13 @@ pub struct BlobPageBlobClientUploadPagesFromUrlOptions<'a> {
     pub source_if_match: Option<String>,
 
     /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
-    pub source_if_modified_since: Option<String>,
+    pub source_if_modified_since: Option<OffsetDateTime>,
 
     /// Specify this header value to operate only on a blob if it has been modified since the specified date/time.
     pub source_if_none_match: Option<String>,
 
     /// Specify this header value to operate only on a blob if it has not been modified since the specified date/time.
-    pub source_if_unmodified_since: Option<String>,
+    pub source_if_unmodified_since: Option<OffsetDateTime>,
 
     /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,

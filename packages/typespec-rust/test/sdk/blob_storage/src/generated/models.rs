@@ -435,10 +435,12 @@ pub struct BlobPropertiesInternal {
 
     /// The access tier change time of the blob.
     #[serde(
+        default,
         rename = "AccessTierChangeTime",
-        skip_serializing_if = "Option::is_none"
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc7231::option"
     )]
-    pub access_tier_change_time: Option<String>,
+    pub access_tier_change_time: Option<OffsetDateTime>,
 
     /// Whether the access tier is inferred.
     #[serde(rename = "AccessTierInferred", skip_serializing_if = "Option::is_none")]
@@ -497,8 +499,13 @@ pub struct BlobPropertiesInternal {
     pub content_type: Option<String>,
 
     /// The copy completion time of the blob.
-    #[serde(rename = "CopyCompletionTime", skip_serializing_if = "Option::is_none")]
-    pub copy_completion_time: Option<String>,
+    #[serde(
+        default,
+        rename = "CopyCompletionTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc7231::option"
+    )]
+    pub copy_completion_time: Option<OffsetDateTime>,
 
     /// The copy ID of the blob.
     #[serde(rename = "CopyId", skip_serializing_if = "Option::is_none")]
@@ -524,8 +531,13 @@ pub struct BlobPropertiesInternal {
     pub copy_status_description: Option<String>,
 
     /// The date-time the blob was created in RFC1123 format.
-    #[serde(rename = "Creation-Time", skip_serializing_if = "Option::is_none")]
-    pub creation_time: Option<String>,
+    #[serde(
+        default,
+        rename = "Creation-Time",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc7231::option"
+    )]
+    pub creation_time: Option<OffsetDateTime>,
 
     /// Customer provided key sha256
     #[serde(
@@ -535,8 +547,13 @@ pub struct BlobPropertiesInternal {
     pub customer_provided_key_sha256: Option<String>,
 
     /// The time the blob was deleted.
-    #[serde(rename = "DeletedTime", skip_serializing_if = "Option::is_none")]
-    pub deleted_time: Option<String>,
+    #[serde(
+        default,
+        rename = "DeletedTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc7231::option"
+    )]
+    pub deleted_time: Option<OffsetDateTime>,
 
     /// The name of the destination snapshot.
     #[serde(
@@ -554,15 +571,22 @@ pub struct BlobPropertiesInternal {
     pub encryption_scope: Option<String>,
 
     /// The expire time of the blob.
-    #[serde(rename = "Expiry-Time", skip_serializing_if = "Option::is_none")]
-    pub expires_on: Option<String>,
+    #[serde(
+        default,
+        rename = "Expiry-Time",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc7231::option"
+    )]
+    pub expires_on: Option<OffsetDateTime>,
 
     /// The immutability policy until time of the blob.
     #[serde(
+        default,
         rename = "ImmutabilityPolicyUntilDate",
-        skip_serializing_if = "Option::is_none"
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc7231::option"
     )]
-    pub immutability_policy_expires_on: Option<String>,
+    pub immutability_policy_expires_on: Option<OffsetDateTime>,
 
     /// The immutability policy mode of the blob.
     #[serde(
@@ -580,12 +604,22 @@ pub struct BlobPropertiesInternal {
     pub is_sealed: Option<bool>,
 
     /// The last access time of the blob.
-    #[serde(rename = "LastAccessTime", skip_serializing_if = "Option::is_none")]
-    pub last_accessed_on: Option<String>,
+    #[serde(
+        default,
+        rename = "LastAccessTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc7231::option"
+    )]
+    pub last_accessed_on: Option<OffsetDateTime>,
 
     /// The date-time the blob was last modified in RFC1123 format.
-    #[serde(rename = "Last-Modified", skip_serializing_if = "Option::is_none")]
-    pub last_modified: Option<String>,
+    #[serde(
+        default,
+        rename = "Last-Modified",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc7231::option"
+    )]
+    pub last_modified: Option<OffsetDateTime>,
 
     /// The lease duration of the blob.
     #[serde(rename = "LeaseDuration", skip_serializing_if = "Option::is_none")]
@@ -778,8 +812,13 @@ pub struct ContainerProperties {
     pub default_encryption_scope: Option<String>,
 
     /// The deleted time of the container.
-    #[serde(rename = "DeletedTime", skip_serializing_if = "Option::is_none")]
-    pub deleted_time: Option<String>,
+    #[serde(
+        default,
+        rename = "DeletedTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc7231::option"
+    )]
+    pub deleted_time: Option<OffsetDateTime>,
 
     /// The ETag of the container.
     #[serde(rename = "ETag", skip_serializing_if = "Option::is_none")]
@@ -804,8 +843,13 @@ pub struct ContainerProperties {
     pub is_immutable_storage_with_versioning_enabled: Option<bool>,
 
     /// The date-time the container was last modified in RFC1123 format.
-    #[serde(rename = "Last-Modified", skip_serializing_if = "Option::is_none")]
-    pub last_modified: Option<String>,
+    #[serde(
+        default,
+        rename = "Last-Modified",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc7231::option"
+    )]
+    pub last_modified: Option<OffsetDateTime>,
 
     /// The lease duration of the container.
     #[serde(rename = "LeaseDuration", skip_serializing_if = "Option::is_none")]
@@ -952,8 +996,13 @@ pub struct FilterBlobSegment {
 pub struct GeoReplication {
     /// A GMT date/time value, to the second. All primary writes preceding this value are guaranteed to be available for read
     /// operations at the secondary. Primary writes after this point in time may or may not be available for reads.
-    #[serde(rename = "LastSyncTime", skip_serializing_if = "Option::is_none")]
-    pub last_sync_time: Option<String>,
+    #[serde(
+        default,
+        rename = "LastSyncTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::date::rfc7231::option"
+    )]
+    pub last_sync_time: Option<OffsetDateTime>,
 
     /// The status of the secondary location
     #[serde(rename = "Status", skip_serializing_if = "Option::is_none")]
