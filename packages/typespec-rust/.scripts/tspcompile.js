@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 import { exec, execSync } from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
 import { semaphore } from './semaphore.js';
 
 // limit to 8 concurrent builds
@@ -175,6 +177,12 @@ function generate(crate, input, outputDir, additionalArgs) {
       if (switches.includes('--verbose')) {
         console.log(command);
       }
+      // delete all generated content before regenerating.
+      // the exception is the lib.rs file. if we delete that
+      // from a crate then concurrent invocations of cargo fmt
+      // will blow up. this is fine anyways since we merge
+      // lib.rs with any preexisting content.
+      fs.rmSync(path.join(fullOutputDir, 'src', 'generated'), { recursive: true });
       exec(command, function(error, stdout, stderr) {
         // print any output or error from the tsp compile command
         logResult(error, stdout, stderr);
