@@ -182,13 +182,13 @@ function generate(crate, input, outputDir, additionalArgs) {
       // from a crate then concurrent invocations of cargo fmt
       // will blow up. this is fine anyways since we merge
       // lib.rs with any preexisting content.
-      fs.rmSync(path.join(fullOutputDir, 'src', 'generated'), { recursive: true });
+      fs.rmSync(path.join(fullOutputDir, 'src', 'generated'), { force: true, recursive: true });
       exec(command, function(error, stdout, stderr) {
         // print any output or error from the tsp compile command
         logResult(error, stdout, stderr);
       });
     } catch (err) {
-      console.error(err.output.toString());
+      console.error('\x1b[91m%s\x1b[0m', err);
     } finally {
       sem.leave();
     }
@@ -198,6 +198,11 @@ function generate(crate, input, outputDir, additionalArgs) {
 function logResult(error, stdout, stderr) {
   if (stdout !== '') {
     console.log('stdout: ' + stdout);
+  }
+  if (stderr !== '' && error !== null) {
+    // if both are set just log one
+    console.error('\x1b[91m%s\x1b[0m', 'exec error: ' + error);
+    return;
   }
   if (stderr !== '') {
     console.error('\x1b[91m%s\x1b[0m', 'stderr: ' + stderr);
