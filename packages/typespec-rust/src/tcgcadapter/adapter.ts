@@ -987,11 +987,9 @@ export class Adapter {
           if (header.serializedName !== 'x-ms-meta' && header.serializedName !== 'x-ms-or') {
             throw new Error(`unexpected response header collection ${header.serializedName}`);
           }
-          // TODO: don't use __raw.name, https://github.com/Azure/typespec-azure/issues/2234
-          responseHeader = new rust.ResponseHeaderHashMap(header.__raw.name, header.serializedName);
+          responseHeader = new rust.ResponseHeaderHashMap(header.name, header.serializedName);
         } else {
-          // TODO: don't use __raw.name, https://github.com/Azure/typespec-azure/issues/2234
-          responseHeader = new rust.ResponseHeaderScalar(header.__raw.name, header.serializedName, this.getType(header.type));
+          responseHeader = new rust.ResponseHeaderScalar(header.name, header.serializedName, this.getType(header.type));
         }
 
         responseHeader.docs = this.adaptDocs(header.summary, header.doc);

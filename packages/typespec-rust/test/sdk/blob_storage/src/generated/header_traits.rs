@@ -137,7 +137,7 @@ pub trait BlobAppendBlobClientAppendBlockFromUrlResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
 }
 
 impl BlobAppendBlobClientAppendBlockFromUrlResultHeaders
@@ -219,7 +219,7 @@ impl BlobAppendBlobClientAppendBlockFromUrlResultHeaders
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -243,7 +243,7 @@ pub trait BlobAppendBlobClientAppendBlockResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn structured_body_type(&self) -> Result<Option<String>>;
 }
 
@@ -326,7 +326,7 @@ impl BlobAppendBlobClientAppendBlockResultHeaders
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -352,7 +352,7 @@ pub trait BlobAppendBlobClientCreateResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn version_id(&self) -> Result<Option<String>>;
 }
 
@@ -409,7 +409,7 @@ impl BlobAppendBlobClientCreateResultHeaders for Response<BlobAppendBlobClientCr
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -727,7 +727,7 @@ pub trait BlobBlobClientCreateSnapshotResultHeaders: private::Sealed {
     fn last_modified(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn snapshot(&self) -> Result<Option<String>>;
     fn version_id(&self) -> Result<Option<String>>;
 }
@@ -762,7 +762,7 @@ impl BlobBlobClientCreateSnapshotResultHeaders for Response<BlobBlobClientCreate
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -869,7 +869,7 @@ pub trait BlobBlobClientDownloadResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn immutability_policy_mode(&self) -> Result<Option<BlobImmutabilityPolicyMode>>;
-    fn immutability_policy_until_date(&self) -> Result<Option<String>>;
+    fn immutability_policy_expires_on(&self) -> Result<Option<String>>;
     fn is_current_version(&self) -> Result<Option<bool>>;
     fn last_accessed(&self) -> Result<Option<String>>;
     fn duration(&self) -> Result<Option<i32>>;
@@ -880,7 +880,7 @@ pub trait BlobBlobClientDownloadResultHeaders: private::Sealed {
     fn object_replication_rules(&self) -> Result<HashMap<String, String>>;
     fn object_replication_policy_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn structured_body_type(&self) -> Result<Option<String>>;
     fn structured_content_length(&self) -> Result<Option<i64>>;
     fn tag_count(&self) -> Result<Option<i64>>;
@@ -1096,7 +1096,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the blob immutability policy will expire.
-    fn immutability_policy_until_date(&self) -> Result<Option<String>> {
+    fn immutability_policy_expires_on(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
             .get_optional_string(&XMSIMMUTABILITYPOLICYUNTILDATEHEADER))
@@ -1195,7 +1195,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -1321,9 +1321,9 @@ pub trait BlobBlobClientGetPropertiesResultHeaders: private::Sealed {
     fn creation_time(&self) -> Result<Option<String>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
-    fn expiry_time(&self) -> Result<Option<String>>;
+    fn expires_on(&self) -> Result<Option<String>>;
     fn immutability_policy_mode(&self) -> Result<Option<BlobImmutabilityPolicyMode>>;
-    fn immutability_policy_until_date(&self) -> Result<Option<String>>;
+    fn immutability_policy_expires_on(&self) -> Result<Option<String>>;
     fn is_incremental_copy(&self) -> Result<Option<bool>>;
     fn is_current_version(&self) -> Result<Option<bool>>;
     fn last_accessed(&self) -> Result<Option<String>>;
@@ -1336,7 +1336,7 @@ pub trait BlobBlobClientGetPropertiesResultHeaders: private::Sealed {
     fn object_replication_policy_id(&self) -> Result<Option<String>>;
     fn rehydrate_priority(&self) -> Result<Option<RehydratePriority>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn tag_count(&self) -> Result<Option<i64>>;
     fn version_id(&self) -> Result<Option<String>>;
 }
@@ -1563,7 +1563,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     }
 
     /// The time this blob will expire.
-    fn expiry_time(&self) -> Result<Option<String>> {
+    fn expires_on(&self) -> Result<Option<String>> {
         Ok(self.headers().get_optional_string(&XMSEXPIRYTIMEHEADER))
     }
 
@@ -1579,7 +1579,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     }
 
     /// UTC date/time value generated by the service that indicates the time at which the blob immutability policy will expire.
-    fn immutability_policy_until_date(&self) -> Result<Option<String>> {
+    fn immutability_policy_expires_on(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
             .get_optional_string(&XMSIMMUTABILITYPOLICYUNTILDATEHEADER))
@@ -1701,7 +1701,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -1901,7 +1901,7 @@ pub trait BlobBlobClientSetImmutabilityPolicyResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn immutability_policy_mode(&self) -> Result<Option<BlobImmutabilityPolicyMode>>;
-    fn immutability_policy_until_date(&self) -> Result<Option<String>>;
+    fn immutability_policy_expiry(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
 }
 
@@ -1932,7 +1932,7 @@ impl BlobBlobClientSetImmutabilityPolicyResultHeaders
     }
 
     /// Indicates the time the immutability policy will expire.
-    fn immutability_policy_until_date(&self) -> Result<Option<String>> {
+    fn immutability_policy_expiry(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
             .get_optional_string(&XMSIMMUTABILITYPOLICYUNTILDATEHEADER))
@@ -1988,7 +1988,7 @@ pub trait BlobBlobClientSetMetadataResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn version_id(&self) -> Result<Option<String>>;
 }
 
@@ -2039,7 +2039,7 @@ impl BlobBlobClientSetMetadataResultHeaders for Response<BlobBlobClientSetMetada
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -2202,7 +2202,7 @@ pub trait BlobBlockBlobClientCommitBlockListResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn version_id(&self) -> Result<Option<String>>;
 }
 
@@ -2266,7 +2266,7 @@ impl BlobBlockBlobClientCommitBlockListResultHeaders
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -2293,7 +2293,7 @@ pub trait BlobBlockBlobClientPutBlobFromUrlResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn version_id(&self) -> Result<Option<String>>;
 }
 
@@ -2352,7 +2352,7 @@ impl BlobBlockBlobClientPutBlobFromUrlResultHeaders
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -2401,7 +2401,7 @@ pub trait BlobBlockBlobClientQueryResultHeaders: private::Sealed {
     fn lease_status(&self) -> Result<Option<LeaseStatus>>;
     fn metadata(&self) -> Result<HashMap<String, String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
 }
 
 impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQueryResult> {
@@ -2635,7 +2635,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -2655,7 +2655,7 @@ pub trait BlobBlockBlobClientStageBlockFromUrlResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
 }
 
 impl BlobBlockBlobClientStageBlockFromUrlResultHeaders
@@ -2708,7 +2708,7 @@ impl BlobBlockBlobClientStageBlockFromUrlResultHeaders
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -2728,7 +2728,7 @@ pub trait BlobBlockBlobClientStageBlockResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn structured_body_type(&self) -> Result<Option<String>>;
 }
 
@@ -2780,7 +2780,7 @@ impl BlobBlockBlobClientStageBlockResultHeaders for Response<BlobBlockBlobClient
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -2806,7 +2806,7 @@ pub trait BlobBlockBlobClientUploadResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn structured_body_type(&self) -> Result<Option<String>>;
     fn version_id(&self) -> Result<Option<String>>;
 }
@@ -2864,7 +2864,7 @@ impl BlobBlockBlobClientUploadResultHeaders for Response<BlobBlockBlobClientUplo
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -3158,7 +3158,7 @@ pub trait BlobContainerClientGetPropertiesResultHeaders: private::Sealed {
     fn access(&self) -> Result<Option<PublicAccessType>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn default_encryption_scope(&self) -> Result<Option<String>>;
-    fn deny_encryption_scope_override(&self) -> Result<Option<bool>>;
+    fn prevent_encryption_scope_override(&self) -> Result<Option<bool>>;
     fn has_immutability_policy(&self) -> Result<Option<bool>>;
     fn has_legal_hold(&self) -> Result<Option<bool>>;
     fn is_immutable_storage_with_versioning_enabled(&self) -> Result<Option<bool>>;
@@ -3214,7 +3214,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// If a blob has a lease and the lease is of infinite duration then the value of this header is set to true, otherwise it
     /// is set to false.
-    fn deny_encryption_scope_override(&self) -> Result<Option<bool>> {
+    fn prevent_encryption_scope_override(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSDENYENCRYPTIONSCOPEOVERRIDEHEADER)
@@ -3659,7 +3659,7 @@ pub trait BlobPageBlobClientCreateResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn version_id(&self) -> Result<Option<String>>;
 }
 
@@ -3716,7 +3716,7 @@ impl BlobPageBlobClientCreateResultHeaders for Response<BlobPageBlobClientCreate
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -3847,7 +3847,7 @@ pub trait BlobPageBlobClientUploadPagesFromUrlResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
 }
 
 impl BlobPageBlobClientUploadPagesFromUrlResultHeaders
@@ -3921,7 +3921,7 @@ impl BlobPageBlobClientUploadPagesFromUrlResultHeaders
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)
@@ -3944,7 +3944,7 @@ pub trait BlobPageBlobClientUploadPagesResultHeaders: private::Sealed {
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
-    fn request_server_encrypted(&self) -> Result<Option<bool>>;
+    fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn structured_body_type(&self) -> Result<Option<String>>;
 }
 
@@ -4017,7 +4017,7 @@ impl BlobPageBlobClientUploadPagesResultHeaders for Response<BlobPageBlobClientU
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
     /// algorithm, and false otherwise.
-    fn request_server_encrypted(&self) -> Result<Option<bool>> {
+    fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
             .get_optional_string(&XMSREQUESTSERVERENCRYPTEDHEADER)

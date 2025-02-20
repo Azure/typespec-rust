@@ -65,6 +65,6 @@ async fn request() {
 async fn response() {
     let client = NamingClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.response(None).await.unwrap();
-    let h = resp.default_name().unwrap();
+    let h = resp.client_name().unwrap();
     assert_eq!(h, Some("true".to_string()));
 }

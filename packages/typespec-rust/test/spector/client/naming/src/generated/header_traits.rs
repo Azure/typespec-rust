@@ -10,11 +10,11 @@ const DEFAULTNAMEHEADER: HeaderName = HeaderName::from_static("default-name");
 
 /// Provides access to typed response headers for [`NamingClient::response()`](crate::clients::NamingClient::response())
 pub trait NamingClientResponseResultHeaders: private::Sealed {
-    fn default_name(&self) -> Result<Option<String>>;
+    fn client_name(&self) -> Result<Option<String>>;
 }
 
 impl NamingClientResponseResultHeaders for Response<NamingClientResponseResult> {
-    fn default_name(&self) -> Result<Option<String>> {
+    fn client_name(&self) -> Result<Option<String>> {
         Ok(self.headers().get_optional_string(&DEFAULTNAMEHEADER))
     }
 }
