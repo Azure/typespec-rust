@@ -146,18 +146,18 @@ impl Clear_rangeClearRange {
 #[serde(rename = "CommittedBlocks")]
 pub struct Committed_blocksBlock {
     #[serde(default)]
-    Block: Option<Vec<Block>>,
+    Block: Vec<Block>,
 }
 
 impl Committed_blocksBlock {
-    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<Block>>, D::Error>
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Vec<Block>, D::Error>
     where
         D: Deserializer<'de>,
     {
         Ok(Committed_blocksBlock::deserialize(deserializer)?.Block)
     }
 
-    pub fn wrap<S>(to_serialize: &Option<Vec<Block>>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn wrap<S>(to_serialize: &Vec<Block>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -276,18 +276,18 @@ impl SchemaArrowField {
 #[serde(rename = "UncommittedBlocks")]
 pub struct Uncommitted_blocksBlock {
     #[serde(default)]
-    Block: Option<Vec<Block>>,
+    Block: Vec<Block>,
 }
 
 impl Uncommitted_blocksBlock {
-    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<Block>>, D::Error>
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Vec<Block>, D::Error>
     where
         D: Deserializer<'de>,
     {
         Ok(Uncommitted_blocksBlock::deserialize(deserializer)?.Block)
     }
 
-    pub fn wrap<S>(to_serialize: &Option<Vec<Block>>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn wrap<S>(to_serialize: &Vec<Block>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {

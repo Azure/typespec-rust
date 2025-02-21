@@ -30,8 +30,7 @@ pub struct SetPropertiesRequest {
         default,
         deserialize_with = "CorsCorsRule::unwrap",
         rename = "Cors",
-        serialize_with = "CorsCorsRule::wrap",
-        skip_serializing_if = "Vec::is_empty"
+        serialize_with = "CorsCorsRule::wrap"
     )]
     pub cors: Vec<CorsRule>,
 

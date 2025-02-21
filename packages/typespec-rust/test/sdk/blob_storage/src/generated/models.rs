@@ -59,8 +59,7 @@ pub struct ArrowConfiguration {
         default,
         deserialize_with = "SchemaArrowField::unwrap",
         rename = "Schema",
-        serialize_with = "SchemaArrowField::wrap",
-        skip_serializing_if = "Vec::is_empty"
+        serialize_with = "SchemaArrowField::wrap"
     )]
     pub schema: Vec<ArrowField>,
 }
@@ -98,8 +97,7 @@ pub struct BlobFlatListSegment {
         default,
         deserialize_with = "Blob_itemsBlobItemInternal::unwrap",
         rename = "BlobItems",
-        serialize_with = "Blob_itemsBlobItemInternal::wrap",
-        skip_serializing_if = "Vec::is_empty"
+        serialize_with = "Blob_itemsBlobItemInternal::wrap"
     )]
     pub blob_items: Vec<BlobItemInternal>,
 }
@@ -115,8 +113,7 @@ pub struct BlobHierarchyListSegment {
         default,
         deserialize_with = "Blob_itemsBlobItemInternal::unwrap",
         rename = "BlobItems",
-        serialize_with = "Blob_itemsBlobItemInternal::wrap",
-        skip_serializing_if = "Vec::is_empty"
+        serialize_with = "Blob_itemsBlobItemInternal::wrap"
     )]
     pub blob_items: Vec<BlobItemInternal>,
 
@@ -125,8 +122,7 @@ pub struct BlobHierarchyListSegment {
         default,
         deserialize_with = "Blob_prefixesBlobPrefix::unwrap",
         rename = "BlobPrefixes",
-        serialize_with = "Blob_prefixesBlobPrefix::wrap",
-        skip_serializing_if = "Vec::is_empty"
+        serialize_with = "Blob_prefixesBlobPrefix::wrap"
     )]
     pub blob_prefixes: Vec<BlobPrefix>,
 }
@@ -439,8 +435,7 @@ pub struct BlobTags {
         default,
         deserialize_with = "Blob_tag_setBlobTag::unwrap",
         rename = "TagSet",
-        serialize_with = "Blob_tag_setBlobTag::wrap",
-        skip_serializing_if = "Vec::is_empty"
+        serialize_with = "Blob_tag_setBlobTag::wrap"
     )]
     pub blob_tag_set: Vec<BlobTag>,
 }
@@ -469,20 +464,18 @@ pub struct BlockList {
         default,
         deserialize_with = "Committed_blocksBlock::unwrap",
         rename = "CommittedBlocks",
-        serialize_with = "Committed_blocksBlock::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Committed_blocksBlock::wrap"
     )]
-    pub committed_blocks: Option<Vec<Block>>,
+    pub committed_blocks: Vec<Block>,
 
     /// The list of uncommitted blocks.
     #[serde(
         default,
         deserialize_with = "Uncommitted_blocksBlock::unwrap",
         rename = "UncommittedBlocks",
-        serialize_with = "Uncommitted_blocksBlock::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Uncommitted_blocksBlock::wrap"
     )]
-    pub uncommitted_blocks: Option<Vec<Block>>,
+    pub uncommitted_blocks: Vec<Block>,
 }
 
 /// The Block lookup list.
@@ -491,15 +484,15 @@ pub struct BlockList {
 #[typespec(format = "xml")]
 pub struct BlockLookupList {
     /// The committed blocks
-    #[serde(default, rename = "Committed", skip_serializing_if = "Vec::is_empty")]
+    #[serde(default, rename = "Committed")]
     pub committed: Vec<String>,
 
     /// The latest blocks
-    #[serde(default, rename = "Latest", skip_serializing_if = "Vec::is_empty")]
+    #[serde(default, rename = "Latest")]
     pub latest: Vec<String>,
 
     /// The uncommitted blocks
-    #[serde(default, rename = "Uncommitted", skip_serializing_if = "Vec::is_empty")]
+    #[serde(default, rename = "Uncommitted")]
     pub uncommitted: Vec<String>,
 }
 
@@ -711,8 +704,7 @@ pub struct FilterBlobSegment {
         default,
         deserialize_with = "BlobsFilterBlobItem::unwrap",
         rename = "Blobs",
-        serialize_with = "BlobsFilterBlobItem::wrap",
-        skip_serializing_if = "Vec::is_empty"
+        serialize_with = "BlobsFilterBlobItem::wrap"
     )]
     pub blobs: Vec<FilterBlobItem>,
 
@@ -838,8 +830,7 @@ pub struct ListContainersSegmentResponse {
         default,
         deserialize_with = "Container_itemsContainerItem::unwrap",
         rename = "Containers",
-        serialize_with = "Container_itemsContainerItem::wrap",
-        skip_serializing_if = "Vec::is_empty"
+        serialize_with = "Container_itemsContainerItem::wrap"
     )]
     pub container_items: Vec<ContainerItem>,
 
@@ -927,8 +918,7 @@ pub struct PageList {
         default,
         deserialize_with = "Clear_rangeClearRange::unwrap",
         rename = "ClearRange",
-        serialize_with = "Clear_rangeClearRange::wrap",
-        skip_serializing_if = "Vec::is_empty"
+        serialize_with = "Clear_rangeClearRange::wrap"
     )]
     pub clear_range: Vec<ClearRange>,
 
@@ -941,8 +931,7 @@ pub struct PageList {
         default,
         deserialize_with = "Page_rangePageRange::unwrap",
         rename = "PageRange",
-        serialize_with = "Page_rangePageRange::wrap",
-        skip_serializing_if = "Vec::is_empty"
+        serialize_with = "Page_rangePageRange::wrap"
     )]
     pub page_range: Vec<PageRange>,
 }
@@ -1104,8 +1093,7 @@ pub struct StorageServiceProperties {
         default,
         deserialize_with = "CorsCorsRule::unwrap",
         rename = "Cors",
-        serialize_with = "CorsCorsRule::wrap",
-        skip_serializing_if = "Vec::is_empty"
+        serialize_with = "CorsCorsRule::wrap"
     )]
     pub cors: Vec<CorsRule>,
 
