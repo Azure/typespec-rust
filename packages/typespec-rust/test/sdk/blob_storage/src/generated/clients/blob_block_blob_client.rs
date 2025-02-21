@@ -7,8 +7,8 @@ use crate::generated::clients::method_options::*;
 use crate::models::{
     BlobBlockBlobClientCommitBlockListResult, BlobBlockBlobClientPutBlobFromUrlResult,
     BlobBlockBlobClientQueryResult, BlobBlockBlobClientStageBlockFromUrlResult,
-    BlobBlockBlobClientStageBlockResult, BlobBlockBlobClientUploadResult, BlobType, BlockListType,
-    BlockLookupList, QueryRequest,
+    BlobBlockBlobClientStageBlockResult, BlobBlockBlobClientUploadResult, BlobType, BlockList,
+    BlockListType, BlockLookupList, QueryRequest,
 };
 use azure_core::{
     base64, date, Bytes, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
