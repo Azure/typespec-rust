@@ -104,7 +104,7 @@ export function emitHeaderTraits(crate: rust.Crate): string | undefined {
     })
   }
 
-  headers.sort();
+  headers.sort((a: rust.ResponseHeader, b: rust.ResponseHeader) => helpers.sortAscending(getHeaderConstName(a), getHeaderConstName(b)));
   traits.sort((a: TraitDefinition, b: TraitDefinition) => helpers.sortAscending(a.name, b.name));
 
   // this specializes literals to return the value's underlying type
@@ -151,10 +151,10 @@ export function emitHeaderTraits(crate: rust.Crate): string | undefined {
     switch (header.kind) {
       case 'responseHeaderHashMap':
         // we add a trailing - as the entire str prefix will be stripped off
-        body += `const ${getHeaderConstName(header.header)}: &str = "${headerValue}-";\n`;
+        body += `const ${getHeaderConstName(header)}: &str = "${headerValue}-";\n`;
         break;
       case 'responseHeaderScalar':
-        body += `const ${getHeaderConstName(header.header)}: HeaderName = HeaderName::from_static("${headerValue}");\n`;
+        body += `const ${getHeaderConstName(header)}: HeaderName = HeaderName::from_static("${headerValue}");\n`;
     }
   }
 
@@ -188,13 +188,14 @@ export function emitHeaderTraits(crate: rust.Crate): string | undefined {
 
 /**
  * creates the name to use for a header constant
- * e.g. header Content-Type becomes CONTENTTYPE
+ * e.g. header Content-Type becomes CONTENT_TYPE
  * 
  * @param header the name of the header
  * @returns the header constant
  */
-function getHeaderConstName(header: string): string {
-  const chunks = codegen.deconstruct(header);
+function getHeaderConstName(header: rust.ResponseHeader): string {
+  // strip off any x-ms- prefix
+  const chunks = codegen.deconstruct(header.header.replace(/^x-ms-/i, ''));
   return `${chunks.map(i => i.toUpperCase()).join('_')}`;
 }
 
@@ -211,7 +212,7 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
     let content = `${indent.get()}let mut values = HashMap::new();\n`;
     content += `${indent.get()}for h in self.headers().iter() {\n`;
     content += `${indent.push().get()}let name = h.0.as_str();\n`;
-    const headerConstName = getHeaderConstName(header.header);
+    const headerConstName = getHeaderConstName(header);
     content += `${indent.get()}${helpers.buildIfBlock(indent, {
       condition: `name.len() > ${headerConstName}.len() && name.starts_with(${headerConstName})`,
       body: (indent) => `${indent.get()}values.insert(name[${headerConstName}.len()..].to_owned(), h.1.as_str().to_owned());\n`,
@@ -223,7 +224,7 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
 
   if (header.type.kind === 'String' || (header.type.kind === 'literal' && typeof header.type.value === 'string')) {
     // simple case requires no parsing
-    return `${indent.get()}Ok(self.headers().get_optional_string(&${getHeaderConstName(header.header)}))\n`;
+    return `${indent.get()}Ok(self.headers().get_optional_string(&${getHeaderConstName(header)}))\n`;
   }
 
   let someBody: (indent: helpers.indentation) => string;
@@ -250,7 +251,7 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
       return `${indent.get()}todo!();\n`;
   }
 
-  return indent.get() + helpers.buildMatch(indent, `self.headers().get_optional_string(&${getHeaderConstName(header.header)})`, [
+  return indent.get() + helpers.buildMatch(indent, `self.headers().get_optional_string(&${getHeaderConstName(header)})`, [
     {
       pattern: 'Some(v)',
       body: someBody,

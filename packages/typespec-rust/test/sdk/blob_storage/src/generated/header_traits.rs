@@ -42,85 +42,81 @@ use std::collections::HashMap;
 use std::str::FromStr;
 use time::OffsetDateTime;
 
-const CONTENT_MD5: HeaderName = HeaderName::from_static("content-md5");
-const DATE: HeaderName = HeaderName::from_static("date");
-const E_TAG: HeaderName = HeaderName::from_static("etag");
-const LAST_MODIFIED: HeaderName = HeaderName::from_static("last-modified");
-const X_MS_BLOB_APPEND_OFFSET: HeaderName = HeaderName::from_static("x-ms-blob-append-offset");
-const X_MS_BLOB_COMMITTED_BLOCK_COUNT: HeaderName =
-    HeaderName::from_static("x-ms-blob-committed-block-count");
-const X_MS_CLIENT_REQUEST_ID: HeaderName = HeaderName::from_static("x-ms-client-request-id");
-const X_MS_CONTENT_CRC64: HeaderName = HeaderName::from_static("x-ms-content-crc64");
-const X_MS_ENCRYPTION_KEY_SHA256: HeaderName =
-    HeaderName::from_static("x-ms-encryption-key-sha256");
-const X_MS_ENCRYPTION_SCOPE: HeaderName = HeaderName::from_static("x-ms-encryption-scope");
-const X_MS_REQUEST_ID: HeaderName = HeaderName::from_static("x-ms-request-id");
-const X_MS_REQUEST_SERVER_ENCRYPTED: HeaderName =
-    HeaderName::from_static("x-ms-request-server-encrypted");
-const X_MS_STRUCTURED_BODY: HeaderName = HeaderName::from_static("x-ms-structured-body");
-const X_MS_VERSION_ID: HeaderName = HeaderName::from_static("x-ms-version-id");
-const X_MS_BLOB_SEALED: HeaderName = HeaderName::from_static("x-ms-blob-sealed");
-const X_MS_LEASE_ID: HeaderName = HeaderName::from_static("x-ms-lease-id");
-const X_MS_LEASE_TIME: HeaderName = HeaderName::from_static("x-ms-lease-time");
-const X_MS_COPY_ID: HeaderName = HeaderName::from_static("x-ms-copy-id");
-const X_MS_COPY_STATUS: HeaderName = HeaderName::from_static("x-ms-copy-status");
-const X_MS_SNAPSHOT: HeaderName = HeaderName::from_static("x-ms-snapshot");
 const ACCEPT_RANGES: HeaderName = HeaderName::from_static("accept-ranges");
+const ACCESS_TIER: HeaderName = HeaderName::from_static("x-ms-access-tier");
+const ACCESS_TIER_CHANGE_TIME: HeaderName = HeaderName::from_static("x-ms-access-tier-change-time");
+const ACCESS_TIER_INFERRED: HeaderName = HeaderName::from_static("x-ms-access-tier-inferred");
+const ACCOUNT_KIND: HeaderName = HeaderName::from_static("x-ms-account-kind");
+const ARCHIVE_STATUS: HeaderName = HeaderName::from_static("x-ms-archive-status");
+const BLOB_APPEND_OFFSET: HeaderName = HeaderName::from_static("x-ms-blob-append-offset");
+const BLOB_COMMITTED_BLOCK_COUNT: HeaderName =
+    HeaderName::from_static("x-ms-blob-committed-block-count");
+const BLOB_CONTENT_LENGTH: HeaderName = HeaderName::from_static("x-ms-blob-content-length");
+const BLOB_CONTENT_MD5: HeaderName = HeaderName::from_static("x-ms-blob-content-md5");
+const BLOB_PUBLIC_ACCESS: HeaderName = HeaderName::from_static("x-ms-blob-public-access");
+const BLOB_SEALED: HeaderName = HeaderName::from_static("x-ms-blob-sealed");
+const BLOB_SEQUENCE_NUMBER: HeaderName = HeaderName::from_static("x-ms-blob-sequence-number");
+const BLOB_TYPE: HeaderName = HeaderName::from_static("x-ms-blob-type");
 const CACHE_CONTROL: HeaderName = HeaderName::from_static("cache-control");
+const CLIENT_REQUEST_ID: HeaderName = HeaderName::from_static("x-ms-client-request-id");
+const CONTENT_CRC64: HeaderName = HeaderName::from_static("x-ms-content-crc64");
 const CONTENT_DISPOSITION: HeaderName = HeaderName::from_static("content-disposition");
 const CONTENT_ENCODING: HeaderName = HeaderName::from_static("content-encoding");
 const CONTENT_LANGUAGE: HeaderName = HeaderName::from_static("content-language");
 const CONTENT_LENGTH: HeaderName = HeaderName::from_static("content-length");
+const CONTENT_MD5: HeaderName = HeaderName::from_static("content-md5");
 const CONTENT_RANGE: HeaderName = HeaderName::from_static("content-range");
-const X_MS_BLOB_CONTENT_MD5: HeaderName = HeaderName::from_static("x-ms-blob-content-md5");
-const X_MS_BLOB_SEQUENCE_NUMBER: HeaderName = HeaderName::from_static("x-ms-blob-sequence-number");
-const X_MS_BLOB_TYPE: HeaderName = HeaderName::from_static("x-ms-blob-type");
-const X_MS_COPY_COMPLETION_TIME: HeaderName = HeaderName::from_static("x-ms-copy-completion-time");
-const X_MS_COPY_PROGRESS: HeaderName = HeaderName::from_static("x-ms-copy-progress");
-const X_MS_COPY_SOURCE: HeaderName = HeaderName::from_static("x-ms-copy-source");
-const X_MS_COPY_STATUS_DESCRIPTION: HeaderName =
-    HeaderName::from_static("x-ms-copy-status-description");
-const X_MS_CREATION_TIME: HeaderName = HeaderName::from_static("x-ms-creation-time");
-const X_MS_IMMUTABILITY_POLICY_MODE: HeaderName =
-    HeaderName::from_static("x-ms-immutability-policy-mode");
-const X_MS_IMMUTABILITY_POLICY_UNTIL_DATE: HeaderName =
-    HeaderName::from_static("x-ms-immutability-policy-until-date");
-const X_MS_IS_CURRENT_VERSION: HeaderName = HeaderName::from_static("x-ms-is-current-version");
-const X_MS_LAST_ACCESS_TIME: HeaderName = HeaderName::from_static("x-ms-last-access-time");
-const X_MS_LEASE_DURATION: HeaderName = HeaderName::from_static("x-ms-lease-duration");
-const X_MS_LEASE_STATE: HeaderName = HeaderName::from_static("x-ms-lease-state");
-const X_MS_LEASE_STATUS: HeaderName = HeaderName::from_static("x-ms-lease-status");
-const X_MS_LEGAL_HOLD: HeaderName = HeaderName::from_static("x-ms-legal-hold");
-const X_MS_META: &str = "x-ms-meta-";
-const X_MS_OR: &str = "x-ms-or-";
-const X_MS_OR_POLICY_ID: HeaderName = HeaderName::from_static("x-ms-or-policy-id");
-const X_MS_STRUCTURED_CONTENT_LENGTH: HeaderName =
-    HeaderName::from_static("x-ms-structured-content-length");
-const X_MS_TAG_COUNT: HeaderName = HeaderName::from_static("x-ms-tag-count");
-const X_MS_ACCOUNT_KIND: HeaderName = HeaderName::from_static("x-ms-account-kind");
-const X_MS_IS_HNS_ENABLED: HeaderName = HeaderName::from_static("x-ms-is-hns-enabled");
-const X_MS_SKU_NAME: HeaderName = HeaderName::from_static("x-ms-sku-name");
-const X_MS_ACCESS_TIER: HeaderName = HeaderName::from_static("x-ms-access-tier");
-const X_MS_ACCESS_TIER_CHANGE_TIME: HeaderName =
-    HeaderName::from_static("x-ms-access-tier-change-time");
-const X_MS_ACCESS_TIER_INFERRED: HeaderName = HeaderName::from_static("x-ms-access-tier-inferred");
-const X_MS_ARCHIVE_STATUS: HeaderName = HeaderName::from_static("x-ms-archive-status");
-const X_MS_COPY_DESTINATION_SNAPSHOT: HeaderName =
+const COPY_COMPLETION_TIME: HeaderName = HeaderName::from_static("x-ms-copy-completion-time");
+const COPY_DESTINATION_SNAPSHOT: HeaderName =
     HeaderName::from_static("x-ms-copy-destination-snapshot");
-const X_MS_EXPIRY_TIME: HeaderName = HeaderName::from_static("x-ms-expiry-time");
-const X_MS_INCREMENTAL_COPY: HeaderName = HeaderName::from_static("x-ms-incremental-copy");
-const X_MS_REHYDRATE_PRIORITY: HeaderName = HeaderName::from_static("x-ms-rehydrate-priority");
-const X_MS_BLOB_CONTENT_LENGTH: HeaderName = HeaderName::from_static("x-ms-blob-content-length");
-const X_MS_BLOB_PUBLIC_ACCESS: HeaderName = HeaderName::from_static("x-ms-blob-public-access");
-const X_MS_DEFAULT_ENCRYPTION_SCOPE: HeaderName =
+const COPY_ID: HeaderName = HeaderName::from_static("x-ms-copy-id");
+const COPY_PROGRESS: HeaderName = HeaderName::from_static("x-ms-copy-progress");
+const COPY_SOURCE: HeaderName = HeaderName::from_static("x-ms-copy-source");
+const COPY_STATUS: HeaderName = HeaderName::from_static("x-ms-copy-status");
+const COPY_STATUS_DESCRIPTION: HeaderName = HeaderName::from_static("x-ms-copy-status-description");
+const CREATION_TIME: HeaderName = HeaderName::from_static("x-ms-creation-time");
+const DATE: HeaderName = HeaderName::from_static("date");
+const DEFAULT_ENCRYPTION_SCOPE: HeaderName =
     HeaderName::from_static("x-ms-default-encryption-scope");
-const X_MS_DENY_ENCRYPTION_SCOPE_OVERRIDE: HeaderName =
+const DENY_ENCRYPTION_SCOPE_OVERRIDE: HeaderName =
     HeaderName::from_static("x-ms-deny-encryption-scope-override");
-const X_MS_HAS_IMMUTABILITY_POLICY: HeaderName =
-    HeaderName::from_static("x-ms-has-immutability-policy");
-const X_MS_HAS_LEGAL_HOLD: HeaderName = HeaderName::from_static("x-ms-has-legal-hold");
-const X_MS_IMMUTABLE_STORAGE_WITH_VERSIONING_ENABLED: HeaderName =
+const ENCRYPTION_KEY_SHA256: HeaderName = HeaderName::from_static("x-ms-encryption-key-sha256");
+const ENCRYPTION_SCOPE: HeaderName = HeaderName::from_static("x-ms-encryption-scope");
+const EXPIRY_TIME: HeaderName = HeaderName::from_static("x-ms-expiry-time");
+const E_TAG: HeaderName = HeaderName::from_static("etag");
+const HAS_IMMUTABILITY_POLICY: HeaderName = HeaderName::from_static("x-ms-has-immutability-policy");
+const HAS_LEGAL_HOLD: HeaderName = HeaderName::from_static("x-ms-has-legal-hold");
+const IMMUTABILITY_POLICY_MODE: HeaderName =
+    HeaderName::from_static("x-ms-immutability-policy-mode");
+const IMMUTABILITY_POLICY_UNTIL_DATE: HeaderName =
+    HeaderName::from_static("x-ms-immutability-policy-until-date");
+const IMMUTABLE_STORAGE_WITH_VERSIONING_ENABLED: HeaderName =
     HeaderName::from_static("x-ms-immutable-storage-with-versioning-enabled");
+const INCREMENTAL_COPY: HeaderName = HeaderName::from_static("x-ms-incremental-copy");
+const IS_CURRENT_VERSION: HeaderName = HeaderName::from_static("x-ms-is-current-version");
+const IS_HNS_ENABLED: HeaderName = HeaderName::from_static("x-ms-is-hns-enabled");
+const LAST_ACCESS_TIME: HeaderName = HeaderName::from_static("x-ms-last-access-time");
+const LAST_MODIFIED: HeaderName = HeaderName::from_static("last-modified");
+const LEASE_DURATION: HeaderName = HeaderName::from_static("x-ms-lease-duration");
+const LEASE_ID: HeaderName = HeaderName::from_static("x-ms-lease-id");
+const LEASE_STATE: HeaderName = HeaderName::from_static("x-ms-lease-state");
+const LEASE_STATUS: HeaderName = HeaderName::from_static("x-ms-lease-status");
+const LEASE_TIME: HeaderName = HeaderName::from_static("x-ms-lease-time");
+const LEGAL_HOLD: HeaderName = HeaderName::from_static("x-ms-legal-hold");
+const META: &str = "x-ms-meta-";
+const OR: &str = "x-ms-or-";
+const OR_POLICY_ID: HeaderName = HeaderName::from_static("x-ms-or-policy-id");
+const REHYDRATE_PRIORITY: HeaderName = HeaderName::from_static("x-ms-rehydrate-priority");
+const REQUEST_ID: HeaderName = HeaderName::from_static("x-ms-request-id");
+const REQUEST_SERVER_ENCRYPTED: HeaderName =
+    HeaderName::from_static("x-ms-request-server-encrypted");
+const SKU_NAME: HeaderName = HeaderName::from_static("x-ms-sku-name");
+const SNAPSHOT: HeaderName = HeaderName::from_static("x-ms-snapshot");
+const STRUCTURED_BODY: HeaderName = HeaderName::from_static("x-ms-structured-body");
+const STRUCTURED_CONTENT_LENGTH: HeaderName =
+    HeaderName::from_static("x-ms-structured-content-length");
+const TAG_COUNT: HeaderName = HeaderName::from_static("x-ms-tag-count");
+const VERSION_ID: HeaderName = HeaderName::from_static("x-ms-version-id");
 
 /// Provides access to typed response headers for [`BlobAppendBlobClient::append_block_from_url()`](crate::clients::BlobAppendBlobClient::append_block_from_url())
 pub trait BlobAppendBlobClientAppendBlockFromUrlResultHeaders: private::Sealed {
@@ -171,14 +167,14 @@ impl BlobAppendBlobClientAppendBlockFromUrlResultHeaders
     /// This response header is returned only for append operations. It returns the offset at which the block was committed, in
     /// bytes.
     fn blob_append_offset(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_BLOB_APPEND_OFFSET))
+        Ok(self.headers().get_optional_string(&BLOB_APPEND_OFFSET))
     }
 
     /// The number of committed blocks present in the blob. This header is returned only for append blobs.
     fn blob_committed_block_count(&self) -> Result<Option<i32>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_BLOB_COMMITTED_BLOCK_COUNT)
+            .get_optional_string(&BLOB_COMMITTED_BLOCK_COUNT)
         {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
@@ -187,32 +183,30 @@ impl BlobAppendBlobClientAppendBlockFromUrlResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
+        Ok(self.headers().get_optional_string(&CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -220,7 +214,7 @@ impl BlobAppendBlobClientAppendBlockFromUrlResultHeaders
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -278,14 +272,14 @@ impl BlobAppendBlobClientAppendBlockResultHeaders
     /// This response header is returned only for append operations. It returns the offset at which the block was committed, in
     /// bytes.
     fn blob_append_offset(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_BLOB_APPEND_OFFSET))
+        Ok(self.headers().get_optional_string(&BLOB_APPEND_OFFSET))
     }
 
     /// The number of committed blocks present in the blob. This header is returned only for append blobs.
     fn blob_committed_block_count(&self) -> Result<Option<i32>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_BLOB_COMMITTED_BLOCK_COUNT)
+            .get_optional_string(&BLOB_COMMITTED_BLOCK_COUNT)
         {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
@@ -294,32 +288,30 @@ impl BlobAppendBlobClientAppendBlockResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
+        Ok(self.headers().get_optional_string(&CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -327,7 +319,7 @@ impl BlobAppendBlobClientAppendBlockResultHeaders
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -336,7 +328,7 @@ impl BlobAppendBlobClientAppendBlockResultHeaders
 
     /// Indicates the response body contains a structured message and specifies the message schema version and properties.
     fn structured_body_type(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_STRUCTURED_BODY))
+        Ok(self.headers().get_optional_string(&STRUCTURED_BODY))
     }
 }
 
@@ -384,27 +376,25 @@ impl BlobAppendBlobClientCreateResultHeaders for Response<BlobAppendBlobClientCr
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -412,7 +402,7 @@ impl BlobAppendBlobClientCreateResultHeaders for Response<BlobAppendBlobClientCr
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -422,7 +412,7 @@ impl BlobAppendBlobClientCreateResultHeaders for Response<BlobAppendBlobClientCr
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
+        Ok(self.headers().get_optional_string(&VERSION_ID))
     }
 }
 
@@ -460,7 +450,7 @@ impl BlobAppendBlobClientSealResultHeaders for Response<BlobAppendBlobClientSeal
 
     /// If this blob has been sealed
     fn is_sealed(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_BLOB_SEALED) {
+        match self.headers().get_optional_string(&BLOB_SEALED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -468,12 +458,12 @@ impl BlobAppendBlobClientSealResultHeaders for Response<BlobAppendBlobClientSeal
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -497,12 +487,12 @@ impl BlobBlobClientAbortCopyFromUrlResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -540,17 +530,17 @@ impl BlobBlobClientAcquireLeaseResultHeaders for Response<BlobBlobClientAcquireL
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
+        Ok(self.headers().get_optional_string(&LEASE_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -588,12 +578,12 @@ impl BlobBlobClientBreakLeaseResultHeaders for Response<BlobBlobClientBreakLease
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Approximate time remaining in the lease period, in seconds.
     fn lease_time(&self) -> Result<Option<i32>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_TIME) {
+        match self.headers().get_optional_string(&LEASE_TIME) {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
         }
@@ -601,7 +591,7 @@ impl BlobBlobClientBreakLeaseResultHeaders for Response<BlobBlobClientBreakLease
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -639,17 +629,17 @@ impl BlobBlobClientChangeLeaseResultHeaders for Response<BlobBlobClientChangeLea
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
+        Ok(self.headers().get_optional_string(&LEASE_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -698,23 +688,23 @@ impl BlobBlobClientCopyFromUrlResultHeaders for Response<BlobBlobClientCopyFromU
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
+        Ok(self.headers().get_optional_string(&CONTENT_CRC64))
     }
 
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
     /// pass to Abort Copy Blob to abort a pending copy.
     fn copy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_COPY_ID))
+        Ok(self.headers().get_optional_string(&COPY_ID))
     }
 
     /// State of the copy operation identified by x-ms-copy-id.
     fn copy_status(&self) -> Result<Option<CopyStatus>> {
-        match self.headers().get_optional_string(&X_MS_COPY_STATUS) {
+        match self.headers().get_optional_string(&COPY_STATUS) {
             Some(v) => Ok(Some(CopyStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -724,18 +714,18 @@ impl BlobBlobClientCopyFromUrlResultHeaders for Response<BlobBlobClientCopyFromU
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
+        Ok(self.headers().get_optional_string(&VERSION_ID))
     }
 }
 
@@ -775,12 +765,12 @@ impl BlobBlobClientCreateSnapshotResultHeaders for Response<BlobBlobClientCreate
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -788,7 +778,7 @@ impl BlobBlobClientCreateSnapshotResultHeaders for Response<BlobBlobClientCreate
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -798,13 +788,13 @@ impl BlobBlobClientCreateSnapshotResultHeaders for Response<BlobBlobClientCreate
     /// Uniquely identifies the snapshot and indicates the snapshot version. It may be used in subsequent requests to access the
     /// snapshot.
     fn snapshot(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_SNAPSHOT))
+        Ok(self.headers().get_optional_string(&SNAPSHOT))
     }
 
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
+        Ok(self.headers().get_optional_string(&VERSION_ID))
     }
 }
 
@@ -828,12 +818,12 @@ impl BlobBlobClientDeleteImmutabilityPolicyResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -855,12 +845,12 @@ impl BlobBlobClientDeleteResultHeaders for Response<BlobBlobClientDeleteResult> 
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -986,7 +976,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     fn blob_committed_block_count(&self) -> Result<Option<i32>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_BLOB_COMMITTED_BLOCK_COUNT)
+            .get_optional_string(&BLOB_COMMITTED_BLOCK_COUNT)
         {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
@@ -997,7 +987,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn blob_content_md5(&self) -> Result<Option<Vec<u8>>> {
-        match self.headers().get_optional_string(&X_MS_BLOB_CONTENT_MD5) {
+        match self.headers().get_optional_string(&BLOB_CONTENT_MD5) {
             Some(v) => Ok(Some(base64::decode(v)?)),
             None => Ok(None),
         }
@@ -1005,7 +995,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// If this blob has been sealed
     fn is_sealed(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_BLOB_SEALED) {
+        match self.headers().get_optional_string(&BLOB_SEALED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1013,10 +1003,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
-        {
+        match self.headers().get_optional_string(&BLOB_SEQUENCE_NUMBER) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1024,7 +1011,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// The type of the blob.
     fn blob_type(&self) -> Result<Option<BlobType>> {
-        match self.headers().get_optional_string(&X_MS_BLOB_TYPE) {
+        match self.headers().get_optional_string(&BLOB_TYPE) {
             Some(v) => Ok(Some(BlobType::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1032,12 +1019,12 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
+        Ok(self.headers().get_optional_string(&CONTENT_CRC64))
     }
 
     /// Conclusion time of the last attempted Copy Blob operation where this blob was the destination blob. This value can specify
@@ -1045,10 +1032,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// has never been the destination in a Copy Blob operation, or if this blob has been modified after a concluded Copy Blob
     /// operation using Set Blob Properties, Put Blob, or Put Block List.
     fn copy_completion_time(&self) -> Result<Option<OffsetDateTime>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_COPY_COMPLETION_TIME)
-        {
+        match self.headers().get_optional_string(&COPY_COMPLETION_TIME) {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
         }
@@ -1057,7 +1041,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
     /// pass to Abort Copy Blob to abort a pending copy.
     fn copy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_COPY_ID))
+        Ok(self.headers().get_optional_string(&COPY_ID))
     }
 
     /// Contains the number of bytes copied and the total bytes in the source in the last attempted Copy Blob operation where
@@ -1065,7 +1049,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// this blob has never been the destination in a Copy Blob operation, or if this blob has been modified after a concluded
     /// Copy Blob operation using Set Blob Properties, Put Blob, or Put Block List
     fn copy_progress(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_COPY_PROGRESS))
+        Ok(self.headers().get_optional_string(&COPY_PROGRESS))
     }
 
     /// URL up to 2 KB in length that specifies the source blob or file used in the last attempted Copy Blob operation where this
@@ -1073,12 +1057,12 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// operation, or if this blob has been modified after a concluded Copy Blob operation using Set Blob Properties, Put Blob,
     /// or Put Block List.
     fn copy_source(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_COPY_SOURCE))
+        Ok(self.headers().get_optional_string(&COPY_SOURCE))
     }
 
     /// State of the copy operation identified by x-ms-copy-id.
     fn copy_status(&self) -> Result<Option<CopyStatus>> {
-        match self.headers().get_optional_string(&X_MS_COPY_STATUS) {
+        match self.headers().get_optional_string(&COPY_STATUS) {
             Some(v) => Ok(Some(CopyStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1088,14 +1072,12 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// failure. This header does not appear if this blob has never been the destination in a Copy Blob operation, or if this
     /// blob has been modified after a concluded Copy Blob operation using Set Blob Properties, Put Blob, or Put Block List
     fn copy_status_description(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_COPY_STATUS_DESCRIPTION))
+        Ok(self.headers().get_optional_string(&COPY_STATUS_DESCRIPTION))
     }
 
     /// Returns the date and time the blob was created.
     fn creation_time(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&X_MS_CREATION_TIME) {
+        match self.headers().get_optional_string(&CREATION_TIME) {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
         }
@@ -1104,23 +1086,21 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// Indicates the immutability policy mode of the blob.
     fn immutability_policy_mode(&self) -> Result<Option<BlobImmutabilityPolicyMode>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_IMMUTABILITY_POLICY_MODE)
+            .get_optional_string(&IMMUTABILITY_POLICY_MODE)
         {
             Some(v) => Ok(Some(BlobImmutabilityPolicyMode::from_str(&v)?)),
             None => Ok(None),
@@ -1131,7 +1111,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     fn immutability_policy_expires_on(&self) -> Result<Option<OffsetDateTime>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_IMMUTABILITY_POLICY_UNTIL_DATE)
+            .get_optional_string(&IMMUTABILITY_POLICY_UNTIL_DATE)
         {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
@@ -1140,7 +1120,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// The value of this header indicates whether version of this blob is a current version, see also x-ms-version-id header.
     fn is_current_version(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_IS_CURRENT_VERSION) {
+        match self.headers().get_optional_string(&IS_CURRENT_VERSION) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1148,7 +1128,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// UTC date/time value generated by the service that indicates the time at which the blob was last read or written to
     fn last_accessed(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&X_MS_LAST_ACCESS_TIME) {
+        match self.headers().get_optional_string(&LAST_ACCESS_TIME) {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
         }
@@ -1157,7 +1137,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease
     /// can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change.
     fn duration(&self) -> Result<Option<i32>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_DURATION) {
+        match self.headers().get_optional_string(&LEASE_DURATION) {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1165,7 +1145,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// Lease state of the blob.
     fn lease_state(&self) -> Result<Option<LeaseState>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_STATE) {
+        match self.headers().get_optional_string(&LEASE_STATE) {
             Some(v) => Ok(Some(LeaseState::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1173,7 +1153,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// The lease status of the blob.
     fn lease_status(&self) -> Result<Option<LeaseStatus>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_STATUS) {
+        match self.headers().get_optional_string(&LEASE_STATUS) {
             Some(v) => Ok(Some(LeaseStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1181,7 +1161,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// Specifies the legal hold status to set on the blob.
     fn legal_hold(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_LEGAL_HOLD) {
+        match self.headers().get_optional_string(&LEGAL_HOLD) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1192,8 +1172,8 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
         let mut values = HashMap::new();
         for h in self.headers().iter() {
             let name = h.0.as_str();
-            if name.len() > X_MS_META.len() && name.starts_with(X_MS_META) {
-                values.insert(name[X_MS_META.len()..].to_owned(), h.1.as_str().to_owned());
+            if name.len() > META.len() && name.starts_with(META) {
+                values.insert(name[META.len()..].to_owned(), h.1.as_str().to_owned());
             }
         }
         Ok(values)
@@ -1206,8 +1186,8 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
         let mut values = HashMap::new();
         for h in self.headers().iter() {
             let name = h.0.as_str();
-            if name.len() > X_MS_OR.len() && name.starts_with(X_MS_OR) {
-                values.insert(name[X_MS_OR.len()..].to_owned(), h.1.as_str().to_owned());
+            if name.len() > OR.len() && name.starts_with(OR) {
+                values.insert(name[OR.len()..].to_owned(), h.1.as_str().to_owned());
             }
         }
         Ok(values)
@@ -1215,12 +1195,12 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// Optional. Only valid when Object Replication is enabled for the storage container and on the destination blob of the replication.
     fn object_replication_policy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_OR_POLICY_ID))
+        Ok(self.headers().get_optional_string(&OR_POLICY_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -1228,7 +1208,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -1237,7 +1217,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// Indicates the response body contains a structured message and specifies the message schema version and properties.
     fn structured_body_type(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_STRUCTURED_BODY))
+        Ok(self.headers().get_optional_string(&STRUCTURED_BODY))
     }
 
     /// The length of the blob/file content inside the message body when the response body is returned as a structured message.
@@ -1245,7 +1225,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     fn structured_content_length(&self) -> Result<Option<i64>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_STRUCTURED_CONTENT_LENGTH)
+            .get_optional_string(&STRUCTURED_CONTENT_LENGTH)
         {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
@@ -1254,7 +1234,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// The number of tags associated with the blob
     fn tag_count(&self) -> Result<Option<i64>> {
-        match self.headers().get_optional_string(&X_MS_TAG_COUNT) {
+        match self.headers().get_optional_string(&TAG_COUNT) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1263,7 +1243,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
+        Ok(self.headers().get_optional_string(&VERSION_ID))
     }
 }
 
@@ -1288,7 +1268,7 @@ impl BlobBlobClientGetAccountInfoResultHeaders for Response<BlobBlobClientGetAcc
 
     /// Identifies the account kind
     fn account_kind(&self) -> Result<Option<AccountKind>> {
-        match self.headers().get_optional_string(&X_MS_ACCOUNT_KIND) {
+        match self.headers().get_optional_string(&ACCOUNT_KIND) {
             Some(v) => Ok(Some(AccountKind::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1296,12 +1276,12 @@ impl BlobBlobClientGetAccountInfoResultHeaders for Response<BlobBlobClientGetAcc
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Version 2019-07-07 and newer. Indicates if the account has a hierarchical namespace enabled.
     fn is_hierarchical_namespace_enabled(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_IS_HNS_ENABLED) {
+        match self.headers().get_optional_string(&IS_HNS_ENABLED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1309,12 +1289,12 @@ impl BlobBlobClientGetAccountInfoResultHeaders for Response<BlobBlobClientGetAcc
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// Identifies the sku name of the account
     fn sku_name(&self) -> Result<Option<SkuName>> {
-        match self.headers().get_optional_string(&X_MS_SKU_NAME) {
+        match self.headers().get_optional_string(&SKU_NAME) {
             Some(v) => Ok(Some(SkuName::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1438,7 +1418,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// The tier to be set on the blob.
     fn tier(&self) -> Result<Option<AccessTier>> {
-        match self.headers().get_optional_string(&X_MS_ACCESS_TIER) {
+        match self.headers().get_optional_string(&ACCESS_TIER) {
             Some(v) => Ok(Some(AccessTier::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1446,10 +1426,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// The time the tier was changed on the object. This is only returned if the tier on the block blob was ever set.
     fn access_tier_change_time(&self) -> Result<Option<OffsetDateTime>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_ACCESS_TIER_CHANGE_TIME)
-        {
+        match self.headers().get_optional_string(&ACCESS_TIER_CHANGE_TIME) {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
         }
@@ -1458,10 +1435,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// For page blobs on a premium storage account only. If the access tier is not explicitly set on the blob, the tier is inferred
     /// based on its content length and this header will be returned with true value.
     fn access_tier_inferred(&self) -> Result<Option<bool>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_ACCESS_TIER_INFERRED)
-        {
+        match self.headers().get_optional_string(&ACCESS_TIER_INFERRED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1471,7 +1445,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// rehydrated and is not complete then this header is returned indicating that rehydrate is pending and also tells the destination
     /// tier.
     fn archive_status(&self) -> Result<Option<ArchiveStatus>> {
-        match self.headers().get_optional_string(&X_MS_ARCHIVE_STATUS) {
+        match self.headers().get_optional_string(&ARCHIVE_STATUS) {
             Some(v) => Ok(Some(ArchiveStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1481,7 +1455,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn blob_committed_block_count(&self) -> Result<Option<i32>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_BLOB_COMMITTED_BLOCK_COUNT)
+            .get_optional_string(&BLOB_COMMITTED_BLOCK_COUNT)
         {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
@@ -1490,7 +1464,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// If this blob has been sealed
     fn is_sealed(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_BLOB_SEALED) {
+        match self.headers().get_optional_string(&BLOB_SEALED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1498,10 +1472,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
-        {
+        match self.headers().get_optional_string(&BLOB_SEQUENCE_NUMBER) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1509,7 +1480,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// The type of the blob.
     fn blob_type(&self) -> Result<Option<BlobType>> {
-        match self.headers().get_optional_string(&X_MS_BLOB_TYPE) {
+        match self.headers().get_optional_string(&BLOB_TYPE) {
             Some(v) => Ok(Some(BlobType::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1517,7 +1488,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Conclusion time of the last attempted Copy Blob operation where this blob was the destination blob. This value can specify
@@ -1525,10 +1496,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// has never been the destination in a Copy Blob operation, or if this blob has been modified after a concluded Copy Blob
     /// operation using Set Blob Properties, Put Blob, or Put Block List.
     fn copy_completion_time(&self) -> Result<Option<OffsetDateTime>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_COPY_COMPLETION_TIME)
-        {
+        match self.headers().get_optional_string(&COPY_COMPLETION_TIME) {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
         }
@@ -1539,13 +1507,13 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn destination_snapshot(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&X_MS_COPY_DESTINATION_SNAPSHOT))
+            .get_optional_string(&COPY_DESTINATION_SNAPSHOT))
     }
 
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
     /// pass to Abort Copy Blob to abort a pending copy.
     fn copy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_COPY_ID))
+        Ok(self.headers().get_optional_string(&COPY_ID))
     }
 
     /// Contains the number of bytes copied and the total bytes in the source in the last attempted Copy Blob operation where
@@ -1553,7 +1521,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// this blob has never been the destination in a Copy Blob operation, or if this blob has been modified after a concluded
     /// Copy Blob operation using Set Blob Properties, Put Blob, or Put Block List
     fn copy_progress(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_COPY_PROGRESS))
+        Ok(self.headers().get_optional_string(&COPY_PROGRESS))
     }
 
     /// URL up to 2 KB in length that specifies the source blob or file used in the last attempted Copy Blob operation where this
@@ -1561,12 +1529,12 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// operation, or if this blob has been modified after a concluded Copy Blob operation using Set Blob Properties, Put Blob,
     /// or Put Block List.
     fn copy_source(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_COPY_SOURCE))
+        Ok(self.headers().get_optional_string(&COPY_SOURCE))
     }
 
     /// State of the copy operation identified by x-ms-copy-id.
     fn copy_status(&self) -> Result<Option<CopyStatus>> {
-        match self.headers().get_optional_string(&X_MS_COPY_STATUS) {
+        match self.headers().get_optional_string(&COPY_STATUS) {
             Some(v) => Ok(Some(CopyStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1576,14 +1544,12 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// failure. This header does not appear if this blob has never been the destination in a Copy Blob operation, or if this
     /// blob has been modified after a concluded Copy Blob operation using Set Blob Properties, Put Blob, or Put Block List
     fn copy_status_description(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_COPY_STATUS_DESCRIPTION))
+        Ok(self.headers().get_optional_string(&COPY_STATUS_DESCRIPTION))
     }
 
     /// Returns the date and time the blob was created.
     fn creation_time(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&X_MS_CREATION_TIME) {
+        match self.headers().get_optional_string(&CREATION_TIME) {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
         }
@@ -1592,21 +1558,19 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// The time this blob will expire.
     fn expires_on(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&X_MS_EXPIRY_TIME) {
+        match self.headers().get_optional_string(&EXPIRY_TIME) {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
         }
@@ -1616,7 +1580,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn immutability_policy_mode(&self) -> Result<Option<BlobImmutabilityPolicyMode>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_IMMUTABILITY_POLICY_MODE)
+            .get_optional_string(&IMMUTABILITY_POLICY_MODE)
         {
             Some(v) => Ok(Some(BlobImmutabilityPolicyMode::from_str(&v)?)),
             None => Ok(None),
@@ -1627,7 +1591,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn immutability_policy_expires_on(&self) -> Result<Option<OffsetDateTime>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_IMMUTABILITY_POLICY_UNTIL_DATE)
+            .get_optional_string(&IMMUTABILITY_POLICY_UNTIL_DATE)
         {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
@@ -1636,7 +1600,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// Included if the blob is incremental copy blob.
     fn is_incremental_copy(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_INCREMENTAL_COPY) {
+        match self.headers().get_optional_string(&INCREMENTAL_COPY) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1644,7 +1608,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// The value of this header indicates whether version of this blob is a current version, see also x-ms-version-id header.
     fn is_current_version(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_IS_CURRENT_VERSION) {
+        match self.headers().get_optional_string(&IS_CURRENT_VERSION) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1652,7 +1616,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// UTC date/time value generated by the service that indicates the time at which the blob was last read or written to
     fn last_accessed(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&X_MS_LAST_ACCESS_TIME) {
+        match self.headers().get_optional_string(&LAST_ACCESS_TIME) {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
         }
@@ -1661,7 +1625,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease
     /// can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change.
     fn duration(&self) -> Result<Option<i32>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_DURATION) {
+        match self.headers().get_optional_string(&LEASE_DURATION) {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1669,7 +1633,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// Lease state of the blob.
     fn lease_state(&self) -> Result<Option<LeaseState>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_STATE) {
+        match self.headers().get_optional_string(&LEASE_STATE) {
             Some(v) => Ok(Some(LeaseState::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1677,7 +1641,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// The lease status of the blob.
     fn lease_status(&self) -> Result<Option<LeaseStatus>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_STATUS) {
+        match self.headers().get_optional_string(&LEASE_STATUS) {
             Some(v) => Ok(Some(LeaseStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1685,7 +1649,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// Specifies the legal hold status to set on the blob.
     fn legal_hold(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_LEGAL_HOLD) {
+        match self.headers().get_optional_string(&LEGAL_HOLD) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1696,8 +1660,8 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
         let mut values = HashMap::new();
         for h in self.headers().iter() {
             let name = h.0.as_str();
-            if name.len() > X_MS_META.len() && name.starts_with(X_MS_META) {
-                values.insert(name[X_MS_META.len()..].to_owned(), h.1.as_str().to_owned());
+            if name.len() > META.len() && name.starts_with(META) {
+                values.insert(name[META.len()..].to_owned(), h.1.as_str().to_owned());
             }
         }
         Ok(values)
@@ -1710,8 +1674,8 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
         let mut values = HashMap::new();
         for h in self.headers().iter() {
             let name = h.0.as_str();
-            if name.len() > X_MS_OR.len() && name.starts_with(X_MS_OR) {
-                values.insert(name[X_MS_OR.len()..].to_owned(), h.1.as_str().to_owned());
+            if name.len() > OR.len() && name.starts_with(OR) {
+                values.insert(name[OR.len()..].to_owned(), h.1.as_str().to_owned());
             }
         }
         Ok(values)
@@ -1719,13 +1683,13 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// Optional. Only valid when Object Replication is enabled for the storage container and on the destination blob of the replication.
     fn object_replication_policy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_OR_POLICY_ID))
+        Ok(self.headers().get_optional_string(&OR_POLICY_ID))
     }
 
     /// If an object is in rehydrate pending state then this header is returned with priority of rehydrate. Valid values are High
     /// and Standard.
     fn rehydrate_priority(&self) -> Result<Option<RehydratePriority>> {
-        match self.headers().get_optional_string(&X_MS_REHYDRATE_PRIORITY) {
+        match self.headers().get_optional_string(&REHYDRATE_PRIORITY) {
             Some(v) => Ok(Some(RehydratePriority::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1733,7 +1697,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -1741,7 +1705,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -1750,7 +1714,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
 
     /// The number of tags associated with the blob
     fn tag_count(&self) -> Result<Option<i64>> {
-        match self.headers().get_optional_string(&X_MS_TAG_COUNT) {
+        match self.headers().get_optional_string(&TAG_COUNT) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1759,7 +1723,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
+        Ok(self.headers().get_optional_string(&VERSION_ID))
     }
 }
 
@@ -1796,12 +1760,12 @@ impl BlobBlobClientReleaseLeaseResultHeaders for Response<BlobBlobClientReleaseL
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -1839,17 +1803,17 @@ impl BlobBlobClientRenewLeaseResultHeaders for Response<BlobBlobClientRenewLease
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
+        Ok(self.headers().get_optional_string(&LEASE_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -1886,12 +1850,12 @@ impl BlobBlobClientSetExpiryResultHeaders for Response<BlobBlobClientSetExpiryRe
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -1929,10 +1893,7 @@ impl BlobBlobClientSetHttpHeadersResultHeaders for Response<BlobBlobClientSetHtt
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
-        {
+        match self.headers().get_optional_string(&BLOB_SEQUENCE_NUMBER) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -1940,12 +1901,12 @@ impl BlobBlobClientSetHttpHeadersResultHeaders for Response<BlobBlobClientSetHtt
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -1954,7 +1915,7 @@ pub trait BlobBlobClientSetImmutabilityPolicyResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn immutability_policy_mode(&self) -> Result<Option<BlobImmutabilityPolicyMode>>;
-    fn immutability_policy_expiry(&self) -> Result<Option<OffsetDateTime>>;
+    fn immutability_policy_expires_on(&self) -> Result<Option<OffsetDateTime>>;
     fn request_id(&self) -> Result<Option<String>>;
 }
 
@@ -1971,25 +1932,25 @@ impl BlobBlobClientSetImmutabilityPolicyResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Indicates the immutability policy mode of the blob.
     fn immutability_policy_mode(&self) -> Result<Option<BlobImmutabilityPolicyMode>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_IMMUTABILITY_POLICY_MODE)
+            .get_optional_string(&IMMUTABILITY_POLICY_MODE)
         {
             Some(v) => Ok(Some(BlobImmutabilityPolicyMode::from_str(&v)?)),
             None => Ok(None),
         }
     }
 
-    /// Indicates the time the immutability policy will expire.
-    fn immutability_policy_expiry(&self) -> Result<Option<OffsetDateTime>> {
+    /// UTC date/time value generated by the service that indicates the time at which the blob immutability policy will expire.
+    fn immutability_policy_expires_on(&self) -> Result<Option<OffsetDateTime>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_IMMUTABILITY_POLICY_UNTIL_DATE)
+            .get_optional_string(&IMMUTABILITY_POLICY_UNTIL_DATE)
         {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
@@ -1998,7 +1959,7 @@ impl BlobBlobClientSetImmutabilityPolicyResultHeaders
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -2021,12 +1982,12 @@ impl BlobBlobClientSetLegalHoldResultHeaders for Response<BlobBlobClientSetLegal
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Specifies the legal hold status to set on the blob.
     fn legal_hold(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_LEGAL_HOLD) {
+        match self.headers().get_optional_string(&LEGAL_HOLD) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2034,7 +1995,7 @@ impl BlobBlobClientSetLegalHoldResultHeaders for Response<BlobBlobClientSetLegal
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -2075,27 +2036,25 @@ impl BlobBlobClientSetMetadataResultHeaders for Response<BlobBlobClientSetMetada
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2103,7 +2062,7 @@ impl BlobBlobClientSetMetadataResultHeaders for Response<BlobBlobClientSetMetada
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2113,7 +2072,7 @@ impl BlobBlobClientSetMetadataResultHeaders for Response<BlobBlobClientSetMetada
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
+        Ok(self.headers().get_optional_string(&VERSION_ID))
     }
 }
 
@@ -2135,12 +2094,12 @@ impl BlobBlobClientSetTagsResultHeaders for Response<BlobBlobClientSetTagsResult
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -2153,12 +2112,12 @@ pub trait BlobBlobClientSetTierResultHeaders: private::Sealed {
 impl BlobBlobClientSetTierResultHeaders for Response<BlobBlobClientSetTierResult> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -2200,18 +2159,18 @@ impl BlobBlobClientStartCopyFromUrlResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
     /// pass to Abort Copy Blob to abort a pending copy.
     fn copy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_COPY_ID))
+        Ok(self.headers().get_optional_string(&COPY_ID))
     }
 
     /// State of the copy operation identified by x-ms-copy-id.
     fn copy_status(&self) -> Result<Option<CopyStatus>> {
-        match self.headers().get_optional_string(&X_MS_COPY_STATUS) {
+        match self.headers().get_optional_string(&COPY_STATUS) {
             Some(v) => Ok(Some(CopyStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2219,13 +2178,13 @@ impl BlobBlobClientStartCopyFromUrlResultHeaders
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
+        Ok(self.headers().get_optional_string(&VERSION_ID))
     }
 }
 
@@ -2247,12 +2206,12 @@ impl BlobBlobClientUndeleteResultHeaders for Response<BlobBlobClientUndeleteResu
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -2303,32 +2262,30 @@ impl BlobBlockBlobClientCommitBlockListResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
+        Ok(self.headers().get_optional_string(&CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2336,7 +2293,7 @@ impl BlobBlockBlobClientCommitBlockListResultHeaders
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2346,7 +2303,7 @@ impl BlobBlockBlobClientCommitBlockListResultHeaders
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
+        Ok(self.headers().get_optional_string(&VERSION_ID))
     }
 }
 
@@ -2396,27 +2353,25 @@ impl BlobBlockBlobClientPutBlobFromUrlResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2424,7 +2379,7 @@ impl BlobBlockBlobClientPutBlobFromUrlResultHeaders
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2434,7 +2389,7 @@ impl BlobBlockBlobClientPutBlobFromUrlResultHeaders
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
+        Ok(self.headers().get_optional_string(&VERSION_ID))
     }
 }
 
@@ -2547,7 +2502,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     fn blob_committed_block_count(&self) -> Result<Option<i32>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_BLOB_COMMITTED_BLOCK_COUNT)
+            .get_optional_string(&BLOB_COMMITTED_BLOCK_COUNT)
         {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
@@ -2558,7 +2513,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn blob_content_md5(&self) -> Result<Option<Vec<u8>>> {
-        match self.headers().get_optional_string(&X_MS_BLOB_CONTENT_MD5) {
+        match self.headers().get_optional_string(&BLOB_CONTENT_MD5) {
             Some(v) => Ok(Some(base64::decode(v)?)),
             None => Ok(None),
         }
@@ -2566,10 +2521,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
-        {
+        match self.headers().get_optional_string(&BLOB_SEQUENCE_NUMBER) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2577,7 +2529,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
 
     /// The type of the blob.
     fn blob_type(&self) -> Result<Option<BlobType>> {
-        match self.headers().get_optional_string(&X_MS_BLOB_TYPE) {
+        match self.headers().get_optional_string(&BLOB_TYPE) {
             Some(v) => Ok(Some(BlobType::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2585,12 +2537,12 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
+        Ok(self.headers().get_optional_string(&CONTENT_CRC64))
     }
 
     /// Conclusion time of the last attempted Copy Blob operation where this blob was the destination blob. This value can specify
@@ -2598,10 +2550,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     /// has never been the destination in a Copy Blob operation, or if this blob has been modified after a concluded Copy Blob
     /// operation using Set Blob Properties, Put Blob, or Put Block List.
     fn copy_completion_time(&self) -> Result<Option<OffsetDateTime>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_COPY_COMPLETION_TIME)
-        {
+        match self.headers().get_optional_string(&COPY_COMPLETION_TIME) {
             Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
             None => Ok(None),
         }
@@ -2610,7 +2559,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
     /// pass to Abort Copy Blob to abort a pending copy.
     fn copy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_COPY_ID))
+        Ok(self.headers().get_optional_string(&COPY_ID))
     }
 
     /// Contains the number of bytes copied and the total bytes in the source in the last attempted Copy Blob operation where
@@ -2618,7 +2567,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     /// this blob has never been the destination in a Copy Blob operation, or if this blob has been modified after a concluded
     /// Copy Blob operation using Set Blob Properties, Put Blob, or Put Block List
     fn copy_progress(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_COPY_PROGRESS))
+        Ok(self.headers().get_optional_string(&COPY_PROGRESS))
     }
 
     /// URL up to 2 KB in length that specifies the source blob or file used in the last attempted Copy Blob operation where this
@@ -2626,12 +2575,12 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     /// operation, or if this blob has been modified after a concluded Copy Blob operation using Set Blob Properties, Put Blob,
     /// or Put Block List.
     fn copy_source(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_COPY_SOURCE))
+        Ok(self.headers().get_optional_string(&COPY_SOURCE))
     }
 
     /// State of the copy operation identified by x-ms-copy-id.
     fn copy_status(&self) -> Result<Option<CopyStatus>> {
-        match self.headers().get_optional_string(&X_MS_COPY_STATUS) {
+        match self.headers().get_optional_string(&COPY_STATUS) {
             Some(v) => Ok(Some(CopyStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2641,30 +2590,26 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     /// failure. This header does not appear if this blob has never been the destination in a Copy Blob operation, or if this
     /// blob has been modified after a concluded Copy Blob operation using Set Blob Properties, Put Blob, or Put Block List
     fn copy_status_description(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_COPY_STATUS_DESCRIPTION))
+        Ok(self.headers().get_optional_string(&COPY_STATUS_DESCRIPTION))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease
     /// can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change.
     fn duration(&self) -> Result<Option<i32>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_DURATION) {
+        match self.headers().get_optional_string(&LEASE_DURATION) {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2672,7 +2617,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
 
     /// Lease state of the blob.
     fn lease_state(&self) -> Result<Option<LeaseState>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_STATE) {
+        match self.headers().get_optional_string(&LEASE_STATE) {
             Some(v) => Ok(Some(LeaseState::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2680,7 +2625,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
 
     /// The lease status of the blob.
     fn lease_status(&self) -> Result<Option<LeaseStatus>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_STATUS) {
+        match self.headers().get_optional_string(&LEASE_STATUS) {
             Some(v) => Ok(Some(LeaseStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -2691,8 +2636,8 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
         let mut values = HashMap::new();
         for h in self.headers().iter() {
             let name = h.0.as_str();
-            if name.len() > X_MS_META.len() && name.starts_with(X_MS_META) {
-                values.insert(name[X_MS_META.len()..].to_owned(), h.1.as_str().to_owned());
+            if name.len() > META.len() && name.starts_with(META) {
+                values.insert(name[META.len()..].to_owned(), h.1.as_str().to_owned());
             }
         }
         Ok(values)
@@ -2700,7 +2645,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2708,7 +2653,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2747,32 +2692,30 @@ impl BlobBlockBlobClientStageBlockFromUrlResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
+        Ok(self.headers().get_optional_string(&CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2780,7 +2723,7 @@ impl BlobBlockBlobClientStageBlockFromUrlResultHeaders
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2818,32 +2761,30 @@ impl BlobBlockBlobClientStageBlockResultHeaders for Response<BlobBlockBlobClient
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
+        Ok(self.headers().get_optional_string(&CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2851,7 +2792,7 @@ impl BlobBlockBlobClientStageBlockResultHeaders for Response<BlobBlockBlobClient
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2860,7 +2801,7 @@ impl BlobBlockBlobClientStageBlockResultHeaders for Response<BlobBlockBlobClient
 
     /// Indicates the response body contains a structured message and specifies the message schema version and properties.
     fn structured_body_type(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_STRUCTURED_BODY))
+        Ok(self.headers().get_optional_string(&STRUCTURED_BODY))
     }
 }
 
@@ -2909,27 +2850,25 @@ impl BlobBlockBlobClientUploadResultHeaders for Response<BlobBlockBlobClientUplo
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -2937,7 +2876,7 @@ impl BlobBlockBlobClientUploadResultHeaders for Response<BlobBlockBlobClientUplo
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -2946,13 +2885,13 @@ impl BlobBlockBlobClientUploadResultHeaders for Response<BlobBlockBlobClientUplo
 
     /// Indicates the response body contains a structured message and specifies the message schema version and properties.
     fn structured_body_type(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_STRUCTURED_BODY))
+        Ok(self.headers().get_optional_string(&STRUCTURED_BODY))
     }
 
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
+        Ok(self.headers().get_optional_string(&VERSION_ID))
     }
 }
 
@@ -2992,17 +2931,17 @@ impl BlobContainerClientAcquireLeaseResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
+        Ok(self.headers().get_optional_string(&LEASE_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3041,17 +2980,17 @@ impl BlobContainerClientBreakLeaseResultHeaders for Response<BlobContainerClient
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
+        Ok(self.headers().get_optional_string(&LEASE_ID))
     }
 
     /// Approximate time remaining in the lease period, in seconds.
     fn lease_time(&self) -> Result<Option<i32>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_TIME) {
+        match self.headers().get_optional_string(&LEASE_TIME) {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3059,7 +2998,7 @@ impl BlobContainerClientBreakLeaseResultHeaders for Response<BlobContainerClient
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3099,17 +3038,17 @@ impl BlobContainerClientChangeLeaseResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
+        Ok(self.headers().get_optional_string(&LEASE_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3146,12 +3085,12 @@ impl BlobContainerClientCreateResultHeaders for Response<BlobContainerClientCrea
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3173,12 +3112,12 @@ impl BlobContainerClientDeleteResultHeaders for Response<BlobContainerClientDele
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3205,7 +3144,7 @@ impl BlobContainerClientGetAccountInfoResultHeaders
 
     /// Identifies the account kind
     fn account_kind(&self) -> Result<Option<AccountKind>> {
-        match self.headers().get_optional_string(&X_MS_ACCOUNT_KIND) {
+        match self.headers().get_optional_string(&ACCOUNT_KIND) {
             Some(v) => Ok(Some(AccountKind::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3213,12 +3152,12 @@ impl BlobContainerClientGetAccountInfoResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Version 2019-07-07 and newer. Indicates if the account has a hierarchical namespace enabled.
     fn is_hierarchical_namespace_enabled(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_IS_HNS_ENABLED) {
+        match self.headers().get_optional_string(&IS_HNS_ENABLED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3226,12 +3165,12 @@ impl BlobContainerClientGetAccountInfoResultHeaders
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// Identifies the sku name of the account
     fn sku_name(&self) -> Result<Option<SkuName>> {
-        match self.headers().get_optional_string(&X_MS_SKU_NAME) {
+        match self.headers().get_optional_string(&SKU_NAME) {
             Some(v) => Ok(Some(SkuName::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3283,7 +3222,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// The public access setting for the container.
     fn access(&self) -> Result<Option<PublicAccessType>> {
-        match self.headers().get_optional_string(&X_MS_BLOB_PUBLIC_ACCESS) {
+        match self.headers().get_optional_string(&BLOB_PUBLIC_ACCESS) {
             Some(v) => Ok(Some(PublicAccessType::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3291,14 +3230,14 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// The default encryption scope for the container.
     fn default_encryption_scope(&self) -> Result<Option<String>> {
         Ok(self
             .headers()
-            .get_optional_string(&X_MS_DEFAULT_ENCRYPTION_SCOPE))
+            .get_optional_string(&DEFAULT_ENCRYPTION_SCOPE))
     }
 
     /// If a blob has a lease and the lease is of infinite duration then the value of this header is set to true, otherwise it
@@ -3306,7 +3245,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
     fn prevent_encryption_scope_override(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_DENY_ENCRYPTION_SCOPE_OVERRIDE)
+            .get_optional_string(&DENY_ENCRYPTION_SCOPE_OVERRIDE)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -3315,10 +3254,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// Indicates whether the container has an immutability policy set on it.
     fn has_immutability_policy(&self) -> Result<Option<bool>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_HAS_IMMUTABILITY_POLICY)
-        {
+        match self.headers().get_optional_string(&HAS_IMMUTABILITY_POLICY) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3326,7 +3262,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// Indicates whether the container has a legal hold.
     fn has_legal_hold(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_HAS_LEGAL_HOLD) {
+        match self.headers().get_optional_string(&HAS_LEGAL_HOLD) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3336,7 +3272,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
     fn is_immutable_storage_with_versioning_enabled(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_IMMUTABLE_STORAGE_WITH_VERSIONING_ENABLED)
+            .get_optional_string(&IMMUTABLE_STORAGE_WITH_VERSIONING_ENABLED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -3346,7 +3282,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
     /// Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease
     /// can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change.
     fn duration(&self) -> Result<Option<i32>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_DURATION) {
+        match self.headers().get_optional_string(&LEASE_DURATION) {
             Some(v) => Ok(Some(i32::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3354,7 +3290,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// Lease state of the blob.
     fn lease_state(&self) -> Result<Option<LeaseState>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_STATE) {
+        match self.headers().get_optional_string(&LEASE_STATE) {
             Some(v) => Ok(Some(LeaseState::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3362,7 +3298,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// The lease status of the blob.
     fn lease_status(&self) -> Result<Option<LeaseStatus>> {
-        match self.headers().get_optional_string(&X_MS_LEASE_STATUS) {
+        match self.headers().get_optional_string(&LEASE_STATUS) {
             Some(v) => Ok(Some(LeaseStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3373,8 +3309,8 @@ impl BlobContainerClientGetPropertiesResultHeaders
         let mut values = HashMap::new();
         for h in self.headers().iter() {
             let name = h.0.as_str();
-            if name.len() > X_MS_META.len() && name.starts_with(X_MS_META) {
-                values.insert(name[X_MS_META.len()..].to_owned(), h.1.as_str().to_owned());
+            if name.len() > META.len() && name.starts_with(META) {
+                values.insert(name[META.len()..].to_owned(), h.1.as_str().to_owned());
             }
         }
         Ok(values)
@@ -3382,7 +3318,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3421,12 +3357,12 @@ impl BlobContainerClientReleaseLeaseResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3448,12 +3384,12 @@ impl BlobContainerClientRenameResultHeaders for Response<BlobContainerClientRena
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3491,17 +3427,17 @@ impl BlobContainerClientRenewLeaseResultHeaders for Response<BlobContainerClient
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Uniquely identifies a blobs' lease
     fn lease_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_LEASE_ID))
+        Ok(self.headers().get_optional_string(&LEASE_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3523,12 +3459,12 @@ impl BlobContainerClientRestoreResultHeaders for Response<BlobContainerClientRes
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3567,12 +3503,12 @@ impl BlobContainerClientSetAccessPolicyResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3611,12 +3547,12 @@ impl BlobContainerClientSetMetadataResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3630,7 +3566,7 @@ impl BlobContainerClientSubmitBatchResultHeaders
 {
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3676,10 +3612,7 @@ impl BlobPageBlobClientClearPagesResultHeaders for Response<BlobPageBlobClientCl
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
-        {
+        match self.headers().get_optional_string(&BLOB_SEQUENCE_NUMBER) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3687,17 +3620,17 @@ impl BlobPageBlobClientClearPagesResultHeaders for Response<BlobPageBlobClientCl
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
+        Ok(self.headers().get_optional_string(&CONTENT_CRC64))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3738,18 +3671,18 @@ impl BlobPageBlobClientCopyIncrementalResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// String identifier for this copy operation. Use with Get Blob Properties to check the status of this copy operation, or
     /// pass to Abort Copy Blob to abort a pending copy.
     fn copy_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_COPY_ID))
+        Ok(self.headers().get_optional_string(&COPY_ID))
     }
 
     /// State of the copy operation identified by x-ms-copy-id.
     fn copy_status(&self) -> Result<Option<CopyStatus>> {
-        match self.headers().get_optional_string(&X_MS_COPY_STATUS) {
+        match self.headers().get_optional_string(&COPY_STATUS) {
             Some(v) => Ok(Some(CopyStatus::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3757,7 +3690,7 @@ impl BlobPageBlobClientCopyIncrementalResultHeaders
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3805,27 +3738,25 @@ impl BlobPageBlobClientCreateResultHeaders for Response<BlobPageBlobClientCreate
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -3833,7 +3764,7 @@ impl BlobPageBlobClientCreateResultHeaders for Response<BlobPageBlobClientCreate
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -3843,7 +3774,7 @@ impl BlobPageBlobClientCreateResultHeaders for Response<BlobPageBlobClientCreate
     /// A DateTime value returned by the service that uniquely identifies the blob. The value of this header indicates the blob
     /// version, and may be used in subsequent requests to access this version of the blob.
     fn version_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_VERSION_ID))
+        Ok(self.headers().get_optional_string(&VERSION_ID))
     }
 }
 
@@ -3881,10 +3812,7 @@ impl BlobPageBlobClientResizeResultHeaders for Response<BlobPageBlobClientResize
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
-        {
+        match self.headers().get_optional_string(&BLOB_SEQUENCE_NUMBER) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3892,12 +3820,12 @@ impl BlobPageBlobClientResizeResultHeaders for Response<BlobPageBlobClientResize
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -3937,10 +3865,7 @@ impl BlobPageBlobClientUpdateSequenceNumberResultHeaders
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
-        {
+        match self.headers().get_optional_string(&BLOB_SEQUENCE_NUMBER) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -3948,12 +3873,12 @@ impl BlobPageBlobClientUpdateSequenceNumberResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4004,10 +3929,7 @@ impl BlobPageBlobClientUploadPagesFromUrlResultHeaders
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
-        {
+        match self.headers().get_optional_string(&BLOB_SEQUENCE_NUMBER) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -4015,32 +3937,30 @@ impl BlobPageBlobClientUploadPagesFromUrlResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
+        Ok(self.headers().get_optional_string(&CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -4048,7 +3968,7 @@ impl BlobPageBlobClientUploadPagesFromUrlResultHeaders
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -4102,10 +4022,7 @@ impl BlobPageBlobClientUploadPagesResultHeaders for Response<BlobPageBlobClientU
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
     fn blob_sequence_number(&self) -> Result<Option<i64>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_BLOB_SEQUENCE_NUMBER)
-        {
+        match self.headers().get_optional_string(&BLOB_SEQUENCE_NUMBER) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -4113,32 +4030,30 @@ impl BlobPageBlobClientUploadPagesResultHeaders for Response<BlobPageBlobClientU
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// This response header is returned so that the client can check for the integrity of the copied content.
     fn content_crc64(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CONTENT_CRC64))
+        Ok(self.headers().get_optional_string(&CONTENT_CRC64))
     }
 
     /// The SHA-256 hash of the encryption key used to encrypt the blob. This header is only returned when the blob was encrypted
     /// with a customer-provided key.
     fn encryption_key_sha256(&self) -> Result<Option<String>> {
-        Ok(self
-            .headers()
-            .get_optional_string(&X_MS_ENCRYPTION_KEY_SHA256))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_KEY_SHA256))
     }
 
     /// If the blob has a MD5 hash, and if request contains range header (Range or x-ms-range), this response header is returned
     /// with the value of the whole blob's MD5 value. This value may or may not be equal to the value returned in Content-MD5
     /// header, with the latter calculated from the requested range
     fn encryption_scope(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_ENCRYPTION_SCOPE))
+        Ok(self.headers().get_optional_string(&ENCRYPTION_SCOPE))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// The value of this header is set to true if the contents of the request are successfully encrypted using the specified
@@ -4146,7 +4061,7 @@ impl BlobPageBlobClientUploadPagesResultHeaders for Response<BlobPageBlobClientU
     fn is_server_encrypted(&self) -> Result<Option<bool>> {
         match self
             .headers()
-            .get_optional_string(&X_MS_REQUEST_SERVER_ENCRYPTED)
+            .get_optional_string(&REQUEST_SERVER_ENCRYPTED)
         {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
@@ -4155,7 +4070,7 @@ impl BlobPageBlobClientUploadPagesResultHeaders for Response<BlobPageBlobClientU
 
     /// Indicates the response body contains a structured message and specifies the message schema version and properties.
     fn structured_body_type(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_STRUCTURED_BODY))
+        Ok(self.headers().get_optional_string(&STRUCTURED_BODY))
     }
 }
 
@@ -4182,7 +4097,7 @@ impl BlobServiceClientGetAccountInfoResultHeaders
 
     /// Identifies the account kind
     fn account_kind(&self) -> Result<Option<AccountKind>> {
-        match self.headers().get_optional_string(&X_MS_ACCOUNT_KIND) {
+        match self.headers().get_optional_string(&ACCOUNT_KIND) {
             Some(v) => Ok(Some(AccountKind::from_str(&v)?)),
             None => Ok(None),
         }
@@ -4190,12 +4105,12 @@ impl BlobServiceClientGetAccountInfoResultHeaders
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// Version 2019-07-07 and newer. Indicates if the account has a hierarchical namespace enabled.
     fn is_hierarchical_namespace_enabled(&self) -> Result<Option<bool>> {
-        match self.headers().get_optional_string(&X_MS_IS_HNS_ENABLED) {
+        match self.headers().get_optional_string(&IS_HNS_ENABLED) {
             Some(v) => Ok(Some(bool::from_str(&v)?)),
             None => Ok(None),
         }
@@ -4203,12 +4118,12 @@ impl BlobServiceClientGetAccountInfoResultHeaders
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 
     /// Identifies the sku name of the account
     fn sku_name(&self) -> Result<Option<SkuName>> {
-        match self.headers().get_optional_string(&X_MS_SKU_NAME) {
+        match self.headers().get_optional_string(&SKU_NAME) {
             Some(v) => Ok(Some(SkuName::from_str(&v)?)),
             None => Ok(None),
         }
@@ -4226,12 +4141,12 @@ impl BlobServiceClientSetPropertiesResultHeaders
 {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4244,12 +4159,12 @@ pub trait BlobServiceClientSubmitBatchResultHeaders: private::Sealed {
 impl BlobServiceClientSubmitBatchResultHeaders for Response<BlobServiceClientSubmitBatchResult> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4271,12 +4186,12 @@ impl BlobTagsHeaders for Response<BlobTags> {
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4315,10 +4230,7 @@ impl BlockListHeaders for Response<BlockList> {
     /// This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must be aligned to a 512-byte
     /// boundary.
     fn blob_content_length(&self) -> Result<Option<i64>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_BLOB_CONTENT_LENGTH)
-        {
+        match self.headers().get_optional_string(&BLOB_CONTENT_LENGTH) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -4326,12 +4238,12 @@ impl BlockListHeaders for Response<BlockList> {
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4353,12 +4265,12 @@ impl FilterBlobSegmentHeaders for Response<FilterBlobSegment> {
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4380,12 +4292,12 @@ impl ListBlobsFlatSegmentResponseHeaders for Response<ListBlobsFlatSegmentRespon
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4407,12 +4319,12 @@ impl ListBlobsHierarchySegmentResponseHeaders for Response<ListBlobsHierarchySeg
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4425,12 +4337,12 @@ pub trait ListContainersSegmentResponseHeaders: private::Sealed {
 impl ListContainersSegmentResponseHeaders for Response<ListContainersSegmentResponse> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4469,10 +4381,7 @@ impl PageListHeaders for Response<PageList> {
     /// This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must be aligned to a 512-byte
     /// boundary.
     fn blob_content_length(&self) -> Result<Option<i64>> {
-        match self
-            .headers()
-            .get_optional_string(&X_MS_BLOB_CONTENT_LENGTH)
-        {
+        match self.headers().get_optional_string(&BLOB_CONTENT_LENGTH) {
             Some(v) => Ok(Some(i64::from_str(&v)?)),
             None => Ok(None),
         }
@@ -4480,12 +4389,12 @@ impl PageListHeaders for Response<PageList> {
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4498,12 +4407,12 @@ pub trait StorageServicePropertiesHeaders: private::Sealed {
 impl StorageServicePropertiesHeaders for Response<StorageServiceProperties> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4525,12 +4434,12 @@ impl StorageServiceStatsHeaders for Response<StorageServiceStats> {
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4552,12 +4461,12 @@ impl UserDelegationKeyHeaders for Response<UserDelegationKey> {
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
@@ -4595,7 +4504,7 @@ impl VecSignedIdentifierHeaders for Response<Vec<SignedIdentifier>> {
 
     /// The public access setting for the container.
     fn access(&self) -> Result<Option<PublicAccessType>> {
-        match self.headers().get_optional_string(&X_MS_BLOB_PUBLIC_ACCESS) {
+        match self.headers().get_optional_string(&BLOB_PUBLIC_ACCESS) {
             Some(v) => Ok(Some(PublicAccessType::from_str(&v)?)),
             None => Ok(None),
         }
@@ -4603,12 +4512,12 @@ impl VecSignedIdentifierHeaders for Response<Vec<SignedIdentifier>> {
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
     fn client_request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_CLIENT_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&CLIENT_REQUEST_ID))
     }
 
     /// An opaque, globally-unique, server-generated string identifier for the request.
     fn request_id(&self) -> Result<Option<String>> {
-        Ok(self.headers().get_optional_string(&X_MS_REQUEST_ID))
+        Ok(self.headers().get_optional_string(&REQUEST_ID))
     }
 }
 
