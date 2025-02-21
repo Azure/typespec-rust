@@ -15,25 +15,17 @@ async fn get() {
     let value: ModelWithRenamedArrays = resp.into_body().await.unwrap();
     assert_eq!(
         value.colors,
-        Some(vec![
-            "red".to_string(),
-            "green".to_string(),
-            "blue".to_string()
-        ])
+        vec!["red".to_string(), "green".to_string(), "blue".to_string()]
     );
-    assert_eq!(value.counts, Some(vec![1, 2]));
+    assert_eq!(value.counts, vec![1, 2]);
 }
 
 #[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = ModelWithRenamedArrays {
-        colors: Some(vec![
-            "red".to_string(),
-            "green".to_string(),
-            "blue".to_string(),
-        ]),
-        counts: Some(vec![1, 2]),
+        colors: vec!["red".to_string(), "green".to_string(), "blue".to_string()],
+        counts: vec![1, 2],
     };
     client
         .get_xml_model_with_renamed_arrays_value_client()

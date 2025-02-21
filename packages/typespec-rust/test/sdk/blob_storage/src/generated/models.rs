@@ -59,10 +59,9 @@ pub struct ArrowConfiguration {
         default,
         deserialize_with = "SchemaArrowField::unwrap",
         rename = "Schema",
-        serialize_with = "SchemaArrowField::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "SchemaArrowField::wrap"
     )]
-    pub schema: Option<Vec<ArrowField>>,
+    pub schema: Vec<ArrowField>,
 }
 
 /// Represents an Apache Arrow field.
@@ -98,10 +97,9 @@ pub struct BlobFlatListSegment {
         default,
         deserialize_with = "Blob_itemsBlobItemInternal::unwrap",
         rename = "BlobItems",
-        serialize_with = "Blob_itemsBlobItemInternal::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Blob_itemsBlobItemInternal::wrap"
     )]
-    pub blob_items: Option<Vec<BlobItemInternal>>,
+    pub blob_items: Vec<BlobItemInternal>,
 }
 
 /// Represents an array of blobs.
@@ -115,20 +113,18 @@ pub struct BlobHierarchyListSegment {
         default,
         deserialize_with = "Blob_itemsBlobItemInternal::unwrap",
         rename = "BlobItems",
-        serialize_with = "Blob_itemsBlobItemInternal::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Blob_itemsBlobItemInternal::wrap"
     )]
-    pub blob_items: Option<Vec<BlobItemInternal>>,
+    pub blob_items: Vec<BlobItemInternal>,
 
     /// The blob prefixes.
     #[serde(
         default,
         deserialize_with = "Blob_prefixesBlobPrefix::unwrap",
         rename = "BlobPrefixes",
-        serialize_with = "Blob_prefixesBlobPrefix::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Blob_prefixesBlobPrefix::wrap"
     )]
-    pub blob_prefixes: Option<Vec<BlobPrefix>>,
+    pub blob_prefixes: Vec<BlobPrefix>,
 }
 
 /// An Azure Storage Blob
@@ -439,10 +435,9 @@ pub struct BlobTags {
         default,
         deserialize_with = "Blob_tag_setBlobTag::unwrap",
         rename = "TagSet",
-        serialize_with = "Blob_tag_setBlobTag::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Blob_tag_setBlobTag::wrap"
     )]
-    pub blob_tag_set: Option<Vec<BlobTag>>,
+    pub blob_tag_set: Vec<BlobTag>,
 }
 
 /// Represents a single block in a block blob. It describes the block's ID and size.
@@ -469,20 +464,18 @@ pub struct BlockList {
         default,
         deserialize_with = "Committed_blocksBlock::unwrap",
         rename = "CommittedBlocks",
-        serialize_with = "Committed_blocksBlock::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Committed_blocksBlock::wrap"
     )]
-    pub committed_blocks: Option<Vec<Block>>,
+    pub committed_blocks: Vec<Block>,
 
     /// The list of uncommitted blocks.
     #[serde(
         default,
         deserialize_with = "Uncommitted_blocksBlock::unwrap",
         rename = "UncommittedBlocks",
-        serialize_with = "Uncommitted_blocksBlock::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Uncommitted_blocksBlock::wrap"
     )]
-    pub uncommitted_blocks: Option<Vec<Block>>,
+    pub uncommitted_blocks: Vec<Block>,
 }
 
 /// The Block lookup list.
@@ -491,16 +484,16 @@ pub struct BlockList {
 #[typespec(format = "xml")]
 pub struct BlockLookupList {
     /// The committed blocks
-    #[serde(rename = "Committed", skip_serializing_if = "Option::is_none")]
-    pub committed: Option<Vec<String>>,
+    #[serde(default, rename = "Committed")]
+    pub committed: Vec<String>,
 
     /// The latest blocks
-    #[serde(rename = "Latest", skip_serializing_if = "Option::is_none")]
-    pub latest: Option<Vec<String>>,
+    #[serde(default, rename = "Latest")]
+    pub latest: Vec<String>,
 
     /// The uncommitted blocks
-    #[serde(rename = "Uncommitted", skip_serializing_if = "Option::is_none")]
-    pub uncommitted: Option<Vec<String>>,
+    #[serde(default, rename = "Uncommitted")]
+    pub uncommitted: Vec<String>,
 }
 
 /// The clear range.
@@ -528,8 +521,12 @@ pub struct ContainerItem {
     pub delete: Option<bool>,
 
     /// The metadata of the container.
-    #[serde(rename = "Metadata", skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<HashMap<String, String>>,
+    #[serde(
+        default,
+        rename = "Metadata",
+        skip_serializing_if = "HashMap::is_empty"
+    )]
+    pub metadata: HashMap<String, String>,
 
     /// The name of the container.
     #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
@@ -707,10 +704,9 @@ pub struct FilterBlobSegment {
         default,
         deserialize_with = "BlobsFilterBlobItem::unwrap",
         rename = "Blobs",
-        serialize_with = "BlobsFilterBlobItem::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "BlobsFilterBlobItem::wrap"
     )]
-    pub blobs: Option<Vec<FilterBlobItem>>,
+    pub blobs: Vec<FilterBlobItem>,
 
     /// The next marker of the blobs.
     #[serde(rename = "NextMarker", skip_serializing_if = "Option::is_none")]
@@ -834,10 +830,9 @@ pub struct ListContainersSegmentResponse {
         default,
         deserialize_with = "Container_itemsContainerItem::unwrap",
         rename = "Containers",
-        serialize_with = "Container_itemsContainerItem::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Container_itemsContainerItem::wrap"
     )]
-    pub container_items: Option<Vec<ContainerItem>>,
+    pub container_items: Vec<ContainerItem>,
 
     /// The marker of the containers.
     #[serde(rename = "Marker", skip_serializing_if = "Option::is_none")]
@@ -923,10 +918,9 @@ pub struct PageList {
         default,
         deserialize_with = "Clear_rangeClearRange::unwrap",
         rename = "ClearRange",
-        serialize_with = "Clear_rangeClearRange::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Clear_rangeClearRange::wrap"
     )]
-    pub clear_range: Option<Vec<ClearRange>>,
+    pub clear_range: Vec<ClearRange>,
 
     /// The next marker.
     #[serde(rename = "NextMarker", skip_serializing_if = "Option::is_none")]
@@ -937,10 +931,9 @@ pub struct PageList {
         default,
         deserialize_with = "Page_rangePageRange::unwrap",
         rename = "PageRange",
-        serialize_with = "Page_rangePageRange::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Page_rangePageRange::wrap"
     )]
-    pub page_range: Option<Vec<PageRange>>,
+    pub page_range: Vec<PageRange>,
 }
 
 /// The page range.
@@ -1100,10 +1093,9 @@ pub struct StorageServiceProperties {
         default,
         deserialize_with = "CorsCorsRule::unwrap",
         rename = "Cors",
-        serialize_with = "CorsCorsRule::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "CorsCorsRule::wrap"
     )]
-    pub cors: Option<Vec<CorsRule>>,
+    pub cors: Vec<CorsRule>,
 
     /// The default service version.
     #[serde(

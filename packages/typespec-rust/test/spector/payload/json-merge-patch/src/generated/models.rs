@@ -20,8 +20,8 @@ pub struct InnerModel {
 /// Details about a resource.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct Resource {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub array: Option<Vec<InnerModel>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub array: Vec<InnerModel>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
@@ -32,14 +32,14 @@ pub struct Resource {
     #[serde(rename = "innerModel", skip_serializing_if = "Option::is_none")]
     pub inner_model: Option<InnerModel>,
 
-    #[serde(rename = "intArray", skip_serializing_if = "Option::is_none")]
-    pub int_array: Option<Vec<i32>>,
+    #[serde(default, rename = "intArray", skip_serializing_if = "Vec::is_empty")]
+    pub int_array: Vec<i32>,
 
     #[serde(rename = "intValue", skip_serializing_if = "Option::is_none")]
     pub int_value: Option<i32>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub map: Option<HashMap<String, InnerModel>>,
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    pub map: HashMap<String, InnerModel>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -48,8 +48,8 @@ pub struct Resource {
 /// Details about a resource for patch operation.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct ResourcePatch {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub array: Option<Vec<InnerModel>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub array: Vec<InnerModel>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
@@ -60,12 +60,12 @@ pub struct ResourcePatch {
     #[serde(rename = "innerModel", skip_serializing_if = "Option::is_none")]
     pub inner_model: Option<InnerModel>,
 
-    #[serde(rename = "intArray", skip_serializing_if = "Option::is_none")]
-    pub int_array: Option<Vec<i32>>,
+    #[serde(default, rename = "intArray", skip_serializing_if = "Vec::is_empty")]
+    pub int_array: Vec<i32>,
 
     #[serde(rename = "intValue", skip_serializing_if = "Option::is_none")]
     pub int_value: Option<i32>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub map: Option<HashMap<String, InnerModel>>,
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    pub map: HashMap<String, InnerModel>,
 }

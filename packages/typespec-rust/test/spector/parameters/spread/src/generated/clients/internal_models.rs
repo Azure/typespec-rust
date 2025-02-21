@@ -44,11 +44,19 @@ pub struct SpreadWithMultipleParametersRequest {
     pub optional_int: Option<i32>,
 
     /// optional string
-    #[serde(rename = "optionalStringList", skip_serializing_if = "Option::is_none")]
-    pub optional_string_list: Option<Vec<String>>,
+    #[serde(
+        default,
+        rename = "optionalStringList",
+        skip_serializing_if = "Vec::is_empty"
+    )]
+    pub optional_string_list: Vec<String>,
 
     /// required int
-    #[serde(rename = "requiredIntList")]
+    #[serde(
+        default,
+        rename = "requiredIntList",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub required_int_list: Vec<i32>,
 
     /// required string

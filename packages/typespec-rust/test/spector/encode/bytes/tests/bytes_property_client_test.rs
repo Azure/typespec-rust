@@ -46,10 +46,7 @@ async fn base64_url_array() {
     // TODO: https://github.com/Azure/typespec-rust/issues/221
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = Base64urlArrayBytesProperty {
-        value: Some(vec![
-            "test".as_bytes().to_owned(),
-            "test".as_bytes().to_owned(),
-        ]),
+        value: vec!["test".as_bytes().to_owned(), "test".as_bytes().to_owned()],
     };
     let resp = client
         .get_bytes_property_client()
@@ -59,10 +56,7 @@ async fn base64_url_array() {
     let output: Base64urlArrayBytesProperty = resp.into_body().await.unwrap();
     assert_eq!(
         output.value,
-        Some(vec![
-            "test".as_bytes().to_owned(),
-            "test".as_bytes().to_owned()
-        ])
+        vec!["test".as_bytes().to_owned(), "test".as_bytes().to_owned()]
     );
 }
 

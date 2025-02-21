@@ -18,11 +18,7 @@ async fn get() {
     let value: ModelWithEncodedNames = resp.into_body().await.unwrap();
     assert_eq!(
         value.colors,
-        Some(vec![
-            "red".to_string(),
-            "green".to_string(),
-            "blue".to_string()
-        ])
+        vec!["red".to_string(), "green".to_string(), "blue".to_string()]
     );
     let model_data = value.model_data.unwrap();
     assert_eq!(model_data.age, Some(123));
@@ -33,11 +29,7 @@ async fn get() {
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = ModelWithEncodedNames {
-        colors: Some(vec![
-            "red".to_string(),
-            "green".to_string(),
-            "blue".to_string(),
-        ]),
+        colors: vec!["red".to_string(), "green".to_string(), "blue".to_string()],
         model_data: Some(SimpleModel {
             age: Some(123),
             name: Some("foo".to_string()),
