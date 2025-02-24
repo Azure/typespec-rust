@@ -42,6 +42,7 @@ steps:
       cargo +stable clippy --workspace --all-features --all-targets --keep-going --no-deps
     displayName: Clippy
     workingDirectory: $(TypeSpecRustPkgDir)/test
+    failOnStderr: true
 
   - pwsh: |
       pnpm spector --start
