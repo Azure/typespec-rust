@@ -7,7 +7,7 @@ use crate::models::{
     DatetimeResponseHeaderClientDefaultResult, DatetimeResponseHeaderClientRfc3339Result,
     DatetimeResponseHeaderClientRfc7231Result, DatetimeResponseHeaderClientUnixTimestampResult,
 };
-use azure_core::{date, headers::HeaderName, Response, Result};
+use azure_core::{date, headers::HeaderName, headers::Headers, Response, Result};
 use time::OffsetDateTime;
 
 const VALUE: HeaderName = HeaderName::from_static("value");
@@ -21,10 +21,7 @@ impl DatetimeResponseHeaderClientDefaultResultHeaders
     for Response<DatetimeResponseHeaderClientDefaultResult>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&VALUE) {
-            Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
-            None => Ok(None),
-        }
+        Headers::get_optional_with(self.headers(), &VALUE, |h| date::parse_rfc7231(h.as_str()))
     }
 }
 
@@ -37,10 +34,7 @@ impl DatetimeResponseHeaderClientRfc3339ResultHeaders
     for Response<DatetimeResponseHeaderClientRfc3339Result>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&VALUE) {
-            Some(v) => Ok(Some(date::parse_rfc3339(&v)?)),
-            None => Ok(None),
-        }
+        Headers::get_optional_with(self.headers(), &VALUE, |h| date::parse_rfc3339(h.as_str()))
     }
 }
 
@@ -53,10 +47,7 @@ impl DatetimeResponseHeaderClientRfc7231ResultHeaders
     for Response<DatetimeResponseHeaderClientRfc7231Result>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&VALUE) {
-            Some(v) => Ok(Some(date::parse_rfc7231(&v)?)),
-            None => Ok(None),
-        }
+        Headers::get_optional_with(self.headers(), &VALUE, |h| date::parse_rfc7231(h.as_str()))
     }
 }
 
@@ -69,10 +60,9 @@ impl DatetimeResponseHeaderClientUnixTimestampResultHeaders
     for Response<DatetimeResponseHeaderClientUnixTimestampResult>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
-        match self.headers().get_optional_string(&VALUE) {
-            Some(v) => Ok(Some(date::parse_unix_time(&v)?)),
-            None => Ok(None),
-        }
+        Headers::get_optional_with(self.headers(), &VALUE, |h| {
+            date::parse_unix_time(h.as_str())
+        })
     }
 }
 
