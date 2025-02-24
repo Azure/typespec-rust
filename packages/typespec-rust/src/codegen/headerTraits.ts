@@ -208,11 +208,12 @@ function getHeaderConstName(header: rust.ResponseHeader): string {
  * @returns the header method body
  */
 function getHeaderDeserialization(indent: helpers.indentation, use: Use, header: rust.ResponseHeader): string {
+  const headerConstName = getHeaderConstName(header);
+
   if (header.kind === 'responseHeaderHashMap') {
     let content = `${indent.get()}let mut values = HashMap::new();\n`;
     content += `${indent.get()}for h in self.headers().iter() {\n`;
     content += `${indent.push().get()}let name = h.0.as_str();\n`;
-    const headerConstName = getHeaderConstName(header);
     content += `${indent.get()}${helpers.buildIfBlock(indent, {
       condition: `name.len() > ${headerConstName}.len() && name.starts_with(${headerConstName})`,
       body: (indent) => `${indent.get()}values.insert(name[${headerConstName}.len()..].to_owned(), h.1.as_str().to_owned());\n`,
@@ -220,11 +221,6 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
     content += `${indent.pop().get()}}\n`; // end for
     content += 'Ok(values)\n';
     return content;
-  }
-
-  if (header.type.kind === 'String' || (header.type.kind === 'literal' && typeof header.type.value === 'string')) {
-    // simple case requires no parsing
-    return `${indent.get()}Ok(self.headers().get_optional_string(&${getHeaderConstName(header)}))\n`;
   }
 
   let someBody: (indent: helpers.indentation) => string;
@@ -238,9 +234,9 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
     }
     case 'enum':
     case 'scalar':
-      use.addType('std::str', 'FromStr');
-      someBody = (indent) => `${indent.get()}Ok(Some(${helpers.getTypeDeclaration(header.type)}::from_str(&v)?))\n`;
-      break;
+    case 'String':
+      use.addType('azure_core', 'headers::Headers');
+      return `${indent.get()}Headers::get_optional_as(self.headers(), &${headerConstName})\n`
     case 'offsetDateTime': {
       use.addType('azure_core', 'date');
       const encoding = header.type.encoding;
@@ -251,7 +247,7 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
       return `${indent.get()}todo!();\n`;
   }
 
-  return indent.get() + helpers.buildMatch(indent, `self.headers().get_optional_string(&${getHeaderConstName(header)})`, [
+  return indent.get() + helpers.buildMatch(indent, `self.headers().get_optional_string(&${headerConstName})`, [
     {
       pattern: 'Some(v)',
       body: someBody,
