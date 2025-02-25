@@ -39,10 +39,11 @@ steps:
     workingDirectory: $(TypeSpecRustPkgDir)/test
 
   - pwsh: |
-      cargo +stable clippy --workspace --all-features --all-targets --keep-going --no-deps -- -Dwarnings
-      exit $LASTEXITCODE
+      cargo +stable clippy --workspace --all-features --all-targets --keep-going --no-deps
     displayName: Clippy
     workingDirectory: $(TypeSpecRustPkgDir)/test
+    env:
+      RUSTFLAGS: '-Dwarnings'
 
   - pwsh: |
       pnpm spector --start
