@@ -1,5 +1,12 @@
 # Release History
 
+## 0.10.1 (unreleased)
+
+### Other Changes
+
+* Updated to the latest tsp toolset.
+* Set minimum node engine to `v18.x`.
+
 ## 0.10.0 (2025-02-25)
 
 ### Breaking Changes
