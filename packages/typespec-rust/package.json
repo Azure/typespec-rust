@@ -53,9 +53,9 @@
     "@azure-tools/typespec-azure-core": "0.51.0",
     "@azure-tools/typespec-azure-resource-manager": "0.51.0",
     "@azure-tools/typespec-client-generator-core": "0.51.3",
-    "@eslint/js": "^9.19.0",
+    "@eslint/js": "^9.21.0",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^20.17.16",
+    "@types/node": "^20.17.19",
     "@typespec/compiler": "0.65.3",
     "@typespec/http": "0.65.0",
     "@typespec/http-specs": "0.1.0-alpha.9",
@@ -64,12 +64,13 @@
     "@typespec/spector": "0.1.0-alpha.6",
     "@typespec/versioning": "0.65.0",
     "@typespec/xml": "0.65.0",
-    "@vitest/coverage-v8": "^1.6.1",
-    "@vitest/ui": "^1.6.1",
+    "@vitest/coverage-v8": "^3.0.7",
+    "@vitest/ui": "^3.0.7",
     "c8": "^9.1.0",
-    "eslint": "^9.19.0",
+    "eslint": "^9.21.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.23.0"
+    "typescript-eslint": "^8.25.0",
+    "vitest": "^3.0.7"
   },
   "peerDependencies": {
     "@azure-tools/typespec-client-generator-core": ">=0.51.3 <1.0.0",
@@ -84,7 +85,6 @@
     "linkifyjs": "^4.2.0",
     "query-string": "9.1.1",
     "source-map-support": "0.5.21",
-    "turndown": "^7.2.0",
-    "vitest": "^1.6.1"
+    "turndown": "^7.2.0"
   }
 }
