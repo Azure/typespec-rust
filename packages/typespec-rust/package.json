@@ -78,7 +78,7 @@
     "@typespec/http": ">=0.65.0 <1.0.0"
   },
   "dependencies": {
-    "@azure-tools/codegen": "~2.9.2",
+    "@azure-tools/codegen": "~2.10.0",
     "@azure-tools/linq": "~3.1.263",
     "@types/turndown": "^5.0.5",
     "js-yaml": "^4.1.0",
