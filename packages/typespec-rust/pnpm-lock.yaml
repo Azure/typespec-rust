@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@azure-tools/codegen':
-        specifier: ~2.9.2
-        version: 2.9.2
+        specifier: ~2.10.0
+        version: 2.10.0
       '@azure-tools/linq':
         specifier: ~3.1.263
         version: 3.1.263
@@ -124,8 +124,8 @@ packages:
       '@typespec/versioning': ~0.65.0
       '@typespec/xml': ~0.65.0
 
-  '@azure-tools/codegen@2.9.2':
-    resolution: {integrity: sha512-brVLyffOtPiEijYYBYgV+4q7IyAfqXIec7XbdEqvv7As6SeEdq5WtbtN9N0LdGVHDWtEfc+JArwIx9aYGFdMUg==}
+  '@azure-tools/codegen@2.10.0':
+    resolution: {integrity: sha512-gdy0at3BUZAAARgiX9Ye6SNCKhcjLs5FNUewa/KV/dMGcPv7mBvbslt5VO3W8wj0n96ifk970aIFaivjacBxeQ==}
     engines: {node: '>=12.0.0'}
 
   '@azure-tools/linq@3.1.263':
@@ -1818,10 +1818,6 @@ packages:
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
-  js-yaml@4.0.0:
-    resolution: {integrity: sha512-pqon0s+4ScYUvX30wxQi3PogGFAlUyH0awepWvwkj4jD4v+ova3RiYw8bmA6x2rDrEaj8i/oWKoRxpVNW+Re8Q==}
-    hasBin: true
-
   js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
@@ -2965,10 +2961,10 @@ snapshots:
       - debug
       - supports-color
 
-  '@azure-tools/codegen@2.9.2':
+  '@azure-tools/codegen@2.10.0':
     dependencies:
       '@azure-tools/async-io': 3.0.254
-      js-yaml: 4.0.0
+      js-yaml: 4.1.0
       semver: 7.7.1
 
   '@azure-tools/linq@3.1.263': {}
@@ -4891,10 +4887,6 @@ snapshots:
       '@isaacs/cliui': 8.0.2
 
   js-tokens@4.0.0: {}
-
-  js-yaml@4.0.0:
-    dependencies:
-      argparse: 2.0.1
 
   js-yaml@4.1.0:
     dependencies:
