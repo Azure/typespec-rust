@@ -2,6 +2,10 @@
 
 ## 0.10.1 (unreleased)
 
+### Bug Fixes
+
+* Client constructors will now return an error if the endpoint parameter doesn't start with `http[s]`.
+
 ### Other Changes
 
 * Updated to the latest tsp toolset.

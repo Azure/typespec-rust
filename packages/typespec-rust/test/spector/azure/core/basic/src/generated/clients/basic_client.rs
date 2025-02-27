@@ -36,6 +36,12 @@ impl BasicClient {
     pub fn with_no_credential(endpoint: &str, options: Option<BasicClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                format!("invalid endpoint value {}", endpoint),
+            ));
+        }
         endpoint.set_query(None);
         Ok(Self {
             endpoint,

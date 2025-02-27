@@ -37,6 +37,12 @@ impl ResiliencyServiceDrivenClient {
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                format!("invalid endpoint value {}", endpoint),
+            ));
+        }
         endpoint.set_query(None);
         let mut host = String::from("resiliency/service-driven/client:v1/service:{serviceDeploymentVersion}/api-version:{apiVersion}/");
         host = host.replace("{serviceDeploymentVersion}", &service_deployment_version);
