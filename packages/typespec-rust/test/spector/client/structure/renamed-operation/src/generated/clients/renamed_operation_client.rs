@@ -35,6 +35,12 @@ impl RenamedOperationClient {
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                format!("{endpoint} must use http(s)"),
+            ));
+        }
         endpoint.set_query(None);
         let mut host = String::from("client/structure/{client}/");
         host = host.replace("{client}", client.as_ref());
