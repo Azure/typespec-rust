@@ -34,7 +34,7 @@ impl BasicClient {
         if !endpoint.scheme().starts_with("http") {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
-                format!("invalid endpoint value {}", endpoint),
+                format!("{endpoint} must use http(s)"),
             ));
         }
         endpoint.set_query(None);

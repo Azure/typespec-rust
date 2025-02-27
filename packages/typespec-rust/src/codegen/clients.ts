@@ -101,7 +101,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         body += `${indent.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
         body += `${indent.get()}${helpers.buildIfBlock(indent, {
           condition: `!${endpointParamName}.scheme().starts_with("http")`,
-          body: (indent) => `${indent.get()}return Err(azure_core::Error::message(azure_core::error::ErrorKind::Other, format!("invalid ${endpointParamName} value {}", ${endpointParamName})));\n`,
+          body: (indent) => `${indent.get()}return Err(azure_core::Error::message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
         })}`
         body += `${indent.get()}${endpointParamName}.set_query(None);\n`;
 
