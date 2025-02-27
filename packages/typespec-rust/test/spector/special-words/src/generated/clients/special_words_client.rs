@@ -11,6 +11,7 @@ use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
 /// Scenarios to verify that reserved words can be used in service and generators will handle it appropriately.
+///
 /// Current list of special words
 /// ```txt
 /// and
