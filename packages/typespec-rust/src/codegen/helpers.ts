@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
+import { values } from '@azure-tools/linq';
 import * as rust from '../codemodel/index.js';
 
 const headerText = `// Copyright (c) Microsoft Corporation. All rights reserved.
@@ -44,13 +45,50 @@ export function formatDocComment(docs: rust.Docs, prefix?: string, indent?: inde
     indentLevel = indent.get();
   }
 
+  const commentLines = function(docs: string): string {
+    let commentedLines = '';
+    const lines = docs.split('\n');
+    for (const line of lines) {
+      if (line === '' || line.match(/^\s+$/)) {
+        // "something something\n\nsomething else" becomes:
+        // /// something something
+        // ///
+        // /// something else
+        commentedLines += `${indentLevel}///\n`;
+        continue;
+      }
+
+      // first create the comment block. note that it can be multi-line depending on length:
+      //
+      // * foo - some comment first line
+      // and it finishes here.
+      let formattedLine = codegen.comment(line.trim(), `${indentLevel}/// `, undefined, 120);
+
+      // transform the above to look like this:
+      //
+      // * foo - some comment first line
+      //   and it finishes here.
+      const blockStartMatch = formattedLine.match(/^\/\/\/\s+([*-]|(?:\d+\.))/);
+      if (blockStartMatch && values(formattedLine).where((c) => c === '\n').count() > 0) {
+        const chunks = formattedLine.split('\n');
+        for (let i = 1; i < chunks.length; ++i) {
+          // indent size is based on the size of the captured starting block minus 3 for the /// chars
+          chunks[i] = chunks[i].replace('/// ', `/// ${' '.repeat(blockStartMatch[0].length - 3)}`);
+        }
+        formattedLine = chunks.join('\n');
+      }
+      commentedLines += formattedLine + '\n';
+    }
+    return commentedLines;
+  };
+
   let docStr = '';
   if (docs.summary) {
     let summary = docs.summary;
     if (prefix) {
       summary = `${prefix}${summary}`;
     }
-    docStr = codegen.comment(summary, `${indentLevel}/// `, undefined, 120) + '\n';
+    docStr = commentLines(summary);
   }
 
   if (docs.description) {
@@ -61,7 +99,7 @@ export function formatDocComment(docs: rust.Docs, prefix?: string, indent?: inde
       // only apply the prefix to the description if there was no summary
       description = `${prefix}${description}`;
     }
-    docStr += codegen.comment(description, `${indentLevel}/// `, undefined, 120) + '\n';
+    docStr += commentLines(description);
   }
 
   return docStr;

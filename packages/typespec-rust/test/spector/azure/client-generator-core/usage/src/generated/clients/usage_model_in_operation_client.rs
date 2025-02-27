@@ -44,11 +44,13 @@ impl UsageModelInOperationClient {
     }
 
     /// "ResultModel" should be usage=output, as it is read-only and does not exist in request body.
+    ///
     /// Expected body parameter:
     /// ```json
     /// {
     /// }
     /// ```
+    ///
     /// Expected response body:
     /// ```json
     /// {

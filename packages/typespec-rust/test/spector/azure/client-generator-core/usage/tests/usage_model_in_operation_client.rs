@@ -10,8 +10,9 @@ use spector_coreusage::{
 #[tokio::test]
 async fn input_to_input_output() {
     let client = UsageClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = InputModel::default();
-    body.name = Some("Madge".to_string());
+    let body = InputModel {
+        name: Some("Madge".to_string()),
+    };
     client
         .get_usage_model_in_operation_client()
         .input_to_input_output(body.try_into().unwrap(), None)

@@ -363,24 +363,7 @@ function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Co
       continue;
     }
 
-    // first create the comment block. note that it can be multi-line depending on length:
-    //
-    // * foo - some comment first line
-    // and it finishes here.
-    let forParam = helpers.formatDocComment(param.docs, formatParamBullet(param.name), indent);
-
-    // transform the above to look like this:
-    //
-    // * foo - some comment first line
-    //   and it finishes here.
-    if (values(forParam).where((e) => e === '\n').count() > 1) {
-      const chunks = forParam.split('\n');
-      for (let i = 1; i < chunks.length; ++i) {
-        chunks[i] = chunks[i].replace('/// ', '///   ');
-      }
-      forParam = chunks.join('\n');
-    }
-    paramsContent += forParam;
+    paramsContent += helpers.formatDocComment(param.docs, formatParamBullet(param.name), indent);
   }
 
   if (callable.kind === 'constructor') {

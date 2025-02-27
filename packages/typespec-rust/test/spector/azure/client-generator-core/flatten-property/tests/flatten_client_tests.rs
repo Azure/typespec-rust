@@ -29,15 +29,16 @@ async fn put_flatten_model() {
 #[tokio::test]
 async fn put_nested_flatten_model() {
     let client = FlattenPropertyClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut child_model = ChildModel::default();
-    child_model.age = Some(10);
-    child_model.description = Some(String::from("test"));
-    let mut child_flatten_model = ChildFlattenModel::default();
-    child_flatten_model.properties = Some(child_model);
-    child_flatten_model.summary = Some(String::from("bar"));
-    let mut nested_flatten_model = NestedFlattenModel::default();
-    nested_flatten_model.name = Some(String::from("foo"));
-    nested_flatten_model.properties = Some(child_flatten_model);
+    let nested_flatten_model = NestedFlattenModel {
+        name: Some("foo".to_string()),
+        properties: Some(ChildFlattenModel {
+            properties: Some(ChildModel {
+                age: Some(10),
+                description: Some("test".to_string()),
+            }),
+            summary: Some("bar".to_string()),
+        }),
+    };
     let req = nested_flatten_model.try_into().unwrap();
     let resp = client.put_nested_flatten_model(req, None).await.unwrap();
     let value: NestedFlattenModel = resp.into_body().await.unwrap();
