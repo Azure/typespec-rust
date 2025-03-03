@@ -27,27 +27,6 @@ pub struct KeyVaultClientGetDeletedSecretOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`KeyVaultClient::get_deleted_secrets()`](crate::KeyVaultClient::get_deleted_secrets())
-#[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientGetDeletedSecretsOptions<'a> {
-    /// Maximum number of results to return in a page. If not specified the service will return up to 25 results.
-    pub maxresults: Option<i32>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
-impl KeyVaultClientGetDeletedSecretsOptions<'_> {
-    pub fn into_owned(self) -> KeyVaultClientGetDeletedSecretsOptions<'static> {
-        KeyVaultClientGetDeletedSecretsOptions {
-            maxresults: self.maxresults,
-            method_options: ClientMethodOptions {
-                context: self.method_options.context.into_owned(),
-            },
-        }
-    }
-}
-
 /// Options to be passed to [`KeyVaultClient::get_secret()`](crate::KeyVaultClient::get_secret())
 #[derive(Clone, Default, SafeDebug)]
 pub struct KeyVaultClientGetSecretOptions<'a> {
@@ -55,9 +34,9 @@ pub struct KeyVaultClientGetSecretOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`KeyVaultClient::get_secret_versions()`](crate::KeyVaultClient::get_secret_versions())
+/// Options to be passed to [`KeyVaultClient::list_deleted_secrets()`](crate::KeyVaultClient::list_deleted_secrets())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientGetSecretVersionsOptions<'a> {
+pub struct KeyVaultClientListDeletedSecretsOptions<'a> {
     /// Maximum number of results to return in a page. If not specified the service will return up to 25 results.
     pub maxresults: Option<i32>,
 
@@ -65,9 +44,9 @@ pub struct KeyVaultClientGetSecretVersionsOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-impl KeyVaultClientGetSecretVersionsOptions<'_> {
-    pub fn into_owned(self) -> KeyVaultClientGetSecretVersionsOptions<'static> {
-        KeyVaultClientGetSecretVersionsOptions {
+impl KeyVaultClientListDeletedSecretsOptions<'_> {
+    pub fn into_owned(self) -> KeyVaultClientListDeletedSecretsOptions<'static> {
+        KeyVaultClientListDeletedSecretsOptions {
             maxresults: self.maxresults,
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
@@ -76,9 +55,9 @@ impl KeyVaultClientGetSecretVersionsOptions<'_> {
     }
 }
 
-/// Options to be passed to [`KeyVaultClient::get_secrets()`](crate::KeyVaultClient::get_secrets())
+/// Options to be passed to [`KeyVaultClient::list_secret_versions()`](crate::KeyVaultClient::list_secret_versions())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientGetSecretsOptions<'a> {
+pub struct KeyVaultClientListSecretVersionsOptions<'a> {
     /// Maximum number of results to return in a page. If not specified the service will return up to 25 results.
     pub maxresults: Option<i32>,
 
@@ -86,9 +65,30 @@ pub struct KeyVaultClientGetSecretsOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-impl KeyVaultClientGetSecretsOptions<'_> {
-    pub fn into_owned(self) -> KeyVaultClientGetSecretsOptions<'static> {
-        KeyVaultClientGetSecretsOptions {
+impl KeyVaultClientListSecretVersionsOptions<'_> {
+    pub fn into_owned(self) -> KeyVaultClientListSecretVersionsOptions<'static> {
+        KeyVaultClientListSecretVersionsOptions {
+            maxresults: self.maxresults,
+            method_options: ClientMethodOptions {
+                context: self.method_options.context.into_owned(),
+            },
+        }
+    }
+}
+
+/// Options to be passed to [`KeyVaultClient::list_secrets()`](crate::KeyVaultClient::list_secrets())
+#[derive(Clone, Default, SafeDebug)]
+pub struct KeyVaultClientListSecretsOptions<'a> {
+    /// Maximum number of results to return in a page. If not specified the service will return up to 25 results.
+    pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+impl KeyVaultClientListSecretsOptions<'_> {
+    pub fn into_owned(self) -> KeyVaultClientListSecretsOptions<'static> {
+        KeyVaultClientListSecretsOptions {
             maxresults: self.maxresults,
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),

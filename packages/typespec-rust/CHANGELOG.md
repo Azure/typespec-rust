@@ -1,6 +1,10 @@
 # Release History
 
-## 0.10.1 (unreleased)
+## 0.11.0 (unreleased)
+
+### Breaking Changes
+
+* Pageable methods will be renamed to start with `list` (e.g. `get_versions` becomes `list_versions`). A warning diagnostic is displayed when such a rename occurs.
 
 ### Bug Fixes
 
