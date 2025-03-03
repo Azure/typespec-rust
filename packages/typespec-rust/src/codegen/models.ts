@@ -323,6 +323,18 @@ function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
         case 'i8':
           unwrappedFieldTypeName = 'int8';
           break;
+        case 'u16':
+          unwrappedFieldTypeName = 'uint16';
+          break;
+        case 'u32':
+          unwrappedFieldTypeName = 'uint32';
+          break;
+        case 'u64':
+          unwrappedFieldTypeName = 'uint64';
+          break;
+        case 'u8':
+          unwrappedFieldTypeName = 'uint8';
+          break;
       }
       break;
     default:

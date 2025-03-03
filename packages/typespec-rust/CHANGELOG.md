@@ -5,6 +5,7 @@
 ### Bug Fixes
 
 * Client constructors will now return an error if the endpoint parameter doesn't start with `http[s]`.
+* Added support for unsigned integer types.
 
 ### Other Changes
 

@@ -305,7 +305,7 @@ impl BlobServiceClient {
     /// * `options` - Optional parameters for the request.
     pub async fn submit_batch(
         &self,
-        content_length: i64,
+        content_length: u64,
         body: RequestContent<Bytes>,
         options: Option<BlobServiceClientSubmitBatchOptions<'_>>,
     ) -> Result<Response<BlobServiceClientSubmitBatchResult>> {

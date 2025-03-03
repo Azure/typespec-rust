@@ -36,7 +36,7 @@ impl BlobPageBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn clear_pages(
         &self,
-        content_length: i64,
+        content_length: u64,
         options: Option<BlobPageBlobClientClearPagesOptions<'_>>,
     ) -> Result<Response<BlobPageBlobClientClearPagesResult>> {
         let options = options.unwrap_or_default();
@@ -190,8 +190,8 @@ impl BlobPageBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn create(
         &self,
-        content_length: i64,
-        blob_content_length: i64,
+        content_length: u64,
+        blob_content_length: u64,
         options: Option<BlobPageBlobClientCreateOptions<'_>>,
     ) -> Result<Response<BlobPageBlobClientCreateResult>> {
         let options = options.unwrap_or_default();
@@ -453,7 +453,7 @@ impl BlobPageBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn resize(
         &self,
-        blob_content_length: i64,
+        blob_content_length: u64,
         options: Option<BlobPageBlobClientResizeOptions<'_>>,
     ) -> Result<Response<BlobPageBlobClientResizeResult>> {
         let options = options.unwrap_or_default();
@@ -595,7 +595,7 @@ impl BlobPageBlobClient {
     pub async fn upload_pages(
         &self,
         body: RequestContent<Bytes>,
-        content_length: i64,
+        content_length: u64,
         options: Option<BlobPageBlobClientUploadPagesOptions<'_>>,
     ) -> Result<Response<BlobPageBlobClientUploadPagesResult>> {
         let options = options.unwrap_or_default();
@@ -713,7 +713,7 @@ impl BlobPageBlobClient {
         &self,
         source_url: &str,
         source_range: &str,
-        content_length: i64,
+        content_length: u64,
         range: &str,
         options: Option<BlobPageBlobClientUploadPagesFromUrlOptions<'_>>,
     ) -> Result<Response<BlobPageBlobClientUploadPagesFromUrlResult>> {

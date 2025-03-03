@@ -482,7 +482,7 @@ pub struct BlobPropertiesInternal {
 
     /// The content length of the blob.
     #[serde(rename = "Content-Length", skip_serializing_if = "Option::is_none")]
-    pub content_length: Option<i64>,
+    pub content_length: Option<u64>,
 
     /// The content MD5 of the blob.
     #[serde(

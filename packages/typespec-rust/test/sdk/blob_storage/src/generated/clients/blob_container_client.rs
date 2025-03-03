@@ -774,7 +774,7 @@ impl BlobContainerClient {
     pub async fn submit_batch(
         &self,
         body: RequestContent<Bytes>,
-        content_length: i64,
+        content_length: u64,
         options: Option<BlobContainerClientSubmitBatchOptions<'_>>,
     ) -> Result<Response<BlobContainerClientSubmitBatchResult>> {
         let options = options.unwrap_or_default();
