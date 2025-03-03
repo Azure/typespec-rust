@@ -5,14 +5,19 @@
 
 use crate::generated::clients::method_options::*;
 use crate::models::{
-    BlobAppendBlobClientAppendBlockFromUrlResult, BlobAppendBlobClientAppendBlockResult,
-    BlobAppendBlobClientCreateResult, BlobAppendBlobClientSealResult, BlobType,
+    BlobType, ServiceContainerAppendBlobClientAppendBlockFromUrlResult,
+    ServiceContainerAppendBlobClientAppendBlockResult,
+    ServiceContainerAppendBlobClientCreateResult, ServiceContainerAppendBlobClientSealResult,
 };
+use azure_core::credentials::TokenCredential;
 use azure_core::{
-    base64, date, Bytes, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
+    base64, date, BearerTokenCredentialPolicy, Bytes, ClientOptions, Context, Method, Pipeline,
+    Policy, Request, RequestContent, Response, Result, Url,
 };
+use std::sync::Arc;
+use typespec_client_core::fmt::SafeDebug;
 
-pub struct BlobAppendBlobClient {
+pub struct ServiceContainerAppendBlobClient {
     pub(crate) blob: String,
     pub(crate) container_name: String,
     pub(crate) endpoint: Url,
@@ -20,7 +25,60 @@ pub struct BlobAppendBlobClient {
     pub(crate) version: String,
 }
 
-impl BlobAppendBlobClient {
+/// Options used when creating a [`ServiceContainerAppendBlobClient`](crate::ServiceContainerAppendBlobClient)
+#[derive(Clone, Default, SafeDebug)]
+pub struct ServiceContainerAppendBlobClientOptions {
+    pub client_options: ClientOptions,
+}
+
+impl ServiceContainerAppendBlobClient {
+    /// Creates a new ServiceContainerAppendBlobClient, using Entra ID authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
+    ///   Entra ID token to use when authenticating.
+    /// * `version` - Specifies the version of the operation to use for this request.
+    /// * `container_name` - The name of the container.
+    /// * `blob` - The name of the blob.
+    /// * `options` - Optional configuration for the client.
+    pub fn new(
+        endpoint: &str,
+        credential: Arc<dyn TokenCredential>,
+        version: String,
+        container_name: String,
+        blob: String,
+        options: Option<ServiceContainerAppendBlobClientOptions>,
+    ) -> Result<Self> {
+        let options = options.unwrap_or_default();
+        let mut endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                format!("{endpoint} must use http(s)"),
+            ));
+        }
+        endpoint.set_query(None);
+        let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
+            credential,
+            vec!["https://storage.azure.com/.default"],
+        ));
+        Ok(Self {
+            blob,
+            container_name,
+            endpoint,
+            version,
+            pipeline: Pipeline::new(
+                option_env!("CARGO_PKG_NAME"),
+                option_env!("CARGO_PKG_VERSION"),
+                options.client_options,
+                Vec::default(),
+                vec![auth_policy],
+            ),
+        })
+    }
+
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
         &self.endpoint
@@ -37,12 +95,12 @@ impl BlobAppendBlobClient {
         &self,
         body: RequestContent<Bytes>,
         content_length: u64,
-        options: Option<BlobAppendBlobClientAppendBlockOptions<'_>>,
-    ) -> Result<Response<BlobAppendBlobClientAppendBlockResult>> {
+        options: Option<ServiceContainerAppendBlobClientAppendBlockOptions<'_>>,
+    ) -> Result<Response<ServiceContainerAppendBlobClientAppendBlockResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{containerName}/{blob}");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -132,12 +190,12 @@ impl BlobAppendBlobClient {
         &self,
         source_url: &str,
         content_length: u64,
-        options: Option<BlobAppendBlobClientAppendBlockFromUrlOptions<'_>>,
-    ) -> Result<Response<BlobAppendBlobClientAppendBlockFromUrlResult>> {
+        options: Option<ServiceContainerAppendBlobClientAppendBlockFromUrlOptions<'_>>,
+    ) -> Result<Response<ServiceContainerAppendBlobClientAppendBlockFromUrlResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{containerName}/{blob}");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -247,12 +305,12 @@ impl BlobAppendBlobClient {
     pub async fn create(
         &self,
         content_length: u64,
-        options: Option<BlobAppendBlobClientCreateOptions<'_>>,
-    ) -> Result<Response<BlobAppendBlobClientCreateResult>> {
+        options: Option<ServiceContainerAppendBlobClientCreateOptions<'_>>,
+    ) -> Result<Response<ServiceContainerAppendBlobClientCreateResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{containerName}/{blob}");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -358,12 +416,12 @@ impl BlobAppendBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn seal(
         &self,
-        options: Option<BlobAppendBlobClientSealOptions<'_>>,
-    ) -> Result<Response<BlobAppendBlobClientSealResult>> {
+        options: Option<ServiceContainerAppendBlobClientSealOptions<'_>>,
+    ) -> Result<Response<ServiceContainerAppendBlobClientSealResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{containerName}/{blob}");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;

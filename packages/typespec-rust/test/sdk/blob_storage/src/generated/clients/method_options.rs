@@ -14,9 +14,166 @@ use std::collections::HashMap;
 use time::OffsetDateTime;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`BlobAppendBlobClient::append_block()`](crate::clients::BlobAppendBlobClient::append_block())
+/// Options to be passed to [`ServiceClient::filter_blobs()`](crate::ServiceClient::filter_blobs())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobAppendBlobClientAppendBlockOptions<'a> {
+pub struct ServiceClientFilterBlobsOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// Include this parameter to specify one or more datasets to include in the response.
+    pub include: Option<Vec<FilterBlobsIncludeItem>>,
+
+    /// A string value that identifies the portion of the list of containers to be returned with the next listing operation. The
+    /// operation returns the NextMarker value within the response body if the listing operation did not return all containers
+    /// remaining to be listed with the current page. The NextMarker value can be used as the value for the marker parameter in
+    /// a subsequent call to request the next page of list items. The marker value is opaque to the client.
+    pub marker: Option<String>,
+
+    /// Specifies the maximum number of containers to return. If the request does not specify maxresults, or specifies a value
+    /// greater than 5000, the server will return up to 5000 items.
+    pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+
+    /// Filters the results to return only to return only blobs whose tags match the specified expression.
+    pub where_param: Option<String>,
+}
+
+/// Options to be passed to [`ServiceClient::get_account_info()`](crate::ServiceClient::get_account_info())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ServiceClientGetAccountInfoOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
+/// Options to be passed to [`ServiceClient::get_properties()`](crate::ServiceClient::get_properties())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ServiceClientGetPropertiesOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
+/// Options to be passed to [`ServiceClient::get_statistics()`](crate::ServiceClient::get_statistics())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ServiceClientGetStatisticsOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
+/// Options to be passed to [`ServiceClient::get_user_delegation_key()`](crate::ServiceClient::get_user_delegation_key())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ServiceClientGetUserDelegationKeyOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
+/// Options to be passed to [`ServiceClient::list_containers_segment()`](crate::ServiceClient::list_containers_segment())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ServiceClientListContainersSegmentOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// Include this parameter to specify that the container's metadata be returned as part of the response body.
+    pub include: Option<Vec<ListContainersIncludeType>>,
+
+    /// A string value that identifies the portion of the list of containers to be returned with the next listing operation. The
+    /// operation returns the NextMarker value within the response body if the listing operation did not return all containers
+    /// remaining to be listed with the current page. The NextMarker value can be used as the value for the marker parameter in
+    /// a subsequent call to request the next page of list items. The marker value is opaque to the client.
+    pub marker: Option<String>,
+
+    /// Specifies the maximum number of containers to return. If the request does not specify maxresults, or specifies a value
+    /// greater than 5000, the server will return up to 5000 items.
+    pub maxresults: Option<i32>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// Filters the results to return only containers whose name begins with the specified prefix.
+    pub prefix: Option<String>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
+/// Options to be passed to [`ServiceClient::set_properties()`](crate::ServiceClient::set_properties())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ServiceClientSetPropertiesOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// The CORS properties.
+    pub cors: Vec<CorsRule>,
+
+    /// The default service version.
+    pub default_service_version: Option<String>,
+
+    /// The delete retention policy.
+    pub delete_retention_policy: Option<RetentionPolicy>,
+
+    /// The hour metrics properties.
+    pub hour_metrics: Option<Metrics>,
+
+    /// The logging properties.
+    pub logging: Option<Logging>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// The minute metrics properties.
+    pub minute_metrics: Option<Metrics>,
+
+    /// The static website properties.
+    pub static_website: Option<StaticWebsite>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
+/// Options to be passed to [`ServiceClient::submit_batch()`](crate::ServiceClient::submit_batch())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ServiceClientSubmitBatchOptions<'a> {
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
+/// Options to be passed to [`ServiceContainerAppendBlobClient::append_block()`](crate::ServiceContainerAppendBlobClient::append_block())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ServiceContainerAppendBlobClientAppendBlockOptions<'a> {
     /// Optional conditional header, used only for the Append Block operation. A number indicating the byte offset to compare.
     /// Append Block will succeed only if the append position is equal to this number. If it is not, the request will fail with
     /// the AppendPositionConditionNotMet error (HTTP status code 412 - Precondition Failed).
@@ -86,9 +243,9 @@ pub struct BlobAppendBlobClientAppendBlockOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to [`BlobAppendBlobClient::append_block_from_url()`](crate::clients::BlobAppendBlobClient::append_block_from_url())
+/// Options to be passed to [`ServiceContainerAppendBlobClient::append_block_from_url()`](crate::ServiceContainerAppendBlobClient::append_block_from_url())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobAppendBlobClientAppendBlockFromUrlOptions<'a> {
+pub struct ServiceContainerAppendBlobClientAppendBlockFromUrlOptions<'a> {
     /// Optional conditional header, used only for the Append Block operation. A number indicating the byte offset to compare.
     /// Append Block will succeed only if the append position is equal to this number. If it is not, the request will fail with
     /// the AppendPositionConditionNotMet error (HTTP status code 412 - Precondition Failed).
@@ -172,9 +329,9 @@ pub struct BlobAppendBlobClientAppendBlockFromUrlOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to [`BlobAppendBlobClient::create()`](crate::clients::BlobAppendBlobClient::create())
+/// Options to be passed to [`ServiceContainerAppendBlobClient::create()`](crate::ServiceContainerAppendBlobClient::create())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobAppendBlobClientCreateOptions<'a> {
+pub struct ServiceContainerAppendBlobClientCreateOptions<'a> {
     /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
     /// request.
     pub blob_cache_control: Option<String>,
@@ -258,9 +415,9 @@ pub struct BlobAppendBlobClientCreateOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobAppendBlobClient::seal()`](crate::clients::BlobAppendBlobClient::seal())
+/// Options to be passed to [`ServiceContainerAppendBlobClient::seal()`](crate::ServiceContainerAppendBlobClient::seal())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobAppendBlobClientSealOptions<'a> {
+pub struct ServiceContainerAppendBlobClientSealOptions<'a> {
     /// Optional conditional header, used only for the Append Block operation. A number indicating the byte offset to compare.
     /// Append Block will succeed only if the append position is equal to this number. If it is not, the request will fail with
     /// the AppendPositionConditionNotMet error (HTTP status code 412 - Precondition Failed).
@@ -291,9 +448,9 @@ pub struct BlobAppendBlobClientSealOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::abort_copy_from_url()`](crate::clients::BlobBlobClient::abort_copy_from_url())
+/// Options to be passed to [`ServiceContainerBlobClient::abort_copy_from_url()`](crate::ServiceContainerBlobClient::abort_copy_from_url())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientAbortCopyFromUrlOptions<'a> {
+pub struct ServiceContainerBlobClientAbortCopyFromUrlOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -307,9 +464,9 @@ pub struct BlobBlobClientAbortCopyFromUrlOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::acquire_lease()`](crate::clients::BlobBlobClient::acquire_lease())
+/// Options to be passed to [`ServiceContainerBlobClient::acquire_lease()`](crate::ServiceContainerBlobClient::acquire_lease())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientAcquireLeaseOptions<'a> {
+pub struct ServiceContainerBlobClientAcquireLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -342,9 +499,9 @@ pub struct BlobBlobClientAcquireLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::break_lease()`](crate::clients::BlobBlobClient::break_lease())
+/// Options to be passed to [`ServiceContainerBlobClient::break_lease()`](crate::ServiceContainerBlobClient::break_lease())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientBreakLeaseOptions<'a> {
+pub struct ServiceContainerBlobClientBreakLeaseOptions<'a> {
     /// For a break operation, proposed duration the lease should continue before it is broken, in seconds, between 0 and 60.
     /// This break period is only used if it is shorter than the time remaining on the lease. If longer, the time remaining on
     /// the lease is used. A new lease will not be available before the break period has expired, but the lease may be held for
@@ -377,9 +534,9 @@ pub struct BlobBlobClientBreakLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::change_lease()`](crate::clients::BlobBlobClient::change_lease())
+/// Options to be passed to [`ServiceContainerBlobClient::change_lease()`](crate::ServiceContainerBlobClient::change_lease())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientChangeLeaseOptions<'a> {
+pub struct ServiceContainerBlobClientChangeLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -408,9 +565,9 @@ pub struct BlobBlobClientChangeLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::copy_from_url()`](crate::clients::BlobBlobClient::copy_from_url())
+/// Options to be passed to [`ServiceContainerBlobClient::copy_from_url()`](crate::ServiceContainerBlobClient::copy_from_url())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientCopyFromUrlOptions<'a> {
+pub struct ServiceContainerBlobClientCopyFromUrlOptions<'a> {
     /// Optional. Used to set blob tags in various blob operations.
     pub blob_tags_string: Option<String>,
 
@@ -482,9 +639,9 @@ pub struct BlobBlobClientCopyFromUrlOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::create_snapshot()`](crate::clients::BlobBlobClient::create_snapshot())
+/// Options to be passed to [`ServiceContainerBlobClient::create_snapshot()`](crate::ServiceContainerBlobClient::create_snapshot())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientCreateSnapshotOptions<'a> {
+pub struct ServiceContainerBlobClientCreateSnapshotOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -533,9 +690,9 @@ pub struct BlobBlobClientCreateSnapshotOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::delete()`](crate::clients::BlobBlobClient::delete())
+/// Options to be passed to [`ServiceContainerBlobClient::delete()`](crate::ServiceContainerBlobClient::delete())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientDeleteOptions<'a> {
+pub struct ServiceContainerBlobClientDeleteOptions<'a> {
     /// Optional. Only possible value is 'permanent', which specifies to permanently delete a blob if blob soft delete is enabled.
     pub blob_delete_type: Option<BlobDeleteType>,
 
@@ -579,9 +736,9 @@ pub struct BlobBlobClientDeleteOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlobClient::delete_immutability_policy()`](crate::clients::BlobBlobClient::delete_immutability_policy())
+/// Options to be passed to [`ServiceContainerBlobClient::delete_immutability_policy()`](crate::ServiceContainerBlobClient::delete_immutability_policy())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientDeleteImmutabilityPolicyOptions<'a> {
+pub struct ServiceContainerBlobClientDeleteImmutabilityPolicyOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -600,9 +757,9 @@ pub struct BlobBlobClientDeleteImmutabilityPolicyOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlobClient::download()`](crate::clients::BlobBlobClient::download())
+/// Options to be passed to [`ServiceContainerBlobClient::download()`](crate::ServiceContainerBlobClient::download())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientDownloadOptions<'a> {
+pub struct ServiceContainerBlobClientDownloadOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -667,9 +824,9 @@ pub struct BlobBlobClientDownloadOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlobClient::get_account_info()`](crate::clients::BlobBlobClient::get_account_info())
+/// Options to be passed to [`ServiceContainerBlobClient::get_account_info()`](crate::ServiceContainerBlobClient::get_account_info())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientGetAccountInfoOptions<'a> {
+pub struct ServiceContainerBlobClientGetAccountInfoOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -680,9 +837,9 @@ pub struct BlobBlobClientGetAccountInfoOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::get_properties()`](crate::clients::BlobBlobClient::get_properties())
+/// Options to be passed to [`ServiceContainerBlobClient::get_properties()`](crate::ServiceContainerBlobClient::get_properties())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientGetPropertiesOptions<'a> {
+pub struct ServiceContainerBlobClientGetPropertiesOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -732,9 +889,9 @@ pub struct BlobBlobClientGetPropertiesOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlobClient::get_tags()`](crate::clients::BlobBlobClient::get_tags())
+/// Options to be passed to [`ServiceContainerBlobClient::get_tags()`](crate::ServiceContainerBlobClient::get_tags())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientGetTagsOptions<'a> {
+pub struct ServiceContainerBlobClientGetTagsOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -759,9 +916,9 @@ pub struct BlobBlobClientGetTagsOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlobClient::release_lease()`](crate::clients::BlobBlobClient::release_lease())
+/// Options to be passed to [`ServiceContainerBlobClient::release_lease()`](crate::ServiceContainerBlobClient::release_lease())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientReleaseLeaseOptions<'a> {
+pub struct ServiceContainerBlobClientReleaseLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -787,9 +944,9 @@ pub struct BlobBlobClientReleaseLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::renew_lease()`](crate::clients::BlobBlobClient::renew_lease())
+/// Options to be passed to [`ServiceContainerBlobClient::renew_lease()`](crate::ServiceContainerBlobClient::renew_lease())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientRenewLeaseOptions<'a> {
+pub struct ServiceContainerBlobClientRenewLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -815,9 +972,9 @@ pub struct BlobBlobClientRenewLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::set_expiry()`](crate::clients::BlobBlobClient::set_expiry())
+/// Options to be passed to [`ServiceContainerBlobClient::set_expiry()`](crate::ServiceContainerBlobClient::set_expiry())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientSetExpiryOptions<'a> {
+pub struct ServiceContainerBlobClientSetExpiryOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -831,9 +988,9 @@ pub struct BlobBlobClientSetExpiryOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::set_http_headers()`](crate::clients::BlobBlobClient::set_http_headers())
+/// Options to be passed to [`ServiceContainerBlobClient::set_http_headers()`](crate::ServiceContainerBlobClient::set_http_headers())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientSetHttpHeadersOptions<'a> {
+pub struct ServiceContainerBlobClientSetHttpHeadersOptions<'a> {
     /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
     /// request.
     pub blob_cache_control: Option<String>,
@@ -885,9 +1042,9 @@ pub struct BlobBlobClientSetHttpHeadersOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::set_immutability_policy()`](crate::clients::BlobBlobClient::set_immutability_policy())
+/// Options to be passed to [`ServiceContainerBlobClient::set_immutability_policy()`](crate::ServiceContainerBlobClient::set_immutability_policy())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientSetImmutabilityPolicyOptions<'a> {
+pub struct ServiceContainerBlobClientSetImmutabilityPolicyOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -915,9 +1072,9 @@ pub struct BlobBlobClientSetImmutabilityPolicyOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlobClient::set_legal_hold()`](crate::clients::BlobBlobClient::set_legal_hold())
+/// Options to be passed to [`ServiceContainerBlobClient::set_legal_hold()`](crate::ServiceContainerBlobClient::set_legal_hold())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientSetLegalHoldOptions<'a> {
+pub struct ServiceContainerBlobClientSetLegalHoldOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -936,9 +1093,9 @@ pub struct BlobBlobClientSetLegalHoldOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlobClient::set_metadata()`](crate::clients::BlobBlobClient::set_metadata())
+/// Options to be passed to [`ServiceContainerBlobClient::set_metadata()`](crate::ServiceContainerBlobClient::set_metadata())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientSetMetadataOptions<'a> {
+pub struct ServiceContainerBlobClientSetMetadataOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -987,9 +1144,9 @@ pub struct BlobBlobClientSetMetadataOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::set_tags()`](crate::clients::BlobBlobClient::set_tags())
+/// Options to be passed to [`ServiceContainerBlobClient::set_tags()`](crate::ServiceContainerBlobClient::set_tags())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientSetTagsOptions<'a> {
+pub struct ServiceContainerBlobClientSetTagsOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1017,9 +1174,9 @@ pub struct BlobBlobClientSetTagsOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlobClient::set_tier()`](crate::clients::BlobBlobClient::set_tier())
+/// Options to be passed to [`ServiceContainerBlobClient::set_tier()`](crate::ServiceContainerBlobClient::set_tier())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientSetTierOptions<'a> {
+pub struct ServiceContainerBlobClientSetTierOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1048,9 +1205,9 @@ pub struct BlobBlobClientSetTierOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlobClient::start_copy_from_url()`](crate::clients::BlobBlobClient::start_copy_from_url())
+/// Options to be passed to [`ServiceContainerBlobClient::start_copy_from_url()`](crate::ServiceContainerBlobClient::start_copy_from_url())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientStartCopyFromUrlOptions<'a> {
+pub struct ServiceContainerBlobClientStartCopyFromUrlOptions<'a> {
     /// Optional. Used to set blob tags in various blob operations.
     pub blob_tags_string: Option<String>,
 
@@ -1119,9 +1276,9 @@ pub struct BlobBlobClientStartCopyFromUrlOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlobClient::undelete()`](crate::clients::BlobBlobClient::undelete())
+/// Options to be passed to [`ServiceContainerBlobClient::undelete()`](crate::ServiceContainerBlobClient::undelete())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlobClientUndeleteOptions<'a> {
+pub struct ServiceContainerBlobClientUndeleteOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1132,9 +1289,9 @@ pub struct BlobBlobClientUndeleteOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlockBlobClient::commit_block_list()`](crate::clients::BlobBlockBlobClient::commit_block_list())
+/// Options to be passed to [`ServiceContainerBlockBlobClient::commit_block_list()`](crate::ServiceContainerBlockBlobClient::commit_block_list())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlockBlobClientCommitBlockListOptions<'a> {
+pub struct ServiceContainerBlockBlobClientCommitBlockListOptions<'a> {
     /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
     /// request.
     pub blob_cache_control: Option<String>,
@@ -1228,9 +1385,9 @@ pub struct BlobBlockBlobClientCommitBlockListOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlockBlobClient::get_block_list()`](crate::clients::BlobBlockBlobClient::get_block_list())
+/// Options to be passed to [`ServiceContainerBlockBlobClient::get_block_list()`](crate::ServiceContainerBlockBlobClient::get_block_list())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlockBlobClientGetBlockListOptions<'a> {
+pub struct ServiceContainerBlockBlobClientGetBlockListOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1251,9 +1408,9 @@ pub struct BlobBlockBlobClientGetBlockListOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlockBlobClient::put_blob_from_url()`](crate::clients::BlobBlockBlobClient::put_blob_from_url())
+/// Options to be passed to [`ServiceContainerBlockBlobClient::put_blob_from_url()`](crate::ServiceContainerBlockBlobClient::put_blob_from_url())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlockBlobClientPutBlobFromUrlOptions<'a> {
+pub struct ServiceContainerBlockBlobClientPutBlobFromUrlOptions<'a> {
     /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
     /// request.
     pub blob_cache_control: Option<String>,
@@ -1362,9 +1519,9 @@ pub struct BlobBlockBlobClientPutBlobFromUrlOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlockBlobClient::query()`](crate::clients::BlobBlockBlobClient::query())
+/// Options to be passed to [`ServiceContainerBlockBlobClient::query()`](crate::ServiceContainerBlockBlobClient::query())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlockBlobClientQueryOptions<'a> {
+pub struct ServiceContainerBlockBlobClientQueryOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1410,9 +1567,9 @@ pub struct BlobBlockBlobClientQueryOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlockBlobClient::stage_block()`](crate::clients::BlobBlockBlobClient::stage_block())
+/// Options to be passed to [`ServiceContainerBlockBlobClient::stage_block()`](crate::ServiceContainerBlockBlobClient::stage_block())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlockBlobClientStageBlockOptions<'a> {
+pub struct ServiceContainerBlockBlobClientStageBlockOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1457,9 +1614,9 @@ pub struct BlobBlockBlobClientStageBlockOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to [`BlobBlockBlobClient::stage_block_from_url()`](crate::clients::BlobBlockBlobClient::stage_block_from_url())
+/// Options to be passed to [`ServiceContainerBlockBlobClient::stage_block_from_url()`](crate::ServiceContainerBlockBlobClient::stage_block_from_url())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlockBlobClientStageBlockFromUrlOptions<'a> {
+pub struct ServiceContainerBlockBlobClientStageBlockFromUrlOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1514,9 +1671,9 @@ pub struct BlobBlockBlobClientStageBlockFromUrlOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobBlockBlobClient::upload()`](crate::clients::BlobBlockBlobClient::upload())
+/// Options to be passed to [`ServiceContainerBlockBlobClient::upload()`](crate::ServiceContainerBlockBlobClient::upload())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobBlockBlobClientUploadOptions<'a> {
+pub struct ServiceContainerBlockBlobClientUploadOptions<'a> {
     /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
     /// request.
     pub blob_cache_control: Option<String>,
@@ -1617,9 +1774,9 @@ pub struct BlobBlockBlobClientUploadOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to [`BlobContainerClient::acquire_lease()`](crate::clients::BlobContainerClient::acquire_lease())
+/// Options to be passed to [`ServiceContainerClient::acquire_lease()`](crate::ServiceContainerClient::acquire_lease())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientAcquireLeaseOptions<'a> {
+pub struct ServiceContainerClientAcquireLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1643,9 +1800,9 @@ pub struct BlobContainerClientAcquireLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::break_lease()`](crate::clients::BlobContainerClient::break_lease())
+/// Options to be passed to [`ServiceContainerClient::break_lease()`](crate::ServiceContainerClient::break_lease())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientBreakLeaseOptions<'a> {
+pub struct ServiceContainerClientBreakLeaseOptions<'a> {
     /// For a break operation, proposed duration the lease should continue before it is broken, in seconds, between 0 and 60.
     /// This break period is only used if it is shorter than the time remaining on the lease. If longer, the time remaining on
     /// the lease is used. A new lease will not be available before the break period has expired, but the lease may be held for
@@ -1669,9 +1826,9 @@ pub struct BlobContainerClientBreakLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::change_lease()`](crate::clients::BlobContainerClient::change_lease())
+/// Options to be passed to [`ServiceContainerClient::change_lease()`](crate::ServiceContainerClient::change_lease())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientChangeLeaseOptions<'a> {
+pub struct ServiceContainerClientChangeLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1688,9 +1845,9 @@ pub struct BlobContainerClientChangeLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::create()`](crate::clients::BlobContainerClient::create())
+/// Options to be passed to [`ServiceContainerClient::create()`](crate::ServiceContainerClient::create())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientCreateOptions<'a> {
+pub struct ServiceContainerClientCreateOptions<'a> {
     /// The public access setting for the container.
     pub access: Option<PublicAccessType>,
 
@@ -1715,9 +1872,9 @@ pub struct BlobContainerClientCreateOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::delete()`](crate::clients::BlobContainerClient::delete())
+/// Options to be passed to [`ServiceContainerClient::delete()`](crate::ServiceContainerClient::delete())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientDeleteOptions<'a> {
+pub struct ServiceContainerClientDeleteOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1737,9 +1894,9 @@ pub struct BlobContainerClientDeleteOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::filter_blobs()`](crate::clients::BlobContainerClient::filter_blobs())
+/// Options to be passed to [`ServiceContainerClient::filter_blobs()`](crate::ServiceContainerClient::filter_blobs())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientFilterBlobsOptions<'a> {
+pub struct ServiceContainerClientFilterBlobsOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1766,9 +1923,9 @@ pub struct BlobContainerClientFilterBlobsOptions<'a> {
     pub where_param: Option<String>,
 }
 
-/// Options to be passed to [`BlobContainerClient::get_access_policy()`](crate::clients::BlobContainerClient::get_access_policy())
+/// Options to be passed to [`ServiceContainerClient::get_access_policy()`](crate::ServiceContainerClient::get_access_policy())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientGetAccessPolicyOptions<'a> {
+pub struct ServiceContainerClientGetAccessPolicyOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1782,9 +1939,9 @@ pub struct BlobContainerClientGetAccessPolicyOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::get_account_info()`](crate::clients::BlobContainerClient::get_account_info())
+/// Options to be passed to [`ServiceContainerClient::get_account_info()`](crate::ServiceContainerClient::get_account_info())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientGetAccountInfoOptions<'a> {
+pub struct ServiceContainerClientGetAccountInfoOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1795,9 +1952,9 @@ pub struct BlobContainerClientGetAccountInfoOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::get_properties()`](crate::clients::BlobContainerClient::get_properties())
+/// Options to be passed to [`ServiceContainerClient::get_properties()`](crate::ServiceContainerClient::get_properties())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientGetPropertiesOptions<'a> {
+pub struct ServiceContainerClientGetPropertiesOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1811,9 +1968,9 @@ pub struct BlobContainerClientGetPropertiesOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::list_blob_flat_segment()`](crate::clients::BlobContainerClient::list_blob_flat_segment())
+/// Options to be passed to [`ServiceContainerClient::list_blob_flat_segment()`](crate::ServiceContainerClient::list_blob_flat_segment())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientListBlobFlatSegmentOptions<'a> {
+pub struct ServiceContainerClientListBlobFlatSegmentOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1840,9 +1997,9 @@ pub struct BlobContainerClientListBlobFlatSegmentOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::list_blob_hierarchy_segment()`](crate::clients::BlobContainerClient::list_blob_hierarchy_segment())
+/// Options to be passed to [`ServiceContainerClient::list_blob_hierarchy_segment()`](crate::ServiceContainerClient::list_blob_hierarchy_segment())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientListBlobHierarchySegmentOptions<'a> {
+pub struct ServiceContainerClientListBlobHierarchySegmentOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1869,9 +2026,9 @@ pub struct BlobContainerClientListBlobHierarchySegmentOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::release_lease()`](crate::clients::BlobContainerClient::release_lease())
+/// Options to be passed to [`ServiceContainerClient::release_lease()`](crate::ServiceContainerClient::release_lease())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientReleaseLeaseOptions<'a> {
+pub struct ServiceContainerClientReleaseLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1888,9 +2045,9 @@ pub struct BlobContainerClientReleaseLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::rename()`](crate::clients::BlobContainerClient::rename())
+/// Options to be passed to [`ServiceContainerClient::rename()`](crate::ServiceContainerClient::rename())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientRenameOptions<'a> {
+pub struct ServiceContainerClientRenameOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1904,9 +2061,9 @@ pub struct BlobContainerClientRenameOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::renew_lease()`](crate::clients::BlobContainerClient::renew_lease())
+/// Options to be passed to [`ServiceContainerClient::renew_lease()`](crate::ServiceContainerClient::renew_lease())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientRenewLeaseOptions<'a> {
+pub struct ServiceContainerClientRenewLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1923,9 +2080,9 @@ pub struct BlobContainerClientRenewLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::restore()`](crate::clients::BlobContainerClient::restore())
+/// Options to be passed to [`ServiceContainerClient::restore()`](crate::ServiceContainerClient::restore())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientRestoreOptions<'a> {
+pub struct ServiceContainerClientRestoreOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1942,9 +2099,9 @@ pub struct BlobContainerClientRestoreOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::set_access_policy()`](crate::clients::BlobContainerClient::set_access_policy())
+/// Options to be passed to [`ServiceContainerClient::set_access_policy()`](crate::ServiceContainerClient::set_access_policy())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientSetAccessPolicyOptions<'a> {
+pub struct ServiceContainerClientSetAccessPolicyOptions<'a> {
     /// The public access setting for the container.
     pub access: Option<PublicAccessType>,
 
@@ -1967,9 +2124,9 @@ pub struct BlobContainerClientSetAccessPolicyOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::set_metadata()`](crate::clients::BlobContainerClient::set_metadata())
+/// Options to be passed to [`ServiceContainerClient::set_metadata()`](crate::ServiceContainerClient::set_metadata())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientSetMetadataOptions<'a> {
+pub struct ServiceContainerClientSetMetadataOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -1989,9 +2146,9 @@ pub struct BlobContainerClientSetMetadataOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobContainerClient::submit_batch()`](crate::clients::BlobContainerClient::submit_batch())
+/// Options to be passed to [`ServiceContainerClient::submit_batch()`](crate::ServiceContainerClient::submit_batch())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientSubmitBatchOptions<'a> {
+pub struct ServiceContainerClientSubmitBatchOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -2002,9 +2159,9 @@ pub struct BlobContainerClientSubmitBatchOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobPageBlobClient::clear_pages()`](crate::clients::BlobPageBlobClient::clear_pages())
+/// Options to be passed to [`ServiceContainerPageBlobClient::clear_pages()`](crate::ServiceContainerPageBlobClient::clear_pages())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobPageBlobClientClearPagesOptions<'a> {
+pub struct ServiceContainerPageBlobClientClearPagesOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -2062,9 +2219,9 @@ pub struct BlobPageBlobClientClearPagesOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobPageBlobClient::copy_incremental()`](crate::clients::BlobPageBlobClient::copy_incremental())
+/// Options to be passed to [`ServiceContainerPageBlobClient::copy_incremental()`](crate::ServiceContainerPageBlobClient::copy_incremental())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobPageBlobClientCopyIncrementalOptions<'a> {
+pub struct ServiceContainerPageBlobClientCopyIncrementalOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -2090,9 +2247,9 @@ pub struct BlobPageBlobClientCopyIncrementalOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobPageBlobClient::create()`](crate::clients::BlobPageBlobClient::create())
+/// Options to be passed to [`ServiceContainerPageBlobClient::create()`](crate::ServiceContainerPageBlobClient::create())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobPageBlobClientCreateOptions<'a> {
+pub struct ServiceContainerPageBlobClientCreateOptions<'a> {
     /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
     /// request.
     pub blob_cache_control: Option<String>,
@@ -2183,9 +2340,9 @@ pub struct BlobPageBlobClientCreateOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobPageBlobClient::get_page_ranges()`](crate::clients::BlobPageBlobClient::get_page_ranges())
+/// Options to be passed to [`ServiceContainerPageBlobClient::get_page_ranges()`](crate::ServiceContainerPageBlobClient::get_page_ranges())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobPageBlobClientGetPageRangesOptions<'a> {
+pub struct ServiceContainerPageBlobClientGetPageRangesOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -2231,9 +2388,9 @@ pub struct BlobPageBlobClientGetPageRangesOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobPageBlobClient::get_page_ranges_diff()`](crate::clients::BlobPageBlobClient::get_page_ranges_diff())
+/// Options to be passed to [`ServiceContainerPageBlobClient::get_page_ranges_diff()`](crate::ServiceContainerPageBlobClient::get_page_ranges_diff())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobPageBlobClientGetPageRangesDiffOptions<'a> {
+pub struct ServiceContainerPageBlobClientGetPageRangesDiffOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -2289,9 +2446,9 @@ pub struct BlobPageBlobClientGetPageRangesDiffOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobPageBlobClient::resize()`](crate::clients::BlobPageBlobClient::resize())
+/// Options to be passed to [`ServiceContainerPageBlobClient::resize()`](crate::ServiceContainerPageBlobClient::resize())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobPageBlobClientResizeOptions<'a> {
+pub struct ServiceContainerPageBlobClientResizeOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -2337,9 +2494,9 @@ pub struct BlobPageBlobClientResizeOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobPageBlobClient::update_sequence_number()`](crate::clients::BlobPageBlobClient::update_sequence_number())
+/// Options to be passed to [`ServiceContainerPageBlobClient::update_sequence_number()`](crate::ServiceContainerPageBlobClient::update_sequence_number())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobPageBlobClientUpdateSequenceNumberOptions<'a> {
+pub struct ServiceContainerPageBlobClientUpdateSequenceNumberOptions<'a> {
     /// Set for page blobs only. The sequence number is a user-controlled value that you can use to track requests. The value
     /// of the sequence number must be between 0 and 2^63 - 1.
     pub blob_sequence_number: Option<i64>,
@@ -2372,9 +2529,9 @@ pub struct BlobPageBlobClientUpdateSequenceNumberOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to [`BlobPageBlobClient::upload_pages()`](crate::clients::BlobPageBlobClient::upload_pages())
+/// Options to be passed to [`ServiceContainerPageBlobClient::upload_pages()`](crate::ServiceContainerPageBlobClient::upload_pages())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobPageBlobClientUploadPagesOptions<'a> {
+pub struct ServiceContainerPageBlobClientUploadPagesOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -2446,9 +2603,9 @@ pub struct BlobPageBlobClientUploadPagesOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to [`BlobPageBlobClient::upload_pages_from_url()`](crate::clients::BlobPageBlobClient::upload_pages_from_url())
+/// Options to be passed to [`ServiceContainerPageBlobClient::upload_pages_from_url()`](crate::ServiceContainerPageBlobClient::upload_pages_from_url())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BlobPageBlobClientUploadPagesFromUrlOptions<'a> {
+pub struct ServiceContainerPageBlobClientUploadPagesFromUrlOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
     pub client_request_id: Option<String>,
 
@@ -2519,163 +2676,6 @@ pub struct BlobPageBlobClientUploadPagesFromUrlOptions<'a> {
 
     /// Specify this header value to operate only on a blob if it has not been modified since the specified date/time.
     pub source_if_unmodified_since: Option<OffsetDateTime>,
-
-    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
-}
-
-/// Options to be passed to [`BlobServiceClient::filter_blobs()`](crate::clients::BlobServiceClient::filter_blobs())
-#[derive(Clone, Default, SafeDebug)]
-pub struct BlobServiceClientFilterBlobsOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
-    /// Include this parameter to specify one or more datasets to include in the response.
-    pub include: Option<Vec<FilterBlobsIncludeItem>>,
-
-    /// A string value that identifies the portion of the list of containers to be returned with the next listing operation. The
-    /// operation returns the NextMarker value within the response body if the listing operation did not return all containers
-    /// remaining to be listed with the current page. The NextMarker value can be used as the value for the marker parameter in
-    /// a subsequent call to request the next page of list items. The marker value is opaque to the client.
-    pub marker: Option<String>,
-
-    /// Specifies the maximum number of containers to return. If the request does not specify maxresults, or specifies a value
-    /// greater than 5000, the server will return up to 5000 items.
-    pub maxresults: Option<i32>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
-
-    /// Filters the results to return only to return only blobs whose tags match the specified expression.
-    pub where_param: Option<String>,
-}
-
-/// Options to be passed to [`BlobServiceClient::get_account_info()`](crate::clients::BlobServiceClient::get_account_info())
-#[derive(Clone, Default, SafeDebug)]
-pub struct BlobServiceClientGetAccountInfoOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
-}
-
-/// Options to be passed to [`BlobServiceClient::get_properties()`](crate::clients::BlobServiceClient::get_properties())
-#[derive(Clone, Default, SafeDebug)]
-pub struct BlobServiceClientGetPropertiesOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
-}
-
-/// Options to be passed to [`BlobServiceClient::get_statistics()`](crate::clients::BlobServiceClient::get_statistics())
-#[derive(Clone, Default, SafeDebug)]
-pub struct BlobServiceClientGetStatisticsOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
-}
-
-/// Options to be passed to [`BlobServiceClient::get_user_delegation_key()`](crate::clients::BlobServiceClient::get_user_delegation_key())
-#[derive(Clone, Default, SafeDebug)]
-pub struct BlobServiceClientGetUserDelegationKeyOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
-}
-
-/// Options to be passed to [`BlobServiceClient::list_containers_segment()`](crate::clients::BlobServiceClient::list_containers_segment())
-#[derive(Clone, Default, SafeDebug)]
-pub struct BlobServiceClientListContainersSegmentOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
-    /// Include this parameter to specify that the container's metadata be returned as part of the response body.
-    pub include: Option<Vec<ListContainersIncludeType>>,
-
-    /// A string value that identifies the portion of the list of containers to be returned with the next listing operation. The
-    /// operation returns the NextMarker value within the response body if the listing operation did not return all containers
-    /// remaining to be listed with the current page. The NextMarker value can be used as the value for the marker parameter in
-    /// a subsequent call to request the next page of list items. The marker value is opaque to the client.
-    pub marker: Option<String>,
-
-    /// Specifies the maximum number of containers to return. If the request does not specify maxresults, or specifies a value
-    /// greater than 5000, the server will return up to 5000 items.
-    pub maxresults: Option<i32>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Filters the results to return only containers whose name begins with the specified prefix.
-    pub prefix: Option<String>,
-
-    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
-}
-
-/// Options to be passed to [`BlobServiceClient::set_properties()`](crate::clients::BlobServiceClient::set_properties())
-#[derive(Clone, Default, SafeDebug)]
-pub struct BlobServiceClientSetPropertiesOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
-    /// The CORS properties.
-    pub cors: Vec<CorsRule>,
-
-    /// The default service version.
-    pub default_service_version: Option<String>,
-
-    /// The delete retention policy.
-    pub delete_retention_policy: Option<RetentionPolicy>,
-
-    /// The hour metrics properties.
-    pub hour_metrics: Option<Metrics>,
-
-    /// The logging properties.
-    pub logging: Option<Logging>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// The minute metrics properties.
-    pub minute_metrics: Option<Metrics>,
-
-    /// The static website properties.
-    pub static_website: Option<StaticWebsite>,
-
-    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
-}
-
-/// Options to be passed to [`BlobServiceClient::submit_batch()`](crate::clients::BlobServiceClient::submit_batch())
-#[derive(Clone, Default, SafeDebug)]
-pub struct BlobServiceClientSubmitBatchOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
 
     /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,

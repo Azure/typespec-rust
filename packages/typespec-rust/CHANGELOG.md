@@ -10,6 +10,8 @@
 
 * Client constructors will now return an error if the endpoint parameter doesn't start with `http[s]`.
 * Added support for unsigned integer types.
+* Add `pub(crate)` to sub-clients that can also be individually initialized.
+* Removed redundant client accessor parameters that can be inherited from the parent client.
 
 ### Other Changes
 

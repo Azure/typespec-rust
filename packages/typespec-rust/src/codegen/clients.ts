@@ -45,8 +45,8 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
     const indent = new helpers.indentation();
 
     let pubInClients = '';
-    if (!client.constructable) {
-      // the constructable client will need access to these fields
+    if (client.parent) {
+      // if this is a child client, its parent will need access to the fields
       pubInClients = 'pub(crate) ';
     }
 

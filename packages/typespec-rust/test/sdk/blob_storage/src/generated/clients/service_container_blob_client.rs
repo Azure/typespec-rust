@@ -5,23 +5,29 @@
 
 use crate::generated::clients::method_options::*;
 use crate::models::{
-    AccessTier, BlobBlobClientAbortCopyFromUrlResult, BlobBlobClientAcquireLeaseResult,
-    BlobBlobClientBreakLeaseResult, BlobBlobClientChangeLeaseResult,
-    BlobBlobClientCopyFromUrlResult, BlobBlobClientCreateSnapshotResult,
-    BlobBlobClientDeleteImmutabilityPolicyResult, BlobBlobClientDeleteResult,
-    BlobBlobClientDownloadResult, BlobBlobClientGetAccountInfoResult,
-    BlobBlobClientGetPropertiesResult, BlobBlobClientReleaseLeaseResult,
-    BlobBlobClientRenewLeaseResult, BlobBlobClientSetExpiryResult,
-    BlobBlobClientSetHttpHeadersResult, BlobBlobClientSetImmutabilityPolicyResult,
-    BlobBlobClientSetLegalHoldResult, BlobBlobClientSetMetadataResult, BlobBlobClientSetTagsResult,
-    BlobBlobClientSetTierResult, BlobBlobClientStartCopyFromUrlResult,
-    BlobBlobClientUndeleteResult, BlobExpiryOptions, BlobTags,
+    AccessTier, BlobExpiryOptions, BlobTags, ServiceContainerBlobClientAbortCopyFromUrlResult,
+    ServiceContainerBlobClientAcquireLeaseResult, ServiceContainerBlobClientBreakLeaseResult,
+    ServiceContainerBlobClientChangeLeaseResult, ServiceContainerBlobClientCopyFromUrlResult,
+    ServiceContainerBlobClientCreateSnapshotResult,
+    ServiceContainerBlobClientDeleteImmutabilityPolicyResult,
+    ServiceContainerBlobClientDeleteResult, ServiceContainerBlobClientDownloadResult,
+    ServiceContainerBlobClientGetAccountInfoResult, ServiceContainerBlobClientGetPropertiesResult,
+    ServiceContainerBlobClientReleaseLeaseResult, ServiceContainerBlobClientRenewLeaseResult,
+    ServiceContainerBlobClientSetExpiryResult, ServiceContainerBlobClientSetHttpHeadersResult,
+    ServiceContainerBlobClientSetImmutabilityPolicyResult,
+    ServiceContainerBlobClientSetLegalHoldResult, ServiceContainerBlobClientSetMetadataResult,
+    ServiceContainerBlobClientSetTagsResult, ServiceContainerBlobClientSetTierResult,
+    ServiceContainerBlobClientStartCopyFromUrlResult, ServiceContainerBlobClientUndeleteResult,
 };
+use azure_core::credentials::TokenCredential;
 use azure_core::{
-    base64, date, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
+    base64, date, BearerTokenCredentialPolicy, ClientOptions, Context, Method, Pipeline, Policy,
+    Request, RequestContent, Response, Result, Url,
 };
+use std::sync::Arc;
+use typespec_client_core::fmt::SafeDebug;
 
-pub struct BlobBlobClient {
+pub struct ServiceContainerBlobClient {
     pub(crate) blob: String,
     pub(crate) container_name: String,
     pub(crate) endpoint: Url,
@@ -29,7 +35,60 @@ pub struct BlobBlobClient {
     pub(crate) version: String,
 }
 
-impl BlobBlobClient {
+/// Options used when creating a [`ServiceContainerBlobClient`](crate::ServiceContainerBlobClient)
+#[derive(Clone, Default, SafeDebug)]
+pub struct ServiceContainerBlobClientOptions {
+    pub client_options: ClientOptions,
+}
+
+impl ServiceContainerBlobClient {
+    /// Creates a new ServiceContainerBlobClient, using Entra ID authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
+    ///   Entra ID token to use when authenticating.
+    /// * `version` - Specifies the version of the operation to use for this request.
+    /// * `container_name` - The name of the container.
+    /// * `blob` - The name of the blob.
+    /// * `options` - Optional configuration for the client.
+    pub fn new(
+        endpoint: &str,
+        credential: Arc<dyn TokenCredential>,
+        version: String,
+        container_name: String,
+        blob: String,
+        options: Option<ServiceContainerBlobClientOptions>,
+    ) -> Result<Self> {
+        let options = options.unwrap_or_default();
+        let mut endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                format!("{endpoint} must use http(s)"),
+            ));
+        }
+        endpoint.set_query(None);
+        let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
+            credential,
+            vec!["https://storage.azure.com/.default"],
+        ));
+        Ok(Self {
+            blob,
+            container_name,
+            endpoint,
+            version,
+            pipeline: Pipeline::new(
+                option_env!("CARGO_PKG_NAME"),
+                option_env!("CARGO_PKG_VERSION"),
+                options.client_options,
+                Vec::default(),
+                vec![auth_policy],
+            ),
+        })
+    }
+
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
         &self.endpoint
@@ -45,12 +104,12 @@ impl BlobBlobClient {
     pub async fn abort_copy_from_url(
         &self,
         copy_id: &str,
-        options: Option<BlobBlobClientAbortCopyFromUrlOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientAbortCopyFromUrlResult>> {
+        options: Option<ServiceContainerBlobClientAbortCopyFromUrlOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientAbortCopyFromUrlResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -83,12 +142,12 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn acquire_lease(
         &self,
-        options: Option<BlobBlobClientAcquireLeaseOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientAcquireLeaseResult>> {
+        options: Option<ServiceContainerBlobClientAcquireLeaseOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientAcquireLeaseResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -141,12 +200,12 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn break_lease(
         &self,
-        options: Option<BlobBlobClientBreakLeaseOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientBreakLeaseResult>> {
+        options: Option<ServiceContainerBlobClientBreakLeaseOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientBreakLeaseResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -198,12 +257,12 @@ impl BlobBlobClient {
     pub async fn change_lease(
         &self,
         lease_id: &str,
-        options: Option<BlobBlobClientChangeLeaseOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientChangeLeaseResult>> {
+        options: Option<ServiceContainerBlobClientChangeLeaseOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientChangeLeaseResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -258,12 +317,12 @@ impl BlobBlobClient {
     pub async fn copy_from_url(
         &self,
         copy_source: &str,
-        options: Option<BlobBlobClientCopyFromUrlOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientCopyFromUrlResult>> {
+        options: Option<ServiceContainerBlobClientCopyFromUrlOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientCopyFromUrlResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -369,12 +428,12 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn create_snapshot(
         &self,
-        options: Option<BlobBlobClientCreateSnapshotOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientCreateSnapshotResult>> {
+        options: Option<ServiceContainerBlobClientCreateSnapshotOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientCreateSnapshotResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -449,8 +508,8 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn delete(
         &self,
-        options: Option<BlobBlobClientDeleteOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientDeleteResult>> {
+        options: Option<ServiceContainerBlobClientDeleteOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientDeleteResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -513,12 +572,12 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn delete_immutability_policy(
         &self,
-        options: Option<BlobBlobClientDeleteImmutabilityPolicyOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientDeleteImmutabilityPolicyResult>> {
+        options: Option<ServiceContainerBlobClientDeleteImmutabilityPolicyOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientDeleteImmutabilityPolicyResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -552,8 +611,8 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn download(
         &self,
-        options: Option<BlobBlobClientDownloadOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientDownloadResult>> {
+        options: Option<ServiceContainerBlobClientDownloadOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientDownloadResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -638,12 +697,12 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn get_account_info(
         &self,
-        options: Option<BlobBlobClientGetAccountInfoOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientGetAccountInfoResult>> {
+        options: Option<ServiceContainerBlobClientGetAccountInfoOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientGetAccountInfoResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -673,8 +732,8 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn get_properties(
         &self,
-        options: Option<BlobBlobClientGetPropertiesOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientGetPropertiesResult>> {
+        options: Option<ServiceContainerBlobClientGetPropertiesOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientGetPropertiesResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -742,12 +801,12 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn get_tags(
         &self,
-        options: Option<BlobBlobClientGetTagsOptions<'_>>,
+        options: Option<ServiceContainerBlobClientGetTagsOptions<'_>>,
     ) -> Result<Response<BlobTags>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -789,12 +848,12 @@ impl BlobBlobClient {
     pub async fn release_lease(
         &self,
         lease_id: &str,
-        options: Option<BlobBlobClientReleaseLeaseOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientReleaseLeaseResult>> {
+        options: Option<ServiceContainerBlobClientReleaseLeaseOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientReleaseLeaseResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -844,12 +903,12 @@ impl BlobBlobClient {
     pub async fn renew_lease(
         &self,
         lease_id: &str,
-        options: Option<BlobBlobClientRenewLeaseOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientRenewLeaseResult>> {
+        options: Option<ServiceContainerBlobClientRenewLeaseOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientRenewLeaseResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -898,12 +957,12 @@ impl BlobBlobClient {
     pub async fn set_expiry(
         &self,
         expiry_options: BlobExpiryOptions,
-        options: Option<BlobBlobClientSetExpiryOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientSetExpiryResult>> {
+        options: Option<ServiceContainerBlobClientSetExpiryOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientSetExpiryResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -933,12 +992,12 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn set_http_headers(
         &self,
-        options: Option<BlobBlobClientSetHttpHeadersOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientSetHttpHeadersResult>> {
+        options: Option<ServiceContainerBlobClientSetHttpHeadersOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientSetHttpHeadersResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -1005,12 +1064,12 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn set_immutability_policy(
         &self,
-        options: Option<BlobBlobClientSetImmutabilityPolicyOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientSetImmutabilityPolicyResult>> {
+        options: Option<ServiceContainerBlobClientSetImmutabilityPolicyOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientSetImmutabilityPolicyResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -1063,12 +1122,12 @@ impl BlobBlobClient {
     pub async fn set_legal_hold(
         &self,
         legal_hold: bool,
-        options: Option<BlobBlobClientSetLegalHoldOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientSetLegalHoldResult>> {
+        options: Option<ServiceContainerBlobClientSetLegalHoldOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientSetLegalHoldResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -1101,12 +1160,12 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn set_metadata(
         &self,
-        options: Option<BlobBlobClientSetMetadataOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientSetMetadataResult>> {
+        options: Option<ServiceContainerBlobClientSetMetadataOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientSetMetadataResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -1175,12 +1234,12 @@ impl BlobBlobClient {
     pub async fn set_tags(
         &self,
         tags: RequestContent<BlobTags>,
-        options: Option<BlobBlobClientSetTagsOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientSetTagsResult>> {
+        options: Option<ServiceContainerBlobClientSetTagsOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientSetTagsResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -1226,12 +1285,12 @@ impl BlobBlobClient {
     pub async fn set_tier(
         &self,
         tier: AccessTier,
-        options: Option<BlobBlobClientSetTierOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientSetTierResult>> {
+        options: Option<ServiceContainerBlobClientSetTierOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientSetTierResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -1277,12 +1336,12 @@ impl BlobBlobClient {
     pub async fn start_copy_from_url(
         &self,
         copy_source: &str,
-        options: Option<BlobBlobClientStartCopyFromUrlOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientStartCopyFromUrlResult>> {
+        options: Option<ServiceContainerBlobClientStartCopyFromUrlOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientStartCopyFromUrlResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
@@ -1383,12 +1442,12 @@ impl BlobBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn undelete(
         &self,
-        options: Option<BlobBlobClientUndeleteOptions<'_>>,
-    ) -> Result<Response<BlobBlobClientUndeleteResult>> {
+        options: Option<ServiceContainerBlobClientUndeleteOptions<'_>>,
+    ) -> Result<Response<ServiceContainerBlobClientUndeleteResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
+        let mut path = String::from("{containerName}/{blob}/");
         path = path.replace("{blob}", &self.blob);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;

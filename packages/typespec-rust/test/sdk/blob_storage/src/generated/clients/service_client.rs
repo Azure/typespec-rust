@@ -5,22 +5,73 @@
 
 use super::internal_models::{GetUserDelegationKeyRequest, SetPropertiesRequest};
 use crate::generated::clients::method_options::*;
+use crate::generated::clients::service_container_client::ServiceContainerClient;
 use crate::models::{
-    BlobServiceClientGetAccountInfoResult, BlobServiceClientSetPropertiesResult,
-    BlobServiceClientSubmitBatchResult, FilterBlobSegment, ListContainersSegmentResponse,
-    StorageServiceProperties, StorageServiceStats, UserDelegationKey,
+    FilterBlobSegment, ListContainersSegmentResponse, ServiceClientGetAccountInfoResult,
+    ServiceClientSetPropertiesResult, ServiceClientSubmitBatchResult, StorageServiceProperties,
+    StorageServiceStats, UserDelegationKey,
 };
+use azure_core::credentials::TokenCredential;
 use azure_core::{
-    Bytes, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
+    BearerTokenCredentialPolicy, Bytes, ClientOptions, Context, Method, Pipeline, Policy, Request,
+    RequestContent, Response, Result, Url,
 };
+use std::sync::Arc;
+use typespec_client_core::fmt::SafeDebug;
 
-pub struct BlobServiceClient {
-    pub(crate) endpoint: Url,
-    pub(crate) pipeline: Pipeline,
-    pub(crate) version: String,
+pub struct ServiceClient {
+    endpoint: Url,
+    pipeline: Pipeline,
+    version: String,
 }
 
-impl BlobServiceClient {
+/// Options used when creating a [`ServiceClient`](crate::ServiceClient)
+#[derive(Clone, SafeDebug)]
+pub struct ServiceClientOptions {
+    pub client_options: ClientOptions,
+    pub version: String,
+}
+
+impl ServiceClient {
+    /// Creates a new ServiceClient, using Entra ID authentication.
+    ///
+    /// # Arguments
+    ///
+    /// * `endpoint` - Service host
+    /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
+    ///   Entra ID token to use when authenticating.
+    /// * `options` - Optional configuration for the client.
+    pub fn new(
+        endpoint: &str,
+        credential: Arc<dyn TokenCredential>,
+        options: Option<ServiceClientOptions>,
+    ) -> Result<Self> {
+        let options = options.unwrap_or_default();
+        let mut endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                format!("{endpoint} must use http(s)"),
+            ));
+        }
+        endpoint.set_query(None);
+        let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
+            credential,
+            vec!["https://storage.azure.com/.default"],
+        ));
+        Ok(Self {
+            endpoint,
+            version: options.version,
+            pipeline: Pipeline::new(
+                option_env!("CARGO_PKG_NAME"),
+                option_env!("CARGO_PKG_VERSION"),
+                options.client_options,
+                Vec::default(),
+                vec![auth_policy],
+            ),
+        })
+    }
+
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
         &self.endpoint
@@ -33,7 +84,7 @@ impl BlobServiceClient {
     /// * `options` - Optional parameters for the request.
     pub async fn filter_blobs(
         &self,
-        options: Option<BlobServiceClientFilterBlobsOptions<'_>>,
+        options: Option<ServiceClientFilterBlobsOptions<'_>>,
     ) -> Result<Response<FilterBlobSegment>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
@@ -81,8 +132,8 @@ impl BlobServiceClient {
     /// * `options` - Optional parameters for the request.
     pub async fn get_account_info(
         &self,
-        options: Option<BlobServiceClientGetAccountInfoOptions<'_>>,
-    ) -> Result<Response<BlobServiceClientGetAccountInfoResult>> {
+        options: Option<ServiceClientGetAccountInfoOptions<'_>>,
+    ) -> Result<Response<ServiceClientGetAccountInfoResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -112,7 +163,7 @@ impl BlobServiceClient {
     /// * `options` - Optional parameters for the request.
     pub async fn get_properties(
         &self,
-        options: Option<BlobServiceClientGetPropertiesOptions<'_>>,
+        options: Option<ServiceClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<StorageServiceProperties>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
@@ -135,6 +186,20 @@ impl BlobServiceClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    /// Returns a new instance of ServiceContainerClient.
+    ///
+    /// # Arguments
+    ///
+    /// * `container_name` - The name of the container.
+    pub fn get_service_container_client(&self, container_name: String) -> ServiceContainerClient {
+        ServiceContainerClient {
+            container_name,
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+            version: self.version.clone(),
+        }
+    }
+
     /// Retrieves statistics related to replication for the Blob service. It is only available on the secondary location endpoint
     /// when read-access geo-redundant replication is enabled for the storage account.
     ///
@@ -143,7 +208,7 @@ impl BlobServiceClient {
     /// * `options` - Optional parameters for the request.
     pub async fn get_statistics(
         &self,
-        options: Option<BlobServiceClientGetStatisticsOptions<'_>>,
+        options: Option<ServiceClientGetStatisticsOptions<'_>>,
     ) -> Result<Response<StorageServiceStats>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
@@ -177,7 +242,7 @@ impl BlobServiceClient {
         &self,
         start: &str,
         expiry: &str,
-        options: Option<BlobServiceClientGetUserDelegationKeyOptions<'_>>,
+        options: Option<ServiceClientGetUserDelegationKeyOptions<'_>>,
     ) -> Result<Response<UserDelegationKey>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
@@ -213,7 +278,7 @@ impl BlobServiceClient {
     /// * `options` - Optional parameters for the request.
     pub async fn list_containers_segment(
         &self,
-        options: Option<BlobServiceClientListContainersSegmentOptions<'_>>,
+        options: Option<ServiceClientListContainersSegmentOptions<'_>>,
     ) -> Result<Response<ListContainersSegmentResponse>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
@@ -262,8 +327,8 @@ impl BlobServiceClient {
     /// * `options` - Optional parameters for the request.
     pub async fn set_properties(
         &self,
-        options: Option<BlobServiceClientSetPropertiesOptions<'_>>,
-    ) -> Result<Response<BlobServiceClientSetPropertiesResult>> {
+        options: Option<ServiceClientSetPropertiesOptions<'_>>,
+    ) -> Result<Response<ServiceClientSetPropertiesResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -307,8 +372,8 @@ impl BlobServiceClient {
         &self,
         content_length: u64,
         body: RequestContent<Bytes>,
-        options: Option<BlobServiceClientSubmitBatchOptions<'_>>,
-    ) -> Result<Response<BlobServiceClientSubmitBatchResult>> {
+        options: Option<ServiceClientSubmitBatchOptions<'_>>,
+    ) -> Result<Response<ServiceClientSubmitBatchResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -328,5 +393,14 @@ impl BlobServiceClient {
         request.insert_header("x-ms-version", &self.version);
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
+    }
+}
+
+impl Default for ServiceClientOptions {
+    fn default() -> Self {
+        Self {
+            client_options: ClientOptions::default(),
+            version: String::from("2025-01-05"),
+        }
     }
 }
