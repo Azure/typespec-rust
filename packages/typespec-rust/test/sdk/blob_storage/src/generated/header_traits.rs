@@ -770,7 +770,7 @@ pub trait BlobBlobClientDownloadResultHeaders: private::Sealed {
     fn content_disposition(&self) -> Result<Option<String>>;
     fn content_encoding(&self) -> Result<Option<String>>;
     fn content_language(&self) -> Result<Option<String>>;
-    fn content_length(&self) -> Result<Option<i64>>;
+    fn content_length(&self) -> Result<Option<u64>>;
     fn content_md5(&self) -> Result<Option<String>>;
     fn content_range(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
@@ -806,7 +806,7 @@ pub trait BlobBlobClientDownloadResultHeaders: private::Sealed {
     fn request_id(&self) -> Result<Option<String>>;
     fn is_server_encrypted(&self) -> Result<Option<bool>>;
     fn structured_body_type(&self) -> Result<Option<String>>;
-    fn structured_content_length(&self) -> Result<Option<i64>>;
+    fn structured_content_length(&self) -> Result<Option<u64>>;
     fn tag_count(&self) -> Result<Option<i64>>;
     fn version_id(&self) -> Result<Option<String>>;
 }
@@ -841,7 +841,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
     }
 
     /// The number of bytes present in the response body.
-    fn content_length(&self) -> Result<Option<i64>> {
+    fn content_length(&self) -> Result<Option<u64>> {
         Headers::get_optional_as(self.headers(), &CONTENT_LENGTH)
     }
 
@@ -1071,7 +1071,7 @@ impl BlobBlobClientDownloadResultHeaders for Response<BlobBlobClientDownloadResu
 
     /// The length of the blob/file content inside the message body when the response body is returned as a structured message.
     /// Will always be smaller than Content-Length.
-    fn structured_content_length(&self) -> Result<Option<i64>> {
+    fn structured_content_length(&self) -> Result<Option<u64>> {
         Headers::get_optional_as(self.headers(), &STRUCTURED_CONTENT_LENGTH)
     }
 
@@ -1136,7 +1136,7 @@ pub trait BlobBlobClientGetPropertiesResultHeaders: private::Sealed {
     fn content_disposition(&self) -> Result<Option<String>>;
     fn content_encoding(&self) -> Result<Option<String>>;
     fn content_language(&self) -> Result<Option<String>>;
-    fn content_length(&self) -> Result<Option<i64>>;
+    fn content_length(&self) -> Result<Option<u64>>;
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
     fn e_tag(&self) -> Result<Option<String>>;
@@ -1210,7 +1210,7 @@ impl BlobBlobClientGetPropertiesResultHeaders for Response<BlobBlobClientGetProp
     }
 
     /// The number of bytes present in the response body.
-    fn content_length(&self) -> Result<Option<i64>> {
+    fn content_length(&self) -> Result<Option<u64>> {
         Headers::get_optional_as(self.headers(), &CONTENT_LENGTH)
     }
 
@@ -2066,7 +2066,7 @@ pub trait BlobBlockBlobClientQueryResultHeaders: private::Sealed {
     fn content_disposition(&self) -> Result<Option<String>>;
     fn content_encoding(&self) -> Result<Option<String>>;
     fn content_language(&self) -> Result<Option<String>>;
-    fn content_length(&self) -> Result<Option<i64>>;
+    fn content_length(&self) -> Result<Option<u64>>;
     fn content_md5(&self) -> Result<Option<String>>;
     fn content_range(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
@@ -2124,7 +2124,7 @@ impl BlobBlockBlobClientQueryResultHeaders for Response<BlobBlockBlobClientQuery
     }
 
     /// The number of bytes present in the response body.
-    fn content_length(&self) -> Result<Option<i64>> {
+    fn content_length(&self) -> Result<Option<u64>> {
         Headers::get_optional_as(self.headers(), &CONTENT_LENGTH)
     }
 
@@ -3628,7 +3628,7 @@ pub trait BlockListHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
     fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
-    fn blob_content_length(&self) -> Result<Option<i64>>;
+    fn blob_content_length(&self) -> Result<Option<u64>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
 }
@@ -3653,7 +3653,7 @@ impl BlockListHeaders for Response<BlockList> {
 
     /// This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must be aligned to a 512-byte
     /// boundary.
-    fn blob_content_length(&self) -> Result<Option<i64>> {
+    fn blob_content_length(&self) -> Result<Option<u64>> {
         Headers::get_optional_as(self.headers(), &BLOB_CONTENT_LENGTH)
     }
 
@@ -3763,7 +3763,7 @@ pub trait PageListHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
     fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
-    fn blob_content_length(&self) -> Result<Option<i64>>;
+    fn blob_content_length(&self) -> Result<Option<u64>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
 }
@@ -3788,7 +3788,7 @@ impl PageListHeaders for Response<PageList> {
 
     /// This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must be aligned to a 512-byte
     /// boundary.
-    fn blob_content_length(&self) -> Result<Option<i64>> {
+    fn blob_content_length(&self) -> Result<Option<u64>> {
         Headers::get_optional_as(self.headers(), &BLOB_CONTENT_LENGTH)
     }
 

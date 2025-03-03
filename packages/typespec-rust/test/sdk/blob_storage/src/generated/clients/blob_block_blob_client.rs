@@ -212,7 +212,7 @@ impl BlobBlockBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn put_blob_from_url(
         &self,
-        content_length: i64,
+        content_length: u64,
         copy_source: &str,
         options: Option<BlobBlockBlobClientPutBlobFromUrlOptions<'_>>,
     ) -> Result<Response<BlobBlockBlobClientPutBlobFromUrlResult>> {
@@ -430,7 +430,7 @@ impl BlobBlockBlobClient {
     pub async fn stage_block(
         &self,
         block_id: &str,
-        content_length: i64,
+        content_length: u64,
         body: RequestContent<Bytes>,
         options: Option<BlobBlockBlobClientStageBlockOptions<'_>>,
     ) -> Result<Response<BlobBlockBlobClientStageBlockResult>> {
@@ -506,7 +506,7 @@ impl BlobBlockBlobClient {
     pub async fn stage_block_from_url(
         &self,
         block_id: &str,
-        content_length: i64,
+        content_length: u64,
         source_url: &str,
         options: Option<BlobBlockBlobClientStageBlockFromUrlOptions<'_>>,
     ) -> Result<Response<BlobBlockBlobClientStageBlockFromUrlResult>> {
@@ -601,7 +601,7 @@ impl BlobBlockBlobClient {
     pub async fn upload(
         &self,
         body: RequestContent<Bytes>,
-        content_length: i64,
+        content_length: u64,
         options: Option<BlobBlockBlobClientUploadOptions<'_>>,
     ) -> Result<Response<BlobBlockBlobClientUploadResult>> {
         let options = options.unwrap_or_default();

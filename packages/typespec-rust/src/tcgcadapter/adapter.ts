@@ -283,7 +283,8 @@ export class Adapter {
       }
     };
 
-    const getScalar = (kind: 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8'): rust.Scalar => {
+    type scalarKind = 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8' | 'uint16' | 'uint32' | 'uint64' | 'uint8';
+    const getScalar = (kind: scalarKind): rust.Scalar => {
       let scalar = this.types.get(kind);
       if (scalar) {
         return <rust.Scalar>scalar;
@@ -312,6 +313,18 @@ export class Adapter {
           break;
         case 'int8':
           scalarType = 'i8';
+          break;
+        case 'uint16':
+          scalarType = 'u16';
+          break;
+        case 'uint32':
+          scalarType = 'u32';
+          break;
+        case 'uint64':
+          scalarType = 'u64';
+          break;
+        case 'uint8':
+          scalarType = 'u8';
           break;
       }
 
@@ -387,6 +400,10 @@ export class Adapter {
       case 'int32':
       case 'int64':
       case 'int8':
+      case 'uint16':
+      case 'uint32':
+      case 'uint64':
+      case 'uint8':
         return getScalar(type.kind);
       case 'enum':
         return this.getEnum(type);

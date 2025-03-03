@@ -36,7 +36,7 @@ impl BlobAppendBlobClient {
     pub async fn append_block(
         &self,
         body: RequestContent<Bytes>,
-        content_length: i64,
+        content_length: u64,
         options: Option<BlobAppendBlobClientAppendBlockOptions<'_>>,
     ) -> Result<Response<BlobAppendBlobClientAppendBlockResult>> {
         let options = options.unwrap_or_default();
@@ -131,7 +131,7 @@ impl BlobAppendBlobClient {
     pub async fn append_block_from_url(
         &self,
         source_url: &str,
-        content_length: i64,
+        content_length: u64,
         options: Option<BlobAppendBlobClientAppendBlockFromUrlOptions<'_>>,
     ) -> Result<Response<BlobAppendBlobClientAppendBlockFromUrlResult>> {
         let options = options.unwrap_or_default();
@@ -246,7 +246,7 @@ impl BlobAppendBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn create(
         &self,
-        content_length: i64,
+        content_length: u64,
         options: Option<BlobAppendBlobClientCreateOptions<'_>>,
     ) -> Result<Response<BlobAppendBlobClientCreateResult>> {
         let options = options.unwrap_or_default();
