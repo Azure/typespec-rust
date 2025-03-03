@@ -158,6 +158,36 @@ impl KeyVaultClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    /// Get a specified secret from a given key vault.
+    ///
+    /// The GET operation is applicable to any secret stored in Azure Key Vault. This operation requires the secrets/get permission.
+    ///
+    /// # Arguments
+    ///
+    /// * `secret_name` - The name of the secret.
+    /// * `secret_version` - The version of the secret. This URI fragment is optional. If not specified, the latest version of
+    ///   the secret is returned.
+    /// * `options` - Optional parameters for the request.
+    pub async fn get_secret(
+        &self,
+        secret_name: &str,
+        secret_version: &str,
+        options: Option<KeyVaultClientGetSecretOptions<'_>>,
+    ) -> Result<Response<SecretBundle>> {
+        let options = options.unwrap_or_default();
+        let ctx = Context::with_context(&options.method_options.context);
+        let mut url = self.endpoint.clone();
+        let mut path = String::from("secrets/{secret-name}/{secret-version}");
+        path = path.replace("{secret-name}", secret_name);
+        path = path.replace("{secret-version}", secret_version);
+        url = url.join(&path)?;
+        url.query_pairs_mut()
+            .append_pair("api-version", &self.api_version);
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("accept", "application/json");
+        self.pipeline.send(&ctx, &mut request).await
+    }
+
     /// Lists deleted secrets for the specified vault.
     ///
     /// The Get Deleted Secrets operation returns the secrets that have been deleted for a vault enabled for soft-delete. This
@@ -166,9 +196,9 @@ impl KeyVaultClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    pub fn get_deleted_secrets(
+    pub fn list_deleted_secrets(
         &self,
-        options: Option<KeyVaultClientGetDeletedSecretsOptions<'_>>,
+        options: Option<KeyVaultClientListDeletedSecretsOptions<'_>>,
     ) -> Result<Pager<DeletedSecretListResult>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -221,36 +251,6 @@ impl KeyVaultClient {
         }))
     }
 
-    /// Get a specified secret from a given key vault.
-    ///
-    /// The GET operation is applicable to any secret stored in Azure Key Vault. This operation requires the secrets/get permission.
-    ///
-    /// # Arguments
-    ///
-    /// * `secret_name` - The name of the secret.
-    /// * `secret_version` - The version of the secret. This URI fragment is optional. If not specified, the latest version of
-    ///   the secret is returned.
-    /// * `options` - Optional parameters for the request.
-    pub async fn get_secret(
-        &self,
-        secret_name: &str,
-        secret_version: &str,
-        options: Option<KeyVaultClientGetSecretOptions<'_>>,
-    ) -> Result<Response<SecretBundle>> {
-        let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
-        let mut url = self.endpoint.clone();
-        let mut path = String::from("secrets/{secret-name}/{secret-version}");
-        path = path.replace("{secret-name}", secret_name);
-        path = path.replace("{secret-version}", secret_version);
-        url = url.join(&path)?;
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
-        let mut request = Request::new(url, Method::Get);
-        request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
-    }
-
     /// List all versions of the specified secret.
     ///
     /// The full secret identifier and attributes are provided in the response. No values are returned for the secrets. This operations
@@ -260,10 +260,10 @@ impl KeyVaultClient {
     ///
     /// * `secret_name` - The name of the secret.
     /// * `options` - Optional parameters for the request.
-    pub fn get_secret_versions(
+    pub fn list_secret_versions(
         &self,
         secret_name: &str,
-        options: Option<KeyVaultClientGetSecretVersionsOptions<'_>>,
+        options: Option<KeyVaultClientListSecretVersionsOptions<'_>>,
     ) -> Result<Pager<SecretListResult>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -326,9 +326,9 @@ impl KeyVaultClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    pub fn get_secrets(
+    pub fn list_secrets(
         &self,
-        options: Option<KeyVaultClientGetSecretsOptions<'_>>,
+        options: Option<KeyVaultClientListSecretsOptions<'_>>,
     ) -> Result<Pager<SecretListResult>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();

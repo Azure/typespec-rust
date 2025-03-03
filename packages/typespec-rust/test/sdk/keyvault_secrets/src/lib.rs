@@ -15,9 +15,9 @@ pub mod clients {
 pub mod models {
     pub use crate::generated::clients::method_options::{
         KeyVaultClientBackupSecretOptions, KeyVaultClientDeleteSecretOptions,
-        KeyVaultClientGetDeletedSecretOptions, KeyVaultClientGetDeletedSecretsOptions,
-        KeyVaultClientGetSecretOptions, KeyVaultClientGetSecretVersionsOptions,
-        KeyVaultClientGetSecretsOptions, KeyVaultClientPurgeDeletedSecretOptions,
+        KeyVaultClientGetDeletedSecretOptions, KeyVaultClientGetSecretOptions,
+        KeyVaultClientListDeletedSecretsOptions, KeyVaultClientListSecretVersionsOptions,
+        KeyVaultClientListSecretsOptions, KeyVaultClientPurgeDeletedSecretOptions,
         KeyVaultClientRecoverDeletedSecretOptions, KeyVaultClientRestoreSecretOptions,
         KeyVaultClientSetSecretOptions, KeyVaultClientUpdateSecretOptions,
     };

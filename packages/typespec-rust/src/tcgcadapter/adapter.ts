@@ -5,7 +5,7 @@
 
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
-import { DateTimeKnownEncoding, EmitContext } from '@typespec/compiler';
+import { DateTimeKnownEncoding, EmitContext, NoTarget } from '@typespec/compiler';
 import * as http from '@typespec/http';
 import * as helpers from './helpers.js';
 import * as naming from './naming.js';
@@ -41,9 +41,13 @@ export class Adapter {
   // cache of adapted client method params
   private readonly clientMethodParams: Map<string, rust.MethodParameter>;
 
+  // contains methods that have been renamed
+  private readonly renamedMethods: Set<string>;
+
   private constructor(ctx: tcgc.SdkContext, options: RustEmitterOptions) {
     this.types = new Map<string, rust.Type>();
     this.clientMethodParams = new Map<string, rust.MethodParameter>();
+    this.renamedMethods = new Set<string>();
     this.ctx = ctx;
 
     let serviceType: rust.ServiceType = 'data-plane';
@@ -842,10 +846,25 @@ export class Adapter {
    * @param rustClient the client to which the method belongs
    */
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
-    let rustMethod: rust.MethodType;
-    const methodName = naming.getEscapedReservedName(snakeCaseName(method.name), 'fn');
+    let srcMethodName = method.name;
+    if (method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
+      const chunks = codegen.deconstruct(srcMethodName);
+      chunks[0] = 'list';
+      srcMethodName = codegen.camelCase(chunks);
+      this.renamedMethods.add(srcMethodName);
+      this.ctx.program.reportDiagnostic({
+        code: 'PagingMethodRename',
+        severity: 'warning',
+        message: `renamed paging method from ${method.name} to ${srcMethodName}`,
+        target: method.__raw ? method.__raw.node : NoTarget,
+      });
+    } else if (this.renamedMethods.has(srcMethodName)) {
+      throw new Error(`method name ${srcMethodName} collides with a renamed method`);
+    }
+
+    const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
     const optionsLifetime = new rust.Lifetime('a');
-    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(method.name)}Options`, true);
+    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName)}Options`, true);
     methodOptionsStruct.lifetime = optionsLifetime;
     methodOptionsStruct.docs.summary = `Options to be passed to [\`${rustClient.name}::${methodName}()\`](${buildClientDocPath(rustClient)}::${methodName}())`;
 
@@ -870,6 +889,7 @@ export class Adapter {
       httpPath = httpPath.slice(1);
     }
 
+    let rustMethod: rust.MethodType;
     switch (method.kind) {
       case 'basic':
         rustMethod = new rust.AsyncMethod(methodName, rustClient, pub, methodOptions, httpMethod, httpPath);
