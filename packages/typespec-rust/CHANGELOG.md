@@ -5,6 +5,7 @@
 ### Breaking Changes
 
 * Pageable methods will be renamed to start with `list` (e.g. `get_versions` becomes `list_versions`). A warning diagnostic is displayed when such a rename occurs.
+* Sub-clients that specify a `@clientName` decorator will use that client name verbatim instead of having the parent client name as a prefix.
 
 ### Bug Fixes
 

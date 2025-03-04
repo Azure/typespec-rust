@@ -5,12 +5,10 @@
 
 use crate::generated::clients::method_options::*;
 use crate::models::{
-    BlobType, BlockList, BlockListType, BlockLookupList, QueryRequest,
-    ServiceContainerBlockBlobClientCommitBlockListResult,
-    ServiceContainerBlockBlobClientPutBlobFromUrlResult,
-    ServiceContainerBlockBlobClientQueryResult,
-    ServiceContainerBlockBlobClientStageBlockFromUrlResult,
-    ServiceContainerBlockBlobClientStageBlockResult, ServiceContainerBlockBlobClientUploadResult,
+    BlobType, BlockBlobClientCommitBlockListResult, BlockBlobClientPutBlobFromUrlResult,
+    BlockBlobClientQueryResult, BlockBlobClientStageBlockFromUrlResult,
+    BlockBlobClientStageBlockResult, BlockBlobClientUploadResult, BlockList, BlockListType,
+    BlockLookupList, QueryRequest,
 };
 use azure_core::credentials::TokenCredential;
 use azure_core::{
@@ -20,7 +18,7 @@ use azure_core::{
 use std::sync::Arc;
 use typespec_client_core::fmt::SafeDebug;
 
-pub struct ServiceContainerBlockBlobClient {
+pub struct BlockBlobClient {
     pub(crate) blob: String,
     pub(crate) container_name: String,
     pub(crate) endpoint: Url,
@@ -28,14 +26,14 @@ pub struct ServiceContainerBlockBlobClient {
     pub(crate) version: String,
 }
 
-/// Options used when creating a [`ServiceContainerBlockBlobClient`](crate::ServiceContainerBlockBlobClient)
+/// Options used when creating a [`BlockBlobClient`](crate::BlockBlobClient)
 #[derive(Clone, Default, SafeDebug)]
-pub struct ServiceContainerBlockBlobClientOptions {
+pub struct BlockBlobClientOptions {
     pub client_options: ClientOptions,
 }
 
-impl ServiceContainerBlockBlobClient {
-    /// Creates a new ServiceContainerBlockBlobClient, using Entra ID authentication.
+impl BlockBlobClient {
+    /// Creates a new BlockBlobClient, using Entra ID authentication.
     ///
     /// # Arguments
     ///
@@ -52,7 +50,7 @@ impl ServiceContainerBlockBlobClient {
         version: String,
         container_name: String,
         blob: String,
-        options: Option<ServiceContainerBlockBlobClientOptions>,
+        options: Option<BlockBlobClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -101,8 +99,8 @@ impl ServiceContainerBlockBlobClient {
     pub async fn commit_block_list(
         &self,
         blocks: RequestContent<BlockLookupList>,
-        options: Option<ServiceContainerBlockBlobClientCommitBlockListOptions<'_>>,
-    ) -> Result<Response<ServiceContainerBlockBlobClientCommitBlockListResult>> {
+        options: Option<BlockBlobClientCommitBlockListOptions<'_>>,
+    ) -> Result<Response<BlockBlobClientCommitBlockListResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -222,7 +220,7 @@ impl ServiceContainerBlockBlobClient {
     pub async fn get_block_list(
         &self,
         list_type: BlockListType,
-        options: Option<ServiceContainerBlockBlobClientGetBlockListOptions<'_>>,
+        options: Option<BlockBlobClientGetBlockListOptions<'_>>,
     ) -> Result<Response<BlockList>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
@@ -273,8 +271,8 @@ impl ServiceContainerBlockBlobClient {
         &self,
         content_length: u64,
         copy_source: &str,
-        options: Option<ServiceContainerBlockBlobClientPutBlobFromUrlOptions<'_>>,
-    ) -> Result<Response<ServiceContainerBlockBlobClientPutBlobFromUrlResult>> {
+        options: Option<BlockBlobClientPutBlobFromUrlOptions<'_>>,
+    ) -> Result<Response<BlockBlobClientPutBlobFromUrlResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -415,8 +413,8 @@ impl ServiceContainerBlockBlobClient {
     pub async fn query(
         &self,
         query_request: RequestContent<QueryRequest>,
-        options: Option<ServiceContainerBlockBlobClientQueryOptions<'_>>,
-    ) -> Result<Response<ServiceContainerBlockBlobClientQueryResult>> {
+        options: Option<BlockBlobClientQueryOptions<'_>>,
+    ) -> Result<Response<BlockBlobClientQueryResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -491,8 +489,8 @@ impl ServiceContainerBlockBlobClient {
         block_id: &str,
         content_length: u64,
         body: RequestContent<Bytes>,
-        options: Option<ServiceContainerBlockBlobClientStageBlockOptions<'_>>,
-    ) -> Result<Response<ServiceContainerBlockBlobClientStageBlockResult>> {
+        options: Option<BlockBlobClientStageBlockOptions<'_>>,
+    ) -> Result<Response<BlockBlobClientStageBlockResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -567,8 +565,8 @@ impl ServiceContainerBlockBlobClient {
         block_id: &str,
         content_length: u64,
         source_url: &str,
-        options: Option<ServiceContainerBlockBlobClientStageBlockFromUrlOptions<'_>>,
-    ) -> Result<Response<ServiceContainerBlockBlobClientStageBlockFromUrlResult>> {
+        options: Option<BlockBlobClientStageBlockFromUrlOptions<'_>>,
+    ) -> Result<Response<BlockBlobClientStageBlockFromUrlResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -661,8 +659,8 @@ impl ServiceContainerBlockBlobClient {
         &self,
         body: RequestContent<Bytes>,
         content_length: u64,
-        options: Option<ServiceContainerBlockBlobClientUploadOptions<'_>>,
-    ) -> Result<Response<ServiceContainerBlockBlobClientUploadResult>> {
+        options: Option<BlockBlobClientUploadOptions<'_>>,
+    ) -> Result<Response<BlockBlobClientUploadResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

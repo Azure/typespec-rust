@@ -26,7 +26,7 @@ export class Adapter {
     // same as TypeSpec.Xml.@name. however, it's filtered out by default
     // so we need to add it to the allow list of decorators
     const ctx = await tcgc.createSdkContext(context, '@azure-tools/typespec-rust', {
-      additionalDecorators: ['TypeSpec\\.@encodedName'],
+      additionalDecorators: ['TypeSpec\\.@encodedName', '@clientName'],
       disableUsageAccessPropagationToBase: true,
     });
     return new Adapter(ctx, context.options);
@@ -529,7 +529,8 @@ export class Adapter {
    */
   private recursiveAdaptClient(client: tcgc.SdkClientType<tcgc.SdkHttpOperation>, parent?: rust.Client): rust.Client {
     let clientName = client.name;
-    if (parent) {
+    // NOTE: if the client has the @clientName decorator applied then use that verbatim
+    if (parent && !client.decorators.find((decorator) => decorator.name === 'Azure.ClientGenerator.Core.@clientName')) {
       // for hierarchical clients, the child client names are built
       // from the parent client name. this is because tsp allows subclients
       // with the same name. consider the following example.

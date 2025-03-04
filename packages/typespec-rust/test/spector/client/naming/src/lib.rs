@@ -8,15 +8,15 @@ mod generated;
 
 pub mod clients {
     pub use crate::generated::clients::{
-        NamingClient, NamingClientModelClient, NamingClientOptions, NamingUnionEnumClient,
+        ClientModelClient, NamingClient, NamingClientOptions, NamingUnionEnumClient,
     };
 }
 
 pub mod models {
     pub use crate::generated::clients::method_options::{
+        ClientModelClientClientOptions, ClientModelClientLanguageOptions,
         NamingClientClientNameOptions, NamingClientClientOptions,
         NamingClientCompatibleWithEncodedNameOptions, NamingClientLanguageOptions,
-        NamingClientModelClientClientOptions, NamingClientModelClientLanguageOptions,
         NamingClientParameterOptions, NamingClientRequestOptions, NamingClientResponseOptions,
         NamingUnionEnumClientUnionEnumMemberNameOptions, NamingUnionEnumClientUnionEnumNameOptions,
     };

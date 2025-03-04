@@ -5,12 +5,10 @@
 
 use crate::generated::clients::method_options::*;
 use crate::models::{
-    BlobType, PageList, SequenceNumberActionType, ServiceContainerPageBlobClientClearPagesResult,
-    ServiceContainerPageBlobClientCopyIncrementalResult,
-    ServiceContainerPageBlobClientCreateResult, ServiceContainerPageBlobClientResizeResult,
-    ServiceContainerPageBlobClientUpdateSequenceNumberResult,
-    ServiceContainerPageBlobClientUploadPagesFromUrlResult,
-    ServiceContainerPageBlobClientUploadPagesResult,
+    BlobType, PageBlobClientClearPagesResult, PageBlobClientCopyIncrementalResult,
+    PageBlobClientCreateResult, PageBlobClientResizeResult,
+    PageBlobClientUpdateSequenceNumberResult, PageBlobClientUploadPagesFromUrlResult,
+    PageBlobClientUploadPagesResult, PageList, SequenceNumberActionType,
 };
 use azure_core::credentials::TokenCredential;
 use azure_core::{
@@ -20,7 +18,7 @@ use azure_core::{
 use std::sync::Arc;
 use typespec_client_core::fmt::SafeDebug;
 
-pub struct ServiceContainerPageBlobClient {
+pub struct PageBlobClient {
     pub(crate) blob: String,
     pub(crate) container_name: String,
     pub(crate) endpoint: Url,
@@ -28,14 +26,14 @@ pub struct ServiceContainerPageBlobClient {
     pub(crate) version: String,
 }
 
-/// Options used when creating a [`ServiceContainerPageBlobClient`](crate::ServiceContainerPageBlobClient)
+/// Options used when creating a [`PageBlobClient`](crate::PageBlobClient)
 #[derive(Clone, Default, SafeDebug)]
-pub struct ServiceContainerPageBlobClientOptions {
+pub struct PageBlobClientOptions {
     pub client_options: ClientOptions,
 }
 
-impl ServiceContainerPageBlobClient {
-    /// Creates a new ServiceContainerPageBlobClient, using Entra ID authentication.
+impl PageBlobClient {
+    /// Creates a new PageBlobClient, using Entra ID authentication.
     ///
     /// # Arguments
     ///
@@ -52,7 +50,7 @@ impl ServiceContainerPageBlobClient {
         version: String,
         container_name: String,
         blob: String,
-        options: Option<ServiceContainerPageBlobClientOptions>,
+        options: Option<PageBlobClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -96,8 +94,8 @@ impl ServiceContainerPageBlobClient {
     pub async fn clear_pages(
         &self,
         content_length: u64,
-        options: Option<ServiceContainerPageBlobClientClearPagesOptions<'_>>,
-    ) -> Result<Response<ServiceContainerPageBlobClientClearPagesResult>> {
+        options: Option<PageBlobClientClearPagesOptions<'_>>,
+    ) -> Result<Response<PageBlobClientClearPagesResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -196,8 +194,8 @@ impl ServiceContainerPageBlobClient {
     pub async fn copy_incremental(
         &self,
         copy_source: &str,
-        options: Option<ServiceContainerPageBlobClientCopyIncrementalOptions<'_>>,
-    ) -> Result<Response<ServiceContainerPageBlobClientCopyIncrementalResult>> {
+        options: Option<PageBlobClientCopyIncrementalOptions<'_>>,
+    ) -> Result<Response<PageBlobClientCopyIncrementalResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -251,8 +249,8 @@ impl ServiceContainerPageBlobClient {
         &self,
         content_length: u64,
         blob_content_length: u64,
-        options: Option<ServiceContainerPageBlobClientCreateOptions<'_>>,
-    ) -> Result<Response<ServiceContainerPageBlobClientCreateResult>> {
+        options: Option<PageBlobClientCreateOptions<'_>>,
+    ) -> Result<Response<PageBlobClientCreateResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -371,7 +369,7 @@ impl ServiceContainerPageBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn get_page_ranges(
         &self,
-        options: Option<ServiceContainerPageBlobClientGetPageRangesOptions<'_>>,
+        options: Option<PageBlobClientGetPageRangesOptions<'_>>,
     ) -> Result<Response<PageList>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
@@ -436,7 +434,7 @@ impl ServiceContainerPageBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn get_page_ranges_diff(
         &self,
-        options: Option<ServiceContainerPageBlobClientGetPageRangesDiffOptions<'_>>,
+        options: Option<PageBlobClientGetPageRangesDiffOptions<'_>>,
     ) -> Result<Response<PageList>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
@@ -513,8 +511,8 @@ impl ServiceContainerPageBlobClient {
     pub async fn resize(
         &self,
         blob_content_length: u64,
-        options: Option<ServiceContainerPageBlobClientResizeOptions<'_>>,
-    ) -> Result<Response<ServiceContainerPageBlobClientResizeResult>> {
+        options: Option<PageBlobClientResizeOptions<'_>>,
+    ) -> Result<Response<PageBlobClientResizeResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -587,8 +585,8 @@ impl ServiceContainerPageBlobClient {
     pub async fn update_sequence_number(
         &self,
         sequence_number_action: SequenceNumberActionType,
-        options: Option<ServiceContainerPageBlobClientUpdateSequenceNumberOptions<'_>>,
-    ) -> Result<Response<ServiceContainerPageBlobClientUpdateSequenceNumberResult>> {
+        options: Option<PageBlobClientUpdateSequenceNumberOptions<'_>>,
+    ) -> Result<Response<PageBlobClientUpdateSequenceNumberResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -655,8 +653,8 @@ impl ServiceContainerPageBlobClient {
         &self,
         body: RequestContent<Bytes>,
         content_length: u64,
-        options: Option<ServiceContainerPageBlobClientUploadPagesOptions<'_>>,
-    ) -> Result<Response<ServiceContainerPageBlobClientUploadPagesResult>> {
+        options: Option<PageBlobClientUploadPagesOptions<'_>>,
+    ) -> Result<Response<PageBlobClientUploadPagesResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -774,8 +772,8 @@ impl ServiceContainerPageBlobClient {
         source_range: &str,
         content_length: u64,
         range: &str,
-        options: Option<ServiceContainerPageBlobClientUploadPagesFromUrlOptions<'_>>,
-    ) -> Result<Response<ServiceContainerPageBlobClientUploadPagesFromUrlResult>> {
+        options: Option<PageBlobClientUploadPagesFromUrlOptions<'_>>,
+    ) -> Result<Response<PageBlobClientUploadPagesFromUrlResult>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

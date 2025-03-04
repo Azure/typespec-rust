@@ -7,12 +7,12 @@ use crate::generated::clients::method_options::*;
 use crate::models::{ClientModel, RustName};
 use azure_core::{Context, Method, Pipeline, Request, RequestContent, Response, Result, Url};
 
-pub struct NamingClientModelClient {
+pub struct ClientModelClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
 }
 
-impl NamingClientModelClient {
+impl ClientModelClient {
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
         &self.endpoint
@@ -25,7 +25,7 @@ impl NamingClientModelClient {
     pub async fn client(
         &self,
         body: RequestContent<ClientModel>,
-        options: Option<NamingClientModelClientClientOptions<'_>>,
+        options: Option<ClientModelClientClientOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
@@ -44,7 +44,7 @@ impl NamingClientModelClient {
     pub async fn language(
         &self,
         body: RequestContent<RustName>,
-        options: Option<NamingClientModelClientLanguageOptions<'_>>,
+        options: Option<ClientModelClientLanguageOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);

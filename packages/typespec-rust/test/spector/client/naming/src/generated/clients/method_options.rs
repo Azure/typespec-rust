@@ -6,6 +6,20 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Options to be passed to [`ClientModelClient::client()`](crate::clients::ClientModelClient::client())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ClientModelClientClientOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`ClientModelClient::language()`](crate::clients::ClientModelClient::language())
+#[derive(Clone, Default, SafeDebug)]
+pub struct ClientModelClientLanguageOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`NamingClient::client()`](crate::NamingClient::client())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientClientOptions<'a> {
@@ -51,20 +65,6 @@ pub struct NamingClientRequestOptions<'a> {
 /// Options to be passed to [`NamingClient::response()`](crate::NamingClient::response())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientResponseOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
-/// Options to be passed to [`NamingClientModelClient::client()`](crate::clients::NamingClientModelClient::client())
-#[derive(Clone, Default, SafeDebug)]
-pub struct NamingClientModelClientClientOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
-/// Options to be passed to [`NamingClientModelClient::language()`](crate::clients::NamingClientModelClient::language())
-#[derive(Clone, Default, SafeDebug)]
-pub struct NamingClientModelClientLanguageOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
