@@ -86,5 +86,15 @@
     "query-string": "9.1.1",
     "source-map-support": "0.5.21",
     "turndown": "^7.2.0"
-  }
+  },
+  "azure-sdk/emitter-package-json-pinning": [
+    "@azure-tools/typespec-azure-core",
+    "@azure-tools/typespec-client-generator-core",
+    "@typespec/compiler",
+    "@typespec/http",
+    "@typespec/openapi",
+    "@typespec/rest",
+    "@typespec/versioning",
+    "@typespec/xml"
+  ]
 }
