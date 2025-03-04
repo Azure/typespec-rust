@@ -20,12 +20,12 @@ model BlobServiceClientParameters {
 @@clientNamespace(Storage.Blob.Container.BlockBlob, "Azure.Storage.Blobs");
 @@clientNamespace(Storage.Blob.Container.PageBlob, "Azure.Storage.Blobs");
 
-@@clientName(Storage.Blob, "BlobServiceClient");
-@@clientName(Storage.Blob.Container, "BlobContainerClient");
-@@clientName(Storage.Blob.Container.Blob, "BlobClient");
-@@clientName(Storage.Blob.Container.AppendBlob, "AppendBlobClient");
-@@clientName(Storage.Blob.Container.BlockBlob, "BlockBlobClient");
-@@clientName(Storage.Blob.Container.PageBlob, "PageBlobClient");
+@@clientName(Storage.Blob, "BlobServiceClient", "rust");
+@@clientName(Storage.Blob.Container, "BlobContainerClient", "rust");
+@@clientName(Storage.Blob.Container.Blob, "BlobClient", "rust");
+@@clientName(Storage.Blob.Container.AppendBlob, "AppendBlobClient", "rust");
+@@clientName(Storage.Blob.Container.BlockBlob, "BlockBlobClient", "rust");
+@@clientName(Storage.Blob.Container.PageBlob, "PageBlobClient", "rust");
 
 @@clientInitialization(Storage.Blob.Container,
   {
