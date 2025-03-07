@@ -651,7 +651,7 @@ function validateHeaderPathQueryParamKind(type: types.Type, paramKind: string) {
     case 'implTrait':
       validateHeaderPathQueryParamKind(type.type, paramKind);
       return;
-    case 'vector':
+    case 'Vec':
       if (paramKind.endsWith('Collection')) {
         return;
       }

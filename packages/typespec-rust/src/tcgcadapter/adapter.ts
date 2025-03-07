@@ -258,7 +258,7 @@ export class Adapter {
     // for public models each field is always an Option<T>.
     // the only exception is for HashMap and Vec since an
     // empty collection conveys the same semantics.
-    if ((isPubMod || property.optional) && fieldType.kind !== 'hashmap' && fieldType.kind !== 'vector') {
+    if ((isPubMod || property.optional) && fieldType.kind !== 'hashmap' && fieldType.kind !== 'Vec') {
       fieldType = new rust.Option(fieldType);
     }
 
@@ -1141,7 +1141,7 @@ export class Adapter {
         throw new Error('cookie parameters are not supported');
       case 'header':
         if (param.collectionFormat) {
-          if (paramType.kind !== 'vector') {
+          if (paramType.kind !== 'Vec') {
             throw new Error(`unexpected kind ${paramType.kind} for HeaderCollectionParameter`);
           }
           let format: rust.CollectionFormat;
@@ -1174,7 +1174,7 @@ export class Adapter {
       case 'query':
         if (param.collectionFormat) {
           const format = param.collectionFormat === 'simple' ? 'csv' : (param.collectionFormat === 'form' ? 'multi' : param.collectionFormat);
-          if (paramType.kind !== 'vector') {
+          if (paramType.kind !== 'Vec') {
             throw new Error(`unexpected kind ${paramType.kind} for QueryCollectionParameter`);
           }
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
@@ -1369,7 +1369,7 @@ function getXMLKind(decorators: Array<tcgc.DecoratorInfo>, field: rust.ModelFiel
       case 'TypeSpec.Xml.@unwrapped': {
         const fieldType = helpers.unwrapOption(field.type);
         switch (fieldType.kind) {
-          case 'vector':
+          case 'Vec':
             return 'unwrappedList';
           case 'String':
             // an unwrapped string means it's text

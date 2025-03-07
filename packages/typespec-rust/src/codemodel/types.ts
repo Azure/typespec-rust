@@ -330,7 +330,7 @@ export interface Url extends External {
  * since Vec<T> is in the prelude set, it doesn't need to extend StdType
  */
 export interface Vector {
-  kind: 'vector';
+  kind: 'Vec';
 
   /** the generic type param */
   type: Type;
@@ -584,7 +584,7 @@ export class Option implements Option {
       case 'scalar':
       case 'struct':
       case 'Url':
-      case 'vector':
+      case 'Vec':
         this.kind = 'option';
         this.type = type;
         break;
@@ -615,7 +615,7 @@ export class Payload<T> implements Payload<T> {
       case 'model':
       case 'offsetDateTime':
       case 'scalar':
-      case 'vector':
+      case 'Vec':
         this.kind = 'payload';
         this.type = type;
         this.format = format;
@@ -714,7 +714,7 @@ export class Url extends External implements Url {
 
 export class Vector implements Vector {
   constructor(type: Type) {
-    this.kind = 'vector';
+    this.kind = 'Vec';
     this.type = type;
   }
 }

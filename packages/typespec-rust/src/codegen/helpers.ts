@@ -191,8 +191,8 @@ export function getTypeDeclaration(type: rust.Client | rust.Type, withAnonymousL
       return `${type.name}${getGenericLifetimeAnnotation(type.lifetime)}`;
     case 'unit':
       return '()';      
-    case 'vector':
-      return `Vec<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+    case 'Vec':
+      return `${type.kind}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
   }
 }
 
@@ -377,7 +377,7 @@ export function unwrapType(type: rust.Type): rust.Type {
     case 'arc':
     case 'option':
     case 'hashmap':
-    case 'vector':
+    case 'Vec':
       return unwrapType(type.type);
     default:
       return type;

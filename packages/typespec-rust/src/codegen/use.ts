@@ -94,7 +94,7 @@ export class Use {
       case 'option':
       case 'result':
       case 'hashmap':
-      case 'vector':
+      case 'Vec':
         this.addForType(type.type);
         break;
       case 'requestContent':

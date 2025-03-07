@@ -1113,7 +1113,7 @@ function nonCopyableType(type: rust.Type): boolean {
     case 'Url':
     case 'external':
     case 'hashmap':
-    case 'vector':
+    case 'Vec':
       return true;
     default:
       return false;

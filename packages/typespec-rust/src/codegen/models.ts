@@ -126,7 +126,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
         serdeParams.add(`deserialize_with = "base64::deserialize${format}"`);
         serdeParams.add(`serialize_with = "base64::serialize${format}"`);
         use.addType('azure_core', 'base64');
-      } else if (bodyFormat === 'xml' && helpers.unwrapOption(field.type).kind === 'vector' && field.xmlKind !== 'unwrappedList') {
+      } else if (bodyFormat === 'xml' && helpers.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
         serdeParams.add('default');
@@ -142,7 +142,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
       } else if (field.type.kind === 'hashmap') {
         serdeParams.add('default');
         serdeParams.add('skip_serializing_if = "HashMap::is_empty"');
-      } else if (field.type.kind === 'vector') {
+      } else if (field.type.kind === 'Vec') {
         serdeParams.add('default');
         // NOTE: we want to send an empty array for XML payloads
         if (bodyFormat !== 'xml') {
