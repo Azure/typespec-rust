@@ -9,7 +9,7 @@ use crate::models::{
     QueryRequestType, QueryType, RehydratePriority,
 };
 use crate::{
-    generated::xml_helpers::Blob_itemsBlobItemInternal,
+    generated::models_serde, generated::xml_helpers::Blob_itemsBlobItemInternal,
     generated::xml_helpers::Blob_prefixesBlobPrefix, generated::xml_helpers::Blob_tag_setBlobTag,
     generated::xml_helpers::BlobsFilterBlobItem, generated::xml_helpers::Clear_rangeClearRange,
     generated::xml_helpers::Committed_blocksBlock,
@@ -652,8 +652,14 @@ pub struct BlobTags {
 #[typespec(format = "xml")]
 pub struct Block {
     /// The base64 encoded block ID.
-    #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
+    #[serde(
+        default,
+        deserialize_with = "base64::deserialize",
+        rename = "Name",
+        serialize_with = "base64::serialize",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub name: Option<Vec<u8>>,
 
     /// The block size in bytes.
     #[serde(rename = "Size", skip_serializing_if = "Option::is_none")]
@@ -714,16 +720,31 @@ pub struct BlockList {
 #[typespec(format = "xml")]
 pub struct BlockLookupList {
     /// The committed blocks
-    #[serde(default, rename = "Committed")]
-    pub committed: Vec<String>,
+    #[serde(
+        default,
+        rename = "Committed",
+        skip_serializing_if = "Vec::is_empty",
+        with = "models_serde::vec_encoded_bytes_std"
+    )]
+    pub committed: Vec<Vec<u8>>,
 
     /// The latest blocks
-    #[serde(default, rename = "Latest")]
-    pub latest: Vec<String>,
+    #[serde(
+        default,
+        rename = "Latest",
+        skip_serializing_if = "Vec::is_empty",
+        with = "models_serde::vec_encoded_bytes_std"
+    )]
+    pub latest: Vec<Vec<u8>>,
 
     /// The uncommitted blocks
-    #[serde(default, rename = "Uncommitted")]
-    pub uncommitted: Vec<String>,
+    #[serde(
+        default,
+        rename = "Uncommitted",
+        skip_serializing_if = "Vec::is_empty",
+        with = "models_serde::vec_encoded_bytes_std"
+    )]
+    pub uncommitted: Vec<Vec<u8>>,
 }
 
 /// The clear range.
@@ -1441,6 +1462,12 @@ pub struct UserDelegationKey {
     pub signed_version: Option<String>,
 
     /// The key as a base64 string.
-    #[serde(rename = "Value", skip_serializing_if = "Option::is_none")]
-    pub value: Option<String>,
+    #[serde(
+        default,
+        deserialize_with = "base64::deserialize",
+        rename = "Value",
+        serialize_with = "base64::serialize",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub value: Option<Vec<u8>>,
 }

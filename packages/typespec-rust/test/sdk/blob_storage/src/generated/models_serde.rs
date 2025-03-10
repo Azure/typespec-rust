@@ -27,3 +27,34 @@ impl TryFrom<QueryRequest> for RequestContent<QueryRequest> {
         RequestContent::try_from(to_xml(&value)?)
     }
 }
+
+pub mod vec_encoded_bytes_std {
+    use azure_core::base64;
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use std::result::Result;
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Vec<Vec<u8>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let to_deserialize = <Option<Vec<String>>>::deserialize(deserializer)?;
+        match to_deserialize {
+            Some(to_deserialize) => {
+                let mut decoded0 = <Vec<Vec<u8>>>::new();
+                for v in to_deserialize {
+                    decoded0.push(base64::decode(v).map_err(serde::de::Error::custom)?);
+                }
+                Ok(decoded0)
+            }
+            None => Ok(<Vec<Vec<u8>>>::default()),
+        }
+    }
+
+    pub fn serialize<S>(to_serialize: &Vec<Vec<u8>>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let encoded0 = to_serialize.iter().map(base64::encode).collect();
+        <Vec<String>>::serialize(&encoded0, serializer)
+    }
+}

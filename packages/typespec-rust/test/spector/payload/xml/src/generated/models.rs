@@ -89,7 +89,7 @@ pub struct ModelWithOptionalField {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 #[typespec(format = "xml")]
 pub struct ModelWithRenamedArrays {
-    #[serde(default, rename = "Colors")]
+    #[serde(default, rename = "Colors", skip_serializing_if = "Vec::is_empty")]
     pub colors: Vec<String>,
 
     #[serde(
@@ -147,7 +147,7 @@ pub struct ModelWithText {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 #[typespec(format = "xml")]
 pub struct ModelWithUnwrappedArray {
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub colors: Vec<String>,
 
     #[serde(

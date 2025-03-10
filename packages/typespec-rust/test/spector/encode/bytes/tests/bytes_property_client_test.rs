@@ -41,9 +41,7 @@ async fn base64_url() {
 }
 
 #[tokio::test]
-#[should_panic]
 async fn base64_url_array() {
-    // TODO: https://github.com/Azure/typespec-rust/issues/221
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = Base64urlArrayBytesProperty {
         value: vec!["test".as_bytes().to_owned(), "test".as_bytes().to_owned()],

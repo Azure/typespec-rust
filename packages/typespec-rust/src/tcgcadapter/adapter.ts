@@ -1298,6 +1298,8 @@ function recursiveKeyName(root: string, obj: tcgc.SdkType): string {
   switch (obj.kind) {
     case 'array':
       return recursiveKeyName(`${root}-array`, obj.valueType);
+    case 'bytes':
+      return `${root}-bytes-${obj.encode ? obj.encode : 'std'}`;
     case 'enum':
       return `${root}-${obj.name}`;
     case 'enumvalue':

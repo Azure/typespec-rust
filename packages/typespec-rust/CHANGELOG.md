@@ -1,5 +1,13 @@
 # Release History
 
+## 0.11.1 (unreleased)
+
+### Bugs Fixed
+
+* Fixed serde for models containing hash maps/vectors of base64 encoded bytes and hash maps/vectors of `OffsetDateTime` types.
+* Fixed an issue that could cause emitted code to use incorrect base64 encoding/decoding.
+* Fixed serde annotations to omit empty `Vec<T>` for XML unwrapped arrays.
+
 ## 0.11.0 (2025-03-04)
 
 ### Breaking Changes

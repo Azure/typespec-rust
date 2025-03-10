@@ -46,3 +46,39 @@ impl TryFrom<UnixTimestampDatetimeProperty> for RequestContent<UnixTimestampDate
         RequestContent::try_from(to_json(&value)?)
     }
 }
+
+pub mod vec_offset_date_time_unix_time {
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use std::result::Result;
+    use time::OffsetDateTime;
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Vec<OffsetDateTime>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let to_deserialize = <Option<Vec<i64>>>::deserialize(deserializer)?;
+        match to_deserialize {
+            Some(to_deserialize) => {
+                let mut decoded0 = <Vec<OffsetDateTime>>::new();
+                for v in to_deserialize {
+                    decoded0.push(
+                        OffsetDateTime::from_unix_timestamp(v).map_err(serde::de::Error::custom)?,
+                    );
+                }
+                Ok(decoded0)
+            }
+            None => Ok(<Vec<OffsetDateTime>>::default()),
+        }
+    }
+
+    pub fn serialize<S>(
+        to_serialize: &Vec<OffsetDateTime>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let encoded0 = to_serialize.iter().map(|v| v.unix_timestamp()).collect();
+        <Vec<i64>>::serialize(&encoded0, serializer)
+    }
+}

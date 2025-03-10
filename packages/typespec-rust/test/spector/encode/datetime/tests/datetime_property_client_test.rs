@@ -5,7 +5,7 @@
 use spector_datetime::{
     models::{
         DefaultDatetimeProperty, Rfc3339DatetimeProperty, Rfc7231DatetimeProperty,
-        UnixTimestampDatetimeProperty,
+        UnixTimestampArrayDatetimeProperty, UnixTimestampDatetimeProperty,
     },
     DatetimeClient,
 };
@@ -89,5 +89,25 @@ async fn unix_timestamp() {
 
 #[tokio::test]
 async fn unix_timestamp_array() {
-    // TODO: https://github.com/Azure/typespec-rust/issues/221
+    let client = DatetimeClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let time_stamps = vec![
+        OffsetDateTime::new_utc(
+            Date::from_calendar_date(2023, Month::June, 12).unwrap(),
+            Time::from_hms(10, 47, 44).unwrap(),
+        ),
+        OffsetDateTime::new_utc(
+            Date::from_calendar_date(2023, Month::June, 14).unwrap(),
+            Time::from_hms(9, 17, 36).unwrap(),
+        ),
+    ];
+    let body = UnixTimestampArrayDatetimeProperty {
+        value: time_stamps.clone(),
+    };
+    let resp = client
+        .get_datetime_property_client()
+        .unix_timestamp_array(body.try_into().unwrap(), None)
+        .await
+        .unwrap();
+    let value: UnixTimestampArrayDatetimeProperty = resp.into_body().await.unwrap();
+    assert_eq!(value.value, time_stamps);
 }
