@@ -79,8 +79,8 @@ const DENY_ENCRYPTION_SCOPE_OVERRIDE: HeaderName =
     HeaderName::from_static("x-ms-deny-encryption-scope-override");
 const ENCRYPTION_KEY_SHA256: HeaderName = HeaderName::from_static("x-ms-encryption-key-sha256");
 const ENCRYPTION_SCOPE: HeaderName = HeaderName::from_static("x-ms-encryption-scope");
+const ETAG: HeaderName = HeaderName::from_static("etag");
 const EXPIRY_TIME: HeaderName = HeaderName::from_static("x-ms-expiry-time");
-const E_TAG: HeaderName = HeaderName::from_static("etag");
 const HAS_IMMUTABILITY_POLICY: HeaderName = HeaderName::from_static("x-ms-has-immutability-policy");
 const HAS_LEGAL_HOLD: HeaderName = HeaderName::from_static("x-ms-has-legal-hold");
 const IMMUTABILITY_POLICY_MODE: HeaderName =
@@ -119,8 +119,8 @@ const VERSION_ID: HeaderName = HeaderName::from_static("x-ms-version-id");
 pub trait AppendBlobClientAppendBlockFromUrlResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn blob_append_offset(&self) -> Result<Option<String>>;
     fn blob_committed_block_count(&self) -> Result<Option<i32>>;
     fn client_request_id(&self) -> Result<Option<String>>;
@@ -145,16 +145,16 @@ impl AppendBlobClientAppendBlockFromUrlResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// This response header is returned only for append operations. It returns the offset at which the block was committed, in
@@ -207,8 +207,8 @@ impl AppendBlobClientAppendBlockFromUrlResultHeaders
 pub trait AppendBlobClientAppendBlockResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn blob_append_offset(&self) -> Result<Option<String>>;
     fn blob_committed_block_count(&self) -> Result<Option<i32>>;
     fn client_request_id(&self) -> Result<Option<String>>;
@@ -232,16 +232,16 @@ impl AppendBlobClientAppendBlockResultHeaders for Response<AppendBlobClientAppen
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// This response header is returned only for append operations. It returns the offset at which the block was committed, in
@@ -299,8 +299,8 @@ impl AppendBlobClientAppendBlockResultHeaders for Response<AppendBlobClientAppen
 pub trait AppendBlobClientCreateResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
@@ -321,16 +321,16 @@ impl AppendBlobClientCreateResultHeaders for Response<AppendBlobClientCreateResu
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -372,8 +372,8 @@ impl AppendBlobClientCreateResultHeaders for Response<AppendBlobClientCreateResu
 /// Provides access to typed response headers for [`AppendBlobClient::seal()`](crate::clients::AppendBlobClient::seal())
 pub trait AppendBlobClientSealResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn is_sealed(&self) -> Result<Option<bool>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -385,16 +385,16 @@ impl AppendBlobClientSealResultHeaders for Response<AppendBlobClientSealResult> 
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// If this blob has been sealed
@@ -440,8 +440,8 @@ impl BlobClientAbortCopyFromUrlResultHeaders for Response<BlobClientAbortCopyFro
 /// Provides access to typed response headers for [`BlobClient::acquire_lease()`](crate::clients::BlobClient::acquire_lease())
 pub trait BlobClientAcquireLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn lease_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -453,16 +453,16 @@ impl BlobClientAcquireLeaseResultHeaders for Response<BlobClientAcquireLeaseResu
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -484,8 +484,8 @@ impl BlobClientAcquireLeaseResultHeaders for Response<BlobClientAcquireLeaseResu
 /// Provides access to typed response headers for [`BlobClient::break_lease()`](crate::clients::BlobClient::break_lease())
 pub trait BlobClientBreakLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn lease_time(&self) -> Result<Option<i32>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -497,16 +497,16 @@ impl BlobClientBreakLeaseResultHeaders for Response<BlobClientBreakLeaseResult> 
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -528,8 +528,8 @@ impl BlobClientBreakLeaseResultHeaders for Response<BlobClientBreakLeaseResult> 
 /// Provides access to typed response headers for [`BlobClient::change_lease()`](crate::clients::BlobClient::change_lease())
 pub trait BlobClientChangeLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn lease_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -541,16 +541,16 @@ impl BlobClientChangeLeaseResultHeaders for Response<BlobClientChangeLeaseResult
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -573,8 +573,8 @@ impl BlobClientChangeLeaseResultHeaders for Response<BlobClientChangeLeaseResult
 pub trait BlobClientCopyFromUrlResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn content_crc64(&self) -> Result<Option<String>>;
     fn copy_id(&self) -> Result<Option<String>>;
@@ -596,16 +596,16 @@ impl BlobClientCopyFromUrlResultHeaders for Response<BlobClientCopyFromUrlResult
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -651,8 +651,8 @@ impl BlobClientCopyFromUrlResultHeaders for Response<BlobClientCopyFromUrlResult
 /// Provides access to typed response headers for [`BlobClient::create_snapshot()`](crate::clients::BlobClient::create_snapshot())
 pub trait BlobClientCreateSnapshotResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
     fn is_server_encrypted(&self) -> Result<Option<bool>>;
@@ -666,16 +666,16 @@ impl BlobClientCreateSnapshotResultHeaders for Response<BlobClientCreateSnapshot
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -768,8 +768,8 @@ pub trait BlobClientDownloadResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn content_range(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn blob_committed_block_count(&self) -> Result<Option<i32>>;
     fn blob_content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn is_sealed(&self) -> Result<Option<bool>>;
@@ -856,16 +856,16 @@ impl BlobClientDownloadResultHeaders for Response<BlobClientDownloadResult> {
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The number of committed blocks present in the blob. This header is returned only for append blobs.
@@ -1133,8 +1133,8 @@ pub trait BlobClientGetPropertiesResultHeaders: private::Sealed {
     fn content_length(&self) -> Result<Option<u64>>;
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn tier(&self) -> Result<Option<AccessTier>>;
     fn access_tier_change_time(&self) -> Result<Option<OffsetDateTime>>;
     fn access_tier_inferred(&self) -> Result<Option<bool>>;
@@ -1219,16 +1219,16 @@ impl BlobClientGetPropertiesResultHeaders for Response<BlobClientGetPropertiesRe
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The tier to be set on the blob.
@@ -1471,8 +1471,8 @@ impl BlobClientGetPropertiesResultHeaders for Response<BlobClientGetPropertiesRe
 /// Provides access to typed response headers for [`BlobClient::release_lease()`](crate::clients::BlobClient::release_lease())
 pub trait BlobClientReleaseLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
 }
@@ -1483,16 +1483,16 @@ impl BlobClientReleaseLeaseResultHeaders for Response<BlobClientReleaseLeaseResu
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1509,8 +1509,8 @@ impl BlobClientReleaseLeaseResultHeaders for Response<BlobClientReleaseLeaseResu
 /// Provides access to typed response headers for [`BlobClient::renew_lease()`](crate::clients::BlobClient::renew_lease())
 pub trait BlobClientRenewLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn lease_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -1522,16 +1522,16 @@ impl BlobClientRenewLeaseResultHeaders for Response<BlobClientRenewLeaseResult> 
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1553,8 +1553,8 @@ impl BlobClientRenewLeaseResultHeaders for Response<BlobClientRenewLeaseResult> 
 /// Provides access to typed response headers for [`BlobClient::set_expiry()`](crate::clients::BlobClient::set_expiry())
 pub trait BlobClientSetExpiryResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
 }
@@ -1565,16 +1565,16 @@ impl BlobClientSetExpiryResultHeaders for Response<BlobClientSetExpiryResult> {
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1591,8 +1591,8 @@ impl BlobClientSetExpiryResultHeaders for Response<BlobClientSetExpiryResult> {
 /// Provides access to typed response headers for [`BlobClient::set_http_headers()`](crate::clients::BlobClient::set_http_headers())
 pub trait BlobClientSetHttpHeadersResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -1604,16 +1604,16 @@ impl BlobClientSetHttpHeadersResultHeaders for Response<BlobClientSetHttpHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
@@ -1705,8 +1705,8 @@ impl BlobClientSetLegalHoldResultHeaders for Response<BlobClientSetLegalHoldResu
 /// Provides access to typed response headers for [`BlobClient::set_metadata()`](crate::clients::BlobClient::set_metadata())
 pub trait BlobClientSetMetadataResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
@@ -1721,16 +1721,16 @@ impl BlobClientSetMetadataResultHeaders for Response<BlobClientSetMetadataResult
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1814,8 +1814,8 @@ impl BlobClientSetTierResultHeaders for Response<BlobClientSetTierResult> {
 /// Provides access to typed response headers for [`BlobClient::start_copy_from_url()`](crate::clients::BlobClient::start_copy_from_url())
 pub trait BlobClientStartCopyFromUrlResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn copy_id(&self) -> Result<Option<String>>;
     fn copy_status(&self) -> Result<Option<CopyStatus>>;
@@ -1829,16 +1829,16 @@ impl BlobClientStartCopyFromUrlResultHeaders for Response<BlobClientStartCopyFro
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1896,8 +1896,8 @@ impl BlobClientUndeleteResultHeaders for Response<BlobClientUndeleteResult> {
 /// Provides access to typed response headers for [`BlobContainerClient::acquire_lease()`](crate::clients::BlobContainerClient::acquire_lease())
 pub trait BlobContainerClientAcquireLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn lease_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -1911,16 +1911,16 @@ impl BlobContainerClientAcquireLeaseResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1942,8 +1942,8 @@ impl BlobContainerClientAcquireLeaseResultHeaders
 /// Provides access to typed response headers for [`BlobContainerClient::break_lease()`](crate::clients::BlobContainerClient::break_lease())
 pub trait BlobContainerClientBreakLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn lease_id(&self) -> Result<Option<String>>;
     fn lease_time(&self) -> Result<Option<i32>>;
@@ -1956,16 +1956,16 @@ impl BlobContainerClientBreakLeaseResultHeaders for Response<BlobContainerClient
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1992,8 +1992,8 @@ impl BlobContainerClientBreakLeaseResultHeaders for Response<BlobContainerClient
 /// Provides access to typed response headers for [`BlobContainerClient::change_lease()`](crate::clients::BlobContainerClient::change_lease())
 pub trait BlobContainerClientChangeLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn lease_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -2007,16 +2007,16 @@ impl BlobContainerClientChangeLeaseResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2038,8 +2038,8 @@ impl BlobContainerClientChangeLeaseResultHeaders
 /// Provides access to typed response headers for [`BlobContainerClient::create()`](crate::clients::BlobContainerClient::create())
 pub trait BlobContainerClientCreateResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
 }
@@ -2050,16 +2050,16 @@ impl BlobContainerClientCreateResultHeaders for Response<BlobContainerClientCrea
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2144,8 +2144,8 @@ impl BlobContainerClientGetAccountInfoResultHeaders
 /// Provides access to typed response headers for [`BlobContainerClient::get_properties()`](crate::clients::BlobContainerClient::get_properties())
 pub trait BlobContainerClientGetPropertiesResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn access(&self) -> Result<Option<PublicAccessType>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn default_encryption_scope(&self) -> Result<Option<String>>;
@@ -2168,16 +2168,16 @@ impl BlobContainerClientGetPropertiesResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The public access setting for the container.
@@ -2253,8 +2253,8 @@ impl BlobContainerClientGetPropertiesResultHeaders
 /// Provides access to typed response headers for [`BlobContainerClient::release_lease()`](crate::clients::BlobContainerClient::release_lease())
 pub trait BlobContainerClientReleaseLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
 }
@@ -2267,16 +2267,16 @@ impl BlobContainerClientReleaseLeaseResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2317,8 +2317,8 @@ impl BlobContainerClientRenameResultHeaders for Response<BlobContainerClientRena
 /// Provides access to typed response headers for [`BlobContainerClient::renew_lease()`](crate::clients::BlobContainerClient::renew_lease())
 pub trait BlobContainerClientRenewLeaseResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn lease_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -2330,16 +2330,16 @@ impl BlobContainerClientRenewLeaseResultHeaders for Response<BlobContainerClient
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2385,8 +2385,8 @@ impl BlobContainerClientRestoreResultHeaders for Response<BlobContainerClientRes
 /// Provides access to typed response headers for [`BlobContainerClient::set_access_policy()`](crate::clients::BlobContainerClient::set_access_policy())
 pub trait BlobContainerClientSetAccessPolicyResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
 }
@@ -2399,16 +2399,16 @@ impl BlobContainerClientSetAccessPolicyResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2425,8 +2425,8 @@ impl BlobContainerClientSetAccessPolicyResultHeaders
 /// Provides access to typed response headers for [`BlobContainerClient::set_metadata()`](crate::clients::BlobContainerClient::set_metadata())
 pub trait BlobContainerClientSetMetadataResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
 }
@@ -2439,16 +2439,16 @@ impl BlobContainerClientSetMetadataResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2586,8 +2586,8 @@ impl BlobTagsHeaders for Response<BlobTags> {
 pub trait BlockBlobClientCommitBlockListResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn content_crc64(&self) -> Result<Option<String>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
@@ -2611,16 +2611,16 @@ impl BlockBlobClientCommitBlockListResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2668,8 +2668,8 @@ impl BlockBlobClientCommitBlockListResultHeaders
 pub trait BlockBlobClientPutBlobFromUrlResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
@@ -2690,16 +2690,16 @@ impl BlockBlobClientPutBlobFromUrlResultHeaders for Response<BlockBlobClientPutB
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2749,8 +2749,8 @@ pub trait BlockBlobClientQueryResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn content_range(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn blob_committed_block_count(&self) -> Result<Option<i32>>;
     fn blob_content_md5(&self) -> Result<Option<Vec<u8>>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
@@ -2824,16 +2824,16 @@ impl BlockBlobClientQueryResultHeaders for Response<BlockBlobClientQueryResult> 
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The number of committed blocks present in the blob. This header is returned only for append blobs.
@@ -3097,8 +3097,8 @@ impl BlockBlobClientStageBlockResultHeaders for Response<BlockBlobClientStageBlo
 pub trait BlockBlobClientUploadResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
@@ -3120,16 +3120,16 @@ impl BlockBlobClientUploadResultHeaders for Response<BlockBlobClientUploadResult
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -3176,8 +3176,8 @@ impl BlockBlobClientUploadResultHeaders for Response<BlockBlobClientUploadResult
 /// Provides access to typed response headers for [`BlockBlobClient::get_block_list()`](crate::clients::BlockBlobClient::get_block_list())
 pub trait BlockListHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn blob_content_length(&self) -> Result<Option<u64>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -3189,16 +3189,16 @@ impl BlockListHeaders for Response<BlockList> {
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must be aligned to a 512-byte
@@ -3312,8 +3312,8 @@ impl ListContainersSegmentResponseHeaders for Response<ListContainersSegmentResp
 pub trait PageBlobClientClearPagesResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn content_crc64(&self) -> Result<Option<String>>;
@@ -3332,16 +3332,16 @@ impl PageBlobClientClearPagesResultHeaders for Response<PageBlobClientClearPages
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
@@ -3368,8 +3368,8 @@ impl PageBlobClientClearPagesResultHeaders for Response<PageBlobClientClearPages
 /// Provides access to typed response headers for [`PageBlobClient::copy_incremental()`](crate::clients::PageBlobClient::copy_incremental())
 pub trait PageBlobClientCopyIncrementalResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn copy_id(&self) -> Result<Option<String>>;
     fn copy_status(&self) -> Result<Option<CopyStatus>>;
@@ -3382,16 +3382,16 @@ impl PageBlobClientCopyIncrementalResultHeaders for Response<PageBlobClientCopyI
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -3420,8 +3420,8 @@ impl PageBlobClientCopyIncrementalResultHeaders for Response<PageBlobClientCopyI
 pub trait PageBlobClientCreateResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn encryption_key_sha256(&self) -> Result<Option<String>>;
     fn encryption_scope(&self) -> Result<Option<String>>;
@@ -3442,16 +3442,16 @@ impl PageBlobClientCreateResultHeaders for Response<PageBlobClientCreateResult> 
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -3493,8 +3493,8 @@ impl PageBlobClientCreateResultHeaders for Response<PageBlobClientCreateResult> 
 /// Provides access to typed response headers for [`PageBlobClient::resize()`](crate::clients::PageBlobClient::resize())
 pub trait PageBlobClientResizeResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -3506,16 +3506,16 @@ impl PageBlobClientResizeResultHeaders for Response<PageBlobClientResizeResult> 
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
@@ -3537,8 +3537,8 @@ impl PageBlobClientResizeResultHeaders for Response<PageBlobClientResizeResult> 
 /// Provides access to typed response headers for [`PageBlobClient::update_sequence_number()`](crate::clients::PageBlobClient::update_sequence_number())
 pub trait PageBlobClientUpdateSequenceNumberResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -3552,16 +3552,16 @@ impl PageBlobClientUpdateSequenceNumberResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
@@ -3584,8 +3584,8 @@ impl PageBlobClientUpdateSequenceNumberResultHeaders
 pub trait PageBlobClientUploadPagesFromUrlResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn content_crc64(&self) -> Result<Option<String>>;
@@ -3609,16 +3609,16 @@ impl PageBlobClientUploadPagesFromUrlResultHeaders
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
@@ -3665,8 +3665,8 @@ impl PageBlobClientUploadPagesFromUrlResultHeaders
 pub trait PageBlobClientUploadPagesResultHeaders: private::Sealed {
     fn content_md5(&self) -> Result<Option<String>>;
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn blob_sequence_number(&self) -> Result<Option<i64>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn content_crc64(&self) -> Result<Option<String>>;
@@ -3689,16 +3689,16 @@ impl PageBlobClientUploadPagesResultHeaders for Response<PageBlobClientUploadPag
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The current sequence number for a page blob. This header is not returned for block blobs or append blobs.
@@ -3749,8 +3749,8 @@ impl PageBlobClientUploadPagesResultHeaders for Response<PageBlobClientUploadPag
 /// Provides access to typed response headers for [`PageBlobClient::get_page_ranges()`](crate::clients::PageBlobClient::get_page_ranges())
 pub trait PageListHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn blob_content_length(&self) -> Result<Option<u64>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -3762,16 +3762,16 @@ impl PageListHeaders for Response<PageList> {
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must be aligned to a 512-byte
@@ -3860,8 +3860,8 @@ impl UserDelegationKeyHeaders for Response<UserDelegationKey> {
 /// Provides access to typed response headers for [`BlobContainerClient::get_access_policy()`](crate::clients::BlobContainerClient::get_access_policy())
 pub trait VecSignedIdentifierHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
-    fn e_tag(&self) -> Result<Option<String>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;
+    fn etag(&self) -> Result<Option<String>>;
     fn access(&self) -> Result<Option<PublicAccessType>>;
     fn client_request_id(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -3873,16 +3873,16 @@ impl VecSignedIdentifierHeaders for Response<Vec<SignedIdentifier>> {
         Headers::get_optional_with(self.headers(), &DATE, |h| date::parse_rfc7231(h.as_str()))
     }
 
-    /// The ETag contains a value that you can use to perform operations conditionally.
-    fn e_tag(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &E_TAG)
-    }
-
     /// The date/time that the container was last modified.
     fn last_modified(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &LAST_MODIFIED, |h| {
             date::parse_rfc7231(h.as_str())
         })
+    }
+
+    /// The ETag contains a value that you can use to perform operations conditionally.
+    fn etag(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
     }
 
     /// The public access setting for the container.
