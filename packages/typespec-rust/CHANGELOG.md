@@ -8,6 +8,10 @@
 * Fixed an issue that could cause emitted code to use incorrect base64 encoding/decoding.
 * Fixed serde annotations to omit empty `Vec<T>` for XML unwrapped arrays.
 
+### Other Changes
+
+* Updated to the latest tsp toolset.
+
 ## 0.11.0 (2025-03-04)
 
 ### Breaking Changes
