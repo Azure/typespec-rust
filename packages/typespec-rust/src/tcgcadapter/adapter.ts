@@ -1041,7 +1041,7 @@ export class Adapter {
           }
           responseHeader = new rust.ResponseHeaderHashMap(header.name, header.serializedName);
         } else {
-          responseHeader = new rust.ResponseHeaderScalar(header.name, header.serializedName, this.getType(header.type));
+          responseHeader = new rust.ResponseHeaderScalar(fixETagName(header.name), fixETagName(header.serializedName), this.getType(header.type));
         }
 
         responseHeader.docs = this.adaptDocs(header.summary, header.doc);
@@ -1270,13 +1270,28 @@ export class Adapter {
 }
 
 /**
+ * transforms Etag etc to all lower case.
+ * this is to prevent inadvertently snake-casing
+ * Etag to e_tag.
+ * 
+ * if name isn't some variant of Etag the
+ * original value is returned.
+ * 
+ * @param name the name to transform
+ * @returns etag or the original value
+ */
+function fixETagName(name: string): string {
+  return name.match(/^etag$/i) ? 'etag' : name;
+}
+
+/**
  * snake-cases the provided name
  * 
  * @param name the name to snake-case
  * @returns name in snake-case format
  */
 function snakeCaseName(name: string): string {
-  return codegen.deconstruct(name).join('_');
+  return codegen.deconstruct(fixETagName(name)).join('_');
 }
 
 type OperationParamType = tcgc.SdkBodyParameter | tcgc.SdkCookieParameter | tcgc.SdkHeaderParameter | tcgc.SdkPathParameter | tcgc.SdkQueryParameter;

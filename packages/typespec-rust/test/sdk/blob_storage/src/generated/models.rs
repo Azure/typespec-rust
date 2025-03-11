@@ -510,13 +510,13 @@ pub struct BlobPropertiesInternal {
     )]
     pub destination_snapshot: Option<String>,
 
-    /// The blog ETag.
-    #[serde(rename = "ETag", skip_serializing_if = "Option::is_none")]
-    pub e_tag: Option<String>,
-
     /// The encryption scope of the blob.
     #[serde(rename = "EncryptionScope", skip_serializing_if = "Option::is_none")]
     pub encryption_scope: Option<String>,
+
+    /// The blog ETag.
+    #[serde(rename = "ETag", skip_serializing_if = "Option::is_none")]
+    pub etag: Option<String>,
 
     /// The expire time of the blob.
     #[serde(
@@ -815,7 +815,7 @@ pub struct ContainerProperties {
 
     /// The ETag of the container.
     #[serde(rename = "ETag", skip_serializing_if = "Option::is_none")]
-    pub e_tag: Option<String>,
+    pub etag: Option<String>,
 
     /// Whether it has an immutability policy.
     #[serde(

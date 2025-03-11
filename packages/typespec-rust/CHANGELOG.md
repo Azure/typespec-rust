@@ -1,6 +1,10 @@
 # Release History
 
-## 0.11.1 (unreleased)
+## 0.12.0 (unreleased)
+
+### Breaking Changes
+
+* The word `Etag` is no longer snake-cased to `e_tag`.
 
 ### Bugs Fixed
 
