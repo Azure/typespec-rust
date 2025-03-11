@@ -71,10 +71,7 @@ pub mod vec_offset_date_time_unix_time {
         }
     }
 
-    pub fn serialize<S>(
-        to_serialize: &Vec<OffsetDateTime>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(to_serialize: &[OffsetDateTime], serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {

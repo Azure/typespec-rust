@@ -1010,7 +1010,7 @@ pub mod vec_encoded_bytes_std {
         }
     }
 
-    pub fn serialize<S>(to_serialize: &Vec<Vec<u8>>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(to_serialize: &[Vec<u8>], serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -1041,7 +1041,7 @@ pub mod vec_encoded_bytes_url {
         }
     }
 
-    pub fn serialize<S>(to_serialize: &Vec<Vec<u8>>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(to_serialize: &[Vec<u8>], serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -1085,7 +1085,7 @@ pub mod vec_hashmap_vec_encoded_bytes_std {
     }
 
     pub fn serialize<S>(
-        to_serialize: &Vec<HashMap<String, Vec<Vec<u8>>>>,
+        to_serialize: &[HashMap<String, Vec<Vec<u8>>>],
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where
@@ -1142,7 +1142,7 @@ pub mod vec_hashmap_vec_encoded_bytes_url {
     }
 
     pub fn serialize<S>(
-        to_serialize: &Vec<HashMap<String, Vec<Vec<u8>>>>,
+        to_serialize: &[HashMap<String, Vec<Vec<u8>>>],
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where
@@ -1199,7 +1199,7 @@ pub mod vec_hashmap_vec_offset_date_time_rfc3339 {
     }
 
     pub fn serialize<S>(
-        to_serialize: &Vec<HashMap<String, Vec<OffsetDateTime>>>,
+        to_serialize: &[HashMap<String, Vec<OffsetDateTime>>],
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where
@@ -1256,7 +1256,7 @@ pub mod vec_hashmap_vec_offset_date_time_unix_time {
     }
 
     pub fn serialize<S>(
-        to_serialize: &Vec<HashMap<String, Vec<OffsetDateTime>>>,
+        to_serialize: &[HashMap<String, Vec<OffsetDateTime>>],
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where
@@ -1299,10 +1299,7 @@ pub mod vec_offset_date_time_rfc3339 {
         }
     }
 
-    pub fn serialize<S>(
-        to_serialize: &Vec<OffsetDateTime>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(to_serialize: &[OffsetDateTime], serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -1334,10 +1331,7 @@ pub mod vec_offset_date_time_rfc7231 {
         }
     }
 
-    pub fn serialize<S>(
-        to_serialize: &Vec<OffsetDateTime>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(to_serialize: &[OffsetDateTime], serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -1370,10 +1364,7 @@ pub mod vec_offset_date_time_unix_time {
         }
     }
 
-    pub fn serialize<S>(
-        to_serialize: &Vec<OffsetDateTime>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(to_serialize: &[OffsetDateTime], serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -1408,7 +1399,7 @@ pub mod vec_vec_encoded_bytes_std {
         }
     }
 
-    pub fn serialize<S>(to_serialize: &Vec<Vec<Vec<u8>>>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(to_serialize: &[Vec<Vec<u8>>], serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -1447,7 +1438,7 @@ pub mod vec_vec_encoded_bytes_url {
         }
     }
 
-    pub fn serialize<S>(to_serialize: &Vec<Vec<Vec<u8>>>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(to_serialize: &[Vec<Vec<u8>>], serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -1487,7 +1478,7 @@ pub mod vec_vec_offset_date_time_rfc3339 {
     }
 
     pub fn serialize<S>(
-        to_serialize: &Vec<Vec<OffsetDateTime>>,
+        to_serialize: &[Vec<OffsetDateTime>],
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where
@@ -1529,7 +1520,7 @@ pub mod vec_vec_offset_date_time_rfc7231 {
     }
 
     pub fn serialize<S>(
-        to_serialize: &Vec<Vec<OffsetDateTime>>,
+        to_serialize: &[Vec<OffsetDateTime>],
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where
@@ -1573,7 +1564,7 @@ pub mod vec_vec_offset_date_time_unix_time {
     }
 
     pub fn serialize<S>(
-        to_serialize: &Vec<Vec<OffsetDateTime>>,
+        to_serialize: &[Vec<OffsetDateTime>],
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where
@@ -1618,7 +1609,7 @@ pub mod vec_vec_vec_encoded_bytes_std {
     }
 
     pub fn serialize<S>(
-        to_serialize: &Vec<Vec<Vec<Vec<u8>>>>,
+        to_serialize: &[Vec<Vec<Vec<u8>>>],
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where
@@ -1669,7 +1660,7 @@ pub mod vec_vec_vec_encoded_bytes_url {
     }
 
     pub fn serialize<S>(
-        to_serialize: &Vec<Vec<Vec<Vec<u8>>>>,
+        to_serialize: &[Vec<Vec<Vec<u8>>>],
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where
@@ -1720,7 +1711,7 @@ pub mod vec_vec_vec_offset_date_time_rfc3339 {
     }
 
     pub fn serialize<S>(
-        to_serialize: &Vec<Vec<Vec<OffsetDateTime>>>,
+        to_serialize: &[Vec<Vec<OffsetDateTime>>],
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where
@@ -1771,7 +1762,7 @@ pub mod vec_vec_vec_offset_date_time_rfc7231 {
     }
 
     pub fn serialize<S>(
-        to_serialize: &Vec<Vec<Vec<OffsetDateTime>>>,
+        to_serialize: &[Vec<Vec<OffsetDateTime>>],
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where
@@ -1823,7 +1814,7 @@ pub mod vec_vec_vec_offset_date_time_unix_time {
     }
 
     pub fn serialize<S>(
-        to_serialize: &Vec<Vec<Vec<OffsetDateTime>>>,
+        to_serialize: &[Vec<Vec<OffsetDateTime>>],
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where

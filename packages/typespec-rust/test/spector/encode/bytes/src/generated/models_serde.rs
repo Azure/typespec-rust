@@ -59,7 +59,7 @@ pub mod vec_encoded_bytes_url {
         }
     }
 
-    pub fn serialize<S>(to_serialize: &Vec<Vec<u8>>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(to_serialize: &[Vec<u8>], serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {

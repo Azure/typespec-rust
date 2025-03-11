@@ -577,7 +577,16 @@ function buildSerialize(indent: helpers.indentation, type: rust.Type, use: Use):
   use.addTypes('serde', ['Serialize', 'Serializer']);
   use.addType('std', 'result::Result');
   use.addForType(type);
-  let content = `${indent.get()}pub fn serialize<S>(to_serialize: &${helpers.getTypeDeclaration(type)}, serializer: S) -> Result<S::Ok, S::Error>\n`;
+
+  // clippy wants the outer-most Vec<T> to be a [] instead
+  const getTypeDeclaration = function(type: rust.Type): string {
+    if (type.kind === 'Vec') {
+      return `[${helpers.getTypeDeclaration(type.type)}]`;
+    }
+    return helpers.getTypeDeclaration(type);
+  };
+
+  let content = `${indent.get()}pub fn serialize<S>(to_serialize: &${getTypeDeclaration(type)}, serializer: S) -> Result<S::Ok, S::Error>\n`;
   content += `${indent.get()}where S: Serializer\n${indent.get()}{\n`;
   content += recursiveBuildSerializeBody(indent.push(), use, {
     caller: 'start',
