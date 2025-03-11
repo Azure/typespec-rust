@@ -7,7 +7,7 @@ use crate::generated::clients::json_property_client::JsonPropertyClient;
 use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
-/// Projection
+/// Encoded names
 pub struct JsonClient {
     endpoint: Url,
     pipeline: Pipeline,
