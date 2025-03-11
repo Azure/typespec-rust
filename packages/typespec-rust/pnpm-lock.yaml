@@ -64,8 +64,8 @@ importers:
         specifier: 0.66.0
         version: 0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))
       '@typespec/http-specs':
-        specifier: 0.1.0-alpha.11
-        version: 0.1.0-alpha.11(@types/node@18.19.76)(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))))(@typespec/versioning@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/xml@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))
+        specifier: 0.1.0-alpha.12
+        version: 0.1.0-alpha.12(@types/node@18.19.76)(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))))(@typespec/versioning@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/xml@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))
       '@typespec/openapi':
         specifier: 0.66.0
         version: 0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))
@@ -929,15 +929,15 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  '@typespec/http-specs@0.1.0-alpha.11':
-    resolution: {integrity: sha512-VOE84qmxKA5PJtb+xYXuhZT5d/JBuKIN3EQlt1+g256/gl4HuImMl3SEoGtO+gCn7pJ/rkRiVodELNQY6c6fbw==}
+  '@typespec/http-specs@0.1.0-alpha.12':
+    resolution: {integrity: sha512-AwD5BYBsbmRK/PI9C3rmvIxaHZfw4PIzpYOHN3Wt1U8zNQ9fjkQP1tnzoJ97+EkhfAqB7LP+PU+c8JjFW5xSQw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
-      '@typespec/compiler': ~0.66.0
-      '@typespec/http': ~0.66.0
-      '@typespec/rest': ~0.66.0
-      '@typespec/versioning': ~0.66.0
-      '@typespec/xml': ~0.66.0
+      '@typespec/compiler': ^0.66.0
+      '@typespec/http': ^0.66.0
+      '@typespec/rest': ^0.66.0
+      '@typespec/versioning': ^0.66.0
+      '@typespec/xml': ^0.66.0
 
   '@typespec/http@0.66.0':
     resolution: {integrity: sha512-IKD5FMvnjbZ5cdQ3wTXXAnnQgDcqFuPtVphpTdnYER87gGEa8YNLocgK44CLFB+GvVkTecDltG0CNKPSPQ0RMw==}
@@ -3879,7 +3879,7 @@ snapshots:
       - '@types/node'
       - supports-color
 
-  '@typespec/http-specs@0.1.0-alpha.11(@types/node@18.19.76)(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))))(@typespec/versioning@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/xml@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))':
+  '@typespec/http-specs@0.1.0-alpha.12(@types/node@18.19.76)(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))))(@typespec/versioning@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/xml@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))':
     dependencies:
       '@typespec/compiler': 0.66.0(@types/node@18.19.76)
       '@typespec/http': 0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))
