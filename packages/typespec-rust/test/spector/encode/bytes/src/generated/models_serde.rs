@@ -38,6 +38,7 @@ impl TryFrom<DefaultBytesProperty> for RequestContent<DefaultBytesProperty> {
 }
 
 pub mod vec_encoded_bytes_url {
+    #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;

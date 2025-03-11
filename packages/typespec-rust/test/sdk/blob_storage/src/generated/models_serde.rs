@@ -29,6 +29,7 @@ impl TryFrom<QueryRequest> for RequestContent<QueryRequest> {
 }
 
 pub mod vec_encoded_bytes_std {
+    #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;

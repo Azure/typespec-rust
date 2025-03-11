@@ -48,6 +48,7 @@ impl TryFrom<UnixTimestampDatetimeProperty> for RequestContent<UnixTimestampDate
 }
 
 pub mod vec_offset_date_time_unix_time {
+    #![allow(clippy::type_complexity)]
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
     use time::OffsetDateTime;

@@ -520,6 +520,7 @@ function emitSerDeHelpers(): string | undefined {
     const indent = new helpers.indentation();
 
     let modContent = `pub mod ${helperKey} {\n`;
+    modContent += `${indent.get()}#![allow(clippy::type_complexity)]\n`;
     const deserialize = buildDeserialize(indent, serdeHelpers.get(helperKey)!, use);
     const serialize = buildSerialize(indent, serdeHelpers.get(helperKey)!, use);
     modContent += use.text(indent);
