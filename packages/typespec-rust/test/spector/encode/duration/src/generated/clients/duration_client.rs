@@ -11,8 +11,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Test for encode decorator on duration.
 pub struct DurationClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`DurationClient`](crate::DurationClient)

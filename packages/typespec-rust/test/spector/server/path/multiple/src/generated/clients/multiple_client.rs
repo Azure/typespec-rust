@@ -8,8 +8,8 @@ use azure_core::{ClientOptions, Context, Method, Pipeline, Request, Response, Re
 use typespec_client_core::fmt::SafeDebug;
 
 pub struct MultipleClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`MultipleClient`](crate::MultipleClient)

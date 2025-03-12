@@ -380,6 +380,9 @@ export class StdType implements StdType {
   }
 }
 
+/** Visibility defines where something can be accessed. */
+export type Visibility = 'pub' | 'pubCrate';
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // base types
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -394,8 +397,8 @@ interface StructBase {
   /** any docs for the type */
   docs: Docs;
 
-  /** indicates if the struct is only for internal consumption */
-  internal: boolean;
+  /** indicates the visibility of the struct */
+  visibility: Visibility;
 
   /** fields contains the fields within the struct */
   fields: Array<StructFieldBase>;
@@ -412,8 +415,8 @@ interface StructFieldBase {
   /** any docs for the field */
   docs: Docs;
 
-  /** indicates if the field should be public */
-  pub: boolean;
+  /** indicates the visibility of the struct field */
+  visibility: Visibility;
 
   /** the field's underlying type */
   type: Type;
@@ -423,18 +426,18 @@ interface StructFieldBase {
 }
 
 class StructBase implements StructBase {
-  constructor(kind: 'model' | 'struct', name: string, internal: boolean) {
+  constructor(kind: 'model' | 'struct', name: string, visibility: Visibility) {
     this.kind = kind;
     this.name = name;
-    this.internal = internal;
+    this.visibility = visibility;
     this.docs = {};
   }
 }
 
 class StructFieldBase implements StructFieldBase {
-  constructor(name: string, pub: boolean, type: Type) {
+  constructor(name: string, visibility: Visibility, type: Type) {
     this.name = name;
-    this.pub = pub;
+    this.visibility = visibility;
     this.type = type;
     this.docs = {};
   }
@@ -545,16 +548,16 @@ export class MarkerType implements MarkerType {
 }
 
 export class Model extends StructBase implements Model {
-  constructor(name: string, internal: boolean, flags: ModelFlags) {
-    super('model', name, internal);
+  constructor(name: string, visibility: Visibility, flags: ModelFlags) {
+    super('model', name, visibility);
     this.fields = new Array<ModelField>();
     this.flags = flags;
   }
 }
 
 export class ModelField extends StructFieldBase implements ModelField {
-  constructor(name: string, serde: string, pub: boolean, type: Type) {
-    super(name, pub, type);
+  constructor(name: string, serde: string, visibility: Visibility, type: Type) {
+    super(name, visibility, type);
     this.serde = serde;
   }
 }
@@ -676,15 +679,15 @@ export class StringType implements StringType {
 }
 
 export class Struct extends StructBase implements Struct {
-  constructor(name: string, internal: boolean) {
-    super('struct', name, internal);
+  constructor(name: string, visibility: Visibility) {
+    super('struct', name, visibility);
     this.fields = new Array<StructField>();
   }
 }
 
 export class StructField extends StructFieldBase implements StructField {
-  constructor(name: string, pub: boolean, type: Type) {
-    super(name, pub, type);
+  constructor(name: string, visibility: Visibility, type: Type) {
+    super(name, visibility, type);
   }
 }
 

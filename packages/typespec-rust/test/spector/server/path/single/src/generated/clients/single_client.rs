@@ -9,8 +9,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Illustrates server with a single path parameter @server
 pub struct SingleClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`SingleClient`](crate::SingleClient)

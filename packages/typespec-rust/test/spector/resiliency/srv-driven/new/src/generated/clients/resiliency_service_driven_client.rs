@@ -21,8 +21,8 @@ use typespec_client_core::fmt::SafeDebug;
 /// - A client generated from the second service spec can call the second deployment of a service with api version v1
 /// - A client generated from the second service spec can call the second deployment of a service with api version v2
 pub struct ResiliencyServiceDrivenClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`ResiliencyServiceDrivenClient`](crate::ResiliencyServiceDrivenClient)

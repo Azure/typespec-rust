@@ -10,8 +10,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Test for collectionFormat.
 pub struct CollectionFormatClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`CollectionFormatClient`](crate::CollectionFormatClient)

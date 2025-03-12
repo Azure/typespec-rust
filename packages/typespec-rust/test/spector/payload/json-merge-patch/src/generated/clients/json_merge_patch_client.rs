@@ -12,8 +12,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Test for merge-patch+json content-type
 pub struct JsonMergePatchClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`JsonMergePatchClient`](crate::JsonMergePatchClient)

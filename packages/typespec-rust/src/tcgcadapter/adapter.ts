@@ -197,7 +197,7 @@ export class Adapter {
       modelFlags |= rust.ModelFlags.Output;
     }
 
-    rustModel = new rust.Model(modelName, model.access === 'internal', modelFlags);
+    rustModel = new rust.Model(modelName, model.access === 'internal' ? 'pubCrate' : 'pub', modelFlags);
     rustModel.docs = this.adaptDocs(model.summary, model.doc);
     rustModel.xmlName = getXMLName(model.decorators);
     this.types.set(modelName, rustModel);
@@ -238,7 +238,7 @@ export class Adapter {
           throw new Error(`model property kind ${property.kind} NYI`);
         }
       }
-      const structField = this.getModelField(property, !rustModel.internal);
+      const structField = this.getModelField(property, rustModel.visibility);
       rustModel.fields.push(structField);
     }
 
@@ -252,17 +252,17 @@ export class Adapter {
    * @param isPubMod indicates if the model is public
    * @returns a Rust model field
    */
-  private getModelField(property: tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, isPubMod: boolean): rust.ModelField {
+  private getModelField(property: tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, visibility: rust.Visibility): rust.ModelField {
     let fieldType = this.getType(property.type);
 
     // for public models each field is always an Option<T>.
     // the only exception is for HashMap and Vec since an
     // empty collection conveys the same semantics.
-    if ((isPubMod || property.optional) && fieldType.kind !== 'hashmap' && fieldType.kind !== 'Vec') {
+    if ((visibility === 'pub' || property.optional) && fieldType.kind !== 'hashmap' && fieldType.kind !== 'Vec') {
       fieldType = new rust.Option(fieldType);
     }
 
-    const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, true, fieldType);
+    const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, visibility, fieldType);
     modelField.docs = this.adaptDocs(property.summary, property.doc);
 
     const xmlName = getXMLName(property.decorators);
@@ -556,12 +556,12 @@ export class Adapter {
     const rustClient = new rust.Client(clientName);
     rustClient.docs = this.adaptDocs(client.summary, client.doc);
     rustClient.parent = parent;
-    rustClient.fields.push(new rust.StructField('pipeline', false, new rust.ExternalType(this.crate, 'azure_core', 'Pipeline')));
+    rustClient.fields.push(new rust.StructField('pipeline', 'pubCrate', new rust.ExternalType(this.crate, 'azure_core', 'Pipeline')));
 
     // anything other than public means non-instantiable client
     if (client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
-      const clientOptionsStruct = new rust.Struct(`${rustClient.name}Options`, true);
-      const clientOptionsField = new rust.StructField('client_options', true, new rust.ExternalType(this.crate, 'azure_core', 'ClientOptions'));
+      const clientOptionsStruct = new rust.Struct(`${rustClient.name}Options`, 'pub');
+      const clientOptionsField = new rust.StructField('client_options', 'pub', new rust.ExternalType(this.crate, 'azure_core', 'ClientOptions'));
       clientOptionsField.defaultValue = 'ClientOptions::default()';
       clientOptionsStruct.fields.push(clientOptionsField);
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
@@ -659,7 +659,7 @@ export class Adapter {
                 const adaptedParam = new rust.ClientMethodParameter(param.name, this.getStringSlice(), false, true);
                 adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
                 ctorParams.push(adaptedParam);
-                rustClient.fields.push(new rust.StructField(param.name, false, new rust.Url(this.crate)));
+                rustClient.fields.push(new rust.StructField(param.name, 'pubCrate', new rust.Url(this.crate)));
 
                 // if the server's URL is *only* the endpoint parameter then we're done.
                 // this is the param.type.kind === 'endpoint' case.
@@ -698,7 +698,7 @@ export class Adapter {
           }
           case 'method': {
             const clientParam = this.adaptClientParameter(param, rustClient.constructable);
-            rustClient.fields.push(new rust.StructField(clientParam.name, false, clientParam.type));
+            rustClient.fields.push(new rust.StructField(clientParam.name, 'pubCrate', clientParam.type));
             ctorParams.push(clientParam);
             break;
           }
@@ -736,7 +736,7 @@ export class Adapter {
         if (rustClient.fields.find((v) => v.name === name)) {
           continue;
         }
-        rustClient.fields.push(new rust.StructField(name, false, this.getType(prop.type)));
+        rustClient.fields.push(new rust.StructField(name, 'pubCrate', this.getType(prop.type)));
       }
     } else {
       throw new Error(`uninstantiable client ${client.name} has no parent`);
@@ -800,7 +800,7 @@ export class Adapter {
     // client-side default value makes the param optional
     if (param.optional || param.clientDefaultValue) {
       optional = true;
-      const paramField = new rust.StructField(paramName, true, paramType);
+      const paramField = new rust.StructField(paramName, 'pub', paramType);
       constructable.options.type.fields.push(paramField);
       if (param.clientDefaultValue) {
         paramField.defaultValue = `String::from("${<string>param.clientDefaultValue}")`;
@@ -879,17 +879,17 @@ export class Adapter {
 
     const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
     const optionsLifetime = new rust.Lifetime('a');
-    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName)}Options`, true);
+    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName)}Options`, 'pub');
     methodOptionsStruct.lifetime = optionsLifetime;
     methodOptionsStruct.docs.summary = `Options to be passed to [\`${rustClient.name}::${methodName}()\`](${buildClientDocPath(rustClient)}::${methodName}())`;
 
     const clientMethodOptions = new rust.ExternalType(this.crate, 'azure_core', 'ClientMethodOptions');
     clientMethodOptions.lifetime = optionsLifetime;
-    const methodOptionsField = new rust.StructField('method_options', true, clientMethodOptions);
+    const methodOptionsField = new rust.StructField('method_options', 'pub', clientMethodOptions);
     methodOptionsField.docs.summary = 'Allows customization of the method call.';
     methodOptionsStruct.fields.push(methodOptionsField);
 
-    const pub = method.access === 'public';
+    const pub: rust.Visibility = method.access === 'public' ? 'pub' : 'pubCrate';
     const methodOptions = new rust.MethodOptions(methodOptionsStruct);
     const httpMethod = method.operation.verb;
 
@@ -984,7 +984,7 @@ export class Adapter {
           fieldType = new rust.Option(adaptedParam.type);
         }
 
-        const optionsField = new rust.StructField(adaptedParam.name, true, fieldType);
+        const optionsField = new rust.StructField(adaptedParam.name, 'pub', fieldType);
         optionsField.docs = adaptedParam.docs;
         rustMethod.options.type.fields.push(optionsField);
       }

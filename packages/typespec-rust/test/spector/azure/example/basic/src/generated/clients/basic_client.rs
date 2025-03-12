@@ -9,9 +9,9 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Test for loading JSON example and generating sample code.
 pub struct BasicClient {
-    api_version: String,
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) api_version: String,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`BasicClient`](crate::BasicClient)

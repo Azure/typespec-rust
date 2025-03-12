@@ -12,8 +12,8 @@ use typespec_client_core::json;
 
 /// Test describing pageable.
 pub struct PageableClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`PageableClient`](crate::PageableClient)

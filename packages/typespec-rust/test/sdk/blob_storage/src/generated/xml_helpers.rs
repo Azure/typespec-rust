@@ -14,7 +14,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "BlobItems")]
-pub struct Blob_itemsBlobItemInternal {
+pub(crate) struct Blob_itemsBlobItemInternal {
     #[serde(default)]
     BlobItemInternal: Vec<BlobItemInternal>,
 }
@@ -40,7 +40,7 @@ impl Blob_itemsBlobItemInternal {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "BlobPrefixes")]
-pub struct Blob_prefixesBlobPrefix {
+pub(crate) struct Blob_prefixesBlobPrefix {
     #[serde(default)]
     BlobPrefix: Vec<BlobPrefix>,
 }
@@ -66,7 +66,7 @@ impl Blob_prefixesBlobPrefix {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "TagSet")]
-pub struct Blob_tag_setBlobTag {
+pub(crate) struct Blob_tag_setBlobTag {
     #[serde(default)]
     BlobTag: Vec<BlobTag>,
 }
@@ -92,7 +92,7 @@ impl Blob_tag_setBlobTag {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "Blobs")]
-pub struct BlobsFilterBlobItem {
+pub(crate) struct BlobsFilterBlobItem {
     #[serde(default)]
     FilterBlobItem: Vec<FilterBlobItem>,
 }
@@ -118,7 +118,7 @@ impl BlobsFilterBlobItem {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "ClearRange")]
-pub struct Clear_rangeClearRange {
+pub(crate) struct Clear_rangeClearRange {
     #[serde(default)]
     ClearRange: Vec<ClearRange>,
 }
@@ -144,7 +144,7 @@ impl Clear_rangeClearRange {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "CommittedBlocks")]
-pub struct Committed_blocksBlock {
+pub(crate) struct Committed_blocksBlock {
     #[serde(default)]
     Block: Vec<Block>,
 }
@@ -170,7 +170,7 @@ impl Committed_blocksBlock {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "Containers")]
-pub struct Container_itemsContainerItem {
+pub(crate) struct Container_itemsContainerItem {
     #[serde(default)]
     ContainerItem: Vec<ContainerItem>,
 }
@@ -196,7 +196,7 @@ impl Container_itemsContainerItem {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "Cors")]
-pub struct CorsCorsRule {
+pub(crate) struct CorsCorsRule {
     #[serde(default)]
     CorsRule: Vec<CorsRule>,
 }
@@ -222,7 +222,7 @@ impl CorsCorsRule {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "PageRange")]
-pub struct Page_rangePageRange {
+pub(crate) struct Page_rangePageRange {
     #[serde(default)]
     PageRange: Vec<PageRange>,
 }
@@ -248,7 +248,7 @@ impl Page_rangePageRange {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "Schema")]
-pub struct SchemaArrowField {
+pub(crate) struct SchemaArrowField {
     #[serde(default)]
     ArrowField: Vec<ArrowField>,
 }
@@ -274,7 +274,7 @@ impl SchemaArrowField {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "UncommittedBlocks")]
-pub struct Uncommitted_blocksBlock {
+pub(crate) struct Uncommitted_blocksBlock {
     #[serde(default)]
     Block: Vec<Block>,
 }

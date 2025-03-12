@@ -9,8 +9,8 @@ use typespec_client_core::fmt::SafeDebug;
 use typespec_client_core::json::to_json;
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
-pub struct SimpleRequest {
-    pub name: String,
+pub(crate) struct SimpleRequest {
+    pub(crate) name: String,
 }
 
 impl TryFrom<SimpleRequest> for RequestContent<SimpleRequest> {

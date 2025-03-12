@@ -9,8 +9,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Illustrates server doesn't define endpoint. Client should automatically add an endpoint to let user pass in.
 pub struct NotDefinedClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`NotDefinedClient`](crate::NotDefinedClient)

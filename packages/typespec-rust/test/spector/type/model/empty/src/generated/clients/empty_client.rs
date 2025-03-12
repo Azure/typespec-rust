@@ -12,8 +12,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Illustrates usage of empty model used in operation's parameters and responses.
 pub struct EmptyClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`EmptyClient`](crate::EmptyClient)

@@ -13,8 +13,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Test for encode decorator on bytes.
 pub struct BytesClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`BytesClient`](crate::BytesClient)

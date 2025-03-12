@@ -10,8 +10,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Test describing optionality of the request body.
 pub struct ContentNegotiationClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`ContentNegotiationClient`](crate::ContentNegotiationClient)

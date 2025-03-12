@@ -11,10 +11,10 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Arm Managed Identity Provider management API.
 pub struct CommonPropertiesClient {
-    api_version: String,
-    endpoint: Url,
-    pipeline: Pipeline,
-    subscription_id: String,
+    pub(crate) api_version: String,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
+    pub(crate) subscription_id: String,
 }
 
 /// Options used when creating a [`CommonPropertiesClient`](crate::CommonPropertiesClient)

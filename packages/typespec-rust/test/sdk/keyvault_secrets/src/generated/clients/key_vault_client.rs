@@ -20,9 +20,9 @@ use typespec_client_core::json;
 
 /// The key vault client performs cryptographic key operations and vault operations against the Key Vault service.
 pub struct KeyVaultClient {
-    api_version: String,
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) api_version: String,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`KeyVaultClient`](crate::KeyVaultClient)

@@ -14,8 +14,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Illustrates clients generated with ApiKey and OAuth2 authentication.
 pub struct UnionClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`UnionClient`](crate::UnionClient)

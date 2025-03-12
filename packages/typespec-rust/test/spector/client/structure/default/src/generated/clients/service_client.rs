@@ -20,8 +20,8 @@ use typespec_client_core::fmt::SafeDebug;
 /// 5. have two clients with operations come from different interfaces
 /// 6. have two clients with a hierarchy relation.
 pub struct ServiceClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`ServiceClient`](crate::ServiceClient)

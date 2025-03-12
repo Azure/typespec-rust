@@ -85,7 +85,7 @@ export class Use {
       case 'model':
         if (this.scope !== 'models') {
           let module = 'crate::models';
-          if (type.internal) {
+          if (type.visibility !== 'pub') {
             module = 'super::internal_models';
           }
           this.addType(module, type.name);

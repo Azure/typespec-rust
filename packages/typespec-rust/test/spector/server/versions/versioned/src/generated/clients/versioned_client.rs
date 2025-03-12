@@ -9,9 +9,9 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Illustrates versioned server.
 pub struct VersionedClient {
-    api_version: String,
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) api_version: String,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`VersionedClient`](crate::VersionedClient)

@@ -49,8 +49,8 @@ use typespec_client_core::fmt::SafeDebug;
 /// yield
 /// ```
 pub struct SpecialWordsClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`SpecialWordsClient`](crate::SpecialWordsClient)

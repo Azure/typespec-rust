@@ -81,7 +81,7 @@ function getGeneratedContent(crate: rust.Crate): string {
     indent.push();
     for (const client of crate.clients) {
       for (const method of client.methods) {
-        if (!method.pub || method.kind === 'clientaccessor') {
+        if (method.visibility !== 'pub' || method.kind === 'clientaccessor') {
           continue;
         }
         content += `${indent.get()}${method.options.type.name},\n`;

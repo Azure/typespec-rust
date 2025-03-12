@@ -9,8 +9,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Test for internal decorator.
 pub struct UsageClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`UsageClient`](crate::UsageClient)

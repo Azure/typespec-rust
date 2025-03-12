@@ -55,9 +55,9 @@ describe('typespec-rust: codegen', () => {
       strictEqual(helpers.annotationDerive('', 'Copy'), '#[derive(Clone, Copy, Deserialize, SafeDebug, Serialize)]\n');
     });
 
-    it('emitPub', () => {
-      strictEqual(helpers.emitPub(false), '');
-      strictEqual(helpers.emitPub(true), 'pub ');
+    it('emitVisibility', () => {
+      strictEqual(helpers.emitVisibility('pub'), 'pub ');
+      strictEqual(helpers.emitVisibility('pubCrate'), 'pub(crate) ');
     });
 
     it('indent', () => {

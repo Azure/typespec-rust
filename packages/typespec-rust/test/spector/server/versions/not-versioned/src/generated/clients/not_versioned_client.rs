@@ -9,8 +9,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Illustrates not-versioned server.
 pub struct NotVersionedClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`NotVersionedClient`](crate::NotVersionedClient)
