@@ -101,9 +101,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_key_only("acquire")
             .append_pair("comp", "lease")
@@ -150,9 +148,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_key_only("break")
             .append_pair("comp", "lease")
@@ -200,9 +196,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_key_only("change")
             .append_pair("comp", "lease")
@@ -245,9 +239,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -293,9 +285,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -336,9 +326,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "blobs")
             .append_pair("restype", "container");
@@ -388,9 +376,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "acl")
             .append_pair("restype", "container");
@@ -423,9 +409,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "properties")
             .append_pair("restype", "account");
@@ -516,9 +500,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -549,9 +531,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "list")
             .append_key_only("flat")
@@ -607,9 +587,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "list")
             .append_key_only("hierarchy")
@@ -665,9 +643,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "lease")
             .append_key_only("release")
@@ -710,9 +686,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "rename")
             .append_pair("restype", "container");
@@ -752,9 +726,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "lease")
             .append_key_only("renew")
@@ -795,9 +767,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "undelete")
             .append_pair("restype", "container");
@@ -836,9 +806,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "acl")
             .append_pair("restype", "container");
@@ -884,9 +852,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "metadata")
             .append_pair("restype", "container");
@@ -931,9 +897,7 @@ impl BlobContainerClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/");
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "batch")
             .append_pair("restype", "container");

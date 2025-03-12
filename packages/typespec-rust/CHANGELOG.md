@@ -11,6 +11,7 @@
 * Fixed serde for models containing hash maps/vectors of base64 encoded bytes and hash maps/vectors of `OffsetDateTime` types.
 * Fixed an issue that could cause emitted code to use incorrect base64 encoding/decoding.
 * Fixed serde annotations to omit empty `Vec<T>` for XML unwrapped arrays.
+* Remove erroneous `url = url.join("")?;` that can happen in some cases.
 
 ### Other Changes
 

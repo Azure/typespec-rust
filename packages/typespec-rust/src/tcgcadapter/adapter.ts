@@ -899,8 +899,9 @@ export class Adapter {
     // e.g. if endpoint is https://contoso.com/foo/bar and httpPath is /some/sub/path
     // then calling Url::join will provide result https://contoso.com/some/sub/path
     // which is not what we want.
+    // the only exception is if this is the root before the query string
     let httpPath = method.operation.path;
-    if (httpPath.length > 1 && httpPath[0] === '/') {
+    if (httpPath.length > 1 && httpPath[0] === '/' && !httpPath.startsWith('/?')) {
       httpPath = httpPath.slice(1);
     }
 

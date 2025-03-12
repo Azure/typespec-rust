@@ -89,7 +89,6 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join("")?;
         url.query_pairs_mut().append_pair("comp", "blobs");
         if let Some(include) = options.include {
             url.query_pairs_mut().append_pair(
@@ -137,7 +136,6 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join("")?;
         url.query_pairs_mut()
             .append_pair("comp", "properties")
             .append_pair("restype", "account");
@@ -182,7 +180,6 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join("")?;
         url.query_pairs_mut()
             .append_pair("comp", "properties")
             .append_pair("restype", "service");
@@ -213,7 +210,6 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join("")?;
         url.query_pairs_mut()
             .append_pair("comp", "stats")
             .append_pair("restype", "service");
@@ -247,7 +243,6 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join("")?;
         url.query_pairs_mut()
             .append_pair("comp", "userdelegationkey")
             .append_pair("restype", "service");
@@ -283,7 +278,6 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join("")?;
         url.query_pairs_mut().append_pair("comp", "list");
         if let Some(include) = options.include {
             url.query_pairs_mut().append_pair(
@@ -332,7 +326,6 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join("")?;
         url.query_pairs_mut()
             .append_pair("comp", "properties")
             .append_pair("restype", "service");
@@ -377,7 +370,6 @@ impl BlobServiceClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        url = url.join("")?;
         url.query_pairs_mut().append_pair("comp", "batch");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
