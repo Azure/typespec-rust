@@ -17,8 +17,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Describe changing names of types in a client with `@clientName`
 pub struct NamingClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`NamingClient`](crate::NamingClient)

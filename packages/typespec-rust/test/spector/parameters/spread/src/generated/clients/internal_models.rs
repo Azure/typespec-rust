@@ -9,39 +9,39 @@ use typespec_client_core::fmt::SafeDebug;
 use typespec_client_core::json::to_json;
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
-pub struct SpreadAsRequestBodyRequest {
-    pub name: String,
+pub(crate) struct SpreadAsRequestBodyRequest {
+    pub(crate) name: String,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
-pub struct SpreadAsRequestParameterRequest {
-    pub name: String,
+pub(crate) struct SpreadAsRequestParameterRequest {
+    pub(crate) name: String,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
-pub struct SpreadCompositeRequestMixRequest {
-    pub prop: String,
+pub(crate) struct SpreadCompositeRequestMixRequest {
+    pub(crate) prop: String,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
-pub struct SpreadParameterWithInnerAliasRequest {
+pub(crate) struct SpreadParameterWithInnerAliasRequest {
     /// age of the Thing
-    pub age: i32,
+    pub(crate) age: i32,
 
     /// name of the Thing
-    pub name: String,
+    pub(crate) name: String,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
-pub struct SpreadParameterWithInnerModelRequest {
-    pub name: String,
+pub(crate) struct SpreadParameterWithInnerModelRequest {
+    pub(crate) name: String,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
-pub struct SpreadWithMultipleParametersRequest {
+pub(crate) struct SpreadWithMultipleParametersRequest {
     /// optional int
     #[serde(rename = "optionalInt", skip_serializing_if = "Option::is_none")]
-    pub optional_int: Option<i32>,
+    pub(crate) optional_int: Option<i32>,
 
     /// optional string
     #[serde(
@@ -49,7 +49,7 @@ pub struct SpreadWithMultipleParametersRequest {
         rename = "optionalStringList",
         skip_serializing_if = "Vec::is_empty"
     )]
-    pub optional_string_list: Vec<String>,
+    pub(crate) optional_string_list: Vec<String>,
 
     /// required int
     #[serde(
@@ -57,11 +57,11 @@ pub struct SpreadWithMultipleParametersRequest {
         rename = "requiredIntList",
         skip_serializing_if = "Vec::is_empty"
     )]
-    pub required_int_list: Vec<i32>,
+    pub(crate) required_int_list: Vec<i32>,
 
     /// required string
     #[serde(rename = "requiredString")]
-    pub required_string: String,
+    pub(crate) required_string: String,
 }
 
 impl TryFrom<SpreadAsRequestBodyRequest> for RequestContent<SpreadAsRequestBodyRequest> {

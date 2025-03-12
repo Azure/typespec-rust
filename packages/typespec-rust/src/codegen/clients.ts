@@ -44,17 +44,11 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
     const use = new Use();
     const indent = new helpers.indentation();
 
-    let pubInClients = '';
-    if (client.parent) {
-      // if this is a child client, its parent will need access to the fields
-      pubInClients = 'pub(crate) ';
-    }
-
     let body = helpers.formatDocComment(client.docs);
     body += `pub struct ${client.name} {\n`;
     for (const field of client.fields) {
       use.addForType(field.type);
-      body += `${indent.get()}${pubInClients}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+      body += `${indent.get()}${helpers.emitVisibility(field.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
     }
     body += '}\n\n'; // end client
 
@@ -73,7 +67,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
         body += ' {\n';
         for (const field of client.constructable.options.type.fields) {
           use.addForType(field.type);
-          body += `${indent.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+          body += `${indent.get()}${helpers.emitVisibility(field.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
         }
         body += '}\n\n'; // end client options
       } else {
@@ -221,7 +215,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
       if (paramsDocs) {
         body += paramsDocs;
       }
-      body += `${indent.get()}${helpers.emitPub(method.pub)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
+      body += `${indent.get()}${helpers.emitVisibility(method.visibility)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
       body += `${indent.push().get()}${methodBody(indent)}\n`;
       body += `${indent.pop().get()}}\n`; // end method
       if (i + 1 < client.methods.length) {
@@ -290,7 +284,7 @@ function getMethodOptionsRs(crate: rust.Crate): string {
       body += helpers.formatDocComment(method.options.type.docs);
       use.addType('typespec_client_core::fmt', 'SafeDebug');
       body += '#[derive(Clone, Default, SafeDebug)]\n';
-      body += `${helpers.emitPub(method.pub)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
+      body += `${helpers.emitVisibility(method.visibility)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
       for (let i = 0; i < method.options.type.fields.length; ++i) {
         const field = method.options.type.fields[i];
         use.addForType(field.type);
@@ -298,7 +292,7 @@ function getMethodOptionsRs(crate: rust.Crate): string {
         if (fieldDocs.length > 0) {
           body += `${indent.get()}${fieldDocs}`;
         }
-        body += `${indent.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
+        body += `${indent.get()}${helpers.emitVisibility(method.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
         if (i + 1 < method.options.type.fields.length) {
           body += '\n';
         }
@@ -820,7 +814,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       if (partialBodyParam.ref) {
         initializer = `${initializer}.to_owned()`;
       }
-      if (!requestContentType.content.type.internal) {
+      if (requestContentType.content.type.visibility === 'pub') {
         // spread param maps to a non-internal model, so it must be wrapped in Some()
         initializer = `Some(${initializer})`;
       }

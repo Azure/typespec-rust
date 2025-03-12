@@ -11,7 +11,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "PossibleColors")]
-pub struct ColorsString {
+pub(crate) struct ColorsString {
     #[serde(default)]
     string: Vec<String>,
 }
@@ -37,7 +37,7 @@ impl ColorsString {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "Counts")]
-pub struct CountsInt32 {
+pub(crate) struct CountsInt32 {
     #[serde(default)]
     int32: Vec<i32>,
 }
@@ -63,7 +63,7 @@ impl CountsInt32 {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "items")]
-pub struct ItemsSimpleModel {
+pub(crate) struct ItemsSimpleModel {
     #[serde(default)]
     SimpleModel: Vec<SimpleModel>,
 }

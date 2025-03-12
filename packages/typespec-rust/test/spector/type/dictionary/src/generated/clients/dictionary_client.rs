@@ -19,8 +19,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Illustrates various of dictionaries.
 pub struct DictionaryClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`DictionaryClient`](crate::DictionaryClient)

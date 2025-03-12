@@ -22,8 +22,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Illustrates various types of arrays.
 pub struct ArrayClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`ArrayClient`](crate::ArrayClient)

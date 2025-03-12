@@ -38,9 +38,9 @@ export function emitModels(crate: rust.Crate, context: Context): Models {
   }
 
   return {
-    public: emitModelsInternal(crate, context, true),
+    public: emitModelsInternal(crate, context, 'pub'),
     serde: emitModelsSerde(crate, context),
-    internal: emitModelsInternal(crate, context, false),
+    internal: emitModelsInternal(crate, context, 'pubCrate'),
     xmlHelpers: emitXMLListWrappers(),
   };
 }
@@ -50,12 +50,12 @@ export function emitModels(crate: rust.Crate, context: Context): Models {
  * 
  * @param crate the crate for which to emit models
  * @param context the context for the provided crate
- * @param pub true if we want public models, false for internal models
+ * @param visibility the visibility of the models to emit
  * @returns the model content or empty
  */
-function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): string | undefined {
+function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rust.Visibility): string | undefined {
   // for the internal models we might need to use public model types
-  const use = new Use(pub ? 'models' : undefined);
+  const use = new Use(visibility !== 'pubCrate' ? 'models' : undefined);
   use.addTypes('serde', ['Deserialize', 'Serialize']);
   use.addType('typespec_client_core::fmt', 'SafeDebug');
 
@@ -63,7 +63,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
 
   let body = '';
   for (const model of crate.models) {
-    if (pub && model.kind === 'marker') {
+    if (visibility === 'pub' && model.kind === 'marker') {
       body += helpers.formatDocComment(model.docs);
       // marker types don't have any fields
       // and don't participate in serde.
@@ -75,7 +75,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
       continue;
     }
 
-    if (model.internal === pub) {
+    if (model.visibility !== visibility) {
       continue;
     }
 
@@ -94,7 +94,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
       // json is the default if not specified so no need to handle it
       body += `#[typespec(format = "xml")]\n`;
     }
-    body += `pub struct ${model.name} {\n`;
+    body += `${helpers.emitVisibility(model.visibility)}struct ${model.name} {\n`;
 
     for (const field of model.fields) {
       use.addForType(field.type);
@@ -136,7 +136,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
       if (serdeParams.size > 0) {
         body += `${indent.get()}#[serde(${Array.from(serdeParams).sort().join(', ')})]\n`;
       }
-      body += `${indent.get()}${helpers.emitPub(field.pub)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
+      body += `${indent.get()}${helpers.emitVisibility(field.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
     }
 
     body += '}\n\n';
@@ -149,9 +149,9 @@ function emitModelsInternal(crate: rust.Crate, context: Context, pub: boolean): 
 
   // emit TryFrom as required for internal models only.
   // public models will have their helpers in a separate file.
-  if (!pub) {
+  if (visibility !== 'pub') {
     for (const model of crate.models) {
-      if (model.kind === 'marker' || !model.internal) {
+      if (model.kind === 'marker' || model.visibility === 'pub') {
         continue;
       }
 
@@ -180,7 +180,7 @@ function emitModelsSerde(crate: rust.Crate, context: Context): string | undefine
 
   // emit TryFrom as required
   for (const model of crate.models) {
-    if (model.kind === 'marker' || model.internal) {
+    if (model.kind === 'marker' || model.visibility !== 'pub') {
       // skip internal models as their serde helpers are in the same file
       continue;
     }
@@ -374,7 +374,7 @@ function emitXMLListWrappers(): string | undefined {
     use.addForType(wrapperType.fieldType);
     const fieldType = helpers.getTypeDeclaration(wrapperType.fieldType);
 
-    body += `pub struct ${wrapperType.name} {\n`;
+    body += `pub(crate) struct ${wrapperType.name} {\n`;
     body += `${indent.get()}#[serde(default)]\n`;
     body += `${indent.get()}${wrapperType.fieldName}: ${fieldType},\n`;
     body += '}\n\n';

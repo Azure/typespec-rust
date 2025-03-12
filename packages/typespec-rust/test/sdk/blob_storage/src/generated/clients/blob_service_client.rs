@@ -20,9 +20,9 @@ use std::sync::Arc;
 use typespec_client_core::fmt::SafeDebug;
 
 pub struct BlobServiceClient {
-    endpoint: Url,
-    pipeline: Pipeline,
-    version: String,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
+    pub(crate) version: String,
 }
 
 /// Options used when creating a [`BlobServiceClient`](crate::BlobServiceClient)

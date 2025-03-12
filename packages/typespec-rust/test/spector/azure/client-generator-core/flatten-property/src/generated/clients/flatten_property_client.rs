@@ -12,8 +12,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Illustrates the model flatten cases.
 pub struct FlattenPropertyClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`FlattenPropertyClient`](crate::FlattenPropertyClient)

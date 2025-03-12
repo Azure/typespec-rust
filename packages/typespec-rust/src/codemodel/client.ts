@@ -412,8 +412,8 @@ class ClientParameterBase implements ClientParameterBase {
 }
 
 class HTTPMethodBase extends method.Method<types.Type> implements HTTPMethodBase {
-  constructor(name: string, httpMethod: HTTPMethod, httpPath: string, pub: boolean, impl: string, self: method.Self) {
-    super(name, pub, impl, self);
+  constructor(name: string, httpMethod: HTTPMethod, httpPath: string, visibility: types.Visibility, impl: string, self: method.Self) {
+    super(name, visibility, impl, self);
     this.httpMethod = httpMethod;
     this.httpPath = httpPath;
     this.docs = {};
@@ -434,8 +434,8 @@ class HTTPParameterBase extends method.Parameter {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class AsyncMethod extends HTTPMethodBase implements AsyncMethod {
-  constructor(name: string, client: Client, pub: boolean, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
-    super(name, httpMethod, httpPath, pub, client.name, new method.Self(false, true));
+  constructor(name: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+    super(name, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'async';
     this.params = new Array<MethodParameter>();
     this.options = options;
@@ -461,7 +461,7 @@ export class Client implements Client {
 
 export class ClientAccessor extends method.Method<Client> implements ClientAccessor {
   constructor(name: string, client: Client, returns: Client) {
-    super(name, true, client.name, new method.Self(false, true));
+    super(name, 'pub', client.name, new method.Self(false, true));
     this.kind = 'clientaccessor';
     this.params = new Array<MethodParameter>();
     this.returns = returns;
@@ -541,8 +541,8 @@ export class MethodOptions extends types.Option implements MethodOptions {
 }
 
 export class PageableMethod extends HTTPMethodBase implements PageableMethod {
-  constructor(name: string, client: Client, pub: boolean, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
-    super(name, httpMethod, httpPath, pub, client.name, new method.Self(false, true));
+  constructor(name: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+    super(name, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'pageable';
     this.params = new Array<MethodParameter>();
     this.options = options;

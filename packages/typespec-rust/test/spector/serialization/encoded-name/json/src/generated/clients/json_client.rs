@@ -9,8 +9,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Encoded names
 pub struct JsonClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`JsonClient`](crate::JsonClient)

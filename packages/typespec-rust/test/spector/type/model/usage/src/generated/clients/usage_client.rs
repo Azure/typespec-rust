@@ -12,8 +12,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Illustrates usage of Record in different places(Operation parameters, return type or both).
 pub struct UsageClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`UsageClient`](crate::UsageClient)

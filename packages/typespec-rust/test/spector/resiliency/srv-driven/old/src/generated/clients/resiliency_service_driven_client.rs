@@ -9,8 +9,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Test that we can grow up a service spec and service deployment into a multi-versioned service with full client support.
 pub struct ResiliencyServiceDrivenClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`ResiliencyServiceDrivenClient`](crate::ResiliencyServiceDrivenClient)

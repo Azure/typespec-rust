@@ -10,8 +10,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Test for basic parameters cases.
 pub struct BasicClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`BasicClient`](crate::BasicClient)

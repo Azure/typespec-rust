@@ -106,13 +106,18 @@ export function formatDocComment(docs: rust.Docs, prefix?: string, indent?: inde
 }
 
 /**
- * returns 'pub ' prefix as required
+ * returns the specified visibility prefix
  * 
- * @param pub true if the prefix is required
- * @returns the prefix or the empty string
+ * @param visibility the visibility to evaluate
+ * @returns the prefix
  */
-export function emitPub(pub: boolean): string {
-  return pub ? 'pub ' : '';
+export function emitVisibility(visibility: rust.Visibility): string {
+  switch (visibility) {
+    case 'pub':
+      return 'pub ';
+    case 'pubCrate':
+      return 'pub(crate) ';
+  }
 }
 
 /**

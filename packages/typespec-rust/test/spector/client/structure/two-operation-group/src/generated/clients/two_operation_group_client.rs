@@ -10,8 +10,8 @@ use azure_core::{ClientOptions, Pipeline, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 
 pub struct TwoOperationGroupClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`TwoOperationGroupClient`](crate::TwoOperationGroupClient)

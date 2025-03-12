@@ -20,8 +20,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Sends and receives bodies in XML format.
 pub struct XmlClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`XmlClient`](crate::XmlClient)

@@ -12,8 +12,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Test for encode decorator on datetime.
 pub struct DatetimeClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`DatetimeClient`](crate::DatetimeClient)

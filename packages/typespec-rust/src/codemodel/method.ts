@@ -13,8 +13,8 @@ export interface Method<T> {
   /** any docs for the method */
   docs: types.Docs;
 
-  /** indicates if the method should be public */
-  pub: boolean;
+  /** indicates the visibility of the method */
+  visibility: types.Visibility;
 
   /** the name of the type on which the method is implemented */
   impl: string;
@@ -62,9 +62,9 @@ export interface Self {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class Method<T> implements Method<T> {
-  constructor(name: string, pub: boolean, impl: string, self: Self) {
+  constructor(name: string, visibility: types.Visibility, impl: string, self: Self) {
     this.name = name;
-    this.pub = pub;
+    this.visibility = visibility;
     this.impl = impl;
     this.self = self;
     this.params = new Array<Parameter>();

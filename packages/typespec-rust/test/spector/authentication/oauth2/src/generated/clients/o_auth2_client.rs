@@ -14,8 +14,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Illustrates clients generated with OAuth2 authentication.
 pub struct OAuth2Client {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`OAuth2Client`](crate::OAuth2Client)

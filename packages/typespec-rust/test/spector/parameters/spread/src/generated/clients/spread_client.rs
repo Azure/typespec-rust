@@ -10,8 +10,8 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Test for the spread operator.
 pub struct SpreadClient {
-    endpoint: Url,
-    pipeline: Pipeline,
+    pub(crate) endpoint: Url,
+    pub(crate) pipeline: Pipeline,
 }
 
 /// Options used when creating a [`SpreadClient`](crate::SpreadClient)
