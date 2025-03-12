@@ -431,10 +431,10 @@ impl BlobContainerClient {
     ///
     /// # Arguments
     ///
-    /// * `blob` - The name of the blob.
-    pub fn get_append_blob_client(&self, blob: String) -> AppendBlobClient {
+    /// * `blob_name` - The name of the blob.
+    pub fn get_append_blob_client(&self, blob_name: String) -> AppendBlobClient {
         AppendBlobClient {
-            blob,
+            blob_name,
             container_name: self.container_name.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
@@ -446,10 +446,10 @@ impl BlobContainerClient {
     ///
     /// # Arguments
     ///
-    /// * `blob` - The name of the blob.
-    pub fn get_blob_client(&self, blob: String) -> BlobClient {
+    /// * `blob_name` - The name of the blob.
+    pub fn get_blob_client(&self, blob_name: String) -> BlobClient {
         BlobClient {
-            blob,
+            blob_name,
             container_name: self.container_name.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
@@ -461,10 +461,10 @@ impl BlobContainerClient {
     ///
     /// # Arguments
     ///
-    /// * `blob` - The name of the blob.
-    pub fn get_block_blob_client(&self, blob: String) -> BlockBlobClient {
+    /// * `blob_name` - The name of the blob.
+    pub fn get_block_blob_client(&self, blob_name: String) -> BlockBlobClient {
         BlockBlobClient {
-            blob,
+            blob_name,
             container_name: self.container_name.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
@@ -476,10 +476,10 @@ impl BlobContainerClient {
     ///
     /// # Arguments
     ///
-    /// * `blob` - The name of the blob.
-    pub fn get_page_blob_client(&self, blob: String) -> PageBlobClient {
+    /// * `blob_name` - The name of the blob.
+    pub fn get_page_blob_client(&self, blob_name: String) -> PageBlobClient {
         PageBlobClient {
-            blob,
+            blob_name,
             container_name: self.container_name.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),

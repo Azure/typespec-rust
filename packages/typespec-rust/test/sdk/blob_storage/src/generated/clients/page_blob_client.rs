@@ -19,7 +19,7 @@ use std::sync::Arc;
 use typespec_client_core::fmt::SafeDebug;
 
 pub struct PageBlobClient {
-    pub(crate) blob: String,
+    pub(crate) blob_name: String,
     pub(crate) container_name: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -42,14 +42,14 @@ impl PageBlobClient {
     ///   Entra ID token to use when authenticating.
     /// * `version` - Specifies the version of the operation to use for this request.
     /// * `container_name` - The name of the container.
-    /// * `blob` - The name of the blob.
+    /// * `blob_name` - The name of the blob.
     /// * `options` - Optional configuration for the client.
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
         version: String,
         container_name: String,
-        blob: String,
+        blob_name: String,
         options: Option<PageBlobClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
@@ -66,7 +66,7 @@ impl PageBlobClient {
             vec!["https://storage.azure.com/.default"],
         ));
         Ok(Self {
-            blob,
+            blob_name,
             container_name,
             endpoint,
             version,
@@ -99,8 +99,8 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &self.blob);
+        let mut path = String::from("{containerName}/{blobName}");
+        path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
@@ -199,8 +199,8 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &self.blob);
+        let mut path = String::from("{containerName}/{blobName}");
+        path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "incrementalcopy");
@@ -254,8 +254,8 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &self.blob);
+        let mut path = String::from("{containerName}/{blobName}");
+        path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_key_only("PageBlob");
@@ -374,8 +374,8 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &self.blob);
+        let mut path = String::from("{containerName}/{blobName}");
+        path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "pagelist");
@@ -439,8 +439,8 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &self.blob);
+        let mut path = String::from("{containerName}/{blobName}");
+        path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
@@ -516,8 +516,8 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &self.blob);
+        let mut path = String::from("{containerName}/{blobName}");
+        path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
@@ -590,8 +590,8 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &self.blob);
+        let mut path = String::from("{containerName}/{blobName}");
+        path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
@@ -658,8 +658,8 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &self.blob);
+        let mut path = String::from("{containerName}/{blobName}");
+        path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
@@ -777,8 +777,8 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blob}");
-        path = path.replace("{blob}", &self.blob);
+        let mut path = String::from("{containerName}/{blobName}");
+        path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url = url.join(&path)?;
         url.query_pairs_mut()
