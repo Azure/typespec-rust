@@ -29,6 +29,7 @@ export class Adapter {
       additionalDecorators: ['TypeSpec\\.@encodedName', '@clientName'],
       disableUsageAccessPropagationToBase: true,
     });
+    context.program.reportDiagnostics(ctx.diagnostics);
     return new Adapter(ctx, context.options);
   }
 
@@ -249,20 +250,20 @@ export class Adapter {
    * converts a tcgc model property to a model field
    * 
    * @param property the tcgc model property to convert
-   * @param isPubMod indicates if the model is public
+   * @param modelVisibility the visibility of the model that contains the property
    * @returns a Rust model field
    */
-  private getModelField(property: tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, visibility: rust.Visibility): rust.ModelField {
+  private getModelField(property: tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, modelVisibility: rust.Visibility): rust.ModelField {
     let fieldType = this.getType(property.type);
 
     // for public models each field is always an Option<T>.
     // the only exception is for HashMap and Vec since an
     // empty collection conveys the same semantics.
-    if ((visibility === 'pub' || property.optional) && fieldType.kind !== 'hashmap' && fieldType.kind !== 'Vec') {
+    if ((modelVisibility === 'pub' || property.optional) && fieldType.kind !== 'hashmap' && fieldType.kind !== 'Vec') {
       fieldType = new rust.Option(fieldType);
     }
 
-    const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, visibility, fieldType);
+    const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, modelVisibility, fieldType);
     modelField.docs = this.adaptDocs(property.summary, property.doc);
 
     const xmlName = getXMLName(property.decorators);
