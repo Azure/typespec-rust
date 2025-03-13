@@ -115,7 +115,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
         serdeParams.add('default');
         serdeParams.add(`deserialize_with = "${xmlListWrapper.name}::unwrap"`);
         serdeParams.add(`serialize_with = "${xmlListWrapper.name}::wrap"`);
-        use.addType('crate', `generated::xml_helpers::${xmlListWrapper.name}`);
+        use.addType(visibility === 'pub' ? 'super::xml_helpers' : 'super::super::xml_helpers', xmlListWrapper.name);
       }
 
       // TODO: omit skip_serializing_if if we need to send explicit JSON null
@@ -485,7 +485,7 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
       return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, false);
     case 'hashmap':
     case 'Vec':
-      use.addType('crate', 'generated::models_serde');
+      use.addType('super', 'models_serde');
       serdeParams.add('default');
       serdeParams.add(`with = "models_serde::${buildSerDeModName(type)}"`);
       break;

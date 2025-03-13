@@ -18,6 +18,7 @@
 * Updated to the latest tsp toolset.
 * Client struct fields are now always `pub(crate)`. In addition, internal and helper types are now `pub(crate)` instead of `pub` to help prevent inadvertent exposure.
 * Report diagnostics from `@azure-tools/typespec-client-generator-core`.
+* Use relative paths when importing types.
 
 ## 0.11.0 (2025-03-04)
 

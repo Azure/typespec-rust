@@ -250,7 +250,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
     // add using for method_options as required
     for (const method of client.methods) {
       if (method.kind !== 'clientaccessor') {
-        use.addType('crate::generated::clients::method_options', '*');
+        use.addType('super::method_options', '*');
         break;
       }
     }

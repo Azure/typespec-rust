@@ -8,7 +8,7 @@ use super::internal_models::{
     SpreadParameterWithInnerAliasRequest, SpreadParameterWithInnerModelRequest,
     SpreadWithMultipleParametersRequest,
 };
-use crate::generated::clients::method_options::*;
+use super::method_options::*;
 use azure_core::{Context, Method, Pipeline, Request, RequestContent, Response, Result, Url};
 
 pub struct SpreadAliasClient {
