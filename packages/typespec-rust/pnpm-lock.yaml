@@ -49,7 +49,7 @@ importers:
         specifier: 0.52.0
         version: 0.52.0(@azure-tools/typespec-azure-core@0.52.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))))(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/openapi@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))))(@typespec/versioning@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/xml@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))
       '@eslint/js':
-        specifier: ^9.21.0
+        specifier: ^9.22.0
         version: 9.22.0
       '@types/js-yaml':
         specifier: ^4.0.9
@@ -82,25 +82,25 @@ importers:
         specifier: 0.66.0
         version: 0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))
       '@vitest/coverage-v8':
-        specifier: ^3.0.7
-        version: 3.0.8(vitest@3.0.8)
+        specifier: ^3.0.8
+        version: 3.0.8(vitest@3.0.8(@types/node@18.19.76)(@vitest/ui@3.0.8)(yaml@2.7.0))
       '@vitest/ui':
-        specifier: ^3.0.7
+        specifier: ^3.0.8
         version: 3.0.8(vitest@3.0.8)
       c8:
         specifier: ^10.1.3
         version: 10.1.3
       eslint:
-        specifier: ^9.21.0
+        specifier: ^9.22.0
         version: 9.22.0
       typescript:
-        specifier: ^5.7.3
+        specifier: ^5.8.2
         version: 5.8.2
       typescript-eslint:
-        specifier: ^8.25.0
+        specifier: ^8.26.1
         version: 8.26.1(eslint@9.22.0)(typescript@5.8.2)
       vitest:
-        specifier: ^3.0.7
+        specifier: ^3.0.8
         version: 3.0.8(@types/node@18.19.76)(@vitest/ui@3.0.8)(yaml@2.7.0)
 
 packages:
@@ -1112,8 +1112,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  axios@1.8.1:
-    resolution: {integrity: sha512-NN+fvwH/kV01dYUQ3PTOZns4LWtWhOFCAhQ/pHb88WQ1hNe5V/dvFwc4VJcDL11LT9xSX0QtsR8sWUuyOuOq7g==}
+  axios@1.8.3:
+    resolution: {integrity: sha512-iP4DebzoNlP/YN2dpwCgb8zoCmhtkajzS48JvwmkSkXvPI3DHc7m+XYL5tGnSlJtR6nImXZmdCuN5aP8dh1d8A==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -3956,7 +3956,7 @@ snapshots:
       '@typespec/spec-coverage-sdk': 0.1.0-alpha.3
       '@typespec/versioning': 0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))
       ajv: 8.17.1
-      axios: 1.8.1
+      axios: 1.8.3
       body-parser: 1.20.3
       deep-equal: 2.2.3
       express: 4.21.2
@@ -3988,7 +3988,7 @@ snapshots:
     dependencies:
       '@typespec/compiler': 0.66.0(@types/node@18.19.76)
 
-  '@vitest/coverage-v8@3.0.8(vitest@3.0.8)':
+  '@vitest/coverage-v8@3.0.8(vitest@3.0.8(@types/node@18.19.76)(@vitest/ui@3.0.8)(yaml@2.7.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
@@ -4121,7 +4121,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  axios@1.8.1:
+  axios@1.8.3:
     dependencies:
       follow-redirects: 1.15.9
       form-data: 4.0.2
