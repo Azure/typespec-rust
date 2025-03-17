@@ -48,7 +48,7 @@
   "homepage": "https://github.com/Azure/typespec-rust#readme",
   "readme": "https://github.com/Azure/typespec-rust/blob/main/readme.md",
   "devDependencies": {
-    "@azure-tools/azure-http-specs": "0.1.0-alpha.7",
+    "@azure-tools/azure-http-specs": "0.1.0-alpha.8",
     "@azure-tools/typespec-autorest": "0.52.0",
     "@azure-tools/typespec-azure-core": "0.52.0",
     "@azure-tools/typespec-azure-resource-manager": "0.52.0",

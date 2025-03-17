@@ -34,8 +34,8 @@ importers:
         version: 7.2.0
     devDependencies:
       '@azure-tools/azure-http-specs':
-        specifier: 0.1.0-alpha.7
-        version: 0.1.0-alpha.7(@azure-tools/typespec-azure-core@0.52.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))))(@types/node@18.19.76)(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))))(@typespec/versioning@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/xml@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))
+        specifier: 0.1.0-alpha.8
+        version: 0.1.0-alpha.8(@azure-tools/typespec-azure-core@0.52.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))))(@types/node@18.19.76)(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))))(@typespec/versioning@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/xml@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))
       '@azure-tools/typespec-autorest':
         specifier: 0.52.0
         version: 0.52.0(wt7kc6dg7zkgujls3d6lmpvnk4)
@@ -83,7 +83,7 @@ importers:
         version: 0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))
       '@vitest/coverage-v8':
         specifier: ^3.0.8
-        version: 3.0.8(vitest@3.0.8(@types/node@18.19.76)(@vitest/ui@3.0.8)(yaml@2.7.0))
+        version: 3.0.8(vitest@3.0.8)
       '@vitest/ui':
         specifier: ^3.0.8
         version: 3.0.8(vitest@3.0.8)
@@ -113,16 +113,16 @@ packages:
     resolution: {integrity: sha512-X1C7XdyCuo50ch9FzKtTvmK18FgDxxf1Bbt3cSoknQqeDaRegHSSCO+zByq2YA4NvUzKXeZ1engh29IDxZXgpQ==}
     engines: {node: '>=10.12.0'}
 
-  '@azure-tools/azure-http-specs@0.1.0-alpha.7':
-    resolution: {integrity: sha512-5fne+fk4xrSN13VhMrkcOiE30v40IXGIfW6JWCySbZZdQm4wjngWj1YNe+O1Ivy5UIbg6je1Xht1R43kFFOKag==}
-    engines: {node: '>=18.0.0'}
+  '@azure-tools/azure-http-specs@0.1.0-alpha.8':
+    resolution: {integrity: sha512-4D8eKQ2z1uTvHAvCySGahE2kwzBMrUbL0zutDTEN4rdBmp83UYI89mh8fsYdilpbQ+K4loibChuvX99GE2HNVg==}
+    engines: {node: '>=20.0.0'}
     peerDependencies:
-      '@azure-tools/typespec-azure-core': ~0.52.0
-      '@typespec/compiler': ~0.66.0
-      '@typespec/http': ~0.66.0
-      '@typespec/rest': ~0.66.0
-      '@typespec/versioning': ~0.66.0
-      '@typespec/xml': ~0.66.0
+      '@azure-tools/typespec-azure-core': ^0.52.0
+      '@typespec/compiler': ^0.66.0
+      '@typespec/http': ^0.66.0
+      '@typespec/rest': ^0.66.0
+      '@typespec/versioning': ^0.66.0
+      '@typespec/xml': ^0.66.0
 
   '@azure-tools/codegen@2.10.0':
     resolution: {integrity: sha512-gdy0at3BUZAAARgiX9Ye6SNCKhcjLs5FNUewa/KV/dMGcPv7mBvbslt5VO3W8wj0n96ifk970aIFaivjacBxeQ==}
@@ -3025,7 +3025,7 @@ snapshots:
       '@azure-tools/tasks': 3.0.255
       proper-lockfile: 2.0.1
 
-  '@azure-tools/azure-http-specs@0.1.0-alpha.7(@azure-tools/typespec-azure-core@0.52.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))))(@types/node@18.19.76)(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))))(@typespec/versioning@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/xml@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))':
+  '@azure-tools/azure-http-specs@0.1.0-alpha.8(@azure-tools/typespec-azure-core@0.52.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))))(@types/node@18.19.76)(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))))(@typespec/versioning@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/xml@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))':
     dependencies:
       '@azure-tools/typespec-azure-core': 0.52.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))(@typespec/http@0.66.0(@typespec/compiler@0.66.0(@types/node@18.19.76))))
       '@typespec/compiler': 0.66.0(@types/node@18.19.76)
@@ -3988,7 +3988,7 @@ snapshots:
     dependencies:
       '@typespec/compiler': 0.66.0(@types/node@18.19.76)
 
-  '@vitest/coverage-v8@3.0.8(vitest@3.0.8(@types/node@18.19.76)(@vitest/ui@3.0.8)(yaml@2.7.0))':
+  '@vitest/coverage-v8@3.0.8(vitest@3.0.8)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
