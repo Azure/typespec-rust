@@ -115,7 +115,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
         serdeParams.add('default');
         serdeParams.add(`deserialize_with = "${xmlListWrapper.name}::unwrap"`);
         serdeParams.add(`serialize_with = "${xmlListWrapper.name}::wrap"`);
-        use.addType(visibility === 'pub' ? 'super::xml_helpers' : 'super::super::xml_helpers', xmlListWrapper.name);
+        use.addType('super::xml_helpers', xmlListWrapper.name);
       }
 
       // TODO: omit skip_serializing_if if we need to send explicit JSON null

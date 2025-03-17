@@ -33,6 +33,19 @@ async fn model_in_read_only_property() {
 }
 
 #[tokio::test]
+async fn orphan_model_serializable() {
+    let client = UsageClient::with_no_credential("http://localhost:3000", None).unwrap();
+    client
+        .get_usage_model_in_operation_client()
+        .orphan_model_serializable(
+            r#"{"name": "name", "desc": "desc"}"#.try_into().unwrap(),
+            None,
+        )
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
 async fn output_to_input_output() {
     let client = UsageClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client

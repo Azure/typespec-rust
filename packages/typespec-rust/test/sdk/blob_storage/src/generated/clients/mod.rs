@@ -8,7 +8,6 @@ mod blob_client;
 mod blob_container_client;
 mod blob_service_client;
 mod block_blob_client;
-mod internal_models;
 pub(crate) mod method_options;
 mod page_blob_client;
 pub use append_blob_client::*;

@@ -14,7 +14,7 @@ import * as rust from '../codemodel/index.js';
  * @param addlMods any additional modules to include
  * @returns the contents of the mod.rs file
  */
-export function emitClientsModRs(crate: rust.Crate, addlMods: Array<string>): string {
+export function emitClientsModRs(crate: rust.Crate): string {
   const content = helpers.contentPreamble();
   const body = new Array<string>();
 
@@ -28,11 +28,6 @@ export function emitClientsModRs(crate: rust.Crate, addlMods: Array<string>): st
 
   // add module for method options
   body.push('pub(crate) mod method_options;');
-
-  // add any additional mod entries
-  for (const addlMod of addlMods) {
-    body.push(`${addlMod};`);
-  }
 
   // now add re-exports for each client module
   for (const module of modules) {

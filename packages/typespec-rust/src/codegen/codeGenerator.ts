@@ -63,7 +63,6 @@ export class CodeGenerator {
    */
   emitContent(): Array<File> {
     const generatedModRS = new Array<string>();
-    const clientsModRS = new Array<string>();
     const files = new Array<File>();
     const clientsSubDir = 'clients';
 
@@ -71,6 +70,7 @@ export class CodeGenerator {
     if (clients) {
       generatedModRS.push('pub(crate) mod clients');
       files.push(...clients.clients);
+      files.push({name: `${clientsSubDir}/mod.rs`, content: emitClientsModRs(this.crate)});
     }
 
     const enums = emitEnums(this.crate, this.context);
@@ -89,8 +89,8 @@ export class CodeGenerator {
       files.push({name: 'models_serde.rs', content: models.serde});
     }
     if (models.internal) {
-      clientsModRS.push('mod internal_models');
-      files.push({name: `${clientsSubDir}/internal_models.rs`, content: models.internal});
+      generatedModRS.push('pub(crate) mod internal_models');
+      files.push({name: `internal_models.rs`, content: models.internal});
     }
     const headerTraits = emitHeaderTraits(this.crate);
     if (headerTraits) {
@@ -100,10 +100,6 @@ export class CodeGenerator {
     if (models.xmlHelpers) {
       generatedModRS.push('mod xml_helpers');
       files.push({name: 'xml_helpers.rs', content: models.xmlHelpers});
-    }
-
-    if (clients) {
-      files.push({name: `${clientsSubDir}/mod.rs`, content: emitClientsModRs(this.crate, clientsModRS)});
     }
 
     // there will always be something in the generated/mod.rs file

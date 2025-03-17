@@ -19,6 +19,7 @@
 * Client struct fields are now always `pub(crate)`. In addition, internal and helper types are now `pub(crate)` instead of `pub` to help prevent inadvertent exposure.
 * Report diagnostics from `@azure-tools/typespec-client-generator-core`.
 * Use relative paths when importing types.
+* Moved `internal_models.rs` up one directory as it isn't used just for internal helper model types (e.g. spread params).
 
 ## 0.11.0 (2025-03-04)
 
