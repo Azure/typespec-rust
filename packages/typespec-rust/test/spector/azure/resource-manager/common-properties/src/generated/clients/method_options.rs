@@ -6,6 +6,20 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
+/// Options to be passed to [`CommonPropertiesErrorClient::create_for_user_defined_error()`](crate::clients::CommonPropertiesErrorClient::create_for_user_defined_error())
+#[derive(Clone, Default, SafeDebug)]
+pub struct CommonPropertiesErrorClientCreateForUserDefinedErrorOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`CommonPropertiesErrorClient::get_for_predefined_error()`](crate::clients::CommonPropertiesErrorClient::get_for_predefined_error())
+#[derive(Clone, Default, SafeDebug)]
+pub struct CommonPropertiesErrorClientGetForPredefinedErrorOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`CommonPropertiesManagedIdentityClient::create_with_system_assigned()`](crate::clients::CommonPropertiesManagedIdentityClient::create_with_system_assigned())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions<'a> {

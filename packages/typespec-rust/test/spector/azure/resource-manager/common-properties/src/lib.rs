@@ -8,13 +8,15 @@ mod generated;
 
 pub mod clients {
     pub use crate::generated::clients::{
-        CommonPropertiesClient, CommonPropertiesClientOptions,
+        CommonPropertiesClient, CommonPropertiesClientOptions, CommonPropertiesErrorClient,
         CommonPropertiesManagedIdentityClient,
     };
 }
 
 pub mod models {
     pub use crate::generated::clients::method_options::{
+        CommonPropertiesErrorClientCreateForUserDefinedErrorOptions,
+        CommonPropertiesErrorClientGetForPredefinedErrorOptions,
         CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions,
         CommonPropertiesManagedIdentityClientGetOptions,
         CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedOptions,

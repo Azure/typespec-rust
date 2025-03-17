@@ -16,6 +16,7 @@ pub mod models {
     pub use crate::generated::clients::method_options::{
         UsageModelInOperationClientInputToInputOutputOptions,
         UsageModelInOperationClientModelInReadOnlyPropertyOptions,
+        UsageModelInOperationClientOrphanModelSerializableOptions,
         UsageModelInOperationClientOutputToInputOutputOptions,
     };
     pub use crate::generated::models::*;

@@ -6,6 +6,7 @@
 use super::method_options::*;
 use crate::models::{InputModel, OutputModel, RoundTripModel};
 use azure_core::{Context, Method, Pipeline, Request, RequestContent, Response, Result, Url};
+use serde_json::Value;
 
 pub struct UsageModelInOperationClient {
     pub(crate) endpoint: Url,
@@ -74,6 +75,34 @@ impl UsageModelInOperationClient {
         url = url.join("azure/client-generator-core/usage/modelInReadOnlyProperty")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        self.pipeline.send(&ctx, &mut request).await
+    }
+
+    /// Serialize the 'OrphanModel' as request body.
+    ///
+    /// Expected body parameter:
+    /// ```json
+    /// {
+    /// "name": "name",
+    /// "desc": "desc"
+    /// }
+    /// ```
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    pub async fn orphan_model_serializable(
+        &self,
+        body: RequestContent<Value>,
+        options: Option<UsageModelInOperationClientOrphanModelSerializableOptions<'_>>,
+    ) -> Result<Response<()>> {
+        let options = options.unwrap_or_default();
+        let ctx = Context::with_context(&options.method_options.context);
+        let mut url = self.endpoint.clone();
+        url = url.join("azure/client-generator-core/usage/orphanModelSerializable")?;
+        let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await

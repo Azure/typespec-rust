@@ -20,6 +20,13 @@ pub struct UsageModelInOperationClientModelInReadOnlyPropertyOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`UsageModelInOperationClient::orphan_model_serializable()`](crate::clients::UsageModelInOperationClient::orphan_model_serializable())
+#[derive(Clone, Default, SafeDebug)]
+pub struct UsageModelInOperationClientOrphanModelSerializableOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`UsageModelInOperationClient::output_to_input_output()`](crate::clients::UsageModelInOperationClient::output_to_input_output())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageModelInOperationClientOutputToInputOutputOptions<'a> {

@@ -16,8 +16,11 @@ pub struct InputModel {
 /// Not used anywhere, but access is override to public so still need to be generated and exported with serialization.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct OrphanModel {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
+    #[serde(rename = "desc", skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
+    pub model_name: Option<String>,
 }
 
 /// Usage override to roundtrip.

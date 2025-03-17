@@ -11,6 +11,49 @@ use typespec_client_core::fmt::SafeDebug;
 
 /// Concrete tracked resource types can be created by aliasing this type using a specific property type.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
+pub struct ConfidentialResource {
+    /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The geo-location where the resource lives
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub location: Option<String>,
+
+    /// The name of the ConfidentialResource
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// The resource-specific properties for this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub properties: Option<ConfidentialResourceProperties>,
+
+    /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
+    pub system_data: Option<SystemData>,
+
+    /// Resource tags.
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    pub tags: HashMap<String, String>,
+
+    /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    pub type_prop: Option<String>,
+}
+
+/// Confidential Resource Properties.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
+pub struct ConfidentialResourceProperties {
+    /// The status of the last operation.
+    #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
+    pub provisioning_state: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub username: Option<String>,
+}
+
+/// Concrete tracked resource types can be created by aliasing this type using a specific property type.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
 pub struct ManagedIdentityTrackedResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     #[serde(skip_serializing_if = "Option::is_none")]
