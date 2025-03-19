@@ -14,10 +14,9 @@ import * as rust from '../codemodel/index.js';
  * the header traits provide access to typed response headers
  * 
  * @param crate the crate for which to emit header traits
- * @param context the context for the provided crate
  * @returns the header traits content or undefined
  */
-export function emitHeaderTraits(crate: rust.Crate): string | undefined {
+export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined {
   interface clientMethod {
     client: rust.Client;
     method: Exclude<rust.MethodType, rust.ClientAccessor>;
@@ -183,7 +182,10 @@ export function emitHeaderTraits(crate: rust.Crate): string | undefined {
   content += body;
   content += getSealedImpls(traits);
 
-  return content;
+  return {
+    name: 'header_traits',
+    content: content,
+  };
 }
 
 /**

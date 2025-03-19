@@ -86,7 +86,7 @@ export class Use {
         if (this.scope !== 'models') {
           let module = 'crate::models';
           if (type.visibility !== 'pub') {
-            module = 'super::super::internal_models';
+            module = 'super::super::models::crate_models';
           }
           this.addType(module, type.name);
         }

@@ -5,8 +5,7 @@
 
 use super::first_group3_client::FirstGroup3Client;
 use super::first_group4_client::FirstGroup4Client;
-use super::method_options::*;
-use crate::models::ClientType;
+use crate::models::{ClientType, FirstClientOneOptions};
 use azure_core::{ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url};
 use typespec_client_core::fmt::SafeDebug;
 

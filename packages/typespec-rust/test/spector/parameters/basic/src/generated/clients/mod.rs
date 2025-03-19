@@ -6,7 +6,6 @@
 mod basic_client;
 mod basic_explicit_body_client;
 mod basic_implicit_body_client;
-pub(crate) mod method_options;
 pub use basic_client::*;
 pub use basic_explicit_body_client::*;
 pub use basic_implicit_body_client::*;

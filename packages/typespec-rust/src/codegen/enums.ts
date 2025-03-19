@@ -16,7 +16,7 @@ import * as rust from '../codemodel/index.js';
  * @param context the context for the provided crate
  * @returns the enum content or undefined
  */
-export function emitEnums(crate: rust.Crate, context: Context): string | undefined {
+export function emitEnums(crate: rust.Crate, context: Context): helpers.Module | undefined {
   if (crate.enums.length === 0) {
     return undefined;
   }
@@ -70,5 +70,8 @@ export function emitEnums(crate: rust.Crate, context: Context): string | undefin
   content += use.text();
   content += body;
 
-  return content;
+  return {
+    name: 'enums',
+    content: content,
+  };
 }

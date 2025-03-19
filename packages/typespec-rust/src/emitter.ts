@@ -7,7 +7,7 @@ import { CodeGenerator } from './codegen/codeGenerator.js';
 import { Adapter } from './tcgcadapter/adapter.js';
 import { RustEmitterOptions } from './lib.js';
 import { execSync } from 'child_process';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
 import * as path from 'path';
 import { EmitContext, NoTarget } from '@typespec/compiler';
@@ -30,7 +30,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   // TODO: consider merging existing dependencies with emitted dependencies when overwriting
   // https://github.com/Azure/typespec-rust/issues/22
   const cargoTomlPath = `${context.emitterOutputDir}/Cargo.toml`;
-  if (existsSync(cargoTomlPath) && !context.options['overwrite-cargo-toml']) {
+  if (existsSync(cargoTomlPath) && context.options['overwrite-cargo-toml'] !== true) {
     context.program.reportDiagnostic({
       code: 'FileAlreadyExists',
       severity: 'warning',
@@ -41,12 +41,17 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
     await writeFile(cargoTomlPath, codegen.emitCargoToml());
   }
 
-  let existingLibRs: string | undefined;
   const libRsPath = `${context.emitterOutputDir}/src/lib.rs`;
-  if (existsSync(libRsPath)) {
-    existingLibRs = readFileSync(libRsPath, { encoding: 'ascii' });
+  if (existsSync(libRsPath) && context.options['overwrite-lib-rs'] !== true) {
+    context.program.reportDiagnostic({
+      code: 'FileAlreadyExists',
+      severity: 'warning',
+      message: `skip overwriting file ${libRsPath}`,
+      target: NoTarget,
+    });
+  } else {
+    await writeFile(libRsPath, codegen.emitLibRs());
   }
-  await writeFile(libRsPath, codegen.emitLibRs(existingLibRs));
 
   const files = codegen.emitContent();
   for (const file of files) {

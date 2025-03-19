@@ -6,17 +6,26 @@
 use super::append_blob_client::AppendBlobClient;
 use super::blob_client::BlobClient;
 use super::block_blob_client::BlockBlobClient;
-use super::method_options::*;
 use super::page_blob_client::PageBlobClient;
 use crate::models::{
-    BlobContainerClientAcquireLeaseResult, BlobContainerClientBreakLeaseResult,
-    BlobContainerClientChangeLeaseResult, BlobContainerClientCreateResult,
-    BlobContainerClientDeleteResult, BlobContainerClientGetAccountInfoResult,
-    BlobContainerClientGetPropertiesResult, BlobContainerClientReleaseLeaseResult,
-    BlobContainerClientRenameResult, BlobContainerClientRenewLeaseResult,
-    BlobContainerClientRestoreResult, BlobContainerClientSetAccessPolicyResult,
-    BlobContainerClientSetMetadataResult, BlobContainerClientSubmitBatchResult, FilterBlobSegment,
-    ListBlobsFlatSegmentResponse, ListBlobsHierarchySegmentResponse, SignedIdentifier,
+    BlobContainerClientAcquireLeaseOptions, BlobContainerClientAcquireLeaseResult,
+    BlobContainerClientBreakLeaseOptions, BlobContainerClientBreakLeaseResult,
+    BlobContainerClientChangeLeaseOptions, BlobContainerClientChangeLeaseResult,
+    BlobContainerClientCreateOptions, BlobContainerClientCreateResult,
+    BlobContainerClientDeleteOptions, BlobContainerClientDeleteResult,
+    BlobContainerClientFilterBlobsOptions, BlobContainerClientGetAccessPolicyOptions,
+    BlobContainerClientGetAccountInfoOptions, BlobContainerClientGetAccountInfoResult,
+    BlobContainerClientGetPropertiesOptions, BlobContainerClientGetPropertiesResult,
+    BlobContainerClientListBlobFlatSegmentOptions,
+    BlobContainerClientListBlobHierarchySegmentOptions, BlobContainerClientReleaseLeaseOptions,
+    BlobContainerClientReleaseLeaseResult, BlobContainerClientRenameOptions,
+    BlobContainerClientRenameResult, BlobContainerClientRenewLeaseOptions,
+    BlobContainerClientRenewLeaseResult, BlobContainerClientRestoreOptions,
+    BlobContainerClientRestoreResult, BlobContainerClientSetAccessPolicyOptions,
+    BlobContainerClientSetAccessPolicyResult, BlobContainerClientSetMetadataOptions,
+    BlobContainerClientSetMetadataResult, BlobContainerClientSubmitBatchOptions,
+    BlobContainerClientSubmitBatchResult, FilterBlobSegment, ListBlobsFlatSegmentResponse,
+    ListBlobsHierarchySegmentResponse, SignedIdentifier,
 };
 use azure_core::credentials::TokenCredential;
 use azure_core::{
