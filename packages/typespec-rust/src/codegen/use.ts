@@ -73,7 +73,7 @@ export class Use {
         return this.addForType(type.type);
       case 'client': {
         // client type are only referenced from other things in generated/clients so we ignore any scope
-        this.addType('super', type.name);
+        this.addType('crate::generated::clients', type.name);
         break;
       }
       case 'enum':
