@@ -20,7 +20,7 @@
 * Report diagnostics from `@azure-tools/typespec-client-generator-core`.
 * Use relative paths when importing types.
 * Moved `internal_models.rs` up one directory as it isn't used just for internal helper model types (e.g. spread params).
-* Enforce that the API version parameter has a client default value.
+* Ensure that the API version parameter provided by `tcgc` has its `clientDefaultValue` set.
 
 ## 0.11.0 (2025-03-04)
 
