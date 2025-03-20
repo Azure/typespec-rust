@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{TwoOperationGroupClient, TwoOperationGroupClientOptions};
+pub use clients::{TwoOperationGroupClient, TwoOperationGroupClientOptions};

@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{CollectionFormatClient, CollectionFormatClientOptions};
+pub use clients::{CollectionFormatClient, CollectionFormatClientOptions};

@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{SpreadClient, SpreadClientOptions};
+pub use clients::{SpreadClient, SpreadClientOptions};

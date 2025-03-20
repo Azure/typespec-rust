@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{RenamedOperationClient, RenamedOperationClientOptions};
+pub use clients::{RenamedOperationClient, RenamedOperationClientOptions};

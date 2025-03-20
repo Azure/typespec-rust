@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{JsonClient, JsonClientOptions};
+pub use clients::{JsonClient, JsonClientOptions};

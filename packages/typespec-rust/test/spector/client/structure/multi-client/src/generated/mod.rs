@@ -5,6 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{
-    ClientAClient, ClientAClientOptions, ClientBClient, ClientBClientOptions,
-};
+pub use clients::{ClientAClient, ClientAClientOptions, ClientBClient, ClientBClientOptions};

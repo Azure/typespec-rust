@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{ContentNegotiationClient, ContentNegotiationClientOptions};
+pub use clients::{ContentNegotiationClient, ContentNegotiationClientOptions};

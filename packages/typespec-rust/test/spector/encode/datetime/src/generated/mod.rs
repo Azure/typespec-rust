@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{DatetimeClient, DatetimeClientOptions};
+pub use clients::{DatetimeClient, DatetimeClientOptions};

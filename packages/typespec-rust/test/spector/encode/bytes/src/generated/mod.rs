@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{BytesClient, BytesClientOptions};
+pub use clients::{BytesClient, BytesClientOptions};

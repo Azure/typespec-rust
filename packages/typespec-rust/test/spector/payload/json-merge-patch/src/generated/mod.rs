@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{JsonMergePatchClient, JsonMergePatchClientOptions};
+pub use clients::{JsonMergePatchClient, JsonMergePatchClientOptions};

@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{PageableClient, PageableClientOptions};
+pub use clients::{PageableClient, PageableClientOptions};

@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{EmptyClient, EmptyClientOptions};
+pub use clients::{EmptyClient, EmptyClientOptions};

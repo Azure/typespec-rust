@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{UnionClient, UnionClientOptions};
+pub use clients::{UnionClient, UnionClientOptions};

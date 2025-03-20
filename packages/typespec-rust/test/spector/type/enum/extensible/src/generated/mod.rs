@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{ExtensibleClient, ExtensibleClientOptions};
+pub use clients::{ExtensibleClient, ExtensibleClientOptions};

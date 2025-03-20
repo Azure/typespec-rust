@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{FlattenPropertyClient, FlattenPropertyClientOptions};
+pub use clients::{FlattenPropertyClient, FlattenPropertyClientOptions};

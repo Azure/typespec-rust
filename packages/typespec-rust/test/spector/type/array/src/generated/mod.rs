@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{ArrayClient, ArrayClientOptions};
+pub use clients::{ArrayClient, ArrayClientOptions};

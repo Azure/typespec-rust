@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{DurationClient, DurationClientOptions};
+pub use clients::{DurationClient, DurationClientOptions};

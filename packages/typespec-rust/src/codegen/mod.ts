@@ -53,7 +53,7 @@ export function emitGeneratedModRs(crate: rust.Crate): string {
         clientsAndClientOptions.push(client.constructable.options.type.name);
       }
     }
-    content += `pub use super::clients::{${clientsAndClientOptions.join(', ')}};\n`;
+    content += `pub use clients::{${clientsAndClientOptions.join(', ')}};\n`;
   }
 
   return content;

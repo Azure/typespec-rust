@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{FixedClient, FixedClientOptions};
+pub use clients::{FixedClient, FixedClientOptions};

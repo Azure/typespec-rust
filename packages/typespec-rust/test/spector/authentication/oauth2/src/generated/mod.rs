@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{OAuth2Client, OAuth2ClientOptions};
+pub use clients::{OAuth2Client, OAuth2ClientOptions};

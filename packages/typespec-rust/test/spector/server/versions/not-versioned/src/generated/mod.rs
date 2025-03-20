@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{NotVersionedClient, NotVersionedClientOptions};
+pub use clients::{NotVersionedClient, NotVersionedClientOptions};

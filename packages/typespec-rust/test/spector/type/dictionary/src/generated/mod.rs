@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{DictionaryClient, DictionaryClientOptions};
+pub use clients::{DictionaryClient, DictionaryClientOptions};

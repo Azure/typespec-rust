@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{MultipleClient, MultipleClientOptions};
+pub use clients::{MultipleClient, MultipleClientOptions};

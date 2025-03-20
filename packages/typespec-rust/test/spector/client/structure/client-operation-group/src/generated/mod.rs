@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{FirstClient, FirstClientOptions};
+pub use clients::{FirstClient, FirstClientOptions};

@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use super::clients::{ResiliencyServiceDrivenClient, ResiliencyServiceDrivenClientOptions};
+pub use clients::{ResiliencyServiceDrivenClient, ResiliencyServiceDrivenClientOptions};
