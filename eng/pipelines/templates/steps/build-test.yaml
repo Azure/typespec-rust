@@ -25,13 +25,12 @@ steps:
       summaryFileLocation: $(TypeSpecRustPkgDir)/coverage/tmp/cobertura-coverage.xml
     displayName: Publish code coverage
 
-  - script: |
+  - pwsh: |
       pnpm run tspcompile --verbose
       git add -A .
-      git diff --staged 1>&2
+      git diff --staged --exit-code
     displayName: Regenerate Spector Tests
     workingDirectory: $(TypeSpecRustPkgDir)/test
-    failOnStderr: true
 
   - pwsh: |
       cargo build
