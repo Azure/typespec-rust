@@ -227,6 +227,12 @@ export interface HeaderParameter extends HTTPParameterBase {
    * note that not all types are applicable
    */
   type: types.Type;
+
+  /**
+   * indicates this is an API version parameter 
+   * the default value is false.
+   */
+  isApiVersion: boolean;
 }
 
 /** MethodOptions is the struct containing optional method params */
@@ -531,6 +537,7 @@ export class HeaderParameter extends HTTPParameterBase implements HeaderParamete
     super(name, location, optional, type);
     this.kind = 'header';
     this.header = header;
+    this.isApiVersion = false;
   }
 }
 

@@ -1,6 +1,6 @@
 # Release History
 
-## 0.12.0 (unreleased)
+## 0.12.0 (2025-03-20)
 
 ### Breaking Changes
 
@@ -20,6 +20,7 @@
 * Report diagnostics from `@azure-tools/typespec-client-generator-core`.
 * Use relative paths when importing types.
 * Moved `internal_models.rs` up one directory as it isn't used just for internal helper model types (e.g. spread params).
+* Enforce that the API version parameter has a client default value.
 
 ## 0.11.0 (2025-03-04)
 

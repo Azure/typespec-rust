@@ -338,16 +338,6 @@ export class Adapter {
       return scalar;
     };
 
-    const getStringType = (): rust.Type => {
-      let stringType = this.types.get(type.kind);
-      if (stringType) {
-        return stringType;
-      }
-      stringType = new rust.StringType();
-      this.types.set(type.kind, stringType);
-      return stringType;
-    };
-
     switch (type.kind) {
       case 'array': {
         const keyName = recursiveKeyName(type.kind, type.valueType);
@@ -394,7 +384,7 @@ export class Adapter {
           case 'int64':
             return getScalar(type.wireType.kind);
           case 'string':
-            return getStringType();
+            return this.getStringType();
           default:
             throw new Error(`unhandled duration wireType.kind ${type.wireType.kind}`);
         }
@@ -429,7 +419,7 @@ export class Adapter {
           this.types.set(etagKey, etagType);
           return etagType;
         }
-        return getStringType();
+        return this.getStringType();
       }
       case 'offsetDateTime': {
         const keyName = `${type.kind}-${type.encode}`;
@@ -475,6 +465,18 @@ export class Adapter {
     }
     return <rust.StringSlice>stringSlice;
   }
+
+  /** returns the Rust String type */
+  private getStringType(): rust.StringType {
+    const typeKey = 'String';
+    let stringType = this.types.get(typeKey);
+    if (stringType) {
+      return <rust.StringType>stringType;
+    }
+    stringType = new rust.StringType();
+    this.types.set(typeKey, stringType);
+    return stringType;
+  };
 
   /** returns the Rust unit type */
   private getUnitType(): rust.Unit {
@@ -789,8 +791,10 @@ export class Adapter {
   private adaptClientParameter(param: tcgc.SdkMethodParameter | tcgc.SdkPathParameter, constructable: rust.ClientConstruction): rust.ClientParameter {
     let paramType: rust.Type;
     if (param.isApiVersionParam) {
-      // we expose the api-version param as a String
-      paramType = new rust.StringType();
+      if (!param.clientDefaultValue) {
+        throw new Error(`API version parameter ${param.name} has no clientDefaultValue`);
+      }
+      paramType = this.getStringType();
     } else {
       paramType = this.getType(param.type);
     }
@@ -1168,6 +1172,7 @@ export class Adapter {
           adaptedParam = new rust.HeaderHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
         } else {
           adaptedParam = new rust.HeaderParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
+          adaptedParam.isApiVersion = param.isApiVersionParam;
         }
         break;
       case 'path':
