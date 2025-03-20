@@ -86,7 +86,7 @@ impl BytesRequestBodyClient {
     /// * `options` - Optional parameters for the request.
     pub async fn default(
         &self,
-        value: RequestContent<Vec<u8>>,
+        value: RequestContent<Bytes>,
         options: Option<BytesRequestBodyClientDefaultOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -94,7 +94,7 @@ impl BytesRequestBodyClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/request/default")?;
         let mut request = Request::new(url, Method::Post);
-        request.insert_header("content-type", "application/json");
+        request.insert_header("content-type", "application/octet-stream");
         request.set_body(value);
         self.pipeline.send(&ctx, &mut request).await
     }

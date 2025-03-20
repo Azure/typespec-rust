@@ -55,16 +55,3 @@ async fn ssv() {
         .await
         .unwrap();
 }
-
-#[tokio::test]
-async fn tsv() {
-    let client = CollectionFormatClient::with_no_credential("http://localhost:3000", None).unwrap();
-    client
-        .get_collection_format_query_client()
-        .tsv(
-            vec!["blue".to_string(), "red".to_string(), "green".to_string()],
-            None,
-        )
-        .await
-        .unwrap();
-}

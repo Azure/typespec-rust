@@ -79,13 +79,13 @@ impl BytesResponseBodyClient {
     pub async fn default(
         &self,
         options: Option<BytesResponseBodyClientDefaultOptions<'_>>,
-    ) -> Result<Response<Vec<u8>>> {
+    ) -> Result<Response> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/response/default")?;
         let mut request = Request::new(url, Method::Get);
-        request.insert_header("accept", "application/json");
+        request.insert_header("accept", "application/octet-stream");
         self.pipeline.send(&ctx, &mut request).await
     }
 

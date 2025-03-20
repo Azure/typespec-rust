@@ -31,9 +31,10 @@ pub struct PageBlobClient {
 }
 
 /// Options used when creating a [`PageBlobClient`](crate::PageBlobClient)
-#[derive(Clone, Default, SafeDebug)]
+#[derive(Clone, SafeDebug)]
 pub struct PageBlobClientOptions {
     pub client_options: ClientOptions,
+    pub version: String,
 }
 
 impl PageBlobClient {
@@ -44,14 +45,12 @@ impl PageBlobClient {
     /// * `endpoint` - Service host
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
-    /// * `version` - Specifies the version of the operation to use for this request.
     /// * `container_name` - The name of the container.
     /// * `blob_name` - The name of the blob.
     /// * `options` - Optional configuration for the client.
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
-        version: String,
         container_name: String,
         blob_name: String,
         options: Option<PageBlobClientOptions>,
@@ -73,7 +72,7 @@ impl PageBlobClient {
             blob_name,
             container_name,
             endpoint,
-            version,
+            version: options.version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
                 option_env!("CARGO_PKG_VERSION"),
@@ -891,5 +890,14 @@ impl PageBlobClient {
         request.insert_header("x-ms-source-range", source_range.to_owned());
         request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
+    }
+}
+
+impl Default for PageBlobClientOptions {
+    fn default() -> Self {
+        Self {
+            client_options: ClientOptions::default(),
+            version: String::from("2025-01-05"),
+        }
     }
 }

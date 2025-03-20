@@ -40,10 +40,3 @@ pub struct CollectionFormatQueryClientSsvOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
-
-/// Options to be passed to [`CollectionFormatQueryClient::tsv()`](crate::clients::CollectionFormatQueryClient::tsv())
-#[derive(Clone, Default, SafeDebug)]
-pub struct CollectionFormatQueryClientTsvOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
