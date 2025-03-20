@@ -5,6 +5,5 @@
 
 mod json_client;
 mod json_property_client;
-pub(crate) mod method_options;
 pub use json_client::*;
 pub use json_property_client::*;

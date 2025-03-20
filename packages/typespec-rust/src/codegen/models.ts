@@ -12,16 +12,16 @@ import * as rust from '../codemodel/index.js';
 /** contains different types of models to emit */
 export interface Models {
   /** models that are part of public surface area */
-  public?: string;
+  public?: helpers.Module;
 
   /** serde helpers for public models */
-  serde?: string;
+  serde?: helpers.Module;
 
   /** models that are for internal use only */
-  internal?: string;
+  internal?: helpers.Module;
 
   /** XML-specific helpers for internal use only */
-  xmlHelpers?: string;
+  xmlHelpers?: helpers.Module;
 }
 
 /**
@@ -53,9 +53,9 @@ export function emitModels(crate: rust.Crate, context: Context): Models {
  * @param visibility the visibility of the models to emit
  * @returns the model content or empty
  */
-function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rust.Visibility): string | undefined {
+function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rust.Visibility): helpers.Module | undefined {
   // for the internal models we might need to use public model types
-  const use = new Use(visibility !== 'pubCrate' ? 'models' : undefined);
+  const use = new Use(visibility === 'pub' ? 'models' : 'modelsOther');
   use.addTypes('serde', ['Deserialize', 'Serialize']);
   use.addType('typespec_client_core::fmt', 'SafeDebug');
 
@@ -163,7 +163,10 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
   content += use.text();
   content += body;
 
-  return content;
+  return {
+    name: visibility === 'pub' ? 'pub_models' : 'crate_models',
+    content: content,
+  };
 }
 
 /**
@@ -174,8 +177,8 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
  * @param context the context for the provided crate
  * @returns the model serde helpers content or undefined
  */
-function emitModelsSerde(crate: rust.Crate, context: Context): string | undefined {
-  const use = new Use();
+function emitModelsSerde(crate: rust.Crate, context: Context): helpers.Module | undefined {
+  const use = new Use('modelsOther');
   let body = '';
 
   // emit TryFrom as required
@@ -214,7 +217,10 @@ function emitModelsSerde(crate: rust.Crate, context: Context): string | undefine
     content += serdeHelpers;
   }
 
-  return content;
+  return {
+    name: 'models_serde',
+    content: content,
+  };
 }
 
 /**
@@ -351,7 +357,7 @@ function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
  * 
  * @returns the helper models for wrapped XML lists or undefined
  */
-function emitXMLListWrappers(): string | undefined {
+function emitXMLListWrappers(): helpers.Module | undefined {
   if (xmlListWrappers.size === 0) {
     return undefined;
   }
@@ -360,7 +366,7 @@ function emitXMLListWrappers(): string | undefined {
   wrapperTypes.sort((a, b) => { return helpers.sortAscending(a.name, b.name); });
 
   const indent = new helpers.indentation();
-  const use = new Use();
+  const use = new Use('modelsOther');
 
   use.addTypes('serde', ['Deserialize', 'Deserializer', 'Serialize', 'Serializer']);
 
@@ -403,7 +409,10 @@ function emitXMLListWrappers(): string | undefined {
   content += use.text();
   content += body;
 
-  return content;
+  return {
+    name: 'xml_helpers',
+    content: content,
+  };
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -516,7 +525,7 @@ function emitSerDeHelpers(): string | undefined {
 
   const helperKeys = Array.from(serdeHelpers.keys()).sort();
   for (const helperKey of helperKeys) {
-    const use = new Use();
+    const use = new Use('modelsOther');
     const indent = new helpers.indentation();
 
     let modContent = `pub mod ${helperKey} {\n`;

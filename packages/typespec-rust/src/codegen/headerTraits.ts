@@ -14,10 +14,9 @@ import * as rust from '../codemodel/index.js';
  * the header traits provide access to typed response headers
  * 
  * @param crate the crate for which to emit header traits
- * @param context the context for the provided crate
  * @returns the header traits content or undefined
  */
-export function emitHeaderTraits(crate: rust.Crate): string | undefined {
+export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined {
   interface clientMethod {
     client: rust.Client;
     method: Exclude<rust.MethodType, rust.ClientAccessor>;
@@ -140,7 +139,7 @@ export function emitHeaderTraits(crate: rust.Crate): string | undefined {
     return `fn ${codegen.deconstruct(header.name).join('_')}(&self) -> Result<${resultType}>`;
   };
 
-  const use = new Use();
+  const use = new Use('modelsOther');
   use.addTypes('azure_core', ['headers::HeaderName', 'Response', 'Result']);
 
   const indent = new helpers.indentation();
@@ -183,7 +182,10 @@ export function emitHeaderTraits(crate: rust.Crate): string | undefined {
   content += body;
   content += getSealedImpls(traits);
 
-  return content;
+  return {
+    name: 'header_traits',
+    content: content,
+  };
 }
 
 /**
@@ -250,7 +252,7 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
  * @returns the private mod definition
  */
 function getSealedImpls(traitDefs: Array<TraitDefinition>): string {
-  const use = new Use();
+  const use = new Use('modelsOther');
   const indent = new helpers.indentation();
 
   const implsFor = new Array<string>();

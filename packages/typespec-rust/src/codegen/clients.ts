@@ -10,38 +10,31 @@ import queryString from 'query-string';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
-/** a file to emit */
-export interface File {
-  /** the name of the file. can contain sub-directories */
-  readonly name: string;
+/** the client modules */
+export interface ClientModules {
+  /** the list of client modules */
+  modules: Array<helpers.Module>;
 
-  /** the contents of the file */
-  readonly content: string;
-}
-
-/** the client files and modules */
-export interface ClientsContent {
-  /** the list of client files */
-  clients: Array<File>;
+  /** the client method options module */
+  options: helpers.Module;
 }
 
 /**
  * emits the content for all client files
  * 
  * @param crate the crate for which to emit clients
- * @param targetDir the directory to contain the client content
  * @returns client content or undefined if the crate contains no clients
  */
-export function emitClients(crate: rust.Crate, targetDir: string): ClientsContent | undefined {
+export function emitClients(crate: rust.Crate): ClientModules | undefined {
   if (crate.clients.length === 0) {
     return undefined;
   }
 
-  const clientFiles = new Array<File>();
+  const clientModules = new Array<helpers.Module>();
 
   // emit the clients, one file per client
   for (const client of crate.clients) {
-    const use = new Use();
+    const use = new Use('clients');
     const indent = new helpers.indentation();
 
     let body = helpers.formatDocComment(client.docs);
@@ -250,8 +243,7 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
     // add using for method_options as required
     for (const method of client.methods) {
       if (method.kind !== 'clientaccessor') {
-        use.addType('super::method_options', '*');
-        break;
+        use.addType('crate::generated::models', method.options.type.name);
       }
     }
 
@@ -260,17 +252,17 @@ export function emitClients(crate: rust.Crate, targetDir: string): ClientsConten
     content += body;
 
     const clientMod = codegen.deconstruct(client.name).join('_');
-    clientFiles.push({name: `${targetDir}/${clientMod}.rs`, content: content});
+    clientModules.push({name: clientMod, content: content});
   }
 
-  // emit method options into method_options.rs
-  clientFiles.push({name: `${targetDir}/method_options.rs`, content: getMethodOptionsRs(crate)});
-
-  return {clients: clientFiles};
+  return {
+    modules: clientModules,
+    options: getMethodOptions(crate),
+  };
 }
 
-function getMethodOptionsRs(crate: rust.Crate): string {
-  const use = new Use();
+function getMethodOptions(crate: rust.Crate): helpers.Module {
+  const use = new Use('modelsOther');
   const indent = new helpers.indentation();
 
   let body = '';
@@ -328,7 +320,10 @@ function getMethodOptionsRs(crate: rust.Crate): string {
   content += use.text();
   content += body;
 
-  return content;
+  return {
+    name: 'method_options',
+    content: content,
+  };
 }
 
 /**

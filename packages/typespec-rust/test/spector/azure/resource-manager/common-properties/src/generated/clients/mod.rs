@@ -6,7 +6,6 @@
 mod common_properties_client;
 mod common_properties_error_client;
 mod common_properties_managed_identity_client;
-pub(crate) mod method_options;
 pub use common_properties_client::*;
 pub use common_properties_error_client::*;
 pub use common_properties_managed_identity_client::*;

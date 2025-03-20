@@ -6,7 +6,6 @@
 mod collection_format_client;
 mod collection_format_header_client;
 mod collection_format_query_client;
-pub(crate) mod method_options;
 pub use collection_format_client::*;
 pub use collection_format_header_client::*;
 pub use collection_format_query_client::*;

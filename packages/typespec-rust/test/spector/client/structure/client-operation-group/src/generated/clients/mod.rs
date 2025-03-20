@@ -6,7 +6,6 @@
 mod first_client;
 mod first_group3_client;
 mod first_group4_client;
-pub(crate) mod method_options;
 pub use first_client::*;
 pub use first_group3_client::*;
 pub use first_group4_client::*;

@@ -3,31 +3,31 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import * as codegen from '@azure-tools/codegen';
 import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
 
 /** used to generate use statements */
 export class Use {
   private uses: Array<moduleTypes>;
-  private scope?: 'models';
+  private scope: 'clients' | 'models' | 'modelsOther';
 
   /**
    * instantiates a new instance of the Use type
    * 
    * @param scope indicates a scope in which use statements are constructed.
-   * e.g. 'models' indicates we're "in" the crate::models scope so there's
-   * no need to add a use statement for types in crate::models
-   * no scope will add all using statements as required.
+   * this is only applicable when construcing the path to generated types.
+   *      clients - we're in generated/clients
+   *       models - we're in generated/models/models.rs
+   *  modelsOther - we're in generated/models but not models.rs
    */
-  constructor(scope?: 'models') {
+  constructor(scope: 'clients' | 'models' | 'modelsOther') {
     this.uses = new Array<moduleTypes>();
     this.scope = scope;
   }
 
   /**
    * adds the specified module and type if not already in the list
-   * e.g. ('azure_core', 'Context') or ('crate::models', 'FooType')
+   * e.g. ('azure_core', 'Context') or ('super::models', 'FooType')
    * 
    * @param module a module name
    * @param type a type within the provided module
@@ -72,23 +72,27 @@ export class Use {
         this.addType('std::sync', 'Arc');
         return this.addForType(type.type);
       case 'client': {
-        const mod = codegen.deconstruct(type.name).join('_');
-        this.addType(`super::${mod}`, type.name);
+        // client type are only referenced from other things in generated/clients so we ignore any scope
+        this.addType('crate::generated::clients', type.name);
         break;
       }
       case 'enum':
-        this.addType('crate::models', type.name);
+        this.addType(this.scope === 'clients' ? 'crate::generated::models' : 'super', type.name);
         break;
       case 'enumValue':
         this.addForType(type.type);
         break;
       case 'model':
-        if (this.scope !== 'models') {
-          let module = 'crate::models';
-          if (type.visibility !== 'pub') {
-            module = 'super::super::internal_models';
-          }
-          this.addType(module, type.name);
+        switch (this.scope) {
+          case 'clients':
+            this.addType(`crate::generated::models${type.visibility !== 'pub' ? '::crate_models' : ''}`, type.name);
+            break;
+          case 'models':
+            // we're in models so no need to bring another model into scope
+            break;
+          case 'modelsOther':
+            this.addType('super', type.name);
+            break;
         }
         break;
       case 'option':
@@ -110,7 +114,18 @@ export class Use {
       case 'response':
         switch (type.content.kind) {
           case 'marker':
-            this.addType('crate::models', type.content.name);
+            switch (this.scope) {
+              case 'clients':
+                this.addType('crate::generated::models', type.content.name);
+                break;
+              case 'modelsOther':
+                this.addType('super', type.content.name);
+                break;
+              default:
+                // marker types are only referenced from clients and model
+                // helpers so we should never get here (if we do it's a bug)
+                throw new Error(`unexpected scope ${this.scope}`);
+            }
             break;
           case 'payload':
             this.addForType(type.content.type);

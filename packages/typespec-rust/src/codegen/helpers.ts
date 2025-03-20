@@ -18,6 +18,15 @@ export const AnnotationNonExhaustive = '#[non_exhaustive]\n';
 
 export const AnonymousLifetimeAnnotation = '<\'_>';
 
+/** a module to emit */
+export interface Module {
+  /** the name of the module */
+  readonly name: string;
+
+  /** the contents of the module */
+  readonly content: string;
+}
+
 /**
  * returns the content preamble common to all emitted files
  * 

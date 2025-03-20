@@ -8,7 +8,6 @@ mod datetime_header_client;
 mod datetime_property_client;
 mod datetime_query_client;
 mod datetime_response_header_client;
-pub(crate) mod method_options;
 pub use datetime_client::*;
 pub use datetime_header_client::*;
 pub use datetime_property_client::*;

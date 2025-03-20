@@ -18,7 +18,6 @@ mod array_nullable_model_value_client;
 mod array_nullable_string_value_client;
 mod array_string_value_client;
 mod array_unknown_value_client;
-pub(crate) mod method_options;
 pub use array_boolean_value_client::*;
 pub use array_client::*;
 pub use array_datetime_value_client::*;

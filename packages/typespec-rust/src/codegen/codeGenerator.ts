@@ -7,9 +7,10 @@ import { emitCargoToml } from './cargotoml.js';
 import { emitClients } from './clients.js';
 import { Context } from './context.js';
 import { emitEnums } from './enums.js';
+import { Module } from './helpers.js';
 import { emitLibRs } from './lib.js';
 import { emitHeaderTraits } from './headerTraits.js';
-import { emitClientsModRs, emitGeneratedMod } from './mod.js';
+import { emitClientsModRs, emitGeneratedModRs, emitModelsModRs } from './mod.js';
 import { emitModels } from './models.js';
 
 import * as rust from '../codemodel/index.js';
@@ -49,11 +50,10 @@ export class CodeGenerator {
   /**
    * generates the lib.rs file for crate
    * 
-   * @param existingLibRs contents of preexisting lib.rs file
    * @returns the content for lib.rs
    */
-  emitLibRs(existingLibRs?: string): string {
-    return emitLibRs(this.crate, existingLibRs);
+  emitLibRs(): string {
+    return emitLibRs();
   }
 
   /**
@@ -62,48 +62,59 @@ export class CodeGenerator {
    * @returns an array of files to emit
    */
   emitContent(): Array<File> {
-    const generatedModRS = new Array<string>();
+    const modelsModRS = new Array<string>();
     const files = new Array<File>();
     const clientsSubDir = 'clients';
+    const modelsSubDir = 'models';
 
-    const clients = emitClients(this.crate, clientsSubDir);
-    if (clients) {
-      generatedModRS.push('pub(crate) mod clients');
-      files.push(...clients.clients);
-      files.push({name: `${clientsSubDir}/mod.rs`, content: emitClientsModRs(this.crate)});
+    const addModelsFile = function(module: Module, crateOnly: boolean = false): void {
+      files.push({name: `${modelsSubDir}/${module.name}.rs`, content: module.content});
+      modelsModRS.push(`${crateOnly ? 'pub(crate) ' : ''}mod ${module.name}`);
+      if (!crateOnly) {
+        modelsModRS.push(`pub use ${module.name}::*`);
+      }
+    };
+
+    const clientModules = emitClients(this.crate);
+    if (clientModules) {
+      files.push(...clientModules.modules.map((module) => { return {name: `${clientsSubDir}/${module.name}.rs`, content: module.content}; }));
+      files.push({name: `${clientsSubDir}/mod.rs`, content: emitClientsModRs(clientModules.modules.map((module) => module.name))});
+      addModelsFile(clientModules.options);
     }
 
     const enums = emitEnums(this.crate, this.context);
     if (enums) {
-      generatedModRS.push('pub(crate) mod enums');
-      files.push({name: 'enums.rs', content: enums});
+      addModelsFile(enums);
     }
 
     const models = emitModels(this.crate, this.context);
     if (models.public) {
-      generatedModRS.push('pub(crate) mod models');
-      files.push({name: 'models.rs', content: models.public});
+      addModelsFile(models.public);
     }
+
     if (models.serde) {
-      generatedModRS.push('pub(crate) mod models_serde');
-      files.push({name: 'models_serde.rs', content: models.serde});
+      addModelsFile(models.serde, true);
     }
+
     if (models.internal) {
-      generatedModRS.push('pub(crate) mod internal_models');
-      files.push({name: `internal_models.rs`, content: models.internal});
+      addModelsFile(models.internal, true);
     }
+
+    if (models.xmlHelpers) {
+      addModelsFile(models.xmlHelpers, true);
+    }
+
     const headerTraits = emitHeaderTraits(this.crate);
     if (headerTraits) {
-      generatedModRS.push('pub(crate) mod header_traits');
-      files.push({name: 'header_traits.rs', content: headerTraits});
+      addModelsFile(headerTraits);
     }
-    if (models.xmlHelpers) {
-      generatedModRS.push('mod xml_helpers');
-      files.push({name: 'xml_helpers.rs', content: models.xmlHelpers});
+
+    if (modelsModRS.length > 0) {
+      files.push({name: `${modelsSubDir}/mod.rs`, content: emitModelsModRs(modelsModRS)})
     }
 
     // there will always be something in the generated/mod.rs file
-    files.push({name: 'mod.rs', content: emitGeneratedMod(generatedModRS)});
+    files.push({name: 'mod.rs', content: emitGeneratedModRs(this.crate)});
 
     return files;
   }
