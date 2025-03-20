@@ -8,7 +8,7 @@ use super::super::models::crate_models::{
     SpreadParameterWithInnerAliasRequest, SpreadParameterWithInnerModelRequest,
     SpreadWithMultipleParametersRequest,
 };
-use crate::models::{
+use super::super::models::{
     SpreadAliasClientSpreadAsRequestBodyOptions, SpreadAliasClientSpreadAsRequestParameterOptions,
     SpreadAliasClientSpreadParameterWithInnerAliasOptions,
     SpreadAliasClientSpreadParameterWithInnerModelOptions,

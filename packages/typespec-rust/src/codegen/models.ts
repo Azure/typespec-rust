@@ -55,7 +55,7 @@ export function emitModels(crate: rust.Crate, context: Context): Models {
  */
 function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rust.Visibility): helpers.Module | undefined {
   // for the internal models we might need to use public model types
-  const use = new Use(visibility !== 'pubCrate' ? 'models' : undefined);
+  const use = new Use(visibility === 'pub' ? 'models' : 'modelsOther');
   use.addTypes('serde', ['Deserialize', 'Serialize']);
   use.addType('typespec_client_core::fmt', 'SafeDebug');
 
@@ -178,7 +178,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
  * @returns the model serde helpers content or undefined
  */
 function emitModelsSerde(crate: rust.Crate, context: Context): helpers.Module | undefined {
-  const use = new Use();
+  const use = new Use('modelsOther');
   let body = '';
 
   // emit TryFrom as required
@@ -366,7 +366,7 @@ function emitXMLListWrappers(): helpers.Module | undefined {
   wrapperTypes.sort((a, b) => { return helpers.sortAscending(a.name, b.name); });
 
   const indent = new helpers.indentation();
-  const use = new Use();
+  const use = new Use('modelsOther');
 
   use.addTypes('serde', ['Deserialize', 'Deserializer', 'Serialize', 'Serializer']);
 
@@ -525,7 +525,7 @@ function emitSerDeHelpers(): string | undefined {
 
   const helperKeys = Array.from(serdeHelpers.keys()).sort();
   for (const helperKey of helperKeys) {
-    const use = new Use();
+    const use = new Use('modelsOther');
     const indent = new helpers.indentation();
 
     let modContent = `pub mod ${helperKey} {\n`;

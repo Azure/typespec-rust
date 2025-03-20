@@ -6,7 +6,7 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-use crate::models::{
+use super::{
     ArrowField, BlobItemInternal, BlobPrefix, BlobTag, Block, ClearRange, ContainerItem, CorsRule,
     FilterBlobItem, PageRange,
 };

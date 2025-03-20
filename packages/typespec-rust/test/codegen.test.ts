@@ -6,7 +6,6 @@
 import * as rust from '../src/codemodel/index.js';
 import { CodeGenerator } from '../src/codegen/codeGenerator.js';
 import * as helpers from '../src/codegen/helpers.js';
-import { Use } from '../src/codegen/use.js';
 import { strictEqual } from 'assert';
 import { describe, it } from 'vitest';
 
@@ -145,31 +144,6 @@ describe('typespec-rust: codegen', () => {
       '    },\n' +
       '}';
       strictEqual(match, expected);
-    });
-
-    it('emits use with default indentation level', () => {
-      const use = new Use();
-      use.addType('foo', 'bar');
-      strictEqual(use.text(), 'use foo::bar;\n\n');
-      use.addType('foo', 'baz');
-      const expected =
-      'use foo::{\n' +
-      '    bar, baz,\n' +
-      '};\n\n'
-      strictEqual(use.text(), expected);
-    });
-
-    it('emits use with custom indentation level', () => {
-      const use = new Use();
-      use.addType('foo', 'bar');
-      const indent = new helpers.indentation();
-      strictEqual(use.text(indent), '    use foo::bar;\n\n');
-      use.addType('foo', 'baz');
-      const expected =
-      '    use foo::{\n' +
-      '        bar, baz,\n' +
-      '    };\n\n'
-      strictEqual(use.text(indent), expected);
     });
   });
 });

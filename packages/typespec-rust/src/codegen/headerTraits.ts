@@ -139,7 +139,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
     return `fn ${codegen.deconstruct(header.name).join('_')}(&self) -> Result<${resultType}>`;
   };
 
-  const use = new Use();
+  const use = new Use('modelsOther');
   use.addTypes('azure_core', ['headers::HeaderName', 'Response', 'Result']);
 
   const indent = new helpers.indentation();
@@ -252,7 +252,7 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
  * @returns the private mod definition
  */
 function getSealedImpls(traitDefs: Array<TraitDefinition>): string {
-  const use = new Use();
+  const use = new Use('modelsOther');
   const indent = new helpers.indentation();
 
   const implsFor = new Array<string>();

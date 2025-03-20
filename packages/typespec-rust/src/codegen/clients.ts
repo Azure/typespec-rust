@@ -34,7 +34,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
 
   // emit the clients, one file per client
   for (const client of crate.clients) {
-    const use = new Use();
+    const use = new Use('clients');
     const indent = new helpers.indentation();
 
     let body = helpers.formatDocComment(client.docs);
@@ -243,7 +243,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     // add using for method_options as required
     for (const method of client.methods) {
       if (method.kind !== 'clientaccessor') {
-        use.addType('crate::models', method.options.type.name);
+        use.addType('super::super::models', method.options.type.name);
       }
     }
 
@@ -262,7 +262,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
 }
 
 function getMethodOptions(crate: rust.Crate): helpers.Module {
-  const use = new Use();
+  const use = new Use('modelsOther');
   const indent = new helpers.indentation();
 
   let body = '';
