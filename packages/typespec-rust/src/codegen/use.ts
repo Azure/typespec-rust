@@ -3,7 +3,6 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import * as codegen from '@azure-tools/codegen';
 import * as helpers from './helpers.js';
 import * as rust from '../codemodel/index.js';
 
@@ -73,12 +72,12 @@ export class Use {
         this.addType('std::sync', 'Arc');
         return this.addForType(type.type);
       case 'client': {
-        const mod = codegen.deconstruct(type.name).join('_');
-        this.addType(`super::${mod}`, type.name);
+        // client type are only referenced from other things in generated/clients so we ignore any scope
+        this.addType('super', type.name);
         break;
       }
       case 'enum':
-        this.addType(`super${this.scope === 'clients' ? '::super::models' : ''}`, type.name);
+        this.addType(this.scope === 'clients' ? 'crate::generated::models' : 'super', type.name);
         break;
       case 'enumValue':
         this.addForType(type.type);
@@ -86,7 +85,7 @@ export class Use {
       case 'model':
         switch (this.scope) {
           case 'clients':
-            this.addType(`super::super::models${type.visibility !== 'pub' ? '::crate_models' : ''}`, type.name);
+            this.addType(`crate::generated::models${type.visibility !== 'pub' ? '::crate_models' : ''}`, type.name);
             break;
           case 'models':
             // we're in models so no need to bring another model into scope
@@ -117,7 +116,7 @@ export class Use {
           case 'marker':
             switch (this.scope) {
               case 'clients':
-                this.addType('super::super::models', type.content.name);
+                this.addType('crate::generated::models', type.content.name);
                 break;
               case 'modelsOther':
                 this.addType('super', type.content.name);

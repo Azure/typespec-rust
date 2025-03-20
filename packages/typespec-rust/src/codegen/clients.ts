@@ -243,7 +243,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     // add using for method_options as required
     for (const method of client.methods) {
       if (method.kind !== 'clientaccessor') {
-        use.addType('super::super::models', method.options.type.name);
+        use.addType('crate::generated::models', method.options.type.name);
       }
     }
 
