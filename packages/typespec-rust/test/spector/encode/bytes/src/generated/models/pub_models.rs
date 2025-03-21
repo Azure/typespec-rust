@@ -5,10 +5,10 @@
 
 use super::models_serde;
 use azure_core::base64;
+use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
-use typespec_client_core::fmt::SafeDebug;
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Base64BytesProperty {
     #[serde(
         default,
@@ -19,7 +19,7 @@ pub struct Base64BytesProperty {
     pub value: Option<Vec<u8>>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Base64urlArrayBytesProperty {
     #[serde(
         default,
@@ -29,7 +29,7 @@ pub struct Base64urlArrayBytesProperty {
     pub value: Vec<Vec<u8>>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Base64urlBytesProperty {
     #[serde(
         default,
@@ -40,7 +40,7 @@ pub struct Base64urlBytesProperty {
     pub value: Option<Vec<u8>>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct DefaultBytesProperty {
     #[serde(
         default,

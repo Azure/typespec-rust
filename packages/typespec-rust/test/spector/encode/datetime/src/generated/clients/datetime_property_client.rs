@@ -9,7 +9,8 @@ use crate::generated::models::{
     DatetimePropertyClientUnixTimestampOptions, DefaultDatetimeProperty, Rfc3339DatetimeProperty,
     Rfc7231DatetimeProperty, UnixTimestampArrayDatetimeProperty, UnixTimestampDatetimeProperty,
 };
-use azure_core::{Context, Method, Pipeline, Request, RequestContent, Response, Result, Url};
+use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
+use azure_core::Result;
 
 pub struct DatetimePropertyClient {
     pub(crate) endpoint: Url,

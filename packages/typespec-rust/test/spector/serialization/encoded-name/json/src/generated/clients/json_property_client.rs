@@ -6,7 +6,8 @@
 use crate::generated::models::{
     JsonEncodedNameModel, JsonPropertyClientGetOptions, JsonPropertyClientSendOptions,
 };
-use azure_core::{Context, Method, Pipeline, Request, RequestContent, Response, Result, Url};
+use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
+use azure_core::Result;
 
 pub struct JsonPropertyClient {
     pub(crate) endpoint: Url,

@@ -7,8 +7,9 @@ use crate::generated::models::{
     ClientAClientRenamedFiveOptions, ClientAClientRenamedOneOptions,
     ClientAClientRenamedThreeOptions, ClientType,
 };
-use azure_core::{ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url};
-use typespec_client_core::fmt::SafeDebug;
+use azure_core::fmt::SafeDebug;
+use azure_core::http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url};
+use azure_core::Result;
 
 pub struct ClientAClient {
     pub(crate) endpoint: Url,

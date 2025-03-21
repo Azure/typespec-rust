@@ -7,10 +7,11 @@ use crate::generated::models::{
     JsonMergePatchClientCreateResourceOptions, JsonMergePatchClientUpdateOptionalResourceOptions,
     JsonMergePatchClientUpdateResourceOptions, Resource, ResourcePatch,
 };
-use azure_core::{
-    ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
+use azure_core::fmt::SafeDebug;
+use azure_core::http::{
+    ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url,
 };
-use typespec_client_core::fmt::SafeDebug;
+use azure_core::Result;
 
 /// Test for merge-patch+json content-type
 pub struct JsonMergePatchClient {

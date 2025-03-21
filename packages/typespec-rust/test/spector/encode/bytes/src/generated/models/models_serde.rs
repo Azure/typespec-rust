@@ -6,8 +6,8 @@
 use super::{
     Base64BytesProperty, Base64urlArrayBytesProperty, Base64urlBytesProperty, DefaultBytesProperty,
 };
-use azure_core::{RequestContent, Result};
-use typespec_client_core::json::to_json;
+use azure_core::http::RequestContent;
+use azure_core::{json::to_json, Result};
 
 impl TryFrom<Base64BytesProperty> for RequestContent<Base64BytesProperty> {
     type Error = azure_core::Error;

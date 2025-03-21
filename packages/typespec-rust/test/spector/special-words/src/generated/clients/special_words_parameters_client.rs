@@ -24,7 +24,8 @@ use crate::generated::models::{
     SpecialWordsParametersClientWithTryOptions, SpecialWordsParametersClientWithWhileOptions,
     SpecialWordsParametersClientWithYieldOptions,
 };
-use azure_core::{Context, Method, Pipeline, Request, Response, Result, Url};
+use azure_core::http::{Context, Method, Pipeline, Request, Response, Url};
+use azure_core::Result;
 
 /// Verify reserved words as parameter name.
 pub struct SpecialWordsParametersClient {

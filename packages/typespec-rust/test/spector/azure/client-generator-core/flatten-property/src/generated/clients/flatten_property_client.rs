@@ -7,10 +7,11 @@ use crate::generated::models::{
     FlattenModel, FlattenPropertyClientPutFlattenModelOptions,
     FlattenPropertyClientPutNestedFlattenModelOptions, NestedFlattenModel,
 };
-use azure_core::{
-    ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
+use azure_core::fmt::SafeDebug;
+use azure_core::http::{
+    ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url,
 };
-use typespec_client_core::fmt::SafeDebug;
+use azure_core::Result;
 
 /// Illustrates the model flatten cases.
 pub struct FlattenPropertyClient {

@@ -5,8 +5,9 @@
 
 use crate::generated::clients::{TwoOperationGroupGroup1Client, TwoOperationGroupGroup2Client};
 use crate::generated::models::ClientType;
-use azure_core::{ClientOptions, Pipeline, Result, Url};
-use typespec_client_core::fmt::SafeDebug;
+use azure_core::fmt::SafeDebug;
+use azure_core::http::{ClientOptions, Pipeline, Url};
+use azure_core::Result;
 
 pub struct TwoOperationGroupClient {
     pub(crate) endpoint: Url,

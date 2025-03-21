@@ -7,7 +7,8 @@ use crate::generated::models::{
     DaysOfWeekEnum, FixedStringClientGetKnownValueOptions, FixedStringClientPutKnownValueOptions,
     FixedStringClientPutUnknownValueOptions,
 };
-use azure_core::{Context, Method, Pipeline, Request, RequestContent, Response, Result, Url};
+use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
+use azure_core::Result;
 
 pub struct FixedStringClient {
     pub(crate) endpoint: Url,

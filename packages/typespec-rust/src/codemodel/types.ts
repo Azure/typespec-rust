@@ -491,7 +491,7 @@ export class EnumValue implements EnumValue {
 
 export class Etag extends External implements Etag {
   constructor(crate: Crate) {
-    super(crate, 'azure_core', 'Etag');
+    super(crate, 'azure_core::http', 'Etag');
     this.kind = 'Etag';
   }
 }
@@ -599,7 +599,7 @@ export class Option implements Option {
 
 export class Pager extends External implements Pager {
   constructor(crate: Crate, type: Model, format: BodyFormat) {
-    super(crate, 'azure_core', 'Pager');
+    super(crate, 'azure_core::http', 'Pager');
     this.kind = 'pager';
     this.type = type;
     this.format = format;
@@ -631,7 +631,7 @@ export class Payload<T> implements Payload<T> {
 
 export class RequestContent<T> extends External implements RequestContent<T> {
   constructor(crate: Crate, content: T) {
-    super(crate, 'azure_core', 'RequestContent');
+    super(crate, 'azure_core::http', 'RequestContent');
     this.kind = 'requestContent';
     this.content = content;
   }
@@ -639,7 +639,7 @@ export class RequestContent<T> extends External implements RequestContent<T> {
 
 export class Response<T> extends External implements Response<T> {
   constructor(crate: Crate, content: T) {
-    super(crate, 'azure_core', 'Response');
+    super(crate, 'azure_core::http', 'Response');
     this.kind = 'response';
     this.content = content;
   }
@@ -710,7 +710,7 @@ export class Unit implements Unit {
 
 export class Url extends External implements Url {
   constructor(crate: Crate) {
-    super(crate, 'azure_core', 'Url');
+    super(crate, 'azure_core::http', 'Url');
     this.kind = 'Url';
   }
 }

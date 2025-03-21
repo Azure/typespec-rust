@@ -5,12 +5,11 @@
 
 use crate::generated::models::{UnionClientValidKeyOptions, UnionClientValidTokenOptions};
 use azure_core::credentials::TokenCredential;
-use azure_core::{
-    BearerTokenCredentialPolicy, ClientOptions, Context, Method, Pipeline, Policy, Request,
-    Response, Result, Url,
-};
+use azure_core::fmt::SafeDebug;
+use azure_core::http::policies::{BearerTokenCredentialPolicy, Policy};
+use azure_core::http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url};
+use azure_core::Result;
 use std::sync::Arc;
-use typespec_client_core::fmt::SafeDebug;
 
 /// Illustrates clients generated with ApiKey and OAuth2 authentication.
 pub struct UnionClient {

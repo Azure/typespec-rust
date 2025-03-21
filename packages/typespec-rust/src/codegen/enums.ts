@@ -23,7 +23,7 @@ export function emitEnums(crate: rust.Crate, context: Context): helpers.Module |
 
   const use = new Use('models');
   // note that create_extensible_enum uses create_enum, so it will always be used
-  use.addType('typespec_client_core', 'create_enum');
+  use.addType('azure_core', 'create_enum');
 
   const indent = new helpers.indentation();
 
@@ -31,7 +31,7 @@ export function emitEnums(crate: rust.Crate, context: Context): helpers.Module |
   for (const rustEnum of crate.enums) {
     let enumType = 'create_enum';
     if (rustEnum.extensible) {
-      use.addType('typespec_client_core', 'create_extensible_enum');
+      use.addType('azure_core', 'create_extensible_enum');
       enumType = 'create_extensible_enum';
     }
 

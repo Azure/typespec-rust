@@ -1,10 +1,17 @@
 # Release History
 
-## 0.12.1 (unreleased)
+## 0.13.0 (unreleased)
+
+### Breaking Changes
+
+**NOTE: this version is incompatible with earlier versions of `azure_core`**
+
+* Updated references to types in `azure_core` based on its refactoring.
+* Replaced references to `typespec_client_core` with the matching references in `azure_core`.
 
 ### Other Changes
 
-* Use relative paths to types in doc links.
+* Use `crate::generated::` paths to types in doc links.
 
 ## 0.12.0 (2025-03-20)
 

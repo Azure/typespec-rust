@@ -6,8 +6,9 @@
 use crate::generated::clients::{
     DurationHeaderClient, DurationPropertyClient, DurationQueryClient,
 };
-use azure_core::{ClientOptions, Pipeline, Result, Url};
-use typespec_client_core::fmt::SafeDebug;
+use azure_core::fmt::SafeDebug;
+use azure_core::http::{ClientOptions, Pipeline, Url};
+use azure_core::Result;
 
 /// Test for encode decorator on duration.
 pub struct DurationClient {

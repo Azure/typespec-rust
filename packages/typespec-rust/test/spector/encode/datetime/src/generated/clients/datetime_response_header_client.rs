@@ -10,7 +10,8 @@ use crate::generated::models::{
     DatetimeResponseHeaderClientUnixTimestampOptions,
     DatetimeResponseHeaderClientUnixTimestampResult,
 };
-use azure_core::{Context, Method, Pipeline, Request, Response, Result, Url};
+use azure_core::http::{Context, Method, Pipeline, Request, Response, Url};
+use azure_core::Result;
 
 pub struct DatetimeResponseHeaderClient {
     pub(crate) endpoint: Url,

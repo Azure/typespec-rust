@@ -99,8 +99,9 @@ export class Context {
       return '';
     }
 
-    use.addTypes('azure_core', ['RequestContent', 'Result']);
-    use.addType('typespec_client_core', `${format}::to_${format}`);
+    use.addType('azure_core', 'Result');
+    use.addType('azure_core::http', 'RequestContent');
+    use.addType('azure_core', `${format}::to_${format}`);
 
     const indent = new helpers.indentation();
     let content = `impl TryFrom<${helpers.getTypeDeclaration(type)}> for RequestContent<${helpers.getTypeDeclaration(type)}> {\n`;
@@ -126,10 +127,10 @@ export class Context {
       return '';
     }
 
-    use.addType('azure_core', 'ResponseBody');
+    use.addType('azure_core::http', 'response::ResponseBody');
 
     const indent = new helpers.indentation();
-    let content = `impl azure_core::Model for ${helpers.getTypeDeclaration(type)} {\n`;
+    let content = `impl azure_core::http::Model for ${helpers.getTypeDeclaration(type)} {\n`;
     content += `${indent.get()}async fn from_response_body(body: ResponseBody) -> Result<Self> {\n`;
     content += `${indent.push().get()}body.${format}().await\n`;
     content += `${indent.pop().get()}}\n`;

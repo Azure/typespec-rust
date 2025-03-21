@@ -7,7 +7,8 @@ use crate::generated::models::{
     ModelWithOptionalField, XmlModelWithOptionalFieldValueClientGetOptions,
     XmlModelWithOptionalFieldValueClientPutOptions,
 };
-use azure_core::{Context, Method, Pipeline, Request, RequestContent, Response, Result, Url};
+use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
+use azure_core::Result;
 
 /// Operations for the ModelWithOptionalField type.
 pub struct XmlModelWithOptionalFieldValueClient {

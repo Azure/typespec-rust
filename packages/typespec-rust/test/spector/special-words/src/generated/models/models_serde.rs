@@ -8,8 +8,8 @@ use super::{
     Except, Exec, Finally, For, From, Global, If, Import, In, Is, Lambda, Not, Or, Pass, Raise,
     Return, SameAsModel, Try, While, With, Yield,
 };
-use azure_core::{RequestContent, Result};
-use typespec_client_core::json::to_json;
+use azure_core::http::RequestContent;
+use azure_core::{json::to_json, Result};
 
 impl TryFrom<And> for RequestContent<And> {
     type Error = azure_core::Error;

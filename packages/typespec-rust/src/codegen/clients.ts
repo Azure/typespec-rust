@@ -61,7 +61,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         deriveDefault = '';
       }
       body += helpers.formatDocComment(client.constructable.options.type.docs);
-      use.addType('typespec_client_core::fmt', 'SafeDebug');
+      use.addType('azure_core::fmt', 'SafeDebug');
       body += `#[derive(Clone, ${deriveDefault}SafeDebug)]\n`;
       body += `pub struct ${client.constructable.options.type.name}`;
       if (client.constructable.options.type.fields.length > 0) {
@@ -283,7 +283,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
       }
 
       body += helpers.formatDocComment(method.options.type.docs);
-      use.addType('typespec_client_core::fmt', 'SafeDebug');
+      use.addType('azure_core::fmt', 'SafeDebug');
       body += '#[derive(Clone, Default, SafeDebug)]\n';
       body += `${helpers.emitVisibility(method.visibility)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
       for (let i = 0; i < method.options.type.fields.length; ++i) {
@@ -468,7 +468,7 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
 function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
   for (const param of ctor.params) {
     if (param.type.kind === 'arc' && param.type.type.kind === 'tokenCredential') {
-      use.addTypes('azure_core', ['BearerTokenCredentialPolicy', 'Policy']);
+      use.addTypes('azure_core::http::policies', ['BearerTokenCredentialPolicy', 'Policy']);
       const scopes = new Array<string>();
       for (const scope of param.type.type.scopes) {
         scopes.push(`"${scope}"`);
@@ -860,7 +860,7 @@ function urlVarNeedsMut(paramGroups: methodParamGroups, method: ClientMethod): s
  * @returns the contents of the method body
  */
 function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
-  use.addTypes('azure_core', ['Context', 'Method', 'Request']);
+  use.addTypes('azure_core::http', ['Context', 'Method', 'Request']);
   const paramGroups = getMethodParamGroup(method);
   let body = 'let options = options.unwrap_or_default();\n';
   body += `${indent.get()}let ctx = Context::with_context(&options.method_options.context);\n`;
@@ -889,9 +889,9 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   }
 
   const nextLinkName = method.strategy.nextLinkName;
-  use.addTypes('azure_core', ['Method', 'Pager', 'Request', 'Response', 'Result', 'Url']);
-  use.addType('typespec_client_core::http', 'PagerResult');
-  use.addType('typespec_client_core', 'json');
+  use.addType('azure_core', 'Result');
+  use.addTypes('azure_core::http', ['Method', 'Pager', 'PagerResult', 'Request', 'Response', 'Url']);
+  use.addType('azure_core', 'json');
   use.addForType(method.returns.type.type);
 
   const paramGroups = getMethodParamGroup(method);

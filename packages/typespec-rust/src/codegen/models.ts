@@ -57,7 +57,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
   // for the internal models we might need to use public model types
   const use = new Use(visibility === 'pub' ? 'models' : 'modelsOther');
   use.addTypes('serde', ['Deserialize', 'Serialize']);
-  use.addType('typespec_client_core::fmt', 'SafeDebug');
+  use.addType('azure_core::fmt', 'SafeDebug');
 
   const indent = new helpers.indentation();
 
@@ -82,7 +82,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
     const bodyFormat = context.getModelBodyFormat(model);
 
     body += helpers.formatDocComment(model.docs);
-    body += helpers.annotationDerive('Default', 'azure_core::Model');
+    body += helpers.annotationDerive('Default', 'azure_core::http::Model');
     if (<rust.ModelFlags>(model.flags & rust.ModelFlags.Output) === rust.ModelFlags.Output && (model.flags & rust.ModelFlags.Input) === 0) {
       // output-only models get the non_exhaustive annotation
       body += helpers.AnnotationNonExhaustive;

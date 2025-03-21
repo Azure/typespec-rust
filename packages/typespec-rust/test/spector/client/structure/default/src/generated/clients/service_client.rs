@@ -7,8 +7,9 @@ use crate::generated::clients::{
     ServiceBarClient, ServiceBazClient, ServiceFooClient, ServiceQuxClient,
 };
 use crate::generated::models::{ClientType, ServiceClientOneOptions, ServiceClientTwoOptions};
-use azure_core::{ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url};
-use typespec_client_core::fmt::SafeDebug;
+use azure_core::fmt::SafeDebug;
+use azure_core::http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url};
+use azure_core::Result;
 
 /// Test that we can use @client and @operationGroup decorators to customize client side code structure, such as:
 /// 1. have everything as default.

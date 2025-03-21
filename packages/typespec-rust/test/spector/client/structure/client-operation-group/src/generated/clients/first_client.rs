@@ -5,8 +5,9 @@
 
 use crate::generated::clients::{FirstGroup3Client, FirstGroup4Client};
 use crate::generated::models::{ClientType, FirstClientOneOptions};
-use azure_core::{ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url};
-use typespec_client_core::fmt::SafeDebug;
+use azure_core::fmt::SafeDebug;
+use azure_core::http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url};
+use azure_core::Result;
 
 pub struct FirstClient {
     pub(crate) endpoint: Url,

@@ -9,8 +9,9 @@ use crate::generated::clients::{
     DictionaryModelValueClient, DictionaryNullableFloatValueClient,
     DictionaryRecursiveModelValueClient, DictionaryStringValueClient, DictionaryUnknownValueClient,
 };
-use azure_core::{ClientOptions, Pipeline, Result, Url};
-use typespec_client_core::fmt::SafeDebug;
+use azure_core::fmt::SafeDebug;
+use azure_core::http::{ClientOptions, Pipeline, Url};
+use azure_core::Result;
 
 /// Illustrates various of dictionaries.
 pub struct DictionaryClient {

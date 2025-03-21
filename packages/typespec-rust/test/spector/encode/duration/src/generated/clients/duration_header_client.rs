@@ -8,7 +8,8 @@ use crate::generated::models::{
     DurationHeaderClientFloatSecondsOptions, DurationHeaderClientInt32SecondsOptions,
     DurationHeaderClientIso8601ArrayOptions, DurationHeaderClientIso8601Options,
 };
-use azure_core::{Context, Method, Pipeline, Request, Response, Result, Url};
+use azure_core::http::{Context, Method, Pipeline, Request, Response, Url};
+use azure_core::Result;
 
 pub struct DurationHeaderClient {
     pub(crate) endpoint: Url,

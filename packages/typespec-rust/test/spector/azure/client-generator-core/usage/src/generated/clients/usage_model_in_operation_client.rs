@@ -9,7 +9,8 @@ use crate::generated::models::{
     UsageModelInOperationClientOrphanModelSerializableOptions,
     UsageModelInOperationClientOutputToInputOutputOptions,
 };
-use azure_core::{Context, Method, Pipeline, Request, RequestContent, Response, Result, Url};
+use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
+use azure_core::Result;
 use serde_json::Value;
 
 pub struct UsageModelInOperationClient {

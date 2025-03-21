@@ -7,8 +7,8 @@ use super::{
     DefaultDurationProperty, Float64SecondsDurationProperty, FloatSecondsDurationArrayProperty,
     FloatSecondsDurationProperty, ISO8601DurationProperty, Int32SecondsDurationProperty,
 };
-use azure_core::{RequestContent, Result};
-use typespec_client_core::json::to_json;
+use azure_core::http::RequestContent;
+use azure_core::{json::to_json, Result};
 
 impl TryFrom<DefaultDurationProperty> for RequestContent<DefaultDurationProperty> {
     type Error = azure_core::Error;

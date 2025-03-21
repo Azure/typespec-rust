@@ -25,12 +25,13 @@ use crate::generated::models::{
     ListBlobsHierarchySegmentResponse, SignedIdentifier,
 };
 use azure_core::credentials::TokenCredential;
-use azure_core::{
-    date, BearerTokenCredentialPolicy, Bytes, ClientOptions, Context, Method, Pipeline, Policy,
-    Request, RequestContent, Response, Result, Url,
+use azure_core::fmt::SafeDebug;
+use azure_core::http::policies::{BearerTokenCredentialPolicy, Policy};
+use azure_core::http::{
+    ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url,
 };
+use azure_core::{date, Bytes, Result};
 use std::sync::Arc;
-use typespec_client_core::fmt::SafeDebug;
 
 pub struct BlobContainerClient {
     pub(crate) container_name: String,

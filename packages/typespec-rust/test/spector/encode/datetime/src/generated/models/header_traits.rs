@@ -7,7 +7,8 @@ use super::{
     DatetimeResponseHeaderClientDefaultResult, DatetimeResponseHeaderClientRfc3339Result,
     DatetimeResponseHeaderClientRfc7231Result, DatetimeResponseHeaderClientUnixTimestampResult,
 };
-use azure_core::{date, headers::HeaderName, headers::Headers, Response, Result};
+use azure_core::http::{headers::HeaderName, headers::Headers, Response};
+use azure_core::{date, Result};
 use time::OffsetDateTime;
 
 const VALUE: HeaderName = HeaderName::from_static("value");
@@ -71,7 +72,7 @@ mod private {
         DatetimeResponseHeaderClientDefaultResult, DatetimeResponseHeaderClientRfc3339Result,
         DatetimeResponseHeaderClientRfc7231Result, DatetimeResponseHeaderClientUnixTimestampResult,
     };
-    use azure_core::Response;
+    use azure_core::http::Response;
 
     pub trait Sealed {}
 

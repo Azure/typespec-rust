@@ -35,7 +35,8 @@ use super::{
     PageBlobClientUploadPagesResult, PageList, PublicAccessType, RehydratePriority,
     SignedIdentifier, SkuName, StorageServiceProperties, StorageServiceStats, UserDelegationKey,
 };
-use azure_core::{base64, date, headers::HeaderName, headers::Headers, Response, Result};
+use azure_core::http::{headers::HeaderName, headers::Headers, Response};
+use azure_core::{base64, date, Result};
 use std::collections::HashMap;
 use time::OffsetDateTime;
 
@@ -3932,7 +3933,7 @@ mod private {
         PageBlobClientUploadPagesResult, PageList, SignedIdentifier, StorageServiceProperties,
         StorageServiceStats, UserDelegationKey,
     };
-    use azure_core::Response;
+    use azure_core::http::Response;
 
     pub trait Sealed {}
 

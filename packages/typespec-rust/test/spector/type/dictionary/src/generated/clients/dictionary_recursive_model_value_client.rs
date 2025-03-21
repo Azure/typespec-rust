@@ -7,7 +7,8 @@ use crate::generated::models::{
     DictionaryRecursiveModelValueClientGetOptions, DictionaryRecursiveModelValueClientPutOptions,
     InnerModel,
 };
-use azure_core::{Context, Method, Pipeline, Request, RequestContent, Response, Result, Url};
+use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
+use azure_core::Result;
 use std::collections::HashMap;
 
 /// Dictionary of model values

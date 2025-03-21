@@ -7,8 +7,8 @@ use super::{
     ClientModel, ClientNameAndJsonEncodedNameModel, ClientNameModel, LanguageClientNameModel,
     RustName,
 };
-use azure_core::{RequestContent, Result};
-use typespec_client_core::json::to_json;
+use azure_core::http::RequestContent;
+use azure_core::{json::to_json, Result};
 
 impl TryFrom<ClientModel> for RequestContent<ClientModel> {
     type Error = azure_core::Error;

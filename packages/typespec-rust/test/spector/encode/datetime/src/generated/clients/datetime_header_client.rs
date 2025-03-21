@@ -8,7 +8,8 @@ use crate::generated::models::{
     DatetimeHeaderClientRfc7231Options, DatetimeHeaderClientUnixTimestampArrayOptions,
     DatetimeHeaderClientUnixTimestampOptions,
 };
-use azure_core::{date, Context, Method, Pipeline, Request, Response, Result, Url};
+use azure_core::http::{Context, Method, Pipeline, Request, Response, Url};
+use azure_core::{date, Result};
 use time::OffsetDateTime;
 
 pub struct DatetimeHeaderClient {

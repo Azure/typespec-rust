@@ -8,8 +8,9 @@ use crate::generated::models::{
     ResiliencyServiceDrivenClientFromOneOptionalOptions,
     ResiliencyServiceDrivenClientFromOneRequiredOptions,
 };
-use azure_core::{ClientOptions, Context, Method, Pipeline, Request, Response, Result, Url};
-use typespec_client_core::fmt::SafeDebug;
+use azure_core::fmt::SafeDebug;
+use azure_core::http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url};
+use azure_core::Result;
 
 /// Test that we can grow up a service spec and service deployment into a multi-versioned service with full client support.
 pub struct ResiliencyServiceDrivenClient {

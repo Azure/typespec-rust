@@ -7,9 +7,11 @@ use crate::generated::clients::{
     CommonPropertiesErrorClient, CommonPropertiesManagedIdentityClient,
 };
 use azure_core::credentials::TokenCredential;
-use azure_core::{BearerTokenCredentialPolicy, ClientOptions, Pipeline, Policy, Result, Url};
+use azure_core::fmt::SafeDebug;
+use azure_core::http::policies::{BearerTokenCredentialPolicy, Policy};
+use azure_core::http::{ClientOptions, Pipeline, Url};
+use azure_core::Result;
 use std::sync::Arc;
-use typespec_client_core::fmt::SafeDebug;
 
 /// Arm Managed Identity Provider management API.
 pub struct CommonPropertiesClient {

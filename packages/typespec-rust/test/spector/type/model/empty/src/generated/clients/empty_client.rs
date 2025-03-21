@@ -7,10 +7,11 @@ use crate::generated::models::{
     EmptyClientGetEmptyOptions, EmptyClientPostRoundTripEmptyOptions, EmptyClientPutEmptyOptions,
     EmptyInput, EmptyInputOutput, EmptyOutput,
 };
-use azure_core::{
-    ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Result, Url,
+use azure_core::fmt::SafeDebug;
+use azure_core::http::{
+    ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url,
 };
-use typespec_client_core::fmt::SafeDebug;
+use azure_core::Result;
 
 /// Illustrates usage of empty model used in operation's parameters and responses.
 pub struct EmptyClient {

@@ -9,10 +9,10 @@ use super::{
     ListContainersIncludeType, Logging, Metrics, PremiumPageBlobAccessTier, PublicAccessType,
     RehydratePriority, RetentionPolicy, StaticWebsite,
 };
-use azure_core::ClientMethodOptions;
+use azure_core::fmt::SafeDebug;
+use azure_core::http::ClientMethodOptions;
 use std::collections::HashMap;
 use time::OffsetDateTime;
-use typespec_client_core::fmt::SafeDebug;
 
 /// Options to be passed to [`AppendBlobClient::append_block()`](crate::generated::clients::AppendBlobClient::append_block())
 #[derive(Clone, Default, SafeDebug)]

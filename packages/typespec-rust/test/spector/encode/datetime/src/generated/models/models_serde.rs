@@ -7,8 +7,8 @@ use super::{
     DefaultDatetimeProperty, Rfc3339DatetimeProperty, Rfc7231DatetimeProperty,
     UnixTimestampArrayDatetimeProperty, UnixTimestampDatetimeProperty,
 };
-use azure_core::{RequestContent, Result};
-use typespec_client_core::json::to_json;
+use azure_core::http::RequestContent;
+use azure_core::{json::to_json, Result};
 
 impl TryFrom<DefaultDatetimeProperty> for RequestContent<DefaultDatetimeProperty> {
     type Error = azure_core::Error;

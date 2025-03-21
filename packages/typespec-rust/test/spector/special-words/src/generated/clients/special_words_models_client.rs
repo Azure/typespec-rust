@@ -24,7 +24,8 @@ use crate::generated::models::{
     SpecialWordsModelsClientWithTryOptions, SpecialWordsModelsClientWithWhileOptions,
     SpecialWordsModelsClientWithYieldOptions, Try, While, With, Yield,
 };
-use azure_core::{Context, Method, Pipeline, Request, RequestContent, Response, Result, Url};
+use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
+use azure_core::Result;
 
 /// Verify model names
 pub struct SpecialWordsModelsClient {

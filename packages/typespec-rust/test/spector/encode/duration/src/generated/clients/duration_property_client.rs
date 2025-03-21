@@ -11,7 +11,8 @@ use crate::generated::models::{
     FloatSecondsDurationArrayProperty, FloatSecondsDurationProperty, ISO8601DurationProperty,
     Int32SecondsDurationProperty,
 };
-use azure_core::{Context, Method, Pipeline, Request, RequestContent, Response, Result, Url};
+use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
+use azure_core::Result;
 
 pub struct DurationPropertyClient {
     pub(crate) endpoint: Url,

@@ -2,7 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use azure_core::Etag;
+use azure_core::http::Etag;
 use futures::StreamExt;
 use spector_basic::{
     models::{BasicClientListOptions, PagedUser, User, UserList},
