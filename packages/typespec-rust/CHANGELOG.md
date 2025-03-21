@@ -18,8 +18,9 @@
 * Updated to the latest tsp toolset.
 * Client struct fields are now always `pub(crate)`. In addition, internal and helper types are now `pub(crate)` instead of `pub` to help prevent inadvertent exposure.
 * Report diagnostics from `@azure-tools/typespec-client-generator-core`.
-* Use relative paths when importing types.
-* Moved `internal_models.rs` up one directory as it isn't used just for internal helper model types (e.g. spread params).
+* Refactor on-disk layout of generated code (simplifies re-exporting of types).
+* The `lib.rs` file is no longer merged and will be ignored when it exists (a warning diagnostic is displayed).
+  * Set `overwrite-lib-rs: true` to force overwriting the `lib.rs` file.
 
 ## 0.11.0 (2025-03-04)
 
