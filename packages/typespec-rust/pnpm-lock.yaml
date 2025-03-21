@@ -64,8 +64,8 @@ importers:
         specifier: 0.67.1
         version: 0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))
       '@typespec/http-specs':
-        specifier: 0.1.0-alpha.15-dev.3
-        version: 0.1.0-alpha.15-dev.3(@types/node@18.19.76)(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/http@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))))(@typespec/rest@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/http@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))(@typespec/versioning@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))(@typespec/xml@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))
+        specifier: 0.1.0-alpha.15
+        version: 0.1.0-alpha.15(@types/node@18.19.76)(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/http@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))))(@typespec/rest@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/http@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))(@typespec/versioning@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))(@typespec/xml@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))
       '@typespec/openapi':
         specifier: 0.67.1
         version: 0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/http@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))))
@@ -83,7 +83,7 @@ importers:
         version: 0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))
       '@vitest/coverage-v8':
         specifier: ^3.0.8
-        version: 3.0.9(vitest@3.0.9(@types/node@18.19.76)(@vitest/ui@3.0.9)(yaml@2.7.0))
+        version: 3.0.9(vitest@3.0.9)
       '@vitest/ui':
         specifier: ^3.0.8
         version: 3.0.9(vitest@3.0.9)
@@ -847,15 +847,15 @@ packages:
     peerDependencies:
       '@typespec/compiler': ^0.67.1
 
-  '@typespec/http-specs@0.1.0-alpha.15-dev.3':
-    resolution: {integrity: sha512-pWrtceHjixwFv6SX1nkSu5WG7odm83FqnKLVzmO5Y29MD4DCgu1AhqtDM7UJ1GZgfHPbZS0zh9gj/01vxEhkdQ==}
+  '@typespec/http-specs@0.1.0-alpha.15':
+    resolution: {integrity: sha512-5GGuS7hkHtxurGmVbvyZ35Y80pB9Fbf6Hf9hsVdXHkUMUXrRJe3UJJLzfstwsHGVZzcVtDmDqewxUq5646GOCw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
-      '@typespec/compiler': ^0.67.1 || >=0.68.0-dev <0.68.0
-      '@typespec/http': ^0.67.1 || >=0.68.0-dev <0.68.0
-      '@typespec/rest': ^0.67.1 || >=0.68.0-dev <0.68.0
-      '@typespec/versioning': ^0.67.1 || >=0.68.0-dev <0.68.0
-      '@typespec/xml': ^0.67.1 || >=0.68.0-dev <0.68.0
+      '@typespec/compiler': ^0.67.1
+      '@typespec/http': ^0.67.1
+      '@typespec/rest': ^0.67.1
+      '@typespec/versioning': ^0.67.1
+      '@typespec/xml': ^0.67.1
 
   '@typespec/http@0.67.1':
     resolution: {integrity: sha512-pkLFdKLA5ObCptUuwL8mhiy6EqVbqmtvHK89zqiTfYYGw2qm76+EUHaK0P/g2aAmjcwlrDGhJ0EhzbVp87H0mg==}
@@ -3380,7 +3380,7 @@ snapshots:
     dependencies:
       '@typespec/compiler': 0.67.1(@types/node@18.19.76)
 
-  '@typespec/http-specs@0.1.0-alpha.15-dev.3(@types/node@18.19.76)(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/http@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))))(@typespec/rest@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/http@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))(@typespec/versioning@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))(@typespec/xml@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))':
+  '@typespec/http-specs@0.1.0-alpha.15(@types/node@18.19.76)(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/http@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))))(@typespec/rest@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/http@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))(@typespec/versioning@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))(@typespec/xml@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))':
     dependencies:
       '@typespec/compiler': 0.67.1(@types/node@18.19.76)
       '@typespec/http': 0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.1(@types/node@18.19.76)))
@@ -3491,7 +3491,7 @@ snapshots:
     dependencies:
       '@typespec/compiler': 0.67.1(@types/node@18.19.76)
 
-  '@vitest/coverage-v8@3.0.9(vitest@3.0.9(@types/node@18.19.76)(@vitest/ui@3.0.9)(yaml@2.7.0))':
+  '@vitest/coverage-v8@3.0.9(vitest@3.0.9)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
