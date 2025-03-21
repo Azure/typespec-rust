@@ -58,7 +58,7 @@
     "@types/node": "^18.19.76",
     "@typespec/compiler": "0.67.1",
     "@typespec/http": "0.67.1",
-    "@typespec/http-specs": "0.1.0-alpha.15-dev.3",
+    "@typespec/http-specs": "0.1.0-alpha.15",
     "@typespec/openapi": "0.67.1",
     "@typespec/rest": "0.67.1",
     "@typespec/spector": "0.1.0-alpha.9",
