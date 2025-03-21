@@ -30,6 +30,15 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     return undefined;
   }
 
+  // returns true if the client options type needs to explicitly implement Default
+  const clientOptionsImplDefault = function(constructable: rust.ClientConstruction): boolean {
+    // only implement Default when there's more than one field (i.e. more than just client_options)
+    // and the field(s) contain a client default value.
+    return constructable.options.type.fields.length > 1 && values(constructable.options.type.fields)
+      .where((field) => field.name !== 'client_options')
+      .where((field) => field.defaultValue !== undefined).any();
+  };
+
   const clientModules = new Array<helpers.Module>();
 
   // emit the clients, one file per client
@@ -46,10 +55,9 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     body += '}\n\n'; // end client
 
     if (client.constructable) {
-      // if client options contains only one field (the azure_core::ClientOptions type)
-      // then we can simply derive Default and elide the manual implementation.
+      // if client options doesn't require an impl for Default then just derive it
       let deriveDefault = 'Default, ';
-      if (client.constructable.options.type.fields.length > 1) {
+      if (clientOptionsImplDefault(client.constructable)) {
         deriveDefault = '';
       }
       body += helpers.formatDocComment(client.constructable.options.type.docs);
@@ -220,7 +228,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
 
     // only implement Default when there's more than one field.
     // for the single-case field we just derive Default.
-    if (client.constructable && client.constructable.options.type.fields.length > 1) {
+    if (client.constructable && clientOptionsImplDefault(client.constructable)) {
       // emit default trait impl for client options type
       const clientOptionsType = client.constructable.options;
       body += `impl Default for ${clientOptionsType.type.name} {\n`;
@@ -228,10 +236,11 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
       body += `${indent.push().get()}Self {\n`;
       indent.push();
       for (const field of clientOptionsType.type.fields) {
-        if (!field.defaultValue) {
-          throw new Error(`missing default value for struct field ${clientOptionsType.type.name}.${field.name}`);
+        if (field.defaultValue) {
+          body += `${indent.get()}${field.name}: ${field.defaultValue},\n`;
+        } else {
+          body += `${indent.get()}${field.name}: ${helpers.getTypeDeclaration(field.type)}::default(),\n`;
         }
-        body += `${indent.get()}${field.name}: ${field.defaultValue},\n`;
       }
       body += `${indent.pop().get()}}\n`;
       body += `${indent.pop().get()}}\n`;
