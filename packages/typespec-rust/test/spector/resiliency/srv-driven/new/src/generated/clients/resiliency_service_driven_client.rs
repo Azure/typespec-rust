@@ -29,7 +29,7 @@ pub struct ResiliencyServiceDrivenClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`ResiliencyServiceDrivenClient`](crate::ResiliencyServiceDrivenClient)
+/// Options used when creating a [`ResiliencyServiceDrivenClient`](ResiliencyServiceDrivenClient)
 #[derive(Clone, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientOptions {
     pub api_version: String,

@@ -6,707 +6,707 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`SpecialWordsModelPropertiesClient::same_as_model()`](crate::clients::SpecialWordsModelPropertiesClient::same_as_model())
+/// Options to be passed to [`SpecialWordsModelPropertiesClient::same_as_model()`](crate::generated::clients::SpecialWordsModelPropertiesClient::same_as_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelPropertiesClientSameAsModelOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_and()`](crate::clients::SpecialWordsModelsClient::with_and())
+/// Options to be passed to [`SpecialWordsModelsClient::with_and()`](crate::generated::clients::SpecialWordsModelsClient::with_and())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithAndOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_as()`](crate::clients::SpecialWordsModelsClient::with_as())
+/// Options to be passed to [`SpecialWordsModelsClient::with_as()`](crate::generated::clients::SpecialWordsModelsClient::with_as())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithAsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_assert()`](crate::clients::SpecialWordsModelsClient::with_assert())
+/// Options to be passed to [`SpecialWordsModelsClient::with_assert()`](crate::generated::clients::SpecialWordsModelsClient::with_assert())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithAssertOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_async()`](crate::clients::SpecialWordsModelsClient::with_async())
+/// Options to be passed to [`SpecialWordsModelsClient::with_async()`](crate::generated::clients::SpecialWordsModelsClient::with_async())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithAsyncOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_await()`](crate::clients::SpecialWordsModelsClient::with_await())
+/// Options to be passed to [`SpecialWordsModelsClient::with_await()`](crate::generated::clients::SpecialWordsModelsClient::with_await())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithAwaitOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_break()`](crate::clients::SpecialWordsModelsClient::with_break())
+/// Options to be passed to [`SpecialWordsModelsClient::with_break()`](crate::generated::clients::SpecialWordsModelsClient::with_break())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithBreakOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_class()`](crate::clients::SpecialWordsModelsClient::with_class())
+/// Options to be passed to [`SpecialWordsModelsClient::with_class()`](crate::generated::clients::SpecialWordsModelsClient::with_class())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithClassOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_constructor()`](crate::clients::SpecialWordsModelsClient::with_constructor())
+/// Options to be passed to [`SpecialWordsModelsClient::with_constructor()`](crate::generated::clients::SpecialWordsModelsClient::with_constructor())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithConstructorOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_continue()`](crate::clients::SpecialWordsModelsClient::with_continue())
+/// Options to be passed to [`SpecialWordsModelsClient::with_continue()`](crate::generated::clients::SpecialWordsModelsClient::with_continue())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithContinueOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_def()`](crate::clients::SpecialWordsModelsClient::with_def())
+/// Options to be passed to [`SpecialWordsModelsClient::with_def()`](crate::generated::clients::SpecialWordsModelsClient::with_def())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithDefOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_del()`](crate::clients::SpecialWordsModelsClient::with_del())
+/// Options to be passed to [`SpecialWordsModelsClient::with_del()`](crate::generated::clients::SpecialWordsModelsClient::with_del())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithDelOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_elif()`](crate::clients::SpecialWordsModelsClient::with_elif())
+/// Options to be passed to [`SpecialWordsModelsClient::with_elif()`](crate::generated::clients::SpecialWordsModelsClient::with_elif())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithElifOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_else()`](crate::clients::SpecialWordsModelsClient::with_else())
+/// Options to be passed to [`SpecialWordsModelsClient::with_else()`](crate::generated::clients::SpecialWordsModelsClient::with_else())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithElseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_except()`](crate::clients::SpecialWordsModelsClient::with_except())
+/// Options to be passed to [`SpecialWordsModelsClient::with_except()`](crate::generated::clients::SpecialWordsModelsClient::with_except())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithExceptOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_exec()`](crate::clients::SpecialWordsModelsClient::with_exec())
+/// Options to be passed to [`SpecialWordsModelsClient::with_exec()`](crate::generated::clients::SpecialWordsModelsClient::with_exec())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithExecOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_finally()`](crate::clients::SpecialWordsModelsClient::with_finally())
+/// Options to be passed to [`SpecialWordsModelsClient::with_finally()`](crate::generated::clients::SpecialWordsModelsClient::with_finally())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithFinallyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_for()`](crate::clients::SpecialWordsModelsClient::with_for())
+/// Options to be passed to [`SpecialWordsModelsClient::with_for()`](crate::generated::clients::SpecialWordsModelsClient::with_for())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithForOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_from()`](crate::clients::SpecialWordsModelsClient::with_from())
+/// Options to be passed to [`SpecialWordsModelsClient::with_from()`](crate::generated::clients::SpecialWordsModelsClient::with_from())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithFromOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_global()`](crate::clients::SpecialWordsModelsClient::with_global())
+/// Options to be passed to [`SpecialWordsModelsClient::with_global()`](crate::generated::clients::SpecialWordsModelsClient::with_global())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithGlobalOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_if()`](crate::clients::SpecialWordsModelsClient::with_if())
+/// Options to be passed to [`SpecialWordsModelsClient::with_if()`](crate::generated::clients::SpecialWordsModelsClient::with_if())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithIfOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_import()`](crate::clients::SpecialWordsModelsClient::with_import())
+/// Options to be passed to [`SpecialWordsModelsClient::with_import()`](crate::generated::clients::SpecialWordsModelsClient::with_import())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithImportOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_in()`](crate::clients::SpecialWordsModelsClient::with_in())
+/// Options to be passed to [`SpecialWordsModelsClient::with_in()`](crate::generated::clients::SpecialWordsModelsClient::with_in())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithInOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_is()`](crate::clients::SpecialWordsModelsClient::with_is())
+/// Options to be passed to [`SpecialWordsModelsClient::with_is()`](crate::generated::clients::SpecialWordsModelsClient::with_is())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithIsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_lambda()`](crate::clients::SpecialWordsModelsClient::with_lambda())
+/// Options to be passed to [`SpecialWordsModelsClient::with_lambda()`](crate::generated::clients::SpecialWordsModelsClient::with_lambda())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithLambdaOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_not()`](crate::clients::SpecialWordsModelsClient::with_not())
+/// Options to be passed to [`SpecialWordsModelsClient::with_not()`](crate::generated::clients::SpecialWordsModelsClient::with_not())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithNotOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_or()`](crate::clients::SpecialWordsModelsClient::with_or())
+/// Options to be passed to [`SpecialWordsModelsClient::with_or()`](crate::generated::clients::SpecialWordsModelsClient::with_or())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithOrOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_pass()`](crate::clients::SpecialWordsModelsClient::with_pass())
+/// Options to be passed to [`SpecialWordsModelsClient::with_pass()`](crate::generated::clients::SpecialWordsModelsClient::with_pass())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithPassOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_raise()`](crate::clients::SpecialWordsModelsClient::with_raise())
+/// Options to be passed to [`SpecialWordsModelsClient::with_raise()`](crate::generated::clients::SpecialWordsModelsClient::with_raise())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithRaiseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_return()`](crate::clients::SpecialWordsModelsClient::with_return())
+/// Options to be passed to [`SpecialWordsModelsClient::with_return()`](crate::generated::clients::SpecialWordsModelsClient::with_return())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithReturnOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_try()`](crate::clients::SpecialWordsModelsClient::with_try())
+/// Options to be passed to [`SpecialWordsModelsClient::with_try()`](crate::generated::clients::SpecialWordsModelsClient::with_try())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithTryOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_while()`](crate::clients::SpecialWordsModelsClient::with_while())
+/// Options to be passed to [`SpecialWordsModelsClient::with_while()`](crate::generated::clients::SpecialWordsModelsClient::with_while())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithWhileOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_with()`](crate::clients::SpecialWordsModelsClient::with_with())
+/// Options to be passed to [`SpecialWordsModelsClient::with_with()`](crate::generated::clients::SpecialWordsModelsClient::with_with())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsModelsClient::with_yield()`](crate::clients::SpecialWordsModelsClient::with_yield())
+/// Options to be passed to [`SpecialWordsModelsClient::with_yield()`](crate::generated::clients::SpecialWordsModelsClient::with_yield())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsModelsClientWithYieldOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::and()`](crate::clients::SpecialWordsOperationsClient::and())
+/// Options to be passed to [`SpecialWordsOperationsClient::and()`](crate::generated::clients::SpecialWordsOperationsClient::and())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientAndOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::as_fn()`](crate::clients::SpecialWordsOperationsClient::as_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::as_fn()`](crate::generated::clients::SpecialWordsOperationsClient::as_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientAsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::assert()`](crate::clients::SpecialWordsOperationsClient::assert())
+/// Options to be passed to [`SpecialWordsOperationsClient::assert()`](crate::generated::clients::SpecialWordsOperationsClient::assert())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientAssertOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::async_fn()`](crate::clients::SpecialWordsOperationsClient::async_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::async_fn()`](crate::generated::clients::SpecialWordsOperationsClient::async_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientAsyncOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::await_fn()`](crate::clients::SpecialWordsOperationsClient::await_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::await_fn()`](crate::generated::clients::SpecialWordsOperationsClient::await_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientAwaitOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::break_fn()`](crate::clients::SpecialWordsOperationsClient::break_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::break_fn()`](crate::generated::clients::SpecialWordsOperationsClient::break_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientBreakOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::class()`](crate::clients::SpecialWordsOperationsClient::class())
+/// Options to be passed to [`SpecialWordsOperationsClient::class()`](crate::generated::clients::SpecialWordsOperationsClient::class())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientClassOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::constructor()`](crate::clients::SpecialWordsOperationsClient::constructor())
+/// Options to be passed to [`SpecialWordsOperationsClient::constructor()`](crate::generated::clients::SpecialWordsOperationsClient::constructor())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientConstructorOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::continue_fn()`](crate::clients::SpecialWordsOperationsClient::continue_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::continue_fn()`](crate::generated::clients::SpecialWordsOperationsClient::continue_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientContinueOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::def()`](crate::clients::SpecialWordsOperationsClient::def())
+/// Options to be passed to [`SpecialWordsOperationsClient::def()`](crate::generated::clients::SpecialWordsOperationsClient::def())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientDefOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::del()`](crate::clients::SpecialWordsOperationsClient::del())
+/// Options to be passed to [`SpecialWordsOperationsClient::del()`](crate::generated::clients::SpecialWordsOperationsClient::del())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientDelOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::elif()`](crate::clients::SpecialWordsOperationsClient::elif())
+/// Options to be passed to [`SpecialWordsOperationsClient::elif()`](crate::generated::clients::SpecialWordsOperationsClient::elif())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientElifOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::else_fn()`](crate::clients::SpecialWordsOperationsClient::else_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::else_fn()`](crate::generated::clients::SpecialWordsOperationsClient::else_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientElseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::except()`](crate::clients::SpecialWordsOperationsClient::except())
+/// Options to be passed to [`SpecialWordsOperationsClient::except()`](crate::generated::clients::SpecialWordsOperationsClient::except())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientExceptOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::exec()`](crate::clients::SpecialWordsOperationsClient::exec())
+/// Options to be passed to [`SpecialWordsOperationsClient::exec()`](crate::generated::clients::SpecialWordsOperationsClient::exec())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientExecOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::finally()`](crate::clients::SpecialWordsOperationsClient::finally())
+/// Options to be passed to [`SpecialWordsOperationsClient::finally()`](crate::generated::clients::SpecialWordsOperationsClient::finally())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientFinallyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::for_fn()`](crate::clients::SpecialWordsOperationsClient::for_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::for_fn()`](crate::generated::clients::SpecialWordsOperationsClient::for_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientForOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::from()`](crate::clients::SpecialWordsOperationsClient::from())
+/// Options to be passed to [`SpecialWordsOperationsClient::from()`](crate::generated::clients::SpecialWordsOperationsClient::from())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientFromOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::global()`](crate::clients::SpecialWordsOperationsClient::global())
+/// Options to be passed to [`SpecialWordsOperationsClient::global()`](crate::generated::clients::SpecialWordsOperationsClient::global())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientGlobalOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::if_fn()`](crate::clients::SpecialWordsOperationsClient::if_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::if_fn()`](crate::generated::clients::SpecialWordsOperationsClient::if_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientIfOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::import()`](crate::clients::SpecialWordsOperationsClient::import())
+/// Options to be passed to [`SpecialWordsOperationsClient::import()`](crate::generated::clients::SpecialWordsOperationsClient::import())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientImportOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::in_fn()`](crate::clients::SpecialWordsOperationsClient::in_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::in_fn()`](crate::generated::clients::SpecialWordsOperationsClient::in_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientInOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::is()`](crate::clients::SpecialWordsOperationsClient::is())
+/// Options to be passed to [`SpecialWordsOperationsClient::is()`](crate::generated::clients::SpecialWordsOperationsClient::is())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientIsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::lambda()`](crate::clients::SpecialWordsOperationsClient::lambda())
+/// Options to be passed to [`SpecialWordsOperationsClient::lambda()`](crate::generated::clients::SpecialWordsOperationsClient::lambda())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientLambdaOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::not()`](crate::clients::SpecialWordsOperationsClient::not())
+/// Options to be passed to [`SpecialWordsOperationsClient::not()`](crate::generated::clients::SpecialWordsOperationsClient::not())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientNotOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::or()`](crate::clients::SpecialWordsOperationsClient::or())
+/// Options to be passed to [`SpecialWordsOperationsClient::or()`](crate::generated::clients::SpecialWordsOperationsClient::or())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientOrOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::pass()`](crate::clients::SpecialWordsOperationsClient::pass())
+/// Options to be passed to [`SpecialWordsOperationsClient::pass()`](crate::generated::clients::SpecialWordsOperationsClient::pass())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientPassOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::raise()`](crate::clients::SpecialWordsOperationsClient::raise())
+/// Options to be passed to [`SpecialWordsOperationsClient::raise()`](crate::generated::clients::SpecialWordsOperationsClient::raise())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientRaiseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::return_fn()`](crate::clients::SpecialWordsOperationsClient::return_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::return_fn()`](crate::generated::clients::SpecialWordsOperationsClient::return_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientReturnOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::try_fn()`](crate::clients::SpecialWordsOperationsClient::try_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::try_fn()`](crate::generated::clients::SpecialWordsOperationsClient::try_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientTryOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::while_fn()`](crate::clients::SpecialWordsOperationsClient::while_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::while_fn()`](crate::generated::clients::SpecialWordsOperationsClient::while_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientWhileOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::with()`](crate::clients::SpecialWordsOperationsClient::with())
+/// Options to be passed to [`SpecialWordsOperationsClient::with()`](crate::generated::clients::SpecialWordsOperationsClient::with())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientWithOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsOperationsClient::yield_fn()`](crate::clients::SpecialWordsOperationsClient::yield_fn())
+/// Options to be passed to [`SpecialWordsOperationsClient::yield_fn()`](crate::generated::clients::SpecialWordsOperationsClient::yield_fn())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsOperationsClientYieldOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_and()`](crate::clients::SpecialWordsParametersClient::with_and())
+/// Options to be passed to [`SpecialWordsParametersClient::with_and()`](crate::generated::clients::SpecialWordsParametersClient::with_and())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithAndOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_as()`](crate::clients::SpecialWordsParametersClient::with_as())
+/// Options to be passed to [`SpecialWordsParametersClient::with_as()`](crate::generated::clients::SpecialWordsParametersClient::with_as())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithAsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_assert()`](crate::clients::SpecialWordsParametersClient::with_assert())
+/// Options to be passed to [`SpecialWordsParametersClient::with_assert()`](crate::generated::clients::SpecialWordsParametersClient::with_assert())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithAssertOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_async()`](crate::clients::SpecialWordsParametersClient::with_async())
+/// Options to be passed to [`SpecialWordsParametersClient::with_async()`](crate::generated::clients::SpecialWordsParametersClient::with_async())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithAsyncOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_await()`](crate::clients::SpecialWordsParametersClient::with_await())
+/// Options to be passed to [`SpecialWordsParametersClient::with_await()`](crate::generated::clients::SpecialWordsParametersClient::with_await())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithAwaitOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_break()`](crate::clients::SpecialWordsParametersClient::with_break())
+/// Options to be passed to [`SpecialWordsParametersClient::with_break()`](crate::generated::clients::SpecialWordsParametersClient::with_break())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithBreakOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_cancellation_token()`](crate::clients::SpecialWordsParametersClient::with_cancellation_token())
+/// Options to be passed to [`SpecialWordsParametersClient::with_cancellation_token()`](crate::generated::clients::SpecialWordsParametersClient::with_cancellation_token())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithCancellationTokenOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_class()`](crate::clients::SpecialWordsParametersClient::with_class())
+/// Options to be passed to [`SpecialWordsParametersClient::with_class()`](crate::generated::clients::SpecialWordsParametersClient::with_class())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithClassOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_constructor()`](crate::clients::SpecialWordsParametersClient::with_constructor())
+/// Options to be passed to [`SpecialWordsParametersClient::with_constructor()`](crate::generated::clients::SpecialWordsParametersClient::with_constructor())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithConstructorOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_continue()`](crate::clients::SpecialWordsParametersClient::with_continue())
+/// Options to be passed to [`SpecialWordsParametersClient::with_continue()`](crate::generated::clients::SpecialWordsParametersClient::with_continue())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithContinueOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_def()`](crate::clients::SpecialWordsParametersClient::with_def())
+/// Options to be passed to [`SpecialWordsParametersClient::with_def()`](crate::generated::clients::SpecialWordsParametersClient::with_def())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithDefOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_del()`](crate::clients::SpecialWordsParametersClient::with_del())
+/// Options to be passed to [`SpecialWordsParametersClient::with_del()`](crate::generated::clients::SpecialWordsParametersClient::with_del())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithDelOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_elif()`](crate::clients::SpecialWordsParametersClient::with_elif())
+/// Options to be passed to [`SpecialWordsParametersClient::with_elif()`](crate::generated::clients::SpecialWordsParametersClient::with_elif())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithElifOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_else()`](crate::clients::SpecialWordsParametersClient::with_else())
+/// Options to be passed to [`SpecialWordsParametersClient::with_else()`](crate::generated::clients::SpecialWordsParametersClient::with_else())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithElseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_except()`](crate::clients::SpecialWordsParametersClient::with_except())
+/// Options to be passed to [`SpecialWordsParametersClient::with_except()`](crate::generated::clients::SpecialWordsParametersClient::with_except())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithExceptOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_exec()`](crate::clients::SpecialWordsParametersClient::with_exec())
+/// Options to be passed to [`SpecialWordsParametersClient::with_exec()`](crate::generated::clients::SpecialWordsParametersClient::with_exec())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithExecOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_finally()`](crate::clients::SpecialWordsParametersClient::with_finally())
+/// Options to be passed to [`SpecialWordsParametersClient::with_finally()`](crate::generated::clients::SpecialWordsParametersClient::with_finally())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithFinallyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_for()`](crate::clients::SpecialWordsParametersClient::with_for())
+/// Options to be passed to [`SpecialWordsParametersClient::with_for()`](crate::generated::clients::SpecialWordsParametersClient::with_for())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithForOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_from()`](crate::clients::SpecialWordsParametersClient::with_from())
+/// Options to be passed to [`SpecialWordsParametersClient::with_from()`](crate::generated::clients::SpecialWordsParametersClient::with_from())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithFromOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_global()`](crate::clients::SpecialWordsParametersClient::with_global())
+/// Options to be passed to [`SpecialWordsParametersClient::with_global()`](crate::generated::clients::SpecialWordsParametersClient::with_global())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithGlobalOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_if()`](crate::clients::SpecialWordsParametersClient::with_if())
+/// Options to be passed to [`SpecialWordsParametersClient::with_if()`](crate::generated::clients::SpecialWordsParametersClient::with_if())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithIfOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_import()`](crate::clients::SpecialWordsParametersClient::with_import())
+/// Options to be passed to [`SpecialWordsParametersClient::with_import()`](crate::generated::clients::SpecialWordsParametersClient::with_import())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithImportOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_in()`](crate::clients::SpecialWordsParametersClient::with_in())
+/// Options to be passed to [`SpecialWordsParametersClient::with_in()`](crate::generated::clients::SpecialWordsParametersClient::with_in())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithInOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_is()`](crate::clients::SpecialWordsParametersClient::with_is())
+/// Options to be passed to [`SpecialWordsParametersClient::with_is()`](crate::generated::clients::SpecialWordsParametersClient::with_is())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithIsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_lambda()`](crate::clients::SpecialWordsParametersClient::with_lambda())
+/// Options to be passed to [`SpecialWordsParametersClient::with_lambda()`](crate::generated::clients::SpecialWordsParametersClient::with_lambda())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithLambdaOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_not()`](crate::clients::SpecialWordsParametersClient::with_not())
+/// Options to be passed to [`SpecialWordsParametersClient::with_not()`](crate::generated::clients::SpecialWordsParametersClient::with_not())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithNotOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_or()`](crate::clients::SpecialWordsParametersClient::with_or())
+/// Options to be passed to [`SpecialWordsParametersClient::with_or()`](crate::generated::clients::SpecialWordsParametersClient::with_or())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithOrOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_pass()`](crate::clients::SpecialWordsParametersClient::with_pass())
+/// Options to be passed to [`SpecialWordsParametersClient::with_pass()`](crate::generated::clients::SpecialWordsParametersClient::with_pass())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithPassOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_raise()`](crate::clients::SpecialWordsParametersClient::with_raise())
+/// Options to be passed to [`SpecialWordsParametersClient::with_raise()`](crate::generated::clients::SpecialWordsParametersClient::with_raise())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithRaiseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_return()`](crate::clients::SpecialWordsParametersClient::with_return())
+/// Options to be passed to [`SpecialWordsParametersClient::with_return()`](crate::generated::clients::SpecialWordsParametersClient::with_return())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithReturnOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_try()`](crate::clients::SpecialWordsParametersClient::with_try())
+/// Options to be passed to [`SpecialWordsParametersClient::with_try()`](crate::generated::clients::SpecialWordsParametersClient::with_try())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithTryOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_while()`](crate::clients::SpecialWordsParametersClient::with_while())
+/// Options to be passed to [`SpecialWordsParametersClient::with_while()`](crate::generated::clients::SpecialWordsParametersClient::with_while())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithWhileOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_with()`](crate::clients::SpecialWordsParametersClient::with_with())
+/// Options to be passed to [`SpecialWordsParametersClient::with_with()`](crate::generated::clients::SpecialWordsParametersClient::with_with())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpecialWordsParametersClient::with_yield()`](crate::clients::SpecialWordsParametersClient::with_yield())
+/// Options to be passed to [`SpecialWordsParametersClient::with_yield()`](crate::generated::clients::SpecialWordsParametersClient::with_yield())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsParametersClientWithYieldOptions<'a> {
     /// Allows customization of the method call.

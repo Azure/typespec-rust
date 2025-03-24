@@ -13,7 +13,7 @@ pub struct JsonClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`JsonClient`](crate::JsonClient)
+/// Options used when creating a [`JsonClient`](JsonClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonClientOptions {
     pub client_options: ClientOptions,

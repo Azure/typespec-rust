@@ -18,7 +18,7 @@ pub struct DictionaryClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`DictionaryClient`](crate::DictionaryClient)
+/// Options used when creating a [`DictionaryClient`](DictionaryClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryClientOptions {
     pub client_options: ClientOptions,

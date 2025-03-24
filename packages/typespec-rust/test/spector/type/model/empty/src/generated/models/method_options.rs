@@ -6,21 +6,21 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`EmptyClient::get_empty()`](crate::EmptyClient::get_empty())
+/// Options to be passed to [`EmptyClient::get_empty()`](crate::generated::clients::EmptyClient::get_empty())
 #[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientGetEmptyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`EmptyClient::post_round_trip_empty()`](crate::EmptyClient::post_round_trip_empty())
+/// Options to be passed to [`EmptyClient::post_round_trip_empty()`](crate::generated::clients::EmptyClient::post_round_trip_empty())
 #[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientPostRoundTripEmptyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`EmptyClient::put_empty()`](crate::EmptyClient::put_empty())
+/// Options to be passed to [`EmptyClient::put_empty()`](crate::generated::clients::EmptyClient::put_empty())
 #[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientPutEmptyOptions<'a> {
     /// Allows customization of the method call.

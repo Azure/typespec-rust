@@ -15,7 +15,7 @@ pub struct ContentNegotiationClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`ContentNegotiationClient`](crate::ContentNegotiationClient)
+/// Options used when creating a [`ContentNegotiationClient`](ContentNegotiationClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ContentNegotiationClientOptions {
     pub client_options: ClientOptions,

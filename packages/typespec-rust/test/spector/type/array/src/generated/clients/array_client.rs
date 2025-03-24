@@ -19,7 +19,7 @@ pub struct ArrayClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`ArrayClient`](crate::ArrayClient)
+/// Options used when creating a [`ArrayClient`](ArrayClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayClientOptions {
     pub client_options: ClientOptions,

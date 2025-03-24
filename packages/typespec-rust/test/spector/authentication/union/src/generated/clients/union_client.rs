@@ -18,7 +18,7 @@ pub struct UnionClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`UnionClient`](crate::UnionClient)
+/// Options used when creating a [`UnionClient`](UnionClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct UnionClientOptions {
     pub client_options: ClientOptions,

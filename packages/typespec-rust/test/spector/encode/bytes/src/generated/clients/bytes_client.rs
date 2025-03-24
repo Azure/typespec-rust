@@ -16,7 +16,7 @@ pub struct BytesClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`BytesClient`](crate::BytesClient)
+/// Options used when creating a [`BytesClient`](BytesClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesClientOptions {
     pub client_options: ClientOptions,

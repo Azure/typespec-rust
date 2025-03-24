@@ -6,42 +6,42 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`TwoOperationGroupGroup1Client::four()`](crate::clients::TwoOperationGroupGroup1Client::four())
+/// Options to be passed to [`TwoOperationGroupGroup1Client::four()`](crate::generated::clients::TwoOperationGroupGroup1Client::four())
 #[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupGroup1ClientFourOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`TwoOperationGroupGroup1Client::one()`](crate::clients::TwoOperationGroupGroup1Client::one())
+/// Options to be passed to [`TwoOperationGroupGroup1Client::one()`](crate::generated::clients::TwoOperationGroupGroup1Client::one())
 #[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupGroup1ClientOneOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`TwoOperationGroupGroup1Client::three()`](crate::clients::TwoOperationGroupGroup1Client::three())
+/// Options to be passed to [`TwoOperationGroupGroup1Client::three()`](crate::generated::clients::TwoOperationGroupGroup1Client::three())
 #[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupGroup1ClientThreeOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`TwoOperationGroupGroup2Client::five()`](crate::clients::TwoOperationGroupGroup2Client::five())
+/// Options to be passed to [`TwoOperationGroupGroup2Client::five()`](crate::generated::clients::TwoOperationGroupGroup2Client::five())
 #[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupGroup2ClientFiveOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`TwoOperationGroupGroup2Client::six()`](crate::clients::TwoOperationGroupGroup2Client::six())
+/// Options to be passed to [`TwoOperationGroupGroup2Client::six()`](crate::generated::clients::TwoOperationGroupGroup2Client::six())
 #[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupGroup2ClientSixOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`TwoOperationGroupGroup2Client::two()`](crate::clients::TwoOperationGroupGroup2Client::two())
+/// Options to be passed to [`TwoOperationGroupGroup2Client::two()`](crate::generated::clients::TwoOperationGroupGroup2Client::two())
 #[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupGroup2ClientTwoOptions<'a> {
     /// Allows customization of the method call.

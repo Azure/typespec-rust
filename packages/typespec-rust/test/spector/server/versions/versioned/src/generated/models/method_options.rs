@@ -6,28 +6,28 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`VersionedClient::with_path_api_version()`](crate::VersionedClient::with_path_api_version())
+/// Options to be passed to [`VersionedClient::with_path_api_version()`](crate::generated::clients::VersionedClient::with_path_api_version())
 #[derive(Clone, Default, SafeDebug)]
 pub struct VersionedClientWithPathApiVersionOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`VersionedClient::with_query_api_version()`](crate::VersionedClient::with_query_api_version())
+/// Options to be passed to [`VersionedClient::with_query_api_version()`](crate::generated::clients::VersionedClient::with_query_api_version())
 #[derive(Clone, Default, SafeDebug)]
 pub struct VersionedClientWithQueryApiVersionOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`VersionedClient::with_query_old_api_version()`](crate::VersionedClient::with_query_old_api_version())
+/// Options to be passed to [`VersionedClient::with_query_old_api_version()`](crate::generated::clients::VersionedClient::with_query_old_api_version())
 #[derive(Clone, Default, SafeDebug)]
 pub struct VersionedClientWithQueryOldApiVersionOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`VersionedClient::without_api_version()`](crate::VersionedClient::without_api_version())
+/// Options to be passed to [`VersionedClient::without_api_version()`](crate::generated::clients::VersionedClient::without_api_version())
 #[derive(Clone, Default, SafeDebug)]
 pub struct VersionedClientWithoutApiVersionOptions<'a> {
     /// Allows customization of the method call.

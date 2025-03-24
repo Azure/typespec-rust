@@ -30,7 +30,7 @@ pub struct KeyVaultClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`KeyVaultClient`](crate::KeyVaultClient)
+/// Options used when creating a [`KeyVaultClient`](KeyVaultClient)
 #[derive(Clone, SafeDebug)]
 pub struct KeyVaultClientOptions {
     pub api_version: String,

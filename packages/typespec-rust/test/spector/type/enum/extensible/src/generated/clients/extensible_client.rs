@@ -12,7 +12,7 @@ pub struct ExtensibleClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`ExtensibleClient`](crate::ExtensibleClient)
+/// Options used when creating a [`ExtensibleClient`](ExtensibleClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleClientOptions {
     pub client_options: ClientOptions,

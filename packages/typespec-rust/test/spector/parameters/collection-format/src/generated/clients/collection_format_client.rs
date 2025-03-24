@@ -13,7 +13,7 @@ pub struct CollectionFormatClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`CollectionFormatClient`](crate::CollectionFormatClient)
+/// Options used when creating a [`CollectionFormatClient`](CollectionFormatClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatClientOptions {
     pub client_options: ClientOptions,

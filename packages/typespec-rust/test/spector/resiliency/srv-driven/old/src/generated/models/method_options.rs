@@ -6,14 +6,14 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`ResiliencyServiceDrivenClient::from_none()`](crate::ResiliencyServiceDrivenClient::from_none())
+/// Options to be passed to [`ResiliencyServiceDrivenClient::from_none()`](crate::generated::clients::ResiliencyServiceDrivenClient::from_none())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientFromNoneOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ResiliencyServiceDrivenClient::from_one_optional()`](crate::ResiliencyServiceDrivenClient::from_one_optional())
+/// Options to be passed to [`ResiliencyServiceDrivenClient::from_one_optional()`](crate::generated::clients::ResiliencyServiceDrivenClient::from_one_optional())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientFromOneOptionalOptions<'a> {
     /// Allows customization of the method call.
@@ -23,7 +23,7 @@ pub struct ResiliencyServiceDrivenClientFromOneOptionalOptions<'a> {
     pub parameter: Option<String>,
 }
 
-/// Options to be passed to [`ResiliencyServiceDrivenClient::from_one_required()`](crate::ResiliencyServiceDrivenClient::from_one_required())
+/// Options to be passed to [`ResiliencyServiceDrivenClient::from_one_required()`](crate::generated::clients::ResiliencyServiceDrivenClient::from_one_required())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientFromOneRequiredOptions<'a> {
     /// Allows customization of the method call.

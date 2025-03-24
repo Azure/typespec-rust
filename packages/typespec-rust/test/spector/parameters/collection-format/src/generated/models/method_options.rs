@@ -6,35 +6,35 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`CollectionFormatHeaderClient::csv()`](crate::clients::CollectionFormatHeaderClient::csv())
+/// Options to be passed to [`CollectionFormatHeaderClient::csv()`](crate::generated::clients::CollectionFormatHeaderClient::csv())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatHeaderClientCsvOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`CollectionFormatQueryClient::csv()`](crate::clients::CollectionFormatQueryClient::csv())
+/// Options to be passed to [`CollectionFormatQueryClient::csv()`](crate::generated::clients::CollectionFormatQueryClient::csv())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatQueryClientCsvOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`CollectionFormatQueryClient::multi()`](crate::clients::CollectionFormatQueryClient::multi())
+/// Options to be passed to [`CollectionFormatQueryClient::multi()`](crate::generated::clients::CollectionFormatQueryClient::multi())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatQueryClientMultiOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`CollectionFormatQueryClient::pipes()`](crate::clients::CollectionFormatQueryClient::pipes())
+/// Options to be passed to [`CollectionFormatQueryClient::pipes()`](crate::generated::clients::CollectionFormatQueryClient::pipes())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatQueryClientPipesOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`CollectionFormatQueryClient::ssv()`](crate::clients::CollectionFormatQueryClient::ssv())
+/// Options to be passed to [`CollectionFormatQueryClient::ssv()`](crate::generated::clients::CollectionFormatQueryClient::ssv())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatQueryClientSsvOptions<'a> {
     /// Allows customization of the method call.

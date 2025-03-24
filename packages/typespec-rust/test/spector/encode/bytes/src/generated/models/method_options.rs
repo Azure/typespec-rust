@@ -6,154 +6,154 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`BytesHeaderClient::base64()`](crate::clients::BytesHeaderClient::base64())
+/// Options to be passed to [`BytesHeaderClient::base64()`](crate::generated::clients::BytesHeaderClient::base64())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesHeaderClientBase64Options<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesHeaderClient::base64_url()`](crate::clients::BytesHeaderClient::base64_url())
+/// Options to be passed to [`BytesHeaderClient::base64_url()`](crate::generated::clients::BytesHeaderClient::base64_url())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesHeaderClientBase64UrlOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesHeaderClient::base64_url_array()`](crate::clients::BytesHeaderClient::base64_url_array())
+/// Options to be passed to [`BytesHeaderClient::base64_url_array()`](crate::generated::clients::BytesHeaderClient::base64_url_array())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesHeaderClientBase64UrlArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesHeaderClient::default()`](crate::clients::BytesHeaderClient::default())
+/// Options to be passed to [`BytesHeaderClient::default()`](crate::generated::clients::BytesHeaderClient::default())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesHeaderClientDefaultOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesPropertyClient::base64()`](crate::clients::BytesPropertyClient::base64())
+/// Options to be passed to [`BytesPropertyClient::base64()`](crate::generated::clients::BytesPropertyClient::base64())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesPropertyClientBase64Options<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesPropertyClient::base64_url()`](crate::clients::BytesPropertyClient::base64_url())
+/// Options to be passed to [`BytesPropertyClient::base64_url()`](crate::generated::clients::BytesPropertyClient::base64_url())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesPropertyClientBase64UrlOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesPropertyClient::base64_url_array()`](crate::clients::BytesPropertyClient::base64_url_array())
+/// Options to be passed to [`BytesPropertyClient::base64_url_array()`](crate::generated::clients::BytesPropertyClient::base64_url_array())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesPropertyClientBase64UrlArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesPropertyClient::default()`](crate::clients::BytesPropertyClient::default())
+/// Options to be passed to [`BytesPropertyClient::default()`](crate::generated::clients::BytesPropertyClient::default())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesPropertyClientDefaultOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesQueryClient::base64()`](crate::clients::BytesQueryClient::base64())
+/// Options to be passed to [`BytesQueryClient::base64()`](crate::generated::clients::BytesQueryClient::base64())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesQueryClientBase64Options<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesQueryClient::base64_url()`](crate::clients::BytesQueryClient::base64_url())
+/// Options to be passed to [`BytesQueryClient::base64_url()`](crate::generated::clients::BytesQueryClient::base64_url())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesQueryClientBase64UrlOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesQueryClient::base64_url_array()`](crate::clients::BytesQueryClient::base64_url_array())
+/// Options to be passed to [`BytesQueryClient::base64_url_array()`](crate::generated::clients::BytesQueryClient::base64_url_array())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesQueryClientBase64UrlArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesQueryClient::default()`](crate::clients::BytesQueryClient::default())
+/// Options to be passed to [`BytesQueryClient::default()`](crate::generated::clients::BytesQueryClient::default())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesQueryClientDefaultOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesRequestBodyClient::base64()`](crate::clients::BytesRequestBodyClient::base64())
+/// Options to be passed to [`BytesRequestBodyClient::base64()`](crate::generated::clients::BytesRequestBodyClient::base64())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesRequestBodyClientBase64Options<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesRequestBodyClient::base64_url()`](crate::clients::BytesRequestBodyClient::base64_url())
+/// Options to be passed to [`BytesRequestBodyClient::base64_url()`](crate::generated::clients::BytesRequestBodyClient::base64_url())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesRequestBodyClientBase64UrlOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesRequestBodyClient::custom_content_type()`](crate::clients::BytesRequestBodyClient::custom_content_type())
+/// Options to be passed to [`BytesRequestBodyClient::custom_content_type()`](crate::generated::clients::BytesRequestBodyClient::custom_content_type())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesRequestBodyClientCustomContentTypeOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesRequestBodyClient::default()`](crate::clients::BytesRequestBodyClient::default())
+/// Options to be passed to [`BytesRequestBodyClient::default()`](crate::generated::clients::BytesRequestBodyClient::default())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesRequestBodyClientDefaultOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesRequestBodyClient::octet_stream()`](crate::clients::BytesRequestBodyClient::octet_stream())
+/// Options to be passed to [`BytesRequestBodyClient::octet_stream()`](crate::generated::clients::BytesRequestBodyClient::octet_stream())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesRequestBodyClientOctetStreamOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesResponseBodyClient::base64()`](crate::clients::BytesResponseBodyClient::base64())
+/// Options to be passed to [`BytesResponseBodyClient::base64()`](crate::generated::clients::BytesResponseBodyClient::base64())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesResponseBodyClientBase64Options<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesResponseBodyClient::base64_url()`](crate::clients::BytesResponseBodyClient::base64_url())
+/// Options to be passed to [`BytesResponseBodyClient::base64_url()`](crate::generated::clients::BytesResponseBodyClient::base64_url())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesResponseBodyClientBase64UrlOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesResponseBodyClient::custom_content_type()`](crate::clients::BytesResponseBodyClient::custom_content_type())
+/// Options to be passed to [`BytesResponseBodyClient::custom_content_type()`](crate::generated::clients::BytesResponseBodyClient::custom_content_type())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesResponseBodyClientCustomContentTypeOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesResponseBodyClient::default()`](crate::clients::BytesResponseBodyClient::default())
+/// Options to be passed to [`BytesResponseBodyClient::default()`](crate::generated::clients::BytesResponseBodyClient::default())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesResponseBodyClientDefaultOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BytesResponseBodyClient::octet_stream()`](crate::clients::BytesResponseBodyClient::octet_stream())
+/// Options to be passed to [`BytesResponseBodyClient::octet_stream()`](crate::generated::clients::BytesResponseBodyClient::octet_stream())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesResponseBodyClientOctetStreamOptions<'a> {
     /// Allows customization of the method call.

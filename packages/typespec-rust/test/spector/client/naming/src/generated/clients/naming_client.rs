@@ -22,7 +22,7 @@ pub struct NamingClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`NamingClient`](crate::NamingClient)
+/// Options used when creating a [`NamingClient`](NamingClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientOptions {
     pub client_options: ClientOptions,

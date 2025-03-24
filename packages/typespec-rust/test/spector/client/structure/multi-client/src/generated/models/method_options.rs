@@ -6,42 +6,42 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`ClientAClient::renamed_five()`](crate::ClientAClient::renamed_five())
+/// Options to be passed to [`ClientAClient::renamed_five()`](crate::generated::clients::ClientAClient::renamed_five())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientAClientRenamedFiveOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ClientAClient::renamed_one()`](crate::ClientAClient::renamed_one())
+/// Options to be passed to [`ClientAClient::renamed_one()`](crate::generated::clients::ClientAClient::renamed_one())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientAClientRenamedOneOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ClientAClient::renamed_three()`](crate::ClientAClient::renamed_three())
+/// Options to be passed to [`ClientAClient::renamed_three()`](crate::generated::clients::ClientAClient::renamed_three())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientAClientRenamedThreeOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ClientBClient::renamed_four()`](crate::ClientBClient::renamed_four())
+/// Options to be passed to [`ClientBClient::renamed_four()`](crate::generated::clients::ClientBClient::renamed_four())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientBClientRenamedFourOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ClientBClient::renamed_six()`](crate::ClientBClient::renamed_six())
+/// Options to be passed to [`ClientBClient::renamed_six()`](crate::generated::clients::ClientBClient::renamed_six())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientBClientRenamedSixOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ClientBClient::renamed_two()`](crate::ClientBClient::renamed_two())
+/// Options to be passed to [`ClientBClient::renamed_two()`](crate::generated::clients::ClientBClient::renamed_two())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientBClientRenamedTwoOptions<'a> {
     /// Allows customization of the method call.

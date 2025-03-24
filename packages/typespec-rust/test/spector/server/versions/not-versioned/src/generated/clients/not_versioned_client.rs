@@ -16,7 +16,7 @@ pub struct NotVersionedClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`NotVersionedClient`](crate::NotVersionedClient)
+/// Options used when creating a [`NotVersionedClient`](NotVersionedClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct NotVersionedClientOptions {
     pub client_options: ClientOptions,

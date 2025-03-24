@@ -18,7 +18,7 @@ pub struct UsageClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`UsageClient`](crate::UsageClient)
+/// Options used when creating a [`UsageClient`](UsageClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageClientOptions {
     pub client_options: ClientOptions,

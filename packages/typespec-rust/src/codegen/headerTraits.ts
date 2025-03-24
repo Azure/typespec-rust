@@ -97,7 +97,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
 
     traits.push({
       name: traitName,
-      docs: `Provides access to typed response headers for [\`${client.name}::${method.name}()\`](crate::clients::${client.name}::${method.name}())`,
+      docs: `Provides access to typed response headers for [\`${client.name}::${method.name}()\`](crate::generated::clients::${client.name}::${method.name}())`,
       headers: [...method.responseHeaders], // make a copy of the headers array
       implFor: method.returns.type,
     })

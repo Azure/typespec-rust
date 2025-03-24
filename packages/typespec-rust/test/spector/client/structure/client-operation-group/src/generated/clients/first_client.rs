@@ -13,7 +13,7 @@ pub struct FirstClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`FirstClient`](crate::FirstClient)
+/// Options used when creating a [`FirstClient`](FirstClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct FirstClientOptions {
     pub client_options: ClientOptions,

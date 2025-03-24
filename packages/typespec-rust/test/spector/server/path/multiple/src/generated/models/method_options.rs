@@ -6,14 +6,14 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`MultipleClient::no_operation_params()`](crate::MultipleClient::no_operation_params())
+/// Options to be passed to [`MultipleClient::no_operation_params()`](crate::generated::clients::MultipleClient::no_operation_params())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MultipleClientNoOperationParamsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`MultipleClient::with_operation_path_param()`](crate::MultipleClient::with_operation_path_param())
+/// Options to be passed to [`MultipleClient::with_operation_path_param()`](crate::generated::clients::MultipleClient::with_operation_path_param())
 #[derive(Clone, Default, SafeDebug)]
 pub struct MultipleClientWithOperationPathParamOptions<'a> {
     /// Allows customization of the method call.

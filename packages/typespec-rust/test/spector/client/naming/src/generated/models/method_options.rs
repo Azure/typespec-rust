@@ -6,77 +6,77 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`ClientModelClient::client()`](crate::clients::ClientModelClient::client())
+/// Options to be passed to [`ClientModelClient::client()`](crate::generated::clients::ClientModelClient::client())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientModelClientClientOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ClientModelClient::language()`](crate::clients::ClientModelClient::language())
+/// Options to be passed to [`ClientModelClient::language()`](crate::generated::clients::ClientModelClient::language())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientModelClientLanguageOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`NamingClient::client()`](crate::NamingClient::client())
+/// Options to be passed to [`NamingClient::client()`](crate::generated::clients::NamingClient::client())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientClientOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`NamingClient::client_name()`](crate::NamingClient::client_name())
+/// Options to be passed to [`NamingClient::client_name()`](crate::generated::clients::NamingClient::client_name())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientClientNameOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`NamingClient::compatible_with_encoded_name()`](crate::NamingClient::compatible_with_encoded_name())
+/// Options to be passed to [`NamingClient::compatible_with_encoded_name()`](crate::generated::clients::NamingClient::compatible_with_encoded_name())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientCompatibleWithEncodedNameOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`NamingClient::language()`](crate::NamingClient::language())
+/// Options to be passed to [`NamingClient::language()`](crate::generated::clients::NamingClient::language())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientLanguageOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`NamingClient::parameter()`](crate::NamingClient::parameter())
+/// Options to be passed to [`NamingClient::parameter()`](crate::generated::clients::NamingClient::parameter())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientParameterOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`NamingClient::request()`](crate::NamingClient::request())
+/// Options to be passed to [`NamingClient::request()`](crate::generated::clients::NamingClient::request())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientRequestOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`NamingClient::response()`](crate::NamingClient::response())
+/// Options to be passed to [`NamingClient::response()`](crate::generated::clients::NamingClient::response())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientResponseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`NamingUnionEnumClient::union_enum_member_name()`](crate::clients::NamingUnionEnumClient::union_enum_member_name())
+/// Options to be passed to [`NamingUnionEnumClient::union_enum_member_name()`](crate::generated::clients::NamingUnionEnumClient::union_enum_member_name())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingUnionEnumClientUnionEnumMemberNameOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`NamingUnionEnumClient::union_enum_name()`](crate::clients::NamingUnionEnumClient::union_enum_name())
+/// Options to be passed to [`NamingUnionEnumClient::union_enum_name()`](crate::generated::clients::NamingUnionEnumClient::union_enum_name())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingUnionEnumClientUnionEnumNameOptions<'a> {
     /// Allows customization of the method call.

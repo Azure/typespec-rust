@@ -6,7 +6,7 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`NotDefinedClient::valid()`](crate::NotDefinedClient::valid())
+/// Options to be passed to [`NotDefinedClient::valid()`](crate::generated::clients::NotDefinedClient::valid())
 #[derive(Clone, Default, SafeDebug)]
 pub struct NotDefinedClientValidOptions<'a> {
     /// Allows customization of the method call.

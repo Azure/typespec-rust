@@ -20,7 +20,7 @@ pub struct XmlClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`XmlClient`](crate::XmlClient)
+/// Options used when creating a [`XmlClient`](XmlClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlClientOptions {
     pub client_options: ClientOptions,

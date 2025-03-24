@@ -6,28 +6,28 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`ExtensibleStringClient::get_known_value()`](crate::clients::ExtensibleStringClient::get_known_value())
+/// Options to be passed to [`ExtensibleStringClient::get_known_value()`](crate::generated::clients::ExtensibleStringClient::get_known_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleStringClientGetKnownValueOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ExtensibleStringClient::get_unknown_value()`](crate::clients::ExtensibleStringClient::get_unknown_value())
+/// Options to be passed to [`ExtensibleStringClient::get_unknown_value()`](crate::generated::clients::ExtensibleStringClient::get_unknown_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleStringClientGetUnknownValueOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ExtensibleStringClient::put_known_value()`](crate::clients::ExtensibleStringClient::put_known_value())
+/// Options to be passed to [`ExtensibleStringClient::put_known_value()`](crate::generated::clients::ExtensibleStringClient::put_known_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleStringClientPutKnownValueOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ExtensibleStringClient::put_unknown_value()`](crate::clients::ExtensibleStringClient::put_unknown_value())
+/// Options to be passed to [`ExtensibleStringClient::put_unknown_value()`](crate::generated::clients::ExtensibleStringClient::put_unknown_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleStringClientPutUnknownValueOptions<'a> {
     /// Allows customization of the method call.

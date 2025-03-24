@@ -568,8 +568,7 @@ export class Adapter {
       clientOptionsField.defaultValue = 'ClientOptions::default()';
       clientOptionsStruct.fields.push(clientOptionsField);
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
-      // NOTE: must call buildClientDocPath() after setting rustClient.constructable
-      clientOptionsStruct.docs.summary = `Options used when creating a [\`${rustClient.name}\`](${buildClientDocPath(rustClient)})`;
+      clientOptionsStruct.docs.summary = `Options used when creating a [\`${rustClient.name}\`](${rustClient.name})`;
 
       // NOTE: per tcgc convention, if there is no param of kind credential
       // it means that the client doesn't require any kind of authentication.
@@ -886,7 +885,7 @@ export class Adapter {
     const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName)}Options`, 'pub');
     methodOptionsStruct.lifetime = optionsLifetime;
-    methodOptionsStruct.docs.summary = `Options to be passed to [\`${rustClient.name}::${methodName}()\`](${buildClientDocPath(rustClient)}::${methodName}())`;
+    methodOptionsStruct.docs.summary = `Options to be passed to [\`${rustClient.name}::${methodName}()\`](crate::generated::clients::${rustClient.name}::${methodName}())`;
 
     const clientMethodOptions = new rust.ExternalType(this.crate, 'azure_core', 'ClientMethodOptions');
     clientMethodOptions.lifetime = optionsLifetime;
@@ -1079,7 +1078,7 @@ export class Adapter {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
       const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name)}Result`);
-      markerType.docs.summary = `Contains results for [\`${rustClient.name}::${methodName}()\`](${buildClientDocPath(rustClient)}::${methodName}())`;
+      markerType.docs.summary = `Contains results for [\`${rustClient.name}::${methodName}()\`](crate::generated::clients::${rustClient.name}::${methodName}())`;
       returnType = new rust.Response(this.crate, markerType);
       this.crate.models.push(markerType);
     } else if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
@@ -1404,14 +1403,4 @@ function getXMLKind(decorators: Array<tcgc.DecoratorInfo>, field: rust.ModelFiel
   }
 
   return undefined;
-}
-
-/**
- * contructs the fully qualified path to a client to be used in doc comments
- * 
- * @param client the client to build the path to
- * @returns the fully qualified client path (e.g. crate::Client, crate::clients::SubClient)
- */
-function buildClientDocPath(client: rust.Client): string {
-  return `crate::${client.constructable ? '' : 'clients::'}${client.name}`;
 }

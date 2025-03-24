@@ -30,7 +30,7 @@ pub struct PageBlobClient {
     pub(crate) version: String,
 }
 
-/// Options used when creating a [`PageBlobClient`](crate::PageBlobClient)
+/// Options used when creating a [`PageBlobClient`](PageBlobClient)
 #[derive(Clone, SafeDebug)]
 pub struct PageBlobClientOptions {
     pub client_options: ClientOptions,

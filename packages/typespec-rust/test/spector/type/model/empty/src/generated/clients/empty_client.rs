@@ -18,7 +18,7 @@ pub struct EmptyClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`EmptyClient`](crate::EmptyClient)
+/// Options used when creating a [`EmptyClient`](EmptyClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientOptions {
     pub client_options: ClientOptions,

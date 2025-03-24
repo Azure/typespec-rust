@@ -18,7 +18,7 @@ pub struct JsonMergePatchClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`JsonMergePatchClient`](crate::JsonMergePatchClient)
+/// Options used when creating a [`JsonMergePatchClient`](JsonMergePatchClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientOptions {
     pub client_options: ClientOptions,

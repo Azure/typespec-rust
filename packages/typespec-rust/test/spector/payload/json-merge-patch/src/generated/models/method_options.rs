@@ -7,14 +7,14 @@ use super::ResourcePatch;
 use azure_core::{ClientMethodOptions, RequestContent};
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`JsonMergePatchClient::create_resource()`](crate::JsonMergePatchClient::create_resource())
+/// Options to be passed to [`JsonMergePatchClient::create_resource()`](crate::generated::clients::JsonMergePatchClient::create_resource())
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientCreateResourceOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`JsonMergePatchClient::update_optional_resource()`](crate::JsonMergePatchClient::update_optional_resource())
+/// Options to be passed to [`JsonMergePatchClient::update_optional_resource()`](crate::generated::clients::JsonMergePatchClient::update_optional_resource())
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientUpdateOptionalResourceOptions<'a> {
     pub body: Option<RequestContent<ResourcePatch>>,
@@ -23,7 +23,7 @@ pub struct JsonMergePatchClientUpdateOptionalResourceOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`JsonMergePatchClient::update_resource()`](crate::JsonMergePatchClient::update_resource())
+/// Options to be passed to [`JsonMergePatchClient::update_resource()`](crate::generated::clients::JsonMergePatchClient::update_resource())
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientUpdateResourceOptions<'a> {
     /// Allows customization of the method call.

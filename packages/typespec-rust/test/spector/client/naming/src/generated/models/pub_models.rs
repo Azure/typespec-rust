@@ -34,7 +34,7 @@ pub struct LanguageClientNameModel {
     pub rust_name: Option<bool>,
 }
 
-/// Contains results for [`NamingClient::response()`](crate::NamingClient::response())
+/// Contains results for [`NamingClient::response()`](crate::generated::clients::NamingClient::response())
 #[derive(SafeDebug)]
 pub struct NamingClientResponseResult;
 

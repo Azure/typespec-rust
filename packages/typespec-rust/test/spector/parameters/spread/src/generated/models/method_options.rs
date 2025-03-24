@@ -6,35 +6,35 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`SpreadAliasClient::spread_as_request_body()`](crate::clients::SpreadAliasClient::spread_as_request_body())
+/// Options to be passed to [`SpreadAliasClient::spread_as_request_body()`](crate::generated::clients::SpreadAliasClient::spread_as_request_body())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadAliasClientSpreadAsRequestBodyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpreadAliasClient::spread_as_request_parameter()`](crate::clients::SpreadAliasClient::spread_as_request_parameter())
+/// Options to be passed to [`SpreadAliasClient::spread_as_request_parameter()`](crate::generated::clients::SpreadAliasClient::spread_as_request_parameter())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadAliasClientSpreadAsRequestParameterOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpreadAliasClient::spread_parameter_with_inner_alias()`](crate::clients::SpreadAliasClient::spread_parameter_with_inner_alias())
+/// Options to be passed to [`SpreadAliasClient::spread_parameter_with_inner_alias()`](crate::generated::clients::SpreadAliasClient::spread_parameter_with_inner_alias())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadAliasClientSpreadParameterWithInnerAliasOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpreadAliasClient::spread_parameter_with_inner_model()`](crate::clients::SpreadAliasClient::spread_parameter_with_inner_model())
+/// Options to be passed to [`SpreadAliasClient::spread_parameter_with_inner_model()`](crate::generated::clients::SpreadAliasClient::spread_parameter_with_inner_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadAliasClientSpreadParameterWithInnerModelOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpreadAliasClient::spread_with_multiple_parameters()`](crate::clients::SpreadAliasClient::spread_with_multiple_parameters())
+/// Options to be passed to [`SpreadAliasClient::spread_with_multiple_parameters()`](crate::generated::clients::SpreadAliasClient::spread_with_multiple_parameters())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadAliasClientSpreadWithMultipleParametersOptions<'a> {
     /// Allows customization of the method call.
@@ -47,35 +47,35 @@ pub struct SpreadAliasClientSpreadWithMultipleParametersOptions<'a> {
     pub optional_string_list: Vec<String>,
 }
 
-/// Options to be passed to [`SpreadModelClient::spread_as_request_body()`](crate::clients::SpreadModelClient::spread_as_request_body())
+/// Options to be passed to [`SpreadModelClient::spread_as_request_body()`](crate::generated::clients::SpreadModelClient::spread_as_request_body())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadAsRequestBodyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpreadModelClient::spread_composite_request()`](crate::clients::SpreadModelClient::spread_composite_request())
+/// Options to be passed to [`SpreadModelClient::spread_composite_request()`](crate::generated::clients::SpreadModelClient::spread_composite_request())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadCompositeRequestOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpreadModelClient::spread_composite_request_mix()`](crate::clients::SpreadModelClient::spread_composite_request_mix())
+/// Options to be passed to [`SpreadModelClient::spread_composite_request_mix()`](crate::generated::clients::SpreadModelClient::spread_composite_request_mix())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadCompositeRequestMixOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpreadModelClient::spread_composite_request_only_with_body()`](crate::clients::SpreadModelClient::spread_composite_request_only_with_body())
+/// Options to be passed to [`SpreadModelClient::spread_composite_request_only_with_body()`](crate::generated::clients::SpreadModelClient::spread_composite_request_only_with_body())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadCompositeRequestOnlyWithBodyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`SpreadModelClient::spread_composite_request_without_body()`](crate::clients::SpreadModelClient::spread_composite_request_without_body())
+/// Options to be passed to [`SpreadModelClient::spread_composite_request_without_body()`](crate::generated::clients::SpreadModelClient::spread_composite_request_without_body())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadModelClientSpreadCompositeRequestWithoutBodyOptions<'a> {
     /// Allows customization of the method call.

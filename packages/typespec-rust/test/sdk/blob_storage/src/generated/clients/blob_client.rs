@@ -39,7 +39,7 @@ pub struct BlobClient {
     pub(crate) version: String,
 }
 
-/// Options used when creating a [`BlobClient`](crate::BlobClient)
+/// Options used when creating a [`BlobClient`](BlobClient)
 #[derive(Clone, SafeDebug)]
 pub struct BlobClientOptions {
     pub client_options: ClientOptions,

@@ -6,28 +6,28 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`FirstClient::one()`](crate::FirstClient::one())
+/// Options to be passed to [`FirstClient::one()`](crate::generated::clients::FirstClient::one())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FirstClientOneOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`FirstGroup3Client::three()`](crate::clients::FirstGroup3Client::three())
+/// Options to be passed to [`FirstGroup3Client::three()`](crate::generated::clients::FirstGroup3Client::three())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FirstGroup3ClientThreeOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`FirstGroup3Client::two()`](crate::clients::FirstGroup3Client::two())
+/// Options to be passed to [`FirstGroup3Client::two()`](crate::generated::clients::FirstGroup3Client::two())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FirstGroup3ClientTwoOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`FirstGroup4Client::four()`](crate::clients::FirstGroup4Client::four())
+/// Options to be passed to [`FirstGroup4Client::four()`](crate::generated::clients::FirstGroup4Client::four())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FirstGroup4ClientFourOptions<'a> {
     /// Allows customization of the method call.

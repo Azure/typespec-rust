@@ -14,7 +14,7 @@ pub struct MultipleClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`MultipleClient`](crate::MultipleClient)
+/// Options used when creating a [`MultipleClient`](MultipleClient)
 #[derive(Clone, SafeDebug)]
 pub struct MultipleClientOptions {
     pub api_version: String,

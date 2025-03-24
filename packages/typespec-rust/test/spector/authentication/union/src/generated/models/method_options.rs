@@ -6,14 +6,14 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`UnionClient::valid_key()`](crate::UnionClient::valid_key())
+/// Options to be passed to [`UnionClient::valid_key()`](crate::generated::clients::UnionClient::valid_key())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UnionClientValidKeyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`UnionClient::valid_token()`](crate::UnionClient::valid_token())
+/// Options to be passed to [`UnionClient::valid_token()`](crate::generated::clients::UnionClient::valid_token())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UnionClientValidTokenOptions<'a> {
     /// Allows customization of the method call.

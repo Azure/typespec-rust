@@ -18,7 +18,7 @@ pub struct FlattenPropertyClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`FlattenPropertyClient`](crate::FlattenPropertyClient)
+/// Options used when creating a [`FlattenPropertyClient`](FlattenPropertyClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct FlattenPropertyClientOptions {
     pub client_options: ClientOptions,

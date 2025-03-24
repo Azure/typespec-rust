@@ -6,196 +6,196 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`ArrayBooleanValueClient::get()`](crate::clients::ArrayBooleanValueClient::get())
+/// Options to be passed to [`ArrayBooleanValueClient::get()`](crate::generated::clients::ArrayBooleanValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayBooleanValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayBooleanValueClient::put()`](crate::clients::ArrayBooleanValueClient::put())
+/// Options to be passed to [`ArrayBooleanValueClient::put()`](crate::generated::clients::ArrayBooleanValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayBooleanValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayDatetimeValueClient::get()`](crate::clients::ArrayDatetimeValueClient::get())
+/// Options to be passed to [`ArrayDatetimeValueClient::get()`](crate::generated::clients::ArrayDatetimeValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayDatetimeValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayDatetimeValueClient::put()`](crate::clients::ArrayDatetimeValueClient::put())
+/// Options to be passed to [`ArrayDatetimeValueClient::put()`](crate::generated::clients::ArrayDatetimeValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayDatetimeValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayDurationValueClient::get()`](crate::clients::ArrayDurationValueClient::get())
+/// Options to be passed to [`ArrayDurationValueClient::get()`](crate::generated::clients::ArrayDurationValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayDurationValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayDurationValueClient::put()`](crate::clients::ArrayDurationValueClient::put())
+/// Options to be passed to [`ArrayDurationValueClient::put()`](crate::generated::clients::ArrayDurationValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayDurationValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayFloat32ValueClient::get()`](crate::clients::ArrayFloat32ValueClient::get())
+/// Options to be passed to [`ArrayFloat32ValueClient::get()`](crate::generated::clients::ArrayFloat32ValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayFloat32ValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayFloat32ValueClient::put()`](crate::clients::ArrayFloat32ValueClient::put())
+/// Options to be passed to [`ArrayFloat32ValueClient::put()`](crate::generated::clients::ArrayFloat32ValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayFloat32ValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayInt32ValueClient::get()`](crate::clients::ArrayInt32ValueClient::get())
+/// Options to be passed to [`ArrayInt32ValueClient::get()`](crate::generated::clients::ArrayInt32ValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayInt32ValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayInt32ValueClient::put()`](crate::clients::ArrayInt32ValueClient::put())
+/// Options to be passed to [`ArrayInt32ValueClient::put()`](crate::generated::clients::ArrayInt32ValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayInt32ValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayInt64ValueClient::get()`](crate::clients::ArrayInt64ValueClient::get())
+/// Options to be passed to [`ArrayInt64ValueClient::get()`](crate::generated::clients::ArrayInt64ValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayInt64ValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayInt64ValueClient::put()`](crate::clients::ArrayInt64ValueClient::put())
+/// Options to be passed to [`ArrayInt64ValueClient::put()`](crate::generated::clients::ArrayInt64ValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayInt64ValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayModelValueClient::get()`](crate::clients::ArrayModelValueClient::get())
+/// Options to be passed to [`ArrayModelValueClient::get()`](crate::generated::clients::ArrayModelValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayModelValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayModelValueClient::put()`](crate::clients::ArrayModelValueClient::put())
+/// Options to be passed to [`ArrayModelValueClient::put()`](crate::generated::clients::ArrayModelValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayModelValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayNullableBooleanValueClient::get()`](crate::clients::ArrayNullableBooleanValueClient::get())
+/// Options to be passed to [`ArrayNullableBooleanValueClient::get()`](crate::generated::clients::ArrayNullableBooleanValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableBooleanValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayNullableBooleanValueClient::put()`](crate::clients::ArrayNullableBooleanValueClient::put())
+/// Options to be passed to [`ArrayNullableBooleanValueClient::put()`](crate::generated::clients::ArrayNullableBooleanValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableBooleanValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayNullableFloatValueClient::get()`](crate::clients::ArrayNullableFloatValueClient::get())
+/// Options to be passed to [`ArrayNullableFloatValueClient::get()`](crate::generated::clients::ArrayNullableFloatValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableFloatValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayNullableFloatValueClient::put()`](crate::clients::ArrayNullableFloatValueClient::put())
+/// Options to be passed to [`ArrayNullableFloatValueClient::put()`](crate::generated::clients::ArrayNullableFloatValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableFloatValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayNullableInt32ValueClient::get()`](crate::clients::ArrayNullableInt32ValueClient::get())
+/// Options to be passed to [`ArrayNullableInt32ValueClient::get()`](crate::generated::clients::ArrayNullableInt32ValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableInt32ValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayNullableInt32ValueClient::put()`](crate::clients::ArrayNullableInt32ValueClient::put())
+/// Options to be passed to [`ArrayNullableInt32ValueClient::put()`](crate::generated::clients::ArrayNullableInt32ValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableInt32ValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayNullableModelValueClient::get()`](crate::clients::ArrayNullableModelValueClient::get())
+/// Options to be passed to [`ArrayNullableModelValueClient::get()`](crate::generated::clients::ArrayNullableModelValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableModelValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayNullableModelValueClient::put()`](crate::clients::ArrayNullableModelValueClient::put())
+/// Options to be passed to [`ArrayNullableModelValueClient::put()`](crate::generated::clients::ArrayNullableModelValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableModelValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayNullableStringValueClient::get()`](crate::clients::ArrayNullableStringValueClient::get())
+/// Options to be passed to [`ArrayNullableStringValueClient::get()`](crate::generated::clients::ArrayNullableStringValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableStringValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayNullableStringValueClient::put()`](crate::clients::ArrayNullableStringValueClient::put())
+/// Options to be passed to [`ArrayNullableStringValueClient::put()`](crate::generated::clients::ArrayNullableStringValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayNullableStringValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayStringValueClient::get()`](crate::clients::ArrayStringValueClient::get())
+/// Options to be passed to [`ArrayStringValueClient::get()`](crate::generated::clients::ArrayStringValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayStringValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayStringValueClient::put()`](crate::clients::ArrayStringValueClient::put())
+/// Options to be passed to [`ArrayStringValueClient::put()`](crate::generated::clients::ArrayStringValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayStringValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayUnknownValueClient::get()`](crate::clients::ArrayUnknownValueClient::get())
+/// Options to be passed to [`ArrayUnknownValueClient::get()`](crate::generated::clients::ArrayUnknownValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayUnknownValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ArrayUnknownValueClient::put()`](crate::clients::ArrayUnknownValueClient::put())
+/// Options to be passed to [`ArrayUnknownValueClient::put()`](crate::generated::clients::ArrayUnknownValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayUnknownValueClientPutOptions<'a> {
     /// Allows customization of the method call.

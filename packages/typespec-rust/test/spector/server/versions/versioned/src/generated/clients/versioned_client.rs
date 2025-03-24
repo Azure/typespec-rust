@@ -17,7 +17,7 @@ pub struct VersionedClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`VersionedClient`](crate::VersionedClient)
+/// Options used when creating a [`VersionedClient`](VersionedClient)
 #[derive(Clone, SafeDebug)]
 pub struct VersionedClientOptions {
     pub api_version: String,

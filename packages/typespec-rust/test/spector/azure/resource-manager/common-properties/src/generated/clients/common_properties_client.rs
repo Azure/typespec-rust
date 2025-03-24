@@ -19,7 +19,7 @@ pub struct CommonPropertiesClient {
     pub(crate) subscription_id: String,
 }
 
-/// Options used when creating a [`CommonPropertiesClient`](crate::CommonPropertiesClient)
+/// Options used when creating a [`CommonPropertiesClient`](CommonPropertiesClient)
 #[derive(Clone, SafeDebug)]
 pub struct CommonPropertiesClientOptions {
     pub api_version: String,

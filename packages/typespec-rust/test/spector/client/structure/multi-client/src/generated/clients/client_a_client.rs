@@ -15,7 +15,7 @@ pub struct ClientAClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`ClientAClient`](crate::ClientAClient)
+/// Options used when creating a [`ClientAClient`](ClientAClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientAClientOptions {
     pub client_options: ClientOptions,

@@ -22,7 +22,7 @@ pub struct ServiceClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`ServiceClient`](crate::ServiceClient)
+/// Options used when creating a [`ServiceClient`](ServiceClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceClientOptions {
     pub client_options: ClientOptions,

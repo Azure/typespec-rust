@@ -1,5 +1,11 @@
 # Release History
 
+## 0.12.1 (unreleased)
+
+### Other Changes
+
+* Use relative paths to types in doc links.
+
 ## 0.12.0 (2025-03-20)
 
 ### Breaking Changes

@@ -6,154 +6,154 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`DictionaryBooleanValueClient::get()`](crate::clients::DictionaryBooleanValueClient::get())
+/// Options to be passed to [`DictionaryBooleanValueClient::get()`](crate::generated::clients::DictionaryBooleanValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryBooleanValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryBooleanValueClient::put()`](crate::clients::DictionaryBooleanValueClient::put())
+/// Options to be passed to [`DictionaryBooleanValueClient::put()`](crate::generated::clients::DictionaryBooleanValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryBooleanValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryDatetimeValueClient::get()`](crate::clients::DictionaryDatetimeValueClient::get())
+/// Options to be passed to [`DictionaryDatetimeValueClient::get()`](crate::generated::clients::DictionaryDatetimeValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryDatetimeValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryDatetimeValueClient::put()`](crate::clients::DictionaryDatetimeValueClient::put())
+/// Options to be passed to [`DictionaryDatetimeValueClient::put()`](crate::generated::clients::DictionaryDatetimeValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryDatetimeValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryDurationValueClient::get()`](crate::clients::DictionaryDurationValueClient::get())
+/// Options to be passed to [`DictionaryDurationValueClient::get()`](crate::generated::clients::DictionaryDurationValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryDurationValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryDurationValueClient::put()`](crate::clients::DictionaryDurationValueClient::put())
+/// Options to be passed to [`DictionaryDurationValueClient::put()`](crate::generated::clients::DictionaryDurationValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryDurationValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryFloat32ValueClient::get()`](crate::clients::DictionaryFloat32ValueClient::get())
+/// Options to be passed to [`DictionaryFloat32ValueClient::get()`](crate::generated::clients::DictionaryFloat32ValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryFloat32ValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryFloat32ValueClient::put()`](crate::clients::DictionaryFloat32ValueClient::put())
+/// Options to be passed to [`DictionaryFloat32ValueClient::put()`](crate::generated::clients::DictionaryFloat32ValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryFloat32ValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryInt32ValueClient::get()`](crate::clients::DictionaryInt32ValueClient::get())
+/// Options to be passed to [`DictionaryInt32ValueClient::get()`](crate::generated::clients::DictionaryInt32ValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryInt32ValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryInt32ValueClient::put()`](crate::clients::DictionaryInt32ValueClient::put())
+/// Options to be passed to [`DictionaryInt32ValueClient::put()`](crate::generated::clients::DictionaryInt32ValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryInt32ValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryInt64ValueClient::get()`](crate::clients::DictionaryInt64ValueClient::get())
+/// Options to be passed to [`DictionaryInt64ValueClient::get()`](crate::generated::clients::DictionaryInt64ValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryInt64ValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryInt64ValueClient::put()`](crate::clients::DictionaryInt64ValueClient::put())
+/// Options to be passed to [`DictionaryInt64ValueClient::put()`](crate::generated::clients::DictionaryInt64ValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryInt64ValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryModelValueClient::get()`](crate::clients::DictionaryModelValueClient::get())
+/// Options to be passed to [`DictionaryModelValueClient::get()`](crate::generated::clients::DictionaryModelValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryModelValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryModelValueClient::put()`](crate::clients::DictionaryModelValueClient::put())
+/// Options to be passed to [`DictionaryModelValueClient::put()`](crate::generated::clients::DictionaryModelValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryModelValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryNullableFloatValueClient::get()`](crate::clients::DictionaryNullableFloatValueClient::get())
+/// Options to be passed to [`DictionaryNullableFloatValueClient::get()`](crate::generated::clients::DictionaryNullableFloatValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryNullableFloatValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryNullableFloatValueClient::put()`](crate::clients::DictionaryNullableFloatValueClient::put())
+/// Options to be passed to [`DictionaryNullableFloatValueClient::put()`](crate::generated::clients::DictionaryNullableFloatValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryNullableFloatValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryRecursiveModelValueClient::get()`](crate::clients::DictionaryRecursiveModelValueClient::get())
+/// Options to be passed to [`DictionaryRecursiveModelValueClient::get()`](crate::generated::clients::DictionaryRecursiveModelValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryRecursiveModelValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryRecursiveModelValueClient::put()`](crate::clients::DictionaryRecursiveModelValueClient::put())
+/// Options to be passed to [`DictionaryRecursiveModelValueClient::put()`](crate::generated::clients::DictionaryRecursiveModelValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryRecursiveModelValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryStringValueClient::get()`](crate::clients::DictionaryStringValueClient::get())
+/// Options to be passed to [`DictionaryStringValueClient::get()`](crate::generated::clients::DictionaryStringValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryStringValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryStringValueClient::put()`](crate::clients::DictionaryStringValueClient::put())
+/// Options to be passed to [`DictionaryStringValueClient::put()`](crate::generated::clients::DictionaryStringValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryStringValueClientPutOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryUnknownValueClient::get()`](crate::clients::DictionaryUnknownValueClient::get())
+/// Options to be passed to [`DictionaryUnknownValueClient::get()`](crate::generated::clients::DictionaryUnknownValueClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryUnknownValueClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`DictionaryUnknownValueClient::put()`](crate::clients::DictionaryUnknownValueClient::put())
+/// Options to be passed to [`DictionaryUnknownValueClient::put()`](crate::generated::clients::DictionaryUnknownValueClient::put())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryUnknownValueClientPutOptions<'a> {
     /// Allows customization of the method call.

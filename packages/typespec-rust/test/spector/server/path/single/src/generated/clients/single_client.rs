@@ -13,7 +13,7 @@ pub struct SingleClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`SingleClient`](crate::SingleClient)
+/// Options used when creating a [`SingleClient`](SingleClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct SingleClientOptions {
     pub client_options: ClientOptions,

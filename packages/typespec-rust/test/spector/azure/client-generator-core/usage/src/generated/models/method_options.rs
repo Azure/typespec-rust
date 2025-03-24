@@ -6,28 +6,28 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`UsageModelInOperationClient::input_to_input_output()`](crate::clients::UsageModelInOperationClient::input_to_input_output())
+/// Options to be passed to [`UsageModelInOperationClient::input_to_input_output()`](crate::generated::clients::UsageModelInOperationClient::input_to_input_output())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageModelInOperationClientInputToInputOutputOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`UsageModelInOperationClient::model_in_read_only_property()`](crate::clients::UsageModelInOperationClient::model_in_read_only_property())
+/// Options to be passed to [`UsageModelInOperationClient::model_in_read_only_property()`](crate::generated::clients::UsageModelInOperationClient::model_in_read_only_property())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageModelInOperationClientModelInReadOnlyPropertyOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`UsageModelInOperationClient::orphan_model_serializable()`](crate::clients::UsageModelInOperationClient::orphan_model_serializable())
+/// Options to be passed to [`UsageModelInOperationClient::orphan_model_serializable()`](crate::generated::clients::UsageModelInOperationClient::orphan_model_serializable())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageModelInOperationClientOrphanModelSerializableOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`UsageModelInOperationClient::output_to_input_output()`](crate::clients::UsageModelInOperationClient::output_to_input_output())
+/// Options to be passed to [`UsageModelInOperationClient::output_to_input_output()`](crate::generated::clients::UsageModelInOperationClient::output_to_input_output())
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageModelInOperationClientOutputToInputOutputOptions<'a> {
     /// Allows customization of the method call.

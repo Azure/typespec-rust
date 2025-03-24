@@ -13,7 +13,7 @@ pub struct SpreadClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`SpreadClient`](crate::SpreadClient)
+/// Options used when creating a [`SpreadClient`](SpreadClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadClientOptions {
     pub client_options: ClientOptions,

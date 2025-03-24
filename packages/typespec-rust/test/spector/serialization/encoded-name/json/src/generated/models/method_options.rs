@@ -6,14 +6,14 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`JsonPropertyClient::get()`](crate::clients::JsonPropertyClient::get())
+/// Options to be passed to [`JsonPropertyClient::get()`](crate::generated::clients::JsonPropertyClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonPropertyClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`JsonPropertyClient::send()`](crate::clients::JsonPropertyClient::send())
+/// Options to be passed to [`JsonPropertyClient::send()`](crate::generated::clients::JsonPropertyClient::send())
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonPropertyClientSendOptions<'a> {
     /// Allows customization of the method call.

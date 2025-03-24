@@ -18,7 +18,7 @@ pub struct OAuth2Client {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`OAuth2Client`](crate::OAuth2Client)
+/// Options used when creating a [`OAuth2Client`](OAuth2Client)
 #[derive(Clone, Default, SafeDebug)]
 pub struct OAuth2ClientOptions {
     pub client_options: ClientOptions,

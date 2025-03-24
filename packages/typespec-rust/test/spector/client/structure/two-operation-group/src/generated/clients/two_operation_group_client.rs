@@ -13,7 +13,7 @@ pub struct TwoOperationGroupClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`TwoOperationGroupClient`](crate::TwoOperationGroupClient)
+/// Options used when creating a [`TwoOperationGroupClient`](TwoOperationGroupClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupClientOptions {
     pub client_options: ClientOptions,

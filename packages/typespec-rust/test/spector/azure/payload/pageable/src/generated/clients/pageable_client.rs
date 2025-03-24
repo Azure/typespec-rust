@@ -15,7 +15,7 @@ pub struct PageableClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`PageableClient`](crate::PageableClient)
+/// Options used when creating a [`PageableClient`](PageableClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageableClientOptions {
     pub client_options: ClientOptions,

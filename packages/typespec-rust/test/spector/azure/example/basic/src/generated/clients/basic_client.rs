@@ -14,7 +14,7 @@ pub struct BasicClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`BasicClient`](crate::BasicClient)
+/// Options used when creating a [`BasicClient`](BasicClient)
 #[derive(Clone, SafeDebug)]
 pub struct BasicClientOptions {
     pub api_version: String,

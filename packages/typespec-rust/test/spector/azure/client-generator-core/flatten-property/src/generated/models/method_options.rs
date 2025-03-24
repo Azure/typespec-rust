@@ -6,14 +6,14 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`FlattenPropertyClient::put_flatten_model()`](crate::FlattenPropertyClient::put_flatten_model())
+/// Options to be passed to [`FlattenPropertyClient::put_flatten_model()`](crate::generated::clients::FlattenPropertyClient::put_flatten_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FlattenPropertyClientPutFlattenModelOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`FlattenPropertyClient::put_nested_flatten_model()`](crate::FlattenPropertyClient::put_nested_flatten_model())
+/// Options to be passed to [`FlattenPropertyClient::put_nested_flatten_model()`](crate::generated::clients::FlattenPropertyClient::put_nested_flatten_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct FlattenPropertyClientPutNestedFlattenModelOptions<'a> {
     /// Allows customization of the method call.

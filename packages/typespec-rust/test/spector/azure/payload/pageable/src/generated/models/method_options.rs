@@ -6,7 +6,7 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`PageableClient::list()`](crate::PageableClient::list())
+/// Options to be passed to [`PageableClient::list()`](crate::generated::clients::PageableClient::list())
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageableClientListOptions<'a> {
     /// The maximum number of result items per page.

@@ -6,28 +6,28 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`ContentNegotiationDifferentBodyClient::get_avatar_as_json()`](crate::clients::ContentNegotiationDifferentBodyClient::get_avatar_as_json())
+/// Options to be passed to [`ContentNegotiationDifferentBodyClient::get_avatar_as_json()`](crate::generated::clients::ContentNegotiationDifferentBodyClient::get_avatar_as_json())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ContentNegotiationDifferentBodyClientGetAvatarAsJsonOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ContentNegotiationDifferentBodyClient::get_avatar_as_png()`](crate::clients::ContentNegotiationDifferentBodyClient::get_avatar_as_png())
+/// Options to be passed to [`ContentNegotiationDifferentBodyClient::get_avatar_as_png()`](crate::generated::clients::ContentNegotiationDifferentBodyClient::get_avatar_as_png())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ContentNegotiationSameBodyClient::get_avatar_as_jpeg()`](crate::clients::ContentNegotiationSameBodyClient::get_avatar_as_jpeg())
+/// Options to be passed to [`ContentNegotiationSameBodyClient::get_avatar_as_jpeg()`](crate::generated::clients::ContentNegotiationSameBodyClient::get_avatar_as_jpeg())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ContentNegotiationSameBodyClientGetAvatarAsJpegOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ContentNegotiationSameBodyClient::get_avatar_as_png()`](crate::clients::ContentNegotiationSameBodyClient::get_avatar_as_png())
+/// Options to be passed to [`ContentNegotiationSameBodyClient::get_avatar_as_png()`](crate::generated::clients::ContentNegotiationSameBodyClient::get_avatar_as_png())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ContentNegotiationSameBodyClientGetAvatarAsPngOptions<'a> {
     /// Allows customization of the method call.

@@ -6,63 +6,63 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`ServiceBarClient::five()`](crate::clients::ServiceBarClient::five())
+/// Options to be passed to [`ServiceBarClient::five()`](crate::generated::clients::ServiceBarClient::five())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceBarClientFiveOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ServiceBarClient::six()`](crate::clients::ServiceBarClient::six())
+/// Options to be passed to [`ServiceBarClient::six()`](crate::generated::clients::ServiceBarClient::six())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceBarClientSixOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ServiceBazFooClient::seven()`](crate::clients::ServiceBazFooClient::seven())
+/// Options to be passed to [`ServiceBazFooClient::seven()`](crate::generated::clients::ServiceBazFooClient::seven())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceBazFooClientSevenOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ServiceClient::one()`](crate::ServiceClient::one())
+/// Options to be passed to [`ServiceClient::one()`](crate::generated::clients::ServiceClient::one())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceClientOneOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ServiceClient::two()`](crate::ServiceClient::two())
+/// Options to be passed to [`ServiceClient::two()`](crate::generated::clients::ServiceClient::two())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceClientTwoOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ServiceFooClient::four()`](crate::clients::ServiceFooClient::four())
+/// Options to be passed to [`ServiceFooClient::four()`](crate::generated::clients::ServiceFooClient::four())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceFooClientFourOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ServiceFooClient::three()`](crate::clients::ServiceFooClient::three())
+/// Options to be passed to [`ServiceFooClient::three()`](crate::generated::clients::ServiceFooClient::three())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceFooClientThreeOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ServiceQuxBarClient::nine()`](crate::clients::ServiceQuxBarClient::nine())
+/// Options to be passed to [`ServiceQuxBarClient::nine()`](crate::generated::clients::ServiceQuxBarClient::nine())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceQuxBarClientNineOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ServiceQuxClient::eight()`](crate::clients::ServiceQuxClient::eight())
+/// Options to be passed to [`ServiceQuxClient::eight()`](crate::generated::clients::ServiceQuxClient::eight())
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceQuxClientEightOptions<'a> {
     /// Allows customization of the method call.

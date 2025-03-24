@@ -6,42 +6,42 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`RenamedOperationClient::renamed_five()`](crate::RenamedOperationClient::renamed_five())
+/// Options to be passed to [`RenamedOperationClient::renamed_five()`](crate::generated::clients::RenamedOperationClient::renamed_five())
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationClientRenamedFiveOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`RenamedOperationClient::renamed_one()`](crate::RenamedOperationClient::renamed_one())
+/// Options to be passed to [`RenamedOperationClient::renamed_one()`](crate::generated::clients::RenamedOperationClient::renamed_one())
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationClientRenamedOneOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`RenamedOperationClient::renamed_three()`](crate::RenamedOperationClient::renamed_three())
+/// Options to be passed to [`RenamedOperationClient::renamed_three()`](crate::generated::clients::RenamedOperationClient::renamed_three())
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationClientRenamedThreeOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`RenamedOperationGroupClient::renamed_four()`](crate::clients::RenamedOperationGroupClient::renamed_four())
+/// Options to be passed to [`RenamedOperationGroupClient::renamed_four()`](crate::generated::clients::RenamedOperationGroupClient::renamed_four())
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationGroupClientRenamedFourOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`RenamedOperationGroupClient::renamed_six()`](crate::clients::RenamedOperationGroupClient::renamed_six())
+/// Options to be passed to [`RenamedOperationGroupClient::renamed_six()`](crate::generated::clients::RenamedOperationGroupClient::renamed_six())
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationGroupClientRenamedSixOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`RenamedOperationGroupClient::renamed_two()`](crate::clients::RenamedOperationGroupClient::renamed_two())
+/// Options to be passed to [`RenamedOperationGroupClient::renamed_two()`](crate::generated::clients::RenamedOperationGroupClient::renamed_two())
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationGroupClientRenamedTwoOptions<'a> {
     /// Allows customization of the method call.

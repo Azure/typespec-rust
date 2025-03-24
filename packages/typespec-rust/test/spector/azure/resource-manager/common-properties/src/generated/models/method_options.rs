@@ -6,35 +6,35 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`CommonPropertiesErrorClient::create_for_user_defined_error()`](crate::clients::CommonPropertiesErrorClient::create_for_user_defined_error())
+/// Options to be passed to [`CommonPropertiesErrorClient::create_for_user_defined_error()`](crate::generated::clients::CommonPropertiesErrorClient::create_for_user_defined_error())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesErrorClientCreateForUserDefinedErrorOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`CommonPropertiesErrorClient::get_for_predefined_error()`](crate::clients::CommonPropertiesErrorClient::get_for_predefined_error())
+/// Options to be passed to [`CommonPropertiesErrorClient::get_for_predefined_error()`](crate::generated::clients::CommonPropertiesErrorClient::get_for_predefined_error())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesErrorClientGetForPredefinedErrorOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`CommonPropertiesManagedIdentityClient::create_with_system_assigned()`](crate::clients::CommonPropertiesManagedIdentityClient::create_with_system_assigned())
+/// Options to be passed to [`CommonPropertiesManagedIdentityClient::create_with_system_assigned()`](crate::generated::clients::CommonPropertiesManagedIdentityClient::create_with_system_assigned())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`CommonPropertiesManagedIdentityClient::get()`](crate::clients::CommonPropertiesManagedIdentityClient::get())
+/// Options to be passed to [`CommonPropertiesManagedIdentityClient::get()`](crate::generated::clients::CommonPropertiesManagedIdentityClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesManagedIdentityClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`CommonPropertiesManagedIdentityClient::update_with_user_assigned_and_system_assigned()`](crate::clients::CommonPropertiesManagedIdentityClient::update_with_user_assigned_and_system_assigned())
+/// Options to be passed to [`CommonPropertiesManagedIdentityClient::update_with_user_assigned_and_system_assigned()`](crate::generated::clients::CommonPropertiesManagedIdentityClient::update_with_user_assigned_and_system_assigned())
 #[derive(Clone, Default, SafeDebug)]
 pub struct CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedOptions<'a> {
     /// Allows customization of the method call.

@@ -6,14 +6,14 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`BasicExplicitBodyClient::simple()`](crate::clients::BasicExplicitBodyClient::simple())
+/// Options to be passed to [`BasicExplicitBodyClient::simple()`](crate::generated::clients::BasicExplicitBodyClient::simple())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicExplicitBodyClientSimpleOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BasicImplicitBodyClient::simple()`](crate::clients::BasicImplicitBodyClient::simple())
+/// Options to be passed to [`BasicImplicitBodyClient::simple()`](crate::generated::clients::BasicImplicitBodyClient::simple())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicImplicitBodyClientSimpleOptions<'a> {
     /// Allows customization of the method call.

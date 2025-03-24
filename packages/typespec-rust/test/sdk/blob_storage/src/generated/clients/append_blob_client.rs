@@ -25,7 +25,7 @@ pub struct AppendBlobClient {
     pub(crate) version: String,
 }
 
-/// Options used when creating a [`AppendBlobClient`](crate::AppendBlobClient)
+/// Options used when creating a [`AppendBlobClient`](AppendBlobClient)
 #[derive(Clone, SafeDebug)]
 pub struct AppendBlobClientOptions {
     pub client_options: ClientOptions,

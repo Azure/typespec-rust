@@ -12,7 +12,7 @@ pub struct FixedClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`FixedClient`](crate::FixedClient)
+/// Options used when creating a [`FixedClient`](FixedClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct FixedClientOptions {
     pub client_options: ClientOptions,

@@ -15,7 +15,7 @@ pub struct DatetimeClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`DatetimeClient`](crate::DatetimeClient)
+/// Options used when creating a [`DatetimeClient`](DatetimeClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeClientOptions {
     pub client_options: ClientOptions,

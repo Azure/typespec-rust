@@ -8,19 +8,19 @@ use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Contains results for [`DatetimeResponseHeaderClient::default()`](crate::clients::DatetimeResponseHeaderClient::default())
+/// Contains results for [`DatetimeResponseHeaderClient::default()`](crate::generated::clients::DatetimeResponseHeaderClient::default())
 #[derive(SafeDebug)]
 pub struct DatetimeResponseHeaderClientDefaultResult;
 
-/// Contains results for [`DatetimeResponseHeaderClient::rfc3339()`](crate::clients::DatetimeResponseHeaderClient::rfc3339())
+/// Contains results for [`DatetimeResponseHeaderClient::rfc3339()`](crate::generated::clients::DatetimeResponseHeaderClient::rfc3339())
 #[derive(SafeDebug)]
 pub struct DatetimeResponseHeaderClientRfc3339Result;
 
-/// Contains results for [`DatetimeResponseHeaderClient::rfc7231()`](crate::clients::DatetimeResponseHeaderClient::rfc7231())
+/// Contains results for [`DatetimeResponseHeaderClient::rfc7231()`](crate::generated::clients::DatetimeResponseHeaderClient::rfc7231())
 #[derive(SafeDebug)]
 pub struct DatetimeResponseHeaderClientRfc7231Result;
 
-/// Contains results for [`DatetimeResponseHeaderClient::unix_timestamp()`](crate::clients::DatetimeResponseHeaderClient::unix_timestamp())
+/// Contains results for [`DatetimeResponseHeaderClient::unix_timestamp()`](crate::generated::clients::DatetimeResponseHeaderClient::unix_timestamp())
 #[derive(SafeDebug)]
 pub struct DatetimeResponseHeaderClientUnixTimestampResult;
 

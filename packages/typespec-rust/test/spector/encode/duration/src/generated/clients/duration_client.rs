@@ -15,7 +15,7 @@ pub struct DurationClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`DurationClient`](crate::DurationClient)
+/// Options used when creating a [`DurationClient`](DurationClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationClientOptions {
     pub client_options: ClientOptions,

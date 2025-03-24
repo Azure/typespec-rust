@@ -6,7 +6,7 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`SingleClient::my_op()`](crate::SingleClient::my_op())
+/// Options to be passed to [`SingleClient::my_op()`](crate::generated::clients::SingleClient::my_op())
 #[derive(Clone, Default, SafeDebug)]
 pub struct SingleClientMyOpOptions<'a> {
     /// Allows customization of the method call.

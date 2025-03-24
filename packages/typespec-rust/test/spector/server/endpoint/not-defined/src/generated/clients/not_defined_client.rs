@@ -13,7 +13,7 @@ pub struct NotDefinedClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`NotDefinedClient`](crate::NotDefinedClient)
+/// Options used when creating a [`NotDefinedClient`](NotDefinedClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct NotDefinedClientOptions {
     pub client_options: ClientOptions,

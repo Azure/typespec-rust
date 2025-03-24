@@ -6,49 +6,49 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`BasicClient::create_or_replace()`](crate::BasicClient::create_or_replace())
+/// Options to be passed to [`BasicClient::create_or_replace()`](crate::generated::clients::BasicClient::create_or_replace())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientCreateOrReplaceOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BasicClient::create_or_update()`](crate::BasicClient::create_or_update())
+/// Options to be passed to [`BasicClient::create_or_update()`](crate::generated::clients::BasicClient::create_or_update())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientCreateOrUpdateOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BasicClient::delete()`](crate::BasicClient::delete())
+/// Options to be passed to [`BasicClient::delete()`](crate::generated::clients::BasicClient::delete())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientDeleteOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BasicClient::export()`](crate::BasicClient::export())
+/// Options to be passed to [`BasicClient::export()`](crate::generated::clients::BasicClient::export())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientExportOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BasicClient::export_all_users()`](crate::BasicClient::export_all_users())
+/// Options to be passed to [`BasicClient::export_all_users()`](crate::generated::clients::BasicClient::export_all_users())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientExportAllUsersOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BasicClient::get()`](crate::BasicClient::get())
+/// Options to be passed to [`BasicClient::get()`](crate::generated::clients::BasicClient::get())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientGetOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`BasicClient::list()`](crate::BasicClient::list())
+/// Options to be passed to [`BasicClient::list()`](crate::generated::clients::BasicClient::list())
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientListOptions<'a> {
     /// Expand the indicated resources into the response.

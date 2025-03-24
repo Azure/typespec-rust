@@ -6,14 +6,14 @@
 use azure_core::ClientMethodOptions;
 use typespec_client_core::fmt::SafeDebug;
 
-/// Options to be passed to [`OAuth2Client::invalid()`](crate::OAuth2Client::invalid())
+/// Options to be passed to [`OAuth2Client::invalid()`](crate::generated::clients::OAuth2Client::invalid())
 #[derive(Clone, Default, SafeDebug)]
 pub struct OAuth2ClientInvalidOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`OAuth2Client::valid()`](crate::OAuth2Client::valid())
+/// Options to be passed to [`OAuth2Client::valid()`](crate::generated::clients::OAuth2Client::valid())
 #[derive(Clone, Default, SafeDebug)]
 pub struct OAuth2ClientValidOptions<'a> {
     /// Allows customization of the method call.

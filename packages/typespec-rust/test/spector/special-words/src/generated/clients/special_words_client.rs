@@ -53,7 +53,7 @@ pub struct SpecialWordsClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`SpecialWordsClient`](crate::SpecialWordsClient)
+/// Options used when creating a [`SpecialWordsClient`](SpecialWordsClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsClientOptions {
     pub client_options: ClientOptions,

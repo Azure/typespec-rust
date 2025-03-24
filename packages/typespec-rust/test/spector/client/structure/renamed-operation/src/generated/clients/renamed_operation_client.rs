@@ -16,7 +16,7 @@ pub struct RenamedOperationClient {
     pub(crate) pipeline: Pipeline,
 }
 
-/// Options used when creating a [`RenamedOperationClient`](crate::RenamedOperationClient)
+/// Options used when creating a [`RenamedOperationClient`](RenamedOperationClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationClientOptions {
     pub client_options: ClientOptions,
