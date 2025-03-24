@@ -180,12 +180,6 @@ function generate(crate, input, outputDir, additionalArgs) {
       if (switches.includes('--verbose')) {
         console.log(command);
       }
-      // delete all generated content before regenerating.
-      // the exception is the lib.rs file. if we delete that
-      // from a crate then concurrent invocations of cargo fmt
-      // will blow up. this is fine anyways since we merge
-      // lib.rs with any preexisting content.
-      fs.rmSync(path.join(fullOutputDir, 'src', 'generated'), { force: true, recursive: true });
       exec(command, function(error, stdout, stderr) {
         // print any output or error from the tsp compile command
         logResult(error, stdout, stderr);

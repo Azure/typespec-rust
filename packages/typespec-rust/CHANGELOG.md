@@ -1,5 +1,11 @@
 # Release History
 
+## 0.13.1 (unreleased)
+
+### Other Changes
+
+* Recursively delete the contents of `src/generated` before writing the content to disk.
+
 ## 0.13.0 (2025-03-24)
 
 ### Breaking Changes

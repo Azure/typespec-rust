@@ -7,7 +7,7 @@ import { CodeGenerator } from './codegen/codeGenerator.js';
 import { Adapter } from './tcgcadapter/adapter.js';
 import { RustEmitterOptions } from './lib.js';
 import { execSync } from 'child_process';
-import { existsSync } from 'fs';
+import { existsSync, rmSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
 import * as path from 'path';
 import { EmitContext, NoTarget } from '@typespec/compiler';
@@ -54,6 +54,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
   }
 
   const files = codegen.emitContent();
+  rmSync(path.join(context.emitterOutputDir, 'src', 'generated'), { force: true, recursive: true });
   for (const file of files) {
     await writeToGeneratedDir(context.emitterOutputDir, file.name, file.content);
   }
