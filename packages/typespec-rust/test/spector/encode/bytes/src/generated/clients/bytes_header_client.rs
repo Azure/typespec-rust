@@ -7,8 +7,11 @@ use crate::generated::models::{
     BytesHeaderClientBase64Options, BytesHeaderClientBase64UrlArrayOptions,
     BytesHeaderClientBase64UrlOptions, BytesHeaderClientDefaultOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, Response, Url};
-use azure_core::{base64, Result};
+use azure_core::{
+    base64,
+    http::{Context, Method, Pipeline, Request, Response, Url},
+    Result,
+};
 
 pub struct BytesHeaderClient {
     pub(crate) endpoint: Url,

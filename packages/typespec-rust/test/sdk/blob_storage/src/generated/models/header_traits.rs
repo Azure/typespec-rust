@@ -35,8 +35,14 @@ use super::{
     PageBlobClientUploadPagesResult, PageList, PublicAccessType, RehydratePriority,
     SignedIdentifier, SkuName, StorageServiceProperties, StorageServiceStats, UserDelegationKey,
 };
-use azure_core::http::{headers::HeaderName, headers::Headers, Response};
-use azure_core::{base64, date, Result};
+use azure_core::{
+    base64, date,
+    http::{
+        headers::{HeaderName, Headers},
+        Response,
+    },
+    Result,
+};
 use std::collections::HashMap;
 use time::OffsetDateTime;
 

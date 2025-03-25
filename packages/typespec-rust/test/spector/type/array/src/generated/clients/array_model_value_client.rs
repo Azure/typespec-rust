@@ -6,8 +6,10 @@
 use crate::generated::models::{
     ArrayModelValueClientGetOptions, ArrayModelValueClientPutOptions, InnerModel,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 
 /// Array of model values
 pub struct ArrayModelValueClient {

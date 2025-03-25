@@ -7,9 +7,11 @@ use crate::generated::models::{
     VersionedClientWithPathApiVersionOptions, VersionedClientWithQueryApiVersionOptions,
     VersionedClientWithQueryOldApiVersionOptions, VersionedClientWithoutApiVersionOptions,
 };
-use azure_core::fmt::SafeDebug;
-use azure_core::http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    fmt::SafeDebug,
+    http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url},
+    Result,
+};
 
 /// Illustrates versioned server.
 pub struct VersionedClient {

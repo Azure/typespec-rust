@@ -8,8 +8,10 @@ use crate::generated::models::{
     BytesPropertyClientBase64Options, BytesPropertyClientBase64UrlArrayOptions,
     BytesPropertyClientBase64UrlOptions, BytesPropertyClientDefaultOptions, DefaultBytesProperty,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 
 pub struct BytesPropertyClient {
     pub(crate) endpoint: Url,

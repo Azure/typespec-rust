@@ -7,8 +7,10 @@ use crate::generated::models::{
     ModelWithAttributes, XmlModelWithAttributesValueClientGetOptions,
     XmlModelWithAttributesValueClientPutOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 
 /// Operations for the ModelWithAttributes type.
 pub struct XmlModelWithAttributesValueClient {

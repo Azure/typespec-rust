@@ -6,8 +6,10 @@
 use crate::generated::models::{
     ArrayNullableInt32ValueClientGetOptions, ArrayNullableInt32ValueClientPutOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 
 /// Array of nullable int32 values
 pub struct ArrayNullableInt32ValueClient {

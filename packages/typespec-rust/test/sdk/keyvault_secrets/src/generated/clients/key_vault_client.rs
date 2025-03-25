@@ -13,14 +13,16 @@ use crate::generated::models::{
     KeyVaultClientSetSecretOptions, KeyVaultClientUpdateSecretOptions, SecretBundle,
     SecretListResult, SecretRestoreParameters, SecretSetParameters, SecretUpdateParameters,
 };
-use azure_core::credentials::TokenCredential;
-use azure_core::fmt::SafeDebug;
-use azure_core::http::policies::{BearerTokenCredentialPolicy, Policy};
-use azure_core::http::{
-    ClientOptions, Context, Method, Pager, PagerResult, Pipeline, Request, RequestContent,
-    Response, Url,
+use azure_core::{
+    credentials::TokenCredential,
+    fmt::SafeDebug,
+    http::{
+        policies::{BearerTokenCredentialPolicy, Policy},
+        ClientOptions, Context, Method, Pager, PagerResult, Pipeline, Request, RequestContent,
+        Response, Url,
+    },
+    json, Result,
 };
-use azure_core::{json, Result};
 use std::sync::Arc;
 
 /// The key vault client performs cryptographic key operations and vault operations against the Key Vault service.

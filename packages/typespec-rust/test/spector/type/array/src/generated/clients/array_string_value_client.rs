@@ -6,8 +6,10 @@
 use crate::generated::models::{
     ArrayStringValueClientGetOptions, ArrayStringValueClientPutOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 
 /// Array of string values
 pub struct ArrayStringValueClient {

@@ -357,6 +357,9 @@ export interface External {
 
 export class External implements External {
   constructor(crate: Crate, crateName: string, typeName: string, namespace?: string) {
+    if (crateName.indexOf('::') > 0) {
+      throw new Error(`crate name ${crateName} must not contain any modules`);
+    }
     crate.addDependency(new CrateDependency(crateName));
     this.crate = crateName;
     this.name = typeName;
@@ -491,14 +494,14 @@ export class EnumValue implements EnumValue {
 
 export class Etag extends External implements Etag {
   constructor(crate: Crate) {
-    super(crate, 'azure_core::http', 'Etag');
+    super(crate, 'azure_core', 'Etag', 'http');
     this.kind = 'Etag';
   }
 }
 
 export class ExternalType extends External implements ExternalType {
-  constructor(crate: Crate, crateName: string, typeName: string) {
-    super(crate, crateName, typeName);
+  constructor(crate: Crate, crateName: string, typeName: string, namespace?: string) {
+    super(crate, crateName, typeName, namespace);
     this.kind = 'external';
   }
 }
@@ -599,7 +602,7 @@ export class Option implements Option {
 
 export class Pager extends External implements Pager {
   constructor(crate: Crate, type: Model, format: BodyFormat) {
-    super(crate, 'azure_core::http', 'Pager');
+    super(crate, 'azure_core', 'Pager', 'http');
     this.kind = 'pager';
     this.type = type;
     this.format = format;
@@ -631,7 +634,7 @@ export class Payload<T> implements Payload<T> {
 
 export class RequestContent<T> extends External implements RequestContent<T> {
   constructor(crate: Crate, content: T) {
-    super(crate, 'azure_core::http', 'RequestContent');
+    super(crate, 'azure_core', 'RequestContent', 'http');
     this.kind = 'requestContent';
     this.content = content;
   }
@@ -639,7 +642,7 @@ export class RequestContent<T> extends External implements RequestContent<T> {
 
 export class Response<T> extends External implements Response<T> {
   constructor(crate: Crate, content: T) {
-    super(crate, 'azure_core::http', 'Response');
+    super(crate, 'azure_core', 'Response', 'http');
     this.kind = 'response';
     this.content = content;
   }
@@ -710,7 +713,7 @@ export class Unit implements Unit {
 
 export class Url extends External implements Url {
   constructor(crate: Crate) {
-    super(crate, 'azure_core::http', 'Url');
+    super(crate, 'azure_core', 'Url', 'http');
     this.kind = 'Url';
   }
 }

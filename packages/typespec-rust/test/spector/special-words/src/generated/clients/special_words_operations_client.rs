@@ -22,8 +22,10 @@ use crate::generated::models::{
     SpecialWordsOperationsClientWhileOptions, SpecialWordsOperationsClientWithOptions,
     SpecialWordsOperationsClientYieldOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, Response, Url},
+    Result,
+};
 
 /// Test reserved words as operation name.
 pub struct SpecialWordsOperationsClient {

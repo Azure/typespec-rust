@@ -8,8 +8,10 @@ use crate::generated::models::{
     BytesResponseBodyClientCustomContentTypeOptions, BytesResponseBodyClientDefaultOptions,
     BytesResponseBodyClientOctetStreamOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, Response, Url},
+    Result,
+};
 
 pub struct BytesResponseBodyClient {
     pub(crate) endpoint: Url,

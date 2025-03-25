@@ -7,11 +7,11 @@ use crate::generated::models::{
     InputOutputRecord, InputRecord, OutputRecord, UsageClientInputAndOutputOptions,
     UsageClientInputOptions, UsageClientOutputOptions,
 };
-use azure_core::fmt::SafeDebug;
-use azure_core::http::{
-    ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url,
+use azure_core::{
+    fmt::SafeDebug,
+    http::{ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
 };
-use azure_core::Result;
 
 /// Illustrates usage of Record in different places(Operation parameters, return type or both).
 pub struct UsageClient {

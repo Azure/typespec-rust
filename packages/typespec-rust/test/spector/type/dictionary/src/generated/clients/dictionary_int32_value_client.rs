@@ -6,8 +6,10 @@
 use crate::generated::models::{
     DictionaryInt32ValueClientGetOptions, DictionaryInt32ValueClientPutOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 use std::collections::HashMap;
 
 /// Dictionary of int32 values

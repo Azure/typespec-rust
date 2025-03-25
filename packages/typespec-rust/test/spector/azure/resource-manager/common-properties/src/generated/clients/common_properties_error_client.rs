@@ -7,8 +7,10 @@ use crate::generated::models::{
     CommonPropertiesErrorClientCreateForUserDefinedErrorOptions,
     CommonPropertiesErrorClientGetForPredefinedErrorOptions, ConfidentialResource,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 
 pub struct CommonPropertiesErrorClient {
     pub(crate) api_version: String,

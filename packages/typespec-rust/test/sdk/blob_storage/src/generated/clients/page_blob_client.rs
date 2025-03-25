@@ -14,13 +14,17 @@ use crate::generated::models::{
     PageBlobClientUploadPagesOptions, PageBlobClientUploadPagesResult, PageList,
     SequenceNumberActionType,
 };
-use azure_core::credentials::TokenCredential;
-use azure_core::fmt::SafeDebug;
-use azure_core::http::policies::{BearerTokenCredentialPolicy, Policy};
-use azure_core::http::{
-    ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url,
+use azure_core::{
+    base64,
+    credentials::TokenCredential,
+    date,
+    fmt::SafeDebug,
+    http::{
+        policies::{BearerTokenCredentialPolicy, Policy},
+        ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url,
+    },
+    Bytes, Result,
 };
-use azure_core::{base64, date, Bytes, Result};
 use std::sync::Arc;
 
 pub struct PageBlobClient {

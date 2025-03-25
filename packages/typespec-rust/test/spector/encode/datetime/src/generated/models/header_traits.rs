@@ -7,8 +7,14 @@ use super::{
     DatetimeResponseHeaderClientDefaultResult, DatetimeResponseHeaderClientRfc3339Result,
     DatetimeResponseHeaderClientRfc7231Result, DatetimeResponseHeaderClientUnixTimestampResult,
 };
-use azure_core::http::{headers::HeaderName, headers::Headers, Response};
-use azure_core::{date, Result};
+use azure_core::{
+    date,
+    http::{
+        headers::{HeaderName, Headers},
+        Response,
+    },
+    Result,
+};
 use time::OffsetDateTime;
 
 const VALUE: HeaderName = HeaderName::from_static("value");

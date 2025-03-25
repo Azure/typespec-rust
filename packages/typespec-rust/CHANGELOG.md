@@ -5,6 +5,7 @@
 ### Other Changes
 
 * Recursively delete the contents of `src/generated` before writing the content to disk.
+* Consolidate `use` statements.
 
 ## 0.13.0 (2025-03-24)
 
