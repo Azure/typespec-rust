@@ -127,14 +127,8 @@ export class Use {
     }
 
     if (type.kind !== 'client') {
-      if ((<rust.StdType>type).name !== undefined && (<rust.StdType>type).use !== undefined) {
-        this.add((<rust.StdType>type).use, (<rust.StdType>type).name);
-      } else if ((<rust.External>type).crate !== undefined && (<rust.External>type).name !== undefined) {
-        let module = (<rust.External>type).crate;
-        if ((<rust.External>type).namespace) {
-          module += `::${(<rust.External>type).namespace}`;
-        }
-        this.add(module, (<rust.External>type).name);
+      if ((<rust.QualifiedType>type).name !== undefined && (<rust.QualifiedType>type).path !== undefined) {
+        this.add((<rust.QualifiedType>type).path, (<rust.QualifiedType>type).name);
       }
     }
   }
