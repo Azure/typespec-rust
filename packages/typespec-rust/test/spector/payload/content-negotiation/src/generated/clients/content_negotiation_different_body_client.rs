@@ -7,8 +7,10 @@ use crate::generated::models::{
     ContentNegotiationDifferentBodyClientGetAvatarAsJsonOptions,
     ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions, PngImageAsJson,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, Response, Url},
+    Result,
+};
 
 pub struct ContentNegotiationDifferentBodyClient {
     pub(crate) endpoint: Url,

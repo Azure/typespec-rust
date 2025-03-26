@@ -7,8 +7,10 @@ use crate::generated::models::{
     TwoOperationGroupGroup1ClientFourOptions, TwoOperationGroupGroup1ClientOneOptions,
     TwoOperationGroupGroup1ClientThreeOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, Response, Url},
+    Result,
+};
 
 pub struct TwoOperationGroupGroup1Client {
     pub(crate) endpoint: Url,

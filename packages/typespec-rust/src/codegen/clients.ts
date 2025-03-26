@@ -61,7 +61,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         deriveDefault = '';
       }
       body += helpers.formatDocComment(client.constructable.options.type.docs);
-      use.addType('azure_core::fmt', 'SafeDebug');
+      use.add('azure_core::fmt', 'SafeDebug');
       body += `#[derive(Clone, ${deriveDefault}SafeDebug)]\n`;
       body += `pub struct ${client.constructable.options.type.name}`;
       if (client.constructable.options.type.fields.length > 0) {
@@ -80,7 +80,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
 
     if (client.constructable) {
       // this is an instantiable client, so we need to emit client options and constructors
-      use.addType('azure_core', 'Result');
+      use.add('azure_core', 'Result');
 
       for (let i = 0; i < client.constructable.constructors.length; ++i) {
         const constructor = client.constructable.constructors[i];
@@ -252,7 +252,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     // add using for method_options as required
     for (const method of client.methods) {
       if (method.kind !== 'clientaccessor') {
-        use.addType('crate::generated::models', method.options.type.name);
+        use.add('crate::generated::models', method.options.type.name);
       }
     }
 
@@ -283,7 +283,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
       }
 
       body += helpers.formatDocComment(method.options.type.docs);
-      use.addType('azure_core::fmt', 'SafeDebug');
+      use.add('azure_core::fmt', 'SafeDebug');
       body += '#[derive(Clone, Default, SafeDebug)]\n';
       body += `${helpers.emitVisibility(method.visibility)}struct ${helpers.getTypeDeclaration(method.options.type)} {\n`;
       for (let i = 0; i < method.options.type.fields.length; ++i) {
@@ -468,7 +468,7 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
 function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
   for (const param of ctor.params) {
     if (param.type.kind === 'arc' && param.type.type.kind === 'tokenCredential') {
-      use.addTypes('azure_core::http::policies', ['BearerTokenCredentialPolicy', 'Policy']);
+      use.add('azure_core::http::policies', 'BearerTokenCredentialPolicy', 'Policy');
       const scopes = new Array<string>();
       for (const scope of param.type.type.scopes) {
         scopes.push(`"${scope}"`);
@@ -860,7 +860,7 @@ function urlVarNeedsMut(paramGroups: methodParamGroups, method: ClientMethod): s
  * @returns the contents of the method body
  */
 function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
-  use.addTypes('azure_core::http', ['Context', 'Method', 'Request']);
+  use.add('azure_core::http', 'Context', 'Method', 'Request');
   const paramGroups = getMethodParamGroup(method);
   let body = 'let options = options.unwrap_or_default();\n';
   body += `${indent.get()}let ctx = Context::with_context(&options.method_options.context);\n`;
@@ -889,9 +889,8 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   }
 
   const nextLinkName = method.strategy.nextLinkName;
-  use.addType('azure_core', 'Result');
-  use.addTypes('azure_core::http', ['Method', 'Pager', 'PagerResult', 'Request', 'Response', 'Url']);
-  use.addType('azure_core', 'json');
+  use.add('azure_core::http', 'Method', 'Pager', 'PagerResult', 'Request', 'Response', 'Url');
+  use.add('azure_core', 'json', 'Result');
   use.addForType(method.returns.type.type);
 
   const paramGroups = getMethodParamGroup(method);
@@ -1007,7 +1006,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
   }
 
   const encodeBytes = function(type: rust.EncodedBytes, param?: string): string {
-    use.addType('azure_core', 'base64');
+    use.add('azure_core', 'base64');
     let encoding: string;
     switch (type.encoding) {
       case 'std':
@@ -1024,7 +1023,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
   };
 
   const encodeDateTime = function(type: rust.OffsetDateTime, param: string): string {
-    use.addType('azure_core', 'date');
+    use.add('azure_core', 'date');
     switch (type.encoding) {
       case 'rfc3339':
       case 'rfc7231':

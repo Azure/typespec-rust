@@ -7,9 +7,11 @@ use crate::generated::clients::{
     BytesHeaderClient, BytesPropertyClient, BytesQueryClient, BytesRequestBodyClient,
     BytesResponseBodyClient,
 };
-use azure_core::fmt::SafeDebug;
-use azure_core::http::{ClientOptions, Pipeline, Url};
-use azure_core::Result;
+use azure_core::{
+    fmt::SafeDebug,
+    http::{ClientOptions, Pipeline, Url},
+    Result,
+};
 
 /// Test for encode decorator on bytes.
 pub struct BytesClient {

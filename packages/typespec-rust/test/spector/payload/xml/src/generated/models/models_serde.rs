@@ -8,8 +8,7 @@ use super::{
     ModelWithEncodedNames, ModelWithOptionalField, ModelWithRenamedArrays, ModelWithRenamedFields,
     ModelWithSimpleArrays, ModelWithText, ModelWithUnwrappedArray, SimpleModel,
 };
-use azure_core::http::RequestContent;
-use azure_core::{xml::to_xml, Result};
+use azure_core::{http::RequestContent, xml::to_xml, Result};
 
 impl TryFrom<ModelWithArrayOfModel> for RequestContent<ModelWithArrayOfModel> {
     type Error = azure_core::Error;

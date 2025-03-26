@@ -11,9 +11,11 @@ use crate::generated::clients::{
     XmlModelWithSimpleArraysValueClient, XmlModelWithTextValueClient,
     XmlModelWithUnwrappedArrayValueClient, XmlSimpleModelValueClient,
 };
-use azure_core::fmt::SafeDebug;
-use azure_core::http::{ClientOptions, Pipeline, Url};
-use azure_core::Result;
+use azure_core::{
+    fmt::SafeDebug,
+    http::{ClientOptions, Pipeline, Url},
+    Result,
+};
 
 /// Sends and receives bodies in XML format.
 pub struct XmlClient {

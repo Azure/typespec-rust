@@ -140,8 +140,8 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
   };
 
   const use = new Use('modelsOther');
-  use.addType('azure_core', 'Result');
-  use.addType('azure_core::http', 'headers::HeaderName');
+  use.add('azure_core', 'Result');
+  use.add('azure_core::http', 'headers::HeaderName');
 
   const indent = new helpers.indentation();
 
@@ -226,11 +226,11 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
     return content;
   }
 
-  use.addType('azure_core::http', 'headers::Headers');
+  use.add('azure_core::http', 'headers::Headers');
 
   switch (header.type.kind) {
     case 'encodedBytes': {
-      use.addType('azure_core', 'base64');
+      use.add('azure_core', 'base64');
       const decoder = header.type.encoding === 'std' ? 'decode' : 'decode_url_safe';
       return `${indent.get()}Headers::get_optional_with(self.headers(), &${headerConstName}, |h| base64::${decoder}(h.as_str()))\n`;
     }
@@ -239,7 +239,7 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
     case 'String':
       return `${indent.get()}Headers::get_optional_as(self.headers(), &${headerConstName})\n`
     case 'offsetDateTime': {
-      use.addType('azure_core', 'date');
+      use.add('azure_core', 'date');
       return `${indent.get()}Headers::get_optional_with(self.headers(), &${headerConstName}, |h| date::parse_${header.type.encoding}(h.as_str()))\n`;
     }
     default:

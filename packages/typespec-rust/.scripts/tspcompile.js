@@ -180,6 +180,9 @@ function generate(crate, input, outputDir, additionalArgs) {
       if (switches.includes('--verbose')) {
         console.log(command);
       }
+      // delete all content before regenerating as it makes it
+      // really easy to determine if something failed to generated
+      fs.rmSync(path.join(fullOutputDir, 'src', 'generated'), { force: true, recursive: true });
       exec(command, function(error, stdout, stderr) {
         // print any output or error from the tsp compile command
         logResult(error, stdout, stderr);

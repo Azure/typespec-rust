@@ -7,8 +7,7 @@ pub mod hashmap_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<HashMap<String, Vec<u8>>, D::Error>
     where
@@ -49,8 +48,7 @@ pub mod hashmap_encoded_bytes_url {
     #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<HashMap<String, Vec<u8>>, D::Error>
     where
@@ -91,8 +89,7 @@ pub mod hashmap_hashmap_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -144,8 +141,7 @@ pub mod hashmap_hashmap_encoded_bytes_url {
     #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -197,8 +193,7 @@ pub mod hashmap_hashmap_hashmap_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -263,8 +258,7 @@ pub mod hashmap_hashmap_hashmap_encoded_bytes_url {
     #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -329,8 +323,7 @@ pub mod hashmap_hashmap_hashmap_offset_date_time_rfc3339 {
     #![allow(clippy::type_complexity)]
     use azure_core::date;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
@@ -399,8 +392,7 @@ pub mod hashmap_hashmap_hashmap_offset_date_time_rfc7231 {
     #![allow(clippy::type_complexity)]
     use azure_core::date;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
@@ -468,8 +460,7 @@ pub mod hashmap_hashmap_hashmap_offset_date_time_rfc7231 {
 pub mod hashmap_hashmap_hashmap_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
@@ -539,8 +530,7 @@ pub mod hashmap_hashmap_offset_date_time_rfc3339 {
     #![allow(clippy::type_complexity)]
     use azure_core::date;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
@@ -593,8 +583,7 @@ pub mod hashmap_hashmap_offset_date_time_rfc7231 {
     #![allow(clippy::type_complexity)]
     use azure_core::date;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
@@ -646,8 +635,7 @@ pub mod hashmap_hashmap_offset_date_time_rfc7231 {
 pub mod hashmap_hashmap_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
@@ -701,8 +689,7 @@ pub mod hashmap_offset_date_time_rfc3339 {
     #![allow(clippy::type_complexity)]
     use azure_core::date;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<HashMap<String, OffsetDateTime>, D::Error>
@@ -744,8 +731,7 @@ pub mod hashmap_offset_date_time_rfc7231 {
     #![allow(clippy::type_complexity)]
     use azure_core::date;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<HashMap<String, OffsetDateTime>, D::Error>
@@ -786,8 +772,7 @@ pub mod hashmap_offset_date_time_rfc7231 {
 pub mod hashmap_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<HashMap<String, OffsetDateTime>, D::Error>
@@ -830,8 +815,7 @@ pub mod hashmap_vec_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<HashMap<String, Vec<Vec<u8>>>, D::Error>
     where
@@ -873,8 +857,7 @@ pub mod hashmap_vec_encoded_bytes_url {
     #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<HashMap<String, Vec<Vec<u8>>>, D::Error>
     where
@@ -917,8 +900,7 @@ pub mod hashmap_vec_offset_date_time_rfc7231 {
     #![allow(clippy::type_complexity)]
     use azure_core::date;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
@@ -962,8 +944,7 @@ pub mod hashmap_vec_offset_date_time_rfc7231 {
 pub mod hashmap_vec_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
@@ -1075,8 +1056,7 @@ pub mod vec_hashmap_vec_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -1131,8 +1111,7 @@ pub mod vec_hashmap_vec_encoded_bytes_url {
     #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -1189,8 +1168,7 @@ pub mod vec_hashmap_vec_offset_date_time_rfc3339 {
     #![allow(clippy::type_complexity)]
     use azure_core::date;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
@@ -1246,8 +1224,7 @@ pub mod vec_hashmap_vec_offset_date_time_rfc3339 {
 pub mod vec_hashmap_vec_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
-    use std::collections::HashMap;
-    use std::result::Result;
+    use std::{collections::HashMap, result::Result};
     use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(

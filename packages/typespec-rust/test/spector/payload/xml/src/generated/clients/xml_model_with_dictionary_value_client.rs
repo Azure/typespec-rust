@@ -7,8 +7,10 @@ use crate::generated::models::{
     ModelWithDictionary, XmlModelWithDictionaryValueClientGetOptions,
     XmlModelWithDictionaryValueClientPutOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 
 /// Operations for the ModelWithDictionary type.
 pub struct XmlModelWithDictionaryValueClient {

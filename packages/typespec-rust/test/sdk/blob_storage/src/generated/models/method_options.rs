@@ -9,8 +9,7 @@ use super::{
     ListContainersIncludeType, Logging, Metrics, PremiumPageBlobAccessTier, PublicAccessType,
     RehydratePriority, RetentionPolicy, StaticWebsite,
 };
-use azure_core::fmt::SafeDebug;
-use azure_core::http::ClientMethodOptions;
+use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 use std::collections::HashMap;
 use time::OffsetDateTime;
 

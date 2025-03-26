@@ -8,8 +8,10 @@ use crate::generated::models::{
     DurationQueryClientFloatSecondsOptions, DurationQueryClientInt32SecondsArrayOptions,
     DurationQueryClientInt32SecondsOptions, DurationQueryClientIso8601Options,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, Response, Url},
+    Result,
+};
 
 pub struct DurationQueryClient {
     pub(crate) endpoint: Url,

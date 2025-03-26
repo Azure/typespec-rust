@@ -7,9 +7,11 @@ use crate::generated::clients::{
     SpecialWordsModelPropertiesClient, SpecialWordsModelsClient, SpecialWordsOperationsClient,
     SpecialWordsParametersClient,
 };
-use azure_core::fmt::SafeDebug;
-use azure_core::http::{ClientOptions, Pipeline, Url};
-use azure_core::Result;
+use azure_core::{
+    fmt::SafeDebug,
+    http::{ClientOptions, Pipeline, Url},
+    Result,
+};
 
 /// Scenarios to verify that reserved words can be used in service and generators will handle it appropriately.
 ///

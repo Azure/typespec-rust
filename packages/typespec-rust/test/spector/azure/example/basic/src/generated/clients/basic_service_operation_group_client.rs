@@ -6,8 +6,10 @@
 use crate::generated::models::{
     ActionRequest, ActionResponse, BasicServiceOperationGroupClientBasicOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 
 pub struct BasicServiceOperationGroupClient {
     pub(crate) api_version: String,

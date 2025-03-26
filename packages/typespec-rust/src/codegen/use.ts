@@ -8,7 +8,7 @@ import * as rust from '../codemodel/index.js';
 
 /** used to generate use statements */
 export class Use {
-  private uses: Array<moduleTypes>;
+  private trees: Array<useTree>;
   private scope: 'clients' | 'models' | 'modelsOther';
 
   /**
@@ -21,7 +21,7 @@ export class Use {
    *  modelsOther - we're in generated/models but not models.rs
    */
   constructor(scope: 'clients' | 'models' | 'modelsOther') {
-    this.uses = new Array<moduleTypes>();
+    this.trees = new Array<useTree>();
     this.scope = scope;
   }
 
@@ -30,34 +30,28 @@ export class Use {
    * e.g. ('azure_core', 'Context') or ('super::models', 'FooType')
    * 
    * @param module a module name
-   * @param type a type within the provided module
+   * @param type one or more types within the provided module
    */
-  addType(module: string, type: string): void {
-    let mod = this.uses.find((v: moduleTypes) => { return v.module === module; });
-    if (!mod) {
-      mod = {
-        module: module,
-        types: new Array<string>(),
-      };
-      this.uses.push(mod);
-    }
-    if (!mod.types.find((v: string) => { return v === type; })) {
-      mod.types.push(type);
-    }
-  }
-
-  /**
-   * adds the specified module and types if not already in the list
-   * 
-   * @param module a module name
-   * @param types one or more types within the provided module
-   */
-  addTypes(module: string, types: Array<string>): void {
+  add(module: string, ...types: Array<string>): void {
     if (types.length === 0) {
       throw new Error('types can\'t be empty');
     }
+
     for (const type of types) {
-      this.addType(module, type);
+      // for each type, split it up into the constituent
+      // parts that build the fully qualified path.
+      const chunks = module.split('::');
+      chunks.push(...type.split('::'));
+
+      // each tree starts at the root of the fully qualified path
+      let tree = this.trees.find(v => v.root.name === chunks[0]);
+      if (!tree) {
+        tree = new useTree(chunks[0]);
+        this.trees.push(tree);
+      }
+
+      // insert the children of the root node into the tree
+      tree.insert(chunks.slice(1));
     }
   }
 
@@ -69,15 +63,15 @@ export class Use {
   addForType(type: rust.Client | rust.Type): void {
     switch (type.kind) {
       case 'arc':
-        this.addType('std::sync', 'Arc');
+        this.add('std::sync', 'Arc');
         return this.addForType(type.type);
       case 'client': {
         // client type are only referenced from other things in generated/clients so we ignore any scope
-        this.addType('crate::generated::clients', type.name);
+        this.add('crate::generated::clients', type.name);
         break;
       }
       case 'enum':
-        this.addType(this.scope === 'clients' ? 'crate::generated::models' : 'super', type.name);
+        this.add(this.scope === 'clients' ? 'crate::generated::models' : 'super', type.name);
         break;
       case 'enumValue':
         this.addForType(type.type);
@@ -85,13 +79,13 @@ export class Use {
       case 'model':
         switch (this.scope) {
           case 'clients':
-            this.addType(`crate::generated::models${type.visibility !== 'pub' ? '::crate_models' : ''}`, type.name);
+            this.add(`crate::generated::models${type.visibility !== 'pub' ? '::crate_models' : ''}`, type.name);
             break;
           case 'models':
             // we're in models so no need to bring another model into scope
             break;
           case 'modelsOther':
-            this.addType('super', type.name);
+            this.add('super', type.name);
             break;
         }
         break;
@@ -116,10 +110,10 @@ export class Use {
           case 'marker':
             switch (this.scope) {
               case 'clients':
-                this.addType('crate::generated::models', type.content.name);
+                this.add('crate::generated::models', type.content.name);
                 break;
               case 'modelsOther':
-                this.addType('super', type.content.name);
+                this.add('super', type.content.name);
                 break;
               default:
                 // marker types are only referenced from clients and model
@@ -133,14 +127,8 @@ export class Use {
     }
 
     if (type.kind !== 'client') {
-      if ((<rust.StdType>type).name !== undefined && (<rust.StdType>type).use !== undefined) {
-        this.addType((<rust.StdType>type).use, (<rust.StdType>type).name);
-      } else if ((<rust.External>type).crate !== undefined && (<rust.External>type).name !== undefined) {
-        let module = (<rust.External>type).crate;
-        if ((<rust.External>type).namespace) {
-          module += `::${(<rust.External>type).namespace}`;
-        }
-        this.addType(module, (<rust.External>type).name);
+      if ((<rust.QualifiedType>type).name !== undefined && (<rust.QualifiedType>type).path !== undefined) {
+        this.add((<rust.QualifiedType>type).path, (<rust.QualifiedType>type).name);
       }
     }
   }
@@ -152,7 +140,7 @@ export class Use {
    * @returns returns Rust formatted use statements
    */
   text(indent?: helpers.indentation): string {
-    if (this.uses.length === 0) {
+    if (this.trees.length === 0) {
       return '';
     }
 
@@ -163,17 +151,31 @@ export class Use {
 
     let content = '';
 
-    // sort by module name, then sort types if more than one type
-    const sortedMods = this.uses.sort((a: moduleTypes, b: moduleTypes) => { return helpers.sortAscending(a.module, b.module); });
-    for (const sortedMod of sortedMods) {
-      if (sortedMod.types.length === 1) {
-        content += `${indent.get()}use ${sortedMod.module}::${sortedMod.types[0]};\n`;
-      } else {
-        const sortedTypes = sortedMod.types.sort((a: string, b: string) => { return helpers.sortAscending(a, b); });
-        content += `${indent.get()}use ${sortedMod.module}::{\n`;
-        content += `${indent.push().get()}${sortedTypes.join(', ')}`;
-        content += `,\n${indent.pop().get()}};\n`;
+    /** recursively populates content with the guts of the use statement */
+    const recursiveText = function(node: useNode, siblings: boolean) {
+      content += node.name;
+      if (node.children.length === 1) {
+        content += '::';
+        recursiveText(node.children[0], false);
+      } else if (node.children.length > 1) {
+        node.children.sort((a, b) => helpers.sortAscending(a.name, b.name));
+        content += '::{';
+        for (const child of node.children) {
+          recursiveText(child, true);
+        }
+        content += '}';
       }
+
+      if (siblings) {
+        content += ', ';
+      }
+    };
+
+    this.trees.sort((a, b) => helpers.sortAscending(a.root.name, b.root.name));
+    for (const tree of this.trees) {
+      content += `${indent.get()}use `;
+      recursiveText(tree.root, false);
+      content += ';\n';
     }
 
     content += '\n';
@@ -181,11 +183,37 @@ export class Use {
   }
 }
 
-/** module and types within */
-interface moduleTypes {
-  /** the module name */
-  module: string;
+/**
+ * a tree of use statements
+ * 
+ * the tree starts at a root (e.g. azure_core) and
+ * each node has one or more children.
+ */
+class useTree {
+  readonly root: useNode;
+  constructor(item: string) {
+    this.root = new useNode(item);
+  }
 
-  /** the types within module */
-  types: Array<string>;
+  insert(items: Array<string>): void {
+    let node = this.root;
+    for (const item of items) {
+      let next = node.children.find((n) => n.name === item);
+      if (!next) {
+        next = new useNode(item);
+        node.children.push(next);
+      }
+      node = next;
+    }
+  }
+}
+
+/** a node within the use statement tree */
+class useNode {
+  readonly name: string;
+  readonly children: Array<useNode>;
+  constructor(name: string) {
+    this.name = name;
+    this.children = new Array<useNode>;
+  }
 }

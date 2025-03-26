@@ -6,8 +6,10 @@
 use crate::generated::models::{
     ModelWithText, XmlModelWithTextValueClientGetOptions, XmlModelWithTextValueClientPutOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 
 /// Operations for the ModelWithText type.
 pub struct XmlModelWithTextValueClient {

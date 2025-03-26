@@ -8,12 +8,14 @@ use crate::generated::models::{
     BasicClientExportAllUsersOptions, BasicClientExportOptions, BasicClientGetOptions,
     BasicClientListOptions, PagedUser, User, UserList,
 };
-use azure_core::fmt::SafeDebug;
-use azure_core::http::{
-    ClientOptions, Context, Method, Pager, PagerResult, Pipeline, Request, RequestContent,
-    Response, Url,
+use azure_core::{
+    fmt::SafeDebug,
+    http::{
+        ClientOptions, Context, Method, Pager, PagerResult, Pipeline, Request, RequestContent,
+        Response, Url,
+    },
+    json, Result,
 };
-use azure_core::{json, Result};
 
 /// Illustrates bodies templated with Azure Core
 pub struct BasicClient {

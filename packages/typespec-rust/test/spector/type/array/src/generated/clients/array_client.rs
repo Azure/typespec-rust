@@ -10,9 +10,11 @@ use crate::generated::clients::{
     ArrayNullableModelValueClient, ArrayNullableStringValueClient, ArrayStringValueClient,
     ArrayUnknownValueClient,
 };
-use azure_core::fmt::SafeDebug;
-use azure_core::http::{ClientOptions, Pipeline, Url};
-use azure_core::Result;
+use azure_core::{
+    fmt::SafeDebug,
+    http::{ClientOptions, Pipeline, Url},
+    Result,
+};
 
 /// Illustrates various types of arrays.
 pub struct ArrayClient {

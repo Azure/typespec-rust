@@ -6,9 +6,11 @@
 use crate::generated::clients::{
     ContentNegotiationDifferentBodyClient, ContentNegotiationSameBodyClient,
 };
-use azure_core::fmt::SafeDebug;
-use azure_core::http::{ClientOptions, Pipeline, Url};
-use azure_core::Result;
+use azure_core::{
+    fmt::SafeDebug,
+    http::{ClientOptions, Pipeline, Url},
+    Result,
+};
 
 /// Test describing optionality of the request body.
 pub struct ContentNegotiationClient {

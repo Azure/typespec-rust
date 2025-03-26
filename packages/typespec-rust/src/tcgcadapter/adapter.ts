@@ -64,7 +64,8 @@ export class Adapter {
     this.adaptTypes();
     this.adaptClients();
 
-    if (this.crate.enums.length > 0 || this.crate.models.length > 0) {
+    // marker models don't require serde so exclude them from the check
+    if (this.crate.enums.length > 0 || values(this.crate.models).where(e => e.kind === 'model').any()) {
       this.crate.addDependency(new rust.CrateDependency('serde'));
     }
 
@@ -559,12 +560,12 @@ export class Adapter {
     const rustClient = new rust.Client(clientName);
     rustClient.docs = this.adaptDocs(client.summary, client.doc);
     rustClient.parent = parent;
-    rustClient.fields.push(new rust.StructField('pipeline', 'pubCrate', new rust.ExternalType(this.crate, 'azure_core::http', 'Pipeline')));
+    rustClient.fields.push(new rust.StructField('pipeline', 'pubCrate', new rust.ExternalType(this.crate, 'Pipeline', 'azure_core::http')));
 
     // anything other than public means non-instantiable client
     if (client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
       const clientOptionsStruct = new rust.Struct(`${rustClient.name}Options`, 'pub');
-      const clientOptionsField = new rust.StructField('client_options', 'pub', new rust.ExternalType(this.crate, 'azure_core::http', 'ClientOptions'));
+      const clientOptionsField = new rust.StructField('client_options', 'pub', new rust.ExternalType(this.crate, 'ClientOptions', 'azure_core::http'));
       clientOptionsField.defaultValue = 'ClientOptions::default()';
       clientOptionsStruct.fields.push(clientOptionsField);
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
@@ -887,7 +888,7 @@ export class Adapter {
     methodOptionsStruct.lifetime = optionsLifetime;
     methodOptionsStruct.docs.summary = `Options to be passed to [\`${rustClient.name}::${methodName}()\`](crate::generated::clients::${rustClient.name}::${methodName}())`;
 
-    const clientMethodOptions = new rust.ExternalType(this.crate, 'azure_core::http', 'ClientMethodOptions');
+    const clientMethodOptions = new rust.ExternalType(this.crate, 'ClientMethodOptions', 'azure_core::http');
     clientMethodOptions.lifetime = optionsLifetime;
     const methodOptionsField = new rust.StructField('method_options', 'pub', clientMethodOptions);
     methodOptionsField.docs.summary = 'Allows customization of the method call.';

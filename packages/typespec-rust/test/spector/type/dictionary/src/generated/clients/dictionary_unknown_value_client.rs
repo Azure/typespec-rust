@@ -6,8 +6,10 @@
 use crate::generated::models::{
     DictionaryUnknownValueClientGetOptions, DictionaryUnknownValueClientPutOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 use serde_json::Value;
 use std::collections::HashMap;
 

@@ -7,8 +7,10 @@ use crate::generated::models::{
     CollectionFormatQueryClientCsvOptions, CollectionFormatQueryClientMultiOptions,
     CollectionFormatQueryClientPipesOptions, CollectionFormatQueryClientSsvOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, Response, Url},
+    Result,
+};
 
 pub struct CollectionFormatQueryClient {
     pub(crate) endpoint: Url,

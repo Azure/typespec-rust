@@ -18,7 +18,7 @@ export interface Docs {
 export type Type = Arc | Bytes | EncodedBytes | Enum | EnumValue | Etag | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | Pager | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
 
 /** Arc is a std::sync::Arc<T> */
-export interface Arc extends StdType {
+export interface Arc extends QualifiedType {
   kind: 'arc';
 
   /**
@@ -98,7 +98,7 @@ export interface ExternalType extends External {
  * HashMap is a Rust HashMap<K, V>
  * K is always a String
  */
-export interface HashMap extends StdType {
+export interface HashMap extends QualifiedType {
   kind: 'hashmap';
 
   /** the V generic type param */
@@ -340,43 +340,29 @@ export interface Vector {
 export type XMLKind = 'attribute' | 'text' | 'unwrappedList';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// base types
+// exported base types
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-/** External is a type defined in a different crate */
-export interface External {
-  /** the crate that defines the type */
-  crate: string;
-
+/**
+ * QualifiedType is a fully qualified type.
+ * 
+ * this is typically a type in the standard library that's not in the prelude set.
+ */
+export interface QualifiedType {
   /** the name of the type */
   name: string;
 
-  /** namespace within the crate where the type is defined (e.g. foo, foo::bar) */
-  namespace?: string;
+  /** the path to use to bring it into scope */
+  path: string;
 }
 
-export class External implements External {
-  constructor(crate: Crate, crateName: string, typeName: string, namespace?: string) {
-    crate.addDependency(new CrateDependency(crateName));
-    this.crate = crateName;
-    this.name = typeName;
-    this.namespace = namespace;
-  }
-}
-
-/** StdType is a type in the standard library that's not in the prelude set. */
-export interface StdType {
-  /** the name of the type */
-  name: string;
-
-  /** the using statement to bring it into scope */
-  use: string;
-}
-
-export class StdType implements StdType {
-  constructor(name: string, use: string) {
+export class QualifiedType implements QualifiedType {
+  constructor(name: string, path: string) {
+    if (name.indexOf('::') > 0) {
+      throw new Error(`name ${name} must not include any paths`);
+    }
     this.name = name;
-    this.use = use;
+    this.path = path;
   }
 }
 
@@ -386,6 +372,25 @@ export type Visibility = 'pub' | 'pubCrate';
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // base types
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * External is a qualified type defined in a different crate
+ * 
+ * the value in path will be used to determine the crate name
+ */
+interface External extends QualifiedType {}
+
+class External extends QualifiedType implements External {
+  constructor(crate: Crate, name: string, path: string) {
+    super(name, path);
+    let crateName = this.path;
+    const pathSep = crateName.indexOf('::');
+    if (pathSep > 0) {
+      crateName = crateName.substring(0, pathSep);
+    }
+    crate.addDependency(new CrateDependency(crateName));
+  }
+}
 
 /** base type for models and structs */
 interface StructBase {
@@ -446,7 +451,7 @@ class StructFieldBase implements StructFieldBase {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-export class Arc extends StdType implements Arc {
+export class Arc extends QualifiedType implements Arc {
   constructor(type: Type) {
     super('Arc', 'std::sync');
     this.kind = 'arc';
@@ -456,7 +461,7 @@ export class Arc extends StdType implements Arc {
 
 export class Bytes extends External implements Bytes {
   constructor(crate: Crate) {
-    super(crate, 'azure_core', 'Bytes');
+    super(crate, 'Bytes', 'azure_core');
     this.kind = 'bytes';
   }
 }
@@ -491,19 +496,19 @@ export class EnumValue implements EnumValue {
 
 export class Etag extends External implements Etag {
   constructor(crate: Crate) {
-    super(crate, 'azure_core::http', 'Etag');
+    super(crate, 'Etag', 'azure_core::http');
     this.kind = 'Etag';
   }
 }
 
 export class ExternalType extends External implements ExternalType {
-  constructor(crate: Crate, crateName: string, typeName: string) {
-    super(crate, crateName, typeName);
+  constructor(crate: Crate, name: string, path: string) {
+    super(crate, name, path);
     this.kind = 'external';
   }
 }
 
-export class HashMap extends StdType implements HashMap {
+export class HashMap extends QualifiedType implements HashMap {
   constructor(type: Type) {
     super('HashMap', 'std::collections');
     this.kind = 'hashmap';
@@ -521,7 +526,7 @@ export class ImplTrait implements ImplTrait {
 
 export class JsonValue extends External implements JsonValue {
   constructor(crate: Crate) {
-    super(crate, 'serde_json', 'Value');
+    super(crate, 'Value', 'serde_json');
     this.kind = 'jsonValue';
   }
 }
@@ -564,7 +569,7 @@ export class ModelField extends StructFieldBase implements ModelField {
 
 export class OffsetDateTime extends External implements OffsetDateTime {
   constructor(crate: Crate, encoding: DateTimeEncoding, utc: boolean) {
-    super(crate, 'time', 'OffsetDateTime');
+    super(crate, 'OffsetDateTime', 'time');
     this.kind = 'offsetDateTime';
     this.encoding = encoding;
     this.utc = utc;
@@ -599,7 +604,7 @@ export class Option implements Option {
 
 export class Pager extends External implements Pager {
   constructor(crate: Crate, type: Model, format: BodyFormat) {
-    super(crate, 'azure_core::http', 'Pager');
+    super(crate, 'Pager', 'azure_core::http');
     this.kind = 'pager';
     this.type = type;
     this.format = format;
@@ -631,7 +636,7 @@ export class Payload<T> implements Payload<T> {
 
 export class RequestContent<T> extends External implements RequestContent<T> {
   constructor(crate: Crate, content: T) {
-    super(crate, 'azure_core::http', 'RequestContent');
+    super(crate, 'RequestContent', 'azure_core::http');
     this.kind = 'requestContent';
     this.content = content;
   }
@@ -639,7 +644,7 @@ export class RequestContent<T> extends External implements RequestContent<T> {
 
 export class Response<T> extends External implements Response<T> {
   constructor(crate: Crate, content: T) {
-    super(crate, 'azure_core::http', 'Response');
+    super(crate, 'Response', 'azure_core::http');
     this.kind = 'response';
     this.content = content;
   }
@@ -653,7 +658,7 @@ export class ResponseBody implements ResponseBody {
 
 export class Result<T> extends External implements Result<T> {
   constructor(crate: Crate, type: T) {
-    super(crate, 'azure_core', 'Result');
+    super(crate, 'Result', 'azure_core');
     this.kind = 'result';
     this.type = type;
   }
@@ -696,7 +701,7 @@ export class TokenCredential extends External implements TokenCredential {
     if (scopes.length === 0) {
       throw new Error('scopes must contain at least one entry');
     }
-    super(crate, 'azure_core', 'TokenCredential', 'credentials');
+    super(crate, 'TokenCredential', 'azure_core::credentials');
     this.kind = 'tokenCredential';
     this.scopes = scopes;
   }
@@ -710,7 +715,7 @@ export class Unit implements Unit {
 
 export class Url extends External implements Url {
   constructor(crate: Crate) {
-    super(crate, 'azure_core::http', 'Url');
+    super(crate, 'Url', 'azure_core::http');
     this.kind = 'Url';
   }
 }

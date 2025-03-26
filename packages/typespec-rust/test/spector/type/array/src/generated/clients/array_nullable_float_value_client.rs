@@ -6,8 +6,10 @@
 use crate::generated::models::{
     ArrayNullableFloatValueClientGetOptions, ArrayNullableFloatValueClientPutOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 
 /// Array of nullable float values
 pub struct ArrayNullableFloatValueClient {

@@ -6,8 +6,10 @@
 use crate::generated::models::{
     DictionaryDurationValueClientGetOptions, DictionaryDurationValueClientPutOptions,
 };
-use azure_core::http::{Context, Method, Pipeline, Request, RequestContent, Response, Url};
-use azure_core::Result;
+use azure_core::{
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    Result,
+};
 use std::collections::HashMap;
 
 /// Dictionary of duration values

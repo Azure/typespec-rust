@@ -56,8 +56,7 @@ export function emitModels(crate: rust.Crate, context: Context): Models {
 function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rust.Visibility): helpers.Module | undefined {
   // for the internal models we might need to use public model types
   const use = new Use(visibility === 'pub' ? 'models' : 'modelsOther');
-  use.addTypes('serde', ['Deserialize', 'Serialize']);
-  use.addType('azure_core::fmt', 'SafeDebug');
+  use.add('azure_core::fmt', 'SafeDebug');
 
   const indent = new helpers.indentation();
 
@@ -74,6 +73,9 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
       // marker types are always public, so we skip them for the internal models file
       continue;
     }
+
+    // we add this here to avoid using serde for marker-only models
+    use.add('serde', 'Deserialize', 'Serialize');
 
     if (model.visibility !== visibility) {
       continue;
@@ -115,7 +117,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
         serdeParams.add('default');
         serdeParams.add(`deserialize_with = "${xmlListWrapper.name}::unwrap"`);
         serdeParams.add(`serialize_with = "${xmlListWrapper.name}::wrap"`);
-        use.addType('super::xml_helpers', xmlListWrapper.name);
+        use.add('super::xml_helpers', xmlListWrapper.name);
       }
 
       // TODO: omit skip_serializing_if if we need to send explicit JSON null
@@ -368,7 +370,7 @@ function emitXMLListWrappers(): helpers.Module | undefined {
   const indent = new helpers.indentation();
   const use = new Use('modelsOther');
 
-  use.addTypes('serde', ['Deserialize', 'Deserializer', 'Serialize', 'Serializer']);
+  use.add('serde', 'Deserialize', 'Deserializer', 'Serialize', 'Serializer');
 
   let body = '';
   for (const wrapperType of wrapperTypes) {
@@ -477,7 +479,7 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
     serdeParams.add('default');
     serdeParams.add(`deserialize_with = "base64::deserialize${format}"`);
     serdeParams.add(`serialize_with = "base64::serialize${format}"`);
-    use.addType('azure_core', 'base64');
+    use.add('azure_core', 'base64');
   };
 
   /** non-collection based impl */
@@ -494,7 +496,7 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
       return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, false);
     case 'hashmap':
     case 'Vec':
-      use.addType('super', 'models_serde');
+      use.add('super', 'models_serde');
       serdeParams.add('default');
       serdeParams.add(`with = "models_serde::${buildSerDeModName(type)}"`);
       break;
@@ -551,8 +553,8 @@ function emitSerDeHelpers(): string | undefined {
  * @returns the pub fn deserialize function definition
  */
 function buildDeserialize(indent: helpers.indentation, type: rust.Type, use: Use): string {
-  use.addTypes('serde', ['Deserialize', 'Deserializer']);
-  use.addType('std', 'result::Result');
+  use.add('serde', 'Deserialize', 'Deserializer');
+  use.add('std', 'result::Result');
   use.addForType(type);
   let content = `${indent.get()}pub fn deserialize<'de, D>(deserializer: D) -> Result<${helpers.getTypeDeclaration(type)}, D::Error>\n`;
   content += `${indent.get()}where D: Deserializer<'de>\n${indent.get()}{\n`;
@@ -584,8 +586,8 @@ function buildDeserialize(indent: helpers.indentation, type: rust.Type, use: Use
  * @returns the pub fn serialize function definition
  */
 function buildSerialize(indent: helpers.indentation, type: rust.Type, use: Use): string {
-  use.addTypes('serde', ['Serialize', 'Serializer']);
-  use.addType('std', 'result::Result');
+  use.add('serde', 'Serialize', 'Serializer');
+  use.add('std', 'result::Result');
   use.addForType(type);
 
   // clippy wants the outer-most Vec<T> to be a [] instead
@@ -673,7 +675,7 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
   switch (ctx.type.kind) {
     case 'encodedBytes': {
       // terminal case (NEVER the start case)
-      use.addType('azure_core', 'base64');
+      use.add('azure_core', 'base64');
       const base64Decode = `base64::${ctx.type.encoding === 'std' ? 'decode' : 'decode_url_safe'}`;
       content = `${base64Decode}(${ctx.srcVar}).map_err(serde::de::Error::custom)?`;
       content = insertOrPush(content, true);
@@ -694,7 +696,7 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
     case 'offsetDateTime': {
       // terminal case (NEVER the start case)
       if (ctx.type.encoding !== 'unix_time') {
-        use.addType('azure_core', 'date');
+        use.add('azure_core', 'date');
       }
       const dateParse = ctx.type.encoding === 'unix_time' ? 'OffsetDateTime::from_unix_timestamp' : `date::parse_${ctx.type.encoding}`;
       content = `${dateParse}(${ctx.type.encoding !== 'unix_time' ? '&' : ''}${ctx.srcVar}).map_err(serde::de::Error::custom)?`;
@@ -758,7 +760,7 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
   switch (ctx.type.kind) {
     case 'encodedBytes': {
       // terminal case (NEVER the start case)
-      use.addType('azure_core', 'base64');
+      use.add('azure_core', 'base64');
       const base64Encode = `base64::${ctx.type.encoding === 'std' ? 'encode' : 'encode_url_safe'}`;
       switch (ctx.caller) {
         case 'hashmap':
@@ -798,7 +800,7 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
     case 'offsetDateTime': {
       // terminal case (NEVER the start case)
       if (ctx.type.encoding !== 'unix_time') {
-        use.addType('azure_core', 'date');
+        use.add('azure_core', 'date');
       }
       content = ctx.type.encoding === 'unix_time' ? `${ctx.srcVar}.unix_timestamp()` : `date::to_${ctx.type.encoding}`;
       switch (ctx.caller) {
