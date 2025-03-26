@@ -366,14 +366,21 @@ export class QualifiedType implements QualifiedType {
   }
 }
 
+/** Visibility defines where something can be accessed. */
+export type Visibility = 'pub' | 'pubCrate';
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// base types
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
  * External is a qualified type defined in a different crate
  * 
  * the value in path will be used to determine the crate name
  */
-export interface External extends QualifiedType {}
+interface External extends QualifiedType {}
 
-export class External extends QualifiedType implements External {
+class External extends QualifiedType implements External {
   constructor(crate: Crate, name: string, path: string) {
     super(name, path);
     let crateName = this.path;
@@ -384,13 +391,6 @@ export class External extends QualifiedType implements External {
     crate.addDependency(new CrateDependency(crateName));
   }
 }
-
-/** Visibility defines where something can be accessed. */
-export type Visibility = 'pub' | 'pubCrate';
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// base types
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** base type for models and structs */
 interface StructBase {
