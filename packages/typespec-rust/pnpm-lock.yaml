@@ -34,8 +34,8 @@ importers:
         version: 7.2.0
     devDependencies:
       '@azure-tools/azure-http-specs':
-        specifier: 0.1.0-alpha.11
-        version: 0.1.0-alpha.11(dvm2r57fnpwbs3wd3b4hyelitm)
+        specifier: 0.1.0-alpha.12
+        version: 0.1.0-alpha.12(dvm2r57fnpwbs3wd3b4hyelitm)
       '@azure-tools/typespec-autorest':
         specifier: 0.53.0
         version: 0.53.0(gzchvn7tm2qglp3pxtofhuvxlq)
@@ -83,7 +83,7 @@ importers:
         version: 0.67.1(@typespec/compiler@0.67.2(@types/node@18.19.76))
       '@vitest/coverage-v8':
         specifier: ^3.0.8
-        version: 3.0.9(vitest@3.0.9)
+        version: 3.0.9(vitest@3.0.9(@types/node@18.19.76)(@vitest/ui@3.0.9)(yaml@2.7.0))
       '@vitest/ui':
         specifier: ^3.0.8
         version: 3.0.9(vitest@3.0.9)
@@ -113,12 +113,12 @@ packages:
     resolution: {integrity: sha512-X1C7XdyCuo50ch9FzKtTvmK18FgDxxf1Bbt3cSoknQqeDaRegHSSCO+zByq2YA4NvUzKXeZ1engh29IDxZXgpQ==}
     engines: {node: '>=10.12.0'}
 
-  '@azure-tools/azure-http-specs@0.1.0-alpha.11':
-    resolution: {integrity: sha512-j6vM1pbxgZcCP41Q6e2jk5D8OxqL/k4CZp5HcCIXPAYLZDIEF675AAqe4x73QSgsith9vqAiiJweZpIwtPJEyw==}
+  '@azure-tools/azure-http-specs@0.1.0-alpha.12':
+    resolution: {integrity: sha512-WKXqzrdlsRnzdmoL1eg+En2do+540/2FUrWG4nncSbuJnBuxmlHbE++x/jFNXiI4TUBMgLYr1WEgqnRu5r9qkw==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@azure-tools/typespec-azure-core': ^0.53.0
-      '@typespec/compiler': ^0.67.1
+      '@typespec/compiler': ^0.67.2
       '@typespec/http': ^0.67.1
       '@typespec/rest': ^0.67.1
       '@typespec/versioning': ^0.67.1
@@ -2510,7 +2510,7 @@ snapshots:
       '@azure-tools/tasks': 3.0.255
       proper-lockfile: 2.0.1
 
-  '@azure-tools/azure-http-specs@0.1.0-alpha.11(dvm2r57fnpwbs3wd3b4hyelitm)':
+  '@azure-tools/azure-http-specs@0.1.0-alpha.12(dvm2r57fnpwbs3wd3b4hyelitm)':
     dependencies:
       '@azure-tools/typespec-azure-core': 0.53.0(@typespec/compiler@0.67.2(@types/node@18.19.76))(@typespec/http@0.67.1(@typespec/compiler@0.67.2(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.2(@types/node@18.19.76))))(@typespec/rest@0.67.1(@typespec/compiler@0.67.2(@types/node@18.19.76))(@typespec/http@0.67.1(@typespec/compiler@0.67.2(@types/node@18.19.76))(@typespec/streams@0.67.1(@typespec/compiler@0.67.2(@types/node@18.19.76)))))
       '@typespec/compiler': 0.67.2(@types/node@18.19.76)
@@ -3315,7 +3315,7 @@ snapshots:
     dependencies:
       '@typespec/compiler': 0.67.2(@types/node@18.19.76)
 
-  '@vitest/coverage-v8@3.0.9(vitest@3.0.9)':
+  '@vitest/coverage-v8@3.0.9(vitest@3.0.9(@types/node@18.19.76)(@vitest/ui@3.0.9)(yaml@2.7.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
