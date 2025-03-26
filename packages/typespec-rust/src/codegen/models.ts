@@ -56,7 +56,6 @@ export function emitModels(crate: rust.Crate, context: Context): Models {
 function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rust.Visibility): helpers.Module | undefined {
   // for the internal models we might need to use public model types
   const use = new Use(visibility === 'pub' ? 'models' : 'modelsOther');
-  use.add('serde', 'Deserialize', 'Serialize');
   use.add('azure_core::fmt', 'SafeDebug');
 
   const indent = new helpers.indentation();
@@ -74,6 +73,9 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
       // marker types are always public, so we skip them for the internal models file
       continue;
     }
+
+    // we add this here to avoid using serde for marker-only models
+    use.add('serde', 'Deserialize', 'Serialize');
 
     if (model.visibility !== visibility) {
       continue;

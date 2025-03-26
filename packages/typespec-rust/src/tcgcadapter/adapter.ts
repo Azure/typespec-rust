@@ -64,7 +64,8 @@ export class Adapter {
     this.adaptTypes();
     this.adaptClients();
 
-    if (this.crate.enums.length > 0 || this.crate.models.length > 0) {
+    // marker models don't require serde so exclude them from the check
+    if (this.crate.enums.length > 0 || values(this.crate.models).where(e => e.kind === 'model').any()) {
       this.crate.addDependency(new rust.CrateDependency('serde'));
     }
 
