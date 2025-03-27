@@ -891,7 +891,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   const nextLinkName = method.strategy.nextLinkName;
   use.add('azure_core::http', 'Method', 'Pager', 'PagerResult', 'Request', 'Response', 'Url');
   use.add('azure_core', 'json', 'Result');
-  use.addForType(method.returns.type.type);
+  use.addForType(method.returns.type.type.type);
 
   const paramGroups = getMethodParamGroup(method);
   const urlVar = 'first_url';
@@ -929,7 +929,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += ';\n';
 
   // here we want the T in Pager<T>
-  const returnType = helpers.getTypeDeclaration(method.returns.type.type);
+  const returnType = helpers.getTypeDeclaration(method.returns.type.type.type);
 
   body += constructRequest(indent, use, method, paramGroups, false);
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;

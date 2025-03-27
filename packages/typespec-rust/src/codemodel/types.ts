@@ -14,8 +14,14 @@ export interface Docs {
   description?: string;
 }
 
+/** SdkType defines types used in generated code but do not directly participate in serde */
+export type SdkType =  Arc | ExternalType | ImplTrait | Option | Pager | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+
+/** WireType defines types that go across the wire */
+export type WireType = Bytes | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | Scalar | StringSlice | StringType | Url | Vector;
+
 /** Type defines a type within the Rust type system */
-export type Type = Arc | Bytes | EncodedBytes | Enum | EnumValue | Etag | ExternalType | HashMap | ImplTrait | JsonValue | Literal | Model | OffsetDateTime | Option | Pager | RequestContent | Response | Result | Scalar | StringSlice | StringType | Struct | TokenCredential | Unit | Url | Vector;
+export type Type = SdkType | WireType;
 
 /** Arc is a std::sync::Arc<T> */
 export interface Arc extends QualifiedType {
@@ -23,9 +29,9 @@ export interface Arc extends QualifiedType {
 
   /**
    * the generic type param
-   * note that not all types are applicable
+   * at present, only TokenCredential is supported
    */
-  type: Type;
+  type: TokenCredential;
 }
 
 /** Bytes is a azure_core::Bytes type */
@@ -102,7 +108,7 @@ export interface HashMap extends QualifiedType {
   kind: 'hashmap';
 
   /** the V generic type param */
-  type: Type;
+  type: WireType;
 }
 
 /** ImplTrait is the Rust syntax for "a concrete type that implements this trait" */
@@ -205,9 +211,8 @@ export interface Option {
 
   /**
    * the generic type param
-   * note that not all types are applicable
    */
-  type: Type;
+  type: RequestContent | Struct | WireType;
 }
 
 /** Pager is a Pager<T> from azure_core */
@@ -215,22 +220,18 @@ export interface Pager extends External {
   kind: 'pager';
 
   /** the model containing the page of items */
-  type: Model;
-
-  /** the wire format of the response body. */
-  format: BodyFormat;
+  type: Payload<Model>;
 }
 
 /**
  * Payload<T> is used for operations that send/receive a typed payload.
  * it's a grouping of the payload type and its wire format.
  */
-export interface Payload<T extends Type = Type> {
+export interface Payload<T extends WireType = WireType> {
   kind: 'payload';
 
   /**
    * the generic type param
-   * note that not all types are applicable
    */
   type: T;
 
@@ -238,16 +239,22 @@ export interface Payload<T extends Type = Type> {
   format: BodyFormat;
 }
 
+/** RequestContentTypes defines the type constraint when creating a RequestContent<T> */
+type RequestContentTypes = Bytes | Payload;
+
 /** RequestContent is a Rust RequestContent<T> from azure_core */
-export interface RequestContent<T = Bytes | Payload> extends External {
+export interface RequestContent<T extends RequestContentTypes = RequestContentTypes> extends External {
   kind: 'requestContent';
 
   /** the type of content sent in the request */
   content: T;
 }
 
+/** ResponseTypes defines the type constraint when creating a Response<T> */
+type ResponseTypes = MarkerType | Payload | ResponseBody | Unit;
+
 /** Response is a Rust Response<T> from azure_core */
-export interface Response<T = MarkerType | Payload | ResponseBody | Unit> extends External {
+export interface Response<T extends ResponseTypes = ResponseTypes> extends External {
   kind: 'response';
 
   /** the type of content sent in the response */
@@ -262,8 +269,11 @@ export interface ResponseBody {
   kind: 'responseBody';
 }
 
+/** ResultTypes defines the type constraint when creating a Result<T> */
+type ResultTypes = Pager | Response | Unit;
+
 /** Result is a Rust Result<T> from azure_core */
-export interface Result<T = Pager | Response | Unit> extends External {
+export interface Result<T extends ResultTypes = ResultTypes> extends External {
   kind: 'result';
 
   /** the generic type param */
@@ -333,7 +343,7 @@ export interface Vector {
   kind: 'Vec';
 
   /** the generic type param */
-  type: Type;
+  type: WireType;
 }
 
 /** XMLKind contains info used for generating XML-specific serde */
@@ -452,7 +462,7 @@ class StructFieldBase implements StructFieldBase {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class Arc extends QualifiedType implements Arc {
-  constructor(type: Type) {
+  constructor(type: TokenCredential) {
     super('Arc', 'std::sync');
     this.kind = 'arc';
     this.type = type;
@@ -509,7 +519,7 @@ export class ExternalType extends External implements ExternalType {
 }
 
 export class HashMap extends QualifiedType implements HashMap {
-  constructor(type: Type) {
+  constructor(type: WireType) {
     super('HashMap', 'std::collections');
     this.kind = 'hashmap';
     this.type = type;
@@ -577,60 +587,25 @@ export class OffsetDateTime extends External implements OffsetDateTime {
 }
 
 export class Option implements Option {
-  constructor(type: Type) {
-    switch (type.kind) {
-      case 'String':
-      case 'encodedBytes':
-      case 'enum':
-      case 'enumValue':
-      case 'Etag':
-      case 'external':
-      case 'hashmap':
-      case 'model':
-      case 'offsetDateTime':
-      case 'requestContent':
-      case 'scalar':
-      case 'struct':
-      case 'Url':
-      case 'Vec':
-        this.kind = 'option';
-        this.type = type;
-        break;
-      default:
-        throw new Error(`unsupported Option generic type param kind ${type.kind}`);
-    }
+  constructor(type: WireType | RequestContent | Struct) {
+    this.kind = 'option';
+    this.type = type;
   }
 }
 
 export class Pager extends External implements Pager {
-  constructor(crate: Crate, type: Model, format: BodyFormat) {
+  constructor(crate: Crate, type: Payload<Model>) {
     super(crate, 'Pager', 'azure_core::http');
     this.kind = 'pager';
     this.type = type;
-    this.format = format;
   }
 }
 
 export class Payload<T> implements Payload<T> {
   constructor(type: T, format: BodyFormat) {
-    switch (type.kind) {
-      case 'String':
-      case 'encodedBytes':
-      case 'enum':
-      case 'external':
-      case 'hashmap':
-      case 'jsonValue':
-      case 'model':
-      case 'offsetDateTime':
-      case 'scalar':
-      case 'Vec':
-        this.kind = 'payload';
-        this.type = type;
-        this.format = format;
-        break;
-      default:
-        throw new Error(`unsupported Payload generic type param kind ${type.kind}`);
-    }
+    this.kind = 'payload';
+    this.type = type;
+    this.format = format;
   }
 }
 
@@ -721,7 +696,7 @@ export class Url extends External implements Url {
 }
 
 export class Vector implements Vector {
-  constructor(type: Type) {
+  constructor(type: WireType) {
     this.kind = 'Vec';
     this.type = type;
   }

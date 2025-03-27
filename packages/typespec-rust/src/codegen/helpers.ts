@@ -158,7 +158,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Type, withAnonymousL
     case 'option':
       return `Option<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'pager':
-      return `Pager<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+      return `Pager<${getTypeDeclaration(type.type.type, withAnonymousLifetime)}>`;
     case 'requestContent':
       switch (type.content.kind) {
         case 'bytes':

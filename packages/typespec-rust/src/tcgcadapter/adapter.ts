@@ -261,7 +261,7 @@ export class Adapter {
     // the only exception is for HashMap and Vec since an
     // empty collection conveys the same semantics.
     if ((modelVisibility === 'pub' || property.optional) && fieldType.kind !== 'hashmap' && fieldType.kind !== 'Vec') {
-      fieldType = new rust.Option(fieldType);
+      fieldType = new rust.Option(this.typeToWireType(fieldType));
     }
 
     const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, modelVisibility, fieldType);
@@ -346,7 +346,7 @@ export class Adapter {
         if (vectorType) {
           return vectorType;
         }
-        vectorType = new rust.Vector(this.getType(type.valueType));
+        vectorType = new rust.Vector(this.typeToWireType(this.getType(type.valueType)));
         this.types.set(keyName, vectorType);
         return vectorType;
       }
@@ -372,7 +372,7 @@ export class Adapter {
         if (hashmapType) {
           return hashmapType;
         }
-        hashmapType = new rust.HashMap(this.getType(type.valueType));
+        hashmapType = new rust.HashMap(this.typeToWireType(this.getType(type.valueType)));
         this.types.set(keyName, hashmapType);
         return hashmapType;
       }
@@ -986,6 +986,13 @@ export class Adapter {
           }
           fieldType = field.type;
         } else {
+          switch (adaptedParam.type.kind) {
+            case 'requestContent':
+            case 'struct':
+              break;
+            default:
+              adaptedParam.type = this.typeToWireType(adaptedParam.type);
+          }
           fieldType = new rust.Option(adaptedParam.type);
         }
 
@@ -1072,9 +1079,9 @@ export class Adapter {
       if (!this.crate.models.includes(synthesizedModel)) {
         this.crate.models.push(synthesizedModel);
       }
-      returnType = new rust.Pager(this.crate, synthesizedModel, format);
+      returnType = new rust.Pager(this.crate, new rust.Payload(synthesizedModel, format));
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
-      returnType = new rust.Response(this.crate, new rust.Payload(this.getType(method.response.type), getBodyFormat()));
+      returnType = new rust.Response(this.crate, new rust.Payload(this.typeToWireType(this.getType(method.response.type)), getBodyFormat()));
     } else if (rustMethod.responseHeaders.length > 0) {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
@@ -1137,7 +1144,7 @@ export class Adapter {
           // bytes encoding indicates a streaming binary request
           requestType = new rust.Bytes(this.crate);
         } else {
-          requestType = new rust.Payload(paramType, this.adaptBodyFormat(param.defaultContentType));
+          requestType = new rust.Payload(this.typeToWireType(paramType), this.adaptBodyFormat(param.defaultContentType));
         }
         adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, requestType));
         break;
@@ -1202,6 +1209,36 @@ export class Adapter {
     }
 
     return adaptedParam;
+  }
+
+  /**
+   * narrows a rust.Type to a rust.WireType.
+   * if type isn't a rust.WireType, an error is thrown.
+   * 
+   * @param type the type to narrow
+   * @returns the narrowed type
+   */
+  private typeToWireType(type: rust.Type): rust.WireType {
+    switch (type.kind) {
+      case 'bytes':
+      case 'encodedBytes':
+      case 'enum':
+      case 'enumValue':
+      case 'Etag':
+      case 'hashmap':
+      case 'jsonValue':
+      case 'literal':
+      case 'model':
+      case 'offsetDateTime':
+      case 'scalar':
+      case 'str':
+      case 'String':
+      case 'Url':
+      case 'Vec':
+        return type;
+      default:
+        throw new Error(`cannot convert ${type.kind} to a wire type`);
+    }
   }
 
   /**

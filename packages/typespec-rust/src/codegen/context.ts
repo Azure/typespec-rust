@@ -78,8 +78,8 @@ export class Context {
           }
           recursiveAddBodyFormat(method.returns.type.content.type, method.returns.type.content.format);
         } else if (method.returns.type.kind === 'pager') {
-          this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.type), method.returns.type.format);
-          recursiveAddBodyFormat(method.returns.type.type, method.returns.type.format);
+          this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.type.type), method.returns.type.type.format);
+          recursiveAddBodyFormat(method.returns.type.type.type, method.returns.type.type.format);
         }
       }
     }
