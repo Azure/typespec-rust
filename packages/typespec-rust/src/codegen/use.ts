@@ -60,7 +60,7 @@ export class Use {
    * 
    * @param type the Rust type to add
    */
-  addForType(type: rust.Client | rust.Type): void {
+  addForType(type: rust.Client | rust.Payload | rust.Type): void {
     switch (type.kind) {
       case 'arc':
         this.add('std::sync', 'Arc');
@@ -76,6 +76,20 @@ export class Use {
       case 'enumValue':
         this.addForType(type.type);
         break;
+      case 'marker':
+        switch (this.scope) {
+          case 'clients':
+            this.add('crate::generated::models', type.name);
+            break;
+          case 'modelsOther':
+            this.add('super', type.name);
+            break;
+          default:
+            // marker types are only referenced from clients and model
+            // helpers so we should never get here (if we do it's a bug)
+            throw new Error(`unexpected scope ${this.scope}`);
+        }
+        break;
       case 'model':
         switch (this.scope) {
           case 'clients':
@@ -90,6 +104,7 @@ export class Use {
         }
         break;
       case 'option':
+      case 'payload':
       case 'result':
       case 'hashmap':
       case 'Vec':
@@ -108,21 +123,9 @@ export class Use {
       case 'response':
         switch (type.content.kind) {
           case 'marker':
-            switch (this.scope) {
-              case 'clients':
-                this.add('crate::generated::models', type.content.name);
-                break;
-              case 'modelsOther':
-                this.add('super', type.content.name);
-                break;
-              default:
-                // marker types are only referenced from clients and model
-                // helpers so we should never get here (if we do it's a bug)
-                throw new Error(`unexpected scope ${this.scope}`);
-            }
-            break;
           case 'payload':
-            this.addForType(type.content.type);
+            this.addForType(type.content);
+            break;
         }
     }
 

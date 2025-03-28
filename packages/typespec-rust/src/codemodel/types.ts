@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | ExternalType | ImplTrait | Option | Pager | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType =  Arc | ExternalType | ImplTrait | MarkerType | Option | Pager | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
 export type WireType = Bytes | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | Scalar | StringSlice | StringType | Url | Vector;
@@ -225,7 +225,8 @@ export interface Pager extends External {
 
 /**
  * Payload<T> is used for operations that send/receive a typed payload.
- * it's a grouping of the payload type and its wire format.
+ * it's a grouping of the payload type and its wire format but does not
+ * actually exist as a type (i.e. there's no Payload type in emitted code).
  */
 export interface Payload<T extends WireType = WireType> {
   kind: 'payload';

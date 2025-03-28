@@ -55,10 +55,20 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
     const client = clientMethod.client;
     const method = clientMethod.method;
 
-    if (method.returns.type.kind !== 'response') {
-      throw new Error(`unexpected method return kind ${method.returns.type.kind}`);
-    } else if (method.returns.type.content.kind !== 'marker' && method.returns.type.content.kind !== 'payload') {
-      throw new Error(`unexpected method content kind ${method.returns.type.content.kind}`);
+    let implFor: rust.MarkerType | rust.Payload;
+    switch (method.returns.type.kind) {
+      case 'pager':
+        implFor = method.returns.type.type;
+        break;
+      case 'response':
+        if (method.returns.type.content.kind !== 'marker' && method.returns.type.content.kind !== 'payload') {
+          throw new Error(`unexpected method content kind ${method.returns.type.content.kind}`);
+        }
+        implFor = method.returns.type.content;
+        break;
+      default:
+        // this is Unit which should have been previously skipped
+        throw new Error(`unexpected method return kind ${method.returns.type.kind}`);
     }
 
     for (const responseHeader of method.responseHeaders) {
@@ -69,7 +79,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
 
     // if this trait is already implemented for a Response<T>
     // then just add any new headers to it
-    const trait = traits.find(v => helpers.getTypeDeclaration(v.implFor) === helpers.getTypeDeclaration(method.returns.type));
+    const trait = traits.find(v => helpers.getTypeDeclaration(v.implFor) === helpers.getTypeDeclaration(implFor));
     if (trait) {
       for (const responseHeader of method.responseHeaders) {
         const matchingHeader = trait.headers.find(h => h.header === responseHeader.header);
@@ -84,22 +94,24 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
     }
 
     let traitName: string;
-    switch (method.returns.type.content.kind) {
+    switch (implFor.kind) {
       case 'marker':
-        traitName = `${method.returns.type.content.name}Headers`;
+        traitName = `${implFor.name}Headers`;
         break;
       case 'payload':
-        traitName = `${helpers.getTypeDeclaration(method.returns.type.content.type)}Headers`;
+        traitName = `${helpers.getTypeDeclaration(implFor.type)}Headers`;
         // Response<Vec<SignedIdentifier>> becomes VecSignedIdentifierHeaders
         traitName = traitName.replace(/(?:<|>)/g, '');
         break;
+      default:
+        throw new Error(`unexpected method return kind ${method.returns.type.kind}`);
     }
 
     traits.push({
       name: traitName,
       docs: `Provides access to typed response headers for [\`${client.name}::${method.name}()\`](crate::generated::clients::${client.name}::${method.name}())`,
       headers: [...method.responseHeaders], // make a copy of the headers array
-      implFor: method.returns.type,
+      implFor: implFor,
     })
   }
 
@@ -141,7 +153,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
 
   const use = new Use('modelsOther');
   use.add('azure_core', 'Result');
-  use.add('azure_core::http', 'headers::HeaderName');
+  use.add('azure_core::http', 'headers::HeaderName', 'Response');
 
   const indent = new helpers.indentation();
 
@@ -168,7 +180,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
     body += '}\n\n';
 
     use.addForType(helpers.unwrapType(trait.implFor));
-    body += `impl ${trait.name} for ${helpers.getTypeDeclaration(trait.implFor)} {\n`;
+    body += `impl ${trait.name} for Response<${helpers.getTypeDeclaration(trait.implFor)}> {\n`;
     for (const header of trait.headers) {
       body += helpers.formatDocComment(header.docs);
       body += `${indent.get()}${getHeaderMethodName(header)} {\n`;
@@ -256,11 +268,12 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
 function getSealedImpls(traitDefs: Array<TraitDefinition>): string {
   const use = new Use('modelsOther');
   const indent = new helpers.indentation();
+  use.add('azure_core::http', 'Response');
 
   const implsFor = new Array<string>();
   for (const traitDef of traitDefs) {
     use.addForType(traitDef.implFor);
-    implsFor.push(`impl Sealed for ${helpers.getTypeDeclaration(traitDef.implFor)} {}`);
+    implsFor.push(`impl Sealed for Response<${helpers.getTypeDeclaration(traitDef.implFor)}> {}`);
   }
 
   implsFor.sort();
@@ -288,5 +301,5 @@ interface TraitDefinition {
   headers: Array<rust.ResponseHeader>;
 
   /** the type for which to implement the trait */
-  implFor: rust.Response;
+  implFor: rust.MarkerType | rust.Payload;
 }

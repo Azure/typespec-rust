@@ -136,12 +136,13 @@ export function emitVisibility(visibility: rust.Visibility): string {
  * @param withAnonymousLifetime indicates if an existing lifetime annotation should be substituted with the anonymous lifetime
  * @returns 
  */
-export function getTypeDeclaration(type: rust.Client | rust.Type, withAnonymousLifetime = false): string {
+export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Type, withAnonymousLifetime = false): string {
   switch (type.kind) {
     case 'arc':
       return `${type.name}<dyn ${getTypeDeclaration(type.type)}>`;
     case 'bytes':
     case 'client':
+    case 'marker':
       return type.name;
     case 'encodedBytes':
       return 'Vec<u8>';
@@ -159,6 +160,8 @@ export function getTypeDeclaration(type: rust.Client | rust.Type, withAnonymousL
       return `Option<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'pager':
       return `Pager<${getTypeDeclaration(type.type.type, withAnonymousLifetime)}>`;
+    case 'payload':
+      return getTypeDeclaration(type.type, withAnonymousLifetime);
     case 'requestContent':
       switch (type.content.kind) {
         case 'bytes':
@@ -386,12 +389,16 @@ export function unwrapOption(type: rust.Type): rust.Type {
  * @param type is the type to unwrap
  * @returns the wrapped type or the original type if it wasn't wrapped
  */
-export function unwrapType(type: rust.Type): rust.Type {
+export function unwrapType(type: rust.Payload | rust.Type): rust.Type {
   switch (type.kind) {
     case 'arc':
-    case 'option':
     case 'hashmap':
+    case 'option':
     case 'Vec':
+      return unwrapType(type.type);
+    case 'pager':      
+      return type.type.type;
+    case 'payload':
       return unwrapType(type.type);
     default:
       return type;
