@@ -148,16 +148,22 @@ export interface PageableMethod extends HTTPMethodBase {
 export interface PageableStrategyContinuationToken {
   kind: 'continuationToken';
 
-  /** the name of the field in the response that contains the continuation token */
-  continuationToken: string;
+  /** the parameter that contains the continuation token */
+  requestToken: HeaderParameter | QueryParameter;
+
+  /**
+   * the location in the response that contains the continuation token.
+   * can be a response header or a field in response model.
+   */
+  responseToken: ResponseHeaderScalar | types.StructField;
 }
 
 /** PageableStrategyNextLink indicates a pageable method uses the nextLink strategy */
 export interface PageableStrategyNextLink {
   kind: 'nextLink';
 
-  /** the name of the field in the response that contains the next link URL */
-  nextLinkName: string;
+  /** the field in the response that contains the next link URL */
+  nextLink: types.StructField;
 }
 
 /** PageableStrategyKind contains different strategies for fetching subsequent pages */
@@ -557,16 +563,17 @@ export class PageableMethod extends HTTPMethodBase implements PageableMethod {
 }
 
 export class PageableStrategyContinuationToken implements PageableStrategyContinuationToken {
-  constructor(continuationToken: string) {
+  constructor(requestToken: HeaderParameter | QueryParameter, responseToken: ResponseHeaderScalar | types.StructField) {
     this.kind = 'continuationToken';
-    this.continuationToken = continuationToken;
+    this.requestToken = requestToken;
+    this.responseToken = responseToken;
   }
 }
 
 export class PageableStrategyNextLink implements PageableStrategyNextLink {
-  constructor(nextLinkName: string) {
+  constructor(nextLink: types.StructField) {
     this.kind = 'nextLink';
-    this.nextLinkName = nextLinkName;
+    this.nextLink = nextLink;
   }
 }
 

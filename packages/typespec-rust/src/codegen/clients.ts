@@ -888,7 +888,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     throw new Error('paged methods other than nextLink NYI');
   }
 
-  const nextLinkName = method.strategy.nextLinkName;
+  const nextLinkName = method.strategy.nextLink.name;
   use.add('azure_core::http', 'Method', 'Pager', 'PagerResult', 'Request', 'Response', 'Url');
   use.add('azure_core', 'json', 'Result');
   use.addForType(method.returns.type.type.type);

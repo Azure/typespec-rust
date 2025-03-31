@@ -45,10 +45,14 @@ export class Adapter {
   // contains methods that have been renamed
   private readonly renamedMethods: Set<string>;
 
+  // maps a tcgc model field to the adapted struct field
+  private readonly fieldsMap: Map<tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, rust.StructField>;
+
   private constructor(ctx: tcgc.SdkContext, options: RustEmitterOptions) {
     this.types = new Map<string, rust.Type>();
     this.clientMethodParams = new Map<string, rust.MethodParameter>();
     this.renamedMethods = new Set<string>();
+    this.fieldsMap = new Map<tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, rust.StructField>();
     this.ctx = ctx;
 
     let serviceType: rust.ServiceType = 'data-plane';
@@ -273,6 +277,11 @@ export class Adapter {
       modelField.serde = xmlName;
     }
     modelField.xmlKind = getXMLKind(property.decorators, modelField);
+
+    // it's possible for different models to reference the same property definition
+    if (!this.fieldsMap.get(property)) {
+      this.fieldsMap.set(property, modelField);
+    }
 
     return modelField;
   }
@@ -917,17 +926,6 @@ export class Adapter {
         break;
       case 'paging':
         rustMethod = new rust.PageableMethod(methodName, rustClient, pub, methodOptions, httpMethod, httpPath);
-        if (method.nextLinkOperation) {
-          // TODO: https://github.com/Azure/autorest.rust/issues/103
-          throw new Error('next page operation NYI');
-        } else if (method.nextLinkPath) {
-          // this is the name of the field in the response type that contains the next link URL
-          if (method.nextLinkPath.indexOf('.') > 0) {
-            // TODO: https://github.com/Azure/autorest.rust/issues/102
-            throw new Error('nested next link path NYI');
-          }
-          rustMethod.strategy = new rust.PageableStrategyNextLink(naming.getEscapedReservedName(snakeCaseName(method.nextLinkPath), 'prop'));
-        }
         break;
       default:
         throw new Error(`method kind ${method.kind} NYI`);
@@ -1096,6 +1094,45 @@ export class Adapter {
       returnType = new rust.Response(this.crate, this.getUnitType());
     }
     rustMethod.returns = new rust.Result(this.crate, returnType);
+
+    if (method.kind === 'paging') {
+      // can't do this until the method has been completely adapted
+      (<rust.PageableMethod>rustMethod).strategy = this.adaptPageableMethodStrategy(method);
+    }
+  }
+
+  /**
+   * creates the pageable strategy based on the method definition
+   * 
+   * @param method the pageable method for which to create a strategy
+   * @returns the pageable strategy
+   */
+  private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>): rust.PageableStrategyKind {
+    if (method.pagingMetadata.nextLinkOperation) {
+      // TODO: https://github.com/Azure/autorest.rust/issues/103
+      throw new Error('next page operation NYI');
+    } else if (method.pagingMetadata.nextLinkSegments) {
+      if (method.pagingMetadata.nextLinkSegments.length > 1) {
+        // TODO: https://github.com/Azure/autorest.rust/issues/102
+        throw new Error('nested next link path NYI');
+      }
+
+      // this is the field in the response type that contains the next link URL
+      const nextLinkSegment = method.pagingMetadata.nextLinkSegments[0];
+      if (nextLinkSegment.kind !== 'property') {
+        throw new Error(`unexpected kind ${nextLinkSegment.kind} for next link segment in operation ${method.name}`);
+      }
+
+      const nextLinkField = this.fieldsMap.get(nextLinkSegment);
+      if (!nextLinkField) {
+        throw new Error(`didn't find next link field name ${nextLinkSegment.name} for operation ${method.name}`);
+      }
+      return new rust.PageableStrategyNextLink(nextLinkField);
+    } else if (method.pagingMetadata.continuationTokenParameterSegments && method.pagingMetadata.continuationTokenResponseSegments) {
+      throw new Error('PageableStrategyNextLink NYI');
+    } else {
+      throw new Error(`unhandled paging strategy for operation ${method.name}`);
+    }
   }
 
   /**
