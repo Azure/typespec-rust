@@ -1125,7 +1125,8 @@ export class Adapter {
 
       const nextLinkField = this.fieldsMap.get(nextLinkSegment);
       if (!nextLinkField) {
-        throw new Error(`didn't find next link field name ${nextLinkSegment.name} for operation ${method.name}`);
+        // the most likely explanation for this is lack of reference equality
+        throw new Error(`missing next link field name ${nextLinkSegment.name} for operation ${method.name}`);
       }
       return new rust.PageableStrategyNextLink(nextLinkField);
     } else if (method.pagingMetadata.continuationTokenParameterSegments && method.pagingMetadata.continuationTokenResponseSegments) {
