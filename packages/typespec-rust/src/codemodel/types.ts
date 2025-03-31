@@ -173,6 +173,8 @@ export interface Model extends StructBase {
 
 /** ModelField is a field definition within a model */
 export interface ModelField extends StructFieldBase {
+  kind: 'modelField';
+
   /** the name of the field over the wire */
   serde: string;
 
@@ -574,6 +576,7 @@ export class Model extends StructBase implements Model {
 export class ModelField extends StructFieldBase implements ModelField {
   constructor(name: string, serde: string, visibility: Visibility, type: Type) {
     super(name, visibility, type);
+    this.kind = 'modelField';
     this.serde = serde;
   }
 }
