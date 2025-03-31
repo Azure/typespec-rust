@@ -148,7 +148,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
         resultType = `Option<${getTypeDeclaration(header.type)}>`;
         break;
     }
-    return `fn ${codegen.deconstruct(header.name).join('_')}(&self) -> Result<${resultType}>`;
+    return `fn ${header.name}(&self) -> Result<${resultType}>`;
   };
 
   const use = new Use('modelsOther');

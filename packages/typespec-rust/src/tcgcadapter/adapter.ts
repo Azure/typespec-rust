@@ -46,13 +46,13 @@ export class Adapter {
   private readonly renamedMethods: Set<string>;
 
   // maps a tcgc model field to the adapted struct field
-  private readonly fieldsMap: Map<tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, rust.StructField>;
+  private readonly fieldsMap: Map<tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>;
 
   private constructor(ctx: tcgc.SdkContext, options: RustEmitterOptions) {
     this.types = new Map<string, rust.Type>();
     this.clientMethodParams = new Map<string, rust.MethodParameter>();
     this.renamedMethods = new Set<string>();
-    this.fieldsMap = new Map<tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, rust.StructField>();
+    this.fieldsMap = new Map<tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>();
     this.ctx = ctx;
 
     let serviceType: rust.ServiceType = 'data-plane';
@@ -1050,9 +1050,9 @@ export class Adapter {
           if (header.serializedName !== 'x-ms-meta' && header.serializedName !== 'x-ms-or') {
             throw new Error(`unexpected response header collection ${header.serializedName}`);
           }
-          responseHeader = new rust.ResponseHeaderHashMap(header.name, header.serializedName);
+          responseHeader = new rust.ResponseHeaderHashMap(snakeCaseName(header.name), header.serializedName);
         } else {
-          responseHeader = new rust.ResponseHeaderScalar(fixETagName(header.name), fixETagName(header.serializedName), this.getType(header.type));
+          responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(header.serializedName), this.getType(header.type));
         }
 
         responseHeader.docs = this.adaptDocs(header.summary, header.doc);
