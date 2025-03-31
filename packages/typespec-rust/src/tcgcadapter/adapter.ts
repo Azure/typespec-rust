@@ -1129,7 +1129,7 @@ export class Adapter {
       }
       return new rust.PageableStrategyNextLink(nextLinkField);
     } else if (method.pagingMetadata.continuationTokenParameterSegments && method.pagingMetadata.continuationTokenResponseSegments) {
-      throw new Error('PageableStrategyNextLink NYI');
+      throw new Error('PageableStrategyContinuationToken NYI');
     } else {
       throw new Error(`unhandled paging strategy for operation ${method.name}`);
     }
