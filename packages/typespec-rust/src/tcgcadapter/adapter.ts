@@ -761,6 +761,12 @@ export class Adapter {
       } else if (method.kind === 'lro' || method.kind === 'lropaging') {
         // skip LROs for now so that codegen is unblocked
         // TODO: https://github.com/Azure/typespec-rust/issues/188
+        this.ctx.program.reportDiagnostic({
+          code: 'LroNotSupported',
+          severity: 'warning',
+          message: `skip emitting LRO ${method.name}`,
+          target: method.__raw ? method.__raw.node : NoTarget,
+        });
         continue;
       } else {
         this.adaptMethod(method, rustClient);
