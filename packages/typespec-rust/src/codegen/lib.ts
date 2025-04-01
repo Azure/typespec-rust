@@ -11,7 +11,7 @@ import * as helpers from './helpers.js';
  * @returns the contents of the lib.rs file
  */
 export function emitLibRs(): string {
-  let content = helpers.contentPreamble();
+  let content = helpers.contentPreamble(false);
   content += 'mod generated;\n';
   content += 'pub use generated::*;\n';
   return content;

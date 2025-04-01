@@ -6,6 +6,7 @@
 
 * Recursively delete the contents of `src/generated` before writing the content to disk.
 * Consolidate `use` statements.
+* Omit `DO NOT EDIT` phrase from `src/lib.rs`.
 
 ## 0.13.0 (2025-03-24)
 
