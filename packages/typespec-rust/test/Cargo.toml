@@ -21,6 +21,7 @@ members = [
     "spector/azure/client-generator-core/flatten-property",
     "spector/azure/client-generator-core/usage",
     "spector/azure/core/basic",
+    "spector/azure/core/lro/standard",
     "spector/azure/example/basic",
     "spector/azure/payload/pageable",
     "spector/azure/resource-manager/common-properties",

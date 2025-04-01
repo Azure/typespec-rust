@@ -758,6 +758,10 @@ export class Adapter {
       if (method.kind === 'clientaccessor') {
         const subClient = this.recursiveAdaptClient(method.response, rustClient);
         this.adaptClientAccessor(client, method, rustClient, subClient);
+      } else if (method.kind === 'lro' || method.kind === 'lropaging') {
+        // skip LROs for now so that codegen is unblocked
+        // TODO: https://github.com/Azure/typespec-rust/issues/188
+        continue;
       } else {
         this.adaptMethod(method, rustClient);
       }
