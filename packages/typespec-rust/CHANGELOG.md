@@ -1,6 +1,6 @@
 # Release History
 
-## 0.13.1 (unreleased)
+## 0.13.1 (2025-04-01)
 
 ### Other Changes
 
