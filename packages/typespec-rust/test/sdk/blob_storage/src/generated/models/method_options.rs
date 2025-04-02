@@ -13,7 +13,7 @@ use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 use std::collections::HashMap;
 use time::OffsetDateTime;
 
-/// Options to be passed to AppendBlobClient::append_block()
+/// Options to be passed to `AppendBlobClient::append_block()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct AppendBlobClientAppendBlockOptions<'a> {
     /// Optional conditional header, used only for the Append Block operation. A number indicating the byte offset to compare.
@@ -85,7 +85,7 @@ pub struct AppendBlobClientAppendBlockOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to AppendBlobClient::append_block_from_url()
+/// Options to be passed to `AppendBlobClient::append_block_from_url()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct AppendBlobClientAppendBlockFromUrlOptions<'a> {
     /// Optional conditional header, used only for the Append Block operation. A number indicating the byte offset to compare.
@@ -171,7 +171,7 @@ pub struct AppendBlobClientAppendBlockFromUrlOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to AppendBlobClient::create()
+/// Options to be passed to `AppendBlobClient::create()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct AppendBlobClientCreateOptions<'a> {
     /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
@@ -257,7 +257,7 @@ pub struct AppendBlobClientCreateOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to AppendBlobClient::seal()
+/// Options to be passed to `AppendBlobClient::seal()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct AppendBlobClientSealOptions<'a> {
     /// Optional conditional header, used only for the Append Block operation. A number indicating the byte offset to compare.
@@ -290,7 +290,7 @@ pub struct AppendBlobClientSealOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::abort_copy_from_url()
+/// Options to be passed to `BlobClient::abort_copy_from_url()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientAbortCopyFromUrlOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -306,7 +306,7 @@ pub struct BlobClientAbortCopyFromUrlOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::acquire_lease()
+/// Options to be passed to `BlobClient::acquire_lease()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientAcquireLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -341,7 +341,7 @@ pub struct BlobClientAcquireLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::break_lease()
+/// Options to be passed to `BlobClient::break_lease()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientBreakLeaseOptions<'a> {
     /// For a break operation, proposed duration the lease should continue before it is broken, in seconds, between 0 and 60.
@@ -376,7 +376,7 @@ pub struct BlobClientBreakLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::change_lease()
+/// Options to be passed to `BlobClient::change_lease()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientChangeLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -407,7 +407,7 @@ pub struct BlobClientChangeLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::copy_from_url()
+/// Options to be passed to `BlobClient::copy_from_url()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientCopyFromUrlOptions<'a> {
     /// Optional. Used to set blob tags in various blob operations.
@@ -481,7 +481,7 @@ pub struct BlobClientCopyFromUrlOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::create_snapshot()
+/// Options to be passed to `BlobClient::create_snapshot()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientCreateSnapshotOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -532,7 +532,7 @@ pub struct BlobClientCreateSnapshotOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::delete()
+/// Options to be passed to `BlobClient::delete()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientDeleteOptions<'a> {
     /// Optional. Only possible value is 'permanent', which specifies to permanently delete a blob if blob soft delete is enabled.
@@ -578,7 +578,7 @@ pub struct BlobClientDeleteOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to BlobClient::delete_immutability_policy()
+/// Options to be passed to `BlobClient::delete_immutability_policy()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientDeleteImmutabilityPolicyOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -599,7 +599,7 @@ pub struct BlobClientDeleteImmutabilityPolicyOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to BlobClient::download()
+/// Options to be passed to `BlobClient::download()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientDownloadOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -666,7 +666,7 @@ pub struct BlobClientDownloadOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to BlobClient::get_account_info()
+/// Options to be passed to `BlobClient::get_account_info()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientGetAccountInfoOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -679,7 +679,7 @@ pub struct BlobClientGetAccountInfoOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::get_properties()
+/// Options to be passed to `BlobClient::get_properties()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientGetPropertiesOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -731,7 +731,7 @@ pub struct BlobClientGetPropertiesOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to BlobClient::get_tags()
+/// Options to be passed to `BlobClient::get_tags()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientGetTagsOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -758,7 +758,7 @@ pub struct BlobClientGetTagsOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to BlobClient::release_lease()
+/// Options to be passed to `BlobClient::release_lease()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientReleaseLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -786,7 +786,7 @@ pub struct BlobClientReleaseLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::renew_lease()
+/// Options to be passed to `BlobClient::renew_lease()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientRenewLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -814,7 +814,7 @@ pub struct BlobClientRenewLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::set_expiry()
+/// Options to be passed to `BlobClient::set_expiry()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientSetExpiryOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -830,7 +830,7 @@ pub struct BlobClientSetExpiryOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::set_http_headers()
+/// Options to be passed to `BlobClient::set_http_headers()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientSetHttpHeadersOptions<'a> {
     /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
@@ -884,7 +884,7 @@ pub struct BlobClientSetHttpHeadersOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::set_immutability_policy()
+/// Options to be passed to `BlobClient::set_immutability_policy()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientSetImmutabilityPolicyOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -914,7 +914,7 @@ pub struct BlobClientSetImmutabilityPolicyOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to BlobClient::set_legal_hold()
+/// Options to be passed to `BlobClient::set_legal_hold()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientSetLegalHoldOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -935,7 +935,7 @@ pub struct BlobClientSetLegalHoldOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to BlobClient::set_metadata()
+/// Options to be passed to `BlobClient::set_metadata()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientSetMetadataOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -986,7 +986,7 @@ pub struct BlobClientSetMetadataOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::set_tags()
+/// Options to be passed to `BlobClient::set_tags()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientSetTagsOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1016,7 +1016,7 @@ pub struct BlobClientSetTagsOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to BlobClient::set_tier()
+/// Options to be passed to `BlobClient::set_tier()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientSetTierOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1047,7 +1047,7 @@ pub struct BlobClientSetTierOptions<'a> {
     pub version_id: Option<String>,
 }
 
-/// Options to be passed to BlobClient::start_copy_from_url()
+/// Options to be passed to `BlobClient::start_copy_from_url()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientStartCopyFromUrlOptions<'a> {
     /// Optional. Used to set blob tags in various blob operations.
@@ -1118,7 +1118,7 @@ pub struct BlobClientStartCopyFromUrlOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobClient::undelete()
+/// Options to be passed to `BlobClient::undelete()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientUndeleteOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1131,7 +1131,7 @@ pub struct BlobClientUndeleteOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::acquire_lease()
+/// Options to be passed to `BlobContainerClient::acquire_lease()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientAcquireLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1157,7 +1157,7 @@ pub struct BlobContainerClientAcquireLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::break_lease()
+/// Options to be passed to `BlobContainerClient::break_lease()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientBreakLeaseOptions<'a> {
     /// For a break operation, proposed duration the lease should continue before it is broken, in seconds, between 0 and 60.
@@ -1183,7 +1183,7 @@ pub struct BlobContainerClientBreakLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::change_lease()
+/// Options to be passed to `BlobContainerClient::change_lease()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientChangeLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1202,7 +1202,7 @@ pub struct BlobContainerClientChangeLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::create()
+/// Options to be passed to `BlobContainerClient::create()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientCreateOptions<'a> {
     /// The public access setting for the container.
@@ -1229,7 +1229,7 @@ pub struct BlobContainerClientCreateOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::delete()
+/// Options to be passed to `BlobContainerClient::delete()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientDeleteOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1251,7 +1251,7 @@ pub struct BlobContainerClientDeleteOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::filter_blobs()
+/// Options to be passed to `BlobContainerClient::filter_blobs()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientFilterBlobsOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1280,7 +1280,7 @@ pub struct BlobContainerClientFilterBlobsOptions<'a> {
     pub where_param: Option<String>,
 }
 
-/// Options to be passed to BlobContainerClient::get_access_policy()
+/// Options to be passed to `BlobContainerClient::get_access_policy()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientGetAccessPolicyOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1296,7 +1296,7 @@ pub struct BlobContainerClientGetAccessPolicyOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::get_account_info()
+/// Options to be passed to `BlobContainerClient::get_account_info()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientGetAccountInfoOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1309,7 +1309,7 @@ pub struct BlobContainerClientGetAccountInfoOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::get_properties()
+/// Options to be passed to `BlobContainerClient::get_properties()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientGetPropertiesOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1325,7 +1325,7 @@ pub struct BlobContainerClientGetPropertiesOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::list_blob_flat_segment()
+/// Options to be passed to `BlobContainerClient::list_blob_flat_segment()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientListBlobFlatSegmentOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1354,7 +1354,7 @@ pub struct BlobContainerClientListBlobFlatSegmentOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::list_blob_hierarchy_segment()
+/// Options to be passed to `BlobContainerClient::list_blob_hierarchy_segment()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientListBlobHierarchySegmentOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1383,7 +1383,7 @@ pub struct BlobContainerClientListBlobHierarchySegmentOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::release_lease()
+/// Options to be passed to `BlobContainerClient::release_lease()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientReleaseLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1402,7 +1402,7 @@ pub struct BlobContainerClientReleaseLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::rename()
+/// Options to be passed to `BlobContainerClient::rename()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientRenameOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1418,7 +1418,7 @@ pub struct BlobContainerClientRenameOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::renew_lease()
+/// Options to be passed to `BlobContainerClient::renew_lease()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientRenewLeaseOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1437,7 +1437,7 @@ pub struct BlobContainerClientRenewLeaseOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::restore()
+/// Options to be passed to `BlobContainerClient::restore()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientRestoreOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1456,7 +1456,7 @@ pub struct BlobContainerClientRestoreOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::set_access_policy()
+/// Options to be passed to `BlobContainerClient::set_access_policy()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientSetAccessPolicyOptions<'a> {
     /// The public access setting for the container.
@@ -1481,7 +1481,7 @@ pub struct BlobContainerClientSetAccessPolicyOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::set_metadata()
+/// Options to be passed to `BlobContainerClient::set_metadata()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientSetMetadataOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1503,7 +1503,7 @@ pub struct BlobContainerClientSetMetadataOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobContainerClient::submit_batch()
+/// Options to be passed to `BlobContainerClient::submit_batch()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientSubmitBatchOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1516,7 +1516,7 @@ pub struct BlobContainerClientSubmitBatchOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobServiceClient::filter_blobs()
+/// Options to be passed to `BlobServiceClient::filter_blobs()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientFilterBlobsOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1545,7 +1545,7 @@ pub struct BlobServiceClientFilterBlobsOptions<'a> {
     pub where_param: Option<String>,
 }
 
-/// Options to be passed to BlobServiceClient::get_account_info()
+/// Options to be passed to `BlobServiceClient::get_account_info()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientGetAccountInfoOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1558,7 +1558,7 @@ pub struct BlobServiceClientGetAccountInfoOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobServiceClient::get_properties()
+/// Options to be passed to `BlobServiceClient::get_properties()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientGetPropertiesOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1571,7 +1571,7 @@ pub struct BlobServiceClientGetPropertiesOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobServiceClient::get_statistics()
+/// Options to be passed to `BlobServiceClient::get_statistics()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientGetStatisticsOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1584,7 +1584,7 @@ pub struct BlobServiceClientGetStatisticsOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobServiceClient::get_user_delegation_key()
+/// Options to be passed to `BlobServiceClient::get_user_delegation_key()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientGetUserDelegationKeyOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1597,7 +1597,7 @@ pub struct BlobServiceClientGetUserDelegationKeyOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobServiceClient::list_containers_segment()
+/// Options to be passed to `BlobServiceClient::list_containers_segment()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientListContainersSegmentOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1626,7 +1626,7 @@ pub struct BlobServiceClientListContainersSegmentOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobServiceClient::set_properties()
+/// Options to be passed to `BlobServiceClient::set_properties()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientSetPropertiesOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1660,7 +1660,7 @@ pub struct BlobServiceClientSetPropertiesOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlobServiceClient::submit_batch()
+/// Options to be passed to `BlobServiceClient::submit_batch()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientSubmitBatchOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1673,7 +1673,7 @@ pub struct BlobServiceClientSubmitBatchOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlockBlobClient::commit_block_list()
+/// Options to be passed to `BlockBlobClient::commit_block_list()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlockBlobClientCommitBlockListOptions<'a> {
     /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
@@ -1769,7 +1769,7 @@ pub struct BlockBlobClientCommitBlockListOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to BlockBlobClient::get_block_list()
+/// Options to be passed to `BlockBlobClient::get_block_list()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlockBlobClientGetBlockListOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1792,7 +1792,7 @@ pub struct BlockBlobClientGetBlockListOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlockBlobClient::put_blob_from_url()
+/// Options to be passed to `BlockBlobClient::put_blob_from_url()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlockBlobClientPutBlobFromUrlOptions<'a> {
     /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
@@ -1903,7 +1903,7 @@ pub struct BlockBlobClientPutBlobFromUrlOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to BlockBlobClient::query()
+/// Options to be passed to `BlockBlobClient::query()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlockBlobClientQueryOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1951,7 +1951,7 @@ pub struct BlockBlobClientQueryOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlockBlobClient::stage_block()
+/// Options to be passed to `BlockBlobClient::stage_block()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlockBlobClientStageBlockOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -1998,7 +1998,7 @@ pub struct BlockBlobClientStageBlockOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to BlockBlobClient::stage_block_from_url()
+/// Options to be passed to `BlockBlobClient::stage_block_from_url()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlockBlobClientStageBlockFromUrlOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2055,7 +2055,7 @@ pub struct BlockBlobClientStageBlockFromUrlOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to BlockBlobClient::upload()
+/// Options to be passed to `BlockBlobClient::upload()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlockBlobClientUploadOptions<'a> {
     /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
@@ -2158,7 +2158,7 @@ pub struct BlockBlobClientUploadOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to PageBlobClient::clear_pages()
+/// Options to be passed to `PageBlobClient::clear_pages()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageBlobClientClearPagesOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2218,7 +2218,7 @@ pub struct PageBlobClientClearPagesOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to PageBlobClient::copy_incremental()
+/// Options to be passed to `PageBlobClient::copy_incremental()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageBlobClientCopyIncrementalOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2246,7 +2246,7 @@ pub struct PageBlobClientCopyIncrementalOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to PageBlobClient::create()
+/// Options to be passed to `PageBlobClient::create()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageBlobClientCreateOptions<'a> {
     /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
@@ -2339,7 +2339,7 @@ pub struct PageBlobClientCreateOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to PageBlobClient::get_page_ranges()
+/// Options to be passed to `PageBlobClient::get_page_ranges()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageBlobClientGetPageRangesOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2387,7 +2387,7 @@ pub struct PageBlobClientGetPageRangesOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to PageBlobClient::get_page_ranges_diff()
+/// Options to be passed to `PageBlobClient::get_page_ranges_diff()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageBlobClientGetPageRangesDiffOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2445,7 +2445,7 @@ pub struct PageBlobClientGetPageRangesDiffOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to PageBlobClient::resize()
+/// Options to be passed to `PageBlobClient::resize()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageBlobClientResizeOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2493,7 +2493,7 @@ pub struct PageBlobClientResizeOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to PageBlobClient::update_sequence_number()
+/// Options to be passed to `PageBlobClient::update_sequence_number()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageBlobClientUpdateSequenceNumberOptions<'a> {
     /// Set for page blobs only. The sequence number is a user-controlled value that you can use to track requests. The value
@@ -2528,7 +2528,7 @@ pub struct PageBlobClientUpdateSequenceNumberOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to PageBlobClient::upload_pages()
+/// Options to be passed to `PageBlobClient::upload_pages()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageBlobClientUploadPagesOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.
@@ -2602,7 +2602,7 @@ pub struct PageBlobClientUploadPagesOptions<'a> {
     pub transactional_content_md5: Option<String>,
 }
 
-/// Options to be passed to PageBlobClient::upload_pages_from_url()
+/// Options to be passed to `PageBlobClient::upload_pages_from_url()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageBlobClientUploadPagesFromUrlOptions<'a> {
     /// An opaque, globally-unique, client-generated string identifier for the request.

@@ -545,7 +545,7 @@ export class Adapter {
    */
   private asDocLink(id: string, link: string): string {
     if (this.options['temp-omit-doc-links'] === true) {
-      return id;
+      return `\`${id}\``;
     }
     return `[\`${id}\`](${link})`;
   }

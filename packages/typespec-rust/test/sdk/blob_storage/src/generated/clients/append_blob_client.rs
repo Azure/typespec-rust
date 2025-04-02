@@ -30,7 +30,7 @@ pub struct AppendBlobClient {
     pub(crate) version: String,
 }
 
-/// Options used when creating a AppendBlobClient
+/// Options used when creating a `AppendBlobClient`
 #[derive(Clone, SafeDebug)]
 pub struct AppendBlobClientOptions {
     /// Allows customization of the client.
