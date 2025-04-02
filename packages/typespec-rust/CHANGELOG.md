@@ -1,11 +1,13 @@
 # Release History
 
-## 0.13.2 (unreleased)
+## 0.13.2 (2025-04-02)
 
 ### Other Changes
 
 * Add doc comments for fields in client options types.
 * Add missing doc comment(s) for multiple response header traits that get merged into a single trait.
+* Added switch `temp-omit-doc-links` to omit links to types in doc comments.
+  * NOTE: this switch is _temporary_ and will be removed in a future release.
 
 ## 0.13.1 (2025-04-01)
 

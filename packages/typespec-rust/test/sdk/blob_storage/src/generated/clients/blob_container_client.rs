@@ -45,7 +45,7 @@ pub struct BlobContainerClient {
     pub(crate) version: String,
 }
 
-/// Options used when creating a [`BlobContainerClient`](BlobContainerClient)
+/// Options used when creating a BlobContainerClient
 #[derive(Clone, SafeDebug)]
 pub struct BlobContainerClientOptions {
     /// Allows customization of the client.

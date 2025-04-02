@@ -11,6 +11,7 @@ export interface RustEmitterOptions {
   'crate-version': string;
   'overwrite-cargo-toml': boolean;
   'overwrite-lib-rs': boolean;
+  'temp-omit-doc-links': boolean;
 }
 
 const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
@@ -21,6 +22,7 @@ const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
     'crate-version': { type: 'string', nullable: false },
     'overwrite-cargo-toml': { type: 'boolean', nullable: false, default: false},
     'overwrite-lib-rs': { type: 'boolean', nullable: false, default: false },
+    'temp-omit-doc-links': { type: 'boolean', nullable: false, default: false },
   },
   required: [
     'crate-name',

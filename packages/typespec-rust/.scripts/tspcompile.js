@@ -123,7 +123,7 @@ const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrests';
 generate('keyvault_secrets', keyvault_secrets, 'test/sdk/keyvault_secrets');
 
 const blob_storage = pkgRoot + 'test/tsp/Microsoft.BlobStorage/client.tsp';
-generate('blob_storage', blob_storage, 'test/sdk/blob_storage');
+generate('blob_storage', blob_storage, 'test/sdk/blob_storage', ['temp-omit-doc-links=true']);
 
 const serde_tests = pkgRoot + 'test/tsp/SerdeTests';
 generate('serde_tests', serde_tests, 'test/other/serde_tests');

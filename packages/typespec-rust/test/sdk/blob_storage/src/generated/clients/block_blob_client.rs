@@ -33,7 +33,7 @@ pub struct BlockBlobClient {
     pub(crate) version: String,
 }
 
-/// Options used when creating a [`BlockBlobClient`](BlockBlobClient)
+/// Options used when creating a BlockBlobClient
 #[derive(Clone, SafeDebug)]
 pub struct BlockBlobClientOptions {
     /// Allows customization of the client.

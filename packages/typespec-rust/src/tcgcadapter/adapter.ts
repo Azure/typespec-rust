@@ -35,6 +35,7 @@ export class Adapter {
 
   private readonly crate: rust.Crate;
   private readonly ctx: tcgc.SdkContext;
+  private readonly options: RustEmitterOptions;
 
   // cache of adapted types
   private readonly types: Map<string, rust.Type>;
@@ -54,13 +55,14 @@ export class Adapter {
     this.renamedMethods = new Set<string>();
     this.fieldsMap = new Map<tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>();
     this.ctx = ctx;
+    this.options = options;
 
     let serviceType: rust.ServiceType = 'data-plane';
     if (this.ctx.arm === true) {
       serviceType = 'azure-arm';
     }
 
-    this.crate = new rust.Crate(options['crate-name'], options['crate-version'], serviceType);
+    this.crate = new rust.Crate(this.options['crate-name'], this.options['crate-version'], serviceType);
   }
 
   /** performs all the steps to convert tcgc to a crate */
@@ -533,6 +535,22 @@ export class Adapter {
   }
 
   /**
+   * formats input as a doc link.
+   * e.g. [`${id}`](${link})
+   * if doc links are disabled, id is returned
+   * 
+   * @param id the ID of the doc link
+   * @param link the target of the doc link
+   * @returns the doc link or id
+   */
+  private asDocLink(id: string, link: string): string {
+    if (this.options['temp-omit-doc-links'] === true) {
+      return id;
+    }
+    return `[\`${id}\`](${link})`;
+  }
+
+  /**
    * recursively converts a client and its methods.
    * this simplifies the case for hierarchical clients.
    * 
@@ -579,7 +597,7 @@ export class Adapter {
       clientOptionsField.defaultValue = 'ClientOptions::default()';
       clientOptionsStruct.fields.push(clientOptionsField);
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
-      clientOptionsStruct.docs.summary = `Options used when creating a [\`${rustClient.name}\`](${rustClient.name})`;
+      clientOptionsStruct.docs.summary = `Options used when creating a ${this.asDocLink(rustClient.name, rustClient.name)}`;
 
       // NOTE: per tcgc convention, if there is no param of kind credential
       // it means that the client doesn't require any kind of authentication.
@@ -907,7 +925,7 @@ export class Adapter {
     const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName)}Options`, 'pub');
     methodOptionsStruct.lifetime = optionsLifetime;
-    methodOptionsStruct.docs.summary = `Options to be passed to [\`${rustClient.name}::${methodName}()\`](crate::generated::clients::${rustClient.name}::${methodName}())`;
+    methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
 
     const clientMethodOptions = new rust.ExternalType(this.crate, 'ClientMethodOptions', 'azure_core::http');
     clientMethodOptions.lifetime = optionsLifetime;
@@ -1084,7 +1102,7 @@ export class Adapter {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
       const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name)}Result`);
-      markerType.docs.summary = `Contains results for [\`${rustClient.name}::${methodName}()\`](crate::generated::clients::${rustClient.name}::${methodName}())`;
+      markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
       returnType = new rust.Response(this.crate, markerType);
       this.crate.models.push(markerType);
     } else if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
@@ -1146,7 +1164,7 @@ export class Adapter {
     traitName += 'Headers';
 
     // NOTE: the complete doc text will be emitted at codegen time
-    const docs = `[\`${client.name}::${method.name}()\`](crate::generated::clients::${client.name}::${method.name}())`;
+    const docs = this.asDocLink(`${client.name}::${method.name}()`, `crate::generated::clients::${client.name}::${method.name}()`);
     const responseHeadersTrait = new rust.ResponseHeadersTrait(traitName, implFor, docs);
 
     // adapt the response headers and add them to the trait
