@@ -3225,8 +3225,9 @@ impl BlockListHeaders for Response<BlockList> {
     }
 }
 
-/// Provides access to typed response headers for [`BlobContainerClient::filter_blobs()`](crate::generated::clients::BlobContainerClient::filter_blobs())
-/// Provides access to typed response headers for [`BlobServiceClient::filter_blobs()`](crate::generated::clients::BlobServiceClient::filter_blobs())
+/// Provides access to typed response headers for the following methods:
+/// [`BlobContainerClient::filter_blobs()`](crate::generated::clients::BlobContainerClient::filter_blobs())
+/// [`BlobServiceClient::filter_blobs()`](crate::generated::clients::BlobServiceClient::filter_blobs())
 pub trait FilterBlobSegmentHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
     fn client_request_id(&self) -> Result<Option<String>>;
@@ -3754,8 +3755,9 @@ impl PageBlobClientUploadPagesResultHeaders for Response<PageBlobClientUploadPag
     }
 }
 
-/// Provides access to typed response headers for [`PageBlobClient::get_page_ranges()`](crate::generated::clients::PageBlobClient::get_page_ranges())
-/// Provides access to typed response headers for [`PageBlobClient::get_page_ranges_diff()`](crate::generated::clients::PageBlobClient::get_page_ranges_diff())
+/// Provides access to typed response headers for the following methods:
+/// [`PageBlobClient::get_page_ranges()`](crate::generated::clients::PageBlobClient::get_page_ranges())
+/// [`PageBlobClient::get_page_ranges_diff()`](crate::generated::clients::PageBlobClient::get_page_ranges_diff())
 pub trait PageListHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
     fn last_modified(&self) -> Result<Option<OffsetDateTime>>;

@@ -60,12 +60,9 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
 
     // for traits with multiple impls, merge them into a single trait
     const mergedHeaders = new Array<rust.ResponseHeader>();
-    let mergedDocs = '';
+    let mergedDocs = '/// Provides access to typed response headers for the following methods:\n';
     for (const src of srcTrait) {
-      if (mergedDocs.length > 0) {
-        mergedDocs += '\n/// ';
-      }
-      mergedDocs += src.docs;
+      mergedDocs += `/// ${src.docs}\n`;
 
       for (const responseHeader of src.headers) {
         const matchingHeader = mergedHeaders.find(h => h.header === responseHeader.header);
@@ -139,7 +136,12 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
   }
 
   for (const trait of traits) {
-    body += `\n/// ${trait.docs}\n`;
+    if (trait.docs.startsWith('///')) {
+      // this trait was merged earlier so the doc comments are already baked
+      body += trait.docs;
+    } else {
+      body += `\n/// Provides access to typed response headers for ${trait.docs}\n`;
+    }
     body += `pub trait ${trait.name}: private::Sealed {\n`;
     for (const header of trait.headers) {
       use.addForType(header.type);

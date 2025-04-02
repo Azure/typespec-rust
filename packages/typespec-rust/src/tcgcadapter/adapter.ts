@@ -1145,7 +1145,8 @@ export class Adapter {
     }
     traitName += 'Headers';
 
-    const docs = `Provides access to typed response headers for [\`${client.name}::${method.name}()\`](crate::generated::clients::${client.name}::${method.name}())`;
+    // NOTE: the complete doc text will be emitted at codegen time
+    const docs = `[\`${client.name}::${method.name}()\`](crate::generated::clients::${client.name}::${method.name}())`;
     const responseHeadersTrait = new rust.ResponseHeadersTrait(traitName, implFor, docs);
 
     // adapt the response headers and add them to the trait
