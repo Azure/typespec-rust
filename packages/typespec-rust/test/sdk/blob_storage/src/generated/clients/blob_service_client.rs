@@ -36,7 +36,9 @@ pub struct BlobServiceClient {
 /// Options used when creating a [`BlobServiceClient`](BlobServiceClient)
 #[derive(Clone, SafeDebug)]
 pub struct BlobServiceClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
+    /// Specifies the version of the operation to use for this request.
     pub version: String,
 }
 

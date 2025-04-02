@@ -19,6 +19,7 @@ pub struct PageableClient {
 /// Options used when creating a [`PageableClient`](PageableClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageableClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

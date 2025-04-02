@@ -22,6 +22,7 @@ pub struct BytesClient {
 /// Options used when creating a [`BytesClient`](BytesClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct BytesClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

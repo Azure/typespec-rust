@@ -19,6 +19,7 @@ pub struct NotDefinedClient {
 /// Options used when creating a [`NotDefinedClient`](NotDefinedClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct NotDefinedClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

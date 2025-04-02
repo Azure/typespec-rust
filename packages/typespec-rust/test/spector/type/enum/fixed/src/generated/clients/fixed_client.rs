@@ -18,6 +18,7 @@ pub struct FixedClient {
 /// Options used when creating a [`FixedClient`](FixedClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct FixedClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

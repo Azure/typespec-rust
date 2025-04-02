@@ -21,6 +21,7 @@ pub struct DurationClient {
 /// Options used when creating a [`DurationClient`](DurationClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

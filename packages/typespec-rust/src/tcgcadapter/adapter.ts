@@ -575,6 +575,7 @@ export class Adapter {
     if (client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
       const clientOptionsStruct = new rust.Struct(`${rustClient.name}Options`, 'pub');
       const clientOptionsField = new rust.StructField('client_options', 'pub', new rust.ExternalType(this.crate, 'ClientOptions', 'azure_core::http'));
+      clientOptionsField.docs.summary = 'Allows customization of the client.';
       clientOptionsField.defaultValue = 'ClientOptions::default()';
       clientOptionsStruct.fields.push(clientOptionsField);
       rustClient.constructable = new rust.ClientConstruction(new rust.ClientOptions(clientOptionsStruct));
@@ -825,6 +826,7 @@ export class Adapter {
     if (param.optional || param.clientDefaultValue) {
       optional = true;
       const paramField = new rust.StructField(paramName, 'pub', paramType);
+      paramField.docs = this.adaptDocs(param.summary, param.doc);
       constructable.options.type.fields.push(paramField);
       if (param.clientDefaultValue) {
         paramField.defaultValue = `String::from("${<string>param.clientDefaultValue}")`;

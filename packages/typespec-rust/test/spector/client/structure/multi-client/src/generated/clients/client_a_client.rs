@@ -21,6 +21,7 @@ pub struct ClientAClient {
 /// Options used when creating a [`ClientAClient`](ClientAClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ClientAClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

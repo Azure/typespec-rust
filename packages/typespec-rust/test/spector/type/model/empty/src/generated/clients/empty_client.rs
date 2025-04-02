@@ -22,6 +22,7 @@ pub struct EmptyClient {
 /// Options used when creating a [`EmptyClient`](EmptyClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct EmptyClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

@@ -22,6 +22,7 @@ pub struct FlattenPropertyClient {
 /// Options used when creating a [`FlattenPropertyClient`](FlattenPropertyClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct FlattenPropertyClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

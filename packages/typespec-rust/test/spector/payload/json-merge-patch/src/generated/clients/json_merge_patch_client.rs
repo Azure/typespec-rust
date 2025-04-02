@@ -22,6 +22,7 @@ pub struct JsonMergePatchClient {
 /// Options used when creating a [`JsonMergePatchClient`](JsonMergePatchClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonMergePatchClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

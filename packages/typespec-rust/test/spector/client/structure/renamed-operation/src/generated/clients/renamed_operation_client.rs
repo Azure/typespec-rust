@@ -24,6 +24,7 @@ pub struct RenamedOperationClient {
 /// Options used when creating a [`RenamedOperationClient`](RenamedOperationClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct RenamedOperationClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

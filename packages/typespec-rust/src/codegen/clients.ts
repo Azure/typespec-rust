@@ -68,6 +68,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         body += ' {\n';
         for (const field of client.constructable.options.type.fields) {
           use.addForType(field.type);
+          body += helpers.formatDocComment(field.docs);
           body += `${indent.get()}${helpers.emitVisibility(field.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n`;
         }
         body += '}\n\n'; // end client options

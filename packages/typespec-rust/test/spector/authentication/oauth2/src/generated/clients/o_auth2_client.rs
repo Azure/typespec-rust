@@ -24,6 +24,7 @@ pub struct OAuth2Client {
 /// Options used when creating a [`OAuth2Client`](OAuth2Client)
 #[derive(Clone, Default, SafeDebug)]
 pub struct OAuth2ClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

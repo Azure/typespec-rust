@@ -35,7 +35,9 @@ pub struct KeyVaultClient {
 /// Options used when creating a [`KeyVaultClient`](KeyVaultClient)
 #[derive(Clone, SafeDebug)]
 pub struct KeyVaultClientOptions {
+    /// The API version to use for this operation.
     pub api_version: String,
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

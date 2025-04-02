@@ -18,6 +18,7 @@ pub struct ExtensibleClient {
 /// Options used when creating a [`ExtensibleClient`](ExtensibleClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ExtensibleClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

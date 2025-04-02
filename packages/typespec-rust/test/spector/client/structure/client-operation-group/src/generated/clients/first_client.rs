@@ -21,6 +21,7 @@ pub struct FirstClient {
 /// Options used when creating a [`FirstClient`](FirstClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct FirstClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

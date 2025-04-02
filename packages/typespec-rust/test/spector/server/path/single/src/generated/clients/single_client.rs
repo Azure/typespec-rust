@@ -19,6 +19,7 @@ pub struct SingleClient {
 /// Options used when creating a [`SingleClient`](SingleClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct SingleClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

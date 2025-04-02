@@ -24,6 +24,7 @@ pub struct UnionClient {
 /// Options used when creating a [`UnionClient`](UnionClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct UnionClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

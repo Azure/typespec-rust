@@ -28,6 +28,7 @@ pub struct ServiceClient {
 /// Options used when creating a [`ServiceClient`](ServiceClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ServiceClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

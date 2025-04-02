@@ -26,6 +26,7 @@ pub struct XmlClient {
 /// Options used when creating a [`XmlClient`](XmlClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct XmlClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

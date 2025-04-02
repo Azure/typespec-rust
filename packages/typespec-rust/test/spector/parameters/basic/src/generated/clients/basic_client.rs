@@ -19,6 +19,7 @@ pub struct BasicClient {
 /// Options used when creating a [`BasicClient`](BasicClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct BasicClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

@@ -22,6 +22,7 @@ pub struct NotVersionedClient {
 /// Options used when creating a [`NotVersionedClient`](NotVersionedClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct NotVersionedClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

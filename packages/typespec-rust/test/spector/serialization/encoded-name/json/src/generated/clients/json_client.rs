@@ -19,6 +19,7 @@ pub struct JsonClient {
 /// Options used when creating a [`JsonClient`](JsonClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct JsonClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

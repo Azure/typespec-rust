@@ -28,6 +28,7 @@ pub struct NamingClient {
 /// Options used when creating a [`NamingClient`](NamingClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct NamingClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

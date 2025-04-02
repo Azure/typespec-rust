@@ -24,6 +24,7 @@ pub struct DictionaryClient {
 /// Options used when creating a [`DictionaryClient`](DictionaryClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct DictionaryClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

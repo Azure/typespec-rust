@@ -28,7 +28,9 @@ pub struct CommonPropertiesClient {
 /// Options used when creating a [`CommonPropertiesClient`](CommonPropertiesClient)
 #[derive(Clone, SafeDebug)]
 pub struct CommonPropertiesClientOptions {
+    /// The API version to use for this operation.
     pub api_version: String,
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

@@ -19,6 +19,7 @@ pub struct SpreadClient {
 /// Options used when creating a [`SpreadClient`](SpreadClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpreadClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

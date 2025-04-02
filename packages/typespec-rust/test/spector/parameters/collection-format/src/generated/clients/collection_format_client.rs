@@ -19,6 +19,7 @@ pub struct CollectionFormatClient {
 /// Options used when creating a [`CollectionFormatClient`](CollectionFormatClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct CollectionFormatClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

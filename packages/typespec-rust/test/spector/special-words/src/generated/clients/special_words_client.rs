@@ -59,6 +59,7 @@ pub struct SpecialWordsClient {
 /// Options used when creating a [`SpecialWordsClient`](SpecialWordsClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct SpecialWordsClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

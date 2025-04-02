@@ -19,7 +19,9 @@ pub struct StandardClient {
 /// Options used when creating a [`StandardClient`](StandardClient)
 #[derive(Clone, SafeDebug)]
 pub struct StandardClientOptions {
+    /// The API version to use for this operation.
     pub api_version: String,
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

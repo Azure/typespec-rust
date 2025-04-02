@@ -35,7 +35,9 @@ pub struct ResiliencyServiceDrivenClient {
 /// Options used when creating a [`ResiliencyServiceDrivenClient`](ResiliencyServiceDrivenClient)
 #[derive(Clone, SafeDebug)]
 pub struct ResiliencyServiceDrivenClientOptions {
+    /// Pass in either 'v1' or 'v2'. This represents the API version of a service.
     pub api_version: String,
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

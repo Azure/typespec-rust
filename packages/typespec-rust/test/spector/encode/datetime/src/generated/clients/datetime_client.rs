@@ -21,6 +21,7 @@ pub struct DatetimeClient {
 /// Options used when creating a [`DatetimeClient`](DatetimeClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct DatetimeClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

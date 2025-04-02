@@ -19,6 +19,7 @@ pub struct UsageClient {
 /// Options used when creating a [`UsageClient`](UsageClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct UsageClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

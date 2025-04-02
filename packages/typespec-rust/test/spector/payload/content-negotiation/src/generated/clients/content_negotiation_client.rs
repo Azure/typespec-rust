@@ -21,6 +21,7 @@ pub struct ContentNegotiationClient {
 /// Options used when creating a [`ContentNegotiationClient`](ContentNegotiationClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ContentNegotiationClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

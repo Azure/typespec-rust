@@ -24,6 +24,7 @@ pub struct VersionedClient {
 #[derive(Clone, SafeDebug)]
 pub struct VersionedClientOptions {
     pub api_version: String,
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

@@ -20,7 +20,9 @@ pub struct MultipleClient {
 /// Options used when creating a [`MultipleClient`](MultipleClient)
 #[derive(Clone, SafeDebug)]
 pub struct MultipleClientOptions {
+    /// Pass in v1.0 for API version.
     pub api_version: String,
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

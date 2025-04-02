@@ -21,6 +21,7 @@ pub struct TwoOperationGroupClient {
 /// Options used when creating a [`TwoOperationGroupClient`](TwoOperationGroupClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct TwoOperationGroupClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

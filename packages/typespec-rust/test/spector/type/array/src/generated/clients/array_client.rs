@@ -25,6 +25,7 @@ pub struct ArrayClient {
 /// Options used when creating a [`ArrayClient`](ArrayClient)
 #[derive(Clone, Default, SafeDebug)]
 pub struct ArrayClientOptions {
+    /// Allows customization of the client.
     pub client_options: ClientOptions,
 }
 

@@ -1,5 +1,11 @@
 # Release History
 
+## 0.13.2 (unreleased)
+
+### Other Changes
+
+* Add doc comments for fields in client options types.
+
 ## 0.13.1 (2025-04-01)
 
 ### Other Changes
