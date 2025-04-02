@@ -108,7 +108,7 @@ export class Crate implements Crate {
           continue;
         }
         method.options.type.fields.sort((a: types.StructField, b: types.StructField) => { return sortAscending(a.name, b.name); });
-        method.responseHeaders.sort((a: client.ResponseHeader, b: client.ResponseHeader) => sortAscending(a.header, b.header));
+        method.responseHeaders?.headers.sort((a: client.ResponseHeader, b: client.ResponseHeader) => sortAscending(a.header, b.header));
       }
     }
   }

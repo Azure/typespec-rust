@@ -5,6 +5,7 @@
 ### Other Changes
 
 * Add doc comments for fields in client options types.
+* Add missing doc comment(s) for multiple response header traits that get merged into a single trait.
 
 ## 0.13.1 (2025-04-01)
 

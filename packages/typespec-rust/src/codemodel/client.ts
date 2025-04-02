@@ -363,6 +363,23 @@ export interface ResponseHeaderScalar {
   docs: types.Docs;
 }
 
+/** ResponseHeadersTrait is a trait used to access strongly typed response headers */
+export interface ResponseHeadersTrait {
+  kind: 'responseHeadersTrait';
+
+  /** name of the trait */
+  name: string;
+
+  /** the type for which to implement the trait */
+  implFor: types.MarkerType | types.Payload;
+
+  /** the headers in the trait */
+  headers: Array<ResponseHeader>;
+
+  /** doc string for the trait */
+  docs: string;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // base types
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -395,8 +412,8 @@ interface HTTPMethodBase extends method.Method<types.Type> {
   /** the type returned by the method */
   returns: types.Result;
 
-  /** contains zero or more response headers */
-  responseHeaders: Array<ResponseHeader>;
+  /** contains the trait for accessing response headers */
+  responseHeaders?: ResponseHeadersTrait;
 
   /** the HTTP verb used for the request */
   httpMethod: HTTPMethod;
@@ -429,7 +446,6 @@ class HTTPMethodBase extends method.Method<types.Type> implements HTTPMethodBase
     this.httpMethod = httpMethod;
     this.httpPath = httpPath;
     this.docs = {};
-    this.responseHeaders = new Array<ResponseHeader>();
   }
 }
 
@@ -618,7 +634,7 @@ export class QueryParameter extends HTTPParameterBase implements QueryParameter 
   }
 }
 
-export class ResponseHeaderHashMap {
+export class ResponseHeaderHashMap implements ResponseHeaderHashMap {
   constructor(name: string, header: string) {
     this.kind = 'responseHeaderHashMap';
     this.name = name;
@@ -628,7 +644,7 @@ export class ResponseHeaderHashMap {
   }
 }
 
-export class ResponseHeaderScalar {
+export class ResponseHeaderScalar implements ResponseHeaderScalar {
   constructor(name: string, header: string, type: types.Type) {
     validateHeaderPathQueryParamKind(type, 'header');
     this.kind = 'responseHeaderScalar';
@@ -636,6 +652,16 @@ export class ResponseHeaderScalar {
     this.header = header;
     this.type = type;
     this.docs = {};
+  }
+}
+
+export class ResponseHeadersTrait implements ResponseHeadersTrait {
+  constructor(name: string, implFor: types.MarkerType | types.Payload, docs: string) {
+    this.kind = 'responseHeadersTrait';
+    this.name = name;
+    this.implFor = implFor;
+    this.docs = docs;
+    this.headers = new Array<ResponseHeader>();
   }
 }
 

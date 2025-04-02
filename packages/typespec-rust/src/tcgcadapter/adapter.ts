@@ -931,7 +931,7 @@ export class Adapter {
       httpPath = httpPath.slice(1);
     }
 
-    let rustMethod: rust.MethodType;
+    let rustMethod: MethodType;
     switch (method.kind) {
       case 'basic':
         rustMethod = new rust.AsyncMethod(methodName, rustClient, pub, methodOptions, httpMethod, httpPath);
@@ -1041,10 +1041,10 @@ export class Adapter {
     };
 
     // add any response headers
-    const addedHeaders = new Set<string>();
+    const responseHeaders = new Array<tcgc.SdkServiceResponseHeader>();
     for (const httpResp of method.operation.responses) {
       for (const header of httpResp.headers) {
-        if (addedHeaders.has(header.serializedName)) {
+        if (responseHeaders.find((e) => e.serializedName === header.serializedName)) {
           continue;
         } else if (header.type.kind === 'constant') {
           // omit response headers that have a constant value
@@ -1057,19 +1057,7 @@ export class Adapter {
           continue;
         }
 
-        let responseHeader: rust.ResponseHeader;
-        if (header.type.kind === 'dict') {
-          if (header.serializedName !== 'x-ms-meta' && header.serializedName !== 'x-ms-or') {
-            throw new Error(`unexpected response header collection ${header.serializedName}`);
-          }
-          responseHeader = new rust.ResponseHeaderHashMap(snakeCaseName(header.name), header.serializedName);
-        } else {
-          responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(header.serializedName), this.getType(header.type));
-        }
-
-        responseHeader.docs = this.adaptDocs(header.summary, header.doc);
-        rustMethod.responseHeaders.push(responseHeader);
-        addedHeaders.add(header.serializedName);
+        responseHeaders.push(header);
       }
     }
 
@@ -1092,7 +1080,7 @@ export class Adapter {
       returnType = new rust.Pager(this.crate, new rust.Payload(synthesizedModel, format));
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
       returnType = new rust.Response(this.crate, new rust.Payload(this.typeToWireType(this.getType(method.response.type)), getBodyFormat()));
-    } else if (rustMethod.responseHeaders.length > 0) {
+    } else if (responseHeaders.length > 0) {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
       const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name)}Result`);
@@ -1105,11 +1093,97 @@ export class Adapter {
     } else {
       returnType = new rust.Response(this.crate, this.getUnitType());
     }
+
     rustMethod.returns = new rust.Result(this.crate, returnType);
+    rustMethod.responseHeaders = this.adaptResponseHeadersTrait(rustClient, rustMethod, responseHeaders);
 
     if (method.kind === 'paging') {
       // can't do this until the method has been completely adapted
       (<rust.PageableMethod>rustMethod).strategy = this.adaptPageableMethodStrategy(method);
+    }
+  }
+
+  /**
+   * adapts response headers into a Rust ResponseHeadersTrait
+   * if there are no response headers, undefined is returned.
+   * 
+   * @param client the client that contains the method
+   * @param method the method for which to create the trait
+   * @param responseHeaders the response headers array (can be empty)
+   * @returns a ResponseHeadersTrait or undefined
+   */
+  private adaptResponseHeadersTrait(client: rust.Client, method: MethodType, responseHeaders: Array<tcgc.SdkServiceResponseHeader>): rust.ResponseHeadersTrait | undefined {
+    if (responseHeaders.length === 0) {
+      return undefined;
+    }
+
+    // response header traits are only ever for marker types and payloads
+    let implFor: rust.MarkerType | rust.Payload;
+    switch (method.returns.type.kind) {
+      case 'pager':
+        implFor = method.returns.type.type;
+        break;
+      case 'response':
+        if (method.returns.type.content.kind !== 'marker' && method.returns.type.content.kind !== 'payload') {
+          throw new Error(`unexpected method content kind ${method.returns.type.content.kind}`);
+        }
+        implFor = method.returns.type.content;
+        break;
+      default:
+        // this is Unit which should have been previously skipped
+        throw new Error(`unexpected method return kind ${method.returns.type.kind}`);
+    }
+
+    let traitName: string;
+    switch (implFor.kind) {
+      case 'marker':
+        traitName = implFor.name;
+        break;
+      case 'payload':
+        traitName = this.recursiveTypeName(implFor.type);
+        break;
+    }
+    traitName += 'Headers';
+
+    const docs = `Provides access to typed response headers for [\`${client.name}::${method.name}()\`](crate::generated::clients::${client.name}::${method.name}())`;
+    const responseHeadersTrait = new rust.ResponseHeadersTrait(traitName, implFor, docs);
+
+    // adapt the response headers and add them to the trait
+    for (const header of responseHeaders) {
+      let responseHeader: rust.ResponseHeader;
+      if (header.type.kind === 'dict') {
+        if (header.serializedName !== 'x-ms-meta' && header.serializedName !== 'x-ms-or') {
+          throw new Error(`unexpected response header collection ${header.serializedName}`);
+        }
+        responseHeader = new rust.ResponseHeaderHashMap(snakeCaseName(header.name), header.serializedName);
+      } else {
+        responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(header.serializedName), this.getType(header.type));
+      }
+
+      responseHeader.docs = this.adaptDocs(header.summary, header.doc);
+      responseHeadersTrait.headers.push(responseHeader);
+    }
+    return responseHeadersTrait;
+  }
+
+  /**
+   * recursively builds a name from the specified type.
+   * e.g. Vec<FooModel> would be VecFooModel etc.
+   * 
+   * @param type the type for which to build a name
+   * @returns the name
+   */
+  private recursiveTypeName(type: rust.WireType): string {
+    switch (type.kind) {
+      case 'enum':
+      case 'model':
+        return type.name;
+      case 'hashmap':
+        return `${type.name}${this.recursiveTypeName(type.type)}`;
+      case 'Vec':
+        return `${type.kind}${this.recursiveTypeName(type.type)}`;
+      default:
+        return codegen.capitalize(type.kind);
     }
   }
 
@@ -1362,6 +1436,9 @@ export class Adapter {
     }
   }
 }
+
+/** method types that send/receive data */
+type MethodType = rust.AsyncMethod | rust.PageableMethod;
 
 /**
  * transforms Etag etc to all lower case.

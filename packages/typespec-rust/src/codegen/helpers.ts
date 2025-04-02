@@ -135,7 +135,7 @@ export function emitVisibility(visibility: rust.Visibility): string {
  * @param withAnonymousLifetime indicates if an existing lifetime annotation should be substituted with the anonymous lifetime
  * @returns 
  */
-export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Type, withAnonymousLifetime = false): string {
+export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.ResponseHeadersTrait | rust.Type, withAnonymousLifetime = false): string {
   switch (type.kind) {
     case 'arc':
       return `${type.name}<dyn ${getTypeDeclaration(type.type)}>`;
@@ -193,6 +193,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Type,
     case 'enum':
     case 'jsonValue':
     case 'offsetDateTime':
+    case 'responseHeadersTrait':
     case 'tokenCredential':
       return type.name;
     case 'external':

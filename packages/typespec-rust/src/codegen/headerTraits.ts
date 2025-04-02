@@ -17,106 +17,74 @@ import * as rust from '../codemodel/index.js';
  * @returns the header traits content or undefined
  */
 export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined {
-  interface clientMethod {
-    client: rust.Client;
-    method: Exclude<rust.MethodType, rust.ClientAccessor>;
-  }
+  const srcTraits = new Map<string, Array<rust.ResponseHeadersTrait>>();
 
-  const clientMethodsWithResponseHeaders = new Array<clientMethod>();
   for (const client of crate.clients) {
     for (const method of client.methods) {
       if (method.kind === 'clientaccessor') {
         continue;
-      }
-
-      if (method.responseHeaders.length > 0) {
-        clientMethodsWithResponseHeaders.push({
-          client: client,
-          method: method,
-        });
+      } else if (method.responseHeaders) {
+        let entry = srcTraits.get(method.responseHeaders.name);
+        if (!entry) {
+          entry = new Array<rust.ResponseHeadersTrait>();
+          srcTraits.set(method.responseHeaders.name, entry);
+        }
+        entry.push(method.responseHeaders);
       }
     }
   }
 
-  if (clientMethodsWithResponseHeaders.length === 0) {
+  if (srcTraits.size === 0) {
     return undefined;
   }
 
-  // fold headers across method return types into the same trait.
-  // e.g. DoFoo() Response<Model> and DoBar() Response<Model> methods
-  // return (unique) headers, they will be folded into one trait.
-  // it does mean that headers unique to a method will be absent from
-  // the response of the other method.
-
   const headers = new Array<rust.ResponseHeader>();
-  const traits = new Array<TraitDefinition>();
+  const traits = new Array<rust.ResponseHeadersTrait>();
 
-  for (const clientMethod of clientMethodsWithResponseHeaders) {
-    const client = clientMethod.client;
-    const method = clientMethod.method;
-
-    let implFor: rust.MarkerType | rust.Payload;
-    switch (method.returns.type.kind) {
-      case 'pager':
-        implFor = method.returns.type.type;
-        break;
-      case 'response':
-        if (method.returns.type.content.kind !== 'marker' && method.returns.type.content.kind !== 'payload') {
-          throw new Error(`unexpected method content kind ${method.returns.type.content.kind}`);
-        }
-        implFor = method.returns.type.content;
-        break;
-      default:
-        // this is Unit which should have been previously skipped
-        throw new Error(`unexpected method return kind ${method.returns.type.kind}`);
-    }
-
-    for (const responseHeader of method.responseHeaders) {
+  /** adds response headers to headers, avoiding duplicates */
+  const addHeaders = function(...responseHeaders: Array<rust.ResponseHeader>): void {
+    for (const responseHeader of responseHeaders) {
       if (!headers.find(v => v.header === responseHeader.header)) {
         headers.push(responseHeader);
       }
     }
+  };
 
-    // if this trait is already implemented for a Response<T>
-    // then just add any new headers to it
-    const trait = traits.find(v => helpers.getTypeDeclaration(v.implFor) === helpers.getTypeDeclaration(implFor));
-    if (trait) {
-      for (const responseHeader of method.responseHeaders) {
-        const matchingHeader = trait.headers.find(h => h.header === responseHeader.header);
+  for (const srcTrait of srcTraits.values()) {
+    if (srcTrait.length === 1) {
+      // no traits to merge, just add and move on
+      traits.push(srcTrait[0]);
+      addHeaders(...srcTrait[0].headers);
+      continue;
+    }
+
+    // for traits with multiple impls, merge them into a single trait
+    const mergedHeaders = new Array<rust.ResponseHeader>();
+    let mergedDocs = '';
+    for (const src of srcTrait) {
+      if (mergedDocs.length > 0) {
+        mergedDocs += '\n/// ';
+      }
+      mergedDocs += src.docs;
+
+      for (const responseHeader of src.headers) {
+        const matchingHeader = mergedHeaders.find(h => h.header === responseHeader.header);
         if (!matchingHeader) {
-          trait.headers.push(responseHeader);
+          mergedHeaders.push(responseHeader);
         } else if (matchingHeader.type !== responseHeader.type) {
           // overlapping headers with different types
           throw new Error('overlapping headers');
         }
       }
-      continue;
     }
 
-    let traitName: string;
-    switch (implFor.kind) {
-      case 'marker':
-        traitName = `${implFor.name}Headers`;
-        break;
-      case 'payload':
-        traitName = `${helpers.getTypeDeclaration(implFor.type)}Headers`;
-        // Response<Vec<SignedIdentifier>> becomes VecSignedIdentifierHeaders
-        traitName = traitName.replace(/(?:<|>)/g, '');
-        break;
-      default:
-        throw new Error(`unexpected method return kind ${method.returns.type.kind}`);
-    }
-
-    traits.push({
-      name: traitName,
-      docs: `Provides access to typed response headers for [\`${client.name}::${method.name}()\`](crate::generated::clients::${client.name}::${method.name}())`,
-      headers: [...method.responseHeaders], // make a copy of the headers array
-      implFor: implFor,
-    })
+    const mergedTrait = new rust.ResponseHeadersTrait(srcTrait[0].name, srcTrait[0].implFor, mergedDocs);
+    mergedTrait.headers = mergedHeaders;
+    traits.push(mergedTrait);
   }
 
   headers.sort((a: rust.ResponseHeader, b: rust.ResponseHeader) => helpers.sortAscending(getHeaderConstName(a), getHeaderConstName(b)));
-  traits.sort((a: TraitDefinition, b: TraitDefinition) => helpers.sortAscending(a.name, b.name));
+  traits.sort((a: rust.ResponseHeadersTrait, b: rust.ResponseHeadersTrait) => helpers.sortAscending(a.name, b.name));
 
   // this specializes literals to return the value's underlying type
   const getTypeDeclaration = function(type: rust.Type): string {
@@ -265,7 +233,7 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
  * @param traitDefs the trait definitions to seal
  * @returns the private mod definition
  */
-function getSealedImpls(traitDefs: Array<TraitDefinition>): string {
+function getSealedImpls(traitDefs: Array<rust.ResponseHeadersTrait>): string {
   const use = new Use('modelsOther');
   const indent = new helpers.indentation();
   use.add('azure_core::http', 'Response');
@@ -287,19 +255,4 @@ function getSealedImpls(traitDefs: Array<TraitDefinition>): string {
   content += '}\n\n'; // end mod private
 
   return content;
-}
-
-/** defines a header response trait */
-interface TraitDefinition {
-  /** name of the trait */
-  name: string;
-
-  /** doc string for the trait */
-  docs: string;
-
-  /** the headers in the trait */
-  headers: Array<rust.ResponseHeader>;
-
-  /** the type for which to implement the trait */
-  implFor: rust.MarkerType | rust.Payload;
 }

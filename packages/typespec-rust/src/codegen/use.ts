@@ -60,7 +60,7 @@ export class Use {
    * 
    * @param type the Rust type to add
    */
-  addForType(type: rust.Client | rust.Payload | rust.Type): void {
+  addForType(type: rust.Client | rust.Payload | rust.ResponseHeadersTrait | rust.Type): void {
     switch (type.kind) {
       case 'arc':
         this.add('std::sync', 'Arc');
@@ -127,6 +127,18 @@ export class Use {
             this.addForType(type.content);
             break;
         }
+        break;
+      case 'responseHeadersTrait':
+        switch (this.scope) {
+          case 'clients':
+            this.add(`crate::generated::models`, type.name);
+            break;
+          case 'models':
+          case 'modelsOther':
+            this.add('super', type.name);
+            break;
+        }
+        break;
     }
 
     if (type.kind !== 'client') {
