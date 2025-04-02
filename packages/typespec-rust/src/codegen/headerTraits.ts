@@ -62,7 +62,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
     const mergedHeaders = new Array<rust.ResponseHeader>();
     let mergedDocs = '/// Provides access to typed response headers for the following methods:\n';
     for (const src of srcTrait) {
-      mergedDocs += `/// ${src.docs}\n`;
+      mergedDocs += `/// * ${src.docs}\n`;
 
       for (const responseHeader of src.headers) {
         const matchingHeader = mergedHeaders.find(h => h.header === responseHeader.header);
