@@ -1499,19 +1499,6 @@ pub struct BlobContainerClientSetMetadataOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to `BlobContainerClient::submit_batch()`
-#[derive(Clone, Default, SafeDebug)]
-pub struct BlobContainerClientSubmitBatchOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
-}
-
 /// Options to be passed to `BlobServiceClient::filter_blobs()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientFilterBlobsOptions<'a> {
@@ -1651,19 +1638,6 @@ pub struct BlobServiceClientSetPropertiesOptions<'a> {
 
     /// The static website properties.
     pub static_website: Option<StaticWebsite>,
-
-    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
-}
-
-/// Options to be passed to `BlobServiceClient::submit_batch()`
-#[derive(Clone, Default, SafeDebug)]
-pub struct BlobServiceClientSubmitBatchOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
 
     /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,

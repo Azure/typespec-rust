@@ -20,8 +20,7 @@ use crate::generated::{
         BlobContainerClientRenewLeaseResult, BlobContainerClientRestoreOptions,
         BlobContainerClientRestoreResult, BlobContainerClientSetAccessPolicyOptions,
         BlobContainerClientSetAccessPolicyResult, BlobContainerClientSetMetadataOptions,
-        BlobContainerClientSetMetadataResult, BlobContainerClientSubmitBatchOptions,
-        BlobContainerClientSubmitBatchResult, FilterBlobSegment, ListBlobsFlatSegmentResponse,
+        BlobContainerClientSetMetadataResult, FilterBlobSegment, ListBlobsFlatSegmentResponse,
         ListBlobsHierarchySegmentResponse, SignedIdentifier,
     },
 };
@@ -33,7 +32,7 @@ use azure_core::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url,
     },
-    Bytes, Result,
+    Result,
 };
 use std::sync::Arc;
 
@@ -846,42 +845,6 @@ impl BlobContainerClient {
             }
         }
         request.insert_header("x-ms-version", &self.version);
-        self.pipeline.send(&ctx, &mut request).await
-    }
-
-    /// The Batch operation allows multiple API calls to be embedded into a single HTTP request.
-    ///
-    /// # Arguments
-    ///
-    /// * `body` - The body of the request.
-    /// * `content_length` - The length of the request.
-    /// * `options` - Optional parameters for the request.
-    pub async fn submit_batch(
-        &self,
-        body: RequestContent<Bytes>,
-        content_length: u64,
-        options: Option<BlobContainerClientSubmitBatchOptions<'_>>,
-    ) -> Result<Response<BlobContainerClientSubmitBatchResult>> {
-        let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
-        let mut url = self.endpoint.clone();
-        url = url.join(&self.container_name)?;
-        url.query_pairs_mut()
-            .append_pair("comp", "batch")
-            .append_pair("restype", "container");
-        if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
-        }
-        let mut request = Request::new(url, Method::Post);
-        request.insert_header("accept", "application/octet-stream");
-        request.insert_header("content-length", content_length.to_string());
-        request.insert_header("content-type", "application/octet-stream");
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
-        request.insert_header("x-ms-version", &self.version);
-        request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
 }
