@@ -1109,7 +1109,8 @@ export class Adapter {
     }
 
     rustMethod.returns = new rust.Result(this.crate, returnType);
-    rustMethod.responseHeaders = this.adaptResponseHeadersTrait(rustClient, rustMethod, responseHeaders);
+    const responseHeadersMap = this.adaptResposeHeaders(responseHeaders);
+    rustMethod.responseHeaders = this.adaptResponseHeadersTrait(rustClient, rustMethod, Array.from(responseHeadersMap.values()));
 
     if (method.kind === 'paging') {
       // can't do this until the method has been completely adapted
@@ -1118,7 +1119,35 @@ export class Adapter {
   }
 
   /**
-   * adapts response headers into a Rust ResponseHeadersTrait
+   * adapts response headers into Rust response headers and provides
+   * a mapping from the tcgc response header to the Rust equivalent.
+   * if there are no headers to adapt, an empty map is returned.
+   * 
+   * @param responseHeaders the response headers to adapt (can be empty)
+   * @returns the map of response headers
+   */
+  private adaptResposeHeaders(responseHeaders: Array<tcgc.SdkServiceResponseHeader>): Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader> {
+    const responseHeadersMap = new Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>();
+    // adapt the response headers and add them to the trait
+    for (const header of responseHeaders) {
+      let responseHeader: rust.ResponseHeader;
+      if (header.type.kind === 'dict') {
+        if (header.serializedName !== 'x-ms-meta' && header.serializedName !== 'x-ms-or') {
+          throw new Error(`unexpected response header collection ${header.serializedName}`);
+        }
+        responseHeader = new rust.ResponseHeaderHashMap(snakeCaseName(header.name), header.serializedName);
+      } else {
+        responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(header.serializedName), this.getType(header.type));
+      }
+
+      responseHeader.docs = this.adaptDocs(header.summary, header.doc);
+      responseHeadersMap.set(header, responseHeader);
+    }
+    return responseHeadersMap;
+  }
+
+  /**
+   * creates a Rust ResponseHeadersTrait for the specified response headers.
    * if there are no response headers, undefined is returned.
    * 
    * @param client the client that contains the method
@@ -1126,7 +1155,7 @@ export class Adapter {
    * @param responseHeaders the response headers array (can be empty)
    * @returns a ResponseHeadersTrait or undefined
    */
-  private adaptResponseHeadersTrait(client: rust.Client, method: MethodType, responseHeaders: Array<tcgc.SdkServiceResponseHeader>): rust.ResponseHeadersTrait | undefined {
+  private adaptResponseHeadersTrait(client: rust.Client, method: MethodType, responseHeaders: Array<rust.ResponseHeader>): rust.ResponseHeadersTrait | undefined {
     if (responseHeaders.length === 0) {
       return undefined;
     }
@@ -1162,22 +1191,8 @@ export class Adapter {
     // NOTE: the complete doc text will be emitted at codegen time
     const docs = this.asDocLink(`${client.name}::${method.name}()`, `crate::generated::clients::${client.name}::${method.name}()`);
     const responseHeadersTrait = new rust.ResponseHeadersTrait(traitName, implFor, docs);
+    responseHeadersTrait.headers.push(...responseHeaders);
 
-    // adapt the response headers and add them to the trait
-    for (const header of responseHeaders) {
-      let responseHeader: rust.ResponseHeader;
-      if (header.type.kind === 'dict') {
-        if (header.serializedName !== 'x-ms-meta' && header.serializedName !== 'x-ms-or') {
-          throw new Error(`unexpected response header collection ${header.serializedName}`);
-        }
-        responseHeader = new rust.ResponseHeaderHashMap(snakeCaseName(header.name), header.serializedName);
-      } else {
-        responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(header.serializedName), this.getType(header.type));
-      }
-
-      responseHeader.docs = this.adaptDocs(header.summary, header.doc);
-      responseHeadersTrait.headers.push(responseHeader);
-    }
     return responseHeadersTrait;
   }
 
