@@ -9,8 +9,7 @@ use crate::generated::{
         BlobContainerClientAcquireLeaseOptions, BlobContainerClientAcquireLeaseResult,
         BlobContainerClientBreakLeaseOptions, BlobContainerClientBreakLeaseResult,
         BlobContainerClientChangeLeaseOptions, BlobContainerClientChangeLeaseResult,
-        BlobContainerClientCreateOptions, BlobContainerClientCreateResult,
-        BlobContainerClientDeleteOptions, BlobContainerClientDeleteResult,
+        BlobContainerClientCreateOptions, BlobContainerClientDeleteOptions,
         BlobContainerClientFilterBlobsOptions, BlobContainerClientGetAccessPolicyOptions,
         BlobContainerClientGetAccountInfoOptions, BlobContainerClientGetAccountInfoResult,
         BlobContainerClientGetPropertiesOptions, BlobContainerClientGetPropertiesResult,
@@ -249,7 +248,7 @@ impl BlobContainerClient {
     pub async fn create(
         &self,
         options: Option<BlobContainerClientCreateOptions<'_>>,
-    ) -> Result<Response<BlobContainerClientCreateResult>> {
+    ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -295,7 +294,7 @@ impl BlobContainerClient {
     pub async fn delete(
         &self,
         options: Option<BlobContainerClientDeleteOptions<'_>>,
-    ) -> Result<Response<BlobContainerClientDeleteResult>> {
+    ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
