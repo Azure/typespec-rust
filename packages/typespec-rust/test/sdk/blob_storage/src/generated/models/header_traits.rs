@@ -19,15 +19,14 @@ use super::{
     BlobContainerClientGetPropertiesResult, BlobContainerClientReleaseLeaseResult,
     BlobContainerClientRenameResult, BlobContainerClientRenewLeaseResult,
     BlobContainerClientRestoreResult, BlobContainerClientSetAccessPolicyResult,
-    BlobContainerClientSetMetadataResult, BlobContainerClientSubmitBatchResult,
-    BlobImmutabilityPolicyMode, BlobServiceClientGetAccountInfoResult,
-    BlobServiceClientSubmitBatchResult, BlobTags, BlobType, BlockBlobClientCommitBlockListResult,
-    BlockBlobClientPutBlobFromUrlResult, BlockBlobClientQueryResult,
-    BlockBlobClientStageBlockFromUrlResult, BlockBlobClientStageBlockResult,
-    BlockBlobClientUploadResult, BlockList, CopyStatus, FilterBlobSegment, LeaseState, LeaseStatus,
-    ListBlobsFlatSegmentResponse, ListBlobsHierarchySegmentResponse,
-    PageBlobClientClearPagesResult, PageBlobClientCopyIncrementalResult,
-    PageBlobClientCreateResult, PageBlobClientResizeResult,
+    BlobContainerClientSetMetadataResult, BlobImmutabilityPolicyMode,
+    BlobServiceClientGetAccountInfoResult, BlobTags, BlobType,
+    BlockBlobClientCommitBlockListResult, BlockBlobClientPutBlobFromUrlResult,
+    BlockBlobClientQueryResult, BlockBlobClientStageBlockFromUrlResult,
+    BlockBlobClientStageBlockResult, BlockBlobClientUploadResult, BlockList, CopyStatus,
+    FilterBlobSegment, LeaseState, LeaseStatus, ListBlobsFlatSegmentResponse,
+    ListBlobsHierarchySegmentResponse, PageBlobClientClearPagesResult,
+    PageBlobClientCopyIncrementalResult, PageBlobClientCreateResult, PageBlobClientResizeResult,
     PageBlobClientUpdateSequenceNumberResult, PageBlobClientUploadPagesFromUrlResult,
     PageBlobClientUploadPagesResult, PageList, PublicAccessType, RehydratePriority,
     SignedIdentifier, SkuName, StorageServiceStats, UserDelegationKey,
@@ -59,7 +58,6 @@ const BLOB_SEALED: HeaderName = HeaderName::from_static("x-ms-blob-sealed");
 const BLOB_SEQUENCE_NUMBER: HeaderName = HeaderName::from_static("x-ms-blob-sequence-number");
 const BLOB_TYPE: HeaderName = HeaderName::from_static("x-ms-blob-type");
 const CACHE_CONTROL: HeaderName = HeaderName::from_static("cache-control");
-const CLIENT_REQUEST_ID: HeaderName = HeaderName::from_static("x-ms-client-request-id");
 const CONTENT_CRC64: HeaderName = HeaderName::from_static("x-ms-content-crc64");
 const CONTENT_DISPOSITION: HeaderName = HeaderName::from_static("content-disposition");
 const CONTENT_ENCODING: HeaderName = HeaderName::from_static("content-encoding");
@@ -108,7 +106,6 @@ const META: &str = "x-ms-meta-";
 const OR: &str = "x-ms-or-";
 const OR_POLICY_ID: HeaderName = HeaderName::from_static("x-ms-or-policy-id");
 const REHYDRATE_PRIORITY: HeaderName = HeaderName::from_static("x-ms-rehydrate-priority");
-const REQUEST_ID: HeaderName = HeaderName::from_static("x-ms-request-id");
 const REQUEST_SERVER_ENCRYPTED: HeaderName =
     HeaderName::from_static("x-ms-request-server-encrypted");
 const SKU_NAME: HeaderName = HeaderName::from_static("x-ms-sku-name");
@@ -1903,20 +1900,6 @@ impl BlobContainerClientSetMetadataResultHeaders
     }
 }
 
-/// Provides access to typed response headers for `BlobContainerClient::submit_batch()`
-pub trait BlobContainerClientSubmitBatchResultHeaders: private::Sealed {
-    fn request_id(&self) -> Result<Option<String>>;
-}
-
-impl BlobContainerClientSubmitBatchResultHeaders
-    for Response<BlobContainerClientSubmitBatchResult>
-{
-    /// An opaque, globally-unique, server-generated string identifier for the request.
-    fn request_id(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &REQUEST_ID)
-    }
-}
-
 /// Provides access to typed response headers for `BlobServiceClient::get_account_info()`
 pub trait BlobServiceClientGetAccountInfoResultHeaders: private::Sealed {
     fn date(&self) -> Result<Option<OffsetDateTime>>;
@@ -1946,24 +1929,6 @@ impl BlobServiceClientGetAccountInfoResultHeaders
     /// Identifies the sku name of the account
     fn sku_name(&self) -> Result<Option<SkuName>> {
         Headers::get_optional_as(self.headers(), &SKU_NAME)
-    }
-}
-
-/// Provides access to typed response headers for `BlobServiceClient::submit_batch()`
-pub trait BlobServiceClientSubmitBatchResultHeaders: private::Sealed {
-    fn client_request_id(&self) -> Result<Option<String>>;
-    fn request_id(&self) -> Result<Option<String>>;
-}
-
-impl BlobServiceClientSubmitBatchResultHeaders for Response<BlobServiceClientSubmitBatchResult> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    fn client_request_id(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &CLIENT_REQUEST_ID)
-    }
-
-    /// An opaque, globally-unique, server-generated string identifier for the request.
-    fn request_id(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &REQUEST_ID)
     }
 }
 
@@ -2995,8 +2960,7 @@ mod private {
         BlobContainerClientGetPropertiesResult, BlobContainerClientReleaseLeaseResult,
         BlobContainerClientRenameResult, BlobContainerClientRenewLeaseResult,
         BlobContainerClientRestoreResult, BlobContainerClientSetAccessPolicyResult,
-        BlobContainerClientSetMetadataResult, BlobContainerClientSubmitBatchResult,
-        BlobServiceClientGetAccountInfoResult, BlobServiceClientSubmitBatchResult, BlobTags,
+        BlobContainerClientSetMetadataResult, BlobServiceClientGetAccountInfoResult, BlobTags,
         BlockBlobClientCommitBlockListResult, BlockBlobClientPutBlobFromUrlResult,
         BlockBlobClientQueryResult, BlockBlobClientStageBlockFromUrlResult,
         BlockBlobClientStageBlockResult, BlockBlobClientUploadResult, BlockList, FilterBlobSegment,
@@ -3046,9 +3010,7 @@ mod private {
     impl Sealed for Response<BlobContainerClientRestoreResult> {}
     impl Sealed for Response<BlobContainerClientSetAccessPolicyResult> {}
     impl Sealed for Response<BlobContainerClientSetMetadataResult> {}
-    impl Sealed for Response<BlobContainerClientSubmitBatchResult> {}
     impl Sealed for Response<BlobServiceClientGetAccountInfoResult> {}
-    impl Sealed for Response<BlobServiceClientSubmitBatchResult> {}
     impl Sealed for Response<BlobTags> {}
     impl Sealed for Response<BlockBlobClientCommitBlockListResult> {}
     impl Sealed for Response<BlockBlobClientPutBlobFromUrlResult> {}

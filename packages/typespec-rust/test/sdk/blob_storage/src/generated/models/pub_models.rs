@@ -223,10 +223,6 @@ pub struct BlobContainerClientSetAccessPolicyResult;
 #[derive(SafeDebug)]
 pub struct BlobContainerClientSetMetadataResult;
 
-/// Contains results for `BlobContainerClient::submit_batch()`
-#[derive(SafeDebug)]
-pub struct BlobContainerClientSubmitBatchResult;
-
 /// The blob flat list segment.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
@@ -589,10 +585,6 @@ pub struct BlobPropertiesInternal {
 /// Contains results for `BlobServiceClient::get_account_info()`
 #[derive(SafeDebug)]
 pub struct BlobServiceClientGetAccountInfoResult;
-
-/// Contains results for `BlobServiceClient::submit_batch()`
-#[derive(SafeDebug)]
-pub struct BlobServiceClientSubmitBatchResult;
 
 /// The blob tags.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
