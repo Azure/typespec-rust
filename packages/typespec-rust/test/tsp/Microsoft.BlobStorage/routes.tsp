@@ -129,7 +129,7 @@ namespace Storage.Blob {
   op submitBatch(
     /** Required. The value of this header must be multipart/mixed with a batch boundary. Example header value: multipart/mixed; boundary=batch_<GUID> */
     @header("Content-Type")
-    multipartContentType: "multipart/mixed",
+    multipartContentType: "application/octet-stream",
 
     ...ApiVersionHeader,
     ...TimeoutParameter,
@@ -140,7 +140,7 @@ namespace Storage.Blob {
     /** The media type of the body of the response. For batch requests, this is multipart/mixed; boundary=batchresponse_GUID */
     #suppress "@typespec/http/content-type-ignored" "Template for existing API"
     @header("Content-Type")
-    contentType: "multipart/mixed";
+    contentType: "application/octet-stream";
 
     ...RequestIdResponseHeader;
     ...ClientRequestIdHeader;
@@ -380,7 +380,7 @@ namespace Storage.Blob {
 
       /** Required. The value of this header must be multipart/mixed with a batch boundary. Example header value: multipart/mixed; boundary=batch_<GUID> */
       @header("Content-Type")
-      multipartContentType: "multipart/mixed",
+      multipartContentType: "application/octet-stream",
 
       ...ContentLengthParameter,
       ...TimeoutParameter,
@@ -391,7 +391,7 @@ namespace Storage.Blob {
 
       /** Required. The value of this header must be multipart/mixed with a batch boundary. Example header value: multipart/mixed; boundary=batch_<GUID> */
       @header("Content-Type")
-      multipartContentType: "multipart/mixed";
+      multipartContentType: "application/octet-stream";
 
       ...RequestIdResponseHeader;
     } & BodyParameter) | StorageError;

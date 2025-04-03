@@ -1,6 +1,6 @@
 # Release History
 
-## 0.13.2 (2025-04-02)
+## 0.13.2 (2025-04-03)
 
 ### Other Changes
 
@@ -8,6 +8,8 @@
 * Add missing doc comment(s) for multiple response header traits that get merged into a single trait.
 * Added switch `temp-omit-doc-links` to omit links to types in doc comments.
   * NOTE: this switch is _temporary_ and will be removed in a future release.
+* Updated to the latest tsp toolset.
+  * This prompted updating the minimum node engine to `v20.x.y`.
 
 ## 0.13.1 (2025-04-01)
 

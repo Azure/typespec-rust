@@ -2,9 +2,6 @@ import "@azure-tools/typespec-client-generator-core";
 
 using Azure.ClientGenerator.Core;
 
-@service(#{
-  title: "SerdeTests",
-})
 namespace SerdeTests;
 
 @encode(BytesKnownEncoding.base64url)

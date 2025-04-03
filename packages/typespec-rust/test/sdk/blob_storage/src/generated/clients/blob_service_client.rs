@@ -386,9 +386,9 @@ impl BlobServiceClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Post);
-        request.insert_header("accept", "multipart/mixed");
+        request.insert_header("accept", "application/octet-stream");
         request.insert_header("content-length", content_length.to_string());
-        request.insert_header("content-type", "multipart/mixed");
+        request.insert_header("content-type", "application/octet-stream");
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }

@@ -522,11 +522,6 @@ export class Adapter {
   /** converts all tcgc clients and their methods into Rust clients/methods */
   private adaptClients(): void {
     for (const client of this.ctx.sdkPackage.clients) {
-      if (client.methods.length === 0) {
-        // skip generating empty clients
-        continue;
-      }
-
       // start with instantiable clients and recursively work down
       if (client.clientInitialization.initializedBy & tcgc.InitializedByFlags.Individually) {
         this.recursiveAdaptClient(client);
@@ -773,11 +768,13 @@ export class Adapter {
       throw new Error(`uninstantiable client ${client.name} has no parent`);
     }
 
+    for (const child of values(client.children)) {
+      const subClient = this.recursiveAdaptClient(child, rustClient);
+      this.adaptClientAccessor(client, child, rustClient, subClient);
+    }
+
     for (const method of client.methods) {
-      if (method.kind === 'clientaccessor') {
-        const subClient = this.recursiveAdaptClient(method.response, rustClient);
-        this.adaptClientAccessor(client, method, rustClient, subClient);
-      } else if (method.kind === 'lro' || method.kind === 'lropaging') {
+      if (method.kind === 'lro' || method.kind === 'lropaging') {
         // skip LROs for now so that codegen is unblocked
         // TODO: https://github.com/Azure/typespec-rust/issues/188
         this.ctx.program.reportDiagnostic({
@@ -787,9 +784,8 @@ export class Adapter {
           target: method.__raw ? method.__raw.node : NoTarget,
         });
         continue;
-      } else {
-        this.adaptMethod(method, rustClient);
       }
+      this.adaptMethod(method, rustClient);
     }
 
     this.crate.clients.push(rustClient);
@@ -874,15 +870,15 @@ export class Adapter {
    * @param rustClient the client to which the method belongs
    * @param subClient the sub-client type that the method returns
    */
-  private adaptClientAccessor(client: tcgc.SdkClientType<tcgc.SdkHttpOperation>, method: tcgc.SdkClientAccessor<tcgc.SdkHttpOperation>, rustClient: rust.Client, subClient: rust.Client): void {
+  private adaptClientAccessor(parentClient: tcgc.SdkClientType<tcgc.SdkHttpOperation>, childClient: tcgc.SdkClientType<tcgc.SdkHttpOperation>, rustClient: rust.Client, subClient: rust.Client): void {
     const clientAccessor = new rust.ClientAccessor(`get_${snakeCaseName(subClient.name)}`, rustClient, subClient);
     clientAccessor.docs.summary = `Returns a new instance of ${subClient.name}.`;
-    for (const param of method.parameters) {
+    for (const param of childClient.clientInitialization.parameters) {
       // check if the client's initializer already has this parameter.
       // if it does then omit it from the method sig as we'll populate
       // the child client's value from the parent.
       let existsOnParent = false;
-      for (const clientParam of client.clientInitialization.parameters) {
+      for (const clientParam of parentClient.clientInitialization.parameters) {
         if (clientParam.name === param.name) {
           existsOnParent = true;
           break;
