@@ -433,6 +433,9 @@ export class Adapter {
         }
         return this.getStringType();
       }
+      case 'nullable':
+        // TODO: workaround until https://github.com/Azure/typespec-rust/issues/42 is fixed
+        return this.getType(type.type);
       case 'offsetDateTime': {
         const keyName = `${type.kind}-${type.encode}`;
         let timeType = this.types.get(keyName);
@@ -1534,7 +1537,7 @@ function recursiveKeyName(root: string, obj: tcgc.SdkType): string {
     case 'model':
       return `${root}-${obj.name}`;
     case 'nullable':
-      return recursiveKeyName(root, obj.type);
+      return recursiveKeyName(`${root}-nullable`, obj.type);
     case 'plainTime':
       return `${root}-plainTime`;
     default:
