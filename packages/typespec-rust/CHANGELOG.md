@@ -1,5 +1,11 @@
 # Release History
 
+## 0.13.3 (2025-04-04)
+
+### Other Changes
+
+* Nullable types are treated as their underlying type (temporary until `Nullable<T>` arrives in core).
+
 ## 0.13.2 (2025-04-03)
 
 ### Other Changes

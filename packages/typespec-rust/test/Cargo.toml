@@ -42,6 +42,7 @@ members = [
     "spector/type/enum/fixed",
     "spector/type/model/empty",
     "spector/type/model/usage",
+    "spector/type/property/nullable",
 ]
 resolver = "2"
 
