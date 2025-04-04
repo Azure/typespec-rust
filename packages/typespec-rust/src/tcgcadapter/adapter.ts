@@ -970,6 +970,9 @@ export class Adapter {
       allOpParams.push(method.operation.bodyParam);
     }
 
+    // maps tcgc method header/query params to their Rust method params
+    const paramsMap = new Map<tcgc.SdkMethodParameter, rust.HeaderParameter | rust.QueryParameter>();
+
     for (const param of method.parameters) {
       // we need to translate from the method param to its underlying operation param.
       // most params have a one-to-one mapping. however, for spread params, there will
@@ -995,6 +998,10 @@ export class Adapter {
         adaptedParam = this.adaptMethodSpreadParameter(param, this.adaptBodyFormat(opParam.defaultContentType), opParam.type);
       } else {
         adaptedParam = this.adaptMethodParameter(opParam);
+      }
+
+      if (adaptedParam.kind === 'header' || adaptedParam.kind === 'query') {
+        paramsMap.set(param, adaptedParam);
       }
 
       adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
@@ -1117,7 +1124,7 @@ export class Adapter {
 
     if (method.kind === 'paging') {
       // can't do this until the method has been completely adapted
-      (<rust.PageableMethod>rustMethod).strategy = this.adaptPageableMethodStrategy(method);
+      (<rust.PageableMethod>rustMethod).strategy = this.adaptPageableMethodStrategy(method, paramsMap, responseHeadersMap);
     }
   }
 
@@ -1224,9 +1231,11 @@ export class Adapter {
    * creates the pageable strategy based on the method definition
    * 
    * @param method the pageable method for which to create a strategy
+   * @param paramsMap maps tcgc method params to Rust params (needed for continuation token strategy)
+   * @param respHeadersMap maps tcgc response headers to Rust response headers (needed for continuation token strategy)
    * @returns the pageable strategy
    */
-  private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>): rust.PageableStrategyKind {
+  private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderParameter | rust.QueryParameter>, respHeadersMap: Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>): rust.PageableStrategyKind {
     if (method.pagingMetadata.nextLinkOperation) {
       // TODO: https://github.com/Azure/autorest.rust/issues/103
       throw new Error('next page operation NYI');
@@ -1249,9 +1258,59 @@ export class Adapter {
       }
       return new rust.PageableStrategyNextLink(nextLinkField);
     } else if (method.pagingMetadata.continuationTokenParameterSegments && method.pagingMetadata.continuationTokenResponseSegments) {
-      throw new Error('PageableStrategyContinuationToken NYI');
+      if (method.pagingMetadata.continuationTokenParameterSegments.length > 1) {
+        throw new Error(`nested continuationTokenParameterSegments NYI`);
+      }
+      if (method.pagingMetadata.continuationTokenResponseSegments.length > 1) {
+        throw new Error(`nested continuationTokenResponseSegments NYI`);
+      }
+
+      const tokenReq = method.pagingMetadata.continuationTokenParameterSegments[0];
+      const tokenResp = method.pagingMetadata.continuationTokenResponseSegments[0];
+
+      // find the continuation token parameter
+      let requestToken: rust.HeaderParameter | rust.QueryParameter;
+      switch (tokenReq.kind) {
+        case 'method': {
+          const tokenParam = paramsMap.get(tokenReq);
+          if (!tokenParam) {
+            throw new Error(`missing continuation token request parameter name ${tokenResp.name} for operation ${method.name}`);
+          }
+          requestToken = tokenParam;
+          break;
+        }
+        default:
+          throw new Error(`unhandled continuationTokenParameterSegment kind ${tokenReq.kind}`)
+      }
+
+      // find the continuation token response
+      let responseToken: rust.ResponseHeaderScalar | rust.ModelField;
+      switch (tokenResp.kind) {
+        case 'property': {
+          const tokenField = this.fieldsMap.get(tokenResp);
+          if (!tokenField) {
+            throw new Error(`missing continuation token response field name ${tokenResp.name} for operation ${method.name}`);
+          }
+          responseToken = tokenField;
+          break;
+        }
+        case 'responseheader': {
+          const tokenHeader = respHeadersMap.get(tokenResp);
+          if (!tokenHeader) {
+            throw new Error(`missing continuation token response header name ${tokenResp.name} for operation ${method.name}`);
+          }
+          if (tokenHeader.kind !== 'responseHeaderScalar') {
+            throw new Error(`unexpected response header kind ${tokenHeader.kind}`);
+          }
+          responseToken = tokenHeader;
+          break;
+        }
+        default:
+          throw new Error(`unhandled continuationTokenResponseSegment kind ${tokenResp.kind}`);
+      }
+      return new rust.PageableStrategyContinuationToken(requestToken, responseToken);
     } else {
-      throw new Error(`unhandled paging strategy for operation ${method.name}`);
+      throw new Error(`unknown paging strategy for operation ${method.name}`);
     }
   }
 

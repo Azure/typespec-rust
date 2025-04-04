@@ -1609,6 +1609,22 @@ pub struct BlobServiceClientListContainersSegmentOptions<'a> {
     pub timeout: Option<i32>,
 }
 
+impl BlobServiceClientListContainersSegmentOptions<'_> {
+    pub fn into_owned(self) -> BlobServiceClientListContainersSegmentOptions<'static> {
+        BlobServiceClientListContainersSegmentOptions {
+            client_request_id: self.client_request_id,
+            include: self.include,
+            marker: self.marker,
+            maxresults: self.maxresults,
+            method_options: ClientMethodOptions {
+                context: self.method_options.context.into_owned(),
+            },
+            prefix: self.prefix,
+            timeout: self.timeout,
+        }
+    }
+}
+
 /// Options to be passed to `BlobServiceClient::set_properties()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobServiceClientSetPropertiesOptions<'a> {

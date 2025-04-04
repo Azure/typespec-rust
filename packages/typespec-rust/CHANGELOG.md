@@ -2,6 +2,10 @@
 
 ## 0.13.3 (2025-04-04)
 
+### Features Added
+
+* Added support for pageable methods that use a continuation token when fetching pages.
+
 ### Other Changes
 
 * Nullable types are treated as their underlying type (temporary until `Nullable<T>` arrives in core).

@@ -20,9 +20,10 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url,
+        ClientOptions, Context, Method, Pager, PagerResult, Pipeline, Request, RequestContent,
+        Response, Url,
     },
-    Result,
+    json, Result,
 };
 use std::sync::Arc;
 
@@ -280,16 +281,16 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    pub async fn list_containers_segment(
+    pub fn list_containers_segment(
         &self,
         options: Option<BlobServiceClientListContainersSegmentOptions<'_>>,
-    ) -> Result<Response<ListContainersSegmentResponse>> {
-        let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
-        let mut url = self.endpoint.clone();
-        url.query_pairs_mut().append_pair("comp", "list");
+    ) -> Result<Pager<ListContainersSegmentResponse>> {
+        let options = options.unwrap_or_default().into_owned();
+        let pipeline = self.pipeline.clone();
+        let mut first_url = self.endpoint.clone();
+        first_url.query_pairs_mut().append_pair("comp", "list");
         if let Some(include) = options.include {
-            url.query_pairs_mut().append_pair(
+            first_url.query_pairs_mut().append_pair(
                 "include",
                 &include
                     .iter()
@@ -299,27 +300,60 @@ impl BlobServiceClient {
             );
         }
         if let Some(marker) = options.marker {
-            url.query_pairs_mut().append_pair("marker", &marker);
+            first_url.query_pairs_mut().append_pair("marker", &marker);
         }
         if let Some(maxresults) = options.maxresults {
-            url.query_pairs_mut()
+            first_url
+                .query_pairs_mut()
                 .append_pair("maxresults", &maxresults.to_string());
         }
         if let Some(prefix) = options.prefix {
-            url.query_pairs_mut().append_pair("prefix", &prefix);
+            first_url.query_pairs_mut().append_pair("prefix", &prefix);
         }
         if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
+            first_url
+                .query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
         }
-        let mut request = Request::new(url, Method::Get);
-        request.insert_header("accept", "application/xml");
-        request.insert_header("content-type", "application/xml");
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
-        request.insert_header("x-ms-version", &self.version);
-        self.pipeline.send(&ctx, &mut request).await
+        let version = self.version.clone();
+        Ok(Pager::from_callback(move |marker: Option<String>| {
+            let mut url = first_url.clone();
+            if let Some(marker) = marker {
+                if url.query_pairs().any(|(name, _)| name.eq("marker")) {
+                    let mut new_url = url.clone();
+                    new_url
+                        .query_pairs_mut()
+                        .clear()
+                        .extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("marker")));
+                    url = new_url;
+                }
+                url.query_pairs_mut().append_pair("marker", &marker);
+            }
+            let mut request = Request::new(url, Method::Get);
+            request.insert_header("accept", "application/xml");
+            request.insert_header("content-type", "application/xml");
+            if let Some(client_request_id) = &options.client_request_id {
+                request.insert_header("x-ms-client-request-id", client_request_id);
+            }
+            request.insert_header("x-ms-version", &version);
+            let ctx = options.method_options.context.clone();
+            let pipeline = pipeline.clone();
+            async move {
+                let rsp: Response<ListContainersSegmentResponse> =
+                    pipeline.send(&ctx, &mut request).await?;
+                let (status, headers, body) = rsp.deconstruct();
+                let bytes = body.collect().await?;
+                let res: ListContainersSegmentResponse = json::from_json(bytes.clone())?;
+                let rsp = Response::from_bytes(status, headers, bytes);
+                Ok(match res.next_marker {
+                    Some(next_marker) => PagerResult::Continue {
+                        response: rsp,
+                        continuation: next_marker,
+                    },
+                    None => PagerResult::Complete { response: rsp },
+                })
+            }
+        }))
     }
 
     /// Sets properties for a storage account's Blob service endpoint, including properties for Storage Analytics and CORS (Cross-Origin
