@@ -58,7 +58,7 @@ impl PageableServerDrivenPaginationClient {
                 let rsp: Response<LinkResponse> = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
-                let res: LinkResponse = json::from_json(bytes.clone())?;
+                let res: LinkResponse = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next {
                     Some(next) => PagerResult::Continue {

@@ -119,7 +119,7 @@ impl PageClient {
                 let rsp: Response<UserListResults> = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
-                let res: UserListResults = json::from_json(bytes.clone())?;
+                let res: UserListResults = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
@@ -173,7 +173,7 @@ impl PageClient {
                 let rsp: Response<PagedUser> = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
-                let res: PagedUser = json::from_json(bytes.clone())?;
+                let res: PagedUser = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
@@ -236,7 +236,7 @@ impl PageClient {
                 let rsp: Response<PagedUser> = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
-                let res: PagedUser = json::from_json(bytes.clone())?;
+                let res: PagedUser = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {

@@ -14,25 +14,25 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "BlobItems")]
-pub(crate) struct Blob_itemsBlobItemInternal {
+pub(crate) struct Blob_itemsBlob {
     #[serde(default)]
-    BlobItemInternal: Vec<BlobItemInternal>,
+    Blob: Vec<BlobItemInternal>,
 }
 
-impl Blob_itemsBlobItemInternal {
+impl Blob_itemsBlob {
     pub fn unwrap<'de, D>(deserializer: D) -> Result<Vec<BlobItemInternal>, D::Error>
     where
         D: Deserializer<'de>,
     {
-        Ok(Blob_itemsBlobItemInternal::deserialize(deserializer)?.BlobItemInternal)
+        Ok(Blob_itemsBlob::deserialize(deserializer)?.Blob)
     }
 
     pub fn wrap<S>(to_serialize: &Vec<BlobItemInternal>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        Blob_itemsBlobItemInternal {
-            BlobItemInternal: to_serialize.to_owned(),
+        Blob_itemsBlob {
+            Blob: to_serialize.to_owned(),
         }
         .serialize(serializer)
     }
@@ -66,25 +66,25 @@ impl Blob_prefixesBlobPrefix {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "TagSet")]
-pub(crate) struct Blob_tag_setBlobTag {
+pub(crate) struct Blob_tag_setTag {
     #[serde(default)]
-    BlobTag: Vec<BlobTag>,
+    Tag: Vec<BlobTag>,
 }
 
-impl Blob_tag_setBlobTag {
+impl Blob_tag_setTag {
     pub fn unwrap<'de, D>(deserializer: D) -> Result<Vec<BlobTag>, D::Error>
     where
         D: Deserializer<'de>,
     {
-        Ok(Blob_tag_setBlobTag::deserialize(deserializer)?.BlobTag)
+        Ok(Blob_tag_setTag::deserialize(deserializer)?.Tag)
     }
 
     pub fn wrap<S>(to_serialize: &Vec<BlobTag>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        Blob_tag_setBlobTag {
-            BlobTag: to_serialize.to_owned(),
+        Blob_tag_setTag {
+            Tag: to_serialize.to_owned(),
         }
         .serialize(serializer)
     }
@@ -92,25 +92,25 @@ impl Blob_tag_setBlobTag {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "Blobs")]
-pub(crate) struct BlobsFilterBlobItem {
+pub(crate) struct BlobsBlob {
     #[serde(default)]
-    FilterBlobItem: Vec<FilterBlobItem>,
+    Blob: Vec<FilterBlobItem>,
 }
 
-impl BlobsFilterBlobItem {
+impl BlobsBlob {
     pub fn unwrap<'de, D>(deserializer: D) -> Result<Vec<FilterBlobItem>, D::Error>
     where
         D: Deserializer<'de>,
     {
-        Ok(BlobsFilterBlobItem::deserialize(deserializer)?.FilterBlobItem)
+        Ok(BlobsBlob::deserialize(deserializer)?.Blob)
     }
 
     pub fn wrap<S>(to_serialize: &Vec<FilterBlobItem>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        BlobsFilterBlobItem {
-            FilterBlobItem: to_serialize.to_owned(),
+        BlobsBlob {
+            Blob: to_serialize.to_owned(),
         }
         .serialize(serializer)
     }
@@ -170,25 +170,25 @@ impl Committed_blocksBlock {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "Containers")]
-pub(crate) struct Container_itemsContainerItem {
+pub(crate) struct Container_itemsContainer {
     #[serde(default)]
-    ContainerItem: Vec<ContainerItem>,
+    Container: Vec<ContainerItem>,
 }
 
-impl Container_itemsContainerItem {
+impl Container_itemsContainer {
     pub fn unwrap<'de, D>(deserializer: D) -> Result<Vec<ContainerItem>, D::Error>
     where
         D: Deserializer<'de>,
     {
-        Ok(Container_itemsContainerItem::deserialize(deserializer)?.ContainerItem)
+        Ok(Container_itemsContainer::deserialize(deserializer)?.Container)
     }
 
     pub fn wrap<S>(to_serialize: &Vec<ContainerItem>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        Container_itemsContainerItem {
-            ContainerItem: to_serialize.to_owned(),
+        Container_itemsContainer {
+            Container: to_serialize.to_owned(),
         }
         .serialize(serializer)
     }
@@ -248,25 +248,25 @@ impl Page_rangePageRange {
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename = "Schema")]
-pub(crate) struct SchemaArrowField {
+pub(crate) struct SchemaField {
     #[serde(default)]
-    ArrowField: Vec<ArrowField>,
+    Field: Vec<ArrowField>,
 }
 
-impl SchemaArrowField {
+impl SchemaField {
     pub fn unwrap<'de, D>(deserializer: D) -> Result<Vec<ArrowField>, D::Error>
     where
         D: Deserializer<'de>,
     {
-        Ok(SchemaArrowField::deserialize(deserializer)?.ArrowField)
+        Ok(SchemaField::deserialize(deserializer)?.Field)
     }
 
     pub fn wrap<S>(to_serialize: &Vec<ArrowField>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        SchemaArrowField {
-            ArrowField: to_serialize.to_owned(),
+        SchemaField {
+            Field: to_serialize.to_owned(),
         }
         .serialize(serializer)
     }

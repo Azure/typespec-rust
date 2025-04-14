@@ -62,7 +62,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
-                let res: RequestHeaderResponseBodyResponse = json::from_json(bytes.clone())?;
+                let res: RequestHeaderResponseBodyResponse = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_token {
                     Some(next_token) => PagerResult::Continue {
@@ -165,7 +165,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
-                let res: RequestQueryResponseBodyResponse = json::from_json(bytes.clone())?;
+                let res: RequestQueryResponseBodyResponse = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_token {
                     Some(next_token) => PagerResult::Continue {

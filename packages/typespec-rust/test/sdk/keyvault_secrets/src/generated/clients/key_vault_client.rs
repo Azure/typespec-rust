@@ -247,7 +247,7 @@ impl KeyVaultClient {
                     pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
-                let res: DeletedSecretListResult = json::from_json(bytes.clone())?;
+                let res: DeletedSecretListResult = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
@@ -313,7 +313,7 @@ impl KeyVaultClient {
                 let rsp: Response<SecretListResult> = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
-                let res: SecretListResult = json::from_json(bytes.clone())?;
+                let res: SecretListResult = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
@@ -376,7 +376,7 @@ impl KeyVaultClient {
                 let rsp: Response<SecretListResult> = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
-                let res: SecretListResult = json::from_json(bytes.clone())?;
+                let res: SecretListResult = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {

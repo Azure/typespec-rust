@@ -900,7 +900,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   }
 
   use.add('azure_core::http', 'Method', 'Pager', 'PagerResult', 'Request', 'Response', 'Url');
-  use.add('azure_core', 'json', 'Result');
+  use.add('azure_core', method.returns.type.type.format, 'Result');
   use.addForType(method.returns.type.type.type);
 
   const paramGroups = getMethodParamGroup(method);
@@ -985,7 +985,8 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   if (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'modelField') {
     body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
     body += `${indent.get()}let bytes = body.collect().await?;\n`;
-    body += `${indent.get()}let res: ${returnType} = json::from_json(bytes.clone())?;\n`;
+    const deserialize = method.returns.type.type.format === 'json' ? 'json::from_json' : 'xml::read_xml';
+    body += `${indent.get()}let res: ${returnType} = ${deserialize}(&bytes)?;\n`;
     body += `${indent.get()}let rsp = Response::from_bytes(status, headers, bytes);\n`;
   }
 

@@ -300,6 +300,13 @@ function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
     case 'String':
       unwrappedFieldTypeName = 'string';
       break;
+    case 'model':
+      if (wrappedType.xmlName) {
+        unwrappedFieldTypeName = wrappedType.xmlName;
+      } else {
+        unwrappedFieldTypeName = wrappedType.name;
+      }
+      break;
     case 'scalar':
       switch (wrappedType.type) {
         case 'bool':

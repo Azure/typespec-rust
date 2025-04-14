@@ -6,10 +6,9 @@
 use super::{
     models_serde,
     xml_helpers::{
-        Blob_itemsBlobItemInternal, Blob_prefixesBlobPrefix, Blob_tag_setBlobTag,
-        BlobsFilterBlobItem, Clear_rangeClearRange, Committed_blocksBlock,
-        Container_itemsContainerItem, CorsCorsRule, Page_rangePageRange, SchemaArrowField,
-        Uncommitted_blocksBlock,
+        Blob_itemsBlob, Blob_prefixesBlobPrefix, Blob_tag_setTag, BlobsBlob, Clear_rangeClearRange,
+        Committed_blocksBlock, Container_itemsContainer, CorsCorsRule, Page_rangePageRange,
+        SchemaField, Uncommitted_blocksBlock,
     },
     AccessTier, ArchiveStatus, BlobImmutabilityPolicyMode, BlobType, CopyStatus,
     GeoReplicationStatusType, LeaseDuration, LeaseState, LeaseStatus, PublicAccessType,
@@ -70,9 +69,9 @@ pub struct ArrowConfiguration {
     /// The Apache Arrow schema
     #[serde(
         default,
-        deserialize_with = "SchemaArrowField::unwrap",
+        deserialize_with = "SchemaField::unwrap",
         rename = "Schema",
-        serialize_with = "SchemaArrowField::wrap"
+        serialize_with = "SchemaField::wrap"
     )]
     pub schema: Vec<ArrowField>,
 }
@@ -232,9 +231,9 @@ pub struct BlobFlatListSegment {
     /// The blob items.
     #[serde(
         default,
-        deserialize_with = "Blob_itemsBlobItemInternal::unwrap",
+        deserialize_with = "Blob_itemsBlob::unwrap",
         rename = "BlobItems",
-        serialize_with = "Blob_itemsBlobItemInternal::wrap"
+        serialize_with = "Blob_itemsBlob::wrap"
     )]
     pub blob_items: Vec<BlobItemInternal>,
 }
@@ -248,9 +247,9 @@ pub struct BlobHierarchyListSegment {
     /// The blob items
     #[serde(
         default,
-        deserialize_with = "Blob_itemsBlobItemInternal::unwrap",
+        deserialize_with = "Blob_itemsBlob::unwrap",
         rename = "BlobItems",
-        serialize_with = "Blob_itemsBlobItemInternal::wrap"
+        serialize_with = "Blob_itemsBlob::wrap"
     )]
     pub blob_items: Vec<BlobItemInternal>,
 
@@ -608,9 +607,9 @@ pub struct BlobTags {
     /// Represents the blob tags.
     #[serde(
         default,
-        deserialize_with = "Blob_tag_setBlobTag::unwrap",
+        deserialize_with = "Blob_tag_setTag::unwrap",
         rename = "TagSet",
-        serialize_with = "Blob_tag_setBlobTag::wrap"
+        serialize_with = "Blob_tag_setTag::wrap"
     )]
     pub blob_tag_set: Vec<BlobTag>,
 }
@@ -932,9 +931,9 @@ pub struct FilterBlobSegment {
     /// The blob segment.
     #[serde(
         default,
-        deserialize_with = "BlobsFilterBlobItem::unwrap",
+        deserialize_with = "BlobsBlob::unwrap",
         rename = "Blobs",
-        serialize_with = "BlobsFilterBlobItem::wrap"
+        serialize_with = "BlobsBlob::wrap"
     )]
     pub blobs: Vec<FilterBlobItem>,
 
@@ -1063,9 +1062,9 @@ pub struct ListContainersSegmentResponse {
     /// The container segment.
     #[serde(
         default,
-        deserialize_with = "Container_itemsContainerItem::unwrap",
+        deserialize_with = "Container_itemsContainer::unwrap",
         rename = "Containers",
-        serialize_with = "Container_itemsContainerItem::wrap"
+        serialize_with = "Container_itemsContainer::wrap"
     )]
     pub container_items: Vec<ContainerItem>,
 

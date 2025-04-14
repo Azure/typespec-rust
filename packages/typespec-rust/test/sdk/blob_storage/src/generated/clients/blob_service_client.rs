@@ -23,7 +23,7 @@ use azure_core::{
         ClientOptions, Context, Method, Pager, PagerResult, Pipeline, Request, RequestContent,
         Response, Url,
     },
-    json, Result,
+    xml, Result,
 };
 use std::sync::Arc;
 
@@ -343,7 +343,7 @@ impl BlobServiceClient {
                     pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
-                let res: ListContainersSegmentResponse = json::from_json(bytes.clone())?;
+                let res: ListContainersSegmentResponse = xml::read_xml(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_marker {
                     Some(next_marker) => PagerResult::Continue {

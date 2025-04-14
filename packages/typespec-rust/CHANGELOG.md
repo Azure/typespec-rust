@@ -6,6 +6,10 @@
 
 * Added support for pageable methods that use a continuation token when fetching pages.
 
+### Bugs Fixed
+
+* Fixed XML helpers for certain cases of wrapped arrays.
+
 ## 0.13.3 (2025-04-04)
 
 ### Other Changes

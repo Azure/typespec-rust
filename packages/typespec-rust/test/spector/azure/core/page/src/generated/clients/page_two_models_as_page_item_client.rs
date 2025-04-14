@@ -65,7 +65,7 @@ impl PageTwoModelsAsPageItemClient {
                 let rsp: Response<PagedFirstItem> = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
-                let res: PagedFirstItem = json::from_json(bytes.clone())?;
+                let res: PagedFirstItem = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
@@ -119,7 +119,7 @@ impl PageTwoModelsAsPageItemClient {
                 let rsp: Response<PagedSecondItem> = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
-                let res: PagedSecondItem = json::from_json(bytes.clone())?;
+                let res: PagedSecondItem = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
                 Ok(match res.next_link {
                     Some(next_link) => PagerResult::Continue {
