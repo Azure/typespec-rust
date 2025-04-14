@@ -569,7 +569,7 @@ function getClientAccessorMethodBody(indent: helpers.indentation, client: rust.C
 type ClientMethod = rust.AsyncMethod | rust.PageableMethod;
 type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderHashMapParameter | rust.HeaderParameter;
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryParameter;
-type ApiVersionParamType = rust.QueryParameter;
+type ApiVersionParamType = rust.HeaderParameter | rust.QueryParameter;
 
 /** groups method parameters based on their kind */
 interface methodParamGroups {
@@ -624,7 +624,7 @@ function getMethodParamGroup(method: ClientMethod): methodParamGroups {
         queryParams.push(param);
         break;
     }
-    if (param.kind === 'query' && param.isApiVersion) {
+    if ((param.kind === 'header' || param.kind === 'query') && param.isApiVersion) {
       apiVersionParam = param;
     }
   }
@@ -663,13 +663,14 @@ function getMethodParamGroup(method: ClientMethod): methodParamGroups {
  * @param indent the indentation helper currently in scope
  * @param param the parameter to which the contents of setter apply
  * @param setter the callback that emits the code to read from a param var
+ * @param inClosure indicates if the value is being read from within a closure (e.g. pageable methods)
  * @returns 
  */
-function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, setter: () => string): string {
+function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, inClosure: boolean, setter: () => string): string {
   if (param.optional) {
     // optional params are in the unwrapped options local var
     const op = indent.get() + helpers.buildIfBlock(indent, {
-      condition: `let Some(${param.name}) = options.${param.name}`,
+      condition: `let Some(${param.name}) = ${inClosure ? '&' : ''}options.${param.name}`,
       body: setter,
     });
     return op + '\n';
@@ -746,7 +747,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
   for (const queryParam of paramGroups.query) {
     if (queryParam.kind === 'queryCollection' && queryParam.format === 'multi') {
-      body += getParamValueHelper(indent, queryParam, () => {
+      body += getParamValueHelper(indent, queryParam, false, () => {
         const valueVar = queryParam.name[0];
         let text = `${indent.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
         text += `${indent.push().get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${valueVar});\n`;
@@ -754,7 +755,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         return text;
       });
     } else {
-      body += getParamValueHelper(indent, queryParam, () => {
+      body += getParamValueHelper(indent, queryParam, false, () => {
         // for enums we call .as_ref() which elides the need to borrow
         const borrow = queryParam.type.kind === 'enum' ? '' : borrowOrNot(queryParam);
         return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${borrow}${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional)});\n`;
@@ -774,14 +775,25 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
  * @param use the use statement builder currently in scope
  * @param method the method for which we're building the body
  * @param paramGroups the param groups for the provided method
- * @param fromSelf applicable for client params. when true, the prefix "self." is included
+ * @param inClosure indicates if the request is being constructed within a closure (e.g. pageable methods)
  * @returns the request construction code
  */
-function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, fromSelf = true): string {
+function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, inClosure: boolean): string {
   let body = `${indent.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
 
   for (const headerParam of paramGroups.header) {
-    body += getParamValueHelper(indent, headerParam, () => {
+    if (method.kind === 'pageable' && method.strategy?.kind === 'continuationToken' && method.strategy?.requestToken.kind === 'header' && method.strategy?.requestToken === headerParam) {
+      // we have some special handling for the header continuation token.
+      // if we have a token value, i.e. from the next page, then use that value.
+      // if not, then check if an optional token value was provided.
+      body += indent.get() + helpers.buildIfBlock(indent, {
+        condition: `let Some(${headerParam.name}) = ${headerParam.name}.or_else(|| options.${headerParam.name}.clone())`,
+        body: (indent) => `${indent.get()}request.insert_header("${headerParam.header}", ${headerParam.name});\n`,
+      })
+      continue;
+    }
+
+    body += getParamValueHelper(indent, headerParam, inClosure, () => {
       if (headerParam.kind === 'headerHashMap') {
         let setter = `for (k, v) in &${headerParam.name} {\n`;
         setter += `${indent.push().get()}request.insert_header(format!("${headerParam.header}-{}", k), v);\n`;
@@ -790,14 +802,14 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       }
       const borrow = headerParam.location === 'client' && nonCopyableType(headerParam.type) ? '&' : '';
       const toOwned = headerParam.ref ? '.to_owned()' : '';
-      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, fromSelf)}${toOwned});\n`;
+      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, !inClosure)}${toOwned});\n`;
     });
   }
 
   const bodyParam = paramGroups.body;
   if (bodyParam) {
-    body += getParamValueHelper(indent, bodyParam, () => {
-      return `${indent.get()}request.set_body(${bodyParam.name});\n`;
+    body += getParamValueHelper(indent, bodyParam, inClosure, () => {
+      return `${indent.get()}request.set_body(${bodyParam.name}${inClosure ? '.clone()' : ''});\n`;
     });
   } else if (paramGroups.partialBody.length > 0) {
     // all partial body params should point to the same underlying model type.
@@ -868,7 +880,7 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}url = self.${getEndpointFieldName(client)}.clone();\n`;
 
   body += constructUrl(indent, use, method, paramGroups);
-  body += constructRequest(indent, use, method, paramGroups);
+  body += constructRequest(indent, use, method, paramGroups, false);
   body += `${indent.get()}self.pipeline.send(&ctx, &mut request).await\n`;
   return body;
 }
@@ -885,11 +897,8 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
 function getPageableMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.PageableMethod): string {
   if (!method.strategy) {
     throw new Error('paged method with no strategy NYI');
-  } else if (method.strategy.kind !== 'nextLink') {
-    throw new Error('paged methods other than nextLink NYI');
   }
 
-  const nextLinkName = method.strategy.nextLink.name;
   use.add('azure_core::http', 'Method', 'Pager', 'PagerResult', 'Request', 'Response', 'Url');
   use.add('azure_core', 'json', 'Result');
   use.addForType(method.returns.type.type.type);
@@ -904,48 +913,113 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   if (paramGroups.apiVersion) {
     body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n`;
   }
-  body += `${indent.get()}Ok(Pager::from_callback(move |${nextLinkName}: Option<Url>| {\n`;
 
-  body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
-    pattern: `Some(${nextLinkName})`,
-    body: (indent) => {
-      if (paramGroups.apiVersion) {
-        const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
-        // there are no APIs to set/update an existing query parameter.
-        // so, we filter the existing query params to remove the api-version
-        // query param. we then add back the filtered set and then add the
-        // api-version as specified on the client.
-        let setApiVerBody = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
-        setApiVerBody += `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
-        setApiVerBody += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
-        setApiVerBody += `${indent.get()}${nextLinkName}\n`;
-        return setApiVerBody;
+  switch (method.strategy.kind) {
+    case 'continuationToken': {
+      const reqTokenParam = method.strategy.requestToken.name;
+      body += `${indent.get()}Ok(Pager::from_callback(move |${reqTokenParam}: Option<String>| {\n`;
+      body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'query' ? 'mut ': ''}url = first_url.clone();\n`;
+      if (method.strategy.requestToken.kind === 'query') {
+        // if the url already contains the token query param,
+        // e.g. we started on some page, then we need to remove
+        // it before appending the token for the next page.
+        const reqTokenValue = method.strategy.requestToken.key;
+        body +=`${indent.get()}${helpers.buildIfBlock(indent, {
+          condition: `let Some(${reqTokenParam}) = ${reqTokenParam}`,
+          body: (indent) => {
+            let body = indent.get() + helpers.buildIfBlock(indent, {
+              condition: `url.query_pairs().any(|(name, _)| name.eq("${reqTokenValue}"))`,
+              body: (indent) => {
+                let body = `${indent.get()}let mut new_url = url.clone();\n`;
+                body += `${indent.get()}new_url.query_pairs_mut().clear().extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("${reqTokenValue}")));\n`;
+                body += `${indent.get()}url = new_url;\n`;
+                return body;
+              },
+            });
+            body += `${indent.get()}url.query_pairs_mut().append_pair("${reqTokenValue}", &${reqTokenParam});\n`;
+            return body;
+          }
+        })}`
       }
-      return `${indent.get()} ${nextLinkName}\n`;
+      break;
     }
-  }, {
-    pattern: 'None',
-    body: (indent) => `${indent.get()}${urlVar}.clone()\n`
-  }]);
-  body += ';\n';
+    case 'nextLink': {
+      const nextLinkName = method.strategy.nextLink.name;
+      body += `${indent.get()}Ok(Pager::from_callback(move |${nextLinkName}: Option<Url>| {\n`;
+      body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
+        pattern: `Some(${nextLinkName})`,
+        body: (indent) => {
+          if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'query') {
+            const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
+            // there are no APIs to set/update an existing query parameter.
+            // so, we filter the existing query params to remove the api-version
+            // query param. we then add back the filtered set and then add the
+            // api-version as specified on the client.
+            let setApiVerBody = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
+            setApiVerBody += `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
+            setApiVerBody += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
+            setApiVerBody += `${indent.get()}${nextLinkName}\n`;
+            return setApiVerBody;
+          }
+          return `${indent.get()} ${nextLinkName}\n`;
+        }
+      }, {
+        pattern: 'None',
+        body: (indent) => `${indent.get()}${urlVar}.clone()\n`
+      }]);
+      body += ';\n';
+      break;
+    }
+  }
 
   // here we want the T in Pager<T>
   const returnType = helpers.getTypeDeclaration(method.returns.type.type.type);
 
-  body += constructRequest(indent, use, method, paramGroups, false);
+  body += constructRequest(indent, use, method, paramGroups, true);
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
   body += `${indent.push().get()}let rsp: Response<${returnType}> = pipeline.send(&ctx, &mut request).await?;\n`;
-  body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
-  body += `${indent.get()}let bytes = body.collect().await?;\n`;
-  body += `${indent.get()}let res: ${returnType} = json::from_json(bytes.clone())?;\n`;
-  body += `${indent.get()}let rsp = Response::from_bytes(status, headers, bytes);\n`;
 
-  body += `${indent.get()}Ok(${helpers.buildMatch(indent, `res.${nextLinkName}`, [{
-    pattern: `Some(${nextLinkName})`,
+  // check if we need to extract the next link field from the response model
+  if (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'modelField') {
+    body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
+    body += `${indent.get()}let bytes = body.collect().await?;\n`;
+    body += `${indent.get()}let res: ${returnType} = json::from_json(bytes.clone())?;\n`;
+    body += `${indent.get()}let rsp = Response::from_bytes(status, headers, bytes);\n`;
+  }
+
+  let matchCondition: string;
+  let nextPageValue: string;
+  let continuation: string;
+  switch (method.strategy.kind) {
+    case 'continuationToken':
+      nextPageValue = method.strategy.responseToken.name;
+      continuation = nextPageValue;
+      switch (method.strategy.responseToken.kind) {
+        case 'modelField':
+          matchCondition = `res.${nextPageValue}`;
+          break;
+        case 'responseHeaderScalar':
+          if (!method.responseHeaders) {
+            throw new Error(`missing response headers trait for method ${method.name}`);
+          }
+          use.addForType(method.responseHeaders);
+          matchCondition = `rsp.${method.strategy.responseToken.name}()?`;
+          break;
+      }
+      break;
+    case 'nextLink':
+      nextPageValue = method.strategy.nextLink.name;
+      matchCondition = `res.${nextPageValue}`;
+      continuation = `${nextPageValue}.parse()?`;
+      break;
+  }
+
+  body += `${indent.get()}Ok(${helpers.buildMatch(indent, matchCondition, [{
+    pattern: `Some(${nextPageValue})`,
     returns: 'PagerResult::Continue',
-    body: (indent) => `${indent.get()}response: rsp,\n${indent.get()}continuation: ${nextLinkName}.parse()?,\n`
+    body: (indent) => `${indent.get()}response: rsp,\n${indent.get()}continuation: ${continuation},\n`
   }, {
     pattern: 'None',
     returns: 'PagerResult::Complete',
