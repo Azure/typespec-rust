@@ -130,7 +130,7 @@ export class Adapter {
         // skip error and core types as we use their azure_core equivalents
         continue;
       }
-      const rustModel = this.getModel(model);
+      const rustModel = this.getModel(model, new Array<string>());
       this.crate.models.push(rustModel);
       // presence of models requires the derive feature
       this.crate.addDependency(new rust.CrateDependency('typespec_client_core', ['derive']));
@@ -185,9 +185,10 @@ export class Adapter {
    * converts a tcgc model to a Rust model
    * 
    * @param model the tcgc model to convert
+   * @param stack is a stack of model type names used to detect recursive type definitions
    * @returns a Rust model
    */
-  private getModel(model: tcgc.SdkModelType): rust.Model {
+  private getModel(model: tcgc.SdkModelType, stack: Array<string>): rust.Model {
     if (model.name.length === 0) {
       throw new Error('unnamed model'); // TODO: this might no longer be an issue
     }
@@ -196,6 +197,8 @@ export class Adapter {
     if (rustModel) {
       return <rust.Model>rustModel;
     }
+
+    stack.push(modelName);
 
     let modelFlags = rust.ModelFlags.Unspecified;
     if (<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Input) === tcgc.UsageFlags.Input) {
@@ -246,9 +249,11 @@ export class Adapter {
           throw new Error(`model property kind ${property.kind} NYI`);
         }
       }
-      const structField = this.getModelField(property, rustModel.visibility);
+      const structField = this.getModelField(property, rustModel.visibility, stack);
       rustModel.fields.push(structField);
     }
+
+    stack.pop();
 
     return rustModel;
   }
@@ -258,16 +263,23 @@ export class Adapter {
    * 
    * @param property the tcgc model property to convert
    * @param modelVisibility the visibility of the model that contains the property
+   * @param stack is a stack of model type names used to detect recursive type definitions
    * @returns a Rust model field
    */
-  private getModelField(property: tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, modelVisibility: rust.Visibility): rust.ModelField {
-    let fieldType = this.getType(property.type);
+  private getModelField(property: tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, modelVisibility: rust.Visibility, stack: Array<string>): rust.ModelField {
+    let fieldType = this.getType(property.type, stack);
+
+    // if the field's type is a model and it's in the type stack then
+    // box it. this is to avoid infinitely recursive type definitions.
+    if (fieldType.kind === 'model' && stack.includes(fieldType.name)) {
+      fieldType = new rust.Box(fieldType);
+    }
 
     // for public models each field is always an Option<T>.
     // the only exception is for HashMap and Vec since an
     // empty collection conveys the same semantics.
     if ((modelVisibility === 'pub' || property.optional) && fieldType.kind !== 'hashmap' && fieldType.kind !== 'Vec') {
-      fieldType = new rust.Option(this.typeToWireType(fieldType));
+      fieldType = new rust.Option(fieldType.kind === 'box' ? fieldType : this.typeToWireType(fieldType));
     }
 
     const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, modelVisibility, fieldType);
@@ -288,8 +300,14 @@ export class Adapter {
     return modelField;
   }
 
-  /** converts a tcgc type to a Rust type */
-  private getType(type: tcgc.SdkType): rust.Type {
+  /**
+   * converts a tcgc type to a Rust type
+   * 
+   * @param type the tcgc type to convert
+   * @param stack is a stack of model type names used to detect recursive type definitions
+   * @returns the adapted Rust type
+   */
+  private getType(type: tcgc.SdkType, stack: Array<string>): rust.Type {
     const getDateTimeEncoding = (encoding: DateTimeKnownEncoding): rust.DateTimeEncoding => {
       switch (encoding) {
         case 'rfc3339':
@@ -357,7 +375,7 @@ export class Adapter {
         if (vectorType) {
           return vectorType;
         }
-        vectorType = new rust.Vector(this.typeToWireType(this.getType(type.valueType)));
+        vectorType = new rust.Vector(this.typeToWireType(this.getType(type.valueType, stack)));
         this.types.set(keyName, vectorType);
         return vectorType;
       }
@@ -383,7 +401,7 @@ export class Adapter {
         if (hashmapType) {
           return hashmapType;
         }
-        hashmapType = new rust.HashMap(this.typeToWireType(this.getType(type.valueType)));
+        hashmapType = new rust.HashMap(this.typeToWireType(this.getType(type.valueType, stack)));
         this.types.set(keyName, hashmapType);
         return hashmapType;
       }
@@ -417,7 +435,7 @@ export class Adapter {
       case 'enumvalue':
         return this.getEnumValue(type);
       case 'model':
-        return this.getModel(type);
+        return this.getModel(type, stack);
       case 'endpoint':
       case 'string':
       case 'url': {
@@ -435,7 +453,7 @@ export class Adapter {
       }
       case 'nullable':
         // TODO: workaround until https://github.com/Azure/typespec-rust/issues/42 is fixed
-        return this.getType(type.type);
+        return this.getType(type.type, stack);
       case 'offsetDateTime': {
         const keyName = `${type.kind}-${type.encode}`;
         let timeType = this.types.get(keyName);
@@ -765,7 +783,7 @@ export class Adapter {
         if (rustClient.fields.find((v) => v.name === name)) {
           continue;
         }
-        rustClient.fields.push(new rust.StructField(name, 'pubCrate', this.getType(prop.type)));
+        rustClient.fields.push(new rust.StructField(name, 'pubCrate', this.getType(prop.type, new Array<string>)));
       }
     } else {
       throw new Error(`uninstantiable client ${client.name} has no parent`);
@@ -833,7 +851,7 @@ export class Adapter {
       }
       paramType = this.getStringType();
     } else {
-      paramType = this.getType(param.type);
+      paramType = this.getType(param.type, new Array<string>);
     }
 
     const paramName = snakeCaseName(param.name);
@@ -890,7 +908,7 @@ export class Adapter {
       if (existsOnParent) {
         continue;
       }
-      const adaptedParam = new rust.Parameter(snakeCaseName(param.name), this.getType(param.type));
+      const adaptedParam = new rust.Parameter(snakeCaseName(param.name), this.getType(param.type, new Array<string>));
       adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
       clientAccessor.params.push(adaptedParam);
     }
@@ -1097,13 +1115,13 @@ export class Adapter {
       }
 
       const format = getBodyFormat();
-      const synthesizedModel = this.getModel(synthesizedType);
+      const synthesizedModel = this.getModel(synthesizedType, new Array<string>());
       if (!this.crate.models.includes(synthesizedModel)) {
         this.crate.models.push(synthesizedModel);
       }
       returnType = new rust.Pager(this.crate, new rust.Payload(synthesizedModel, format));
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
-      returnType = new rust.Response(this.crate, new rust.Payload(this.typeToWireType(this.getType(method.response.type)), getBodyFormat()));
+      returnType = new rust.Response(this.crate, new rust.Payload(this.typeToWireType(this.getType(method.response.type, new Array<string>)), getBodyFormat()));
     } else if (responseHeaders.length > 0) {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
@@ -1147,7 +1165,7 @@ export class Adapter {
         }
         responseHeader = new rust.ResponseHeaderHashMap(snakeCaseName(header.name), header.serializedName);
       } else {
-        responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(header.serializedName), this.getType(header.type));
+        responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(header.serializedName), this.getType(header.type, new Array<string>));
       }
 
       responseHeader.docs = this.adaptDocs(header.summary, header.doc);
@@ -1343,7 +1361,7 @@ export class Adapter {
     }
 
     const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
-    let paramType = this.getType(param.type);
+    let paramType = this.getType(param.type, new Array<string>);
     let paramByRef = false;
 
     // for required header/path/query method string params, we emit them as &str instead of String
@@ -1486,7 +1504,7 @@ export class Adapter {
         // it's usually the same type as its corresponding field type
         // in the underlying model. the only exception is for String
         // types. we want to surface those as &str in the method sig.
-        let paramType = this.getType(param.type);
+        let paramType = this.getType(param.type, new Array<string>);
         let paramByRef = false;
         if (!param.optional && !param.onClient && paramType.kind === 'String') {
           paramType = this.getStringSlice();
@@ -1494,7 +1512,7 @@ export class Adapter {
         }
 
         // this is the internal model type that the spread params coalesce into
-        const payloadType = this.getType(opParamType);
+        const payloadType = this.getType(opParamType, new Array<string>);
         if (payloadType.kind !== 'model') {
           throw new Error(`unexpected kind ${payloadType.kind} for spread body param`);
         }

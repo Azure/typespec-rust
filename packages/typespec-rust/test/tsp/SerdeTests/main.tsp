@@ -69,12 +69,47 @@ model OffsetDateTimeMixed {
   vecMapUnix: Record<unixDatetime[]>[];
 }
 
+union RecursiveNullableType {
+  null,
+  {
+    inner?: RecursiveNullableType,
+  },
+}
+
+model OuterWithNullable {
+  value?: RecursiveNullableType;
+}
+
+model OuterType {
+  value: MiddleType;
+}
+
+model MiddleType {
+  value: RecursiveType;
+}
+
+model RecursiveType {
+  value: MiddleType;
+}
+
 @@access(SerdeTests.BytesVectors, Access.public);
 @@usage(SerdeTests.BytesVectors, Usage.output);
 @@access(SerdeTests.BytesRecords, Access.public);
 @@usage(SerdeTests.BytesRecords, Usage.output);
 @@access(SerdeTests.BytesMixed, Access.public);
 @@usage(SerdeTests.BytesMixed, Usage.output);
+
+@@access(SerdeTests.RecursiveNullableType, Access.public);
+@@usage(SerdeTests.RecursiveNullableType, Usage.output);
+@@access(SerdeTests.OuterWithNullable, Access.public);
+@@usage(SerdeTests.OuterWithNullable, Usage.output);
+
+@@access(SerdeTests.OuterType, Access.public);
+@@usage(SerdeTests.OuterType, Usage.output);
+@@access(SerdeTests.MiddleType, Access.public);
+@@usage(SerdeTests.MiddleType, Usage.output);
+@@access(SerdeTests.RecursiveType, Access.public);
+@@usage(SerdeTests.RecursiveType, Usage.output);
 
 @@access(SerdeTests.OffsetDateTimeVectors, Access.public);
 @@usage(SerdeTests.OffsetDateTimeVectors, Usage.output);

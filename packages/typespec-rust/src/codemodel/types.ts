@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | ExternalType | ImplTrait | MarkerType | Option | Pager | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | Pager | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
 export type WireType = Bytes | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | Scalar | StringSlice | StringType | Url | Vector;
@@ -32,6 +32,14 @@ export interface Arc extends QualifiedType {
    * at present, only TokenCredential is supported
    */
   type: TokenCredential;
+}
+
+/** Box is a Rust Box<T> */
+export interface Box {
+  kind: 'box';
+
+  /** the type that's being boxed */
+  type: WireType;
 }
 
 /** Bytes is a azure_core::Bytes type */
@@ -214,7 +222,7 @@ export interface Option {
   /**
    * the generic type param
    */
-  type: RequestContent | Struct | WireType;
+  type: Box | RequestContent | Struct | WireType;
 }
 
 /** Pager is a Pager<T> from azure_core */
@@ -472,6 +480,13 @@ export class Arc extends QualifiedType implements Arc {
   }
 }
 
+export class Box implements Box {
+  constructor(type: WireType) {
+    this.kind = 'box';
+    this.type = type;
+  }
+}
+
 export class Bytes extends External implements Bytes {
   constructor(crate: Crate) {
     super(crate, 'Bytes', 'azure_core');
@@ -591,7 +606,7 @@ export class OffsetDateTime extends External implements OffsetDateTime {
 }
 
 export class Option implements Option {
-  constructor(type: WireType | RequestContent | Struct) {
+  constructor(type: Box | WireType | RequestContent | Struct) {
     this.kind = 'option';
     this.type = type;
   }

@@ -139,6 +139,8 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
   switch (type.kind) {
     case 'arc':
       return `${type.name}<dyn ${getTypeDeclaration(type.type)}>`;
+    case 'box':
+      return `Box<${getTypeDeclaration(type.type)}>`;
     case 'bytes':
     case 'client':
     case 'marker':

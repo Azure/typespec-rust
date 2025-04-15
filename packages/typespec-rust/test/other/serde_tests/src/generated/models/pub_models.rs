@@ -151,6 +151,13 @@ pub struct BytesVectors {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
+pub struct MiddleType {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<RecursiveType>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[non_exhaustive]
 pub struct OffsetDateTimeMixed {
     #[serde(
         default,
@@ -335,4 +342,32 @@ pub struct OffsetDateTimeVectors {
         with = "models_serde::vec_vec_vec_offset_date_time_unix_time"
     )]
     pub vec_vec_vec_unix: Vec<Vec<Vec<OffsetDateTime>>>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[non_exhaustive]
+pub struct OuterType {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<MiddleType>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[non_exhaustive]
+pub struct OuterWithNullable {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<OuterWithNullableValue>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[non_exhaustive]
+pub struct OuterWithNullableValue {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub inner: Option<Box<OuterWithNullableValue>>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[non_exhaustive]
+pub struct RecursiveType {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<Box<MiddleType>>,
 }

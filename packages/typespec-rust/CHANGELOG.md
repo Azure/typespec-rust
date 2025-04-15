@@ -9,6 +9,7 @@
 ### Bugs Fixed
 
 * Fixed XML helpers for certain cases of wrapped arrays.
+* Avoid infinite recursion in emitted types by using `Box<T>` to break the cycle.
 
 ## 0.13.3 (2025-04-04)
 
