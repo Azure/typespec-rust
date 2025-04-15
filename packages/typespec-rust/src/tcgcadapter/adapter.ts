@@ -130,7 +130,7 @@ export class Adapter {
         // skip error and core types as we use their azure_core equivalents
         continue;
       }
-      const rustModel = this.getModel(model, new Array<string>());
+      const rustModel = this.getModel(model);
       this.crate.models.push(rustModel);
       // presence of models requires the derive feature
       this.crate.addDependency(new rust.CrateDependency('typespec_client_core', ['derive']));
@@ -188,7 +188,7 @@ export class Adapter {
    * @param stack is a stack of model type names used to detect recursive type definitions
    * @returns a Rust model
    */
-  private getModel(model: tcgc.SdkModelType, stack: Array<string>): rust.Model {
+  private getModel(model: tcgc.SdkModelType, stack?: Array<string>): rust.Model {
     if (model.name.length === 0) {
       throw new Error('unnamed model'); // TODO: this might no longer be an issue
     }
@@ -198,6 +198,11 @@ export class Adapter {
       return <rust.Model>rustModel;
     }
 
+    // no stack means this is the first model in
+    // the chain of potentially recursive calls
+    if (!stack) {
+      stack = new Array<string>();
+    }
     stack.push(modelName);
 
     let modelFlags = rust.ModelFlags.Unspecified;
@@ -307,7 +312,7 @@ export class Adapter {
    * @param stack is a stack of model type names used to detect recursive type definitions
    * @returns the adapted Rust type
    */
-  private getType(type: tcgc.SdkType, stack: Array<string>): rust.Type {
+  private getType(type: tcgc.SdkType, stack?: Array<string>): rust.Type {
     const getDateTimeEncoding = (encoding: DateTimeKnownEncoding): rust.DateTimeEncoding => {
       switch (encoding) {
         case 'rfc3339':
@@ -783,7 +788,7 @@ export class Adapter {
         if (rustClient.fields.find((v) => v.name === name)) {
           continue;
         }
-        rustClient.fields.push(new rust.StructField(name, 'pubCrate', this.getType(prop.type, new Array<string>)));
+        rustClient.fields.push(new rust.StructField(name, 'pubCrate', this.getType(prop.type)));
       }
     } else {
       throw new Error(`uninstantiable client ${client.name} has no parent`);
@@ -851,7 +856,7 @@ export class Adapter {
       }
       paramType = this.getStringType();
     } else {
-      paramType = this.getType(param.type, new Array<string>);
+      paramType = this.getType(param.type);
     }
 
     const paramName = snakeCaseName(param.name);
@@ -908,7 +913,7 @@ export class Adapter {
       if (existsOnParent) {
         continue;
       }
-      const adaptedParam = new rust.Parameter(snakeCaseName(param.name), this.getType(param.type, new Array<string>));
+      const adaptedParam = new rust.Parameter(snakeCaseName(param.name), this.getType(param.type));
       adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
       clientAccessor.params.push(adaptedParam);
     }
@@ -1121,7 +1126,7 @@ export class Adapter {
       }
       returnType = new rust.Pager(this.crate, new rust.Payload(synthesizedModel, format));
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
-      returnType = new rust.Response(this.crate, new rust.Payload(this.typeToWireType(this.getType(method.response.type, new Array<string>)), getBodyFormat()));
+      returnType = new rust.Response(this.crate, new rust.Payload(this.typeToWireType(this.getType(method.response.type)), getBodyFormat()));
     } else if (responseHeaders.length > 0) {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
@@ -1165,7 +1170,7 @@ export class Adapter {
         }
         responseHeader = new rust.ResponseHeaderHashMap(snakeCaseName(header.name), header.serializedName);
       } else {
-        responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(header.serializedName), this.getType(header.type, new Array<string>));
+        responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(header.serializedName), this.getType(header.type));
       }
 
       responseHeader.docs = this.adaptDocs(header.summary, header.doc);
@@ -1361,7 +1366,7 @@ export class Adapter {
     }
 
     const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
-    let paramType = this.getType(param.type, new Array<string>);
+    let paramType = this.getType(param.type);
     let paramByRef = false;
 
     // for required header/path/query method string params, we emit them as &str instead of String
@@ -1504,7 +1509,7 @@ export class Adapter {
         // it's usually the same type as its corresponding field type
         // in the underlying model. the only exception is for String
         // types. we want to surface those as &str in the method sig.
-        let paramType = this.getType(param.type, new Array<string>);
+        let paramType = this.getType(param.type);
         let paramByRef = false;
         if (!param.optional && !param.onClient && paramType.kind === 'String') {
           paramType = this.getStringSlice();
@@ -1512,7 +1517,7 @@ export class Adapter {
         }
 
         // this is the internal model type that the spread params coalesce into
-        const payloadType = this.getType(opParamType, new Array<string>);
+        const payloadType = this.getType(opParamType);
         if (payloadType.kind !== 'model') {
           throw new Error(`unexpected kind ${payloadType.kind} for spread body param`);
         }
