@@ -32,10 +32,6 @@ impl TokenCredential for FakeTokenCredential {
             OffsetDateTime::now_utc(),
         ))
     }
-
-    async fn clear_cache(&self) -> Result<()> {
-        Ok(())
-    }
 }
 
 fn create_client() -> CommonPropertiesClient {
