@@ -1043,13 +1043,6 @@ export class Adapter {
           }
           fieldType = field.type;
         } else {
-          switch (adaptedParam.type.kind) {
-            case 'requestContent':
-            case 'struct':
-              break;
-            default:
-              adaptedParam.type = this.typeToWireType(adaptedParam.type);
-          }
           fieldType = new rust.Option(adaptedParam.type);
         }
 
@@ -1170,7 +1163,7 @@ export class Adapter {
         }
         responseHeader = new rust.ResponseHeaderHashMap(snakeCaseName(header.name), header.serializedName);
       } else {
-        responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(header.serializedName), this.getType(header.type));
+        responseHeader = new rust.ResponseHeaderScalar(snakeCaseName(header.name), fixETagName(header.serializedName), this.typeToWireType(this.getType(header.type)));
       }
 
       responseHeader.docs = this.adaptDocs(header.summary, header.doc);
@@ -1417,12 +1410,12 @@ export class Adapter {
           }
           adaptedParam = new rust.HeaderHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
         } else {
-          adaptedParam = new rust.HeaderParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
+          adaptedParam = new rust.HeaderParameter(paramName, param.serializedName, paramLoc, param.optional, this.typeToWireType(paramType));
           adaptedParam.isApiVersion = param.isApiVersionParam;
         }
         break;
       case 'path':
-        adaptedParam = new rust.PathParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved);
+        adaptedParam = new rust.PathParameter(paramName, param.serializedName, paramLoc, param.optional, this.typeToWireType(paramType), param.allowReserved);
         break;
       case 'query':
         if (param.collectionFormat) {
@@ -1434,7 +1427,7 @@ export class Adapter {
           adaptedParam = new rust.QueryCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, format);
         } else {
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
-          adaptedParam = new rust.QueryParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true);
+          adaptedParam = new rust.QueryParameter(paramName, param.serializedName, paramLoc, param.optional, this.typeToWireType(paramType), true);
           adaptedParam.isApiVersion = param.isApiVersionParam;
         }
         break;

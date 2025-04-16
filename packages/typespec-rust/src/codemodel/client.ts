@@ -228,11 +228,8 @@ export interface HeaderParameter extends HTTPParameterBase {
   /** the header in the HTTP request */
   header: string;
 
-  /**
-   * the type of the header param
-   * note that not all types are applicable
-   */
-  type: types.Type;
+  /** the type of the param */
+  type: types.WireType;
 
   /**
    * indicates this is an API version parameter 
@@ -270,11 +267,8 @@ export interface PathParameter extends HTTPParameterBase {
   /** the segment name to be replaced with the param's value */
   segment: string;
 
-  /**
-   * the type of the path param
-   * note that not all types are applicable
-   */
-  type: types.Type;
+  /** the type of the param */
+  type: types.WireType;
 
   /** indicates if the path parameter should be URL encoded */
   encoded: boolean;
@@ -304,11 +298,8 @@ export interface QueryParameter extends HTTPParameterBase {
   /** key is the query param's key name */
   key: string;
 
-  /**
-   * the type of the query param
-   * note that not all types are applicable
-   */
-  type: types.Type;
+  /** the type of the param */
+  type: types.WireType;
 
   /** indicates if the query parameter should be URL encoded */
   encoded: boolean;
@@ -353,11 +344,8 @@ export interface ResponseHeaderScalar {
   /** the header in the HTTP response */
   header: string;
 
-  /**
-   * the type of the response header
-   * note that not all types are applicable
-   */
-  type: types.Type;
+  /** the type of the response header */
+  type: types.WireType;
 
   /** any docs for the header */
   docs: types.Docs;
@@ -536,7 +524,6 @@ export class ClientEndpointParameter extends ClientParameterBase implements Clie
 
 export class HeaderCollectionParameter extends HTTPParameterBase implements HeaderCollectionParameter {
   constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.Vector, format: CollectionFormat) {
-    validateHeaderPathQueryParamKind(type, 'headerCollection');
     super(name, location, optional, type);
     this.kind = 'headerCollection';
     this.header = header;
@@ -546,7 +533,6 @@ export class HeaderCollectionParameter extends HTTPParameterBase implements Head
 
 export class HeaderHashMapParameter extends HTTPParameterBase implements HeaderHashMapParameter {
   constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.HashMap) {
-    validateHeaderPathQueryParamKind(type, 'headerHashMap');
     super(name, location, optional, type);
     this.kind = 'headerHashMap';
     this.header = header;
@@ -554,8 +540,7 @@ export class HeaderHashMapParameter extends HTTPParameterBase implements HeaderH
 }
 
 export class HeaderParameter extends HTTPParameterBase implements HeaderParameter {
-  constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.Type) {
-    validateHeaderPathQueryParamKind(type, 'header');
+  constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.WireType) {
     super(name, location, optional, type);
     this.kind = 'header';
     this.header = header;
@@ -603,8 +588,7 @@ export class PartialBodyParameter extends HTTPParameterBase implements PartialBo
 }
 
 export class PathParameter extends HTTPParameterBase implements PathParameter {
-  constructor(name: string, segment: string, location: ParameterLocation, optional: boolean, type: types.Type, encoded: boolean) {
-    validateHeaderPathQueryParamKind(type, 'path');
+  constructor(name: string, segment: string, location: ParameterLocation, optional: boolean, type: types.WireType, encoded: boolean) {
     super(name, location, optional, type);
     this.kind = 'path';
     this.segment = segment;
@@ -614,7 +598,6 @@ export class PathParameter extends HTTPParameterBase implements PathParameter {
 
 export class QueryCollectionParameter extends HTTPParameterBase implements QueryCollectionParameter {
   constructor(name: string, key: string, location: ParameterLocation, optional: boolean, type: types.Vector, encoded: boolean, format: ExtendedCollectionFormat) {
-    validateHeaderPathQueryParamKind(type.type, 'queryCollection');
     super(name, location, optional, type);
     this.kind = 'queryCollection';
     this.key = key;
@@ -624,8 +607,7 @@ export class QueryCollectionParameter extends HTTPParameterBase implements Query
 }
 
 export class QueryParameter extends HTTPParameterBase implements QueryParameter {
-  constructor(name: string, key: string, location: ParameterLocation, optional: boolean, type: types.Type, encoded: boolean) {
-    validateHeaderPathQueryParamKind(type, 'query');
+  constructor(name: string, key: string, location: ParameterLocation, optional: boolean, type: types.WireType, encoded: boolean) {
     super(name, location, optional, type);
     this.kind = 'query';
     this.key = key;
@@ -645,8 +627,7 @@ export class ResponseHeaderHashMap implements ResponseHeaderHashMap {
 }
 
 export class ResponseHeaderScalar implements ResponseHeaderScalar {
-  constructor(name: string, header: string, type: types.Type) {
-    validateHeaderPathQueryParamKind(type, 'header');
+  constructor(name: string, header: string, type: types.WireType) {
     this.kind = 'responseHeaderScalar';
     this.name = name;
     this.header = header;
@@ -670,31 +651,4 @@ export class SupplementalEndpoint implements SupplementalEndpoint{
     this.path = path;
     this.parameters = new Array<ClientEndpointParameter>();
   }
-}
-
-function validateHeaderPathQueryParamKind(type: types.Type, paramKind: string) {
-  switch (type.kind) {
-    case 'String':
-    case 'encodedBytes':
-    case 'enum':
-    case 'enumValue':
-    case 'literal':
-    case 'offsetDateTime':
-    case 'scalar':
-    case 'str':
-      return;
-    case 'hashmap':
-      if (paramKind === 'headerHashMap') {
-        return;
-      }
-      break;
-    case 'implTrait':
-      validateHeaderPathQueryParamKind(type.type, paramKind);
-      return;
-    case 'Vec':
-      if (paramKind.endsWith('Collection')) {
-        return;
-      }
-  }
-  throw new Error(`unsupported ${paramKind} paramter type kind ${type.kind}`);
 }
