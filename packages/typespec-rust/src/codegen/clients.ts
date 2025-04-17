@@ -744,7 +744,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
       for (const pathParam of paramGroups.path) {
         let wrapSortedVec: (s: string) => string = (s) => s;
-        let paramExpression = `${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)}`;
+        let paramExpression: string = `${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)}`;
         if (pathParam.kind === 'pathHashMap') {
           wrapSortedVec = (s) => `${indent.get()}{`
             + `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParam.name}.iter().collect::<Vec<_>>();\n`
@@ -809,7 +809,17 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
           }
         }
 
-        body += wrapSortedVec(`${indent.get()}path = path.replace("{${pathParam.segment}}", ${paramExpression});\n`);
+        if (pathParam.optional) {
+          body += `${indent.get()}path = ${helpers.buildMatch(indent, `options.${pathParam.name}`, [{
+            pattern: `Some(${pathParam.name})`,
+            body: (indent) => `${indent.get()}${emitEmptyPathParamCheck(indent, pathParam)}\npath.replace("{${pathParam.segment}}",${paramExpression}"))\n`,
+          }, {
+            pattern: `None`,
+            body: (indent) => `${indent.get()}path.replace("{${pathParam.segment}}", "")\n`,
+          }])};\n`;
+        } else {
+          body += wrapSortedVec(`${indent.get()}path = path.replace("{${pathParam.segment}}", ${paramExpression});\n`);
+        }
       }
       path = '&path';
       body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
@@ -1002,6 +1012,63 @@ function urlVarNeedsMut(paramGroups: MethodParamGroups, method: ClientMethod): s
 }
 
 /**
+ * emits "if path_param.len() == 0 then error" checks for string method path parameters
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param params the path params to enumerate, can be empty
+ * @returns the empty path param checks or the empty string if there are no checks
+ */
+function checkEmptyRequiredPathParams(indent: helpers.indentation, params: Array<PathParamType>): string {
+  let checks = '';
+  for (const param of params) {
+    if (param.optional || param.location === 'client') {
+      continue;
+    }
+    checks += emitEmptyPathParamCheck(indent, param);
+  }
+  return checks;
+}
+
+/**
+ * emits the "if path_param.len() == 0 then error" check.
+ * this is only applicable when the path param's type can
+ * be empty (e.g. a string). for types that can't be empty
+ * the empty string is returned.
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param param the path param for which to emit the check
+ * @returns the check or the empty string
+ */
+function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamType): string {
+  let toString = '';
+  switch (param.type.kind) {
+    case 'String':
+      // need to check these for zero length
+      break;
+    case 'enum':
+      if (!param.type.extensible) {
+        // fixed enums will always have a value
+        return '';
+      }
+      // need to get the underlying string value
+      toString = 'to_string()';
+      break;
+    case 'ref':
+      if (param.type.type.kind !== 'str') {
+        return '';
+      }
+      break;
+    default:
+      // no length to check so bail
+      return '';
+  }
+  return helpers.buildIfBlock(indent, {
+    condition: `${param.name}${toString}.len() == 0`,
+    body: (indent) => `${indent.get()}return Err(azure_core::Error::message(azure_core::error::ErrorKind::Other, "parameter ${param.name} cannot be empty"));`,
+  });
+}
+
+/**
  * constructs the body for an async client method
  * 
  * @param indent the indentation helper currently in scope
@@ -1014,7 +1081,8 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   use.add('azure_core::http', 'Context', 'Method', 'Request');
 
   const paramGroups = getMethodParamGroup(method);
-  let body = 'let options = options.unwrap_or_default();\n';
+  let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
+  body += 'let options = options.unwrap_or_default();\n';
   body += `${indent.get()}let ctx = Context::with_context(&options.method_options.context);\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}url = self.${getEndpointFieldName(client)}.clone();\n`;
 
@@ -1054,7 +1122,8 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   const paramGroups = getMethodParamGroup(method);
   const urlVar = 'first_url';
 
-  let body = 'let options = options.unwrap_or_default().into_owned();\n';
+  let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
+  body += 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);

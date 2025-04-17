@@ -43,6 +43,18 @@ impl CommonPropertiesErrorClient {
         resource: RequestContent<ConfidentialResource>,
         options: Option<CommonPropertiesErrorClientCreateForUserDefinedErrorOptions<'_>>,
     ) -> Result<Response<ConfidentialResource>> {
+        if confidential_resource_name.len() == 0 {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter confidential_resource_name cannot be empty",
+            ));
+        }
+        if resource_group_name.len() == 0 {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -84,6 +96,18 @@ impl CommonPropertiesErrorClient {
         confidential_resource_name: &str,
         options: Option<CommonPropertiesErrorClientGetForPredefinedErrorOptions<'_>>,
     ) -> Result<Response<ConfidentialResource>> {
+        if confidential_resource_name.len() == 0 {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter confidential_resource_name cannot be empty",
+            ));
+        }
+        if resource_group_name.len() == 0 {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

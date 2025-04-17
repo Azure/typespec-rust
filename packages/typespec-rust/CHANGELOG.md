@@ -123,6 +123,7 @@
 
 * Added support for pageable methods that use a continuation token when fetching pages.
 * Added support for TypeSpec `decimal` and `decimal128` types.
+* Added support for optional path parameters.
 
 ### Bugs Fixed
 
@@ -133,6 +134,7 @@
 
 * Errors in the emitter are no longer surfaced as a crash.
 * Skip `cargo fmt` if the emitter fails.
+* Required path parameters that are empty will return an error.
 
 ## 0.13.3 (2025-04-04)
 

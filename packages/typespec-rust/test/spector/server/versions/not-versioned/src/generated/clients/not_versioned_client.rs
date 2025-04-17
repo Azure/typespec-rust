@@ -76,6 +76,12 @@ impl NotVersionedClient {
         api_version: &str,
         options: Option<NotVersionedClientWithPathApiVersionOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
+        if api_version.len() == 0 {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter api_version cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
