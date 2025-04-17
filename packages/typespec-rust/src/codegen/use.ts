@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import * as helpers from './helpers.js';
+import { CodegenError } from './errors.js';
 import * as rust from '../codemodel/index.js';
 
 /** used to generate use statements */
@@ -34,7 +35,7 @@ export class Use {
    */
   add(module: string, ...types: Array<string>): void {
     if (types.length === 0) {
-      throw new Error('types can\'t be empty');
+      throw new CodegenError('InternalError', 'types can\'t be empty');
     }
 
     for (const type of types) {
@@ -87,7 +88,7 @@ export class Use {
           default:
             // marker types are only referenced from clients and model
             // helpers so we should never get here (if we do it's a bug)
-            throw new Error(`unexpected scope ${this.scope}`);
+            throw new CodegenError('InternalError', `unexpected scope ${this.scope}`);
         }
         break;
       case 'model':

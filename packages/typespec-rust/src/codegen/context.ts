@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
@@ -35,7 +36,7 @@ export class Context {
           // already processed this model
           return;
         }
-        throw new Error(`found conflicting body formats for model ${type.name}`);
+        throw new CodegenError('InternalError', `found conflicting body formats for model ${type.name}`);
       }
 
       this.bodyFormatForModels.set(type, format);
@@ -71,7 +72,7 @@ export class Context {
 
         if (method.returns.type.kind === 'response' && method.returns.type.content.kind === 'payload') {
           if (!method.returns.type.content.format) {
-            throw new Error(`method ${client.name}.${method.name} returns a body but no format was specified`);
+            throw new CodegenError('InternalError', `method ${client.name}.${method.name} returns a body but no format was specified`);
           }
           if (method.returns.type.content.type.kind === 'enum' || method.returns.type.content.type.kind === 'model') {
             this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.content.type), method.returns.type.content.format);

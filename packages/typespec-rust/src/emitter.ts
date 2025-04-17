@@ -4,8 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { CodeGenerator } from './codegen/codeGenerator.js';
-import { Adapter } from './tcgcadapter/adapter.js';
-import { RustEmitterOptions } from './lib.js';
+import { CodegenError } from './codegen/errors.js';
+import { Adapter, AdapterError } from './tcgcadapter/adapter.js';
+import { reportDiagnostic, RustEmitterOptions } from './lib.js';
 import { execSync } from 'child_process';
 import { existsSync, rmSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
@@ -19,44 +20,66 @@ import 'source-map-support/register.js';
  * @param context the emit context
  */
 export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
-  const adapter = await Adapter.create(context);
-  const crate = adapter.tcgcToCrate();
+  try {
+    const adapter = await Adapter.create(context);
+    const crate = adapter.tcgcToCrate();
 
-  await mkdir(`${context.emitterOutputDir}/src`, {recursive: true});
+    await mkdir(`${context.emitterOutputDir}/src`, {recursive: true});
 
-  const codegen = new CodeGenerator(crate);
+    const codegen = new CodeGenerator(crate);
 
-  // don't overwrite an existing Cargo.toml file by default
-  // TODO: consider merging existing dependencies with emitted dependencies when overwriting
-  // https://github.com/Azure/typespec-rust/issues/22
-  const cargoTomlPath = `${context.emitterOutputDir}/Cargo.toml`;
-  if (existsSync(cargoTomlPath) && context.options['overwrite-cargo-toml'] !== true) {
-    context.program.reportDiagnostic({
-      code: 'FileAlreadyExists',
-      severity: 'warning',
-      message: `skip overwriting file ${cargoTomlPath}`,
-      target: NoTarget,
-    });
-  } else {
-    await writeFile(cargoTomlPath, codegen.emitCargoToml());
-  }
+    // don't overwrite an existing Cargo.toml file by default
+    // TODO: consider merging existing dependencies with emitted dependencies when overwriting
+    // https://github.com/Azure/typespec-rust/issues/22
+    const cargoTomlPath = `${context.emitterOutputDir}/Cargo.toml`;
+    if (existsSync(cargoTomlPath) && context.options['overwrite-cargo-toml'] !== true) {
+      context.program.reportDiagnostic({
+        code: 'FileAlreadyExists',
+        severity: 'warning',
+        message: `skip overwriting file ${cargoTomlPath}`,
+        target: NoTarget,
+      });
+    } else {
+      await writeFile(cargoTomlPath, codegen.emitCargoToml());
+    }
 
-  const libRsPath = `${context.emitterOutputDir}/src/lib.rs`;
-  if (existsSync(libRsPath) && context.options['overwrite-lib-rs'] !== true) {
-    context.program.reportDiagnostic({
-      code: 'FileAlreadyExists',
-      severity: 'warning',
-      message: `skip overwriting file ${libRsPath}`,
-      target: NoTarget,
-    });
-  } else {
-    await writeFile(libRsPath, codegen.emitLibRs());
-  }
+    const libRsPath = `${context.emitterOutputDir}/src/lib.rs`;
+    if (existsSync(libRsPath) && context.options['overwrite-lib-rs'] !== true) {
+      context.program.reportDiagnostic({
+        code: 'FileAlreadyExists',
+        severity: 'warning',
+        message: `skip overwriting file ${libRsPath}`,
+        target: NoTarget,
+      });
+    } else {
+      await writeFile(libRsPath, codegen.emitLibRs());
+    }
 
-  const files = codegen.emitContent();
-  rmSync(path.join(context.emitterOutputDir, 'src', 'generated'), { force: true, recursive: true });
-  for (const file of files) {
-    await writeToGeneratedDir(context.emitterOutputDir, file.name, file.content);
+    const files = codegen.emitContent();
+    rmSync(path.join(context.emitterOutputDir, 'src', 'generated'), { force: true, recursive: true });
+    for (const file of files) {
+      await writeToGeneratedDir(context.emitterOutputDir, file.name, file.content);
+    }
+  } catch (error) {
+    if (error instanceof AdapterError) {
+      reportDiagnostic(context.program, {
+        code: error.code,
+        target: error.target,
+        format: {
+          stack: error.stack ? truncateStack(error.stack, 'tcgcToCrate') : 'Stack trace unavailable\n',
+        }
+      });
+    } else if (error instanceof CodegenError) {
+      reportDiagnostic(context.program, {
+        code: error.code,
+        target: NoTarget,
+        format: {
+          stack: error.stack ? truncateStack(error.stack, 'tcgcToCrate') : 'Stack trace unavailable\n',
+        }
+      });
+    } else {
+      throw error;
+    }
   }
 
   // probe to see if cargo is on the path before executing cargo fmt.
@@ -100,4 +123,22 @@ async function writeToGeneratedDir(outDir: string, filename: string, content: st
   const fullDirPath = fullFilePath.substring(0, fullFilePath.lastIndexOf(path.sep));
   await mkdir(fullDirPath, {recursive: true});
   await writeFile(fullFilePath, content);
+}
+
+/**
+ * drop frames after the specified frame.
+ * 
+ * @param stack the stack to truncate
+ * @returns the truncated stack
+ */
+function truncateStack(stack: string, finalFrame: string): string {
+  const lines = stack.split('\n');
+  stack = '';
+  for (const line of lines) {
+    stack += `${line}\n`;
+    if (line.includes(finalFrame)) {
+      break;
+    }
+  }
+  return stack;
 }

@@ -5,6 +5,7 @@
 
 import * as codegen from '@azure-tools/codegen';
 import { Context } from './context.js';
+import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
@@ -447,7 +448,7 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
     case 'offsetDateTime':
       break;
     default:
-      throw new Error(`getSerDeHelper unexpected kind ${type.kind}`);
+      throw new CodegenError('InternalError', `getSerDeHelper unexpected kind ${type.kind}`);
   }
 
   /**
@@ -470,7 +471,7 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
         name += `_${unwrapped.encoding}`;
         break;
       default:
-        throw new Error(`unexpected kind ${unwrapped.kind}`);
+        throw new CodegenError('InternalError', `unexpected kind ${unwrapped.kind}`);
     }
 
     // we can reuse identical helpers across model types
@@ -723,7 +724,7 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
       break;
     }
     default:
-      throw new Error(`unexpected kind ${ctx.type.kind}`);
+      throw new CodegenError('InternalError', `unexpected kind ${ctx.type.kind}`);
   }
 
   if (depth > 0) {
@@ -845,7 +846,7 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
       break;
     }
     default:
-      throw new Error(`unexpected kind ${ctx.type.kind}`);
+      throw new CodegenError('InternalError', `unexpected kind ${ctx.type.kind}`);
   }
 
   if (depth > 0) {
@@ -881,6 +882,6 @@ function getSerDeTypeDeclaration(type: rust.Type, usage: 'serialize' | 'deserial
     case 'Vec':
       return `${type.kind}<${getSerDeTypeDeclaration(type.type, usage)}>`;
     default:
-      throw new Error(`unexpected kind ${type.kind}`);
+      throw new CodegenError('InternalError', `unexpected kind ${type.kind}`);
   }
 }

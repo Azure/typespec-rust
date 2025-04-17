@@ -5,6 +5,7 @@
 
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
+import { CodegenError } from './errors.js';
 import * as rust from '../codemodel/index.js';
 
 const headerText = `// Copyright (c) Microsoft Corporation. All rights reserved.
@@ -261,7 +262,7 @@ export class indentation {
   pop(): indentation {
     --this.level;
     if (this.level < 0) {
-      throw new Error('indentation stack underflow');
+      throw new CodegenError('InternalError', 'indentation stack underflow');
     }
     return this;
   }

@@ -5,13 +5,46 @@
 
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
-import { DateTimeKnownEncoding, EmitContext, NoTarget } from '@typespec/compiler';
+import { DateTimeKnownEncoding, DiagnosticTarget, EmitContext, NoTarget } from '@typespec/compiler';
 import * as http from '@typespec/http';
 import * as helpers from './helpers.js';
 import * as naming from './naming.js';
 import { RustEmitterOptions } from '../lib.js';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as rust from '../codemodel/index.js';
+
+/** ErrorCode defines the types of adapter errors */
+export type ErrorCode =
+  /** the emitter encounted an internal error. this is always a bug in the emitter */
+  'InternalError' |
+
+  /** invalid arguments were passed to the emitter */
+  'InvalidArgument' |
+
+  /**
+   * renaming items resulted in one or more name collisions.
+   * this will likely require an update to client.tsp to resolve.
+   */
+  'NameCollision' |
+
+  /** the emitter does not support the encountered TypeSpec construct */
+  'UnsupportedTsp';
+
+/**
+ * AdapterError is thrown when the emitter fails to convert part of the tcgc code
+ * model to the emitter code model. this could be due to the emitter not supporting
+ * some tsp construct.
+ */
+export class AdapterError extends Error {
+  readonly code: ErrorCode;
+  readonly target: DiagnosticTarget | typeof NoTarget;
+
+  constructor(code: ErrorCode, message: string, target?: DiagnosticTarget) {
+    super(message);
+    this.code = code;
+    this.target = target ?? NoTarget;
+  }
+}
 
 /** Adapter converts the tcgc code model to a Rust Crate */
 export class Adapter {
@@ -178,7 +211,7 @@ export class Adapter {
         return value;
       }
     }
-    throw new Error(`didn't find enum value for name ${sdkEnumValue.name} in enum ${enumType.name}`);
+    throw new AdapterError('InternalError', `didn't find enum value for name ${sdkEnumValue.name} in enum ${enumType.name}`, sdkEnumValue.__raw?.node);
   }
 
   /**
@@ -190,7 +223,7 @@ export class Adapter {
    */
   private getModel(model: tcgc.SdkModelType, stack?: Array<string>): rust.Model {
     if (model.name.length === 0) {
-      throw new Error('unnamed model'); // TODO: this might no longer be an issue
+      throw new AdapterError('InternalError', 'unnamed model', model.__raw?.node); // TODO: this might no longer be an issue
     }
     const modelName = codegen.capitalize(model.name);
     let rustModel = this.types.get(modelName);
@@ -251,7 +284,7 @@ export class Adapter {
           // will be exposed as a discrete method parameter.
           // we just adapt it here as a regular model field.
         } else {
-          throw new Error(`model property kind ${property.kind} NYI`);
+          throw new AdapterError('UnsupportedTsp', `model property kind ${property.kind} NYI`, property.__raw?.node);
         }
       }
       const structField = this.getModelField(property, rustModel.visibility, stack);
@@ -421,7 +454,7 @@ export class Adapter {
           case 'string':
             return this.getStringType();
           default:
-            throw new Error(`unhandled duration wireType.kind ${type.wireType.kind}`);
+            throw new AdapterError('UnsupportedTsp', `unhandled duration wireType.kind ${type.wireType.kind}`, type.__raw?.node);
         }
       case 'boolean':
       case 'float32':
@@ -489,7 +522,7 @@ export class Adapter {
         return timeType;
       }
       default:
-        throw new Error(`unhandled tcgc type ${type.kind}`);
+        throw new AdapterError('UnsupportedTsp', `unhandled tcgc type ${type.kind}`, type.__raw?.node);
     }
   }
 
@@ -653,7 +686,7 @@ export class Adapter {
           }
           default:
             if (throwOnDefault) {
-              throw new Error(`credential scheme type ${cred.type} NYI`);
+              throw new AdapterError('UnsupportedTsp', `credential scheme type ${cred.type} NYI`);
             }
             return AuthTypes.Default;
         }
@@ -679,7 +712,7 @@ export class Adapter {
 
                 // no supported credential types were specified
                 if (authType === AuthTypes.Default) {
-                  throw new Error(`credential scheme types ${variantKinds.join()} NYI`);
+                  throw new AdapterError('UnsupportedTsp', `credential scheme types ${variantKinds.join()} NYI`, param.__raw?.node);
                 }
                 continue;
               }
@@ -741,7 +774,7 @@ export class Adapter {
 
               const clientParam = this.adaptClientParameter(templateArg, rustClient.constructable);
               if (clientParam.kind !== 'clientEndpoint') {
-                throw new Error(`unexpected client parameter kind ${clientParam.kind}`);
+                throw new AdapterError('InternalError', `unexpected client parameter kind ${clientParam.kind}`, templateArg.__raw?.node);
               }
               rustClient.constructable.endpoint?.parameters.push(clientParam);
               ctorParams.push(clientParam);
@@ -791,7 +824,7 @@ export class Adapter {
         rustClient.fields.push(new rust.StructField(name, 'pubCrate', this.getType(prop.type)));
       }
     } else {
-      throw new Error(`uninstantiable client ${client.name} has no parent`);
+      throw new AdapterError('InternalError', `uninstantiable client ${client.name} has no parent`);
     }
 
     for (const child of values(client.children)) {
@@ -827,11 +860,14 @@ export class Adapter {
    */
   private createTokenCredentialCtor(rustClient: rust.Client, cred: http.Oauth2Auth<http.OAuth2Flow[]>): rust.Constructor {
     if (cred.flows.length === 0) {
-      throw new Error(`no flows defined for credential type ${cred.type}`);
+      throw new AdapterError('InternalError', `no flows defined for credential type ${cred.type}`, cred.model);
     }
     const scopes = new Array<string>();
     for (const scope of cred.flows[0].scopes) {
       scopes.push(scope.value);
+    }
+    if (scopes.length === 0) {
+      throw new AdapterError('InternalError', 'scopes must contain at least one entry', cred.model);
     }
     const ctorTokenCredential = new rust.Constructor('new');
     const tokenCredParam = new rust.ClientMethodParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), false);
@@ -852,7 +888,7 @@ export class Adapter {
     let paramType: rust.Type;
     if (param.isApiVersionParam) {
       if (!param.clientDefaultValue) {
-        throw new Error(`API version parameter ${param.name} has no clientDefaultValue`);
+        throw new AdapterError('InternalError', `API version parameter ${param.name} has no clientDefaultValue`, param.__raw?.node);
       }
       paramType = this.getStringType();
     } else {
@@ -940,7 +976,7 @@ export class Adapter {
         target: method.__raw ? method.__raw.node : NoTarget,
       });
     } else if (this.renamedMethods.has(srcMethodName)) {
-      throw new Error(`method name ${srcMethodName} collides with a renamed method`);
+      throw new AdapterError('NameCollision', `method name ${srcMethodName} collides with a renamed method`, method.__raw?.node);
     }
 
     const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
@@ -980,7 +1016,7 @@ export class Adapter {
         rustMethod = new rust.PageableMethod(methodName, rustClient, pub, methodOptions, httpMethod, httpPath);
         break;
       default:
-        throw new Error(`method kind ${method.kind} NYI`);
+        throw new AdapterError('UnsupportedTsp', `method kind ${method.kind} NYI`, method.__raw?.node);
     }
 
     rustMethod.docs = this.adaptDocs(method.summary, method.doc);
@@ -1008,7 +1044,7 @@ export class Adapter {
       }).first();
 
       if (!opParam) {
-        throw new Error(`didn't find operation parameter for method ${method.name} parameter ${param.name}`);
+        throw new AdapterError('InternalError', `didn't find operation parameter for method ${method.name} parameter ${param.name}`, param.__raw?.node);
       }
 
       let adaptedParam: rust.MethodParameter;
@@ -1039,7 +1075,7 @@ export class Adapter {
           // already wrapped in an Option<T> type.
           const field = adaptedParam.type.content.type.fields.find(f => { return f.name === adaptedParam.name; });
           if (!field) {
-            throw new Error(`didn't find spread param field ${adaptedParam.name} in type ${adaptedParam.type.content.type.name}`);
+            throw new AdapterError('InternalError', `didn't find spread param field ${adaptedParam.name} in type ${adaptedParam.type.content.type.name}`);
           }
           fieldType = field.type;
         } else {
@@ -1068,13 +1104,13 @@ export class Adapter {
       let defaultContentType: string | undefined;
       for (const httpResp of method.operation.responses) {
         if (defaultContentType && httpResp.defaultContentType && defaultContentType !== httpResp.defaultContentType) {
-          throw new Error(`method ${method.name} has conflicting content types`);
+          throw new AdapterError('InternalError', `method ${method.name} has conflicting content types`, method.__raw?.node);
         }
         defaultContentType = httpResp.defaultContentType;
       }
 
       if (!defaultContentType) {
-        throw new Error(`unable to determine content type for method ${method.name}`);
+        throw new AdapterError('InternalError', `unable to determine content type for method ${method.name}`, method.__raw?.node);
       }
 
       return this.adaptBodyFormat(defaultContentType);
@@ -1107,9 +1143,9 @@ export class Adapter {
       // however, we want the synthesized paged response envelope type instead.
       const synthesizedType = method.operation.responses[0].type;
       if (!synthesizedType) {
-        throw new Error(`paged method ${method.name} has no synthesized response type`);
+        throw new AdapterError('InternalError', `paged method ${method.name} has no synthesized response type`, method.__raw?.node);
       } else if (synthesizedType.kind !== 'model') {
-        throw new Error(`paged method ${method.name} synthesized response type has unexpected kind ${synthesizedType.kind}`);
+        throw new AdapterError('UnsupportedTsp', `paged method ${method.name} synthesized response type has unexpected kind ${synthesizedType.kind}`, method.__raw?.node);
       }
 
       const format = getBodyFormat();
@@ -1159,7 +1195,7 @@ export class Adapter {
       let responseHeader: rust.ResponseHeader;
       if (header.type.kind === 'dict') {
         if (header.serializedName !== 'x-ms-meta' && header.serializedName !== 'x-ms-or') {
-          throw new Error(`unexpected response header collection ${header.serializedName}`);
+          throw new AdapterError('InternalError', `unexpected response header collection ${header.serializedName}`, header.__raw.node);
         }
         responseHeader = new rust.ResponseHeaderHashMap(snakeCaseName(header.name), header.serializedName);
       } else {
@@ -1194,13 +1230,13 @@ export class Adapter {
         break;
       case 'response':
         if (method.returns.type.content.kind !== 'marker' && method.returns.type.content.kind !== 'payload') {
-          throw new Error(`unexpected method content kind ${method.returns.type.content.kind}`);
+          throw new AdapterError('InternalError', `unexpected method content kind ${method.returns.type.content.kind}`);
         }
         implFor = method.returns.type.content;
         break;
       default:
         // this is Unit which should have been previously skipped
-        throw new Error(`unexpected method return kind ${method.returns.type.kind}`);
+        throw new AdapterError('InternalError', `unexpected method return kind ${method.returns.type.kind}`);
     }
 
     let traitName: string;
@@ -1254,31 +1290,31 @@ export class Adapter {
   private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderParameter | rust.QueryParameter>, respHeadersMap: Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>): rust.PageableStrategyKind {
     if (method.pagingMetadata.nextLinkOperation) {
       // TODO: https://github.com/Azure/autorest.rust/issues/103
-      throw new Error('next page operation NYI');
+      throw new AdapterError('UnsupportedTsp', 'next page operation NYI', method.__raw?.node);
     } else if (method.pagingMetadata.nextLinkSegments) {
       if (method.pagingMetadata.nextLinkSegments.length > 1) {
         // TODO: https://github.com/Azure/autorest.rust/issues/102
-        throw new Error('nested next link path NYI');
+        throw new AdapterError('UnsupportedTsp', 'nested next link path NYI', method.__raw?.node);
       }
 
       // this is the field in the response type that contains the next link URL
       const nextLinkSegment = method.pagingMetadata.nextLinkSegments[0];
       if (nextLinkSegment.kind !== 'property') {
-        throw new Error(`unexpected kind ${nextLinkSegment.kind} for next link segment in operation ${method.name}`);
+        throw new AdapterError('InternalError', `unexpected kind ${nextLinkSegment.kind} for next link segment in operation ${method.name}`, method.__raw?.node);
       }
 
       const nextLinkField = this.fieldsMap.get(nextLinkSegment);
       if (!nextLinkField) {
         // the most likely explanation for this is lack of reference equality
-        throw new Error(`missing next link field name ${nextLinkSegment.name} for operation ${method.name}`);
+        throw new AdapterError('InternalError', `missing next link field name ${nextLinkSegment.name} for operation ${method.name}`, method.__raw?.node);
       }
       return new rust.PageableStrategyNextLink(nextLinkField);
     } else if (method.pagingMetadata.continuationTokenParameterSegments && method.pagingMetadata.continuationTokenResponseSegments) {
       if (method.pagingMetadata.continuationTokenParameterSegments.length > 1) {
-        throw new Error(`nested continuationTokenParameterSegments NYI`);
+        throw new AdapterError('UnsupportedTsp', `nested continuationTokenParameterSegments NYI`, method.__raw?.node);
       }
       if (method.pagingMetadata.continuationTokenResponseSegments.length > 1) {
-        throw new Error(`nested continuationTokenResponseSegments NYI`);
+        throw new AdapterError('UnsupportedTsp', `nested continuationTokenResponseSegments NYI`, method.__raw?.node);
       }
 
       const tokenReq = method.pagingMetadata.continuationTokenParameterSegments[0];
@@ -1290,13 +1326,13 @@ export class Adapter {
         case 'method': {
           const tokenParam = paramsMap.get(tokenReq);
           if (!tokenParam) {
-            throw new Error(`missing continuation token request parameter name ${tokenResp.name} for operation ${method.name}`);
+            throw new AdapterError('InternalError', `missing continuation token request parameter name ${tokenResp.name} for operation ${method.name}`, method.__raw?.node);
           }
           requestToken = tokenParam;
           break;
         }
         default:
-          throw new Error(`unhandled continuationTokenParameterSegment kind ${tokenReq.kind}`)
+          throw new AdapterError('InternalError', `unhandled continuationTokenParameterSegment kind ${tokenReq.kind}`, tokenReq.__raw?.node);
       }
 
       // find the continuation token response
@@ -1305,7 +1341,7 @@ export class Adapter {
         case 'property': {
           const tokenField = this.fieldsMap.get(tokenResp);
           if (!tokenField) {
-            throw new Error(`missing continuation token response field name ${tokenResp.name} for operation ${method.name}`);
+            throw new AdapterError('InternalError', `missing continuation token response field name ${tokenResp.name} for operation ${method.name}`, method.__raw?.node);
           }
           responseToken = tokenField;
           break;
@@ -1313,20 +1349,20 @@ export class Adapter {
         case 'responseheader': {
           const tokenHeader = respHeadersMap.get(tokenResp);
           if (!tokenHeader) {
-            throw new Error(`missing continuation token response header name ${tokenResp.name} for operation ${method.name}`);
+            throw new AdapterError('InternalError', `missing continuation token response header name ${tokenResp.name} for operation ${method.name}`, method.__raw?.node);
           }
           if (tokenHeader.kind !== 'responseHeaderScalar') {
-            throw new Error(`unexpected response header kind ${tokenHeader.kind}`);
+            throw new AdapterError('InternalError', `unexpected response header kind ${tokenHeader.kind}`);
           }
           responseToken = tokenHeader;
           break;
         }
         default:
-          throw new Error(`unhandled continuationTokenResponseSegment kind ${tokenResp.kind}`);
+          throw new AdapterError('InternalError', `unhandled continuationTokenResponseSegment kind ${tokenResp.kind}`);
       }
       return new rust.PageableStrategyContinuationToken(requestToken, responseToken);
     } else {
-      throw new Error(`unknown paging strategy for operation ${method.name}`);
+      throw new AdapterError('InternalError', `unknown paging strategy for operation ${method.name}`, method.__raw?.node);
     }
   }
 
@@ -1383,11 +1419,11 @@ export class Adapter {
       }
       case 'cookie':
         // TODO: https://github.com/Azure/typespec-rust/issues/192
-        throw new Error('cookie parameters are not supported');
+        throw new AdapterError('UnsupportedTsp', 'cookie parameters are not supported', param.__raw?.node);
       case 'header':
         if (param.collectionFormat) {
           if (paramType.kind !== 'Vec') {
-            throw new Error(`unexpected kind ${paramType.kind} for HeaderCollectionParameter`);
+            throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for HeaderCollectionParameter`, param.__raw?.node);
           }
           let format: rust.CollectionFormat;
           switch (param.collectionFormat) {
@@ -1401,12 +1437,12 @@ export class Adapter {
               format = param.collectionFormat;
               break;
             default:
-              throw new Error(`unexpected format ${param.collectionFormat} for HeaderCollectionParameter`);
+              throw new AdapterError('InternalError', `unexpected format ${param.collectionFormat} for HeaderCollectionParameter`, param.__raw?.node);
           }
           adaptedParam = new rust.HeaderCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, format);
         } else if (param.serializedName === 'x-ms-meta') {
           if (paramType.kind !== 'hashmap') {
-            throw new Error(`unexpected kind ${paramType.kind} for header ${param.serializedName}`);
+            throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for header ${param.serializedName}`, param.__raw?.node);
           }
           adaptedParam = new rust.HeaderHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
         } else {
@@ -1421,7 +1457,7 @@ export class Adapter {
         if (param.collectionFormat) {
           const format = param.collectionFormat === 'simple' ? 'csv' : (param.collectionFormat === 'form' ? 'multi' : param.collectionFormat);
           if (paramType.kind !== 'Vec') {
-            throw new Error(`unexpected kind ${paramType.kind} for QueryCollectionParameter`);
+            throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for QueryCollectionParameter`, param.__raw?.node);
           }
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
           adaptedParam = new rust.QueryCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, format);
@@ -1469,7 +1505,7 @@ export class Adapter {
       case 'Vec':
         return type;
       default:
-        throw new Error(`cannot convert ${type.kind} to a wire type`);
+        throw new AdapterError('InternalError', `cannot convert ${type.kind} to a wire type`);
     }
   }
 
@@ -1495,7 +1531,7 @@ export class Adapter {
         }
 
         if (serializedName === undefined) {
-          throw new Error(`didn't find body model property for spread parameter ${param.name}`);
+          throw new AdapterError('InternalError', `didn't find body model property for spread parameter ${param.name}`, param.__raw?.node);
         }
 
         // this is the param type as surfaced in the method sig.
@@ -1512,7 +1548,7 @@ export class Adapter {
         // this is the internal model type that the spread params coalesce into
         const payloadType = this.getType(opParamType);
         if (payloadType.kind !== 'model') {
-          throw new Error(`unexpected kind ${payloadType.kind} for spread body param`);
+          throw new AdapterError('InternalError', `unexpected kind ${payloadType.kind} for spread body param`, opParamType.__raw?.node);
         }
 
         const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
@@ -1540,7 +1576,7 @@ export class Adapter {
       this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
       return 'xml';
     } else {
-      throw new Error(`unexpected contentType ${contentType}`);
+      throw new AdapterError('InternalError', `unexpected contentType ${contentType}`);
     }
   }
 }

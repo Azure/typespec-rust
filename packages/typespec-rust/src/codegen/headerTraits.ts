@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
+import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
@@ -70,7 +71,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
           mergedHeaders.push(responseHeader);
         } else if (matchingHeader.type !== responseHeader.type) {
           // overlapping headers with different types
-          throw new Error('overlapping headers');
+          throw new CodegenError('InternalError', 'overlapping headers');
         }
       }
     }
@@ -94,7 +95,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
         case 'string':
           return 'String';
         default:
-          throw new Error(`unhandled literal type ${typeof type.value}`);
+          throw new CodegenError('InternalError', `unhandled literal type ${typeof type.value}`);
       }
     } else {
       return helpers.getTypeDeclaration(type);

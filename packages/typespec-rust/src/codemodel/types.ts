@@ -379,9 +379,6 @@ export interface QualifiedType {
 
 export class QualifiedType implements QualifiedType {
   constructor(name: string, path: string) {
-    if (name.indexOf('::') > 0) {
-      throw new Error(`name ${name} must not include any paths`);
-    }
     this.name = name;
     this.path = path;
   }
@@ -692,9 +689,6 @@ export class StructField extends StructFieldBase implements StructField {
 
 export class TokenCredential extends External implements TokenCredential {
   constructor(crate: Crate, scopes: Array<string>) {
-    if (scopes.length === 0) {
-      throw new Error('scopes must contain at least one entry');
-    }
     super(crate, 'TokenCredential', 'azure_core::credentials');
     this.kind = 'tokenCredential';
     this.scopes = scopes;

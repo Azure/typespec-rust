@@ -5,6 +5,7 @@
 
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
+import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import queryString from 'query-string';
 import { Use } from './use.js';
@@ -136,7 +137,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
           }
 
           if (!client.fields.find((v: rust.StructField) => { return v.name === param.name; })) {
-            throw new Error(`didn't find field in client ${client.name} for param ${param.name}`);
+            throw new CodegenError('InternalError', `didn't find field in client ${client.name} for param ${param.name}`);
           }
 
           // by convention, the param field and param name are the
@@ -151,11 +152,11 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
           }
 
           if (!client.fields.find((v: rust.StructField) => { return v.name === param.name; })) {
-            throw new Error(`didn't find field in client ${client.name} for param ${param.name}`);
+            throw new CodegenError('InternalError', `didn't find field in client ${client.name} for param ${param.name}`);
           }
 
           if (!client.constructable.options.type.fields.find((v: rust.StructField) => { return v.name === param.name; })) {
-            throw new Error(`didn't find field in client options ${client.constructable.options.type.name} for optional param ${param.name}`);
+            throw new CodegenError('InternalError', `didn't find field in client options ${client.constructable.options.type.name} for optional param ${param.name}`);
           }
 
           body += `${indent.get()}${param.name}: options.${param.name},\n`;
@@ -522,13 +523,13 @@ function getEndpointFieldName(client: rust.Client): string {
   for (const field of client.fields) {
     if (field.type.kind === 'Url' ) {
       if (endpointFieldName) {
-        throw new Error(`found multiple URL fields in client ${client.name} which is unexpected`);
+        throw new CodegenError('InternalError', `found multiple URL fields in client ${client.name} which is unexpected`);
       }
       endpointFieldName = field.name;
     }
   }
   if (!endpointFieldName) {
-    throw new Error(`didn't find URI field for client ${client.name}`);
+    throw new CodegenError('InternalError', `didn't find URI field for client ${client.name}`);
   }
   return endpointFieldName;
 }
@@ -637,7 +638,7 @@ function getMethodParamGroup(method: ClientMethod): methodParamGroups {
   for (const param of method.params) {
     if (param.kind === 'body') {
       if (bodyParam) {
-        throw new Error(`method ${method.name} has multiple body parameters`);
+        throw new CodegenError('InternalError', `method ${method.name} has multiple body parameters`);
       }
       bodyParam = param;
     }
@@ -693,7 +694,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
   // including them in the call to set_path() causes the chars to be path-escaped.
   const pathChunks = method.httpPath.split('?');
   if (pathChunks.length > 2) {
-    throw new Error('too many HTTP path chunks');
+    throw new CodegenError('InternalError', 'too many HTTP path chunks');
   }
 
   /** returns & if the param needs to be borrowed (which is the majority of cases), else the empty string */
@@ -819,7 +820,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
     indent.push();
     for (const partialBodyParam of paramGroups.partialBody) {
       if (partialBodyParam.type.content.type !== requestContentType.content.type) {
-        throw new Error(`spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.content.type.name}, expected model type ${requestContentType.content.type.name}`);
+        throw new CodegenError('InternalError', `spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.content.type.name}, expected model type ${requestContentType.content.type.name}`);
       }
 
       if (partialBodyParam.optional) {
@@ -896,7 +897,7 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
  */
 function getPageableMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.PageableMethod): string {
   if (!method.strategy) {
-    throw new Error('paged method with no strategy NYI');
+    throw new CodegenError('InternalError', 'paged method with no strategy NYI');
   }
 
   use.add('azure_core::http', 'Method', 'Pager', 'PagerResult', 'Request', 'Response', 'Url');
@@ -1003,7 +1004,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
           break;
         case 'responseHeaderScalar':
           if (!method.responseHeaders) {
-            throw new Error(`missing response headers trait for method ${method.name}`);
+            throw new CodegenError('InternalError', `missing response headers trait for method ${method.name}`);
           }
           use.addForType(method.responseHeaders);
           matchCondition = `rsp.${method.strategy.responseToken.name}()?`;
@@ -1054,7 +1055,7 @@ function getClientEndpointParamValue(param: rust.ClientEndpointParameter): strin
     case 'scalar':
       return `&${paramName}.to_string()`;
     default:
-      throw new Error(`unhandled ${param.kind} param type kind ${param.type.kind}`);
+      throw new CodegenError('InternalError', `unhandled ${param.kind} param type kind ${param.type.kind}`);
   }
 }
 
@@ -1111,7 +1112,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
 
   if (param.kind === 'headerCollection' || param.kind === 'queryCollection') {
     if (param.format === 'multi') {
-      throw new Error('multi should have been handled outside getHeaderPathQueryParamValue');
+      throw new CodegenError('InternalError', 'multi should have been handled outside getHeaderPathQueryParamValue');
     } else if (param.type.type.kind === 'String') {
       return `${paramName}.join("${getCollectionDelimiter(param.format)}")`;
     }
@@ -1153,7 +1154,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     case 'offsetDateTime':
       return encodeDateTime(param.type, param.name);
     default:
-      throw new Error(`unhandled ${param.kind} param type kind ${param.type.kind}`);
+      throw new CodegenError('InternalError', `unhandled ${param.kind} param type kind ${param.type.kind}`);
   }
 }
 
