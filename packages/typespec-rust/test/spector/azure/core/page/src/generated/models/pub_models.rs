@@ -62,6 +62,16 @@ pub struct PagedUser {
     pub value: Vec<User>,
 }
 
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[non_exhaustive]
+pub struct ParameterizedNextLinkPagingResult {
+    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    pub next_link: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub values: Vec<User>,
+}
+
 /// Second item.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
