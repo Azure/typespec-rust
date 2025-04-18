@@ -6,6 +6,26 @@
 use super::ListItemInputExtensibleEnum;
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
+/// Options to be passed to [`PageClient::list_parameterized_next_link()`](crate::generated::clients::PageClient::list_parameterized_next_link())
+#[derive(Clone, Default, SafeDebug)]
+pub struct PageClientListParameterizedNextLinkOptions<'a> {
+    pub include_pending: Option<bool>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+impl PageClientListParameterizedNextLinkOptions<'_> {
+    pub fn into_owned(self) -> PageClientListParameterizedNextLinkOptions<'static> {
+        PageClientListParameterizedNextLinkOptions {
+            include_pending: self.include_pending,
+            method_options: ClientMethodOptions {
+                context: self.method_options.context.into_owned(),
+            },
+        }
+    }
+}
+
 /// Options to be passed to [`PageClient::list_with_custom_page_model()`](crate::generated::clients::PageClient::list_with_custom_page_model())
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageClientListWithCustomPageModelOptions<'a> {

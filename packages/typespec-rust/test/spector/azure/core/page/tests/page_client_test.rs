@@ -11,6 +11,41 @@ use spector_corepage::{
     PageClient,
 };
 
+/*#[tokio::test]
+async fn list_parameterized_next_link() {
+    let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut pager = client
+        .list_parameterized_next_link(
+            "name",
+            Some(PageClientListParameterizedNextLinkOptions {
+                include_pending: Some(true),
+                ..Default::default()
+            }),
+        )
+        .unwrap();
+    let mut page_count = 0;
+    while let Some(page) = pager.next().await {
+        page_count += 1;
+        let page = page.unwrap();
+        let page: ParameterizedNextLinkPagingResult = page.into_body().await.unwrap();
+        match page_count {
+            1 => {
+                assert_eq!(page.values.len(), 1);
+                assert!(page.next_link.is_some());
+                assert_eq!(page.values[0].id, Some(1));
+                assert_eq!(page.values[0].name, Some("User1".to_string()));
+            }
+            2 => {
+                assert_eq!(page.values.len(), 1);
+                assert!(page.next_link.is_none());
+                assert_eq!(page.values[0].id, Some(2));
+                assert_eq!(page.values[0].name, Some("User2".to_string()));
+            }
+            _ => panic!("unexpected page number"),
+        }
+    }
+}*/
+
 #[tokio::test]
 async fn list_with_custom_page_model() {
     let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();

@@ -24,7 +24,7 @@ async fn create_resource() {
         map: HashMap::from([(String::from("key"), inner_model.clone())]),
         array: vec![inner_model.clone()],
         int_value: Some(1),
-        float_value: Some(1.1),
+        float_value: Some(1.25),
         inner_model: Some(inner_model),
         int_array: vec![1, 2, 3],
     };
@@ -48,7 +48,7 @@ async fn create_resource() {
     assert_eq!(array_val[0].description, Some(String::from("innerDesc")));
 
     assert_eq!(value.int_value, Some(1));
-    assert_eq!(value.float_value, Some(1.1));
+    assert_eq!(value.float_value, Some(1.25));
 
     let inner_model_resp = value.inner_model.unwrap();
     assert_eq!(inner_model_resp.name, Some(String::from("InnerMadge")));
