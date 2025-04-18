@@ -815,7 +815,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
             body: (indent) => `${indent.get()}${emitEmptyPathParamCheck(indent, pathParam)}\npath.replace("{${pathParam.segment}}",${paramExpression}"))\n`,
           }, {
             pattern: `None`,
-            body: (indent) => `${indent.get()}path.replace("{${pathParam.segment}}", "")\n`,
+            body: (indent) => `${indent.get()}path.replace("{${pathParam.segment}}", "/")\n`,
           }])};\n`;
         } else {
           body += wrapSortedVec(`${indent.get()}path = path.replace("{${pathParam.segment}}", ${paramExpression});\n`);

@@ -256,7 +256,7 @@ impl KeyVaultClient {
                 }
                 path.replace("{secret-version}", &format!("/{secret_version}"))
             }
-            None => path.replace("{secret-version}", ""),
+            None => path.replace("{secret-version}", "/"),
         };
         url = url.join(&path)?;
         url.query_pairs_mut()
