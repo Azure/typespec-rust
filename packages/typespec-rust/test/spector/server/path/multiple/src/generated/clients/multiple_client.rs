@@ -105,7 +105,7 @@ impl MultipleClient {
         keyword: &str,
         options: Option<MultipleClientWithOperationPathParamOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
-        if keyword.len() == 0 {
+        if keyword.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter keyword cannot be empty",

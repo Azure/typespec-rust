@@ -76,7 +76,7 @@ impl NotVersionedClient {
         api_version: &str,
         options: Option<NotVersionedClientWithPathApiVersionOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
-        if api_version.len() == 0 {
+        if api_version.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter api_version cannot be empty",

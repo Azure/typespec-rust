@@ -1063,7 +1063,7 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
       return '';
   }
   return helpers.buildIfBlock(indent, {
-    condition: `${param.name}${toString}.len() == 0`,
+    condition: `${param.name}${toString}.is_empty()`,
     body: (indent) => `${indent.get()}return Err(azure_core::Error::message(azure_core::error::ErrorKind::Other, "parameter ${param.name} cannot be empty"));`,
   });
 }

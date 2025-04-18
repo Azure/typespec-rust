@@ -43,13 +43,13 @@ impl CommonPropertiesErrorClient {
         resource: RequestContent<ConfidentialResource>,
         options: Option<CommonPropertiesErrorClientCreateForUserDefinedErrorOptions<'_>>,
     ) -> Result<Response<ConfidentialResource>> {
-        if confidential_resource_name.len() == 0 {
+        if confidential_resource_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter confidential_resource_name cannot be empty",
             ));
         }
-        if resource_group_name.len() == 0 {
+        if resource_group_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
@@ -96,13 +96,13 @@ impl CommonPropertiesErrorClient {
         confidential_resource_name: &str,
         options: Option<CommonPropertiesErrorClientGetForPredefinedErrorOptions<'_>>,
     ) -> Result<Response<ConfidentialResource>> {
-        if confidential_resource_name.len() == 0 {
+        if confidential_resource_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter confidential_resource_name cannot be empty",
             ));
         }
-        if resource_group_name.len() == 0 {
+        if resource_group_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",

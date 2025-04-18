@@ -104,7 +104,7 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientBackupSecretOptions<'_>>,
     ) -> Result<Response<BackupSecretResult>> {
-        if secret_name.len() == 0 {
+        if secret_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
@@ -148,7 +148,7 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientDeleteSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecretBundle>> {
-        if secret_name.len() == 0 {
+        if secret_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
@@ -192,7 +192,7 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientGetDeletedSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecretBundle>> {
-        if secret_name.len() == 0 {
+        if secret_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
@@ -235,7 +235,7 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientGetSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
-        if secret_name.len() == 0 {
+        if secret_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
@@ -248,7 +248,7 @@ impl KeyVaultClient {
         path = path.replace("{secret-name}", secret_name);
         path = match options.secret_version {
             Some(secret_version) => {
-                if secret_version.len() == 0 {
+                if secret_version.is_empty() {
                     return Err(azure_core::Error::message(
                         azure_core::error::ErrorKind::Other,
                         "parameter secret_version cannot be empty",
@@ -363,7 +363,7 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientListSecretVersionsOptions<'_>>,
     ) -> Result<Pager<SecretListResult>> {
-        if secret_name.len() == 0 {
+        if secret_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
@@ -518,7 +518,7 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientPurgeDeletedSecretOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
-        if secret_name.len() == 0 {
+        if secret_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
@@ -561,7 +561,7 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientRecoverDeletedSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
-        if secret_name.len() == 0 {
+        if secret_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
@@ -645,7 +645,7 @@ impl KeyVaultClient {
         parameters: RequestContent<SecretSetParameters>,
         options: Option<KeyVaultClientSetSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
-        if secret_name.len() == 0 {
+        if secret_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
@@ -695,13 +695,13 @@ impl KeyVaultClient {
         parameters: RequestContent<SecretUpdateParameters>,
         options: Option<KeyVaultClientUpdateSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
-        if secret_name.len() == 0 {
+        if secret_name.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
             ));
         }
-        if secret_version.len() == 0 {
+        if secret_version.is_empty() {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_version cannot be empty",
