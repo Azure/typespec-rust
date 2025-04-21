@@ -144,6 +144,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return `Box<${getTypeDeclaration(type.type)}>`;
     case 'bytes':
     case 'client':
+    case 'decimal':
     case 'marker':
       return type.name;
     case 'encodedBytes':

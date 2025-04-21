@@ -1137,6 +1137,8 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     case 'String':
     case 'str':
       return paramName;
+    case 'decimal':
+      return `${param.name}.to_string()`;
     case 'encodedBytes':
       return encodeBytes(param.type, paramName);
     case 'enum':

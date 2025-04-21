@@ -5,6 +5,7 @@
 ### Features Added
 
 * Added support for pageable methods that use a continuation token when fetching pages.
+* Added support for TypeSpec `decimal` and `decimal128` types.
 
 ### Bugs Fixed
 

@@ -61,7 +61,7 @@ const httpSpecsGroup = {
   'spector_nullable': {input: 'type/property/nullable'},
   //'spector_optionality': {input: 'type/property/optionality'},
   //'spector_valuetypes': {input: 'type/property/value-types'},
-  //'spector_scalar': {input: 'type/scalar'},
+  'spector_scalar': {input: 'type/scalar'},
   //'spector_union': {input: 'type/union'},
 };
 

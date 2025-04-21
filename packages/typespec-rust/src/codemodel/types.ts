@@ -18,7 +18,7 @@ export interface Docs {
 export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | Pager | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
-export type WireType = Bytes | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | Scalar | StringSlice | StringType | Url | Vector;
+export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | Scalar | StringSlice | StringType | Url | Vector;
 
 /** Type defines a type within the Rust type system */
 export type Type = SdkType | WireType;
@@ -45,6 +45,11 @@ export interface Box {
 /** Bytes is a azure_core::Bytes type */
 export interface Bytes extends External {
   kind: 'bytes';
+}
+
+/** Decimal is a rust_decimal::Decimal type */
+export interface Decimal extends External {
+  kind: 'decimal';
 }
 
 /** BytesEncoding defines the possible types of base64-encoding. */
@@ -488,6 +493,13 @@ export class Bytes extends External implements Bytes {
   constructor(crate: Crate) {
     super(crate, 'Bytes', 'azure_core');
     this.kind = 'bytes';
+  }
+}
+
+export class Decimal extends External implements Decimal {
+  constructor(crate: Crate) {
+    super(crate, 'Decimal', 'rust_decimal');
+    this.kind = 'decimal';
   }
 }
 

@@ -433,6 +433,16 @@ export class Adapter {
       }
       case 'constant':
         return this.getLiteral(type);
+      case 'decimal':
+      case 'decimal128': {
+        const keyName = `${type.kind}`;
+        let decimalType = this.types.get(keyName);
+        if (!decimalType) {
+          decimalType = new rust.Decimal(this.crate);
+          this.types.set(keyName, decimalType);
+        }
+        return decimalType;
+      }
       case 'dict': {
         const keyName = recursiveKeyName(type.kind, type.valueType);
         let hashmapType = this.types.get(keyName);
@@ -1489,6 +1499,7 @@ export class Adapter {
   private typeToWireType(type: rust.Type): rust.WireType {
     switch (type.kind) {
       case 'bytes':
+      case 'decimal':
       case 'encodedBytes':
       case 'enum':
       case 'enumValue':
