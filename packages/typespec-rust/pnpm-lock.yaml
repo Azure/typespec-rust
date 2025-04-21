@@ -38,7 +38,7 @@ importers:
         version: 0.1.0-alpha.14(qctdprmpcnbhrygya3wby767n4)
       '@azure-tools/typespec-autorest':
         specifier: 0.54.0
-        version: 0.54.0(zwzjelakgsz3w2sqjjrdfygfgy)
+        version: 0.54.0(ynvuiw52macoax7jy73wys3eru)
       '@azure-tools/typespec-azure-core':
         specifier: 0.54.0
         version: 0.54.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/http@1.0.0-rc.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))))(@typespec/rest@0.68.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/http@1.0.0-rc.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76)))))
@@ -46,8 +46,8 @@ importers:
         specifier: 0.54.0
         version: 0.54.0(jez25odo74jp36atzfsw77b6gq)
       '@azure-tools/typespec-client-generator-core':
-        specifier: 0.54.1
-        version: 0.54.1(5syjw6bracbqis4kfmrbjubkuq)
+        specifier: 0.54.2
+        version: 0.54.2(5syjw6bracbqis4kfmrbjubkuq)
       '@eslint/js':
         specifier: ^9.24.0
         version: 9.24.0
@@ -168,8 +168,8 @@ packages:
       '@typespec/rest': ^0.68.0
       '@typespec/versioning': ^0.68.0
 
-  '@azure-tools/typespec-client-generator-core@0.54.1':
-    resolution: {integrity: sha512-S14D5B9Qm+ORoznC0eY/hlEkvMP1mwGIbudAZWnsG/mp46iB9ooBMARPIAMq61otwuTyoA7SOm0dlqBeGoq6Mg==}
+  '@azure-tools/typespec-client-generator-core@0.54.2':
+    resolution: {integrity: sha512-Ca6uqichXdFvB+ZoXaF3sBrVVlp8r8HNf9v5sBRnfEBM9yRte8+cp04vrEHuPKyvbOTBJPldWqFEhIK7SpnywA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@azure-tools/typespec-azure-core': ^0.54.0
@@ -2571,11 +2571,11 @@ snapshots:
 
   '@azure-tools/tasks@3.0.255': {}
 
-  '@azure-tools/typespec-autorest@0.54.0(zwzjelakgsz3w2sqjjrdfygfgy)':
+  '@azure-tools/typespec-autorest@0.54.0(ynvuiw52macoax7jy73wys3eru)':
     dependencies:
       '@azure-tools/typespec-azure-core': 0.54.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/http@1.0.0-rc.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))))(@typespec/rest@0.68.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/http@1.0.0-rc.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76)))))
       '@azure-tools/typespec-azure-resource-manager': 0.54.0(jez25odo74jp36atzfsw77b6gq)
-      '@azure-tools/typespec-client-generator-core': 0.54.1(5syjw6bracbqis4kfmrbjubkuq)
+      '@azure-tools/typespec-client-generator-core': 0.54.2(5syjw6bracbqis4kfmrbjubkuq)
       '@typespec/compiler': 1.0.0-rc.0(@types/node@18.19.76)
       '@typespec/http': 1.0.0-rc.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76)))
       '@typespec/openapi': 1.0.0-rc.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/http@1.0.0-rc.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))))
@@ -2599,7 +2599,7 @@ snapshots:
       change-case: 5.4.4
       pluralize: 8.0.0
 
-  '@azure-tools/typespec-client-generator-core@0.54.1(5syjw6bracbqis4kfmrbjubkuq)':
+  '@azure-tools/typespec-client-generator-core@0.54.2(5syjw6bracbqis4kfmrbjubkuq)':
     dependencies:
       '@azure-tools/typespec-azure-core': 0.54.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/http@1.0.0-rc.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))))(@typespec/rest@0.68.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/http@1.0.0-rc.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0-rc.0(@types/node@18.19.76)))))
       '@typespec/compiler': 1.0.0-rc.0(@types/node@18.19.76)
