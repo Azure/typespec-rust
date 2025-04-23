@@ -569,7 +569,7 @@ function buildDeserialize(indent: helpers.indentation, type: rust.Type, use: Use
         caller: 'start',
         type: type,
         srcVar: 'to_deserialize',
-        destVar: new varStack('decoded'),
+        destVar: new VarStack('decoded'),
       }),
     },
     {
@@ -608,14 +608,14 @@ function buildSerialize(indent: helpers.indentation, type: rust.Type, use: Use):
     caller: 'start',
     type: type,
     srcVar: 'to_serialize',
-    destVar: new varStack('encoded'),
+    destVar: new VarStack('encoded'),
   });
   content += `${indent.pop().get()}}\n`;
   return content;
 }
 
 /** a stack for variable names */
-class varStack {
+class VarStack {
   private readonly prefix: string;
   private suffix: number;
 
@@ -651,7 +651,7 @@ class varStack {
    * 
    * @returns this with updated stack state
    */
-  push(): varStack {
+  push(): VarStack {
     ++this.suffix;
     return this;
   }
@@ -686,7 +686,7 @@ interface stateCtx {
   srcVar: string
 
   /** the stack of destination var names */
-  destVar: varStack;
+  destVar: VarStack;
 }
 
 /**
