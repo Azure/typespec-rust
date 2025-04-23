@@ -850,7 +850,7 @@ export class Adapter {
           code: 'LroNotSupported',
           severity: 'warning',
           message: `skip emitting LRO ${method.name}`,
-          target: method.__raw ? method.__raw.node : NoTarget,
+          target: method.__raw?.node ?? NoTarget,
         });
         continue;
       }
@@ -983,7 +983,7 @@ export class Adapter {
         code: 'PagingMethodRename',
         severity: 'warning',
         message: `renamed paging method from ${method.name} to ${srcMethodName}`,
-        target: method.__raw ? method.__raw.node : NoTarget,
+        target: method.__raw?.node ?? NoTarget,
       });
     } else if (this.renamedMethods.has(srcMethodName)) {
       throw new AdapterError('NameCollision', `method name ${srcMethodName} collides with a renamed method`, method.__raw?.node);
