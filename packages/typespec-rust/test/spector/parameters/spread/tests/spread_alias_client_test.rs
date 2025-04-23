@@ -56,7 +56,7 @@ async fn spread_with_multiple_parameters() {
             vec![1, 2],
             Some(SpreadAliasClientSpreadWithMultipleParametersOptions {
                 optional_int: Some(1),
-                optional_string_list: vec!["foo".to_string(), "bar".to_string()],
+                optional_string_list: Some(vec!["foo".to_string(), "bar".to_string()]),
                 ..Default::default()
             }),
         )

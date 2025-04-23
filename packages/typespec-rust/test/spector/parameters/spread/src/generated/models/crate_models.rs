@@ -42,19 +42,11 @@ pub(crate) struct SpreadWithMultipleParametersRequest {
     pub(crate) optional_int: Option<i32>,
 
     /// optional string
-    #[serde(
-        default,
-        rename = "optionalStringList",
-        skip_serializing_if = "Vec::is_empty"
-    )]
-    pub(crate) optional_string_list: Vec<String>,
+    #[serde(rename = "optionalStringList", skip_serializing_if = "Option::is_none")]
+    pub(crate) optional_string_list: Option<Vec<String>>,
 
     /// required int
-    #[serde(
-        default,
-        rename = "requiredIntList",
-        skip_serializing_if = "Vec::is_empty"
-    )]
+    #[serde(rename = "requiredIntList")]
     pub(crate) required_int_list: Vec<i32>,
 
     /// required string

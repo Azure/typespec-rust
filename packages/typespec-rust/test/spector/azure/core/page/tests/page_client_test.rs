@@ -57,16 +57,17 @@ async fn list_with_custom_page_model() {
         let page: UserListResults = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.items.len(), 1);
+                let page_items = page.items.unwrap();
+                assert_eq!(page_items.len(), 1);
                 assert!(page.next_link.is_none());
                 assert_eq!(
-                    page.items[0].etag,
+                    page_items[0].etag,
                     Some(azure_core::http::Etag::from(
                         "11bdc430-65e8-45ad-81d9-8ffa60d55b59"
                     ))
                 );
-                assert_eq!(page.items[0].id, Some(1));
-                assert_eq!(page.items[0].name, Some("Madge".to_string()));
+                assert_eq!(page_items[0].id, Some(1));
+                assert_eq!(page_items[0].name, Some("Madge".to_string()));
             }
             _ => panic!("unexpected page number"),
         }
@@ -84,16 +85,17 @@ async fn list_with_page() {
         let page: PagedUser = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.value.len(), 1);
+                let page_value = page.value.unwrap();
+                assert_eq!(page_value.len(), 1);
                 assert!(page.next_link.is_none());
                 assert_eq!(
-                    page.value[0].etag,
+                    page_value[0].etag,
                     Some(azure_core::http::Etag::from(
                         "11bdc430-65e8-45ad-81d9-8ffa60d55b59"
                     ))
                 );
-                assert_eq!(page.value[0].id, Some(1));
-                assert_eq!(page.value[0].name, Some("Madge".to_string()));
+                assert_eq!(page_value[0].id, Some(1));
+                assert_eq!(page_value[0].name, Some("Madge".to_string()));
             }
             _ => panic!("unexpected page number"),
         }
@@ -123,16 +125,17 @@ async fn list_with_parameters() {
         let page: PagedUser = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.value.len(), 1);
+                let page_value = page.value.unwrap();
+                assert_eq!(page_value.len(), 1);
                 assert!(page.next_link.is_none());
                 assert_eq!(
-                    page.value[0].etag,
+                    page_value[0].etag,
                     Some(azure_core::http::Etag::from(
                         "11bdc430-65e8-45ad-81d9-8ffa60d55b59"
                     ))
                 );
-                assert_eq!(page.value[0].id, Some(1));
-                assert_eq!(page.value[0].name, Some("Madge".to_string()));
+                assert_eq!(page_value[0].id, Some(1));
+                assert_eq!(page_value[0].name, Some("Madge".to_string()));
             }
             _ => panic!("unexpected page number"),
         }

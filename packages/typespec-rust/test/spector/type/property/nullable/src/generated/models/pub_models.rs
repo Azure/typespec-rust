@@ -33,10 +33,10 @@ pub struct CollectionsByteProperty {
     #[serde(
         default,
         rename = "nullableProperty",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_encoded_bytes_std"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_encoded_bytes_std"
     )]
-    pub nullable_property: Vec<Vec<u8>>,
+    pub nullable_property: Option<Vec<Vec<u8>>>,
 
     /// Required property
     #[serde(rename = "requiredProperty", skip_serializing_if = "Option::is_none")]
@@ -47,12 +47,8 @@ pub struct CollectionsByteProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct CollectionsModelProperty {
     /// Property
-    #[serde(
-        default,
-        rename = "nullableProperty",
-        skip_serializing_if = "Vec::is_empty"
-    )]
-    pub nullable_property: Vec<InnerModel>,
+    #[serde(rename = "nullableProperty", skip_serializing_if = "Option::is_none")]
+    pub nullable_property: Option<Vec<InnerModel>>,
 
     /// Required property
     #[serde(rename = "requiredProperty", skip_serializing_if = "Option::is_none")]
@@ -63,12 +59,8 @@ pub struct CollectionsModelProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct CollectionsStringProperty {
     /// Property
-    #[serde(
-        default,
-        rename = "nullableProperty",
-        skip_serializing_if = "Vec::is_empty"
-    )]
-    pub nullable_property: Vec<String>,
+    #[serde(rename = "nullableProperty", skip_serializing_if = "Option::is_none")]
+    pub nullable_property: Option<Vec<String>>,
 
     /// Required property
     #[serde(rename = "requiredProperty", skip_serializing_if = "Option::is_none")]

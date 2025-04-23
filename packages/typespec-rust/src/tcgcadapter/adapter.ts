@@ -314,9 +314,7 @@ export class Adapter {
     }
 
     // for public models each field is always an Option<T>.
-    // the only exception is for HashMap and Vec since an
-    // empty collection conveys the same semantics.
-    if ((modelVisibility === 'pub' || property.optional) && fieldType.kind !== 'hashmap' && fieldType.kind !== 'Vec') {
+    if (modelVisibility === 'pub' || property.optional) {
       fieldType = new rust.Option(fieldType.kind === 'box' ? fieldType : this.typeToWireType(fieldType));
     }
 

@@ -36,13 +36,13 @@ impl TryFrom<DefaultBytesProperty> for RequestContent<DefaultBytesProperty> {
     }
 }
 
-pub mod vec_encoded_bytes_url {
+pub mod option_vec_encoded_bytes_url {
     #![allow(clippy::type_complexity)]
     use azure_core::base64;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
 
-    pub fn deserialize<'de, D>(deserializer: D) -> Result<Vec<Vec<u8>>, D::Error>
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Vec<Vec<u8>>>, D::Error>
     where
         D: Deserializer<'de>,
     {
@@ -53,17 +53,24 @@ pub mod vec_encoded_bytes_url {
                 for v in to_deserialize {
                     decoded0.push(base64::decode_url_safe(v).map_err(serde::de::Error::custom)?);
                 }
-                Ok(decoded0)
+                Ok(Some(decoded0))
             }
-            None => Ok(<Vec<Vec<u8>>>::default()),
+            None => Ok(None),
         }
     }
 
-    pub fn serialize<S>(to_serialize: &[Vec<u8>], serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(
+        to_serialize: &Option<Vec<Vec<u8>>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        let encoded0 = to_serialize.iter().map(base64::encode_url_safe).collect();
-        <Vec<String>>::serialize(&encoded0, serializer)
+        if let Some(to_serialize) = to_serialize {
+            let encoded0 = to_serialize.iter().map(base64::encode_url_safe).collect();
+            <Option<Vec<String>>>::serialize(&Some(encoded0), serializer)
+        } else {
+            serializer.serialize_none()
+        }
     }
 }

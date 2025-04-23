@@ -33,8 +33,8 @@ pub struct ConfidentialResource {
     pub system_data: Option<SystemData>,
 
     /// Resource tags.
-    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
-    pub tags: HashMap<String, String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tags: Option<HashMap<String, String>>,
 
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
@@ -80,8 +80,8 @@ pub struct ManagedIdentityTrackedResource {
     pub system_data: Option<SystemData>,
 
     /// Resource tags.
-    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
-    pub tags: HashMap<String, String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tags: Option<HashMap<String, String>>,
 
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
     #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
@@ -113,11 +113,10 @@ pub struct ManagedServiceIdentity {
 
     /// The identities assigned to this resource by the user.
     #[serde(
-        default,
         rename = "userAssignedIdentities",
-        skip_serializing_if = "HashMap::is_empty"
+        skip_serializing_if = "Option::is_none"
     )]
-    pub user_assigned_identities: HashMap<String, UserAssignedIdentity>,
+    pub user_assigned_identities: Option<HashMap<String, UserAssignedIdentity>>,
 }
 
 /// Metadata pertaining to creation and last modification of the resource.

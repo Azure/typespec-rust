@@ -13,13 +13,13 @@ async fn get() {
         .await
         .unwrap();
     let value: ModelWithEmptyArray = resp.into_body().await.unwrap();
-    assert!(value.items.is_empty());
+    assert!(value.items.is_none());
 }
 
 #[tokio::test]
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let input = ModelWithEmptyArray { items: Vec::new() };
+    let input = ModelWithEmptyArray { items: Some(Vec::new()) };
     client
         .get_xml_model_with_empty_array_value_client()
         .put(input.try_into().unwrap(), None)

@@ -21,12 +21,12 @@ async fn create_resource() {
     let resource = Resource {
         name: Some(String::from("Madge")),
         description: Some(String::from("desc")),
-        map: HashMap::from([(String::from("key"), inner_model.clone())]),
-        array: vec![inner_model.clone()],
+        map: Some(HashMap::from([(String::from("key"), inner_model.clone())])),
+        array: Some(vec![inner_model.clone()]),
         int_value: Some(1),
         float_value: Some(1.25),
         inner_model: Some(inner_model),
-        int_array: vec![1, 2, 3],
+        int_array: Some(vec![1, 2, 3]),
     };
 
     let resp = client
@@ -38,11 +38,12 @@ async fn create_resource() {
     assert_eq!(value.name, Some(String::from("Madge")));
     assert_eq!(value.description, Some(String::from("desc")));
 
-    let map_val = value.map.get("key").unwrap();
+    let value_map = value.map.unwrap();
+    let map_val = value_map.get("key").unwrap();
     assert_eq!(map_val.name, Some(String::from("InnerMadge")));
     assert_eq!(map_val.description, Some(String::from("innerDesc")));
 
-    let array_val = value.array;
+    let array_val = value.array.unwrap();
     assert_eq!(array_val.len(), 1);
     assert_eq!(array_val[0].name, Some(String::from("InnerMadge")));
     assert_eq!(array_val[0].description, Some(String::from("innerDesc")));
@@ -58,7 +59,7 @@ async fn create_resource() {
     );
 
     let int_array_val = value.int_array;
-    assert_eq!(int_array_val, vec![1, 2, 3]);
+    assert_eq!(int_array_val, Some(vec![1, 2, 3]));
 }
 
 #[tokio::test]

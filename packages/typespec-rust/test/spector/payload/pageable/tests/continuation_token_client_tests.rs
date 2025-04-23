@@ -37,20 +37,22 @@ async fn list_header_response_body() {
         let page: RequestHeaderResponseBodyResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(page.next_token.is_some());
-                assert_eq!(page.pets[0].id, Some("1".to_string()));
-                assert_eq!(page.pets[0].name, Some("dog".to_string()));
-                assert_eq!(page.pets[1].id, Some("2".to_string()));
-                assert_eq!(page.pets[1].name, Some("cat".to_string()));
+                assert_eq!(page_pets[0].id, Some("1".to_string()));
+                assert_eq!(page_pets[0].name, Some("dog".to_string()));
+                assert_eq!(page_pets[1].id, Some("2".to_string()));
+                assert_eq!(page_pets[1].name, Some("cat".to_string()));
             }
             2 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(page.next_token.is_none());
-                assert_eq!(page.pets[0].id, Some("3".to_string()));
-                assert_eq!(page.pets[0].name, Some("bird".to_string()));
-                assert_eq!(page.pets[1].id, Some("4".to_string()));
-                assert_eq!(page.pets[1].name, Some("fish".to_string()));
+                assert_eq!(page_pets[0].id, Some("3".to_string()));
+                assert_eq!(page_pets[0].name, Some("bird".to_string()));
+                assert_eq!(page_pets[1].id, Some("4".to_string()));
+                assert_eq!(page_pets[1].name, Some("fish".to_string()));
             }
             _ => {
                 panic!("unexpected page number");
@@ -78,12 +80,13 @@ async fn list_header_response_body() {
         let page: RequestHeaderResponseBodyResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(page.next_token.is_none());
-                assert_eq!(page.pets[0].id, Some("3".to_string()));
-                assert_eq!(page.pets[0].name, Some("bird".to_string()));
-                assert_eq!(page.pets[1].id, Some("4".to_string()));
-                assert_eq!(page.pets[1].name, Some("fish".to_string()));
+                assert_eq!(page_pets[0].id, Some("3".to_string()));
+                assert_eq!(page_pets[0].name, Some("bird".to_string()));
+                assert_eq!(page_pets[1].id, Some("4".to_string()));
+                assert_eq!(page_pets[1].name, Some("fish".to_string()));
             }
             _ => {
                 panic!("unexpected page number");
@@ -114,20 +117,22 @@ async fn list_header_response_header() {
         let page: RequestHeaderResponseHeaderResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(next_token.is_some());
-                assert_eq!(page.pets[0].id, Some("1".to_string()));
-                assert_eq!(page.pets[0].name, Some("dog".to_string()));
-                assert_eq!(page.pets[1].id, Some("2".to_string()));
-                assert_eq!(page.pets[1].name, Some("cat".to_string()));
+                assert_eq!(page_pets[0].id, Some("1".to_string()));
+                assert_eq!(page_pets[0].name, Some("dog".to_string()));
+                assert_eq!(page_pets[1].id, Some("2".to_string()));
+                assert_eq!(page_pets[1].name, Some("cat".to_string()));
             }
             2 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(next_token.is_none());
-                assert_eq!(page.pets[0].id, Some("3".to_string()));
-                assert_eq!(page.pets[0].name, Some("bird".to_string()));
-                assert_eq!(page.pets[1].id, Some("4".to_string()));
-                assert_eq!(page.pets[1].name, Some("fish".to_string()));
+                assert_eq!(page_pets[0].id, Some("3".to_string()));
+                assert_eq!(page_pets[0].name, Some("bird".to_string()));
+                assert_eq!(page_pets[1].id, Some("4".to_string()));
+                assert_eq!(page_pets[1].name, Some("fish".to_string()));
             }
             _ => {
                 panic!("unexpected page number");
@@ -156,12 +161,13 @@ async fn list_header_response_header() {
         let page: RequestHeaderResponseHeaderResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(next_token.is_none());
-                assert_eq!(page.pets[0].id, Some("3".to_string()));
-                assert_eq!(page.pets[0].name, Some("bird".to_string()));
-                assert_eq!(page.pets[1].id, Some("4".to_string()));
-                assert_eq!(page.pets[1].name, Some("fish".to_string()));
+                assert_eq!(page_pets[0].id, Some("3".to_string()));
+                assert_eq!(page_pets[0].name, Some("bird".to_string()));
+                assert_eq!(page_pets[1].id, Some("4".to_string()));
+                assert_eq!(page_pets[1].name, Some("fish".to_string()));
             }
             _ => {
                 panic!("unexpected page number");
@@ -191,20 +197,22 @@ async fn list_query_response_body() {
         let page: RequestQueryResponseBodyResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(page.next_token.is_some());
-                assert_eq!(page.pets[0].id, Some("1".to_string()));
-                assert_eq!(page.pets[0].name, Some("dog".to_string()));
-                assert_eq!(page.pets[1].id, Some("2".to_string()));
-                assert_eq!(page.pets[1].name, Some("cat".to_string()));
+                assert_eq!(page_pets[0].id, Some("1".to_string()));
+                assert_eq!(page_pets[0].name, Some("dog".to_string()));
+                assert_eq!(page_pets[1].id, Some("2".to_string()));
+                assert_eq!(page_pets[1].name, Some("cat".to_string()));
             }
             2 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(page.next_token.is_none());
-                assert_eq!(page.pets[0].id, Some("3".to_string()));
-                assert_eq!(page.pets[0].name, Some("bird".to_string()));
-                assert_eq!(page.pets[1].id, Some("4".to_string()));
-                assert_eq!(page.pets[1].name, Some("fish".to_string()));
+                assert_eq!(page_pets[0].id, Some("3".to_string()));
+                assert_eq!(page_pets[0].name, Some("bird".to_string()));
+                assert_eq!(page_pets[1].id, Some("4".to_string()));
+                assert_eq!(page_pets[1].name, Some("fish".to_string()));
             }
             _ => {
                 panic!("unexpected page number");
@@ -232,12 +240,13 @@ async fn list_query_response_body() {
         let page: RequestQueryResponseBodyResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(page.next_token.is_none());
-                assert_eq!(page.pets[0].id, Some("3".to_string()));
-                assert_eq!(page.pets[0].name, Some("bird".to_string()));
-                assert_eq!(page.pets[1].id, Some("4".to_string()));
-                assert_eq!(page.pets[1].name, Some("fish".to_string()));
+                assert_eq!(page_pets[0].id, Some("3".to_string()));
+                assert_eq!(page_pets[0].name, Some("bird".to_string()));
+                assert_eq!(page_pets[1].id, Some("4".to_string()));
+                assert_eq!(page_pets[1].name, Some("fish".to_string()));
             }
             _ => {
                 panic!("unexpected page number");
@@ -268,20 +277,22 @@ async fn list_query_response_header() {
         let page: RequestQueryResponseHeaderResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(next_token.is_some());
-                assert_eq!(page.pets[0].id, Some("1".to_string()));
-                assert_eq!(page.pets[0].name, Some("dog".to_string()));
-                assert_eq!(page.pets[1].id, Some("2".to_string()));
-                assert_eq!(page.pets[1].name, Some("cat".to_string()));
+                assert_eq!(page_pets[0].id, Some("1".to_string()));
+                assert_eq!(page_pets[0].name, Some("dog".to_string()));
+                assert_eq!(page_pets[1].id, Some("2".to_string()));
+                assert_eq!(page_pets[1].name, Some("cat".to_string()));
             }
             2 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(next_token.is_none());
-                assert_eq!(page.pets[0].id, Some("3".to_string()));
-                assert_eq!(page.pets[0].name, Some("bird".to_string()));
-                assert_eq!(page.pets[1].id, Some("4".to_string()));
-                assert_eq!(page.pets[1].name, Some("fish".to_string()));
+                assert_eq!(page_pets[0].id, Some("3".to_string()));
+                assert_eq!(page_pets[0].name, Some("bird".to_string()));
+                assert_eq!(page_pets[1].id, Some("4".to_string()));
+                assert_eq!(page_pets[1].name, Some("fish".to_string()));
             }
             _ => {
                 panic!("unexpected page number");
@@ -310,12 +321,13 @@ async fn list_query_response_header() {
         let page: RequestQueryResponseHeaderResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(next_token.is_none());
-                assert_eq!(page.pets[0].id, Some("3".to_string()));
-                assert_eq!(page.pets[0].name, Some("bird".to_string()));
-                assert_eq!(page.pets[1].id, Some("4".to_string()));
-                assert_eq!(page.pets[1].name, Some("fish".to_string()));
+                assert_eq!(page_pets[0].id, Some("3".to_string()));
+                assert_eq!(page_pets[0].name, Some("bird".to_string()));
+                assert_eq!(page_pets[1].id, Some("4".to_string()));
+                assert_eq!(page_pets[1].name, Some("fish".to_string()));
             }
             _ => {
                 panic!("unexpected page number");

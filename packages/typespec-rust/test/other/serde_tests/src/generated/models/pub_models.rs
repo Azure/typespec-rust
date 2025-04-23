@@ -15,34 +15,34 @@ pub struct BytesMixed {
     #[serde(
         default,
         rename = "mapVecBytes",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_vec_encoded_bytes_std"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_vec_encoded_bytes_std"
     )]
-    pub map_vec_bytes: HashMap<String, Vec<Vec<u8>>>,
+    pub map_vec_bytes: Option<HashMap<String, Vec<Vec<u8>>>>,
 
     #[serde(
         default,
         rename = "mapVecUrlBytes",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_vec_encoded_bytes_url"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_vec_encoded_bytes_url"
     )]
-    pub map_vec_url_bytes: HashMap<String, Vec<Vec<u8>>>,
+    pub map_vec_url_bytes: Option<HashMap<String, Vec<Vec<u8>>>>,
 
     #[serde(
         default,
         rename = "vecMapBytes",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_hashmap_vec_encoded_bytes_std"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_hashmap_vec_encoded_bytes_std"
     )]
-    pub vec_map_bytes: Vec<HashMap<String, Vec<Vec<u8>>>>,
+    pub vec_map_bytes: Option<Vec<HashMap<String, Vec<Vec<u8>>>>>,
 
     #[serde(
         default,
         rename = "vecMapUrlBytes",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_hashmap_vec_encoded_bytes_url"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_hashmap_vec_encoded_bytes_url"
     )]
-    pub vec_map_url_bytes: Vec<HashMap<String, Vec<Vec<u8>>>>,
+    pub vec_map_url_bytes: Option<Vec<HashMap<String, Vec<Vec<u8>>>>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
@@ -51,50 +51,50 @@ pub struct BytesRecords {
     #[serde(
         default,
         rename = "mapBytes",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_encoded_bytes_std"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_encoded_bytes_std"
     )]
-    pub map_bytes: HashMap<String, Vec<u8>>,
+    pub map_bytes: Option<HashMap<String, Vec<u8>>>,
 
     #[serde(
         default,
         rename = "mapMapBytes",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_hashmap_encoded_bytes_std"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_hashmap_encoded_bytes_std"
     )]
-    pub map_map_bytes: HashMap<String, HashMap<String, Vec<u8>>>,
+    pub map_map_bytes: Option<HashMap<String, HashMap<String, Vec<u8>>>>,
 
     #[serde(
         default,
         rename = "mapMapMapBytes",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_hashmap_hashmap_encoded_bytes_std"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_hashmap_hashmap_encoded_bytes_std"
     )]
-    pub map_map_map_bytes: HashMap<String, HashMap<String, HashMap<String, Vec<u8>>>>,
+    pub map_map_map_bytes: Option<HashMap<String, HashMap<String, HashMap<String, Vec<u8>>>>>,
 
     #[serde(
         default,
         rename = "mapMapMapUrlBytes",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_hashmap_hashmap_encoded_bytes_url"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_hashmap_hashmap_encoded_bytes_url"
     )]
-    pub map_map_map_url_bytes: HashMap<String, HashMap<String, HashMap<String, Vec<u8>>>>,
+    pub map_map_map_url_bytes: Option<HashMap<String, HashMap<String, HashMap<String, Vec<u8>>>>>,
 
     #[serde(
         default,
         rename = "mapMapUrlBytes",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_hashmap_encoded_bytes_url"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_hashmap_encoded_bytes_url"
     )]
-    pub map_map_url_bytes: HashMap<String, HashMap<String, Vec<u8>>>,
+    pub map_map_url_bytes: Option<HashMap<String, HashMap<String, Vec<u8>>>>,
 
     #[serde(
         default,
         rename = "mapUrlBytes",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_encoded_bytes_url"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_encoded_bytes_url"
     )]
-    pub map_url_bytes: HashMap<String, Vec<u8>>,
+    pub map_url_bytes: Option<HashMap<String, Vec<u8>>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
@@ -103,50 +103,50 @@ pub struct BytesVectors {
     #[serde(
         default,
         rename = "vecBytes",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_encoded_bytes_std"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_encoded_bytes_std"
     )]
-    pub vec_bytes: Vec<Vec<u8>>,
+    pub vec_bytes: Option<Vec<Vec<u8>>>,
 
     #[serde(
         default,
         rename = "vecUrlBytes",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_encoded_bytes_url"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_encoded_bytes_url"
     )]
-    pub vec_url_bytes: Vec<Vec<u8>>,
+    pub vec_url_bytes: Option<Vec<Vec<u8>>>,
 
     #[serde(
         default,
         rename = "vecVecBytes",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_vec_encoded_bytes_std"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_vec_encoded_bytes_std"
     )]
-    pub vec_vec_bytes: Vec<Vec<Vec<u8>>>,
+    pub vec_vec_bytes: Option<Vec<Vec<Vec<u8>>>>,
 
     #[serde(
         default,
         rename = "vecVecUrlBytes",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_vec_encoded_bytes_url"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_vec_encoded_bytes_url"
     )]
-    pub vec_vec_url_bytes: Vec<Vec<Vec<u8>>>,
+    pub vec_vec_url_bytes: Option<Vec<Vec<Vec<u8>>>>,
 
     #[serde(
         default,
         rename = "vecVecVecBytes",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_vec_vec_encoded_bytes_std"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_vec_vec_encoded_bytes_std"
     )]
-    pub vec_vec_vec_bytes: Vec<Vec<Vec<Vec<u8>>>>,
+    pub vec_vec_vec_bytes: Option<Vec<Vec<Vec<Vec<u8>>>>>,
 
     #[serde(
         default,
         rename = "vecVecVecUrlBytes",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_vec_vec_encoded_bytes_url"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_vec_vec_encoded_bytes_url"
     )]
-    pub vec_vec_vec_url_bytes: Vec<Vec<Vec<Vec<u8>>>>,
+    pub vec_vec_vec_url_bytes: Option<Vec<Vec<Vec<Vec<u8>>>>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
@@ -162,34 +162,34 @@ pub struct OffsetDateTimeMixed {
     #[serde(
         default,
         rename = "mapVecRFC7231",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_vec_offset_date_time_rfc7231"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_vec_offset_date_time_rfc7231"
     )]
-    pub map_vec_rfc7231: HashMap<String, Vec<OffsetDateTime>>,
+    pub map_vec_rfc7231: Option<HashMap<String, Vec<OffsetDateTime>>>,
 
     #[serde(
         default,
         rename = "mapVecUnix",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_vec_offset_date_time_unix_time"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_vec_offset_date_time_unix_time"
     )]
-    pub map_vec_unix: HashMap<String, Vec<OffsetDateTime>>,
+    pub map_vec_unix: Option<HashMap<String, Vec<OffsetDateTime>>>,
 
     #[serde(
         default,
         rename = "vecMapRFC3339",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_hashmap_vec_offset_date_time_rfc3339"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_hashmap_vec_offset_date_time_rfc3339"
     )]
-    pub vec_map_rfc3339: Vec<HashMap<String, Vec<OffsetDateTime>>>,
+    pub vec_map_rfc3339: Option<Vec<HashMap<String, Vec<OffsetDateTime>>>>,
 
     #[serde(
         default,
         rename = "vecMapUnix",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_hashmap_vec_offset_date_time_unix_time"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_hashmap_vec_offset_date_time_unix_time"
     )]
-    pub vec_map_unix: Vec<HashMap<String, Vec<OffsetDateTime>>>,
+    pub vec_map_unix: Option<Vec<HashMap<String, Vec<OffsetDateTime>>>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
@@ -198,74 +198,76 @@ pub struct OffsetDateTimeRecords {
     #[serde(
         default,
         rename = "mapMapMapRFC3339",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_hashmap_hashmap_offset_date_time_rfc3339"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_hashmap_hashmap_offset_date_time_rfc3339"
     )]
-    pub map_map_map_rfc3339: HashMap<String, HashMap<String, HashMap<String, OffsetDateTime>>>,
+    pub map_map_map_rfc3339:
+        Option<HashMap<String, HashMap<String, HashMap<String, OffsetDateTime>>>>,
 
     #[serde(
         default,
         rename = "mapMapMapRFC7231",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_hashmap_hashmap_offset_date_time_rfc7231"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_hashmap_hashmap_offset_date_time_rfc7231"
     )]
-    pub map_map_map_rfc7231: HashMap<String, HashMap<String, HashMap<String, OffsetDateTime>>>,
+    pub map_map_map_rfc7231:
+        Option<HashMap<String, HashMap<String, HashMap<String, OffsetDateTime>>>>,
 
     #[serde(
         default,
         rename = "mapMapMapUnix",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_hashmap_hashmap_offset_date_time_unix_time"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_hashmap_hashmap_offset_date_time_unix_time"
     )]
-    pub map_map_map_unix: HashMap<String, HashMap<String, HashMap<String, OffsetDateTime>>>,
+    pub map_map_map_unix: Option<HashMap<String, HashMap<String, HashMap<String, OffsetDateTime>>>>,
 
     #[serde(
         default,
         rename = "mapMapRFC3339",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_hashmap_offset_date_time_rfc3339"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_hashmap_offset_date_time_rfc3339"
     )]
-    pub map_map_rfc3339: HashMap<String, HashMap<String, OffsetDateTime>>,
+    pub map_map_rfc3339: Option<HashMap<String, HashMap<String, OffsetDateTime>>>,
 
     #[serde(
         default,
         rename = "mapMapRFC7231",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_hashmap_offset_date_time_rfc7231"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_hashmap_offset_date_time_rfc7231"
     )]
-    pub map_map_rfc7231: HashMap<String, HashMap<String, OffsetDateTime>>,
+    pub map_map_rfc7231: Option<HashMap<String, HashMap<String, OffsetDateTime>>>,
 
     #[serde(
         default,
         rename = "mapMapUnix",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_hashmap_offset_date_time_unix_time"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_hashmap_offset_date_time_unix_time"
     )]
-    pub map_map_unix: HashMap<String, HashMap<String, OffsetDateTime>>,
+    pub map_map_unix: Option<HashMap<String, HashMap<String, OffsetDateTime>>>,
 
     #[serde(
         default,
         rename = "mapRFC3339",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_offset_date_time_rfc3339"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_offset_date_time_rfc3339"
     )]
-    pub map_rfc3339: HashMap<String, OffsetDateTime>,
+    pub map_rfc3339: Option<HashMap<String, OffsetDateTime>>,
 
     #[serde(
         default,
         rename = "mapRFC7231",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_offset_date_time_rfc7231"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_offset_date_time_rfc7231"
     )]
-    pub map_rfc7231: HashMap<String, OffsetDateTime>,
+    pub map_rfc7231: Option<HashMap<String, OffsetDateTime>>,
 
     #[serde(
         default,
         rename = "mapUnix",
-        skip_serializing_if = "HashMap::is_empty",
-        with = "models_serde::hashmap_offset_date_time_unix_time"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_hashmap_offset_date_time_unix_time"
     )]
-    pub map_unix: HashMap<String, OffsetDateTime>,
+    pub map_unix: Option<HashMap<String, OffsetDateTime>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
@@ -274,74 +276,74 @@ pub struct OffsetDateTimeVectors {
     #[serde(
         default,
         rename = "vecRFC3339",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_offset_date_time_rfc3339"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_offset_date_time_rfc3339"
     )]
-    pub vec_rfc3339: Vec<OffsetDateTime>,
+    pub vec_rfc3339: Option<Vec<OffsetDateTime>>,
 
     #[serde(
         default,
         rename = "vecRFC7231",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_offset_date_time_rfc7231"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_offset_date_time_rfc7231"
     )]
-    pub vec_rfc7231: Vec<OffsetDateTime>,
+    pub vec_rfc7231: Option<Vec<OffsetDateTime>>,
 
     #[serde(
         default,
         rename = "vecUnix",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_offset_date_time_unix_time"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_offset_date_time_unix_time"
     )]
-    pub vec_unix: Vec<OffsetDateTime>,
+    pub vec_unix: Option<Vec<OffsetDateTime>>,
 
     #[serde(
         default,
         rename = "vecVecRFC3339",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_vec_offset_date_time_rfc3339"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_vec_offset_date_time_rfc3339"
     )]
-    pub vec_vec_rfc3339: Vec<Vec<OffsetDateTime>>,
+    pub vec_vec_rfc3339: Option<Vec<Vec<OffsetDateTime>>>,
 
     #[serde(
         default,
         rename = "vecVecRFC7231",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_vec_offset_date_time_rfc7231"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_vec_offset_date_time_rfc7231"
     )]
-    pub vec_vec_rfc7231: Vec<Vec<OffsetDateTime>>,
+    pub vec_vec_rfc7231: Option<Vec<Vec<OffsetDateTime>>>,
 
     #[serde(
         default,
         rename = "vecVecUnix",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_vec_offset_date_time_unix_time"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_vec_offset_date_time_unix_time"
     )]
-    pub vec_vec_unix: Vec<Vec<OffsetDateTime>>,
+    pub vec_vec_unix: Option<Vec<Vec<OffsetDateTime>>>,
 
     #[serde(
         default,
         rename = "vecVecVecRFC3339",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_vec_vec_offset_date_time_rfc3339"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_vec_vec_offset_date_time_rfc3339"
     )]
-    pub vec_vec_vec_rfc3339: Vec<Vec<Vec<OffsetDateTime>>>,
+    pub vec_vec_vec_rfc3339: Option<Vec<Vec<Vec<OffsetDateTime>>>>,
 
     #[serde(
         default,
         rename = "vecVecVecRFC7231",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_vec_vec_offset_date_time_rfc7231"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_vec_vec_offset_date_time_rfc7231"
     )]
-    pub vec_vec_vec_rfc7231: Vec<Vec<Vec<OffsetDateTime>>>,
+    pub vec_vec_vec_rfc7231: Option<Vec<Vec<Vec<OffsetDateTime>>>>,
 
     #[serde(
         default,
         rename = "vecVecVecUnix",
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_vec_vec_offset_date_time_unix_time"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_vec_vec_offset_date_time_unix_time"
     )]
-    pub vec_vec_vec_unix: Vec<Vec<Vec<OffsetDateTime>>>,
+    pub vec_vec_vec_unix: Option<Vec<Vec<Vec<OffsetDateTime>>>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]

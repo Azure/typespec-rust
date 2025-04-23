@@ -22,9 +22,10 @@ async fn list_first_item() {
         let page: PagedFirstItem = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.value.len(), 1);
+                let page_value = page.value.unwrap();
+                assert_eq!(page_value.len(), 1);
                 assert!(page.next_link.is_none());
-                assert_eq!(page.value[0].id, Some(1));
+                assert_eq!(page_value[0].id, Some(1));
             }
             _ => panic!("unexpected page number"),
         }
@@ -45,9 +46,10 @@ async fn list_second_item() {
         let page: PagedSecondItem = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.value.len(), 1);
+                let page_value = page.value.unwrap();
+                assert_eq!(page_value.len(), 1);
                 assert!(page.next_link.is_none());
-                assert_eq!(page.value[0].name, Some("Madge".to_string()));
+                assert_eq!(page_value[0].name, Some("Madge".to_string()));
             }
             _ => panic!("unexpected page number"),
         }

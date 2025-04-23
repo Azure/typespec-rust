@@ -15,9 +15,10 @@ pub struct ModelWithArrayOfModel {
     #[serde(
         default,
         deserialize_with = "ItemsSimpleModel::unwrap",
-        serialize_with = "ItemsSimpleModel::wrap"
+        serialize_with = "ItemsSimpleModel::wrap",
+        skip_serializing_if = "Option::is_none"
     )]
-    pub items: Vec<SimpleModel>,
+    pub items: Option<Vec<SimpleModel>>,
 }
 
 /// Contains fields that are XML attributes.
@@ -38,8 +39,8 @@ pub struct ModelWithAttributes {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[typespec(format = "xml")]
 pub struct ModelWithDictionary {
-    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
-    pub metadata: HashMap<String, String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<HashMap<String, String>>,
 }
 
 /// Contains an array of models that's supposed to be sent/received as an empty XML element.
@@ -49,9 +50,10 @@ pub struct ModelWithEmptyArray {
     #[serde(
         default,
         deserialize_with = "ItemsSimpleModel::unwrap",
-        serialize_with = "ItemsSimpleModel::wrap"
+        serialize_with = "ItemsSimpleModel::wrap",
+        skip_serializing_if = "Option::is_none"
     )]
-    pub items: Vec<SimpleModel>,
+    pub items: Option<Vec<SimpleModel>>,
 }
 
 /// Uses encodedName instead of Xml.Name which is functionally equivalent.
@@ -63,9 +65,10 @@ pub struct ModelWithEncodedNames {
         default,
         deserialize_with = "ColorsString::unwrap",
         rename = "PossibleColors",
-        serialize_with = "ColorsString::wrap"
+        serialize_with = "ColorsString::wrap",
+        skip_serializing_if = "Option::is_none"
     )]
-    pub colors: Vec<String>,
+    pub colors: Option<Vec<String>>,
 
     #[serde(rename = "SimpleModelData", skip_serializing_if = "Option::is_none")]
     pub model_data: Option<SimpleModel>,
@@ -86,16 +89,17 @@ pub struct ModelWithOptionalField {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[typespec(format = "xml")]
 pub struct ModelWithRenamedArrays {
-    #[serde(default, rename = "Colors", skip_serializing_if = "Vec::is_empty")]
-    pub colors: Vec<String>,
+    #[serde(rename = "Colors", skip_serializing_if = "Option::is_none")]
+    pub colors: Option<Vec<String>>,
 
     #[serde(
         default,
         deserialize_with = "CountsInt32::unwrap",
         rename = "Counts",
-        serialize_with = "CountsInt32::wrap"
+        serialize_with = "CountsInt32::wrap",
+        skip_serializing_if = "Option::is_none"
     )]
-    pub counts: Vec<i32>,
+    pub counts: Option<Vec<i32>>,
 }
 
 /// Contains fields of the same type that have different XML representation.
@@ -117,16 +121,18 @@ pub struct ModelWithSimpleArrays {
     #[serde(
         default,
         deserialize_with = "ColorsString::unwrap",
-        serialize_with = "ColorsString::wrap"
+        serialize_with = "ColorsString::wrap",
+        skip_serializing_if = "Option::is_none"
     )]
-    pub colors: Vec<String>,
+    pub colors: Option<Vec<String>>,
 
     #[serde(
         default,
         deserialize_with = "CountsInt32::unwrap",
-        serialize_with = "CountsInt32::wrap"
+        serialize_with = "CountsInt32::wrap",
+        skip_serializing_if = "Option::is_none"
     )]
-    pub counts: Vec<i32>,
+    pub counts: Option<Vec<i32>>,
 }
 
 /// Contains an attribute and text.
@@ -144,15 +150,16 @@ pub struct ModelWithText {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[typespec(format = "xml")]
 pub struct ModelWithUnwrappedArray {
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub colors: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub colors: Option<Vec<String>>,
 
     #[serde(
         default,
         deserialize_with = "CountsInt32::unwrap",
-        serialize_with = "CountsInt32::wrap"
+        serialize_with = "CountsInt32::wrap",
+        skip_serializing_if = "Option::is_none"
     )]
-    pub counts: Vec<i32>,
+    pub counts: Option<Vec<i32>>,
 }
 
 /// Contains fields of primitive types.

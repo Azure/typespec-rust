@@ -32,8 +32,8 @@ pub struct PagedFirstItem {
     pub next_link: Option<String>,
 
     /// The FirstItem items on this page
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub value: Vec<FirstItem>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<Vec<FirstItem>>,
 }
 
 /// Paged collection of SecondItem items
@@ -45,8 +45,8 @@ pub struct PagedSecondItem {
     pub next_link: Option<String>,
 
     /// The SecondItem items on this page
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub value: Vec<SecondItem>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<Vec<SecondItem>>,
 }
 
 /// Paged collection of User items
@@ -58,8 +58,8 @@ pub struct PagedUser {
     pub next_link: Option<String>,
 
     /// The User items on this page
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub value: Vec<User>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<Vec<User>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
@@ -68,8 +68,8 @@ pub struct ParameterizedNextLinkPagingResult {
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub values: Vec<User>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub values: Option<Vec<User>>,
 }
 
 /// Second item.
@@ -98,16 +98,16 @@ pub struct User {
     pub name: Option<String>,
 
     /// The user's order list
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub orders: Vec<UserOrder>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub orders: Option<Vec<UserOrder>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct UserListResults {
     /// List of items.
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub items: Vec<User>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub items: Option<Vec<User>>,
 
     /// Link to fetch more items.
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]

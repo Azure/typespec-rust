@@ -13,18 +13,18 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 #[serde(rename = "PossibleColors")]
 pub(crate) struct ColorsString {
     #[serde(default)]
-    string: Vec<String>,
+    string: Option<Vec<String>>,
 }
 
 impl ColorsString {
-    pub fn unwrap<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<String>>, D::Error>
     where
         D: Deserializer<'de>,
     {
         Ok(ColorsString::deserialize(deserializer)?.string)
     }
 
-    pub fn wrap<S>(to_serialize: &Vec<String>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn wrap<S>(to_serialize: &Option<Vec<String>>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -39,18 +39,18 @@ impl ColorsString {
 #[serde(rename = "Counts")]
 pub(crate) struct CountsInt32 {
     #[serde(default)]
-    int32: Vec<i32>,
+    int32: Option<Vec<i32>>,
 }
 
 impl CountsInt32 {
-    pub fn unwrap<'de, D>(deserializer: D) -> Result<Vec<i32>, D::Error>
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<i32>>, D::Error>
     where
         D: Deserializer<'de>,
     {
         Ok(CountsInt32::deserialize(deserializer)?.int32)
     }
 
-    pub fn wrap<S>(to_serialize: &Vec<i32>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn wrap<S>(to_serialize: &Option<Vec<i32>>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -65,18 +65,21 @@ impl CountsInt32 {
 #[serde(rename = "items")]
 pub(crate) struct ItemsSimpleModel {
     #[serde(default)]
-    SimpleModel: Vec<SimpleModel>,
+    SimpleModel: Option<Vec<SimpleModel>>,
 }
 
 impl ItemsSimpleModel {
-    pub fn unwrap<'de, D>(deserializer: D) -> Result<Vec<SimpleModel>, D::Error>
+    pub fn unwrap<'de, D>(deserializer: D) -> Result<Option<Vec<SimpleModel>>, D::Error>
     where
         D: Deserializer<'de>,
     {
         Ok(ItemsSimpleModel::deserialize(deserializer)?.SimpleModel)
     }
 
-    pub fn wrap<S>(to_serialize: &Vec<SimpleModel>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn wrap<S>(
+        to_serialize: &Option<Vec<SimpleModel>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {

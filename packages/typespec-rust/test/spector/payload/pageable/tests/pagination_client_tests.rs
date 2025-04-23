@@ -19,20 +19,22 @@ async fn list() {
         let page: LinkResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(page.next.is_some());
-                assert_eq!(page.pets[0].id, Some("1".to_string()));
-                assert_eq!(page.pets[0].name, Some("dog".to_string()));
-                assert_eq!(page.pets[1].id, Some("2".to_string()));
-                assert_eq!(page.pets[1].name, Some("cat".to_string()));
+                assert_eq!(page_pets[0].id, Some("1".to_string()));
+                assert_eq!(page_pets[0].name, Some("dog".to_string()));
+                assert_eq!(page_pets[1].id, Some("2".to_string()));
+                assert_eq!(page_pets[1].name, Some("cat".to_string()));
             }
             2 => {
-                assert_eq!(page.pets.len(), 2);
+                let page_pets = page.pets.unwrap();
+                assert_eq!(page_pets.len(), 2);
                 assert!(page.next.is_none());
-                assert_eq!(page.pets[0].id, Some("3".to_string()));
-                assert_eq!(page.pets[0].name, Some("bird".to_string()));
-                assert_eq!(page.pets[1].id, Some("4".to_string()));
-                assert_eq!(page.pets[1].name, Some("fish".to_string()));
+                assert_eq!(page_pets[0].id, Some("3".to_string()));
+                assert_eq!(page_pets[0].name, Some("bird".to_string()));
+                assert_eq!(page_pets[1].id, Some("4".to_string()));
+                assert_eq!(page_pets[1].name, Some("fish".to_string()));
             }
             _ => panic!("unexpected page number"),
         }

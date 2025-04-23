@@ -16,7 +16,7 @@ async fn get() {
         .await
         .unwrap();
     let value: ModelWithArrayOfModel = resp.into_body().await.unwrap();
-    let items = value.items;
+    let items = value.items.unwrap();
     assert_eq!(items.len(), 2);
     assert_eq!(items[0].age, Some(123));
     assert_eq!(items[0].name, Some("foo".to_string()));
@@ -39,7 +39,7 @@ async fn put() {
     };
 
     let m = ModelWithArrayOfModel {
-        items: vec![item0, item1],
+        items: Some(vec![item0, item1]),
     };
 
     client

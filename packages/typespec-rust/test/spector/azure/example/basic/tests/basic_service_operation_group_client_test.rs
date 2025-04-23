@@ -13,13 +13,13 @@ use spector_azurebasic::{
 async fn basic() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     let body = ActionRequest {
-        array_property: vec!["item".to_string()],
+        array_property: Some(vec!["item".to_string()]),
         model_property: Some(Model {
             enum_property: Some(spector_azurebasic::models::Enum::EnumValue1),
             float32_property: Some(1.5),
             int32_property: Some(1),
         }),
-        record_property: HashMap::from([("record".to_string(), "value".to_string())]),
+        record_property: Some(HashMap::from([("record".to_string(), "value".to_string())])),
         string_property: Some("text".to_string()),
     };
     let resp = client

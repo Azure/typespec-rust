@@ -22,10 +22,10 @@ pub struct Base64BytesProperty {
 pub struct Base64urlArrayBytesProperty {
     #[serde(
         default,
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_encoded_bytes_url"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_encoded_bytes_url"
     )]
-    pub value: Vec<Vec<u8>>,
+    pub value: Option<Vec<Vec<u8>>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]

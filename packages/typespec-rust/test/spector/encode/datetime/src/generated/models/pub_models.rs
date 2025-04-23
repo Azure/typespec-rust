@@ -58,10 +58,10 @@ pub struct Rfc7231DatetimeProperty {
 pub struct UnixTimestampArrayDatetimeProperty {
     #[serde(
         default,
-        skip_serializing_if = "Vec::is_empty",
-        with = "models_serde::vec_offset_date_time_unix_time"
+        skip_serializing_if = "Option::is_none",
+        with = "models_serde::option_vec_offset_date_time_unix_time"
     )]
-    pub value: Vec<OffsetDateTime>,
+    pub value: Option<Vec<OffsetDateTime>>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]

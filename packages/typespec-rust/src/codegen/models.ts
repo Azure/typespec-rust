@@ -125,15 +125,6 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
       // https://github.com/Azure/typespec-rust/issues/78
       if (field.type.kind === 'option') {
         serdeParams.add('skip_serializing_if = "Option::is_none"');
-      } else if (field.type.kind === 'hashmap') {
-        serdeParams.add('default');
-        serdeParams.add('skip_serializing_if = "HashMap::is_empty"');
-      } else if (field.type.kind === 'Vec') {
-        serdeParams.add('default');
-        // NOTE: we want to send an empty wrapper element for wrapped arrays
-        if (bodyFormat !== 'xml' || field.xmlKind === 'unwrappedList') {
-          serdeParams.add('skip_serializing_if = "Vec::is_empty"');
-        }
       }
 
       if (serdeParams.size > 0) {
@@ -460,7 +451,7 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
   const buildSerDeModName = function(type: rust.Type): string {
     let name = codegen.deconstruct(type.kind).join('_');
     let unwrapped = type;
-    while (unwrapped.kind === 'hashmap' || unwrapped.kind === 'Vec') {
+    while (unwrapped.kind === 'hashmap' || unwrapped.kind === 'option' || unwrapped.kind === 'Vec') {
       unwrapped = unwrapped.type;
       name += '_' + codegen.deconstruct(unwrapped.kind).join('_');
     }
@@ -511,10 +502,14 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
     case 'option':
       switch (type.type.kind) {
         case 'encodedBytes':
-          // TODO: this case should go away
           return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding);
         case 'offsetDateTime':
           return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, true);
+        case 'hashmap':
+        case 'Vec':
+          use.add('super', 'models_serde');
+          serdeParams.add('default');
+          serdeParams.add(`with = "models_serde::${buildSerDeModName(type)}"`);
       }
       break;
   }
@@ -566,7 +561,7 @@ function buildDeserialize(indent: helpers.indentation, type: rust.Type, use: Use
   use.addForType(type);
   let content = `${indent.get()}pub fn deserialize<'de, D>(deserializer: D) -> Result<${helpers.getTypeDeclaration(type)}, D::Error>\n`;
   content += `${indent.get()}where D: Deserializer<'de>\n${indent.get()}{\n`;
-  content += `${indent.push().get()}let to_deserialize = <Option<${getSerDeTypeDeclaration(type, 'deserialize')}>>::deserialize(deserializer)?;\n`;
+  content += `${indent.push().get()}let to_deserialize = <Option<${getSerDeTypeDeclaration(type.kind === 'option' ? type.type : type, 'deserialize')}>>::deserialize(deserializer)?;\n`;
   content += `${indent.get()}${helpers.buildMatch(indent, 'to_deserialize', [
     {
       pattern: 'Some(to_deserialize)',
@@ -574,11 +569,12 @@ function buildDeserialize(indent: helpers.indentation, type: rust.Type, use: Use
         caller: 'start',
         type: type,
         srcVar: 'to_deserialize',
+        destVar: new varStack('decoded'),
       }),
     },
     {
       pattern: 'None',
-      body: (indent) => `${indent.get()}Ok(<${getSerDeTypeDeclaration(type, 'result')}>::default())\n`,
+      body: (indent) => `${indent.get()}Ok(${type.kind === 'option' ? 'None' : `<${getSerDeTypeDeclaration(type, 'result')}>::default()`})\n`,
     }
   ])}\n`;
   content += `${indent.pop().get()}}\n`;
@@ -612,9 +608,64 @@ function buildSerialize(indent: helpers.indentation, type: rust.Type, use: Use):
     caller: 'start',
     type: type,
     srcVar: 'to_serialize',
+    destVar: new varStack('encoded'),
   });
   content += `${indent.pop().get()}}\n`;
   return content;
+}
+
+/** a stack for variable names */
+class varStack {
+  private readonly prefix: string;
+  private suffix: number;
+
+  constructor(prefix: string) {
+    this.prefix = prefix;
+    this.suffix = 0;
+  }
+
+  /**
+   * returns the var name at the top of the stack
+   * 
+   * @returns the var name
+   */
+  get(): string {
+    return `${this.prefix}${this.suffix}`;
+  }
+
+  /**
+   * returns the previous var name on the stack.
+   * if push() has not been called, an error is thrown.
+   * 
+   * @returns the previous var name
+   */
+  prev(): string {
+    if (this.suffix === 0) {
+      throw new CodegenError('InternalError', 'stack underflow');
+    }
+    return `${this.prefix}${this.suffix - 1}`;
+  }
+
+  /**
+   * adds the next var to the top of the stack
+   * 
+   * @returns this with updated stack state
+   */
+  push(): varStack {
+    ++this.suffix;
+    return this;
+  }
+
+  /**
+   * removes the var at the top of the stack.
+   * if push() has not been called, an error is thrown.
+   */
+  pop(): void {
+    if (this.suffix === 0) {
+      throw new CodegenError('InternalError', 'stack underflow');
+    }
+    --this.suffix;
+  }
 }
 
 /** stateCtx contains the current context of the state machine */
@@ -623,20 +674,20 @@ interface stateCtx {
    * informs the state machine who called us
    *   start - indicates the state machine is being started
    * hashmap - the caller is in process of processing a HashMap<T, U>
+   *  option - the caller is in process of processing a Option<T>
    *     vec - the caller is in process of processing a Vec<T>
    */
-  caller: 'start' | 'hashmap' | 'vec';
+  caller: 'start' | 'hashmap' | 'option' | 'vec';
 
   /** the type currently being processed */
   type: rust.Type;
 
   /** the var name of the content currently being processed */
   srcVar: string
-}
 
-// used by recursiveBuildDeserializeBody and recursiveBuildSerializeBody
-// to determine recursion depth. used to uniquely name local variables.
-let depth = 0;
+  /** the stack of destination var names */
+  destVar: varStack;
+}
 
 /**
  * recursive state machine to construct the body of the deserialize function.
@@ -647,20 +698,6 @@ let depth = 0;
  * @returns the contents of the Some(to_deserialize) match arm
  */
 function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ctx: stateCtx): string {
-  switch (ctx.caller) {
-    case 'start':
-      depth = 0;
-      break;
-    default:
-      depth += 1;
-      break;
-  }
-
-  // the name of the destination var to hold the
-  // current decoded state. the name includes the
-  // recursion depth so each var name is unique.
-  const destVar = `decoded${depth}`;
-
   /**
    * adds the var in val to the collection, or does nothing
    * depending on the value of caller.
@@ -671,9 +708,9 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
   const insertOrPush = function(val: string, valAsDefault: boolean): string {
     switch (ctx.caller) {
       case 'hashmap':
-        return `${indent.get()}decoded${depth - 1}.insert(kv.0, ${val});\n`;
+        return `${indent.get()}${ctx.destVar.prev()}.insert(kv.0, ${val});\n`;
       case 'vec':
-        return `${indent.get()}decoded${depth - 1}.push(${val});\n`;
+        return `${indent.get()}${ctx.destVar.prev()}.push(${val});\n`;
       default:
         return valAsDefault ? val : '';
     }
@@ -690,13 +727,16 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
       break;
     }
     case 'hashmap': {
+      const destVar = ctx.destVar.get();
       content = `${indent.get()}let mut ${destVar} = <${getSerDeTypeDeclaration(ctx.type, 'result')}>::new();\n`;
       content += `${indent.get()}for kv in ${ctx.srcVar} {\n`;
       content += recursiveBuildDeserializeBody(indent.push(), use, {
         caller: 'hashmap',
         type: ctx.type.type,
         srcVar: 'kv.1',
+        destVar: ctx.destVar.push(),
       });
+      ctx.destVar.pop();
       content += `${indent.pop().get()}}\n`; // end for
       content += insertOrPush(destVar, false);
       break;
@@ -711,14 +751,25 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
       content = insertOrPush(content, true);
       break;
     }
+    case 'option':
+      content += recursiveBuildDeserializeBody(indent, use, {
+        caller: 'option',
+        type: ctx.type.type,
+        srcVar: ctx.srcVar,
+        destVar: ctx.destVar,
+      });
+      break;
     case 'Vec': {
+      const destVar = ctx.destVar.get();
       content = `${indent.get()}let mut ${destVar} = <${getSerDeTypeDeclaration(ctx.type, 'result')}>::new();\n`;
       content += `${indent.get()}for v in ${ctx.srcVar} {\n`;
       content += recursiveBuildDeserializeBody(indent.push(), use, {
         caller: 'vec',
         type: ctx.type.type,
         srcVar: 'v',
+        destVar: ctx.destVar.push(),
       });
+      ctx.destVar.pop();
       content += `${indent.pop().get()}}\n`; // end for
       content += insertOrPush(destVar, false);
       break;
@@ -727,10 +778,9 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
       throw new CodegenError('InternalError', `unexpected kind ${ctx.type.kind}`);
   }
 
-  if (depth > 0) {
-    depth -= 1;
-  } else {
-    content += `${indent.get()}Ok(${destVar})\n`;
+  if (ctx.caller === 'start') {
+    const destVar = ctx.destVar.get();
+    content += `${indent.get()}Ok(${ctx.type.kind === 'option' ? `Some(${destVar})` : destVar})\n`;
   }
 
   return content;
@@ -745,23 +795,9 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
  * @returns the contents of the serialize function
  */
 function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx: stateCtx): string {
-  switch (ctx.caller) {
-    case 'start':
-      depth = 0;
-      break;
-    default:
-      depth += 1;
-      break;
-  }
-
-  // the name of the destination var to hold the
-  // current encoded state. the name includes the
-  // recursion depth so each var name is unique.
-  const destVar = `encoded${depth}`;
-
   /** inserts the var in val into the current HashMap<T, U> */
   const hashMapInsert = function(val: string): string {
-    return `${indent.get()}encoded${depth - 1}.insert(kv.0, ${val});\n`
+    return `${indent.get()}${ctx.destVar.prev()}.insert(kv.0, ${val});\n`
   };
 
   let content = '';
@@ -780,13 +816,16 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
       break;
     }
     case 'hashmap': {
+      const destVar = ctx.destVar.get();
       let enumerateMap = `${indent.get()}let mut ${destVar} = <${getSerDeTypeDeclaration(ctx.type, 'serialize')}>::new();\n`;
       enumerateMap += `${indent.get()}for kv in ${ctx.srcVar} {\n`;
       enumerateMap += recursiveBuildSerializeBody(indent.push(), use, {
         caller: 'hashmap',
         type: ctx.type.type,
         srcVar: 'kv.1',
+        destVar: ctx.destVar.push(),
       });
+      ctx.destVar.pop();
       enumerateMap += `${indent.pop().get()}}\n`; // end for
 
       switch (ctx.caller) {
@@ -795,12 +834,13 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
           content += `${hashMapInsert(destVar)}`;
           break;
         case 'start':
+        case 'option':
           content = enumerateMap;
           break;
         case 'vec':
           content = `|${ctx.srcVar}|{\n`;
           content += enumerateMap;
-          content += `${indent.get()}encoded${depth}}`;
+          content += `${indent.get()}${destVar}}`;
           break;
       }
       break;
@@ -823,13 +863,31 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
       }
       break;
     }
+    case 'option': {
+      content = indent.get() + helpers.buildIfBlock(indent, {
+        condition: `let Some(${ctx.srcVar}) = ${ctx.srcVar}`,
+        body: (indent) => {
+          let body = recursiveBuildSerializeBody(indent, use, {
+            caller: 'option',
+            type: (<rust.Option>ctx.type).type,
+            srcVar: ctx.srcVar,
+            destVar: ctx.destVar,
+          });
+          body += `${indent.get()}<${getSerDeTypeDeclaration(ctx.type, 'serialize')}>::serialize(&Some(${ctx.destVar.get()}), serializer)\n`;
+          return body;
+        }
+      });
+      content += ` else {\n${indent.push().get()}serializer.serialize_none()\n${indent.pop().get()}}\n`;
+      break;
+    }
     case 'Vec': {
       const convertVec = `.iter().map(${recursiveBuildSerializeBody(indent.push(), use, {
         caller: 'vec',
         type: ctx.type.type,
         srcVar: 'v',
+        destVar: ctx.destVar.push(),
       })}).collect()`;
-
+      ctx.destVar.pop();
       indent.pop();
 
       switch (ctx.caller) {
@@ -837,7 +895,8 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
           content = `${hashMapInsert(`${ctx.srcVar}${convertVec}`)}`;
           break;
         case 'start':
-          content = `${indent.get()}let ${destVar} = ${ctx.srcVar}${convertVec};\n`;
+        case 'option':
+          content = `${indent.get()}let ${ctx.destVar.get()} = ${ctx.srcVar}${convertVec};\n`;
           break;
         case 'vec':
           content = `|${ctx.srcVar}|${ctx.srcVar}${convertVec}`;
@@ -849,10 +908,9 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
       throw new CodegenError('InternalError', `unexpected kind ${ctx.type.kind}`);
   }
 
-  if (depth > 0) {
-    depth -= 1;
-  } else {
-    content += `${indent.get()}<${getSerDeTypeDeclaration(ctx.type, 'serialize')}>::serialize(&${destVar}, serializer)\n`;
+  if (ctx.caller === 'start' && ctx.type.kind !== 'option') {
+    // for the Option<T> case, this was emitted within the "if let Some()" body earlier
+    content += `${indent.get()}<${getSerDeTypeDeclaration(ctx.type, 'serialize')}>::serialize(&${ctx.destVar.get()}, serializer)\n`;
   }
 
   return content;
@@ -881,6 +939,8 @@ function getSerDeTypeDeclaration(type: rust.Type, usage: 'serialize' | 'deserial
       return `${type.name}<${usage === 'serialize' ? '&' : ''}String, ${getSerDeTypeDeclaration(type.type, usage)}>`;
     case 'Vec':
       return `${type.kind}<${getSerDeTypeDeclaration(type.type, usage)}>`;
+    case 'option':
+      return `Option<${getSerDeTypeDeclaration(type.type, usage)}>`;
     default:
       throw new CodegenError('InternalError', `unexpected kind ${type.kind}`);
   }
