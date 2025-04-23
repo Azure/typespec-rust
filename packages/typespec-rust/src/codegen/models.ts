@@ -487,30 +487,27 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
     serdeParams.add(`with = "azure_core::date::${encoding}${optional ? '::option' : ''}"`);
   };
 
+  // the first two cases are for spread params where the internal model's field isn't Option<T>
   switch (type.kind) {
     case 'encodedBytes':
       return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding);
     case 'offsetDateTime':
-      // this is for spread params where the internal model's field isn't Option<T>
       return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, false);
-    case 'hashmap':
-    case 'Vec':
+    default:
+      if (type.kind === 'option') {
+        switch (type.type.kind) {
+          case 'encodedBytes':
+            return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding);
+          case 'offsetDateTime':
+            return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, true);
+        }
+      }
+      // if we get here, it means we have one of the following cases
+      //  - HashMap/Vec of encoded thing (spread params)
+      //  - Option of HashMap/Vec of encoded thing
       use.add('super', 'models_serde');
       serdeParams.add('default');
       serdeParams.add(`with = "models_serde::${buildSerDeModName(type)}"`);
-      break;
-    case 'option':
-      switch (type.type.kind) {
-        case 'encodedBytes':
-          return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding);
-        case 'offsetDateTime':
-          return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, true);
-        case 'hashmap':
-        case 'Vec':
-          use.add('super', 'models_serde');
-          serdeParams.add('default');
-          serdeParams.add(`with = "models_serde::${buildSerDeModName(type)}"`);
-      }
       break;
   }
 }
