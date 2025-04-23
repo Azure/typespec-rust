@@ -15,7 +15,11 @@ async fn get() {
     let value: ModelWithUnwrappedArray = resp.into_body().await.unwrap();
     assert_eq!(
         value.colors,
-        Some(vec!["red".to_string(), "green".to_string(), "blue".to_string()])
+        Some(vec![
+            "red".to_string(),
+            "green".to_string(),
+            "blue".to_string()
+        ])
     );
     assert_eq!(value.counts, Some(vec![1, 2]));
 }
@@ -24,7 +28,11 @@ async fn get() {
 async fn put() {
     let client = XmlClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = ModelWithUnwrappedArray {
-        colors: Some(vec!["red".to_string(), "green".to_string(), "blue".to_string()]),
+        colors: Some(vec![
+            "red".to_string(),
+            "green".to_string(),
+            "blue".to_string(),
+        ]),
         counts: Some(vec![1, 2]),
     };
     client

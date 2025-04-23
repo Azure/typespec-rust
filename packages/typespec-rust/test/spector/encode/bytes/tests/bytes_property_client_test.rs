@@ -44,7 +44,10 @@ async fn base64_url() {
 async fn base64_url_array() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     let input = Base64urlArrayBytesProperty {
-        value: Some(vec!["test".as_bytes().to_owned(), "test".as_bytes().to_owned()]),
+        value: Some(vec![
+            "test".as_bytes().to_owned(),
+            "test".as_bytes().to_owned(),
+        ]),
     };
     let resp = client
         .get_bytes_property_client()
@@ -54,7 +57,10 @@ async fn base64_url_array() {
     let output: Base64urlArrayBytesProperty = resp.into_body().await.unwrap();
     assert_eq!(
         output.value,
-        Some(vec!["test".as_bytes().to_owned(), "test".as_bytes().to_owned()])
+        Some(vec![
+            "test".as_bytes().to_owned(),
+            "test".as_bytes().to_owned()
+        ])
     );
 }
 
