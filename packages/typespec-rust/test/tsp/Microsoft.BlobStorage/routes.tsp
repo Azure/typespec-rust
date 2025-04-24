@@ -1,12 +1,8 @@
-import "@typespec/rest";
-import "@typespec/versioning";
 import "@azure-tools/typespec-azure-core";
 import "@typespec/http";
 import "./models.tsp";
 
 using TypeSpec.Http;
-using TypeSpec.Rest;
-using TypeSpec.Versioning;
 using Azure.Core;
 using Azure.ClientGenerator.Core;
 
@@ -41,7 +37,6 @@ namespace Storage.Blob {
     #suppress "@typespec/http/content-type-ignored" "Template for existing API"
     @header("Content-Type")
     contentType: ResponseMediaType;
-
   }) | TError;
 
   /** Sets properties for a storage account's Blob service endpoint, including properties for Storage Analytics and CORS (Cross-Origin Resource Sharing) rules */
@@ -259,11 +254,7 @@ namespace Storage.Blob {
         ...MetadataHeaders;
         ...IfModifiedSinceParameter;
       },
-      {
-        ...EtagResponseHeader;
-        ...LastModifiedResponseHeader;
-        ...DateResponseHeader;
-      }
+      {}
     >;
 
     /** gets the permissions for the specified container. The permissions indicate whether container data may be accessed publicly. */
@@ -611,6 +602,7 @@ namespace Storage.Blob {
         ...EncryptionAlgorithmParameter,
         ...IfTagsParameter,
         ...ConditionalRequestHeaders,
+        ...StructuredBodyParameter,
       ): (BodyParameter & {
         /** The media type of the body of the response. */
         @header("Content-Type")
@@ -876,12 +868,7 @@ namespace Storage.Blob {
           ...ConditionalRequestHeaders;
           ...IfTagsParameter;
         },
-        {
-          ...EtagResponseHeader;
-          ...LastModifiedResponseHeader;
-          ...BlobSequenceNumberResponseHeader;
-          ...DateResponseHeader;
-        }
+        {}
       >;
 
       /** Set the immutability policy of a blob */
@@ -965,15 +952,7 @@ namespace Storage.Blob {
           ...ConditionalRequestHeaders;
           ...IfTagsParameter;
         },
-        {
-          ...EtagResponseHeader;
-          ...LastModifiedResponseHeader;
-          ...VersionIdResponseHeader;
-          ...DateResponseHeader;
-          ...IsServerEncryptedResponseHeader;
-          ...EncryptionKeySha256ResponseHeader;
-          ...EncryptionScopeResponseHeader;
-        }
+        {}
       >;
 
       /** The Acquire Lease operation requests a new lease on a blob. The lease lock duration can be 15 to 60 seconds, or can be infinite. */
@@ -1058,7 +1037,7 @@ namespace Storage.Blob {
           ...BlobPathParameter;
           ...TimeoutParameter;
           ...LeaseIdRequiredParameter;
-          ...ProposedLeaseIdOptionalParameter;
+          ...ProposedLeaseIdRequiredParameter;
           ...ConditionalRequestHeaders;
           ...IfTagsParameter;
         },
@@ -1358,7 +1337,7 @@ namespace Storage.Blob {
             ...ConditionalRequestHeaders;
             ...IfTagsParameter;
             ...BlobContentLengthRequired;
-            ...BlobSequenceNumberParameter;
+            ...SequenceNumberParameter;
             ...BlobTagsHeaderParameter;
             ...ImmutabilityPolicyExpiryParameter;
             ...ImmutabilityPolicyModeParameter;
@@ -1412,7 +1391,7 @@ namespace Storage.Blob {
             ...IfSequenceNumberEqualToParameter;
             ...ConditionalRequestHeaders;
             ...IfTagsParameter;
-            ...StructuredBodyPut;
+            ...StructuredBodyParameter;
             ...StructuredContentLengthParameter;
           },
           {
@@ -1740,7 +1719,7 @@ namespace Storage.Blob {
             ...EncryptionScopeParameter;
             ...ConditionalRequestHeaders;
             ...IfTagsParameter;
-            ...StructuredBodyPut;
+            ...StructuredBodyParameter;
             ...StructuredContentLengthParameter;
           },
           {

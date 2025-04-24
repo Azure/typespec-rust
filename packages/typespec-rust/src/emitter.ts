@@ -20,6 +20,7 @@ import 'source-map-support/register.js';
  * @param context the emit context
  */
 export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
+  let failed = false;
   try {
     const adapter = await Adapter.create(context);
     const crate = adapter.tcgcToCrate();
@@ -61,6 +62,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
       await writeToGeneratedDir(context.emitterOutputDir, file.name, file.content);
     }
   } catch (error) {
+    failed = true;
     if (error instanceof AdapterError) {
       reportDiagnostic(context.program, {
         code: error.code,
@@ -80,6 +82,11 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
     } else {
       throw error;
     }
+  }
+
+  if (failed) {
+    // don't try to format etc if the emitter failed
+    return;
   }
 
   // probe to see if cargo is on the path before executing cargo fmt.

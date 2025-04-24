@@ -5,7 +5,7 @@
 
 use super::{
     AccessTier, BlobDeleteType, BlobImmutabilityPolicyMode, CorsRule, DeleteSnapshotsOptionType,
-    EncryptionAlgorithmType, FilterBlobsIncludeItem, ListBlobsIncludeItem,
+    EncryptionAlgorithmType, FilterBlobsIncludeItem, LeaseDuration, ListBlobsIncludeItem,
     ListContainersIncludeType, Logging, Metrics, PremiumPageBlobAccessTier, PublicAccessType,
     RehydratePriority, RetentionPolicy, StaticWebsite,
 };
@@ -78,11 +78,11 @@ pub struct AppendBlobClientAppendBlockOptions<'a> {
     pub timeout: Option<i32>,
 
     /// Specify the transactional crc64 for the body, to be validated by the service.
-    pub transactional_content_crc64: Option<String>,
+    pub transactional_content_crc64: Option<Vec<u8>>,
 
     /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
     /// were validated when each was uploaded.
-    pub transactional_content_md5: Option<String>,
+    pub transactional_content_md5: Option<Vec<u8>>,
 }
 
 /// Options to be passed to `AppendBlobClient::append_block_from_url()`
@@ -146,7 +146,7 @@ pub struct AppendBlobClientAppendBlockFromUrlOptions<'a> {
     pub source_content_crc64: Option<Vec<u8>>,
 
     /// Specify the md5 calculated for the range of bytes that must be read from the copy source.
-    pub source_content_md5: Option<String>,
+    pub source_content_md5: Option<Vec<u8>>,
 
     /// Specify an ETag value to operate only on blobs with a matching value.
     pub source_if_match: Option<String>,
@@ -168,7 +168,7 @@ pub struct AppendBlobClientAppendBlockFromUrlOptions<'a> {
 
     /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
     /// were validated when each was uploaded.
-    pub transactional_content_md5: Option<String>,
+    pub transactional_content_md5: Option<Vec<u8>>,
 }
 
 /// Options to be passed to `AppendBlobClient::create()`
@@ -314,7 +314,7 @@ pub struct BlobClientAcquireLeaseOptions<'a> {
 
     /// Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease
     /// can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change.
-    pub duration: Option<i32>,
+    pub duration: Option<LeaseDuration>,
 
     /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
@@ -400,9 +400,6 @@ pub struct BlobClientChangeLeaseOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// Optional. The proposed lease ID for the container.
-    pub proposed_lease_id: Option<String>,
-
     /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 }
@@ -460,7 +457,7 @@ pub struct BlobClientCopyFromUrlOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 
     /// Specify the md5 calculated for the range of bytes that must be read from the copy source.
-    pub source_content_md5: Option<String>,
+    pub source_content_md5: Option<Vec<u8>>,
 
     /// Specify an ETag value to operate only on blobs with a matching value.
     pub source_if_match: Option<String>,
@@ -654,6 +651,9 @@ pub struct BlobClientDownloadOptions<'a> {
     /// information on working with blob snapshots, see [Creating a Snapshot of a Blob.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/creating-a-snapshot-of-a-blob)
     pub snapshot: Option<String>,
 
+    /// Required if the request body is a structured message. Specifies the message schema version and properties.
+    pub structured_body_type: Option<String>,
+
     /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
 
@@ -826,60 +826,6 @@ pub struct BlobClientSetExpiryOptions<'a> {
     pub timeout: Option<i32>,
 }
 
-/// Options to be passed to `BlobClient::set_http_headers()`
-#[derive(Clone, Default, SafeDebug)]
-pub struct BlobClientSetHttpHeadersOptions<'a> {
-    /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
-    /// request.
-    pub blob_cache_control: Option<String>,
-
-    /// Optional. Sets the blob's content disposition. If specified, this property is stored with the blob and returned with a
-    /// read request.
-    pub blob_content_disposition: Option<String>,
-
-    /// Optional. Sets the blob's content encoding. If specified, this property is stored with the blob and returned with a read
-    /// request.
-    pub blob_content_encoding: Option<String>,
-
-    /// Optional. Set the blob's content language. If specified, this property is stored with the blob and returned with a read
-    /// request.
-    pub blob_content_language: Option<String>,
-
-    /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
-    /// were validated when each was uploaded.
-    pub blob_content_md5: Option<Vec<u8>>,
-
-    /// Optional. Sets the blob's content type. If specified, this property is stored with the blob and returned with a read request.
-    pub blob_content_type: Option<String>,
-
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
-    /// The request should only proceed if an entity matches this string.
-    pub if_match: Option<String>,
-
-    /// The request should only proceed if the entity was modified after this time.
-    pub if_modified_since: Option<OffsetDateTime>,
-
-    /// The request should only proceed if no entity matches this string.
-    pub if_none_match: Option<String>,
-
-    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
-    pub if_tags: Option<String>,
-
-    /// The request should only proceed if the entity was not modified after this time.
-    pub if_unmodified_since: Option<OffsetDateTime>,
-
-    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
-    pub lease_id: Option<String>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
-    pub timeout: Option<i32>,
-}
-
 /// Options to be passed to `BlobClient::set_immutability_policy()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientSetImmutabilityPolicyOptions<'a> {
@@ -982,6 +928,60 @@ pub struct BlobClientSetMetadataOptions<'a> {
     pub timeout: Option<i32>,
 }
 
+/// Options to be passed to `BlobClient::set_properties()`
+#[derive(Clone, Default, SafeDebug)]
+pub struct BlobClientSetPropertiesOptions<'a> {
+    /// Optional. Sets the blob's cache control. If specified, this property is stored with the blob and returned with a read
+    /// request.
+    pub blob_cache_control: Option<String>,
+
+    /// Optional. Sets the blob's content disposition. If specified, this property is stored with the blob and returned with a
+    /// read request.
+    pub blob_content_disposition: Option<String>,
+
+    /// Optional. Sets the blob's content encoding. If specified, this property is stored with the blob and returned with a read
+    /// request.
+    pub blob_content_encoding: Option<String>,
+
+    /// Optional. Set the blob's content language. If specified, this property is stored with the blob and returned with a read
+    /// request.
+    pub blob_content_language: Option<String>,
+
+    /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
+    /// were validated when each was uploaded.
+    pub blob_content_md5: Option<Vec<u8>>,
+
+    /// Optional. Sets the blob's content type. If specified, this property is stored with the blob and returned with a read request.
+    pub blob_content_type: Option<String>,
+
+    /// An opaque, globally-unique, client-generated string identifier for the request.
+    pub client_request_id: Option<String>,
+
+    /// The request should only proceed if an entity matches this string.
+    pub if_match: Option<String>,
+
+    /// The request should only proceed if the entity was modified after this time.
+    pub if_modified_since: Option<OffsetDateTime>,
+
+    /// The request should only proceed if no entity matches this string.
+    pub if_none_match: Option<String>,
+
+    /// Specify a SQL where clause on blob tags to operate only on blobs with a matching value.
+    pub if_tags: Option<String>,
+
+    /// The request should only proceed if the entity was not modified after this time.
+    pub if_unmodified_since: Option<OffsetDateTime>,
+
+    /// If specified, the operation only succeeds if the resource's lease is active and matches this ID.
+    pub lease_id: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
+    pub timeout: Option<i32>,
+}
+
 /// Options to be passed to `BlobClient::set_tags()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobClientSetTagsOptions<'a> {
@@ -1001,11 +1001,11 @@ pub struct BlobClientSetTagsOptions<'a> {
     pub timeout: Option<i32>,
 
     /// Specify the transactional crc64 for the body, to be validated by the service.
-    pub transactional_content_crc64: Option<String>,
+    pub transactional_content_crc64: Option<Vec<u8>>,
 
     /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
     /// were validated when each was uploaded.
-    pub transactional_content_md5: Option<String>,
+    pub transactional_content_md5: Option<Vec<u8>>,
 
     /// The version id parameter is an opaque DateTime value that, when present, specifies the version of the blob to operate
     /// on. It's for service version 2019-10-10 and newer.
@@ -1135,7 +1135,7 @@ pub struct BlobContainerClientAcquireLeaseOptions<'a> {
 
     /// Specifies the duration of the lease, in seconds, or negative one (-1) for a lease that never expires. A non-infinite lease
     /// can be between 15 and 60 seconds. A lease duration cannot be changed using renew or change.
-    pub duration: Option<i32>,
+    pub duration: Option<LeaseDuration>,
 
     /// A date-time value. A request is made under the condition that the resource has been modified since the specified date-time.
     pub if_modified_since: Option<OffsetDateTime>,
@@ -1748,11 +1748,11 @@ pub struct BlockBlobClientCommitBlockListOptions<'a> {
     pub timeout: Option<i32>,
 
     /// Specify the transactional crc64 for the body, to be validated by the service.
-    pub transactional_content_crc64: Option<String>,
+    pub transactional_content_crc64: Option<Vec<u8>>,
 
     /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
     /// were validated when each was uploaded.
-    pub transactional_content_md5: Option<String>,
+    pub transactional_content_md5: Option<Vec<u8>>,
 }
 
 /// Options to be passed to `BlockBlobClient::get_block_list()`
@@ -1861,7 +1861,7 @@ pub struct BlockBlobClientPutBlobFromUrlOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 
     /// Specify the md5 calculated for the range of bytes that must be read from the copy source.
-    pub source_content_md5: Option<String>,
+    pub source_content_md5: Option<Vec<u8>>,
 
     /// Specify an ETag value to operate only on blobs with a matching value.
     pub source_if_match: Option<String>,
@@ -1886,7 +1886,7 @@ pub struct BlockBlobClientPutBlobFromUrlOptions<'a> {
 
     /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
     /// were validated when each was uploaded.
-    pub transactional_content_md5: Option<String>,
+    pub transactional_content_md5: Option<Vec<u8>>,
 }
 
 /// Options to be passed to `BlockBlobClient::query()`
@@ -1970,11 +1970,11 @@ pub struct BlockBlobClientStageBlockOptions<'a> {
     pub timeout: Option<i32>,
 
     /// Specify the transactional crc64 for the body, to be validated by the service.
-    pub transactional_content_crc64: Option<String>,
+    pub transactional_content_crc64: Option<Vec<u8>>,
 
     /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
     /// were validated when each was uploaded.
-    pub transactional_content_md5: Option<String>,
+    pub transactional_content_md5: Option<Vec<u8>>,
 }
 
 /// Options to be passed to `BlockBlobClient::stage_block_from_url()`
@@ -2013,7 +2013,7 @@ pub struct BlockBlobClientStageBlockFromUrlOptions<'a> {
     pub source_content_crc64: Option<Vec<u8>>,
 
     /// Specify the md5 calculated for the range of bytes that must be read from the copy source.
-    pub source_content_md5: Option<String>,
+    pub source_content_md5: Option<Vec<u8>>,
 
     /// Specify an ETag value to operate only on blobs with a matching value.
     pub source_if_match: Option<String>,
@@ -2123,11 +2123,11 @@ pub struct BlockBlobClientUploadOptions<'a> {
     pub timeout: Option<i32>,
 
     /// Specify the transactional crc64 for the body, to be validated by the service.
-    pub transactional_content_crc64: Option<String>,
+    pub transactional_content_crc64: Option<Vec<u8>>,
 
     /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
     /// were validated when each was uploaded.
-    pub transactional_content_md5: Option<String>,
+    pub transactional_content_md5: Option<Vec<u8>>,
 }
 
 /// Options to be passed to `PageBlobClient::clear_pages()`
@@ -2244,8 +2244,8 @@ pub struct PageBlobClientCreateOptions<'a> {
     /// Optional. Sets the blob's content type. If specified, this property is stored with the blob and returned with a read request.
     pub blob_content_type: Option<String>,
 
-    /// Optional. The sequence number is a user-controlled property that you can use to track requests. The value of the sequence
-    /// number must be between 0 and 2^63 - 1. The default value is 0.
+    /// Set for page blobs only. The sequence number is a user-controlled value that you can use to track requests. The value
+    /// of the sequence number must be between 0 and 2^63 - 1.
     pub blob_sequence_number: Option<i64>,
 
     /// Optional. Used to set blob tags in various blob operations.
@@ -2567,11 +2567,11 @@ pub struct PageBlobClientUploadPagesOptions<'a> {
     pub timeout: Option<i32>,
 
     /// Specify the transactional crc64 for the body, to be validated by the service.
-    pub transactional_content_crc64: Option<String>,
+    pub transactional_content_crc64: Option<Vec<u8>>,
 
     /// Optional. An MD5 hash of the blob content. Note that this hash is not validated, as the hashes for the individual blocks
     /// were validated when each was uploaded.
-    pub transactional_content_md5: Option<String>,
+    pub transactional_content_md5: Option<Vec<u8>>,
 }
 
 /// Options to be passed to `PageBlobClient::upload_pages_from_url()`
@@ -2634,7 +2634,7 @@ pub struct PageBlobClientUploadPagesFromUrlOptions<'a> {
     pub source_content_crc64: Option<Vec<u8>>,
 
     /// Specify the md5 calculated for the range of bytes that must be read from the copy source.
-    pub source_content_md5: Option<String>,
+    pub source_content_md5: Option<Vec<u8>>,
 
     /// Specify an ETag value to operate only on blobs with a matching value.
     pub source_if_match: Option<String>,

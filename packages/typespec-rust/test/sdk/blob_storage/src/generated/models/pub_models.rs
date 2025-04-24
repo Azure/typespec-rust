@@ -151,10 +151,6 @@ pub struct BlobClientRenewLeaseResult;
 #[derive(SafeDebug)]
 pub struct BlobClientSetExpiryResult;
 
-/// Contains results for `BlobClient::set_http_headers()`
-#[derive(SafeDebug)]
-pub struct BlobClientSetHttpHeadersResult;
-
 /// Contains results for `BlobClient::set_immutability_policy()`
 #[derive(SafeDebug)]
 pub struct BlobClientSetImmutabilityPolicyResult;
@@ -162,10 +158,6 @@ pub struct BlobClientSetImmutabilityPolicyResult;
 /// Contains results for `BlobClient::set_legal_hold()`
 #[derive(SafeDebug)]
 pub struct BlobClientSetLegalHoldResult;
-
-/// Contains results for `BlobClient::set_metadata()`
-#[derive(SafeDebug)]
-pub struct BlobClientSetMetadataResult;
 
 /// Contains results for `BlobClient::set_tags()`
 #[derive(SafeDebug)]
@@ -218,10 +210,6 @@ pub struct BlobContainerClientRestoreResult;
 /// Contains results for `BlobContainerClient::set_access_policy()`
 #[derive(SafeDebug)]
 pub struct BlobContainerClientSetAccessPolicyResult;
-
-/// Contains results for `BlobContainerClient::set_metadata()`
-#[derive(SafeDebug)]
-pub struct BlobContainerClientSetMetadataResult;
 
 /// The blob flat list segment.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]

@@ -16,13 +16,13 @@ use crate::generated::{
         BlobClientGetAccountInfoResult, BlobClientGetPropertiesOptions,
         BlobClientGetPropertiesResult, BlobClientGetTagsOptions, BlobClientReleaseLeaseOptions,
         BlobClientReleaseLeaseResult, BlobClientRenewLeaseOptions, BlobClientRenewLeaseResult,
-        BlobClientSetExpiryOptions, BlobClientSetExpiryResult, BlobClientSetHttpHeadersOptions,
-        BlobClientSetHttpHeadersResult, BlobClientSetImmutabilityPolicyOptions,
-        BlobClientSetImmutabilityPolicyResult, BlobClientSetLegalHoldOptions,
-        BlobClientSetLegalHoldResult, BlobClientSetMetadataOptions, BlobClientSetMetadataResult,
-        BlobClientSetTagsOptions, BlobClientSetTagsResult, BlobClientSetTierOptions,
-        BlobClientStartCopyFromUrlOptions, BlobClientStartCopyFromUrlResult,
-        BlobClientUndeleteOptions, BlobClientUndeleteResult, BlobExpiryOptions, BlobTags,
+        BlobClientSetExpiryOptions, BlobClientSetExpiryResult,
+        BlobClientSetImmutabilityPolicyOptions, BlobClientSetImmutabilityPolicyResult,
+        BlobClientSetLegalHoldOptions, BlobClientSetLegalHoldResult, BlobClientSetMetadataOptions,
+        BlobClientSetPropertiesOptions, BlobClientSetTagsOptions, BlobClientSetTagsResult,
+        BlobClientSetTierOptions, BlobClientStartCopyFromUrlOptions,
+        BlobClientStartCopyFromUrlResult, BlobClientUndeleteOptions, BlobClientUndeleteResult,
+        BlobExpiryOptions, BlobTags,
     },
 };
 use azure_core::{
@@ -265,10 +265,12 @@ impl BlobClient {
     ///
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
+    /// * `proposed_lease_id` - Required. The proposed lease ID for the container.
     /// * `options` - Optional parameters for the request.
     pub async fn change_lease(
         &self,
         lease_id: &str,
+        proposed_lease_id: &str,
         options: Option<BlobClientChangeLeaseOptions<'_>>,
     ) -> Result<Response<BlobClientChangeLeaseResult>> {
         let options = options.unwrap_or_default();
@@ -310,9 +312,7 @@ impl BlobClient {
             request.insert_header("x-ms-if-tags", if_tags);
         }
         request.insert_header("x-ms-lease-id", lease_id.to_owned());
-        if let Some(proposed_lease_id) = options.proposed_lease_id {
-            request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
-        }
+        request.insert_header("x-ms-proposed-lease-id", proposed_lease_id.to_owned());
         request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -374,7 +374,7 @@ impl BlobClient {
             request.insert_header("x-ms-copy-source-authorization", copy_source_authorization);
         }
         if let Some(copy_source_tags) = options.copy_source_tags {
-            request.insert_header("x-ms-copy-source-tags", copy_source_tags);
+            request.insert_header("x-ms-copy-source-tag-option", copy_source_tags);
         }
         if let Some(encryption_scope) = options.encryption_scope {
             request.insert_header("x-ms-encryption-scope", encryption_scope);
@@ -406,7 +406,10 @@ impl BlobClient {
             }
         }
         if let Some(source_content_md5) = options.source_content_md5 {
-            request.insert_header("x-ms-source-content-md5", source_content_md5);
+            request.insert_header(
+                "x-ms-source-content-md5",
+                base64::encode(source_content_md5),
+            );
         }
         if let Some(source_if_match) = options.source_if_match {
             request.insert_header("x-ms-source-if-match", source_if_match);
@@ -694,6 +697,9 @@ impl BlobClient {
                 "x-ms-range-get-content-md5",
                 range_get_content_md5.to_string(),
             );
+        }
+        if let Some(structured_body_type) = options.structured_body_type {
+            request.insert_header("x-ms-structured-body", structured_body_type);
         }
         request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
@@ -1027,78 +1033,6 @@ impl BlobClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
-    /// The Set HTTP Headers operation sets system properties on the blob.
-    ///
-    /// # Arguments
-    ///
-    /// * `options` - Optional parameters for the request.
-    pub async fn set_http_headers(
-        &self,
-        options: Option<BlobClientSetHttpHeadersOptions<'_>>,
-    ) -> Result<Response<BlobClientSetHttpHeadersResult>> {
-        let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
-        let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
-        path = path.replace("{blobName}", &self.blob_name);
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
-        url.query_pairs_mut()
-            .append_key_only("SetHTTPHeaders")
-            .append_pair("comp", "properties");
-        if let Some(timeout) = options.timeout {
-            url.query_pairs_mut()
-                .append_pair("timeout", &timeout.to_string());
-        }
-        let mut request = Request::new(url, Method::Put);
-        request.insert_header("accept", "application/json");
-        request.insert_header("content-type", "application/xml");
-        if let Some(if_match) = options.if_match {
-            request.insert_header("if-match", if_match);
-        }
-        if let Some(if_modified_since) = options.if_modified_since {
-            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
-        }
-        if let Some(if_none_match) = options.if_none_match {
-            request.insert_header("if-none-match", if_none_match);
-        }
-        if let Some(if_unmodified_since) = options.if_unmodified_since {
-            request.insert_header(
-                "if-unmodified-since",
-                date::to_rfc7231(&if_unmodified_since),
-            );
-        }
-        if let Some(blob_cache_control) = options.blob_cache_control {
-            request.insert_header("x-ms-blob-cache-control", blob_cache_control);
-        }
-        if let Some(blob_content_disposition) = options.blob_content_disposition {
-            request.insert_header("x-ms-blob-content-disposition", blob_content_disposition);
-        }
-        if let Some(blob_content_encoding) = options.blob_content_encoding {
-            request.insert_header("x-ms-blob-content-encoding", blob_content_encoding);
-        }
-        if let Some(blob_content_language) = options.blob_content_language {
-            request.insert_header("x-ms-blob-content-language", blob_content_language);
-        }
-        if let Some(blob_content_md5) = options.blob_content_md5 {
-            request.insert_header("x-ms-blob-content-md5", base64::encode(blob_content_md5));
-        }
-        if let Some(blob_content_type) = options.blob_content_type {
-            request.insert_header("x-ms-blob-content-type", blob_content_type);
-        }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
-        if let Some(if_tags) = options.if_tags {
-            request.insert_header("x-ms-if-tags", if_tags);
-        }
-        if let Some(lease_id) = options.lease_id {
-            request.insert_header("x-ms-lease-id", lease_id);
-        }
-        request.insert_header("x-ms-version", &self.version);
-        self.pipeline.send(&ctx, &mut request).await
-    }
-
     /// Set the immutability policy of a blob
     ///
     /// # Arguments
@@ -1203,7 +1137,7 @@ impl BlobClient {
     pub async fn set_metadata(
         &self,
         options: Option<BlobClientSetMetadataOptions<'_>>,
-    ) -> Result<Response<BlobClientSetMetadataResult>> {
+    ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -1267,6 +1201,78 @@ impl BlobClient {
         self.pipeline.send(&ctx, &mut request).await
     }
 
+    /// The Set HTTP Headers operation sets system properties on the blob.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    pub async fn set_properties(
+        &self,
+        options: Option<BlobClientSetPropertiesOptions<'_>>,
+    ) -> Result<Response<()>> {
+        let options = options.unwrap_or_default();
+        let ctx = Context::with_context(&options.method_options.context);
+        let mut url = self.endpoint.clone();
+        let mut path = String::from("{containerName}/{blobName}");
+        path = path.replace("{blobName}", &self.blob_name);
+        path = path.replace("{containerName}", &self.container_name);
+        url = url.join(&path)?;
+        url.query_pairs_mut()
+            .append_key_only("SetHTTPHeaders")
+            .append_pair("comp", "properties");
+        if let Some(timeout) = options.timeout {
+            url.query_pairs_mut()
+                .append_pair("timeout", &timeout.to_string());
+        }
+        let mut request = Request::new(url, Method::Put);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/xml");
+        if let Some(if_match) = options.if_match {
+            request.insert_header("if-match", if_match);
+        }
+        if let Some(if_modified_since) = options.if_modified_since {
+            request.insert_header("if-modified-since", date::to_rfc7231(&if_modified_since));
+        }
+        if let Some(if_none_match) = options.if_none_match {
+            request.insert_header("if-none-match", if_none_match);
+        }
+        if let Some(if_unmodified_since) = options.if_unmodified_since {
+            request.insert_header(
+                "if-unmodified-since",
+                date::to_rfc7231(&if_unmodified_since),
+            );
+        }
+        if let Some(blob_cache_control) = options.blob_cache_control {
+            request.insert_header("x-ms-blob-cache-control", blob_cache_control);
+        }
+        if let Some(blob_content_disposition) = options.blob_content_disposition {
+            request.insert_header("x-ms-blob-content-disposition", blob_content_disposition);
+        }
+        if let Some(blob_content_encoding) = options.blob_content_encoding {
+            request.insert_header("x-ms-blob-content-encoding", blob_content_encoding);
+        }
+        if let Some(blob_content_language) = options.blob_content_language {
+            request.insert_header("x-ms-blob-content-language", blob_content_language);
+        }
+        if let Some(blob_content_md5) = options.blob_content_md5 {
+            request.insert_header("x-ms-blob-content-md5", base64::encode(blob_content_md5));
+        }
+        if let Some(blob_content_type) = options.blob_content_type {
+            request.insert_header("x-ms-blob-content-type", blob_content_type);
+        }
+        if let Some(client_request_id) = options.client_request_id {
+            request.insert_header("x-ms-client-request-id", client_request_id);
+        }
+        if let Some(if_tags) = options.if_tags {
+            request.insert_header("x-ms-if-tags", if_tags);
+        }
+        if let Some(lease_id) = options.lease_id {
+            request.insert_header("x-ms-lease-id", lease_id);
+        }
+        request.insert_header("x-ms-version", &self.version);
+        self.pipeline.send(&ctx, &mut request).await
+    }
+
     /// The Set Tags operation enables users to set tags on a blob.
     ///
     /// # Arguments
@@ -1296,14 +1302,17 @@ impl BlobClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         if let Some(transactional_content_md5) = options.transactional_content_md5 {
-            request.insert_header("content-md5", transactional_content_md5);
+            request.insert_header("content-md5", base64::encode(transactional_content_md5));
         }
         request.insert_header("content-type", "application/xml");
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         if let Some(transactional_content_crc64) = options.transactional_content_crc64 {
-            request.insert_header("x-ms-content-crc64", transactional_content_crc64);
+            request.insert_header(
+                "x-ms-content-crc64",
+                base64::encode(transactional_content_crc64),
+            );
         }
         if let Some(if_tags) = options.if_tags {
             request.insert_header("x-ms-if-tags", if_tags);
