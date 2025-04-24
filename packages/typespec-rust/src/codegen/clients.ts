@@ -406,11 +406,7 @@ function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: r
     }
 
     use.addForType(param.type);
-    let ref = '';
-    if (param.kind === 'clientMethod' && param.ref) {
-      ref = '&';
-    }
-    paramsSig.push(`${param.name}: ${ref}${helpers.getTypeDeclaration(param.type)}`);
+    paramsSig.push(`${param.name}: ${helpers.getTypeDeclaration(param.type)}`);
   }
   paramsSig.push(`options: ${helpers.getTypeDeclaration(options)}`);
   return paramsSig.join(', ');
@@ -490,7 +486,7 @@ function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
  */
 function formatParamTypeName(param: rust.MethodParameter | rust.Parameter | rust.Self): string {
   let format = '';
-  if (param.ref) {
+  if ((<rust.Self>param).ref === true) {
     format = '&';
   }
   if (param.mut) {
@@ -699,7 +695,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
   /** returns & if the param needs to be borrowed (which is the majority of cases), else the empty string */
   const borrowOrNot = function(param: rust.Parameter): string {
-    return param.ref ? '' : '&';
+    return param.type.kind === 'str' ? '' : '&';
   };
 
   let body = '';
@@ -802,7 +798,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
         return setter;
       }
       const borrow = headerParam.location === 'client' && nonCopyableType(headerParam.type) ? '&' : '';
-      const toOwned = headerParam.ref ? '.to_owned()' : '';
+      const toOwned = headerParam.type.kind === 'str' ? '.to_owned()' : '';
       return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, !inClosure)}${toOwned});\n`;
     });
   }
@@ -829,7 +825,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       }
 
       let initializer = partialBodyParam.name;
-      if (partialBodyParam.ref) {
+      if (partialBodyParam.paramType.kind === 'str') {
         initializer = `${initializer}.to_owned()`;
       }
       if (requestContentType.content.type.visibility === 'pub') {

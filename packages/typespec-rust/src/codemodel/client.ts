@@ -78,9 +78,6 @@ export interface Constructor {
 /** ClientMethodParameter is a Rust client parameter that's used in method bodies */
 export interface ClientMethodParameter extends ClientParameterBase {
   kind: 'clientMethod';
-
-  /** indicates if the parameter is a reference. defaults to false */
-  ref: boolean;
 }
 
 /** ClientEndpointParameter is used when constructing the endpoint's supplemental path */
@@ -498,10 +495,9 @@ export class ClientOptions extends types.Option implements ClientOptions {
 }
 
 export class ClientMethodParameter extends ClientParameterBase implements ClientMethodParameter {
-  constructor(name: string, type: types.Type, optional: boolean, ref?: boolean) {
+  constructor(name: string, type: types.Type, optional: boolean) {
     super(name, type, optional);
     this.kind = 'clientMethod';
-    this.ref = ref ? ref : false;
   }
 }
 

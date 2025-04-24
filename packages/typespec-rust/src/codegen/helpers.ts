@@ -189,11 +189,12 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       }
       break;
     case 'String':
-    case 'str':
     case 'Url':
       return type.kind;
     case 'scalar':
       return type.type;
+    case 'str':
+      return `${type.ref ? '&' : ''}${type.kind}`;
     case 'enum':
     case 'jsonValue':
     case 'offsetDateTime':

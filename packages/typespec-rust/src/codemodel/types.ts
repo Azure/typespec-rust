@@ -313,6 +313,9 @@ export type BodyFormat = 'json' | 'xml';
 /** StringSlice is a Rust string slice */
 export interface StringSlice {
   kind: 'str';
+
+  /** indicates if this is a &str */
+  ref: boolean;
 }
 
 /** StringType is a Rust string */
@@ -675,8 +678,9 @@ export class Scalar implements Scalar {
 }
 
 export class StringSlice implements StringSlice {
-  constructor() {
+  constructor(ref: boolean) {
     this.kind = 'str';
+    this.ref = ref;
   }
 }
 

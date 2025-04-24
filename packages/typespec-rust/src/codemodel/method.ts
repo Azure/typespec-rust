@@ -42,9 +42,6 @@ export interface Parameter {
 
   /** indicates if the parameter is mutable. defaults to false */
   mut: boolean;
-
-  /** indicates if the parameter is a reference. defaults to false */
-  ref: boolean;
 }
 
 /** Self is a method's self parameter */
@@ -77,7 +74,6 @@ export class Parameter implements Parameter {
     this.name = name;
     this.type = type;
     this.mut = false;
-    this.ref = false;
     this.docs = {};
   }
 }

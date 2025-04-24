@@ -535,11 +535,11 @@ export class Adapter {
   }
 
   /** returns the Rust string slice type */
-  private getStringSlice(): rust.StringSlice {
-    const typeKey = 'str';
+  private getStringSlice(ref: boolean): rust.StringSlice {
+    const typeKey = `${ref ? '&' : ''}str`;
     let stringSlice = this.types.get(typeKey);
     if (!stringSlice) {
-      stringSlice = new rust.StringSlice();
+      stringSlice = new rust.StringSlice(ref);
       this.types.set(typeKey, stringSlice);
     }
     return <rust.StringSlice>stringSlice;
@@ -749,7 +749,7 @@ export class Adapter {
                 // note that the types of the param and the field are different.
                 // NOTE: we use param.name here instead of templateArg.name as
                 // the former has the fixed name "endpoint" which is what we want.
-                const adaptedParam = new rust.ClientMethodParameter(param.name, this.getStringSlice(), false, true);
+                const adaptedParam = new rust.ClientMethodParameter(param.name, this.getStringSlice(true), false);
                 adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
                 ctorParams.push(adaptedParam);
                 rustClient.fields.push(new rust.StructField(param.name, 'pubCrate', new rust.Url(this.crate)));
@@ -1404,12 +1404,10 @@ export class Adapter {
 
     const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
     let paramType = this.getType(param.type);
-    let paramByRef = false;
 
     // for required header/path/query method string params, we emit them as &str instead of String
     if (!param.optional && !param.onClient && paramType.kind === 'String' && (param.kind === 'header' || param.kind === 'path' || param.kind === 'query')) {
-      paramType = this.getStringSlice();
-      paramByRef = true;
+      paramType = this.getStringSlice(true);
     }
 
     let adaptedParam: rust.MethodParameter;
@@ -1478,7 +1476,6 @@ export class Adapter {
     }
 
     adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
-    adaptedParam.ref = paramByRef;
 
     if (paramLoc === 'client') {
       this.clientMethodParams.set(getClientParamsKey(param), adaptedParam);
@@ -1548,10 +1545,8 @@ export class Adapter {
         // in the underlying model. the only exception is for String
         // types. we want to surface those as &str in the method sig.
         let paramType = this.getType(param.type);
-        let paramByRef = false;
         if (!param.optional && !param.onClient && paramType.kind === 'String') {
-          paramType = this.getStringSlice();
-          paramByRef = true;
+          paramType = this.getStringSlice(true);
         }
 
         // this is the internal model type that the spread params coalesce into
@@ -1563,7 +1558,6 @@ export class Adapter {
         const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
         const paramLoc: rust.ParameterLocation = 'method';
         const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, paramType, new rust.RequestContent(this.crate, new rust.Payload(payloadType, format)));
-        adaptedParam.ref = paramByRef;
         return adaptedParam;
       }
     }
