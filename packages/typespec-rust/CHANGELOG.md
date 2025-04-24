@@ -19,6 +19,7 @@
 ### Other Changes
 
 * Errors in the emitter are no longer surfaced as a crash.
+* Skip `cargo fmt` if the emitter fails.
 
 ## 0.13.3 (2025-04-04)
 
