@@ -433,12 +433,13 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
     }
   } else {
     for (const param of method.params) {
-      if (param.type.kind === 'literal') {
+      const paramType = helpers.unwrapType(param.type);
+      if (paramType.kind === 'literal') {
         // literal params are embedded directly in the code (e.g. accept header param)
         continue;
-      } else if (param.type.kind === 'enumValue') {
+      } else if (paramType.kind === 'enumValue') {
         // enum values are treated like literals, we just need to use their type
-        use.addForType(param.type.type);
+        use.addForType(paramType.type);
         continue;
       }
 
@@ -695,7 +696,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
   /** returns & if the param needs to be borrowed (which is the majority of cases), else the empty string */
   const borrowOrNot = function(param: rust.Parameter): string {
-    return param.type.kind === 'str' ? '' : '&';
+    return param.type.kind === 'ref' ? '' : '&';
   };
 
   let body = '';
@@ -798,7 +799,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
         return setter;
       }
       const borrow = headerParam.location === 'client' && nonCopyableType(headerParam.type) ? '&' : '';
-      const toOwned = headerParam.type.kind === 'str' ? '.to_owned()' : '';
+      const toOwned = headerParam.type.kind === 'ref' ? '.to_owned()' : '';
       return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, !inClosure)}${toOwned});\n`;
     });
   }
@@ -825,7 +826,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       }
 
       let initializer = partialBodyParam.name;
-      if (partialBodyParam.paramType.kind === 'str') {
+      if (partialBodyParam.paramType.kind === 'ref') {
         initializer = `${initializer}.to_owned()`;
       }
       if (requestContentType.content.type.visibility === 'pub') {
@@ -1106,21 +1107,22 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     }
   };
 
+  const paramType = helpers.unwrapType(param.type);
   if (param.kind === 'headerCollection' || param.kind === 'queryCollection') {
     if (param.format === 'multi') {
       throw new CodegenError('InternalError', 'multi should have been handled outside getHeaderPathQueryParamValue');
-    } else if (param.type.type.kind === 'String') {
+    } else if (paramType.kind === 'String') {
       return `${paramName}.join("${getCollectionDelimiter(param.format)}")`;
     }
 
     // convert the items to strings
     let strConv: string;
-    switch (param.type.type.kind) {
+    switch (paramType.kind) {
       case 'encodedBytes':
-        strConv = encodeBytes(param.type.type);
+        strConv = encodeBytes(paramType);
         break;
       case 'offsetDateTime':
-        strConv = `|i| ${encodeDateTime(param.type.type, 'i')}`;
+        strConv = `|i| ${encodeDateTime(paramType, 'i')}`;
         break;
       default:
         strConv = '|i| i.to_string()';
@@ -1129,30 +1131,30 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
     return `${param.name}.iter().map(${strConv}).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
   }
 
-  switch (param.type.kind) {
+  switch (paramType.kind) {
     case 'String':
     case 'str':
       return paramName;
     case 'decimal':
       return `${param.name}.to_string()`;
     case 'encodedBytes':
-      return encodeBytes(param.type, paramName);
+      return encodeBytes(paramType, paramName);
     case 'enum':
     case 'scalar':
-      if (param.type.kind === 'enum' && param.kind === 'query') {
+      if (paramType.kind === 'enum' && param.kind === 'query') {
         // append_pair wants a reference to the string
         // TODO: https://github.com/Azure/typespec-rust/issues/25
         return `${paramName}.as_ref()`;
       }
       return `${paramName}.to_string()`;
     case 'enumValue':
-      return `${param.type.type.name}::${param.type.name}.to_string()`;
+      return `${paramType.type.name}::${paramType.name}.to_string()`;
     case 'literal':
-      return `"${param.type.value}"`;
+      return `"${paramType.value}"`;
     case 'offsetDateTime':
-      return encodeDateTime(param.type, param.name);
+      return encodeDateTime(paramType, param.name);
     default:
-      throw new CodegenError('InternalError', `unhandled ${param.kind} param type kind ${param.type.kind}`);
+      throw new CodegenError('InternalError', `unhandled ${param.kind} param type kind ${paramType.kind}`);
   }
 }
 

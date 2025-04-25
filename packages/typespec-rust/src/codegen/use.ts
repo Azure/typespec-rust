@@ -106,6 +106,7 @@ export class Use {
         break;
       case 'option':
       case 'payload':
+      case 'ref':
       case 'result':
       case 'hashmap':
       case 'Vec':

@@ -18,7 +18,7 @@ export interface Docs {
 export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | Pager | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
-export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | Scalar | StringSlice | StringType | Url | Vector;
+export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | Scalar | StringSlice | StringType | Url | Vector;
 
 /** Type defines a type within the Rust type system */
 export type Type = SdkType | WireType;
@@ -255,6 +255,27 @@ export interface Payload<T extends WireType = WireType> {
   format: BodyFormat;
 }
 
+/**
+ * RefBase is the base type for Ref and is used to avoid
+ * a circular dependency in RefType. callers will instantiate
+ * instances of Ref.
+ */
+export interface RefBase {
+  kind: 'ref';
+
+  /** the underlying type */
+  type: WireType;
+}
+
+/** RefType describes the possible types for Ref */
+export type RefType = Exclude<WireType, Literal | RefBase>;
+
+/** Ref is a reference to a type */
+export interface Ref<T extends RefType = RefType> extends RefBase {
+  /** the underlying type */
+  type: T;
+}
+
 /** RequestContentTypes defines the type constraint when creating a RequestContent<T> */
 type RequestContentTypes = Bytes | Payload;
 
@@ -313,9 +334,6 @@ export type BodyFormat = 'json' | 'xml';
 /** StringSlice is a Rust string slice */
 export interface StringSlice {
   kind: 'str';
-
-  /** indicates if this is a &str */
-  ref: boolean;
 }
 
 /** StringType is a Rust string */
@@ -640,6 +658,13 @@ export class Payload<T> implements Payload<T> {
   }
 }
 
+export class Ref<T> implements Ref<T> {
+  constructor(type: T) {
+    this.kind = 'ref';
+    this.type = type;
+  }
+}
+
 export class RequestContent<T> extends External implements RequestContent<T> {
   constructor(crate: Crate, content: T) {
     super(crate, 'RequestContent', 'azure_core::http');
@@ -678,9 +703,8 @@ export class Scalar implements Scalar {
 }
 
 export class StringSlice implements StringSlice {
-  constructor(ref: boolean) {
+  constructor() {
     this.kind = 'str';
-    this.ref = ref;
   }
 }
 
