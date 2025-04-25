@@ -534,12 +534,23 @@ export class Adapter {
     }
   }
 
+  /** returns the specified type wrapped in a Ref */
+  private getRefType(type: rust.RefType): rust.Ref {
+    const typeKey = `ref-${this.recursiveTypeName(type)}`;
+    let refType = this.types.get(typeKey);
+    if (!refType) {
+      refType = new rust.Ref(type);
+      this.types.set(typeKey, refType);
+    }
+    return <rust.Ref>refType;
+  }
+
   /** returns the Rust string slice type */
-  private getStringSlice(ref: boolean): rust.StringSlice {
-    const typeKey = `${ref ? '&' : ''}str`;
+  private getStringSlice(): rust.StringSlice {
+    const typeKey = 'str';
     let stringSlice = this.types.get(typeKey);
     if (!stringSlice) {
-      stringSlice = new rust.StringSlice(ref);
+      stringSlice = new rust.StringSlice();
       this.types.set(typeKey, stringSlice);
     }
     return <rust.StringSlice>stringSlice;
@@ -749,7 +760,7 @@ export class Adapter {
                 // note that the types of the param and the field are different.
                 // NOTE: we use param.name here instead of templateArg.name as
                 // the former has the fixed name "endpoint" which is what we want.
-                const adaptedParam = new rust.ClientMethodParameter(param.name, this.getStringSlice(true), false);
+                const adaptedParam = new rust.ClientMethodParameter(param.name, this.getRefType(this.getStringSlice()), false);
                 adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
                 ctorParams.push(adaptedParam);
                 rustClient.fields.push(new rust.StructField(param.name, 'pubCrate', new rust.Url(this.crate)));
@@ -1407,7 +1418,7 @@ export class Adapter {
 
     // for required header/path/query method string params, we emit them as &str instead of String
     if (!param.optional && !param.onClient && paramType.kind === 'String' && (param.kind === 'header' || param.kind === 'path' || param.kind === 'query')) {
-      paramType = this.getStringSlice(true);
+      paramType = this.getRefType(this.getStringSlice());
     }
 
     let adaptedParam: rust.MethodParameter;
@@ -1504,6 +1515,7 @@ export class Adapter {
       case 'literal':
       case 'model':
       case 'offsetDateTime':
+      case 'ref':
       case 'scalar':
       case 'str':
       case 'String':
@@ -1546,7 +1558,7 @@ export class Adapter {
         // types. we want to surface those as &str in the method sig.
         let paramType = this.getType(param.type);
         if (!param.optional && !param.onClient && paramType.kind === 'String') {
-          paramType = this.getStringSlice(true);
+          paramType = this.getRefType(this.getStringSlice());
         }
 
         // this is the internal model type that the spread params coalesce into

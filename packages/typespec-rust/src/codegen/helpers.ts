@@ -165,6 +165,8 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return `Pager<${getTypeDeclaration(type.type.type, withAnonymousLifetime)}>`;
     case 'payload':
       return getTypeDeclaration(type.type, withAnonymousLifetime);
+    case 'ref':
+      return `&${getTypeDeclaration(type.type)}`;
     case 'requestContent':
       switch (type.content.kind) {
         case 'bytes':
@@ -190,11 +192,10 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       break;
     case 'String':
     case 'Url':
+    case 'str':
       return type.kind;
     case 'scalar':
       return type.type;
-    case 'str':
-      return `${type.ref ? '&' : ''}${type.kind}`;
     case 'enum':
     case 'jsonValue':
     case 'offsetDateTime':
@@ -399,6 +400,7 @@ export function unwrapType(type: rust.Payload | rust.Type): rust.Type {
     case 'arc':
     case 'hashmap':
     case 'option':
+    case 'ref':
     case 'Vec':
       return unwrapType(type.type);
     case 'pager':      
