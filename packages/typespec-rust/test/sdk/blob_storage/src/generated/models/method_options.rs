@@ -1350,6 +1350,22 @@ pub struct BlobContainerClientListBlobFlatSegmentOptions<'a> {
     pub timeout: Option<i32>,
 }
 
+impl BlobContainerClientListBlobFlatSegmentOptions<'_> {
+    pub fn into_owned(self) -> BlobContainerClientListBlobFlatSegmentOptions<'static> {
+        BlobContainerClientListBlobFlatSegmentOptions {
+            client_request_id: self.client_request_id,
+            include: self.include,
+            marker: self.marker,
+            maxresults: self.maxresults,
+            method_options: ClientMethodOptions {
+                context: self.method_options.context.into_owned(),
+            },
+            prefix: self.prefix,
+            timeout: self.timeout,
+        }
+    }
+}
+
 /// Options to be passed to `BlobContainerClient::list_blob_hierarchy_segment()`
 #[derive(Clone, Default, SafeDebug)]
 pub struct BlobContainerClientListBlobHierarchySegmentOptions<'a> {
@@ -1377,6 +1393,22 @@ pub struct BlobContainerClientListBlobHierarchySegmentOptions<'a> {
 
     /// The timeout parameter is expressed in seconds. For more information, see [Setting Timeouts for Blob Service Operations.](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/setting-timeouts-for-blob-service-operations)
     pub timeout: Option<i32>,
+}
+
+impl BlobContainerClientListBlobHierarchySegmentOptions<'_> {
+    pub fn into_owned(self) -> BlobContainerClientListBlobHierarchySegmentOptions<'static> {
+        BlobContainerClientListBlobHierarchySegmentOptions {
+            client_request_id: self.client_request_id,
+            include: self.include,
+            marker: self.marker,
+            maxresults: self.maxresults,
+            method_options: ClientMethodOptions {
+                context: self.method_options.context.into_owned(),
+            },
+            prefix: self.prefix,
+            timeout: self.timeout,
+        }
+    }
 }
 
 /// Options to be passed to `BlobContainerClient::release_lease()`
