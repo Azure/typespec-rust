@@ -356,11 +356,6 @@ export class Adapter {
 
     type scalarKind = 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8' | 'uint16' | 'uint32' | 'uint64' | 'uint8';
     const getScalar = (kind: scalarKind): rust.Scalar => {
-      let scalar = this.types.get(kind);
-      if (scalar) {
-        return <rust.Scalar>scalar;
-      }
-
       let scalarType: rust.ScalarType;
       switch (kind) {
         case 'boolean':
@@ -399,19 +394,24 @@ export class Adapter {
           break;
       }
 
+      let scalar = this.types.get(scalarType);
+      if (scalar) {
+        return <rust.Scalar>scalar;
+      }
       scalar = new rust.Scalar(scalarType);
-      this.types.set(kind, scalar);
+      this.types.set(scalarType, scalar);
       return scalar;
     };
 
     switch (type.kind) {
       case 'array': {
-        const keyName = recursiveKeyName(type.kind, type.valueType);
+        const vecT = this.typeToWireType(this.getType(type.valueType, stack));
+        const keyName = recursiveKeyName('Vec', vecT);
         let vectorType = this.types.get(keyName);
         if (vectorType) {
           return vectorType;
         }
-        vectorType = new rust.Vector(this.typeToWireType(this.getType(type.valueType, stack)));
+        vectorType = new rust.Vector(vecT);
         this.types.set(keyName, vectorType);
         return vectorType;
       }
@@ -433,7 +433,7 @@ export class Adapter {
         return this.getLiteral(type);
       case 'decimal':
       case 'decimal128': {
-        const keyName = `${type.kind}`;
+        const keyName = 'decimal';
         let decimalType = this.types.get(keyName);
         if (!decimalType) {
           decimalType = new rust.Decimal(this.crate);
@@ -442,12 +442,13 @@ export class Adapter {
         return decimalType;
       }
       case 'dict': {
-        const keyName = recursiveKeyName(type.kind, type.valueType);
+        const hashmapT = this.typeToWireType(this.getType(type.valueType, stack));
+        const keyName = recursiveKeyName('hashmap', hashmapT);
         let hashmapType = this.types.get(keyName);
         if (hashmapType) {
           return hashmapType;
         }
-        hashmapType = new rust.HashMap(this.typeToWireType(this.getType(type.valueType, stack)));
+        hashmapType = new rust.HashMap(hashmapT);
         this.types.set(keyName, hashmapType);
         return hashmapType;
       }
@@ -486,7 +487,7 @@ export class Adapter {
       case 'string':
       case 'url': {
         if (type.kind === 'string' && type.crossLanguageDefinitionId === 'Azure.Core.eTag') {
-          const etagKey = 'etag';
+          const etagKey = 'Etag';
           let etagType = this.types.get(etagKey);
           if (etagType) {
             return etagType;
@@ -501,31 +502,34 @@ export class Adapter {
         // TODO: workaround until https://github.com/Azure/typespec-rust/issues/42 is fixed
         return this.getType(type.type, stack);
       case 'offsetDateTime': {
-        const keyName = `${type.kind}-${type.encode}`;
+        const encoding = getDateTimeEncoding(type.encode);
+        const keyName = `offsetDateTime-${encoding}`;
         let timeType = this.types.get(keyName);
         if (timeType) {
           return timeType;
         }
-        timeType = new rust.OffsetDateTime(this.crate, getDateTimeEncoding(type.encode), false);
+        timeType = new rust.OffsetDateTime(this.crate, encoding, false);
         this.types.set(keyName, timeType);
         return timeType;
       }
       case 'unknown': {
-        let anyType = this.types.get(type.kind);
+        const keyName = 'jsonValue';
+        let anyType = this.types.get(keyName);
         if (anyType) {
           return anyType;
         }
         anyType = new rust.JsonValue(this.crate);
-        this.types.set(type.kind, anyType);
+        this.types.set(keyName, anyType);
         return anyType;
       }
       case 'utcDateTime': {
-        const keyName = `${type.kind}-${type.encode}`;
+        const encoding = getDateTimeEncoding(type.encode);
+        const keyName = `offsetDateTime-${encoding}-utc`;
         let timeType = this.types.get(keyName);
         if (timeType) {
           return timeType;
         }
-        timeType = new rust.OffsetDateTime(this.crate, getDateTimeEncoding(type.encode), true);
+        timeType = new rust.OffsetDateTime(this.crate, encoding, true);
         this.types.set(keyName, timeType);
         return timeType;
       }
@@ -536,7 +540,7 @@ export class Adapter {
 
   /** returns the specified type wrapped in a Ref */
   private getRefType(type: rust.RefType): rust.Ref {
-    const typeKey = `ref-${this.recursiveTypeName(type)}`;
+    const typeKey = recursiveKeyName('ref', type);
     let refType = this.types.get(typeKey);
     if (!refType) {
       refType = new rust.Ref(type);
@@ -1241,6 +1245,32 @@ export class Adapter {
       return undefined;
     }
 
+    /**
+     * recursively builds a name from the specified type.
+     * e.g. Vec<FooModel> would be VecFooModel etc.
+     * 
+     * @param type the type for which to build a name
+     * @returns the name
+     */
+    const recursiveTypeName = function(type: rust.WireType): string {
+      // maybe?
+      switch (type.kind) {
+        case 'enum':
+        case 'model':
+          return type.name;
+        case 'hashmap':
+          return `${type.name}${recursiveTypeName(type.type)}`;
+        case 'ref':
+          return `Ref${recursiveTypeName(type.type)}`;
+        case 'scalar':
+          return codegen.capitalize(type.type);
+        case 'Vec':
+          return `${type.kind}${recursiveTypeName(type.type)}`;
+        default:
+          return codegen.capitalize(type.kind);
+      }
+    };
+
     // response header traits are only ever for marker types and payloads
     let implFor: rust.MarkerType | rust.Payload;
     switch (method.returns.type.kind) {
@@ -1264,7 +1294,7 @@ export class Adapter {
         traitName = implFor.name;
         break;
       case 'payload':
-        traitName = this.recursiveTypeName(implFor.type);
+        traitName = recursiveTypeName(implFor.type);
         break;
     }
     traitName += 'Headers';
@@ -1275,27 +1305,6 @@ export class Adapter {
     responseHeadersTrait.headers.push(...responseHeaders);
 
     return responseHeadersTrait;
-  }
-
-  /**
-   * recursively builds a name from the specified type.
-   * e.g. Vec<FooModel> would be VecFooModel etc.
-   * 
-   * @param type the type for which to build a name
-   * @returns the name
-   */
-  private recursiveTypeName(type: rust.WireType): string {
-    switch (type.kind) {
-      case 'enum':
-      case 'model':
-        return type.name;
-      case 'hashmap':
-        return `${type.name}${this.recursiveTypeName(type.type)}`;
-      case 'Vec':
-        return `${type.kind}${this.recursiveTypeName(type.type)}`;
-      default:
-        return codegen.capitalize(type.kind);
-    }
   }
 
   /**
@@ -1633,41 +1642,34 @@ type OperationParamType = tcgc.SdkBodyParameter | tcgc.SdkCookieParameter | tcgc
  * 
  * obj is recursively unwrapped, and each layer is used to construct
  * the key. e.g. if obj is a HashMap<String, Vec<i32>> this would
- * unwrap to dict-array-int32.
+ * unwrap to hashmap-Vec-i32.
  * 
  * @param root the starting value for the key
  * @param obj the type for which to create the key
  * @returns a string containing the complete map key
  */
-function recursiveKeyName(root: string, obj: tcgc.SdkType): string {
-  switch (obj.kind) {
-    case 'array':
-      return recursiveKeyName(`${root}-array`, obj.valueType);
-    case 'bytes':
-      return `${root}-bytes-${obj.encode ? obj.encode : 'std'}`;
+function recursiveKeyName(root: string, type: rust.WireType): string {
+  switch (type.kind) {
+    case 'Vec':
+      return recursiveKeyName(`${root}-${type.kind}`, type.type);
+    case 'encodedBytes':
+      return `${root}-${type.kind}-${type.encoding}`;
     case 'enum':
-      return `${root}-${obj.name}`;
-    case 'enumvalue':
-      return `${root}-${obj.enumType.name}-${obj.value}`;
-    case 'dict':
-      return recursiveKeyName(`${root}-dict`, obj.valueType);
-    case 'plainDate':
-      return `${root}-plainDate`;
-    case 'utcDateTime':
-      return `${root}-${obj.encode}`;
-    case 'duration':
-      // TODO: this should be: return `${root}-duration-${obj.encode}`;
-      // as it is now, it treats the duration as a String
-      // https://github.com/Azure/typespec-rust/issues/41
-      return `${root}-${obj.wireType.kind}`;
+      return `${root}-${type.kind}-${type.name}`;
+    case 'enumValue':
+      return `${root}-${type.type.name}-${type.name}`;
+    case 'hashmap':
+      return recursiveKeyName(`${root}-${type.kind}`, type.type);
+    case 'offsetDateTime':
+      return `${root}-${type.kind}-${type.encoding}${type.utc ? '-utc' : ''}`;
     case 'model':
-      return `${root}-${obj.name}`;
-    case 'nullable':
-      return recursiveKeyName(`${root}-nullable`, obj.type);
-    case 'plainTime':
-      return `${root}-plainTime`;
+      return `${root}-${type.kind}-${type.name}`;
+    case 'ref':
+      return recursiveKeyName(`${root}-${type.kind}`, type.type);
+    case 'scalar':
+      return `${root}-${type.kind}-${type.type}`;
     default:
-      return `${root}-${obj.kind}`;
+      return `${root}-${type.kind}`;
   }
 }
 
