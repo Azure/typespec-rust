@@ -104,7 +104,7 @@ impl DatetimeHeaderClient {
     /// * `options` - Optional parameters for the request.
     pub async fn unix_timestamp_array(
         &self,
-        value: Vec<OffsetDateTime>,
+        value: &[OffsetDateTime],
         options: Option<DatetimeHeaderClientUnixTimestampArrayOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();

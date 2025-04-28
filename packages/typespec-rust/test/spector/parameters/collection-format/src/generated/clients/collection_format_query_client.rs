@@ -30,7 +30,7 @@ impl CollectionFormatQueryClient {
     /// * `options` - Optional parameters for the request.
     pub async fn csv(
         &self,
-        colors: Vec<String>,
+        colors: &[&str],
         options: Option<CollectionFormatQueryClientCsvOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -50,7 +50,7 @@ impl CollectionFormatQueryClient {
     /// * `options` - Optional parameters for the request.
     pub async fn multi(
         &self,
-        colors: Vec<String>,
+        colors: &[&str],
         options: Option<CollectionFormatQueryClientMultiOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -71,7 +71,7 @@ impl CollectionFormatQueryClient {
     /// * `options` - Optional parameters for the request.
     pub async fn pipes(
         &self,
-        colors: Vec<String>,
+        colors: &[&str],
         options: Option<CollectionFormatQueryClientPipesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -91,7 +91,7 @@ impl CollectionFormatQueryClient {
     /// * `options` - Optional parameters for the request.
     pub async fn ssv(
         &self,
-        colors: Vec<String>,
+        colors: &[&str],
         options: Option<CollectionFormatQueryClientSsvOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();

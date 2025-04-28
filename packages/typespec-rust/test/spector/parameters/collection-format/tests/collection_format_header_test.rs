@@ -9,10 +9,7 @@ async fn csv() {
     let client = CollectionFormatClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_collection_format_header_client()
-        .csv(
-            vec!["blue".to_string(), "red".to_string(), "green".to_string()],
-            None,
-        )
+        .csv(&["blue", "red", "green"], None)
         .await
         .unwrap();
 }

@@ -394,40 +394,18 @@ export class Adapter {
           break;
       }
 
-      let scalar = this.types.get(scalarType);
-      if (scalar) {
-        return <rust.Scalar>scalar;
-      }
-      scalar = new rust.Scalar(scalarType);
-      this.types.set(scalarType, scalar);
-      return scalar;
+      return this.getScalar(scalarType);
     };
 
     switch (type.kind) {
-      case 'array': {
-        const vecT = this.typeToWireType(this.getType(type.valueType, stack));
-        const keyName = recursiveKeyName('Vec', vecT);
-        let vectorType = this.types.get(keyName);
-        if (vectorType) {
-          return vectorType;
-        }
-        vectorType = new rust.Vector(vecT);
-        this.types.set(keyName, vectorType);
-        return vectorType;
-      }
+      case 'array':
+        return this.getVec(this.typeToWireType(this.getType(type.valueType, stack)));
       case 'bytes': {
         let encoding: rust.BytesEncoding = 'std';
         if (type.encode === 'base64url') {
           encoding = 'url';
         }
-        const keyName = `encodedBytes-${encoding}`;
-        let encodedBytesType = this.types.get(keyName);
-        if (encodedBytesType) {
-          return encodedBytesType;
-        }
-        encodedBytesType = new rust.EncodedBytes(encoding);
-        this.types.set(keyName, encodedBytesType);
-        return encodedBytesType;
+        return this.getEncodedBytes(encoding, false);
       }
       case 'constant':
         return this.getLiteral(type);
@@ -441,17 +419,8 @@ export class Adapter {
         }
         return decimalType;
       }
-      case 'dict': {
-        const hashmapT = this.typeToWireType(this.getType(type.valueType, stack));
-        const keyName = recursiveKeyName('hashmap', hashmapT);
-        let hashmapType = this.types.get(keyName);
-        if (hashmapType) {
-          return hashmapType;
-        }
-        hashmapType = new rust.HashMap(hashmapT);
-        this.types.set(keyName, hashmapType);
-        return hashmapType;
-      }
+      case 'dict':
+        return this.getHashMap(this.typeToWireType(this.getType(type.valueType, stack)));
       case 'duration':
         switch (type.wireType.kind) {
           case 'float':
@@ -538,6 +507,30 @@ export class Adapter {
     }
   }
 
+  /** returns an EncodedBytes type with the specified encoding */
+  private getEncodedBytes(encoding: rust.BytesEncoding, asSlice: boolean): rust.EncodedBytes {
+    const keyName = `encodedBytes-${encoding}${asSlice ? '-slice' : ''}`;
+    let encodedBytesType = this.types.get(keyName);
+    if (encodedBytesType) {
+      return <rust.EncodedBytes>encodedBytesType;
+    }
+    encodedBytesType = new rust.EncodedBytes(encoding, asSlice);
+    this.types.set(keyName, encodedBytesType);
+    return encodedBytesType;
+  }
+
+  /** returns a HashMap<String, type> */
+  private getHashMap(type: rust.WireType): rust.HashMap {
+    const keyName = recursiveKeyName('hashmap', type);
+    let hashmapType = this.types.get(keyName);
+    if (hashmapType) {
+      return <rust.HashMap>hashmapType;
+    }
+    hashmapType = new rust.HashMap(type);
+    this.types.set(keyName, hashmapType);
+    return hashmapType;
+  }
+
   /** returns the specified type wrapped in a Ref */
   private getRefType(type: rust.RefType): rust.Ref {
     const typeKey = recursiveKeyName('ref', type);
@@ -547,6 +540,27 @@ export class Adapter {
       this.types.set(typeKey, refType);
     }
     return <rust.Ref>refType;
+  }
+
+  /** returns a scalar for the specified scalar type */
+  private getScalar(type: rust.ScalarType): rust.Scalar {
+    let scalar = this.types.get(type);
+    if (!scalar) {
+      scalar = new rust.Scalar(type);
+      this.types.set(type, scalar);
+    }
+    return <rust.Scalar>scalar;
+  }
+
+  /** returns a slice of the specified type */
+  private getSlice(type: rust.WireType): rust.Slice {
+    const typeKey = recursiveKeyName('slice', type);
+    let slice = this.types.get(typeKey);
+    if (!slice) {
+      slice = new rust.Slice(type);
+      this.types.set(typeKey, slice);
+    }
+    return <rust.Slice>slice;
   }
 
   /** returns the Rust string slice type */
@@ -582,6 +596,18 @@ export class Adapter {
     unitType = new rust.Unit();
     this.types.set(typeKey, unitType);
     return unitType;
+  }
+
+  /** returns a Vec<type> */
+  private getVec(type: rust.WireType): rust.Vector {
+    const keyName = recursiveKeyName('Vec', type);
+    let vectorType = this.types.get(keyName);
+    if (vectorType) {
+      return <rust.Vector>vectorType;
+    }
+    vectorType = new rust.Vector(type);
+    this.types.set(keyName, vectorType);
+    return vectorType;
   }
 
   /**
@@ -1263,6 +1289,8 @@ export class Adapter {
           return `Ref${recursiveTypeName(type.type)}`;
         case 'scalar':
           return codegen.capitalize(type.type);
+        case 'slice':
+          return `Slice${recursiveTypeName(type.type)}`;
         case 'Vec':
           return `${type.kind}${recursiveTypeName(type.type)}`;
         default:
@@ -1424,9 +1452,12 @@ export class Adapter {
     const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
     let paramType = this.getType(param.type);
 
-    // for required path/query method string params, we emit them as &str instead of String
-    if (!param.optional && !param.onClient && paramType.kind === 'String' && (param.kind === 'path' || param.kind === 'query')) {
-      paramType = this.getRefType(this.getStringSlice());
+    // for required header/path/query method string params, we might emit them as borrowed types
+    if (!param.optional && !param.onClient && (param.kind === 'header' || param.kind === 'path' || param.kind === 'query')) {
+      const borrowedType = this.canBorrowMethodParam(paramType, param.kind);
+      if (borrowedType) {
+        paramType = borrowedType;
+      }
     }
 
     let adaptedParam: rust.MethodParameter;
@@ -1447,7 +1478,7 @@ export class Adapter {
         throw new AdapterError('UnsupportedTsp', 'cookie parameters are not supported', param.__raw?.node);
       case 'header':
         if (param.collectionFormat) {
-          if (paramType.kind !== 'Vec') {
+          if (paramType.kind !== 'Vec' && !isRefSlice(paramType)) {
             throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for HeaderCollectionParameter`, param.__raw?.node);
           }
           let format: rust.CollectionFormat;
@@ -1481,7 +1512,7 @@ export class Adapter {
       case 'query':
         if (param.collectionFormat) {
           const format = param.collectionFormat === 'simple' ? 'csv' : (param.collectionFormat === 'form' ? 'multi' : param.collectionFormat);
-          if (paramType.kind !== 'Vec') {
+          if (paramType.kind !== 'Vec' && !isRefSlice(paramType)) {
             throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for QueryCollectionParameter`, param.__raw?.node);
           }
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
@@ -1501,6 +1532,53 @@ export class Adapter {
     }
 
     return adaptedParam;
+  }
+
+  /**
+   * updates the specified type to a borrowed type based on its type and kind.
+   * if no such transformation is necessary, undefined is returned.
+   * e.g. a String param that doesn't need to be owned will be
+   * returned as a &str.
+   * 
+   * @param type the param type to be updated
+   * @param kind the kind of param
+   * @returns the updated param type or undefined
+   */
+  private canBorrowMethodParam(type: rust.Type, kind: 'header' | 'path' | 'query'): rust.Type | undefined {
+    const recursiveBuildVecStr = (v: rust.WireType): rust.WireType => {
+      switch (v.kind) {
+        case 'encodedBytes':
+          return this.getRefType(this.getEncodedBytes(v.encoding, true));
+        case 'hashmap':
+          return this.getHashMap(this.typeToWireType(recursiveBuildVecStr(v.type)));
+        case 'String':
+          return this.getRefType(this.getStringSlice());
+        case 'Vec':
+          return this.getVec(this.typeToWireType(recursiveBuildVecStr(v.type)));
+        default:
+          throw new AdapterError('InternalError', `unexpected kind ${v.kind}`);
+      }
+    };
+
+    switch (type.kind) {
+      case 'String':
+        // header String params are always owned
+        if (kind !== 'header') {
+          return this.getRefType(this.getStringSlice());
+        }
+        break;
+      case 'Vec': {
+        // if this is an array of string, we ultimately want a slice of &str
+        const unwrapped = helpers.unwrapVec(type);
+        if (unwrapped.kind === 'String' || unwrapped.kind === 'encodedBytes') {
+          return this.getRefType(this.getSlice(recursiveBuildVecStr(type.type)));
+        }
+        return this.getRefType(this.getSlice(type.type));
+      }
+      case 'encodedBytes':
+        return this.getRefType(this.getEncodedBytes(type.encoding, true));
+    }
+    return undefined;
   }
 
   /**
@@ -1525,6 +1603,7 @@ export class Adapter {
       case 'offsetDateTime':
       case 'ref':
       case 'scalar':
+      case 'slice':
       case 'str':
       case 'String':
       case 'Url':
@@ -1595,6 +1674,11 @@ export class Adapter {
   }
 }
 
+/** typeguard to determine if type is a Ref<Slice> */
+function isRefSlice(type: rust.Type): type is rust.Ref<rust.Slice> {
+  return type.kind === 'ref' && type.type.kind === 'slice';
+}
+
 /** method types that send/receive data */
 type MethodType = rust.AsyncMethod | rust.PageableMethod;
 
@@ -1643,7 +1727,7 @@ function recursiveKeyName(root: string, type: rust.WireType): string {
     case 'Vec':
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
     case 'encodedBytes':
-      return `${root}-${type.kind}-${type.encoding}`;
+      return `${root}-${type.kind}-${type.encoding}${type.slice ? '-slice' : ''}`;
     case 'enum':
       return `${root}-${type.kind}-${type.name}`;
     case 'enumValue':
@@ -1658,6 +1742,8 @@ function recursiveKeyName(root: string, type: rust.WireType): string {
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
     case 'scalar':
       return `${root}-${type.kind}-${type.type}`;
+    case 'slice':
+      return recursiveKeyName(`${root}-${type.kind}`, type.type);
     default:
       return `${root}-${type.kind}`;
   }

@@ -148,7 +148,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'marker':
       return type.name;
     case 'encodedBytes':
-      return 'Vec<u8>';
+      return type.slice ? '[u8]' : 'Vec<u8>';
     case 'enumValue':
       return `${type.type.name}`;
     case 'Etag':
@@ -196,6 +196,8 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return type.kind;
     case 'scalar':
       return type.type;
+    case 'slice':
+      return `[${getTypeDeclaration(type.type)}]`;
     case 'enum':
     case 'jsonValue':
     case 'offsetDateTime':
@@ -401,6 +403,7 @@ export function unwrapType(type: rust.Payload | rust.Type): rust.Type {
     case 'hashmap':
     case 'option':
     case 'ref':
+    case 'slice':
     case 'Vec':
       return unwrapType(type.type);
     case 'pager':      

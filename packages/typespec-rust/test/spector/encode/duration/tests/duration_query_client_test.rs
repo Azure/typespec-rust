@@ -49,7 +49,7 @@ async fn int32_seconds_array() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_duration_query_client()
-        .int32_seconds_array(vec![36, 47], None)
+        .int32_seconds_array(&[36, 47], None)
         .await
         .unwrap();
 }

@@ -30,7 +30,7 @@ impl BytesHeaderClient {
     /// * `options` - Optional parameters for the request.
     pub async fn base64(
         &self,
-        value: Vec<u8>,
+        value: &[u8],
         options: Option<BytesHeaderClientBase64Options<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -48,7 +48,7 @@ impl BytesHeaderClient {
     /// * `options` - Optional parameters for the request.
     pub async fn base64_url(
         &self,
-        value: Vec<u8>,
+        value: &[u8],
         options: Option<BytesHeaderClientBase64UrlOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -66,7 +66,7 @@ impl BytesHeaderClient {
     /// * `options` - Optional parameters for the request.
     pub async fn base64_url_array(
         &self,
-        value: Vec<Vec<u8>>,
+        value: &[&[u8]],
         options: Option<BytesHeaderClientBase64UrlArrayOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -91,7 +91,7 @@ impl BytesHeaderClient {
     /// * `options` - Optional parameters for the request.
     pub async fn default(
         &self,
-        value: Vec<u8>,
+        value: &[u8],
         options: Option<BytesHeaderClientDefaultOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();

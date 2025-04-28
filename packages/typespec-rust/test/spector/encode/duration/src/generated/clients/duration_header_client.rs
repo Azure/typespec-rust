@@ -120,7 +120,7 @@ impl DurationHeaderClient {
     /// * `options` - Optional parameters for the request.
     pub async fn iso8601_array(
         &self,
-        duration: Vec<String>,
+        duration: &[&str],
         options: Option<DurationHeaderClientIso8601ArrayOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();

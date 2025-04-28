@@ -59,7 +59,7 @@ async fn iso8601_array() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_duration_header_client()
-        .iso8601_array(vec!["P40D".to_string(), "P50D".to_string()], None)
+        .iso8601_array(&["P40D", "P50D"], None)
         .await
         .unwrap();
 }

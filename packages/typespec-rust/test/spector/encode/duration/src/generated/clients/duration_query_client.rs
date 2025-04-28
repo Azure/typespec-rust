@@ -105,7 +105,7 @@ impl DurationQueryClient {
     /// * `options` - Optional parameters for the request.
     pub async fn int32_seconds_array(
         &self,
-        input: Vec<i32>,
+        input: &[i32],
         options: Option<DurationQueryClientInt32SecondsArrayOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();

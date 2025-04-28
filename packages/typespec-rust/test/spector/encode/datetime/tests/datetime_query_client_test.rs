@@ -75,7 +75,7 @@ async fn unix_timestamp_array() {
     client
         .get_datetime_query_client()
         .unix_timestamp_array(
-            vec![
+            &[
                 OffsetDateTime::new_utc(
                     Date::from_calendar_date(2023, Month::June, 12).unwrap(),
                     Time::from_hms(10, 47, 44).unwrap(),

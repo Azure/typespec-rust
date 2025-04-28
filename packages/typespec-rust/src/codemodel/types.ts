@@ -18,7 +18,7 @@ export interface Docs {
 export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | Pager | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
-export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | Scalar | StringSlice | StringType | Url | Vector;
+export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | Scalar | Slice | StringSlice | StringType | Url | Vector;
 
 /** Type defines a type within the Rust type system */
 export type Type = SdkType | WireType;
@@ -61,6 +61,9 @@ export interface EncodedBytes {
 
   /** indicates what kind of base64-encoding to use */
   encoding: BytesEncoding;
+
+  /** indicates if this should be a slice instead of Vec */
+  slice: boolean;
 }
 
 /** Enum is a Rust enum type. */
@@ -331,6 +334,14 @@ export interface Scalar {
 /** BodyFormat indicates the wire format for request and response bodies */
 export type BodyFormat = 'json' | 'xml';
 
+/** Slice is a Rust slice i.e. [T] */
+export interface Slice {
+  kind: 'slice';
+
+  /** the type of the slice */
+  type: WireType;
+}
+
 /** StringSlice is a Rust string slice */
 export interface StringSlice {
   kind: 'str';
@@ -525,9 +536,10 @@ export class Decimal extends External implements Decimal {
 }
 
 export class EncodedBytes implements EncodedBytes {
-  constructor(encoding: BytesEncoding) {
+  constructor(encoding: BytesEncoding, slice: boolean) {
     this.kind = 'encodedBytes';
     this.encoding = encoding;
+    this.slice = slice;
   }
 }
 
@@ -698,6 +710,13 @@ export class Result<T> extends External implements Result<T> {
 export class Scalar implements Scalar {
   constructor(type: ScalarType) {
     this.kind = 'scalar';
+    this.type = type;
+  }
+}
+
+export class Slice implements Slice {
+  constructor(type: WireType) {
+    this.kind = 'slice';
     this.type = type;
   }
 }

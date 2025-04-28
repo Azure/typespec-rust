@@ -500,7 +500,7 @@ impl BlockBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn stage_block(
         &self,
-        block_id: Vec<u8>,
+        block_id: &[u8],
         content_length: u64,
         body: RequestContent<Bytes>,
         options: Option<BlockBlobClientStageBlockOptions<'_>>,
@@ -571,7 +571,7 @@ impl BlockBlobClient {
     /// * `options` - Optional parameters for the request.
     pub async fn stage_block_from_url(
         &self,
-        block_id: Vec<u8>,
+        block_id: &[u8],
         content_length: u64,
         source_url: String,
         options: Option<BlockBlobClientStageBlockFromUrlOptions<'_>>,

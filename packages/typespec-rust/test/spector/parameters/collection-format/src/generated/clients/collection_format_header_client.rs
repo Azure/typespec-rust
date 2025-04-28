@@ -27,7 +27,7 @@ impl CollectionFormatHeaderClient {
     /// * `options` - Optional parameters for the request.
     pub async fn csv(
         &self,
-        colors: Vec<String>,
+        colors: &[&str],
         options: Option<CollectionFormatHeaderClientCsvOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();

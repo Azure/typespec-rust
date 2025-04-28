@@ -9,7 +9,7 @@ async fn base64() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_bytes_query_client()
-        .base64("test".as_bytes().to_owned(), None)
+        .base64("test".as_bytes(), None)
         .await
         .unwrap();
 }
@@ -19,7 +19,7 @@ async fn base64_url() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_bytes_query_client()
-        .base64_url("test".as_bytes().to_owned(), None)
+        .base64_url("test".as_bytes(), None)
         .await
         .unwrap();
 }
@@ -29,10 +29,7 @@ async fn base64_url_array() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_bytes_query_client()
-        .base64_url_array(
-            vec!["test".as_bytes().to_owned(), "test".as_bytes().to_owned()],
-            None,
-        )
+        .base64_url_array(&["test".as_bytes(), "test".as_bytes()], None)
         .await
         .unwrap();
 }
@@ -42,7 +39,7 @@ async fn default() {
     let client = BytesClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_bytes_query_client()
-        .default("test".as_bytes().to_owned(), None)
+        .default("test".as_bytes(), None)
         .await
         .unwrap();
 }

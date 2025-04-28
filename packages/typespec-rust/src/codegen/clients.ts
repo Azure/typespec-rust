@@ -696,7 +696,10 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
   /** returns & if the param needs to be borrowed (which is the majority of cases), else the empty string */
   const borrowOrNot = function(param: rust.Parameter): string {
-    return param.type.kind === 'ref' ? '' : '&';
+    if (param.type.kind !== 'ref' || param.type.type.kind === 'encodedBytes' || param.type.type.kind === 'slice') {
+      return '&';
+    }
+    return '';
   };
 
   let body = '';
@@ -1107,7 +1110,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
   if (param.kind === 'headerCollection' || param.kind === 'queryCollection') {
     if (param.format === 'multi') {
       throw new CodegenError('InternalError', 'multi should have been handled outside getHeaderPathQueryParamValue');
-    } else if (paramType.kind === 'String') {
+    } else if (paramType.kind === 'String' || paramType.kind === 'str') {
       return `${paramName}.join("${getCollectionDelimiter(param.format)}")`;
     }
 
