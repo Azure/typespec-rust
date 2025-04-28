@@ -1253,7 +1253,6 @@ export class Adapter {
      * @returns the name
      */
     const recursiveTypeName = function(type: rust.WireType): string {
-      // maybe?
       switch (type.kind) {
         case 'enum':
         case 'model':
