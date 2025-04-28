@@ -22,7 +22,7 @@ async fn list() {
         page_count += 1;
         let page = page.unwrap();
         let page: PagedUser = page.into_body().await.unwrap();
-        let value = page.value.unwrap();
+        let value = page.value;
         match page_count {
             1 => {
                 assert_eq!(value.len(), 3);

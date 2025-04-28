@@ -222,10 +222,9 @@ pub struct BlobFlatListSegment {
         default,
         deserialize_with = "Blob_itemsBlob::unwrap",
         rename = "BlobItems",
-        serialize_with = "Blob_itemsBlob::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Blob_itemsBlob::wrap"
     )]
-    pub blob_items: Option<Vec<BlobItemInternal>>,
+    pub blob_items: Vec<BlobItemInternal>,
 }
 
 /// Represents an array of blobs.
@@ -239,10 +238,9 @@ pub struct BlobHierarchyListSegment {
         default,
         deserialize_with = "Blob_itemsBlob::unwrap",
         rename = "BlobItems",
-        serialize_with = "Blob_itemsBlob::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Blob_itemsBlob::wrap"
     )]
-    pub blob_items: Option<Vec<BlobItemInternal>>,
+    pub blob_items: Vec<BlobItemInternal>,
 
     /// The blob prefixes.
     #[serde(
@@ -998,8 +996,7 @@ pub struct ListBlobsFlatSegmentResponse {
     pub prefix: Option<String>,
 
     /// The blob segment.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub segment: Option<BlobFlatListSegment>,
+    pub segment: BlobFlatListSegment,
 
     /// The service endpoint.
     #[serde(rename = "@ServiceEndpoint", skip_serializing_if = "Option::is_none")]
@@ -1037,8 +1034,7 @@ pub struct ListBlobsHierarchySegmentResponse {
     pub prefix: Option<String>,
 
     /// The blob segment.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub segment: Option<BlobHierarchyListSegment>,
+    pub segment: BlobHierarchyListSegment,
 
     /// The service endpoint.
     #[serde(rename = "@ServiceEndpoint", skip_serializing_if = "Option::is_none")]
@@ -1056,10 +1052,9 @@ pub struct ListContainersSegmentResponse {
         default,
         deserialize_with = "Container_itemsContainer::unwrap",
         rename = "Containers",
-        serialize_with = "Container_itemsContainer::wrap",
-        skip_serializing_if = "Option::is_none"
+        serialize_with = "Container_itemsContainer::wrap"
     )]
-    pub container_items: Option<Vec<ContainerItem>>,
+    pub container_items: Vec<ContainerItem>,
 
     /// The marker of the containers.
     #[serde(rename = "Marker", skip_serializing_if = "Option::is_none")]

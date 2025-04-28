@@ -37,7 +37,7 @@ async fn list_header_response_body() {
         let page: RequestHeaderResponseBodyResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(page.next_token.is_some());
                 assert_eq!(page_pets[0].id, Some("1".to_string()));
@@ -46,7 +46,7 @@ async fn list_header_response_body() {
                 assert_eq!(page_pets[1].name, Some("cat".to_string()));
             }
             2 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(page.next_token.is_none());
                 assert_eq!(page_pets[0].id, Some("3".to_string()));
@@ -80,7 +80,7 @@ async fn list_header_response_body() {
         let page: RequestHeaderResponseBodyResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(page.next_token.is_none());
                 assert_eq!(page_pets[0].id, Some("3".to_string()));
@@ -117,7 +117,7 @@ async fn list_header_response_header() {
         let page: RequestHeaderResponseHeaderResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(next_token.is_some());
                 assert_eq!(page_pets[0].id, Some("1".to_string()));
@@ -126,7 +126,7 @@ async fn list_header_response_header() {
                 assert_eq!(page_pets[1].name, Some("cat".to_string()));
             }
             2 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(next_token.is_none());
                 assert_eq!(page_pets[0].id, Some("3".to_string()));
@@ -161,7 +161,7 @@ async fn list_header_response_header() {
         let page: RequestHeaderResponseHeaderResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(next_token.is_none());
                 assert_eq!(page_pets[0].id, Some("3".to_string()));
@@ -197,7 +197,7 @@ async fn list_query_response_body() {
         let page: RequestQueryResponseBodyResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(page.next_token.is_some());
                 assert_eq!(page_pets[0].id, Some("1".to_string()));
@@ -206,7 +206,7 @@ async fn list_query_response_body() {
                 assert_eq!(page_pets[1].name, Some("cat".to_string()));
             }
             2 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(page.next_token.is_none());
                 assert_eq!(page_pets[0].id, Some("3".to_string()));
@@ -240,7 +240,7 @@ async fn list_query_response_body() {
         let page: RequestQueryResponseBodyResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(page.next_token.is_none());
                 assert_eq!(page_pets[0].id, Some("3".to_string()));
@@ -277,7 +277,7 @@ async fn list_query_response_header() {
         let page: RequestQueryResponseHeaderResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(next_token.is_some());
                 assert_eq!(page_pets[0].id, Some("1".to_string()));
@@ -286,7 +286,7 @@ async fn list_query_response_header() {
                 assert_eq!(page_pets[1].name, Some("cat".to_string()));
             }
             2 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(next_token.is_none());
                 assert_eq!(page_pets[0].id, Some("3".to_string()));
@@ -321,7 +321,7 @@ async fn list_query_response_header() {
         let page: RequestQueryResponseHeaderResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(next_token.is_none());
                 assert_eq!(page_pets[0].id, Some("3".to_string()));

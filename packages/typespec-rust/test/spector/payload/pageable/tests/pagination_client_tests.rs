@@ -19,7 +19,7 @@ async fn list() {
         let page: LinkResponse = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(page.next.is_some());
                 assert_eq!(page_pets[0].id, Some("1".to_string()));
@@ -28,7 +28,7 @@ async fn list() {
                 assert_eq!(page_pets[1].name, Some("cat".to_string()));
             }
             2 => {
-                let page_pets = page.pets.unwrap();
+                let page_pets = page.pets;
                 assert_eq!(page_pets.len(), 2);
                 assert!(page.next.is_none());
                 assert_eq!(page_pets[0].id, Some("3".to_string()));

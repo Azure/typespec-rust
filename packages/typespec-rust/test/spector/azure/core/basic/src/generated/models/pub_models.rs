@@ -15,8 +15,7 @@ pub struct PagedUser {
     pub next_link: Option<String>,
 
     /// The User items on this page
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Vec<User>>,
+    pub value: Vec<User>,
 }
 
 /// Details about a user.

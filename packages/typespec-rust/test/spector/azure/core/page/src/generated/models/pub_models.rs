@@ -32,8 +32,7 @@ pub struct PagedFirstItem {
     pub next_link: Option<String>,
 
     /// The FirstItem items on this page
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Vec<FirstItem>>,
+    pub value: Vec<FirstItem>,
 }
 
 /// Paged collection of SecondItem items
@@ -45,8 +44,7 @@ pub struct PagedSecondItem {
     pub next_link: Option<String>,
 
     /// The SecondItem items on this page
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Vec<SecondItem>>,
+    pub value: Vec<SecondItem>,
 }
 
 /// Paged collection of User items
@@ -58,8 +56,7 @@ pub struct PagedUser {
     pub next_link: Option<String>,
 
     /// The User items on this page
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Vec<User>>,
+    pub value: Vec<User>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
@@ -68,8 +65,7 @@ pub struct ParameterizedNextLinkPagingResult {
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub values: Option<Vec<User>>,
+    pub values: Vec<User>,
 }
 
 /// Second item.
@@ -106,8 +102,7 @@ pub struct User {
 #[non_exhaustive]
 pub struct UserListResults {
     /// List of items.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub items: Option<Vec<User>>,
+    pub items: Vec<User>,
 
     /// Link to fetch more items.
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]

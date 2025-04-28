@@ -1176,6 +1176,48 @@ export class Adapter {
       if (!this.crate.models.includes(synthesizedModel)) {
         this.crate.models.push(synthesizedModel);
       }
+
+      // for the pager response type, remove the Option<T> around the Vec<T> for the page items
+      if (!method.pagingMetadata.pageItemsSegments) {
+        throw new AdapterError('InternalError', `paged method ${method.name} has no pageItemsSegments`, method.__raw?.node);
+      }
+
+      // unwrap all of the segments for the paged response
+      let unwrappedCount = 0;
+      let typeToUnwrap = synthesizedModel;
+      for (const pageItemsSegment of method.pagingMetadata.pageItemsSegments) {
+        const segment = <tcgc.SdkBodyModelPropertyType>pageItemsSegment;
+        let serde: string;
+        switch (format) {
+          case 'json':
+            serde = segment.serializationOptions.json!.name;
+            break;
+          case 'xml':
+            serde = segment.serializationOptions.xml!.name;
+            break;
+        }
+        for (let i = 0; i < typeToUnwrap.fields.length; ++i) {
+          const field = typeToUnwrap.fields[i];
+          if (field.serde === serde) {
+            // check if this has already been unwrapped (e.g. type is shared across operations)
+            if (field.type.kind === 'option') {
+              typeToUnwrap.fields[i].type = <rust.WireType>(<rust.Option>typeToUnwrap.fields[i].type).type;
+            }
+
+            // move to the next segment
+            if (field.type.kind === 'model') {
+              typeToUnwrap = field.type;
+            }
+            ++unwrappedCount;
+            break;
+          }
+        }
+      }
+
+      if (unwrappedCount !== method.pagingMetadata.pageItemsSegments.length) {
+        throw new AdapterError('InternalError', `failed to unwrap paged items for method ${method.name}`, method.__raw?.node);
+      }
+
       returnType = new rust.Pager(this.crate, new rust.Payload(synthesizedModel, format));
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
       returnType = new rust.Response(this.crate, new rust.Payload(this.typeToWireType(this.getType(method.response.type)), getBodyFormat()));

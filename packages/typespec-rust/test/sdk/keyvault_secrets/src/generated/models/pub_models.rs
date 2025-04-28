@@ -136,8 +136,7 @@ pub struct DeletedSecretListResult {
 
     /// A response message containing a list of deleted secrets in the key vault along with a link to the next page of deleted
     /// secrets.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Vec<DeletedSecretItem>>,
+    pub value: Vec<DeletedSecretItem>,
 }
 
 /// The secret management attributes.
@@ -260,8 +259,7 @@ pub struct SecretListResult {
     pub next_link: Option<String>,
 
     /// A response message containing a list of secrets in the key vault along with a link to the next page of secrets.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<Vec<SecretItem>>,
+    pub value: Vec<SecretItem>,
 }
 
 /// The secret restore parameters.
