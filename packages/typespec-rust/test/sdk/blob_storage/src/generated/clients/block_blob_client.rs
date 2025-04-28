@@ -281,7 +281,7 @@ impl BlockBlobClient {
     pub async fn put_blob_from_url(
         &self,
         content_length: u64,
-        copy_source: &str,
+        copy_source: String,
         options: Option<BlockBlobClientPutBlobFromUrlOptions<'_>>,
     ) -> Result<Response<BlockBlobClientPutBlobFromUrlResult>> {
         let options = options.unwrap_or_default();
@@ -345,7 +345,7 @@ impl BlockBlobClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-copy-source", copy_source.to_owned());
+        request.insert_header("x-ms-copy-source", copy_source);
         if let Some(copy_source_authorization) = options.copy_source_authorization {
             request.insert_header("x-ms-copy-source-authorization", copy_source_authorization);
         }
@@ -573,7 +573,7 @@ impl BlockBlobClient {
         &self,
         block_id: Vec<u8>,
         content_length: u64,
-        source_url: &str,
+        source_url: String,
         options: Option<BlockBlobClientStageBlockFromUrlOptions<'_>>,
     ) -> Result<Response<BlockBlobClientStageBlockFromUrlResult>> {
         let options = options.unwrap_or_default();
@@ -599,7 +599,7 @@ impl BlockBlobClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-copy-source", source_url.to_owned());
+        request.insert_header("x-ms-copy-source", source_url);
         if let Some(copy_source_authorization) = options.copy_source_authorization {
             request.insert_header("x-ms-copy-source-authorization", copy_source_authorization);
         }

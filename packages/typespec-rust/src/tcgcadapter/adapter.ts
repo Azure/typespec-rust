@@ -1424,8 +1424,8 @@ export class Adapter {
     const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
     let paramType = this.getType(param.type);
 
-    // for required header/path/query method string params, we emit them as &str instead of String
-    if (!param.optional && !param.onClient && paramType.kind === 'String' && (param.kind === 'header' || param.kind === 'path' || param.kind === 'query')) {
+    // for required path/query method string params, we emit them as &str instead of String
+    if (!param.optional && !param.onClient && paramType.kind === 'String' && (param.kind === 'path' || param.kind === 'query')) {
       paramType = this.getRefType(this.getStringSlice());
     }
 
@@ -1560,15 +1560,6 @@ export class Adapter {
           throw new AdapterError('InternalError', `didn't find body model property for spread parameter ${param.name}`, param.__raw?.node);
         }
 
-        // this is the param type as surfaced in the method sig.
-        // it's usually the same type as its corresponding field type
-        // in the underlying model. the only exception is for String
-        // types. we want to surface those as &str in the method sig.
-        let paramType = this.getType(param.type);
-        if (!param.optional && !param.onClient && paramType.kind === 'String') {
-          paramType = this.getRefType(this.getStringSlice());
-        }
-
         // this is the internal model type that the spread params coalesce into
         const payloadType = this.getType(opParamType);
         if (payloadType.kind !== 'model') {
@@ -1577,7 +1568,7 @@ export class Adapter {
 
         const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
         const paramLoc: rust.ParameterLocation = 'method';
-        const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, paramType, new rust.RequestContent(this.crate, new rust.Payload(payloadType, format)));
+        const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, this.getType(param.type), new rust.RequestContent(this.crate, new rust.Payload(payloadType, format)));
         return adaptedParam;
       }
     }

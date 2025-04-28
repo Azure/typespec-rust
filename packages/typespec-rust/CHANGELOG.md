@@ -5,6 +5,7 @@
 ### Breaking Changes
 
 * Model fields of type `HashMap` and `Vec` are now wrapped in an `Option<T>`.
+* Parameters emitted as `&str` but required ownership are now emitted as `String`.
 
 ### Features Added
 

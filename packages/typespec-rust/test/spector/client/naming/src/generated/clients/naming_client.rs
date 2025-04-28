@@ -183,7 +183,7 @@ impl NamingClient {
     /// * `options` - Optional parameters for the request.
     pub async fn request(
         &self,
-        client_name: &str,
+        client_name: String,
         options: Option<NamingClientRequestOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -191,7 +191,7 @@ impl NamingClient {
         let mut url = self.endpoint.clone();
         url = url.join("client/naming/header")?;
         let mut request = Request::new(url, Method::Post);
-        request.insert_header("default-name", client_name.to_owned());
+        request.insert_header("default-name", client_name);
         self.pipeline.send(&ctx, &mut request).await
     }
 

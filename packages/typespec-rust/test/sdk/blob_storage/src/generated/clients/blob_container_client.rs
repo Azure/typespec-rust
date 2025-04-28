@@ -202,8 +202,8 @@ impl BlobContainerClient {
     /// * `options` - Optional parameters for the request.
     pub async fn change_lease(
         &self,
-        lease_id: &str,
-        proposed_lease_id: &str,
+        lease_id: String,
+        proposed_lease_id: String,
         options: Option<BlobContainerClientChangeLeaseOptions<'_>>,
     ) -> Result<Response<BlobContainerClientChangeLeaseResult>> {
         let options = options.unwrap_or_default();
@@ -233,8 +233,8 @@ impl BlobContainerClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-lease-id", lease_id.to_owned());
-        request.insert_header("x-ms-proposed-lease-id", proposed_lease_id.to_owned());
+        request.insert_header("x-ms-lease-id", lease_id);
+        request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -675,7 +675,7 @@ impl BlobContainerClient {
     /// * `options` - Optional parameters for the request.
     pub async fn release_lease(
         &self,
-        lease_id: &str,
+        lease_id: String,
         options: Option<BlobContainerClientReleaseLeaseOptions<'_>>,
     ) -> Result<Response<BlobContainerClientReleaseLeaseResult>> {
         let options = options.unwrap_or_default();
@@ -705,7 +705,7 @@ impl BlobContainerClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-lease-id", lease_id.to_owned());
+        request.insert_header("x-ms-lease-id", lease_id);
         request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -718,7 +718,7 @@ impl BlobContainerClient {
     /// * `options` - Optional parameters for the request.
     pub async fn rename(
         &self,
-        source_container_name: &str,
+        source_container_name: String,
         options: Option<BlobContainerClientRenameOptions<'_>>,
     ) -> Result<Response<BlobContainerClientRenameResult>> {
         let options = options.unwrap_or_default();
@@ -738,10 +738,7 @@ impl BlobContainerClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header(
-            "x-ms-source-container-name",
-            source_container_name.to_owned(),
-        );
+        request.insert_header("x-ms-source-container-name", source_container_name);
         if let Some(source_lease_id) = options.source_lease_id {
             request.insert_header("x-ms-source-lease-id", source_lease_id);
         }
@@ -758,7 +755,7 @@ impl BlobContainerClient {
     /// * `options` - Optional parameters for the request.
     pub async fn renew_lease(
         &self,
-        lease_id: &str,
+        lease_id: String,
         options: Option<BlobContainerClientRenewLeaseOptions<'_>>,
     ) -> Result<Response<BlobContainerClientRenewLeaseResult>> {
         let options = options.unwrap_or_default();
@@ -788,7 +785,7 @@ impl BlobContainerClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        request.insert_header("x-ms-lease-id", lease_id.to_owned());
+        request.insert_header("x-ms-lease-id", lease_id);
         request.insert_header("x-ms-version", &self.version);
         self.pipeline.send(&ctx, &mut request).await
     }

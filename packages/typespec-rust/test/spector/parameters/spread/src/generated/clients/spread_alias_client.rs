@@ -36,7 +36,7 @@ impl SpreadAliasClient {
     /// * `options` - Optional parameters for the request.
     pub async fn spread_as_request_body(
         &self,
-        name: &str,
+        name: String,
         options: Option<SpreadAliasClientSpreadAsRequestBodyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -45,10 +45,8 @@ impl SpreadAliasClient {
         url = url.join("parameters/spread/alias/request-body")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
-        let body: RequestContent<SpreadAsRequestBodyRequest> = SpreadAsRequestBodyRequest {
-            name: name.to_owned(),
-        }
-        .try_into()?;
+        let body: RequestContent<SpreadAsRequestBodyRequest> =
+            SpreadAsRequestBodyRequest { name }.try_into()?;
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -60,8 +58,8 @@ impl SpreadAliasClient {
     pub async fn spread_as_request_parameter(
         &self,
         id: &str,
-        x_ms_test_header: &str,
-        name: &str,
+        x_ms_test_header: String,
+        name: String,
         options: Option<SpreadAliasClientSpreadAsRequestParameterOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -72,12 +70,9 @@ impl SpreadAliasClient {
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
-        request.insert_header("x-ms-test-header", x_ms_test_header.to_owned());
+        request.insert_header("x-ms-test-header", x_ms_test_header);
         let body: RequestContent<SpreadAsRequestParameterRequest> =
-            SpreadAsRequestParameterRequest {
-                name: name.to_owned(),
-            }
-            .try_into()?;
+            SpreadAsRequestParameterRequest { name }.try_into()?;
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -92,9 +87,9 @@ impl SpreadAliasClient {
     pub async fn spread_parameter_with_inner_alias(
         &self,
         id: &str,
-        name: &str,
+        name: String,
         age: i32,
-        x_ms_test_header: &str,
+        x_ms_test_header: String,
         options: Option<SpreadAliasClientSpreadParameterWithInnerAliasOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -105,13 +100,9 @@ impl SpreadAliasClient {
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
-        request.insert_header("x-ms-test-header", x_ms_test_header.to_owned());
+        request.insert_header("x-ms-test-header", x_ms_test_header);
         let body: RequestContent<SpreadParameterWithInnerAliasRequest> =
-            SpreadParameterWithInnerAliasRequest {
-                name: name.to_owned(),
-                age,
-            }
-            .try_into()?;
+            SpreadParameterWithInnerAliasRequest { name, age }.try_into()?;
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -123,8 +114,8 @@ impl SpreadAliasClient {
     pub async fn spread_parameter_with_inner_model(
         &self,
         id: &str,
-        name: &str,
-        x_ms_test_header: &str,
+        name: String,
+        x_ms_test_header: String,
         options: Option<SpreadAliasClientSpreadParameterWithInnerModelOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -135,12 +126,9 @@ impl SpreadAliasClient {
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
-        request.insert_header("x-ms-test-header", x_ms_test_header.to_owned());
+        request.insert_header("x-ms-test-header", x_ms_test_header);
         let body: RequestContent<SpreadParameterWithInnerModelRequest> =
-            SpreadParameterWithInnerModelRequest {
-                name: name.to_owned(),
-            }
-            .try_into()?;
+            SpreadParameterWithInnerModelRequest { name }.try_into()?;
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -154,8 +142,8 @@ impl SpreadAliasClient {
     pub async fn spread_with_multiple_parameters(
         &self,
         id: &str,
-        x_ms_test_header: &str,
-        required_string: &str,
+        x_ms_test_header: String,
+        required_string: String,
         required_int_list: Vec<i32>,
         options: Option<SpreadAliasClientSpreadWithMultipleParametersOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -167,10 +155,10 @@ impl SpreadAliasClient {
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
-        request.insert_header("x-ms-test-header", x_ms_test_header.to_owned());
+        request.insert_header("x-ms-test-header", x_ms_test_header);
         let body: RequestContent<SpreadWithMultipleParametersRequest> =
             SpreadWithMultipleParametersRequest {
-                required_string: required_string.to_owned(),
+                required_string,
                 optional_int: options.optional_int,
                 required_int_list,
                 optional_string_list: options.optional_string_list,

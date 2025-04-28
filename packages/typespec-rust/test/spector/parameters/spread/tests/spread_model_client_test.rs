@@ -9,7 +9,7 @@ async fn spread_as_request_body() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_spread_model_client()
-        .spread_as_request_body("foo", None)
+        .spread_as_request_body("foo".to_string(), None)
         .await
         .unwrap();
 }
@@ -22,7 +22,7 @@ async fn spread_composite_request() {
     };
     client
         .get_spread_model_client()
-        .spread_composite_request("foo", "bar", body.try_into().unwrap(), None)
+        .spread_composite_request("foo", "bar".to_string(), body.try_into().unwrap(), None)
         .await
         .unwrap();
 }
@@ -32,7 +32,7 @@ async fn spread_composite_request_mix() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_spread_model_client()
-        .spread_composite_request_mix("foo", "bar", "foo", None)
+        .spread_composite_request_mix("foo", "bar".to_string(), "foo".to_string(), None)
         .await
         .unwrap();
 }
@@ -55,7 +55,7 @@ async fn spread_composite_request_without_body() {
     let client = SpreadClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_spread_model_client()
-        .spread_composite_request_without_body("foo", "bar", None)
+        .spread_composite_request_without_body("foo", "bar".to_string(), None)
         .await
         .unwrap();
 }

@@ -30,7 +30,7 @@ impl BasicServiceOperationGroupClient {
     pub async fn basic(
         &self,
         query_param: &str,
-        header_param: &str,
+        header_param: String,
         body: RequestContent<ActionRequest>,
         options: Option<BasicServiceOperationGroupClientBasicOptions<'_>>,
     ) -> Result<Response<ActionResponse>> {
@@ -45,7 +45,7 @@ impl BasicServiceOperationGroupClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
-        request.insert_header("header-param", header_param.to_owned());
+        request.insert_header("header-param", header_param);
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }

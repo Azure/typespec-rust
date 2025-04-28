@@ -9,7 +9,7 @@ async fn simple() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_basic_implicit_body_client()
-        .simple("foo", None)
+        .simple("foo".to_string(), None)
         .await
         .unwrap();
 }

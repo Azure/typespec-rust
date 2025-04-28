@@ -24,7 +24,12 @@ async fn basic() {
     };
     let resp = client
         .get_basic_service_operation_group_client()
-        .basic("query", "header", body.try_into().unwrap(), None)
+        .basic(
+            "query",
+            "header".to_string(),
+            body.try_into().unwrap(),
+            None,
+        )
         .await
         .unwrap();
     let action_resp: ActionResponse = resp.into_body().await.unwrap();

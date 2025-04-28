@@ -799,8 +799,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
         return setter;
       }
       const borrow = headerParam.location === 'client' && nonCopyableType(headerParam.type) ? '&' : '';
-      const toOwned = headerParam.type.kind === 'ref' ? '.to_owned()' : '';
-      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, !inClosure)}${toOwned});\n`;
+      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, !inClosure)});\n`;
     });
   }
 
@@ -826,9 +825,6 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       }
 
       let initializer = partialBodyParam.name;
-      if (partialBodyParam.paramType.kind === 'ref') {
-        initializer = `${initializer}.to_owned()`;
-      }
       if (requestContentType.content.type.visibility === 'pub') {
         // spread param maps to a non-internal model, so it must be wrapped in Some()
         initializer = `Some(${initializer})`;

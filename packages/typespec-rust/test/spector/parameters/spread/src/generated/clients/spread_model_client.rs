@@ -32,7 +32,7 @@ impl SpreadModelClient {
     /// * `options` - Optional parameters for the request.
     pub async fn spread_as_request_body(
         &self,
-        name: &str,
+        name: String,
         options: Option<SpreadModelClientSpreadAsRequestBodyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -41,10 +41,7 @@ impl SpreadModelClient {
         url = url.join("parameters/spread/model/request-body")?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
-        let body: RequestContent<BodyParameter> = BodyParameter {
-            name: Some(name.to_owned()),
-        }
-        .try_into()?;
+        let body: RequestContent<BodyParameter> = BodyParameter { name: Some(name) }.try_into()?;
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -56,7 +53,7 @@ impl SpreadModelClient {
     pub async fn spread_composite_request(
         &self,
         name: &str,
-        test_header: &str,
+        test_header: String,
         body: RequestContent<BodyParameter>,
         options: Option<SpreadModelClientSpreadCompositeRequestOptions<'_>>,
     ) -> Result<Response<()>> {
@@ -68,7 +65,7 @@ impl SpreadModelClient {
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
-        request.insert_header("test-header", test_header.to_owned());
+        request.insert_header("test-header", test_header);
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -80,8 +77,8 @@ impl SpreadModelClient {
     pub async fn spread_composite_request_mix(
         &self,
         name: &str,
-        test_header: &str,
-        prop: &str,
+        test_header: String,
+        prop: String,
         options: Option<SpreadModelClientSpreadCompositeRequestMixOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -92,12 +89,9 @@ impl SpreadModelClient {
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
-        request.insert_header("test-header", test_header.to_owned());
+        request.insert_header("test-header", test_header);
         let body: RequestContent<SpreadCompositeRequestMixRequest> =
-            SpreadCompositeRequestMixRequest {
-                prop: prop.to_owned(),
-            }
-            .try_into()?;
+            SpreadCompositeRequestMixRequest { prop }.try_into()?;
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
     }
@@ -128,7 +122,7 @@ impl SpreadModelClient {
     pub async fn spread_composite_request_without_body(
         &self,
         name: &str,
-        test_header: &str,
+        test_header: String,
         options: Option<SpreadModelClientSpreadCompositeRequestWithoutBodyOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -139,7 +133,7 @@ impl SpreadModelClient {
         path = path.replace("{name}", name);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Put);
-        request.insert_header("test-header", test_header.to_owned());
+        request.insert_header("test-header", test_header);
         self.pipeline.send(&ctx, &mut request).await
     }
 }
