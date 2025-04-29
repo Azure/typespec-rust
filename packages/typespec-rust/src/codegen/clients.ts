@@ -1041,12 +1041,13 @@ function checkEmptyRequiredPathParams(indent: helpers.indentation, params: Array
  */
 function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamType): string {
   let toString = '';
-  switch (param.type.kind) {
+  const paramType = param.type.kind === 'ref' ? param.type.type : param.type;
+  switch (paramType.kind) {
     case 'String':
       // need to check these for zero length
       break;
     case 'enum':
-      if (!param.type.extensible) {
+      if (!paramType.extensible) {
         // fixed enums will always have a value
         return '';
       }
