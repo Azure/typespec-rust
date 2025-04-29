@@ -52,7 +52,7 @@
     "@azure-tools/typespec-autorest": "0.55.0",
     "@azure-tools/typespec-azure-core": "0.55.0",
     "@azure-tools/typespec-azure-resource-manager": "0.55.0",
-    "@azure-tools/typespec-client-generator-core": "0.55.0",
+    "@azure-tools/typespec-client-generator-core": "0.55.1",
     "@eslint/js": "^9.24.0",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^18.19.76",
