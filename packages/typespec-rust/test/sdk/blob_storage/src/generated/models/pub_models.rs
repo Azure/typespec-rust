@@ -996,6 +996,7 @@ pub struct ListBlobsFlatSegmentResponse {
     pub prefix: Option<String>,
 
     /// The blob segment.
+    #[serde(default)]
     pub segment: BlobFlatListSegment,
 
     /// The service endpoint.
@@ -1034,6 +1035,7 @@ pub struct ListBlobsHierarchySegmentResponse {
     pub prefix: Option<String>,
 
     /// The blob segment.
+    #[serde(default)]
     pub segment: BlobHierarchyListSegment,
 
     /// The service endpoint.

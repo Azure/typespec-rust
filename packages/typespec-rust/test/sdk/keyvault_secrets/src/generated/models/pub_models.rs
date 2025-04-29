@@ -136,6 +136,7 @@ pub struct DeletedSecretListResult {
 
     /// A response message containing a list of deleted secrets in the key vault along with a link to the next page of deleted
     /// secrets.
+    #[serde(default)]
     pub value: Vec<DeletedSecretItem>,
 }
 
@@ -259,6 +260,7 @@ pub struct SecretListResult {
     pub next_link: Option<String>,
 
     /// A response message containing a list of secrets in the key vault along with a link to the next page of secrets.
+    #[serde(default)]
     pub value: Vec<SecretItem>,
 }
 

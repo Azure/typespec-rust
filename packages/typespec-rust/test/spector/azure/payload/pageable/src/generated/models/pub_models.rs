@@ -15,6 +15,7 @@ pub struct PagedUser {
     pub next_link: Option<String>,
 
     /// The User items on this page
+    #[serde(default)]
     pub value: Vec<User>,
 }
 

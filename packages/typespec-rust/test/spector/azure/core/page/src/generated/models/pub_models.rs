@@ -32,6 +32,7 @@ pub struct PagedFirstItem {
     pub next_link: Option<String>,
 
     /// The FirstItem items on this page
+    #[serde(default)]
     pub value: Vec<FirstItem>,
 }
 
@@ -44,6 +45,7 @@ pub struct PagedSecondItem {
     pub next_link: Option<String>,
 
     /// The SecondItem items on this page
+    #[serde(default)]
     pub value: Vec<SecondItem>,
 }
 
@@ -56,6 +58,7 @@ pub struct PagedUser {
     pub next_link: Option<String>,
 
     /// The User items on this page
+    #[serde(default)]
     pub value: Vec<User>,
 }
 
@@ -65,6 +68,7 @@ pub struct ParameterizedNextLinkPagingResult {
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
+    #[serde(default)]
     pub values: Vec<User>,
 }
 
@@ -102,6 +106,7 @@ pub struct User {
 #[non_exhaustive]
 pub struct UserListResults {
     /// List of items.
+    #[serde(default)]
     pub items: Vec<User>,
 
     /// Link to fetch more items.
