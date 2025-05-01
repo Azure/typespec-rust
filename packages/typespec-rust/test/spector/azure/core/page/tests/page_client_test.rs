@@ -57,7 +57,7 @@ async fn list_with_custom_page_model() {
         let page: UserListResults = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                let page_items = page.items.unwrap();
+                let page_items = page.items;
                 assert_eq!(page_items.len(), 1);
                 assert!(page.next_link.is_none());
                 assert_eq!(
@@ -85,7 +85,7 @@ async fn list_with_page() {
         let page: PagedUser = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                let page_value = page.value.unwrap();
+                let page_value = page.value;
                 assert_eq!(page_value.len(), 1);
                 assert!(page.next_link.is_none());
                 assert_eq!(
@@ -125,7 +125,7 @@ async fn list_with_parameters() {
         let page: PagedUser = page.into_body().await.unwrap();
         match page_count {
             1 => {
-                let page_value = page.value.unwrap();
+                let page_value = page.value;
                 assert_eq!(page_value.len(), 1);
                 assert!(page.next_link.is_none());
                 assert_eq!(

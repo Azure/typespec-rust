@@ -12,8 +12,8 @@ pub struct LinkResponse {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub next: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pets: Option<Vec<Pet>>,
+    #[serde(default)]
+    pub pets: Vec<Pet>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
@@ -32,15 +32,15 @@ pub struct RequestHeaderResponseBodyResponse {
     #[serde(rename = "nextToken", skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pets: Option<Vec<Pet>>,
+    #[serde(default)]
+    pub pets: Vec<Pet>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct RequestHeaderResponseHeaderResponse {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pets: Option<Vec<Pet>>,
+    #[serde(default)]
+    pub pets: Vec<Pet>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
@@ -49,13 +49,13 @@ pub struct RequestQueryResponseBodyResponse {
     #[serde(rename = "nextToken", skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pets: Option<Vec<Pet>>,
+    #[serde(default)]
+    pub pets: Vec<Pet>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct RequestQueryResponseHeaderResponse {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pets: Option<Vec<Pet>>,
+    #[serde(default)]
+    pub pets: Vec<Pet>,
 }

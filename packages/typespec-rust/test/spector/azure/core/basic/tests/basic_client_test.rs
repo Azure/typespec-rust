@@ -125,7 +125,7 @@ async fn list() {
         let page = page.unwrap();
         page_count += 1;
         let paged_user: PagedUser = page.into_body().await.unwrap();
-        let users = paged_user.value.unwrap();
+        let users = paged_user.value;
         assert_eq!(users.len(), 2);
         assert_eq!(
             users[0].etag,
