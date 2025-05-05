@@ -231,7 +231,7 @@ pub struct BlobHierarchyListSegment {
     pub blob_items: Vec<BlobItemInternal>,
 
     /// The blob prefixes.
-    #[serde(rename = "BlobPrefixes", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "BlobPrefix", skip_serializing_if = "Option::is_none")]
     pub blob_prefixes: Option<Vec<BlobPrefix>>,
 }
 
