@@ -404,6 +404,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 **/dist/
+package-lock.json
 
 # spector test results
 spec-coverage.json
