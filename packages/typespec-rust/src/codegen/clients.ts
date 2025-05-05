@@ -987,7 +987,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     body += `${indent.get()}let rsp = Response::from_bytes(status, headers, bytes);\n`;
   }
 
-  let matchCondition: string;
+  let srcNextPage: string;
   let nextPageValue: string;
   let continuation: string;
   switch (method.strategy.kind) {
@@ -996,33 +996,34 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       continuation = nextPageValue;
       switch (method.strategy.responseToken.kind) {
         case 'modelField':
-          matchCondition = `res.${nextPageValue}`;
+          srcNextPage = `res.${nextPageValue}`;
           break;
         case 'responseHeaderScalar':
           if (!method.responseHeaders) {
             throw new CodegenError('InternalError', `missing response headers trait for method ${method.name}`);
           }
           use.addForType(method.responseHeaders);
-          matchCondition = `rsp.${method.strategy.responseToken.name}()?`;
+          srcNextPage = `rsp.${method.strategy.responseToken.name}()?`;
           break;
       }
       break;
     case 'nextLink':
       nextPageValue = method.strategy.nextLink.name;
-      matchCondition = `res.${nextPageValue}`;
+      srcNextPage = `res.${nextPageValue}`;
       continuation = `${nextPageValue}.parse()?`;
       break;
   }
 
-  body += `${indent.get()}Ok(${helpers.buildMatch(indent, matchCondition, [{
-    pattern: `Some(${nextPageValue})`,
-    returns: 'PagerResult::Continue',
-    body: (indent) => `${indent.get()}response: rsp,\n${indent.get()}continuation: ${continuation},\n`
+  // we need to handle the case where the next page value is the empty string,
+  // so checking strickly for None(theNextLink) is insufficient.
+  // the most common case for this is XML, e.g. an empty tag like <NextLink />
+  body += `${indent.get()}let ${nextPageValue} = ${srcNextPage}.unwrap_or_default();\n`;
+  body += `${indent.get()}Ok(${helpers.buildIfBlock(indent, {
+    condition: `${nextPageValue}.is_empty()`,
+    body: (indent) => `${indent.get()}PagerResult::Complete { response: rsp }\n`,
   }, {
-    pattern: 'None',
-    returns: 'PagerResult::Complete',
-    body: () => `${indent.get()}response: rsp,\n`
-  }])}`;
+    body: (indent) => `${indent.get()} PagerResult::Continue { response: rsp, continuation: ${continuation} }\n`,
+  })}`;
   body += ')\n'; // end Ok
   body += `${indent.pop().get()}}\n`; // end async move
   body += `${indent.pop().get()}}))`; // end Ok/Pager::from_callback

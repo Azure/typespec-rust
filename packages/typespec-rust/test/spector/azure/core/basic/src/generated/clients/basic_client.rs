@@ -309,12 +309,14 @@ impl BasicClient {
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
-                Ok(match res.next_link {
-                    Some(next_link) => PagerResult::Continue {
+                let next_link = res.next_link.unwrap_or_default();
+                Ok(if next_link.is_empty() {
+                    PagerResult::Complete { response: rsp }
+                } else {
+                    PagerResult::Continue {
                         response: rsp,
                         continuation: next_link.parse()?,
-                    },
-                    None => PagerResult::Complete { response: rsp },
+                    }
                 })
             }
         }))

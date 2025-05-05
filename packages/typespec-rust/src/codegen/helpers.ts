@@ -318,17 +318,31 @@ export interface ifBlock {
   body: (indent: indentation) => string;
 }
 
+/** the else condition in an if/else block */
+export interface elseBlock {
+  /** the body of the else block */
+  body: (indent: indentation) => string;
+}
+
 /**
  * constructs an if block (can expand to include else if/else as necessary)
  * 
  * @param indent the current indentation helper in scope
  * @param ifBlock the if block definition
+ * @param elseBlock optional else block definition
  * @returns the text for the if block
  */
-export function buildIfBlock(indent: indentation, ifBlock: ifBlock): string {
+export function buildIfBlock(indent: indentation, ifBlock: ifBlock, elseBlock?: elseBlock): string {
   let body = `if ${ifBlock.condition} {\n`;
   body += ifBlock.body(indent.push());
   body += `${indent.pop().get()}}`;
+
+  if (elseBlock) {
+    body += ' else {\n';
+    body += elseBlock.body(indent.push());
+    body += `${indent.pop().get()}}`;
+  }
+
   return body;
 }
 
