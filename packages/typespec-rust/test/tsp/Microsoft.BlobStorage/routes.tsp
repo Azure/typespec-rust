@@ -45,7 +45,13 @@ namespace Storage.Blob {
   @put
   @route("?restype=service&comp=properties")
   op setProperties is StorageOperation<
-    TimeoutParameter & StorageServiceProperties,
+    {
+      ...TimeoutParameter;
+
+      /** The storage service properties to set. */
+      @body
+      storageServiceProperties: StorageServiceProperties;
+    },
     {
       @statusCode statusCode: 202;
     }
@@ -66,7 +72,13 @@ namespace Storage.Blob {
   @route("?restype=service&comp=stats")
   op getStatistics is StorageOperation<
     TimeoutParameter,
-    DateResponseHeader & StorageServiceStats
+    {
+      ...DateResponseHeader;
+
+      /** Storage service statistics */
+      @body
+      storageServiceStats: StorageServiceStats;
+    }
   >;
 
   /** The List Containers Segment operation returns a list of the containers under the specified account */
@@ -93,8 +105,20 @@ namespace Storage.Blob {
   @post
   @route("?restype=service&comp=userdelegationkey")
   op getUserDelegationKey is StorageOperation<
-    KeyInfo & TimeoutParameter,
-    UserDelegationKey & DateResponseHeader
+    {
+      /** Key information provided in the request */
+      @body
+      keyInfo: KeyInfo;
+
+      ...TimeoutParameter;
+    },
+    {
+      /** The user delegation key */
+      @body
+      userDelegationKey: UserDelegationKey;
+
+      ...DateResponseHeader;
+    }
   >;
 
   /** Returns the sku name and account kind. */
@@ -154,7 +178,13 @@ namespace Storage.Blob {
       ...MaxResultsParameter;
       ...FilterBlobsIncludeParameter;
     },
-    DateResponseHeader & FilterBlobSegment
+    {
+      ...DateResponseHeader;
+
+      /** The filter blobs enumeration results */
+      @body
+      enumerationResults: FilterBlobSegment;
+    }
   >;
 
   #suppress "@azure-tools/typespec-azure-core/operation-missing-api-version" "Existing API. Storage API version parameter pre-dates current guidance."
@@ -268,7 +298,9 @@ namespace Storage.Blob {
         ...LeaseIdOptionalParameter;
       },
       {
+        /** Signed identifiers */
         @body body: SignedIdentifiers;
+
         ...BlobPublicAccess;
         ...EtagResponseHeader;
         ...LastModifiedResponseHeader;
@@ -397,7 +429,13 @@ namespace Storage.Blob {
         ...MaxResultsParameter;
         ...FilterBlobsIncludeParameter;
       },
-      DateResponseHeader & FilterBlobSegment
+      {
+        ...DateResponseHeader;
+
+        /** The container filter blob enumeration results */
+        @body
+        enumerationResults: FilterBlobSegment;
+      }
     >;
 
     /** The Acquire Lease operation requests a new lease on a container. The lease lock duration can be 15 to 60 seconds, or can be infinite. */
@@ -528,7 +566,13 @@ namespace Storage.Blob {
         ...ListBlobsIncludeParameter;
         ...TimeoutParameter;
       },
-      ListBlobsFlatSegmentResponse & DateResponseHeader
+      {
+        ...DateResponseHeader;
+
+        /** The list of blobs in the container */
+        @body
+        enumerationResults: ListBlobsFlatSegmentResponse;
+      }
     >;
 
     /** The List Blobs operation returns a list of the blobs under the specified container. A delimiter can be used to traverse a virtual hierarchy of blobs as though it were a file system. */
@@ -550,7 +594,13 @@ namespace Storage.Blob {
         ...ListBlobsIncludeParameter;
         ...TimeoutParameter;
       },
-      ListBlobsHierarchySegmentResponse & DateResponseHeader
+      {
+        ...DateResponseHeader;
+
+        /** The list of blobs in the container */
+        @body
+        enumerationResults: ListBlobsHierarchySegmentResponse;
+      }
     >;
 
     /** Returns the sku name and account kind */
@@ -1112,7 +1162,7 @@ namespace Storage.Blob {
       #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
       #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
       @put
-      @route("{blobName}?comp=copy")
+      @route("{blobName}")
       op startCopyFromUrl is StorageOperation<
         {
           ...ContainerNamePathParameter;
@@ -1278,7 +1328,13 @@ namespace Storage.Blob {
           ...LeaseIdOptionalParameter;
           ...IfTagsParameter;
         },
-        BlobTags & DateResponseHeader
+        {
+          ...DateResponseHeader;
+
+          /** The blob tags. */
+          @body
+          tags: BlobTags;
+        }
       >;
 
       /** The Set Tags operation enables users to set tags on a blob. */
@@ -2067,7 +2123,11 @@ namespace Storage.Blob {
             ...LeaseIdOptionalParameter;
             ...IfTagsParameter;
           },
-          BlockList & {
+          {
+            /** Block list */
+            @body
+            blockList: BlockList;
+
             ...LastModifiedResponseHeader;
             ...EtagResponseHeader;
             ...BlobContentLengthRequired;

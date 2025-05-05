@@ -6,12 +6,11 @@
 use crate::generated::{
     clients::BlobContainerClient,
     models::{
-        crate_models::{GetUserDelegationKeyRequest, SetPropertiesRequest},
         BlobServiceClientFilterBlobsOptions, BlobServiceClientGetAccountInfoOptions,
         BlobServiceClientGetAccountInfoResult, BlobServiceClientGetPropertiesOptions,
         BlobServiceClientGetStatisticsOptions, BlobServiceClientGetUserDelegationKeyOptions,
         BlobServiceClientListContainersSegmentOptions, BlobServiceClientSetPropertiesOptions,
-        FilterBlobSegment, ListContainersSegmentResponse, StorageServiceProperties,
+        FilterBlobSegment, KeyInfo, ListContainersSegmentResponse, StorageServiceProperties,
         StorageServiceStats, UserDelegationKey,
     },
 };
@@ -241,13 +240,11 @@ impl BlobServiceClient {
     ///
     /// # Arguments
     ///
-    /// * `start` - The date-time the key is active.
-    /// * `expiry` - The date-time the key expires.
+    /// * `key_info` - Key information provided in the request
     /// * `options` - Optional parameters for the request.
     pub async fn get_user_delegation_key(
         &self,
-        start: String,
-        expiry: String,
+        key_info: RequestContent<KeyInfo>,
         options: Option<BlobServiceClientGetUserDelegationKeyOptions<'_>>,
     ) -> Result<Response<UserDelegationKey>> {
         let options = options.unwrap_or_default();
@@ -267,9 +264,7 @@ impl BlobServiceClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", &self.version);
-        let body: RequestContent<GetUserDelegationKeyRequest> =
-            GetUserDelegationKeyRequest { start, expiry }.try_into()?;
-        request.set_body(body);
+        request.set_body(key_info);
         self.pipeline.send(&ctx, &mut request).await
     }
 
@@ -358,9 +353,11 @@ impl BlobServiceClient {
     ///
     /// # Arguments
     ///
+    /// * `storage_service_properties` - The storage service properties to set.
     /// * `options` - Optional parameters for the request.
     pub async fn set_properties(
         &self,
+        storage_service_properties: RequestContent<StorageServiceProperties>,
         options: Option<BlobServiceClientSetPropertiesOptions<'_>>,
     ) -> Result<Response<()>> {
         let options = options.unwrap_or_default();
@@ -380,17 +377,7 @@ impl BlobServiceClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", &self.version);
-        let body: RequestContent<SetPropertiesRequest> = SetPropertiesRequest {
-            logging: options.logging,
-            hour_metrics: options.hour_metrics,
-            minute_metrics: options.minute_metrics,
-            cors: options.cors,
-            default_service_version: options.default_service_version,
-            delete_retention_policy: options.delete_retention_policy,
-            static_website: options.static_website,
-        }
-        .try_into()?;
-        request.set_body(body);
+        request.set_body(storage_service_properties);
         self.pipeline.send(&ctx, &mut request).await
     }
 }
