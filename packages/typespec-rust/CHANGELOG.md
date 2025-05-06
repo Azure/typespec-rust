@@ -1,5 +1,11 @@
 # Release History
 
+## 0.14.1 (unreleased)
+
+### Bugs Fixed
+
+* Fixed infinite loop for certain paged operations.
+
 ## 0.14.0 (2025-05-01)
 
 ### Breaking Changes
