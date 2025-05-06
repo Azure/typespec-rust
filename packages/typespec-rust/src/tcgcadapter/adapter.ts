@@ -159,8 +159,10 @@ export class Adapter {
     }
 
     for (const model of this.ctx.sdkPackage.models) {
-      if ((<tcgc.UsageFlags>(model.usage & tcgc.UsageFlags.Exception) === tcgc.UsageFlags.Exception && (model.usage & tcgc.UsageFlags.Input) === 0 && (model.usage & tcgc.UsageFlags.Output) === 0) || tcgc.isAzureCoreModel(model)) {
-        // skip error and core types as we use their azure_core equivalents
+      if ((model.usage & tcgc.UsageFlags.Input) === 0 && (model.usage & tcgc.UsageFlags.Output) === 0 && (model.usage & tcgc.UsageFlags.Spread) === 0) {
+        // skip types without input and output usage. this will include core
+        // types unless they're explicitly referenced (e.g. a model property).
+        // we keep the models for spread params as we internally use them.
         continue;
       }
       const rustModel = this.getModel(model);
@@ -1147,12 +1149,17 @@ export class Adapter {
       }
     }
 
+    /** called IFF the operation returns a modeled response */
     const getBodyFormat = (): rust.BodyFormat => {
       // fetch the body format from the HTTP responses.
       // they should all have the same type so no need to match responses to type.
       let defaultContentType: string | undefined;
       for (const httpResp of method.operation.responses) {
-        if (defaultContentType && httpResp.defaultContentType && defaultContentType !== httpResp.defaultContentType) {
+        if (!httpResp.defaultContentType) {
+          // we can get here if the operation returns multiple status codes
+          // and one of them doesn't return a body (e.g. a 200 and a 204)
+          continue;
+        } else if (defaultContentType && defaultContentType !== httpResp.defaultContentType) {
           throw new AdapterError('InternalError', `method ${method.name} has conflicting content types`, method.__raw?.node);
         }
         defaultContentType = httpResp.defaultContentType;

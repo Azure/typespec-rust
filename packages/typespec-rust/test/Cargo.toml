@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "other/serde_tests",
+    "sdk/appconfiguration",
     "sdk/blob_storage",
     "sdk/keyvault_secrets",
     "spector/special-words",
@@ -58,7 +59,7 @@ rust-version = "1.80"
 
 [workspace.dependencies]
 async-trait = "0.1"
-azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "79640207417566d723f089ae8ec950e81ac62fa7", features = ["reqwest"] }
+azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "7ea8ce133779978ec621f3b0a7cdbf6655de1a8f", features = ["reqwest"] }
 bytes = { version = "1.5.0" }
 futures = "0.3"
 rust_decimal = "1.37"
@@ -66,4 +67,4 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0.118" }
 time = { version = "0.3.36" }
 tokio = { version = "1.43.0", default-features = false, features = ["macros"] }
-typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "79640207417566d723f089ae8ec950e81ac62fa7", features = ["reqwest"] }
+typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "7ea8ce133779978ec621f3b0a7cdbf6655de1a8f", features = ["reqwest"] }

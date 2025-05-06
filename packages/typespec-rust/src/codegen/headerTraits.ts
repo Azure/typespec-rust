@@ -79,6 +79,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
     const mergedTrait = new rust.ResponseHeadersTrait(srcTrait[0].name, srcTrait[0].implFor, mergedDocs);
     mergedTrait.headers = mergedHeaders;
     traits.push(mergedTrait);
+    addHeaders(...mergedHeaders);
   }
 
   headers.sort((a: rust.ResponseHeader, b: rust.ResponseHeader) => helpers.sortAscending(getHeaderConstName(a), getHeaderConstName(b)));

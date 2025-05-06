@@ -801,7 +801,9 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
         setter += `${indent.pop().get()}}\n`;
         return setter;
       }
-      const borrow = headerParam.location === 'client' && nonCopyableType(headerParam.type) ? '&' : '';
+      // for non-copyable params (e.g. String), we need to borrow them if they're on the
+      // client or we're in a closure and the param is required (header params are always owned)
+      const borrow = nonCopyableType(headerParam.type) && (headerParam.location === 'client' || (inClosure && !headerParam.optional)) ? '&' : '';
       return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, !inClosure)});\n`;
     });
   }

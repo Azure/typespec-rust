@@ -5,6 +5,11 @@
 ### Bugs Fixed
 
 * Fixed infinite loop for certain paged operations.
+* Fixed missing borrow for required header parameters that are used in a closure (e.g. pageable operations).
+* Fixed missing header constant when header traits are merged.
+* Don't skip core types when they're explicitly referenced.
+* Fixed missing content type for operations that have multiple responses and one of them doesn't include a response body (e.g. 200 and 204).
+* Fixed more cases of enum names with symbols that can't be in an identifier.
 
 ## 0.14.0 (2025-05-01)
 

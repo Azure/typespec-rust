@@ -33,9 +33,12 @@ export function fixUpEnumValueName(name: string): string {
   // remove any commas (e.g. value name Foo,Bar becomes FooBar)
   name = name.replace(',', '');
 
+  // application/*+json becomes ApplicationAllJson
+  name = name.replace(/\/\*\+/, 'All');
+
   // if we have a name like V2022_12_01_preview, we want to
   // turn this into V2022_12_01Preview to make the linter happy
-  const parts = name.split(/(?:_|-)/);
+  const parts = name.split(/(?:_|-|\/|\+|\.)/);
   if (parts.length > 1) {
     name = '';
     for (let i = 0; i < parts.length; ++i) {
