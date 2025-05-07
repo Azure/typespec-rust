@@ -1,6 +1,6 @@
 # Release History
 
-## 0.14.1 (unreleased)
+## 0.14.1 (2025-05-07)
 
 ### Bugs Fixed
 
@@ -34,6 +34,8 @@
 
 * Errors in the emitter are no longer surfaced as a crash.
 * Skip `cargo fmt` if the emitter fails.
+* Updated to the latest tsp toolset.
+  * This includes the GA version of the compiler and supporting libraries.
 
 ## 0.13.3 (2025-04-04)
 
