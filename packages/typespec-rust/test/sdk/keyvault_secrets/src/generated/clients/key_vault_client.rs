@@ -244,19 +244,11 @@ impl KeyVaultClient {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
-        let mut path = String::from("secrets/{secret-name}{secret-version}");
+        let mut path = String::from("secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", secret_name);
         path = match options.secret_version {
-            Some(secret_version) => {
-                if secret_version.is_empty() {
-                    return Err(azure_core::Error::message(
-                        azure_core::error::ErrorKind::Other,
-                        "parameter secret_version cannot be empty",
-                    ));
-                }
-                path.replace("{secret-version}", &format!("/{secret_version}"))
-            }
-            None => path.replace("{secret-version}", "/"),
+            Some(secret_version) => path.replace("{secret-version}", &format!("{secret_version}")),
+            None => path.replace("{secret-version}", ""),
         };
         url = url.join(&path)?;
         url.query_pairs_mut()

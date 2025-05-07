@@ -103,7 +103,7 @@ op updateSecret is Azure.Core.Foundations.Operation<
  */
 #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Foundations.Operation is necessary for Key Vault"
 @summary("Get a specified secret from a given key vault.")
-@route("/secrets/{secret-name}{/secret-version}")
+@route("/secrets/{secret-name}/{secret-version}")
 @get
 op getSecret is Azure.Core.Foundations.Operation<
   {

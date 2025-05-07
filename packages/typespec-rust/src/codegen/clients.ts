@@ -812,10 +812,10 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         if (pathParam.optional) {
           body += `${indent.get()}path = ${helpers.buildMatch(indent, `options.${pathParam.name}`, [{
             pattern: `Some(${pathParam.name})`,
-            body: (indent) => `${indent.get()}${emitEmptyPathParamCheck(indent, pathParam)}\npath.replace("{${pathParam.segment}}",${paramExpression}"))\n`,
+            body: (indent) => `${indent.get()}path.replace("{${pathParam.segment}}", ${paramExpression}"))\n`,
           }, {
             pattern: `None`,
-            body: (indent) => `${indent.get()}path.replace("{${pathParam.segment}}", "/")\n`,
+            body: (indent) => `${indent.get()}path.replace("{${pathParam.segment}}", "")\n`,
           }])};\n`;
         } else {
           body += wrapSortedVec(`${indent.get()}path = path.replace("{${pathParam.segment}}", ${paramExpression});\n`);
@@ -1044,6 +1044,7 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
   const paramType = param.type.kind === 'ref' ? param.type.type : param.type;
   switch (paramType.kind) {
     case 'String':
+    case 'str':
       // need to check these for zero length
       break;
     case 'enum':
@@ -1053,11 +1054,6 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
       }
       // need to get the underlying string value
       toString = 'to_string()';
-      break;
-    case 'ref':
-      if (param.type.type.kind !== 'str') {
-        return '';
-      }
       break;
     default:
       // no length to check so bail
