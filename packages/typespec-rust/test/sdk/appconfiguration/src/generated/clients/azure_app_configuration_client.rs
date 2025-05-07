@@ -736,12 +736,14 @@ impl AzureAppConfigurationClient {
                 let bytes = body.collect().await?;
                 let res: KeyValueListResult = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
-                Ok(match res._next_link {
-                    Some(_next_link) => PagerResult::Continue {
+                let _next_link = res._next_link.unwrap_or_default();
+                Ok(if _next_link.is_empty() {
+                    PagerResult::Complete { response: rsp }
+                } else {
+                    PagerResult::Continue {
                         response: rsp,
                         continuation: _next_link.parse()?,
-                    },
-                    None => PagerResult::Complete { response: rsp },
+                    }
                 })
             }
         }))
@@ -805,12 +807,14 @@ impl AzureAppConfigurationClient {
                 let bytes = body.collect().await?;
                 let res: KeyListResult = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
-                Ok(match res._next_link {
-                    Some(_next_link) => PagerResult::Continue {
+                let _next_link = res._next_link.unwrap_or_default();
+                Ok(if _next_link.is_empty() {
+                    PagerResult::Complete { response: rsp }
+                } else {
+                    PagerResult::Continue {
                         response: rsp,
                         continuation: _next_link.parse()?,
-                    },
-                    None => PagerResult::Complete { response: rsp },
+                    }
                 })
             }
         }))
@@ -887,12 +891,14 @@ impl AzureAppConfigurationClient {
                 let bytes = body.collect().await?;
                 let res: LabelListResult = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
-                Ok(match res._next_link {
-                    Some(_next_link) => PagerResult::Continue {
+                let _next_link = res._next_link.unwrap_or_default();
+                Ok(if _next_link.is_empty() {
+                    PagerResult::Complete { response: rsp }
+                } else {
+                    PagerResult::Continue {
                         response: rsp,
                         continuation: _next_link.parse()?,
-                    },
-                    None => PagerResult::Complete { response: rsp },
+                    }
                 })
             }
         }))
@@ -977,12 +983,14 @@ impl AzureAppConfigurationClient {
                 let bytes = body.collect().await?;
                 let res: KeyValueListResult = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
-                Ok(match res._next_link {
-                    Some(_next_link) => PagerResult::Continue {
+                let _next_link = res._next_link.unwrap_or_default();
+                Ok(if _next_link.is_empty() {
+                    PagerResult::Complete { response: rsp }
+                } else {
+                    PagerResult::Continue {
                         response: rsp,
                         continuation: _next_link.parse()?,
-                    },
-                    None => PagerResult::Complete { response: rsp },
+                    }
                 })
             }
         }))
@@ -1063,12 +1071,14 @@ impl AzureAppConfigurationClient {
                 let bytes = body.collect().await?;
                 let res: SnapshotListResult = json::from_json(&bytes)?;
                 let rsp = Response::from_bytes(status, headers, bytes);
-                Ok(match res._next_link {
-                    Some(_next_link) => PagerResult::Continue {
+                let _next_link = res._next_link.unwrap_or_default();
+                Ok(if _next_link.is_empty() {
+                    PagerResult::Complete { response: rsp }
+                } else {
+                    PagerResult::Continue {
                         response: rsp,
                         continuation: _next_link.parse()?,
-                    },
-                    None => PagerResult::Complete { response: rsp },
+                    }
                 })
             }
         }))
