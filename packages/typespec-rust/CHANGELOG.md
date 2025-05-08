@@ -11,6 +11,11 @@
 * Fixed missing content type for operations that have multiple responses and one of them doesn't include a response body (e.g. 200 and 204).
 * Fixed more cases of enum names with symbols that can't be in an identifier.
 
+### Other Changes
+
+* Updated to the latest tsp toolset.
+  * This includes the GA version of the compiler and supporting libraries.
+
 ## 0.14.0 (2025-05-01)
 
 ### Breaking Changes
@@ -34,8 +39,6 @@
 
 * Errors in the emitter are no longer surfaced as a crash.
 * Skip `cargo fmt` if the emitter fails.
-* Updated to the latest tsp toolset.
-  * This includes the GA version of the compiler and supporting libraries.
 
 ## 0.13.3 (2025-04-04)
 
