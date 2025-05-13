@@ -73,7 +73,7 @@
     "vitest": "^3.1.1"
   },
   "peerDependencies": {
-    "@azure-tools/typespec-client-generator-core": ">=0.56.1 <1.0.0",
+    "@azure-tools/typespec-client-generator-core": ">=0.56.2 <1.0.0",
     "@typespec/compiler": "1.0.0",
     "@typespec/http": "1.0.1"
   },
