@@ -77,6 +77,7 @@ const azureHttpSpecsGroup = {
   'spector_corepage': {input: 'azure/core/page'},
   //'spector_corescalar': {input: 'azure/core/scalar'},
   //'spector_traits': {input: 'azure/core/traits'},
+  'spector_azureduration': {input: 'azure/encode/duration'},
   'spector_azurepageable': {input: 'azure/payload/pageable'},
   'spector_azurebasic': {input: 'azure/example/basic'},
   'spector_armcommon': {input: 'azure/resource-manager/common-properties'},

@@ -26,6 +26,7 @@ members = [
     "spector/azure/core/basic",
     "spector/azure/core/lro/standard",
     "spector/azure/core/page",
+    "spector/azure/encode/duration",
     "spector/azure/example/basic",
     "spector/azure/payload/pageable",
     "spector/azure/resource-manager/common-properties",
