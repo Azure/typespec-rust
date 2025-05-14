@@ -20,6 +20,7 @@ members = [
     "spector/payload/xml",
     "spector/type/array",
     "spector/type/dictionary",
+    "spector/azure/client-generator-core/client-initialization",
     "spector/azure/client-generator-core/flatten-property",
     "spector/azure/client-generator-core/usage",
     "spector/azure/core/basic",

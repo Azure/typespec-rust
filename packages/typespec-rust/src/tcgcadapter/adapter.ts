@@ -1074,7 +1074,7 @@ export class Adapter {
     rustClient.methods.push(rustMethod);
 
     // stuff all of the operation parameters into one array for easy traversal
-    const allOpParams = new Array<OperationParamType>();
+    const allOpParams = new Array<tcgc.SdkHttpParameter>();
     allOpParams.push(...method.operation.parameters);
     if (method.operation.bodyParam) {
       allOpParams.push(method.operation.bodyParam);
@@ -1088,7 +1088,7 @@ export class Adapter {
       // most params have a one-to-one mapping. however, for spread params, there will
       // be a many-to-one mapping. i.e. multiple params will map to the same underlying
       // operation param. each param corresponds to a field within the operation param.
-      const opParam = values(allOpParams).where((opParam: OperationParamType) => {
+      const opParam = values(allOpParams).where((opParam: tcgc.SdkHttpParameter) => {
         return values(opParam.correspondingMethodParams).where((methodParam: tcgc.SdkModelPropertyType) => {
           return methodParam.name === param.name;
         }).any();
@@ -1476,19 +1476,19 @@ export class Adapter {
    * @param param the tcgc operation parameter to convert
    * @returns a Rust method parameter
    */
-  private adaptMethodParameter(param: OperationParamType): rust.MethodParameter {
-    const paramLoc = param.onClient ? 'client' : 'method';
-
+  private adaptMethodParameter(param: tcgc.SdkHttpParameter): rust.MethodParameter {
     /**
      * used to create keys for this.clientMethodParams
      * @param param the param for which to create a key
      * @returns the map's key
      */
-    const getClientParamsKey = function (param: OperationParamType): string {
+    const getClientParamsKey = function (param: tcgc.SdkHttpParameter): string {
       // include the param kind in the key name as a client param can be used
       // in different places across methods (path/query)
       return `${param.name}-${param.kind}`;
     };
+
+    const paramLoc = param.onClient ? 'client' : 'method';
 
     // if this is a client method param, check if we've already adapted it
     if (paramLoc === 'client') {
@@ -1498,7 +1498,18 @@ export class Adapter {
       }
     }
 
-    const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
+    /** returns the corresponding client param field name for a client parameter */
+    const getCorrespondingClientParamName = function(param: tcgc.SdkHttpParameter): string {
+      if (param.onClient && param.correspondingMethodParams.length === 1) {
+        // we get here if the param was aliased via the @paramAlias decorator.
+        // this gives us the name of the client param's backing field which has
+        // the aliased name.
+        return param.correspondingMethodParams[0].name;
+      }
+      return param.name;
+    };
+
+    const paramName = naming.getEscapedReservedName(snakeCaseName(getCorrespondingClientParamName(param)), 'param');
     let paramType = this.getType(param.type);
 
     // for required header/path/query method string params, we might emit them as borrowed types
@@ -1755,8 +1766,6 @@ function fixETagName(name: string): string {
 function snakeCaseName(name: string): string {
   return codegen.deconstruct(fixETagName(name)).join('_');
 }
-
-type OperationParamType = tcgc.SdkBodyParameter | tcgc.SdkCookieParameter | tcgc.SdkHeaderParameter | tcgc.SdkPathParameter | tcgc.SdkQueryParameter;
 
 /**
  * recursively creates a map key from the specified type.

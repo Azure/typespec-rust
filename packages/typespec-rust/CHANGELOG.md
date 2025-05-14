@@ -1,5 +1,11 @@
 # Release History
 
+## 0.14.2 (unreleased)
+
+### Bugs Fixed
+
+* Fixed bad codegen when path parameters are aliased as client initializers.
+
 ## 0.14.1 (2025-05-07)
 
 ### Bugs Fixed
