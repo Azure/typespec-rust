@@ -33,6 +33,7 @@ members = [
     "spector/azure/example/basic",
     "spector/azure/payload/pageable",
     "spector/azure/resource-manager/common-properties",
+    "spector/azure/resource-manager/non-resource",
     "spector/client/structure/client-operation-group",
     "spector/client/structure/default",
     "spector/client/structure/multi-client",
