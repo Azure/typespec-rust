@@ -158,7 +158,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'implTrait':
       return `impl ${type.name}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'literal':
-      return `${type.value}`;
+      return getTypeDeclaration(type.valueKind);
     case 'option':
       return `Option<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'pager':

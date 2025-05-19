@@ -152,8 +152,11 @@ export interface Lifetime {
 export interface Literal {
   kind: 'literal';
 
+  /** the value's kind */
+  valueKind: Scalar | StringType;
+
   /** the literal's value */
-  value: boolean | null | number | string;
+  value: boolean | number | string;
 }
 
 /**
@@ -608,8 +611,9 @@ export class Lifetime implements Lifetime {
 }
 
 export class Literal implements Literal {
-  constructor(value: boolean | null | number | string) {
+  constructor(valueKind: Scalar | StringType, value: boolean | number | string) {
     this.kind = 'literal';
+    this.valueKind = valueKind;
     this.value = value;
   }
 }

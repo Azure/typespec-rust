@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
+import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as linkifyjs from 'linkifyjs';
 import turndownService from 'turndown';
 import * as rust from '../codemodel/index.js';
@@ -11,10 +12,39 @@ import * as rust from '../codemodel/index.js';
 /**
  * fixes up enum names to follow Rust conventions
  * 
- * @param name the name to fix up
+ * @param enumValue the enum value type to fix up
  * @returns the fixed up name. can be the original value if no fix-up was required
  */
-export function fixUpEnumValueName(name: string): string {
+export function fixUpEnumValueName(enumValue: tcgc.SdkEnumValueType): string {
+  return fixUpEnumValueNameWorker(enumValue.name, enumValue.valueType.kind);
+}
+
+/**
+ * split out from fixUpEnumValueName for testing purposes.
+ * don't call this directly, call fixUpEnumValueName instead.
+ * 
+ * @param name the enum value name
+ * @param kind the enum value's underlying kind
+ * @returns the fixed up name. can be the original value if no fix-up was required
+ */
+export function fixUpEnumValueNameWorker(name: string, kind: tcgc.SdkBuiltInKinds): string {
+  // if the name starts with a number, then add its kind as a prefix.
+  // we insert 'Value' between the kind and name to simplify reading,
+  // e.g. Int32Value123 instead of Int32123.
+  if (name.match(/^\d+/)) {
+    name = `${kind}Value${name}`;
+  }
+
+  // if the enum is a decimal/float, then replace . with Point instead of Dot below
+  switch (kind) {
+    case 'decimal':
+    case 'decimal128':
+    case 'float':
+    case 'float32':
+    case 'float64':
+      name = name.replace('.', 'Point');
+  }
+
   name = codegen.capitalize(name);
 
   // first replace any '.' chars between numbers with the word 'Dot'

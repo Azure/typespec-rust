@@ -190,7 +190,7 @@ export class Adapter {
     this.types.set(enumName, rustEnum);
 
     for (const value of sdkEnum.values) {
-      const rustEnumValue = new rust.EnumValue(helpers.fixUpEnumValueName(value.name), rustEnum, value.value);
+      const rustEnumValue = new rust.EnumValue(helpers.fixUpEnumValueName(value), rustEnum, value.value);
       rustEnumValue.docs = this.adaptDocs(value.summary, value.doc);
       rustEnum.values.push(rustEnumValue);
     }
@@ -209,7 +209,7 @@ export class Adapter {
     const enumType = this.getEnum(sdkEnumValue.enumType);
     // find the specified enum value
     for (const value of enumType.values) {
-      if (value.name === helpers.fixUpEnumValueName(sdkEnumValue.name)) {
+      if (value.name === helpers.fixUpEnumValueName(sdkEnumValue)) {
         return value;
       }
     }
@@ -356,49 +356,6 @@ export class Adapter {
       }
     };
 
-    type scalarKind = 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8' | 'uint16' | 'uint32' | 'uint64' | 'uint8';
-    const getScalar = (kind: scalarKind): rust.Scalar => {
-      let scalarType: rust.ScalarType;
-      switch (kind) {
-        case 'boolean':
-          scalarType = 'bool';
-          break;
-        case 'float':
-        case 'float32':
-          scalarType = 'f32';
-          break;
-        case 'float64':
-          scalarType = 'f64';
-          break;
-        case 'int16':
-          scalarType = 'i16';
-          break;
-        case 'int32':
-          scalarType = 'i32';
-          break;
-        case 'int64':
-          scalarType = 'i64';
-          break;
-        case 'int8':
-          scalarType = 'i8';
-          break;
-        case 'uint16':
-          scalarType = 'u16';
-          break;
-        case 'uint32':
-          scalarType = 'u32';
-          break;
-        case 'uint64':
-          scalarType = 'u64';
-          break;
-        case 'uint8':
-          scalarType = 'u8';
-          break;
-      }
-
-      return this.getScalar(scalarType);
-    };
-
     switch (type.kind) {
       case 'array':
         return this.getVec(this.typeToWireType(this.getType(type.valueType, stack)));
@@ -430,7 +387,7 @@ export class Adapter {
           case 'float64':
           case 'int32':
           case 'int64':
-            return getScalar(type.wireType.kind);
+            return this.getScalar(type.wireType.kind);
           case 'string':
             return this.getStringType();
           default:
@@ -447,7 +404,7 @@ export class Adapter {
       case 'uint32':
       case 'uint64':
       case 'uint8':
-        return getScalar(type.kind);
+        return this.getScalar(type.kind);
       case 'enum':
         return this.getEnum(type);
       case 'enumvalue':
@@ -545,11 +502,49 @@ export class Adapter {
   }
 
   /** returns a scalar for the specified scalar type */
-  private getScalar(type: rust.ScalarType): rust.Scalar {
-    let scalar = this.types.get(type);
+  private getScalar(type: tcgcScalarKind): rust.Scalar {
+    let scalarType: rust.ScalarType;
+    switch (type) {
+      case 'boolean':
+        scalarType = 'bool';
+        break;
+      case 'float':
+      case 'float32':
+        scalarType = 'f32';
+        break;
+      case 'float64':
+        scalarType = 'f64';
+        break;
+      case 'int16':
+        scalarType = 'i16';
+        break;
+      case 'int32':
+        scalarType = 'i32';
+        break;
+      case 'int64':
+        scalarType = 'i64';
+        break;
+      case 'int8':
+        scalarType = 'i8';
+        break;
+      case 'uint16':
+        scalarType = 'u16';
+        break;
+      case 'uint32':
+        scalarType = 'u32';
+        break;
+      case 'uint64':
+        scalarType = 'u64';
+        break;
+      case 'uint8':
+        scalarType = 'u8';
+        break;
+    }
+
+    let scalar = this.types.get(scalarType);
     if (!scalar) {
-      scalar = new rust.Scalar(type);
-      this.types.set(type, scalar);
+      scalar = new rust.Scalar(scalarType);
+      this.types.set(scalarType, scalar);
     }
     return <rust.Scalar>scalar;
   }
@@ -619,12 +614,37 @@ export class Adapter {
    * @returns a Rust literal
    */
   private getLiteral(constType: tcgc.SdkConstantType): rust.Literal {
-    const literalKey = `literal-${constType.value}`;
+    let valueKind: rust.Scalar | rust.StringType;
+    let keyKind: string;
+    switch (constType.valueType.kind) {
+      case 'boolean':
+      case 'float32':
+      case 'float64':
+      case 'int16':
+      case 'int32':
+      case 'int64':
+      case 'int8':
+      case 'uint16':
+      case 'uint32':
+      case 'uint64':
+      case 'uint8':
+        valueKind = this.getScalar(constType.valueType.kind);
+        keyKind = valueKind.type;
+        break;
+      case 'string':
+        valueKind = this.getStringType();
+        keyKind = valueKind.kind;
+        break;
+      default:
+        throw new AdapterError('UnsupportedTsp', `unhandled constant value kind ${constType.valueType.kind}`, constType.__raw?.node);
+    }
+
+    const literalKey = `literal-${keyKind}-${constType.value}`;
     let literalType = this.types.get(literalKey);
     if (literalType) {
       return <rust.Literal>literalType;
     }
-    literalType = new rust.Literal(constType.value);
+    literalType = new rust.Literal(valueKind, constType.value);
     this.types.set(literalKey, literalType);
     return literalType;
   }
@@ -1741,6 +1761,9 @@ function isRefSlice(type: rust.Type): type is rust.Ref<rust.Slice> {
 
 /** method types that send/receive data */
 type MethodType = rust.AsyncMethod | rust.PageableMethod;
+
+/** supported kinds of tcgc scalars */
+type tcgcScalarKind = 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8' | 'uint16' | 'uint32' | 'uint64' | 'uint8';
 
 /**
  * transforms Etag etc to all lower case.

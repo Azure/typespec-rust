@@ -11,16 +11,20 @@ import { describe, it } from 'vitest';
 describe('typespec-rust: tcgcadapter', () => {
   describe('helpers', () => {
     it('fixUpEnumValueName', () => {
-      strictEqual(helpers.fixUpEnumValueName('fooBar'), 'FooBar');
-      strictEqual(helpers.fixUpEnumValueName('foo_bar'), 'FooBar');
-      strictEqual(helpers.fixUpEnumValueName('V2022_12_01_preview'), 'V2022_12_01Preview');
-      strictEqual(helpers.fixUpEnumValueName('V7.6_preview.1'), 'V7Dot6Preview1');
-      strictEqual(helpers.fixUpEnumValueName('RSA_AES_KEY_WRAP_256'), 'RsaAesKeyWrap256');
-      strictEqual(helpers.fixUpEnumValueName('CKM_AES_KEY_WRAP'), 'CkmAesKeyWrap');
-      strictEqual(helpers.fixUpEnumValueName('RSA1_5'), 'RSA1_5');
-      strictEqual(helpers.fixUpEnumValueName('RSA-OAEP'), 'RsaOaep');
-      strictEqual(helpers.fixUpEnumValueName('RSA-OAEP-256'), 'RsaOaep256');
-      strictEqual(helpers.fixUpEnumValueName('P-256K'), 'P256K');
+      strictEqual(helpers.fixUpEnumValueNameWorker('fooBar', 'string'), 'FooBar');
+      strictEqual(helpers.fixUpEnumValueNameWorker('foo_bar', 'string'), 'FooBar');
+      strictEqual(helpers.fixUpEnumValueNameWorker('V2022_12_01_preview', 'string'), 'V2022_12_01Preview');
+      strictEqual(helpers.fixUpEnumValueNameWorker('V7.6_preview.1', 'string'), 'V7Dot6Preview1');
+      strictEqual(helpers.fixUpEnumValueNameWorker('RSA_AES_KEY_WRAP_256', 'string'), 'RsaAesKeyWrap256');
+      strictEqual(helpers.fixUpEnumValueNameWorker('CKM_AES_KEY_WRAP', 'string'), 'CkmAesKeyWrap');
+      strictEqual(helpers.fixUpEnumValueNameWorker('RSA1_5', 'string'), 'RSA1_5');
+      strictEqual(helpers.fixUpEnumValueNameWorker('RSA-OAEP', 'string'), 'RsaOaep');
+      strictEqual(helpers.fixUpEnumValueNameWorker('RSA-OAEP-256', 'string'), 'RsaOaep256');
+      strictEqual(helpers.fixUpEnumValueNameWorker('P-256K', 'string'), 'P256K');
+      strictEqual(helpers.fixUpEnumValueNameWorker('42', 'integer'), 'IntegerValue42');
+      strictEqual(helpers.fixUpEnumValueNameWorker('3.14', 'float'), 'FloatValue3Point14');
+      strictEqual(helpers.fixUpEnumValueNameWorker('42', 'int32'), 'Int32Value42');
+      strictEqual(helpers.fixUpEnumValueNameWorker('3.14', 'float64'), 'Float64Value3Point14');
     });
 
     it('sortClientParameters', () => {

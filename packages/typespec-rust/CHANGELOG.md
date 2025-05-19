@@ -5,6 +5,7 @@
 ### Bugs Fixed
 
 * Fixed bad codegen when path parameters are aliased as client initializers.
+* Fixed bad codegen for model with literal values.
 
 ## 0.14.1 (2025-05-07)
 

@@ -52,6 +52,7 @@ members = [
     "spector/type/model/empty",
     "spector/type/model/usage",
     "spector/type/property/nullable",
+    "spector/type/property/value-types",
     "spector/type/scalar",
 ]
 resolver = "2"

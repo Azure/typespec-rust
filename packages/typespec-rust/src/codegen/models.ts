@@ -124,7 +124,11 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
       // TODO: omit skip_serializing_if if we need to send explicit JSON null
       // https://github.com/Azure/typespec-rust/issues/78
       if (field.type.kind === 'option') {
-        serdeParams.add('skip_serializing_if = "Option::is_none"');
+        if (field.type.type.kind === 'literal') {
+          getSerDeHelper(field.type, serdeParams, use);
+        } else {
+          serdeParams.add('skip_serializing_if = "Option::is_none"');
+        }
       } else if (visibility === 'pub') {
         // for public models, non-optional fields (e.g. Vec<T> in pageable responses) requires default.
         // crate models don't need this as those are used for spread params and the required params map
@@ -198,7 +202,7 @@ function emitModelsSerde(crate: rust.Crate, context: Context): helpers.Module | 
     body += forReq;
   }
 
-  const serdeHelpers = emitSerDeHelpers();
+  const serdeHelpers = emitSerDeHelpers(use);
 
   if (body.length === 0 && !serdeHelpers) {
     // no helpers
@@ -440,11 +444,11 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
   const unwrapped = helpers.unwrapType(type);
   switch (unwrapped.kind) {
     case 'encodedBytes':
-      break;
+    case 'literal':
     case 'offsetDateTime':
       break;
     default:
-      throw new CodegenError('InternalError', `getSerDeHelper unexpected kind ${type.kind}`);
+      throw new CodegenError('InternalError', `getSerDeHelper unexpected kind ${unwrapped.kind}`);
   }
 
   /**
@@ -492,10 +496,29 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
     serdeParams.add(`with = "azure_core::date::${encoding}${optional ? '::option' : ''}"`);
   };
 
+  /** serializing literal values */
+  const serdeLiteral = function(literal: rust.Literal): void {
+    let literalValueName = literal.value.toString();
+    if (literal.valueKind.kind === 'scalar') {
+      // if the scalar is a float, replace the . as it's illegal in an identifier
+      literalValueName = literalValueName.replace('.', 'point');
+    }
+    const name = `serialize_${literal.valueKind.kind === 'scalar' ? literal.valueKind.type : literal.valueKind.kind.toLowerCase()}_literal_${literalValueName}`;
+    serdeParams.add(`serialize_with = "models_serde::${name}"`);
+
+    // we can reuse identical helpers
+    if (!serdeHelpers.has(name)) {
+      serdeHelpers.set(name, literal);
+      use.add('super', 'models_serde');
+    }
+  };
+
   // the first two cases are for spread params where the internal model's field isn't Option<T>
   switch (type.kind) {
     case 'encodedBytes':
       return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding);
+    case 'literal':
+      return serdeLiteral(type);
     case 'offsetDateTime':
       return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, false);
     default:
@@ -503,6 +526,8 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
         switch (type.type.kind) {
           case 'encodedBytes':
             return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding);
+          case 'literal':
+            return serdeLiteral(type.type);
           case 'offsetDateTime':
             return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, true);
         }
@@ -521,9 +546,10 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
  * emits serde helper modules or returns undefined
  * if no serde helpers are required.
  * 
+ * @param use the use statement builder at the file scope
  * @returns the helper modules or undefined
  */
-function emitSerDeHelpers(): string | undefined {
+function emitSerDeHelpers(use: Use): string | undefined {
   if (serdeHelpers.size === 0) {
     return undefined;
   }
@@ -532,20 +558,54 @@ function emitSerDeHelpers(): string | undefined {
 
   const helperKeys = Array.from(serdeHelpers.keys()).sort();
   for (const helperKey of helperKeys) {
-    const use = new Use('modelsOther');
     const indent = new helpers.indentation();
+    const helperType = serdeHelpers.get(helperKey)!;
+
+    if (helperType.kind === 'literal') {
+      content += buildLiteralSerialize(indent, helperKey, helperType, use);
+      continue;
+    }
+
+    const modUse = new Use('modelsOther');
 
     let modContent = `pub mod ${helperKey} {\n`;
     modContent += `${indent.get()}#![allow(clippy::type_complexity)]\n`;
-    const deserialize = buildDeserialize(indent, serdeHelpers.get(helperKey)!, use);
-    const serialize = buildSerialize(indent, serdeHelpers.get(helperKey)!, use);
-    modContent += use.text(indent);
+    const deserialize = buildDeserialize(indent, helperType, modUse);
+    const serialize = buildSerialize(indent, helperType, modUse);
+    modContent += modUse.text(indent);
     modContent += `${deserialize}\n${serialize}`;
     modContent += '}\n\n'; // end pub mod
 
     content += modContent;
   }
 
+  return content;
+}
+
+/**
+ * constructs a serde serializer function for a literal value
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param name the name of the serialization function
+ * @param literal the literal to serialize
+ * @param use the use statement builder at file scope
+ * @returns the pub(crate) serialize function definition
+ */
+function buildLiteralSerialize(indent: helpers.indentation, name: string, literal: rust.Literal, use: Use): string {
+  use.add('serde', 'Serializer');
+  let content = `pub(crate) fn ${name}<S>(_ignored: &Option<${helpers.getTypeDeclaration(literal)}>, serializer: S) -> std::result::Result<S::Ok, S::Error> where S: Serializer {\n`;
+  let serializeMethod: string;
+  let serializeValue = literal.value;
+  switch (literal.valueKind.kind) {
+    case 'String':
+      serializeMethod = 'str';
+      serializeValue = `"${literal.value}"`;
+      break;
+    case 'scalar':
+      serializeMethod = literal.valueKind.type;
+      break;
+  }
+  content += `${indent.get()}serializer.serialize_${serializeMethod}(${serializeValue})\n}\n\n`;
   return content;
 }
 
