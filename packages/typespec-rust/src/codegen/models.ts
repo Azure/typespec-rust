@@ -503,7 +503,8 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
       // if the scalar is a float, replace the . as it's illegal in an identifier
       literalValueName = literalValueName.replace('.', 'point');
     }
-    const name = `serialize_${literal.valueKind.kind === 'scalar' ? literal.valueKind.type : literal.valueKind.kind.toLowerCase()}_literal_${literalValueName}`;
+    const typeName = literal.valueKind.kind === 'scalar' ? literal.valueKind.type : literal.valueKind.kind.toLowerCase();
+    const name = `serialize_${typeName}_literal_${literalValueName}`;
     serdeParams.add(`serialize_with = "models_serde::${name}"`);
 
     // we can reuse identical helpers

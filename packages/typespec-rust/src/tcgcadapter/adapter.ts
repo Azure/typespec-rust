@@ -323,6 +323,18 @@ export class Adapter {
     const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, modelVisibility, fieldType);
     modelField.docs = this.adaptDocs(property.summary, property.doc);
 
+    // if this is a literal, add a doc comment explaining its behavior
+    const unwrappedType = helpers.unwrapOption(fieldType);
+    if (unwrappedType.kind === 'literal') {
+      const literalDoc = `Field has constant value ${unwrappedType.value}, any specified value is ignored.`;
+      if (!modelField.docs.description) {
+        modelField.docs.description = '';
+      } else {
+        modelField.docs.description += '\n\n';
+      }
+      modelField.docs.description += literalDoc;
+    }
+
     const xmlName = getXMLName(property.decorators);
     if (xmlName) {
       // use the XML name when specified

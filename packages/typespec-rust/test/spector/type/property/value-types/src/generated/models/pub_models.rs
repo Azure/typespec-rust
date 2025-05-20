@@ -18,6 +18,8 @@ use time::OffsetDateTime;
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct BooleanLiteralProperty {
     /// Property
+    ///
+    /// Field has constant value true, any specified value is ignored.
     #[serde(serialize_with = "models_serde::serialize_bool_literal_true")]
     pub property: Option<bool>,
 }
@@ -131,6 +133,8 @@ pub struct ExtensibleEnumProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct FloatLiteralProperty {
     /// Property
+    ///
+    /// Field has constant value 43.125, any specified value is ignored.
     #[serde(serialize_with = "models_serde::serialize_f32_literal_43point125")]
     pub property: Option<f32>,
 }
@@ -155,6 +159,8 @@ pub struct InnerModel {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct IntLiteralProperty {
     /// Property
+    ///
+    /// Field has constant value 42, any specified value is ignored.
     #[serde(serialize_with = "models_serde::serialize_i32_literal_42")]
     pub property: Option<i32>,
 }
@@ -183,6 +189,8 @@ pub struct NeverProperty {}
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct StringLiteralProperty {
     /// Property
+    ///
+    /// Field has constant value hello, any specified value is ignored.
     #[serde(serialize_with = "models_serde::serialize_string_literal_hello")]
     pub property: Option<String>,
 }
