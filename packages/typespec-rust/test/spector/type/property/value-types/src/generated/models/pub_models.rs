@@ -19,7 +19,7 @@ use time::OffsetDateTime;
 pub struct BooleanLiteralProperty {
     /// Property
     ///
-    /// Field has constant value true. Any specified value is ignored.
+    /// Field has constant value true. Any specified value will be ignored.
     #[serde(serialize_with = "models_serde::serialize_bool_literal_true")]
     pub property: Option<bool>,
 }
@@ -134,7 +134,7 @@ pub struct ExtensibleEnumProperty {
 pub struct FloatLiteralProperty {
     /// Property
     ///
-    /// Field has constant value 43.125. Any specified value is ignored.
+    /// Field has constant value 43.125. Any specified value will be ignored.
     #[serde(serialize_with = "models_serde::serialize_f32_literal_43point125")]
     pub property: Option<f32>,
 }
@@ -160,7 +160,7 @@ pub struct InnerModel {
 pub struct IntLiteralProperty {
     /// Property
     ///
-    /// Field has constant value 42. Any specified value is ignored.
+    /// Field has constant value 42. Any specified value will be ignored.
     #[serde(serialize_with = "models_serde::serialize_i32_literal_42")]
     pub property: Option<i32>,
 }
@@ -190,7 +190,7 @@ pub struct NeverProperty {}
 pub struct StringLiteralProperty {
     /// Property
     ///
-    /// Field has constant value hello. Any specified value is ignored.
+    /// Field has constant value hello. Any specified value will be ignored.
     #[serde(serialize_with = "models_serde::serialize_string_literal_hello")]
     pub property: Option<String>,
 }
