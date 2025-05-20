@@ -326,7 +326,7 @@ export class Adapter {
     // if this is a literal, add a doc comment explaining its behavior
     const unwrappedType = helpers.unwrapOption(fieldType);
     if (unwrappedType.kind === 'literal') {
-      const literalDoc = `Field has constant value ${unwrappedType.value}, any specified value is ignored.`;
+      const literalDoc = `Field has constant value ${unwrappedType.value}. Any specified value is ignored.`;
       if (!modelField.docs.description) {
         modelField.docs.description = '';
       } else {
