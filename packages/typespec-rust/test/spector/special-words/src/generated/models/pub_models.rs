@@ -8,204 +8,208 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct And {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct As {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Assert {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Async {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Await {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Break {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Class {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Constructor {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Continue {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Def {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Del {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Elif {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Else {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Except {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Exec {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Finally {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct For {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct From {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Global {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct If {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Import {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct In {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Is {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Lambda {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Not {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Or {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Pass {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Raise {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Return {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct SameAsModel {
-    #[serde(rename = "SameAsModel", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "SameAsModel",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub same_as_model: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Try {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct While {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct With {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Yield {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }

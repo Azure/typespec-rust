@@ -10,62 +10,78 @@ use std::collections::HashMap;
 /// It is the model used by Resource model
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct InnerModel {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 /// Details about a resource.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Resource {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub array: Option<Vec<InnerModel>>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
 
-    #[serde(rename = "floatValue", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "floatValue",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub float_value: Option<f32>,
 
-    #[serde(rename = "innerModel", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "innerModel",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub inner_model: Option<InnerModel>,
 
-    #[serde(rename = "intArray", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "intArray", skip_serializing_if = "Option::is_none")]
     pub int_array: Option<Vec<i32>>,
 
-    #[serde(rename = "intValue", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "intValue", skip_serializing_if = "Option::is_none")]
     pub int_value: Option<i32>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub map: Option<HashMap<String, InnerModel>>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 /// Details about a resource for patch operation.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct ResourcePatch {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub array: Option<Vec<InnerModel>>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
 
-    #[serde(rename = "floatValue", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "floatValue",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub float_value: Option<f32>,
 
-    #[serde(rename = "innerModel", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "innerModel",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub inner_model: Option<InnerModel>,
 
-    #[serde(rename = "intArray", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "intArray", skip_serializing_if = "Option::is_none")]
     pub int_array: Option<Vec<i32>>,
 
-    #[serde(rename = "intValue", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "intValue", skip_serializing_if = "Option::is_none")]
     pub int_value: Option<i32>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub map: Option<HashMap<String, InnerModel>>,
 }

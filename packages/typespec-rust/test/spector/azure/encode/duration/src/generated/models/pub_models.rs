@@ -8,6 +8,6 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct DurationModel {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub input: Option<String>,
 }

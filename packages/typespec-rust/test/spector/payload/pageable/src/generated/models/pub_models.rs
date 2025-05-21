@@ -9,53 +9,48 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct LinkResponse {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub next: Option<String>,
 
-    #[serde(default)]
     pub pets: Vec<Pet>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct Pet {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct RequestHeaderResponseBodyResponse {
-    #[serde(rename = "nextToken", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "nextToken", skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 
-    #[serde(default)]
     pub pets: Vec<Pet>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct RequestHeaderResponseHeaderResponse {
-    #[serde(default)]
     pub pets: Vec<Pet>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct RequestQueryResponseBodyResponse {
-    #[serde(rename = "nextToken", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "nextToken", skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
 
-    #[serde(default)]
     pub pets: Vec<Pet>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct RequestQueryResponseHeaderResponse {
-    #[serde(default)]
     pub pets: Vec<Pet>,
 }

@@ -11,11 +11,10 @@ use serde::{Deserialize, Serialize};
 #[non_exhaustive]
 pub struct PagedUser {
     /// The link to the next page of items
-    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
     /// The User items on this page
-    #[serde(default)]
     pub value: Vec<User>,
 }
 
@@ -24,6 +23,6 @@ pub struct PagedUser {
 #[non_exhaustive]
 pub struct User {
     /// User name
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }

@@ -28,11 +28,15 @@ pub struct BackupSecretResult {
 #[non_exhaustive]
 pub struct DeletedSecretBundle {
     /// The secret management attributes.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub attributes: Option<SecretAttributes>,
 
     /// The content type of the secret.
-    #[serde(rename = "contentType", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "contentType",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub content_type: Option<String>,
 
     /// The time when the secret was deleted, in UTC
@@ -45,20 +49,24 @@ pub struct DeletedSecretBundle {
     pub deleted_date: Option<OffsetDateTime>,
 
     /// The secret id.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// If this is a secret backing a KV certificate, then this field specifies the corresponding key backing the KV certificate.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kid: Option<String>,
 
     /// True if the secret's lifetime is managed by key vault. If this is a secret backing a certificate, then managed will be
     /// true.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 
     /// The url of the recovery object, used to identify and recover the deleted secret.
-    #[serde(rename = "recoveryId", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "recoveryId",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub recovery_id: Option<String>,
 
     /// The time when the secret is scheduled to be purged, in UTC
@@ -71,11 +79,11 @@ pub struct DeletedSecretBundle {
     pub scheduled_purge_date: Option<OffsetDateTime>,
 
     /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tags: Option<HashMap<String, String>>,
 
     /// The secret value.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -84,11 +92,15 @@ pub struct DeletedSecretBundle {
 #[non_exhaustive]
 pub struct DeletedSecretItem {
     /// The secret management attributes.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub attributes: Option<SecretAttributes>,
 
     /// Type of the secret value such as a password.
-    #[serde(rename = "contentType", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "contentType",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub content_type: Option<String>,
 
     /// The time when the secret was deleted, in UTC
@@ -101,15 +113,19 @@ pub struct DeletedSecretItem {
     pub deleted_date: Option<OffsetDateTime>,
 
     /// Secret identifier.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// True if the secret's lifetime is managed by key vault. If this is a key backing a certificate, then managed will be true.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 
     /// The url of the recovery object, used to identify and recover the deleted secret.
-    #[serde(rename = "recoveryId", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "recoveryId",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub recovery_id: Option<String>,
 
     /// The time when the secret is scheduled to be purged, in UTC
@@ -122,7 +138,7 @@ pub struct DeletedSecretItem {
     pub scheduled_purge_date: Option<OffsetDateTime>,
 
     /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tags: Option<HashMap<String, String>>,
 }
 
@@ -131,12 +147,11 @@ pub struct DeletedSecretItem {
 #[non_exhaustive]
 pub struct DeletedSecretListResult {
     /// The URL to get the next set of deleted secrets.
-    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
     /// A response message containing a list of deleted secrets in the key vault along with a link to the next page of deleted
     /// secrets.
-    #[serde(default)]
     pub value: Vec<DeletedSecretItem>,
 }
 
@@ -152,7 +167,7 @@ pub struct SecretAttributes {
     pub created: Option<OffsetDateTime>,
 
     /// Determines whether the object is enabled.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
 
     /// Expiry date in UTC.
@@ -174,13 +189,21 @@ pub struct SecretAttributes {
     pub not_before: Option<OffsetDateTime>,
 
     /// softDelete data retention days. Value should be >=7 and <=90 when softDelete enabled, otherwise 0.
-    #[serde(rename = "recoverableDays", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "recoverableDays",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub recoverable_days: Option<i32>,
 
     /// Reflects the deletion recovery level currently in effect for secrets in the current vault. If it contains 'Purgeable',
     /// the secret can be permanently deleted by a privileged user; otherwise, only the system can purge the secret, at the end
     /// of the retention interval.
-    #[serde(rename = "recoveryLevel", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "recoveryLevel",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub recovery_level: Option<DeletionRecoveryLevel>,
 
     /// Last updated time in UTC.
@@ -197,32 +220,36 @@ pub struct SecretAttributes {
 #[non_exhaustive]
 pub struct SecretBundle {
     /// The secret management attributes.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub attributes: Option<SecretAttributes>,
 
     /// The content type of the secret.
-    #[serde(rename = "contentType", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "contentType",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub content_type: Option<String>,
 
     /// The secret id.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// If this is a secret backing a KV certificate, then this field specifies the corresponding key backing the KV certificate.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kid: Option<String>,
 
     /// True if the secret's lifetime is managed by key vault. If this is a secret backing a certificate, then managed will be
     /// true.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 
     /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tags: Option<HashMap<String, String>>,
 
     /// The secret value.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -231,23 +258,27 @@ pub struct SecretBundle {
 #[non_exhaustive]
 pub struct SecretItem {
     /// The secret management attributes.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub attributes: Option<SecretAttributes>,
 
     /// Type of the secret value such as a password.
-    #[serde(rename = "contentType", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "contentType",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub content_type: Option<String>,
 
     /// Secret identifier.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// True if the secret's lifetime is managed by key vault. If this is a key backing a certificate, then managed will be true.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 
     /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tags: Option<HashMap<String, String>>,
 }
 
@@ -256,11 +287,10 @@ pub struct SecretItem {
 #[non_exhaustive]
 pub struct SecretListResult {
     /// The URL to get the next set of secrets.
-    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
     /// A response message containing a list of secrets in the key vault along with a link to the next page of secrets.
-    #[serde(default)]
     pub value: Vec<SecretItem>,
 }
 
@@ -282,19 +312,27 @@ pub struct SecretRestoreParameters {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct SecretSetParameters {
     /// Type of the secret value such as a password.
-    #[serde(rename = "contentType", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "contentType",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub content_type: Option<String>,
 
     /// The secret management attributes.
-    #[serde(rename = "attributes", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "attributes",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub secret_attributes: Option<SecretAttributes>,
 
     /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tags: Option<HashMap<String, String>>,
 
     /// The value of the secret.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -302,14 +340,22 @@ pub struct SecretSetParameters {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct SecretUpdateParameters {
     /// Type of the secret value such as a password.
-    #[serde(rename = "contentType", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "contentType",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub content_type: Option<String>,
 
     /// The secret management attributes.
-    #[serde(rename = "attributes", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "attributes",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub secret_attributes: Option<SecretAttributes>,
 
     /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tags: Option<HashMap<String, String>>,
 }

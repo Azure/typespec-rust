@@ -129,11 +129,14 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
         if (field.type.type.kind !== 'literal' || field.optional) {
           serdeParams.add('skip_serializing_if = "Option::is_none"');
         }
-      } else if (visibility === 'pub') {
-        // for public models, non-optional fields (e.g. Vec<T> in pageable responses) requires default.
-        // crate models don't need this as those are used for spread params and the required params map
-        // to the required fields in the struct.
-        serdeParams.add('default');
+
+        if (visibility === 'pub') {
+          // for public models, all Option<T> fields require default. this allows Default::default()
+          // to be used in the event that the field is absent during deserialization.
+          // crate models don't need this as those are used for spread params and the required params
+          // map to the required fields in the struct.
+          serdeParams.add('default');
+        }
       }
 
       if (serdeParams.size > 0) {

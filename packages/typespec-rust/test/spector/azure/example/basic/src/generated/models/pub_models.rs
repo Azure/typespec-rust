@@ -10,43 +10,87 @@ use std::collections::HashMap;
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct ActionRequest {
-    #[serde(rename = "arrayProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "arrayProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub array_property: Option<Vec<String>>,
 
-    #[serde(rename = "modelProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "modelProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub model_property: Option<Model>,
 
-    #[serde(rename = "recordProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "recordProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub record_property: Option<HashMap<String, String>>,
 
-    #[serde(rename = "stringProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "stringProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub string_property: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct ActionResponse {
-    #[serde(rename = "arrayProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "arrayProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub array_property: Option<Vec<String>>,
 
-    #[serde(rename = "modelProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "modelProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub model_property: Option<Model>,
 
-    #[serde(rename = "recordProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "recordProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub record_property: Option<HashMap<String, String>>,
 
-    #[serde(rename = "stringProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "stringProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub string_property: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Model {
-    #[serde(rename = "enumProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "enumProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub enum_property: Option<Enum>,
 
-    #[serde(rename = "float32Property", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "float32Property",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub float32_property: Option<f32>,
 
-    #[serde(rename = "int32Property", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "int32Property",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub int32_property: Option<i32>,
 }

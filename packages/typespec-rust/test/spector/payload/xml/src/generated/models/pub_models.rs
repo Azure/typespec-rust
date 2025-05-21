@@ -25,13 +25,13 @@ pub struct ModelWithArrayOfModel {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[typespec(format = "xml")]
 pub struct ModelWithAttributes {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
 
-    #[serde(rename = "@id1", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "@id1", skip_serializing_if = "Option::is_none")]
     pub id1: Option<i32>,
 
-    #[serde(rename = "@id2", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "@id2", skip_serializing_if = "Option::is_none")]
     pub id2: Option<String>,
 }
 
@@ -39,7 +39,7 @@ pub struct ModelWithAttributes {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[typespec(format = "xml")]
 pub struct ModelWithDictionary {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub metadata: Option<HashMap<String, String>>,
 }
 
@@ -70,7 +70,11 @@ pub struct ModelWithEncodedNames {
     )]
     pub colors: Option<Vec<String>>,
 
-    #[serde(rename = "SimpleModelData", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "SimpleModelData",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub model_data: Option<SimpleModel>,
 }
 
@@ -78,10 +82,10 @@ pub struct ModelWithEncodedNames {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[typespec(format = "xml")]
 pub struct ModelWithOptionalField {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub item: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub value: Option<i32>,
 }
 
@@ -89,7 +93,7 @@ pub struct ModelWithOptionalField {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[typespec(format = "xml")]
 pub struct ModelWithRenamedArrays {
-    #[serde(rename = "Colors", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Colors", skip_serializing_if = "Option::is_none")]
     pub colors: Option<Vec<String>>,
 
     #[serde(
@@ -107,10 +111,14 @@ pub struct ModelWithRenamedArrays {
 #[serde(rename = "ModelWithRenamedFieldsSrc")]
 #[typespec(format = "xml")]
 pub struct ModelWithRenamedFields {
-    #[serde(rename = "InputData", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "InputData", skip_serializing_if = "Option::is_none")]
     pub input_data: Option<SimpleModel>,
 
-    #[serde(rename = "OutputData", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "OutputData",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub output_data: Option<SimpleModel>,
 }
 
@@ -139,10 +147,10 @@ pub struct ModelWithSimpleArrays {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[typespec(format = "xml")]
 pub struct ModelWithText {
-    #[serde(rename = "$text", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "$text", skip_serializing_if = "Option::is_none")]
     pub content: Option<String>,
 
-    #[serde(rename = "@language", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "@language", skip_serializing_if = "Option::is_none")]
     pub language: Option<String>,
 }
 
@@ -150,7 +158,7 @@ pub struct ModelWithText {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[typespec(format = "xml")]
 pub struct ModelWithUnwrappedArray {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub colors: Option<Vec<String>>,
 
     #[serde(
@@ -166,9 +174,9 @@ pub struct ModelWithUnwrappedArray {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[typespec(format = "xml")]
 pub struct SimpleModel {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub age: Option<i32>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }

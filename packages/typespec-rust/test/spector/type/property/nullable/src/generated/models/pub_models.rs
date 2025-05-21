@@ -22,7 +22,11 @@ pub struct BytesProperty {
     pub nullable_property: Option<Vec<u8>>,
 
     /// Required property
-    #[serde(rename = "requiredProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "requiredProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub required_property: Option<String>,
 }
 
@@ -39,7 +43,11 @@ pub struct CollectionsByteProperty {
     pub nullable_property: Option<Vec<Vec<u8>>>,
 
     /// Required property
-    #[serde(rename = "requiredProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "requiredProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub required_property: Option<String>,
 }
 
@@ -47,11 +55,19 @@ pub struct CollectionsByteProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct CollectionsModelProperty {
     /// Property
-    #[serde(rename = "nullableProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "nullableProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub nullable_property: Option<Vec<InnerModel>>,
 
     /// Required property
-    #[serde(rename = "requiredProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "requiredProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub required_property: Option<String>,
 }
 
@@ -59,11 +75,19 @@ pub struct CollectionsModelProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct CollectionsStringProperty {
     /// Property
-    #[serde(rename = "nullableProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "nullableProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub nullable_property: Option<Vec<String>>,
 
     /// Required property
-    #[serde(rename = "requiredProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "requiredProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub required_property: Option<String>,
 }
 
@@ -80,7 +104,11 @@ pub struct DatetimeProperty {
     pub nullable_property: Option<OffsetDateTime>,
 
     /// Required property
-    #[serde(rename = "requiredProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "requiredProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub required_property: Option<String>,
 }
 
@@ -88,11 +116,19 @@ pub struct DatetimeProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct DurationProperty {
     /// Property
-    #[serde(rename = "nullableProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "nullableProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub nullable_property: Option<String>,
 
     /// Required property
-    #[serde(rename = "requiredProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "requiredProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub required_property: Option<String>,
 }
 
@@ -100,7 +136,7 @@ pub struct DurationProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct InnerModel {
     /// Inner model property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<String>,
 }
 
@@ -108,10 +144,18 @@ pub struct InnerModel {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct StringProperty {
     /// Property
-    #[serde(rename = "nullableProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "nullableProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub nullable_property: Option<String>,
 
     /// Required property
-    #[serde(rename = "requiredProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "requiredProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub required_property: Option<String>,
 }

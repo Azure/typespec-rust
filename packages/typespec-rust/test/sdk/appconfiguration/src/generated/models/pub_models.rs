@@ -42,23 +42,23 @@ pub struct AzureAppConfigurationClientCheckSnapshotsResult;
 #[non_exhaustive]
 pub struct Error {
     /// One of a server-defined set of error codes.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
 
     /// An array of details about specific errors that led to this reported error.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub details: Option<Vec<Error>>,
 
     /// An object containing more specific information than the current object about the error.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub innererror: Option<InnerError>,
 
     /// A human-readable representation of the error.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
 
     /// The target of the error.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub target: Option<String>,
 }
 
@@ -67,11 +67,11 @@ pub struct Error {
 #[non_exhaustive]
 pub struct InnerError {
     /// One of a server-defined set of error codes.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
 
     /// Inner error.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub innererror: Option<Box<InnerError>>,
 }
 
@@ -80,7 +80,7 @@ pub struct InnerError {
 #[non_exhaustive]
 pub struct Key {
     /// The name of the key.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
@@ -89,11 +89,10 @@ pub struct Key {
 #[non_exhaustive]
 pub struct KeyListResult {
     /// The URI that can be used to request the next set of paged results.
-    #[serde(rename = "@nextLink", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "@nextLink", skip_serializing_if = "Option::is_none")]
     pub _next_link: Option<String>,
 
     /// The collection value.
-    #[serde(default)]
     pub items: Vec<Key>,
 }
 
@@ -101,19 +100,19 @@ pub struct KeyListResult {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct KeyValue {
     /// The content type of the value stored within the key-value.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub content_type: Option<String>,
 
     /// A value representing the current state of the resource.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub etag: Option<String>,
 
     /// The key of the key-value.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
 
     /// The label the key-value belongs to.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
 
     /// A date representing the last time the key-value was modified.
@@ -125,15 +124,15 @@ pub struct KeyValue {
     pub last_modified: Option<OffsetDateTime>,
 
     /// Indicates whether the key-value is locked.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub locked: Option<bool>,
 
     /// The tags of the key-value
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tags: Option<HashMap<String, String>>,
 
     /// The value of the key-value.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -142,15 +141,15 @@ pub struct KeyValue {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct KeyValueFilter {
     /// Filters key-values by their key field.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
 
     /// Filters key-values by their label field.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
 
     /// Filters key-values by their tags field.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<String>>,
 }
 
@@ -159,15 +158,14 @@ pub struct KeyValueFilter {
 #[non_exhaustive]
 pub struct KeyValueListResult {
     /// The URI that can be used to request the next set of paged results.
-    #[serde(rename = "@nextLink", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "@nextLink", skip_serializing_if = "Option::is_none")]
     pub _next_link: Option<String>,
 
     /// An identifier representing the returned state of the resource.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub etag: Option<String>,
 
     /// The collection value.
-    #[serde(default)]
     pub items: Vec<KeyValue>,
 }
 
@@ -176,7 +174,7 @@ pub struct KeyValueListResult {
 #[non_exhaustive]
 pub struct Label {
     /// The name of the label.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
@@ -185,11 +183,10 @@ pub struct Label {
 #[non_exhaustive]
 pub struct LabelListResult {
     /// The URI that can be used to request the next set of paged results.
-    #[serde(rename = "@nextLink", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "@nextLink", skip_serializing_if = "Option::is_none")]
     pub _next_link: Option<String>,
 
     /// The collection value.
-    #[serde(default)]
     pub items: Vec<Label>,
 }
 
@@ -199,15 +196,15 @@ pub struct LabelListResult {
 pub struct OperationDetails {
     /// An error, available when the status is `Failed`, describing why the operation
     /// failed.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub error: Option<Error>,
 
     /// The unique id of the operation.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// The current status of the operation
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub status: Option<OperationState>,
 }
 
@@ -218,7 +215,7 @@ pub struct Snapshot {
     /// composed. The 'key' composition type ensures there are no two key-values
     /// containing the same key. The 'key_label' composition type ensures there are no
     /// two key-values containing the same key and label.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub composition_type: Option<CompositionType>,
 
     /// The time that the snapshot was created.
@@ -230,7 +227,7 @@ pub struct Snapshot {
     pub created: Option<OffsetDateTime>,
 
     /// A value representing the current state of the snapshot.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub etag: Option<String>,
 
     /// The time that the snapshot will expire.
@@ -242,34 +239,34 @@ pub struct Snapshot {
     pub expires: Option<OffsetDateTime>,
 
     /// A list of filters used to filter the key-values included in the snapshot.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub filters: Option<Vec<KeyValueFilter>>,
 
     /// The amount of key-values in the snapshot.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub items_count: Option<i64>,
 
     /// The name of the snapshot.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The amount of time, in seconds, that a snapshot will remain in the archived
     /// state before expiring. This property is only writable during the creation of a
     /// snapshot. If not specified, the default lifetime of key-value revisions will be
     /// used.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub retention_period: Option<i64>,
 
     /// The size in bytes of the snapshot.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub size: Option<i64>,
 
     /// The current status of the snapshot.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub status: Option<SnapshotStatus>,
 
     /// The tags of the snapshot.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tags: Option<HashMap<String, String>>,
 }
 
@@ -278,11 +275,10 @@ pub struct Snapshot {
 #[non_exhaustive]
 pub struct SnapshotListResult {
     /// The URI that can be used to request the next set of paged results.
-    #[serde(rename = "@nextLink", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "@nextLink", skip_serializing_if = "Option::is_none")]
     pub _next_link: Option<String>,
 
     /// The collection value.
-    #[serde(default)]
     pub items: Vec<Snapshot>,
 }
 
@@ -290,6 +286,6 @@ pub struct SnapshotListResult {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct SnapshotUpdateParameters {
     /// The desired status of the snapshot.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub status: Option<SnapshotStatus>,
 }

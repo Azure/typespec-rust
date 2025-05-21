@@ -20,7 +20,7 @@ pub struct BooleanLiteralProperty {
     /// Property
     ///
     /// Field has constant value true. Any specified value will be ignored.
-    #[serde(serialize_with = "models_serde::serialize_bool_literal_true")]
+    #[serde(default, serialize_with = "models_serde::serialize_bool_literal_true")]
     pub property: Option<bool>,
 }
 
@@ -28,7 +28,7 @@ pub struct BooleanLiteralProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct BooleanProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<bool>,
 }
 
@@ -49,7 +49,7 @@ pub struct BytesProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct CollectionsIntProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<Vec<i32>>,
 }
 
@@ -57,7 +57,7 @@ pub struct CollectionsIntProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct CollectionsModelProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<Vec<InnerModel>>,
 }
 
@@ -65,7 +65,7 @@ pub struct CollectionsModelProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct CollectionsStringProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<Vec<String>>,
 }
 
@@ -85,7 +85,7 @@ pub struct DatetimeProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Decimal128Property {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<Decimal>,
 }
 
@@ -93,7 +93,7 @@ pub struct Decimal128Property {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct DecimalProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<Decimal>,
 }
 
@@ -101,7 +101,7 @@ pub struct DecimalProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct DictionaryStringProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<HashMap<String, String>>,
 }
 
@@ -109,7 +109,7 @@ pub struct DictionaryStringProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct DurationProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<String>,
 }
 
@@ -117,7 +117,7 @@ pub struct DurationProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct EnumProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<FixedInnerEnum>,
 }
 
@@ -125,7 +125,7 @@ pub struct EnumProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct ExtensibleEnumProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<InnerEnum>,
 }
 
@@ -135,7 +135,10 @@ pub struct FloatLiteralProperty {
     /// Property
     ///
     /// Field has constant value 43.125. Any specified value will be ignored.
-    #[serde(serialize_with = "models_serde::serialize_f32_literal_43point125")]
+    #[serde(
+        default,
+        serialize_with = "models_serde::serialize_f32_literal_43point125"
+    )]
     pub property: Option<f32>,
 }
 
@@ -143,7 +146,7 @@ pub struct FloatLiteralProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct FloatProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<f32>,
 }
 
@@ -151,7 +154,7 @@ pub struct FloatProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct InnerModel {
     /// Required string property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<String>,
 }
 
@@ -161,7 +164,7 @@ pub struct IntLiteralProperty {
     /// Property
     ///
     /// Field has constant value 42. Any specified value will be ignored.
-    #[serde(serialize_with = "models_serde::serialize_i32_literal_42")]
+    #[serde(default, serialize_with = "models_serde::serialize_i32_literal_42")]
     pub property: Option<i32>,
 }
 
@@ -169,7 +172,7 @@ pub struct IntLiteralProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct IntProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<i32>,
 }
 
@@ -177,7 +180,7 @@ pub struct IntProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct ModelProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<InnerModel>,
 }
 
@@ -191,7 +194,10 @@ pub struct StringLiteralProperty {
     /// Property
     ///
     /// Field has constant value hello. Any specified value will be ignored.
-    #[serde(serialize_with = "models_serde::serialize_string_literal_hello")]
+    #[serde(
+        default,
+        serialize_with = "models_serde::serialize_string_literal_hello"
+    )]
     pub property: Option<String>,
 }
 
@@ -199,7 +205,7 @@ pub struct StringLiteralProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct StringProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<String>,
 }
 
@@ -207,7 +213,7 @@ pub struct StringProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct UnionEnumValueProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<ExtendedEnum>,
 }
 
@@ -215,7 +221,7 @@ pub struct UnionEnumValueProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct UnionFloatLiteralProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<UnionFloatLiteralPropertyProperty>,
 }
 
@@ -223,7 +229,7 @@ pub struct UnionFloatLiteralProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct UnionIntLiteralProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<UnionIntLiteralPropertyProperty>,
 }
 
@@ -231,7 +237,7 @@ pub struct UnionIntLiteralProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct UnionStringLiteralProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<UnionStringLiteralPropertyProperty>,
 }
 
@@ -239,7 +245,7 @@ pub struct UnionStringLiteralProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct UnknownArrayProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<Value>,
 }
 
@@ -247,7 +253,7 @@ pub struct UnknownArrayProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct UnknownDictProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<Value>,
 }
 
@@ -255,7 +261,7 @@ pub struct UnknownDictProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct UnknownIntProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<Value>,
 }
 
@@ -263,6 +269,6 @@ pub struct UnknownIntProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct UnknownStringProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<Value>,
 }

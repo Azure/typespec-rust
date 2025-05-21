@@ -13,31 +13,35 @@ use time::OffsetDateTime;
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct ConfidentialResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// The geo-location where the resource lives
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 
     /// The name of the ConfidentialResource
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The resource-specific properties for this resource.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub properties: Option<ConfidentialResourceProperties>,
 
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
-    #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "systemData",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub system_data: Option<SystemData>,
 
     /// Resource tags.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tags: Option<HashMap<String, String>>,
 
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
 
@@ -45,10 +49,14 @@ pub struct ConfidentialResource {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct ConfidentialResourceProperties {
     /// The status of the last operation.
-    #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "provisioningState",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub provisioning_state: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub username: Option<String>,
 }
 
@@ -56,35 +64,39 @@ pub struct ConfidentialResourceProperties {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct ManagedIdentityTrackedResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     /// The managed service identities assigned to this resource.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub identity: Option<ManagedServiceIdentity>,
 
     /// The geo-location where the resource lives
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
 
     /// arm resource name for path
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The resource-specific properties for this resource.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub properties: Option<ManagedIdentityTrackedResourceProperties>,
 
     /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
-    #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "systemData",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub system_data: Option<SystemData>,
 
     /// Resource tags.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tags: Option<HashMap<String, String>>,
 
     /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
 
@@ -92,7 +104,11 @@ pub struct ManagedIdentityTrackedResource {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct ManagedIdentityTrackedResourceProperties {
     /// The status of the last operation.
-    #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "provisioningState",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub provisioning_state: Option<String>,
 }
 
@@ -100,19 +116,24 @@ pub struct ManagedIdentityTrackedResourceProperties {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct ManagedServiceIdentity {
     /// The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.
-    #[serde(rename = "principalId", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "principalId",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub principal_id: Option<String>,
 
     /// The tenant ID of the system assigned identity. This property will only be provided for a system assigned identity.
-    #[serde(rename = "tenantId", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "tenantId", skip_serializing_if = "Option::is_none")]
     pub tenant_id: Option<String>,
 
     /// The type of managed identity assigned to this resource.
-    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<ManagedServiceIdentityType>,
 
     /// The identities assigned to this resource by the user.
     #[serde(
+        default,
         rename = "userAssignedIdentities",
         skip_serializing_if = "Option::is_none"
     )]
@@ -133,11 +154,15 @@ pub struct SystemData {
     pub created_at: Option<OffsetDateTime>,
 
     /// The identity that created the resource.
-    #[serde(rename = "createdBy", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "createdBy", skip_serializing_if = "Option::is_none")]
     pub created_by: Option<String>,
 
     /// The type of identity that created the resource.
-    #[serde(rename = "createdByType", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "createdByType",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub created_by_type: Option<CreatedByType>,
 
     /// The timestamp of resource last modification (UTC)
@@ -150,11 +175,19 @@ pub struct SystemData {
     pub last_modified_at: Option<OffsetDateTime>,
 
     /// The identity that last modified the resource.
-    #[serde(rename = "lastModifiedBy", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "lastModifiedBy",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub last_modified_by: Option<String>,
 
     /// The type of identity that last modified the resource.
-    #[serde(rename = "lastModifiedByType", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "lastModifiedByType",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub last_modified_by_type: Option<CreatedByType>,
 }
 
@@ -162,10 +195,14 @@ pub struct SystemData {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct UserAssignedIdentity {
     /// The client ID of the assigned identity.
-    #[serde(rename = "clientId", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "clientId", skip_serializing_if = "Option::is_none")]
     pub client_id: Option<String>,
 
     /// The principal ID of the assigned identity.
-    #[serde(rename = "principalId", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "principalId",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub principal_id: Option<String>,
 }

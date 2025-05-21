@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 #[non_exhaustive]
 pub struct FirstItem {
     /// The id of the item.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub id: Option<i32>,
 }
 
@@ -19,7 +19,7 @@ pub struct FirstItem {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct ListItemInputBody {
     /// The name of the input.
-    #[serde(rename = "inputName", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "inputName", skip_serializing_if = "Option::is_none")]
     pub input_name: Option<String>,
 }
 
@@ -28,11 +28,10 @@ pub struct ListItemInputBody {
 #[non_exhaustive]
 pub struct PagedFirstItem {
     /// The link to the next page of items
-    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
     /// The FirstItem items on this page
-    #[serde(default)]
     pub value: Vec<FirstItem>,
 }
 
@@ -41,11 +40,10 @@ pub struct PagedFirstItem {
 #[non_exhaustive]
 pub struct PagedSecondItem {
     /// The link to the next page of items
-    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
     /// The SecondItem items on this page
-    #[serde(default)]
     pub value: Vec<SecondItem>,
 }
 
@@ -54,21 +52,19 @@ pub struct PagedSecondItem {
 #[non_exhaustive]
 pub struct PagedUser {
     /// The link to the next page of items
-    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
     /// The User items on this page
-    #[serde(default)]
     pub value: Vec<User>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct ParameterizedNextLinkPagingResult {
-    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 
-    #[serde(default)]
     pub values: Vec<User>,
 }
 
@@ -77,7 +73,7 @@ pub struct ParameterizedNextLinkPagingResult {
 #[non_exhaustive]
 pub struct SecondItem {
     /// The name of the item.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
@@ -86,19 +82,19 @@ pub struct SecondItem {
 #[non_exhaustive]
 pub struct User {
     /// The entity tag for this resource.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub etag: Option<Etag>,
 
     /// The user's id.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub id: Option<i32>,
 
     /// The user's name.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The user's order list
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub orders: Option<Vec<UserOrder>>,
 }
 
@@ -106,11 +102,10 @@ pub struct User {
 #[non_exhaustive]
 pub struct UserListResults {
     /// List of items.
-    #[serde(default)]
     pub items: Vec<User>,
 
     /// Link to fetch more items.
-    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
 }
 
@@ -119,14 +114,14 @@ pub struct UserListResults {
 #[non_exhaustive]
 pub struct UserOrder {
     /// The user's order detail
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub detail: Option<String>,
 
     /// The user's id.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub id: Option<i32>,
 
     /// The user's id.
-    #[serde(rename = "userId", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "userId", skip_serializing_if = "Option::is_none")]
     pub user_id: Option<i32>,
 }

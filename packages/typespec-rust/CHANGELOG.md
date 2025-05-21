@@ -12,6 +12,7 @@
 * Fixed bad codegen when path parameters are aliased as client initializers.
 * Fixed bad codegen for model with literal values.
 * Fixed incorrect behavior for numeric types that use string encoding.
+* Added missing `default` `serde` annotation on model fields.
 
 ## 0.14.1 (2025-05-07)
 

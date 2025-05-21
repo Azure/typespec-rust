@@ -33,7 +33,11 @@ pub struct AccessPolicy {
     pub expiry: Option<OffsetDateTime>,
 
     /// The permissions for acl the policy.
-    #[serde(rename = "Permission", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "Permission",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub permission: Option<String>,
 
     /// The date-time the policy is active.
@@ -83,19 +87,19 @@ pub struct ArrowConfiguration {
 #[typespec(format = "xml")]
 pub struct ArrowField {
     /// The arrow field name.
-    #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The arrow field precision.
-    #[serde(rename = "Precision", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Precision", skip_serializing_if = "Option::is_none")]
     pub precision: Option<i32>,
 
     /// The arrow field scale.
-    #[serde(rename = "Scale", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Scale", skip_serializing_if = "Option::is_none")]
     pub scale: Option<i32>,
 
     /// The arrow field type.
-    #[serde(rename = "Type", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<String>,
 }
 
@@ -217,7 +221,7 @@ pub struct BlobContainerClientSetAccessPolicyResult;
 #[typespec(format = "xml")]
 pub struct BlobFlatListSegment {
     /// The blob items.
-    #[serde(default, rename = "Blob")]
+    #[serde(rename = "Blob")]
     pub blob_items: Vec<BlobItemInternal>,
 }
 
@@ -227,11 +231,15 @@ pub struct BlobFlatListSegment {
 #[typespec(format = "xml")]
 pub struct BlobHierarchyListSegment {
     /// The blob items
-    #[serde(default, rename = "Blob")]
+    #[serde(rename = "Blob")]
     pub blob_items: Vec<BlobItemInternal>,
 
     /// The blob prefixes.
-    #[serde(rename = "BlobPrefix", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "BlobPrefix",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub blob_prefixes: Option<Vec<BlobPrefix>>,
 }
 
@@ -242,46 +250,59 @@ pub struct BlobHierarchyListSegment {
 #[typespec(format = "xml")]
 pub struct BlobItemInternal {
     /// The tags of the blob.
-    #[serde(rename = "BlobTags", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "BlobTags", skip_serializing_if = "Option::is_none")]
     pub blob_tags: Option<BlobTags>,
 
     /// Whether the blob is deleted.
-    #[serde(rename = "Deleted", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Deleted", skip_serializing_if = "Option::is_none")]
     pub deleted: Option<bool>,
 
     /// Whether the blog has versions only.
-    #[serde(rename = "HasVersionsOnly", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "HasVersionsOnly",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub has_versions_only: Option<bool>,
 
     /// Whether the blob is the current version.
-    #[serde(rename = "IsCurrentVersion", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "IsCurrentVersion",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub is_current_version: Option<bool>,
 
     /// The metadata of the blob.
-    #[serde(rename = "Metadata", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Metadata", skip_serializing_if = "Option::is_none")]
     pub metadata: Option<BlobMetadata>,
 
     /// The name of the blob.
-    #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Name", skip_serializing_if = "Option::is_none")]
     pub name: Option<BlobName>,
 
     /// The object replication metadata of the blob.
     #[serde(
+        default,
         rename = "ObjectReplicationMetadata",
         skip_serializing_if = "Option::is_none"
     )]
     pub object_replication_metadata: Option<ObjectReplicationMetadata>,
 
     /// The properties of the blob.
-    #[serde(rename = "Properties", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "Properties",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub properties: Option<BlobPropertiesInternal>,
 
     /// The snapshot of the blob.
-    #[serde(rename = "Snapshot", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Snapshot", skip_serializing_if = "Option::is_none")]
     pub snapshot: Option<String>,
 
     /// The version id of the blob.
-    #[serde(rename = "VersionId", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "VersionId", skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -291,7 +312,11 @@ pub struct BlobItemInternal {
 #[typespec(format = "xml")]
 pub struct BlobMetadata {
     /// Whether the blob metadata is encrypted.
-    #[serde(rename = "@Encrypted", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "@Encrypted",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub encrypted: Option<String>,
 }
 
@@ -301,11 +326,11 @@ pub struct BlobMetadata {
 #[typespec(format = "xml")]
 pub struct BlobName {
     /// The blob name.
-    #[serde(rename = "$text", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "$text", skip_serializing_if = "Option::is_none")]
     pub content: Option<String>,
 
     /// Whether the blob name is encoded.
-    #[serde(rename = "@Encoded", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "@Encoded", skip_serializing_if = "Option::is_none")]
     pub encoded: Option<bool>,
 }
 
@@ -315,7 +340,7 @@ pub struct BlobName {
 #[typespec(format = "xml")]
 pub struct BlobPrefix {
     /// The blob name.
-    #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Name", skip_serializing_if = "Option::is_none")]
     pub name: Option<BlobName>,
 }
 
@@ -326,7 +351,11 @@ pub struct BlobPrefix {
 #[typespec(format = "xml")]
 pub struct BlobPropertiesInternal {
     /// The access tier of the blob.
-    #[serde(rename = "AccessTier", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "AccessTier",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub access_tier: Option<AccessTier>,
 
     /// The access tier change time of the blob.
@@ -339,45 +368,71 @@ pub struct BlobPropertiesInternal {
     pub access_tier_change_time: Option<OffsetDateTime>,
 
     /// Whether the access tier is inferred.
-    #[serde(rename = "AccessTierInferred", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "AccessTierInferred",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub access_tier_inferred: Option<bool>,
 
     /// The archive status of the blob.
-    #[serde(rename = "ArchiveStatus", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "ArchiveStatus",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub archive_status: Option<ArchiveStatus>,
 
     /// The sequence number of the blob.
     #[serde(
+        default,
         rename = "x-ms-blob-sequence-number",
         skip_serializing_if = "Option::is_none"
     )]
     pub blob_sequence_number: Option<i64>,
 
     /// The blob type.
-    #[serde(rename = "BlobType", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "BlobType", skip_serializing_if = "Option::is_none")]
     pub blob_type: Option<BlobType>,
 
     /// The cache control of the blob.
-    #[serde(rename = "Cache-Control", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "Cache-Control",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub cache_control: Option<String>,
 
     /// The content disposition of the blob.
     #[serde(
+        default,
         rename = "Content-Disposition",
         skip_serializing_if = "Option::is_none"
     )]
     pub content_disposition: Option<String>,
 
     /// The content encoding of the blob.
-    #[serde(rename = "Content-Encoding", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "Content-Encoding",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub content_encoding: Option<String>,
 
     /// The content language of the blob.
-    #[serde(rename = "Content-Language", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "Content-Language",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub content_language: Option<String>,
 
     /// The content length of the blob.
-    #[serde(rename = "Content-Length", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "Content-Length",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub content_length: Option<u64>,
 
     /// The content MD5 of the blob.
@@ -391,7 +446,11 @@ pub struct BlobPropertiesInternal {
     pub content_md5: Option<Vec<u8>>,
 
     /// The content type of the blob.
-    #[serde(rename = "Content-Type", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "Content-Type",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub content_type: Option<String>,
 
     /// The copy completion time of the blob.
@@ -404,23 +463,36 @@ pub struct BlobPropertiesInternal {
     pub copy_completion_time: Option<OffsetDateTime>,
 
     /// The copy ID of the blob.
-    #[serde(rename = "CopyId", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "CopyId", skip_serializing_if = "Option::is_none")]
     pub copy_id: Option<String>,
 
     /// The copy progress of the blob.
-    #[serde(rename = "CopyProgress", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "CopyProgress",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub copy_progress: Option<String>,
 
     /// The copy source of the blob.
-    #[serde(rename = "CopySource", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "CopySource",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub copy_source: Option<String>,
 
     /// The copy status of the blob.
-    #[serde(rename = "CopyStatus", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "CopyStatus",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub copy_status: Option<CopyStatus>,
 
     /// The copy status description of the blob.
     #[serde(
+        default,
         rename = "CopyStatusDescription",
         skip_serializing_if = "Option::is_none"
     )]
@@ -437,6 +509,7 @@ pub struct BlobPropertiesInternal {
 
     /// Customer provided key sha256
     #[serde(
+        default,
         rename = "CustomerProvidedKeySha256",
         skip_serializing_if = "Option::is_none"
     )]
@@ -453,17 +526,22 @@ pub struct BlobPropertiesInternal {
 
     /// The name of the destination snapshot.
     #[serde(
+        default,
         rename = "DestinationSnapshot",
         skip_serializing_if = "Option::is_none"
     )]
     pub destination_snapshot: Option<String>,
 
     /// The encryption scope of the blob.
-    #[serde(rename = "EncryptionScope", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "EncryptionScope",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub encryption_scope: Option<String>,
 
     /// The blog ETag.
-    #[serde(rename = "ETag", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "ETag", skip_serializing_if = "Option::is_none")]
     pub etag: Option<String>,
 
     /// The expire time of the blob.
@@ -486,17 +564,22 @@ pub struct BlobPropertiesInternal {
 
     /// The immutability policy mode of the blob.
     #[serde(
+        default,
         rename = "ImmutabilityPolicyMode",
         skip_serializing_if = "Option::is_none"
     )]
     pub immutability_policy_mode: Option<BlobImmutabilityPolicyMode>,
 
     /// Whether the blog is incremental copy.
-    #[serde(rename = "IncrementalCopy", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "IncrementalCopy",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub incremental_copy: Option<bool>,
 
     /// Whether the blob is sealed.
-    #[serde(rename = "Sealed", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Sealed", skip_serializing_if = "Option::is_none")]
     pub is_sealed: Option<bool>,
 
     /// The last access time of the blob.
@@ -518,38 +601,59 @@ pub struct BlobPropertiesInternal {
     pub last_modified: Option<OffsetDateTime>,
 
     /// The lease duration of the blob.
-    #[serde(rename = "LeaseDuration", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "LeaseDuration",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub lease_duration: Option<LeaseDuration>,
 
     /// The lease state of the blob.
-    #[serde(rename = "LeaseState", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "LeaseState",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub lease_state: Option<LeaseState>,
 
     /// The lease status of the blob.
-    #[serde(rename = "LeaseStatus", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "LeaseStatus",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub lease_status: Option<LeaseStatus>,
 
     /// Whether the blob is under legal hold.
-    #[serde(rename = "LegalHold", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "LegalHold", skip_serializing_if = "Option::is_none")]
     pub legal_hold: Option<bool>,
 
     /// The rehydrate priority of the blob.
-    #[serde(rename = "RehydratePriority", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "RehydratePriority",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub rehydrate_priority: Option<RehydratePriority>,
 
     /// The remaining retention days of the blob.
     #[serde(
+        default,
         rename = "RemainingRetentionDays",
         skip_serializing_if = "Option::is_none"
     )]
     pub remaining_retention_days: Option<i32>,
 
     /// Whether the blog is encrypted on the server.
-    #[serde(rename = "ServerEncrypted", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "ServerEncrypted",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub server_encrypted: Option<bool>,
 
     /// The number of tags for the blob.
-    #[serde(rename = "TagCount", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "TagCount", skip_serializing_if = "Option::is_none")]
     pub tag_count: Option<i32>,
 }
 
@@ -563,11 +667,11 @@ pub struct BlobServiceClientGetAccountInfoResult;
 #[typespec(format = "xml")]
 pub struct BlobTag {
     /// The key of the tag.
-    #[serde(rename = "Key", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Key", skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
 
     /// The value of the tag.
-    #[serde(rename = "Value", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Value", skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }
 
@@ -603,7 +707,7 @@ pub struct Block {
     pub name: Option<Vec<u8>>,
 
     /// The block size in bytes.
-    #[serde(rename = "Size", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Size", skip_serializing_if = "Option::is_none")]
     pub size: Option<i64>,
 }
 
@@ -696,11 +800,11 @@ pub struct BlockLookupList {
 #[typespec(format = "xml")]
 pub struct ClearRange {
     /// The end of the byte range.
-    #[serde(rename = "End", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "End", skip_serializing_if = "Option::is_none")]
     pub end: Option<i64>,
 
     /// The start of the byte range.
-    #[serde(rename = "Start", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Start", skip_serializing_if = "Option::is_none")]
     pub start: Option<i64>,
 }
 
@@ -711,23 +815,27 @@ pub struct ClearRange {
 #[typespec(format = "xml")]
 pub struct ContainerItem {
     /// Whether the container is deleted.
-    #[serde(rename = "Deleted", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Deleted", skip_serializing_if = "Option::is_none")]
     pub delete: Option<bool>,
 
     /// The metadata of the container.
-    #[serde(rename = "Metadata", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Metadata", skip_serializing_if = "Option::is_none")]
     pub metadata: Option<HashMap<String, String>>,
 
     /// The name of the container.
-    #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The properties of the container.
-    #[serde(rename = "Properties", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "Properties",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub properties: Option<ContainerProperties>,
 
     /// The version of the container.
-    #[serde(rename = "Version", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Version", skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
 
@@ -738,6 +846,7 @@ pub struct ContainerItem {
 pub struct ContainerProperties {
     /// The default encryption scope of the container.
     #[serde(
+        default,
         rename = "DefaultEncryptionScope",
         skip_serializing_if = "Option::is_none"
     )]
@@ -753,22 +862,28 @@ pub struct ContainerProperties {
     pub deleted_time: Option<OffsetDateTime>,
 
     /// The ETag of the container.
-    #[serde(rename = "ETag", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "ETag", skip_serializing_if = "Option::is_none")]
     pub etag: Option<String>,
 
     /// Whether it has an immutability policy.
     #[serde(
+        default,
         rename = "HasImmutabilityPolicy",
         skip_serializing_if = "Option::is_none"
     )]
     pub has_immutability_policy: Option<bool>,
 
     /// The has legal hold status of the container.
-    #[serde(rename = "HasLegalHold", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "HasLegalHold",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub has_legal_hold: Option<bool>,
 
     /// Whether immutable storage with versioning is enabled.
     #[serde(
+        default,
         rename = "ImmutableStorageWithVersioningEnabled",
         skip_serializing_if = "Option::is_none"
     )]
@@ -784,30 +899,48 @@ pub struct ContainerProperties {
     pub last_modified: Option<OffsetDateTime>,
 
     /// The lease duration of the container.
-    #[serde(rename = "LeaseDuration", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "LeaseDuration",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub lease_duration: Option<LeaseDuration>,
 
     /// The lease state of the container.
-    #[serde(rename = "LeaseState", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "LeaseState",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub lease_state: Option<LeaseState>,
 
     /// The lease status of the container.
-    #[serde(rename = "LeaseStatus", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "LeaseStatus",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub lease_status: Option<LeaseStatus>,
 
     /// Whether to prevent encryption scope override.
     #[serde(
+        default,
         rename = "DenyEncryptionScopeOverride",
         skip_serializing_if = "Option::is_none"
     )]
     pub prevent_encryption_scope_override: Option<bool>,
 
     /// The public access type of the container.
-    #[serde(rename = "PublicAccess", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "PublicAccess",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub public_access: Option<PublicAccessType>,
 
     /// The remaining retention days of the container.
     #[serde(
+        default,
         rename = "RemainingRetentionDays",
         skip_serializing_if = "Option::is_none"
     )]
@@ -821,23 +954,43 @@ pub struct ContainerProperties {
 #[typespec(format = "xml")]
 pub struct CorsRule {
     /// The allowed headers.
-    #[serde(rename = "AllowedHeaders", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "AllowedHeaders",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub allowed_headers: Option<String>,
 
     /// The allowed methods.
-    #[serde(rename = "AllowedMethods", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "AllowedMethods",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub allowed_methods: Option<String>,
 
     /// The allowed origins.
-    #[serde(rename = "AllowedOrigins", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "AllowedOrigins",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub allowed_origins: Option<String>,
 
     /// The exposed headers.
-    #[serde(rename = "ExposedHeaders", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "ExposedHeaders",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub exposed_headers: Option<String>,
 
     /// The maximum age in seconds.
-    #[serde(rename = "MaxAgeInSeconds", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "MaxAgeInSeconds",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub max_age_in_seconds: Option<i32>,
 }
 
@@ -846,23 +999,43 @@ pub struct CorsRule {
 #[typespec(format = "xml")]
 pub struct DelimitedTextConfiguration {
     /// The string used to separate columns.
-    #[serde(rename = "ColumnSeparator", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "ColumnSeparator",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub column_separator: Option<String>,
 
     /// The string used to escape a quote character in a field.
-    #[serde(rename = "EscapeChar", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "EscapeChar",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub escape_char: Option<String>,
 
     /// The string used to quote a specific field.
-    #[serde(rename = "FieldQuote", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "FieldQuote",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub field_quote: Option<String>,
 
     /// Represents whether the data has headers.
-    #[serde(rename = "HasHeaders", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "HasHeaders",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub headers_present: Option<bool>,
 
     /// The string used to separate records.
-    #[serde(rename = "RecordSeparator", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "RecordSeparator",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub record_separator: Option<String>,
 }
 
@@ -873,23 +1046,31 @@ pub struct DelimitedTextConfiguration {
 #[typespec(format = "xml")]
 pub struct FilterBlobItem {
     /// The properties of the blob.
-    #[serde(rename = "ContainerName", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "ContainerName",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub container_name: Option<String>,
 
     /// Whether it is the current version of the blob
-    #[serde(rename = "IsCurrentVersion", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "IsCurrentVersion",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub is_current_version: Option<bool>,
 
     /// The name of the blob.
-    #[serde(rename = "Name", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The metadata of the blob.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tags: Option<BlobTags>,
 
     /// The version ID of the blob.
-    #[serde(rename = "VersionId", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "VersionId", skip_serializing_if = "Option::is_none")]
     pub version_id: Option<String>,
 }
 
@@ -910,15 +1091,23 @@ pub struct FilterBlobSegment {
     pub blobs: Option<Vec<FilterBlobItem>>,
 
     /// The next marker of the blobs.
-    #[serde(rename = "NextMarker", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "NextMarker",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub next_marker: Option<String>,
 
     /// The service endpoint.
-    #[serde(rename = "@ServiceEndpoint", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "@ServiceEndpoint",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub service_endpoint: Option<String>,
 
     /// The filter for the blobs.
-    #[serde(rename = "Where", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Where", skip_serializing_if = "Option::is_none")]
     pub where_prop: Option<String>,
 }
 
@@ -938,7 +1127,7 @@ pub struct GeoReplication {
     pub last_sync_time: Option<OffsetDateTime>,
 
     /// The status of the secondary location
-    #[serde(rename = "Status", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Status", skip_serializing_if = "Option::is_none")]
     pub status: Option<GeoReplicationStatusType>,
 }
 
@@ -947,7 +1136,11 @@ pub struct GeoReplication {
 #[typespec(format = "xml")]
 pub struct JsonTextConfiguration {
     /// The string used to separate records.
-    #[serde(rename = "RecordSeparator", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "RecordSeparator",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub record_separator: Option<String>,
 }
 
@@ -956,11 +1149,11 @@ pub struct JsonTextConfiguration {
 #[typespec(format = "xml")]
 pub struct KeyInfo {
     /// The date-time the key expires.
-    #[serde(rename = "Expiry", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Expiry", skip_serializing_if = "Option::is_none")]
     pub expiry: Option<String>,
 
     /// The date-time the key is active.
-    #[serde(rename = "Start", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Start", skip_serializing_if = "Option::is_none")]
     pub start: Option<String>,
 }
 
@@ -971,31 +1164,47 @@ pub struct KeyInfo {
 #[typespec(format = "xml")]
 pub struct ListBlobsFlatSegmentResponse {
     /// The container name.
-    #[serde(rename = "@ContainerName", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "@ContainerName",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub container_name: Option<String>,
 
     /// The marker of the blobs.
-    #[serde(rename = "Marker", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Marker", skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 
     /// The max results of the blobs.
-    #[serde(rename = "MaxResults", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "MaxResults",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub max_results: Option<i32>,
 
     /// The next marker of the blobs.
-    #[serde(rename = "NextMarker", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "NextMarker",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub next_marker: Option<String>,
 
     /// The prefix of the blobs.
-    #[serde(rename = "Prefix", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Prefix", skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
 
     /// The blob segment.
-    #[serde(default, rename = "Blobs")]
+    #[serde(rename = "Blobs")]
     pub segment: BlobFlatListSegment,
 
     /// The service endpoint.
-    #[serde(rename = "@ServiceEndpoint", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "@ServiceEndpoint",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub service_endpoint: Option<String>,
 }
 
@@ -1006,35 +1215,51 @@ pub struct ListBlobsFlatSegmentResponse {
 #[typespec(format = "xml")]
 pub struct ListBlobsHierarchySegmentResponse {
     /// The container name.
-    #[serde(rename = "@ContainerName", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "@ContainerName",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub container_name: Option<String>,
 
     /// The delimiter of the blobs.
-    #[serde(rename = "Delimiter", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Delimiter", skip_serializing_if = "Option::is_none")]
     pub delimiter: Option<String>,
 
     /// The marker of the blobs.
-    #[serde(rename = "Marker", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Marker", skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 
     /// The max results of the blobs.
-    #[serde(rename = "MaxResults", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "MaxResults",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub max_results: Option<i32>,
 
     /// The next marker of the blobs.
-    #[serde(rename = "NextMarker", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "NextMarker",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub next_marker: Option<String>,
 
     /// The prefix of the blobs.
-    #[serde(rename = "Prefix", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Prefix", skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
 
     /// The blob segment.
-    #[serde(default, rename = "Blobs")]
+    #[serde(rename = "Blobs")]
     pub segment: BlobHierarchyListSegment,
 
     /// The service endpoint.
-    #[serde(rename = "@ServiceEndpoint", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "@ServiceEndpoint",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub service_endpoint: Option<String>,
 }
 
@@ -1054,23 +1279,35 @@ pub struct ListContainersSegmentResponse {
     pub container_items: Vec<ContainerItem>,
 
     /// The marker of the containers.
-    #[serde(rename = "Marker", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Marker", skip_serializing_if = "Option::is_none")]
     pub marker: Option<String>,
 
     /// The max results of the containers.
-    #[serde(rename = "MaxResults", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "MaxResults",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub max_results: Option<i32>,
 
     /// The next marker of the containers.
-    #[serde(rename = "NextMarker", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "NextMarker",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub next_marker: Option<String>,
 
     /// The prefix of the containers.
-    #[serde(rename = "Prefix", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Prefix", skip_serializing_if = "Option::is_none")]
     pub prefix: Option<String>,
 
     /// The service endpoint.
-    #[serde(rename = "@ServiceEndpoint", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "@ServiceEndpoint",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub service_endpoint: Option<String>,
 }
 
@@ -1079,23 +1316,27 @@ pub struct ListContainersSegmentResponse {
 #[typespec(format = "xml")]
 pub struct Logging {
     /// Whether delete operation is logged.
-    #[serde(rename = "Delete", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Delete", skip_serializing_if = "Option::is_none")]
     pub delete: Option<bool>,
 
     /// Whether read operation is logged.
-    #[serde(rename = "Read", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Read", skip_serializing_if = "Option::is_none")]
     pub read: Option<bool>,
 
     /// The retention policy of the logs.
-    #[serde(rename = "RetentionPolicy", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "RetentionPolicy",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub retention_policy: Option<RetentionPolicy>,
 
     /// The version of the logging properties.
-    #[serde(rename = "Version", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Version", skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 
     /// Whether write operation is logged.
-    #[serde(rename = "Write", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Write", skip_serializing_if = "Option::is_none")]
     pub write: Option<bool>,
 }
 
@@ -1104,19 +1345,27 @@ pub struct Logging {
 #[typespec(format = "xml")]
 pub struct Metrics {
     /// Whether it is enabled.
-    #[serde(rename = "Enabled", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Enabled", skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
 
     /// Whether to include API in the metrics.
-    #[serde(rename = "IncludeAPIs", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "IncludeAPIs",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub include_apis: Option<bool>,
 
     /// The retention policy of the metrics.
-    #[serde(rename = "RetentionPolicy", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "RetentionPolicy",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub retention_policy: Option<RetentionPolicy>,
 
     /// The version of the metrics properties.
-    #[serde(rename = "Version", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Version", skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
 }
 
@@ -1171,7 +1420,11 @@ pub struct PageList {
     pub clear_range: Option<Vec<ClearRange>>,
 
     /// The next marker.
-    #[serde(rename = "NextMarker", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "NextMarker",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub next_marker: Option<String>,
 
     /// The page ranges.
@@ -1191,11 +1444,11 @@ pub struct PageList {
 #[typespec(format = "xml")]
 pub struct PageRange {
     /// The end of the byte range.
-    #[serde(rename = "End", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "End", skip_serializing_if = "Option::is_none")]
     pub end: Option<i64>,
 
     /// The start of the byte range.
-    #[serde(rename = "Start", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Start", skip_serializing_if = "Option::is_none")]
     pub start: Option<i64>,
 }
 
@@ -1209,11 +1462,16 @@ pub struct ParquetConfiguration {}
 #[typespec(format = "xml")]
 pub struct QueryFormat {
     /// The Apache Arrow configuration.
-    #[serde(rename = "ArrowConfiguration", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "ArrowConfiguration",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub arrow_configuration: Option<ArrowConfiguration>,
 
     /// The delimited text configuration.
     #[serde(
+        default,
         rename = "DelimitedTextConfiguration",
         skip_serializing_if = "Option::is_none"
     )]
@@ -1221,6 +1479,7 @@ pub struct QueryFormat {
 
     /// The JSON text configuration.
     #[serde(
+        default,
         rename = "JsonTextConfiguration",
         skip_serializing_if = "Option::is_none"
     )]
@@ -1228,13 +1487,14 @@ pub struct QueryFormat {
 
     /// The Parquet configuration.
     #[serde(
+        default,
         rename = "ParquetConfiguration",
         skip_serializing_if = "Option::is_none"
     )]
     pub parquet_text_configuration: Option<ParquetConfiguration>,
 
     /// The query type.
-    #[serde(rename = "Type", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Type", skip_serializing_if = "Option::is_none")]
     pub type_prop: Option<QueryType>,
 }
 
@@ -1243,22 +1503,31 @@ pub struct QueryFormat {
 #[typespec(format = "xml")]
 pub struct QueryRequest {
     /// The query expression in SQL. The maximum size of the query expression is 256KiB.
-    #[serde(rename = "Expression", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "Expression",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub expression: Option<String>,
 
     /// The input serialization settings.
-    #[serde(rename = "InputSerialization", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "InputSerialization",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub input_serialization: Option<QuerySerialization>,
 
     /// The output serialization settings.
     #[serde(
+        default,
         rename = "OutputSerialization",
         skip_serializing_if = "Option::is_none"
     )]
     pub output_serialization: Option<QuerySerialization>,
 
     /// Required. The type of the provided query expression.
-    #[serde(rename = "QueryType", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "QueryType", skip_serializing_if = "Option::is_none")]
     pub query_type: Option<QueryRequestType>,
 }
 
@@ -1267,7 +1536,7 @@ pub struct QueryRequest {
 #[typespec(format = "xml")]
 pub struct QuerySerialization {
     /// The query format.
-    #[serde(rename = "Format", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Format", skip_serializing_if = "Option::is_none")]
     pub format: Option<QueryFormat>,
 }
 
@@ -1277,17 +1546,18 @@ pub struct QuerySerialization {
 pub struct RetentionPolicy {
     /// Whether to allow permanent delete.
     #[serde(
+        default,
         rename = "AllowPermanentDelete",
         skip_serializing_if = "Option::is_none"
     )]
     pub allow_permanent_delete: Option<bool>,
 
     /// The number of days to retain the logs.
-    #[serde(rename = "Days", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Days", skip_serializing_if = "Option::is_none")]
     pub days: Option<i32>,
 
     /// Whether to enable the retention policy.
-    #[serde(rename = "Enabled", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Enabled", skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
 }
 
@@ -1297,11 +1567,15 @@ pub struct RetentionPolicy {
 #[typespec(format = "xml")]
 pub struct SignedIdentifier {
     /// The access policy for the signed identifier.
-    #[serde(rename = "AccessPolicy", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "AccessPolicy",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub access_policy: Option<AccessPolicy>,
 
     /// The unique ID for the signed identifier.
-    #[serde(rename = "Id", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 }
 
@@ -1311,24 +1585,30 @@ pub struct SignedIdentifier {
 pub struct StaticWebsite {
     /// Absolute path of the default index page
     #[serde(
+        default,
         rename = "DefaultIndexDocumentPath",
         skip_serializing_if = "Option::is_none"
     )]
     pub default_index_document_path: Option<String>,
 
     /// Indicates whether this account is hosting a static website
-    #[serde(rename = "Enabled", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Enabled", skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
 
     /// The error document.
     #[serde(
+        default,
         rename = "ErrorDocument404Path",
         skip_serializing_if = "Option::is_none"
     )]
     pub error_document404_path: Option<String>,
 
     /// The index document.
-    #[serde(rename = "IndexDocument", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "IndexDocument",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub index_document: Option<String>,
 }
 
@@ -1348,6 +1628,7 @@ pub struct StorageServiceProperties {
 
     /// The default service version.
     #[serde(
+        default,
         rename = "DefaultServiceVersion",
         skip_serializing_if = "Option::is_none"
     )]
@@ -1355,25 +1636,38 @@ pub struct StorageServiceProperties {
 
     /// The delete retention policy.
     #[serde(
+        default,
         rename = "DeleteRetentionPolicy",
         skip_serializing_if = "Option::is_none"
     )]
     pub delete_retention_policy: Option<RetentionPolicy>,
 
     /// The hour metrics properties.
-    #[serde(rename = "HourMetrics", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "HourMetrics",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub hour_metrics: Option<Metrics>,
 
     /// The logging properties.
-    #[serde(rename = "Logging", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "Logging", skip_serializing_if = "Option::is_none")]
     pub logging: Option<Logging>,
 
     /// The minute metrics properties.
-    #[serde(rename = "MinuteMetrics", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "MinuteMetrics",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub minute_metrics: Option<Metrics>,
 
     /// The static website properties.
-    #[serde(rename = "StaticWebsite", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "StaticWebsite",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub static_website: Option<StaticWebsite>,
 }
 
@@ -1383,7 +1677,11 @@ pub struct StorageServiceProperties {
 #[typespec(format = "xml")]
 pub struct StorageServiceStats {
     /// The geo replication stats.
-    #[serde(rename = "GeoReplication", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "GeoReplication",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub geo_replication: Option<GeoReplication>,
 }
 
@@ -1393,27 +1691,43 @@ pub struct StorageServiceStats {
 #[typespec(format = "xml")]
 pub struct UserDelegationKey {
     /// The date-time the key expires.
-    #[serde(rename = "SignedExpiry", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "SignedExpiry",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub signed_expiry: Option<String>,
 
     /// The Azure Active Directory object ID in GUID format.
-    #[serde(rename = "SignedOid", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "SignedOid", skip_serializing_if = "Option::is_none")]
     pub signed_oid: Option<String>,
 
     /// Abbreviation of the Azure Storage service that accepts the key.
-    #[serde(rename = "SignedService", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "SignedService",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub signed_service: Option<String>,
 
     /// The date-time the key is active.
-    #[serde(rename = "SignedStart", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "SignedStart",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub signed_start: Option<String>,
 
     /// The Azure Active Directory tenant ID in GUID format.
-    #[serde(rename = "SignedTid", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "SignedTid", skip_serializing_if = "Option::is_none")]
     pub signed_tid: Option<String>,
 
     /// The service version that created the key.
-    #[serde(rename = "SignedVersion", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "SignedVersion",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub signed_version: Option<String>,
 
     /// The key as a base64 string.

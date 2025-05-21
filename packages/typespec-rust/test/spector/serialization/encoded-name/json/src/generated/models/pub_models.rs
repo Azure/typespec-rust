@@ -9,6 +9,6 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct JsonEncodedNameModel {
     /// Pass in true
-    #[serde(rename = "wireName", skip_serializing_if = "Option::is_none")]
+    #[serde(default, rename = "wireName", skip_serializing_if = "Option::is_none")]
     pub default_name: Option<bool>,
 }

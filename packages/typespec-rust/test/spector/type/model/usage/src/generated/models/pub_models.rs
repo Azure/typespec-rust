@@ -9,14 +9,22 @@ use serde::{Deserialize, Serialize};
 /// Record used both as operation parameter and return type
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct InputOutputRecord {
-    #[serde(rename = "requiredProp", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "requiredProp",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub required_prop: Option<String>,
 }
 
 /// Record used in operation parameters
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct InputRecord {
-    #[serde(rename = "requiredProp", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "requiredProp",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub required_prop: Option<String>,
 }
 
@@ -24,6 +32,10 @@ pub struct InputRecord {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct OutputRecord {
-    #[serde(rename = "requiredProp", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "requiredProp",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub required_prop: Option<String>,
 }

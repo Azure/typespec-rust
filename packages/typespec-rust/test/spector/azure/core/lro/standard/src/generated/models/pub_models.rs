@@ -11,11 +11,15 @@ use serde::{Deserialize, Serialize};
 #[non_exhaustive]
 pub struct ExportedUser {
     /// The name of user.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The exported URI.
-    #[serde(rename = "resourceUri", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "resourceUri",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub resource_uri: Option<String>,
 }
 
@@ -23,10 +27,10 @@ pub struct ExportedUser {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct User {
     /// The name of user.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
     /// The role of user
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub role: Option<String>,
 }

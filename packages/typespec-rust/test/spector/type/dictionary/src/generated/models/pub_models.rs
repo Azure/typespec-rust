@@ -10,10 +10,10 @@ use std::collections::HashMap;
 /// Dictionary inner model
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct InnerModel {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub children: Option<HashMap<String, InnerModel>>,
 
     /// Required string property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub property: Option<String>,
 }

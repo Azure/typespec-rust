@@ -11,7 +11,11 @@ use time::OffsetDateTime;
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 #[non_exhaustive]
 pub struct BlobProperties {
-    #[serde(rename = "contentType", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        rename = "contentType",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub content_type: Option<String>,
 
     #[serde(
@@ -22,21 +26,21 @@ pub struct BlobProperties {
     )]
     pub created_on: Option<OffsetDateTime>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub size: Option<i64>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Input {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct WithBodyRequest {
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }

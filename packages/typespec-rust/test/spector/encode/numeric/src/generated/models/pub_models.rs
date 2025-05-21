@@ -10,6 +10,7 @@ use serde_json::Number;
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct SafeintAsStringProperty {
     #[serde(
+        default,
         skip_serializing_if = "Option::is_none",
         with = "azure_core::fmt::as_string"
     )]
@@ -19,6 +20,7 @@ pub struct SafeintAsStringProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Uint32AsStringProperty {
     #[serde(
+        default,
         skip_serializing_if = "Option::is_none",
         with = "azure_core::fmt::as_string"
     )]
@@ -28,6 +30,7 @@ pub struct Uint32AsStringProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Uint8AsStringProperty {
     #[serde(
+        default,
         skip_serializing_if = "Option::is_none",
         with = "azure_core::fmt::as_string"
     )]
