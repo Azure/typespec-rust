@@ -197,6 +197,9 @@ export interface ModelField extends StructFieldBase {
   /** the name of the field over the wire */
   serde: string;
 
+  /** indicates if the field is optional */
+  optional: boolean;
+
   /** contains XML-specific serde info */
   xmlKind?: XMLKind;
 }
@@ -635,9 +638,10 @@ export class Model extends StructBase implements Model {
 }
 
 export class ModelField extends StructFieldBase implements ModelField {
-  constructor(name: string, serde: string, visibility: Visibility, type: Type) {
+  constructor(name: string, serde: string, visibility: Visibility, type: Type, optional: boolean) {
     super(name, visibility, type);
     this.kind = 'modelField';
+    this.optional = optional;
     this.serde = serde;
   }
 }

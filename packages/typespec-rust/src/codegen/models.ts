@@ -111,7 +111,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
       // NOTE: usage of serde annotations like this means that base64 encoded bytes and
       // XML wrapped lists are mutually exclusive. it's not a real scenario at present.
       if (helpers.unwrapType(field.type).kind === 'encodedBytes' || helpers.unwrapType(field.type).kind === 'offsetDateTime') {
-        getSerDeHelper(field.type, serdeParams, use);
+        getSerDeHelper(field, serdeParams, use);
       } else if (bodyFormat === 'xml' && helpers.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
@@ -125,8 +125,10 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
       // https://github.com/Azure/typespec-rust/issues/78
       if (field.type.kind === 'option') {
         if (field.type.type.kind === 'literal') {
-          getSerDeHelper(field.type, serdeParams, use);
-        } else {
+          getSerDeHelper(field, serdeParams, use);
+        }
+        // optional literals need to skip serializing when it's None
+        if (field.type.type.kind !== 'literal' || field.optional) {
           serdeParams.add('skip_serializing_if = "Option::is_none"');
         }
       } else if (visibility === 'pub') {
@@ -430,18 +432,18 @@ function emitXMLListWrappers(): helpers.Module | undefined {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // used by getSerDeHelper and emitSerDeHelpers
-const serdeHelpers = new Map<string, rust.Type>();
+const serdeHelpers = new Map<string, rust.ModelField>();
 
 /**
  * defines serde helpers for encodedBytes and offsetDateTime types.
  * any other type will cause this function to throw.
  * 
- * @param type the encodedBytes/offsetDateTime type for which to build serde helpers
+ * @param field the model field for which to build serde helpers
  * @param serdeParams the params that will be passed to the serde annotation
  * @param use the use statement builder currently in scope
  */
-function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): void {
-  const unwrapped = helpers.unwrapType(type);
+function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: Use): void {
+  const unwrapped = helpers.unwrapType(field.type);
   switch (unwrapped.kind) {
     case 'encodedBytes':
     case 'literal':
@@ -476,7 +478,7 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
 
     // we can reuse identical helpers across model types
     if (!serdeHelpers.has(name)) {
-      serdeHelpers.set(name, type);
+      serdeHelpers.set(name, field);
     }
     return name;
   };
@@ -497,38 +499,41 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
   };
 
   /** serializing literal values */
-  const serdeLiteral = function(literal: rust.Literal): void {
+  const serdeLiteral = function(): void {
+    const literal = <rust.Literal>helpers.unwrapOption(field.type);
     let literalValueName = literal.value.toString();
     if (literal.valueKind.kind === 'scalar') {
       // if the scalar is a float, replace the . as it's illegal in an identifier
       literalValueName = literalValueName.replace('.', 'point');
     }
+
+    const optional = field.optional ? 'optional_' : '';
     const typeName = literal.valueKind.kind === 'scalar' ? literal.valueKind.type : literal.valueKind.kind.toLowerCase();
-    const name = `serialize_${typeName}_literal_${literalValueName}`;
+    const name = `serialize_${optional}${typeName}_literal_${literalValueName}`;
     serdeParams.add(`serialize_with = "models_serde::${name}"`);
 
     // we can reuse identical helpers
     if (!serdeHelpers.has(name)) {
-      serdeHelpers.set(name, literal);
+      serdeHelpers.set(name, field);
       use.add('super', 'models_serde');
     }
   };
 
   // the first two cases are for spread params where the internal model's field isn't Option<T>
-  switch (type.kind) {
+  switch (field.type.kind) {
     case 'encodedBytes':
       return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding);
     case 'literal':
-      return serdeLiteral(type);
+      return serdeLiteral();
     case 'offsetDateTime':
       return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, false);
     default:
-      if (type.kind === 'option') {
-        switch (type.type.kind) {
+      if (field.type.kind === 'option') {
+        switch (field.type.type.kind) {
           case 'encodedBytes':
             return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding);
           case 'literal':
-            return serdeLiteral(type.type);
+            return serdeLiteral();
           case 'offsetDateTime':
             return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, true);
         }
@@ -538,7 +543,7 @@ function getSerDeHelper(type: rust.Type, serdeParams: Set<string>, use: Use): vo
       //  - Option of HashMap/Vec of encoded thing
       use.add('super', 'models_serde');
       serdeParams.add('default');
-      serdeParams.add(`with = "models_serde::${buildSerDeModName(type)}"`);
+      serdeParams.add(`with = "models_serde::${buildSerDeModName(field.type)}"`);
       break;
   }
 }
@@ -560,10 +565,10 @@ function emitSerDeHelpers(use: Use): string | undefined {
   const helperKeys = Array.from(serdeHelpers.keys()).sort();
   for (const helperKey of helperKeys) {
     const indent = new helpers.indentation();
-    const helperType = serdeHelpers.get(helperKey)!;
+    const field = serdeHelpers.get(helperKey)!;
 
-    if (helperType.kind === 'literal') {
-      content += buildLiteralSerialize(indent, helperKey, helperType, use);
+    if (helpers.unwrapOption(field.type).kind === 'literal') {
+      content += buildLiteralSerialize(indent, helperKey, field, use);
       continue;
     }
 
@@ -571,8 +576,8 @@ function emitSerDeHelpers(use: Use): string | undefined {
 
     let modContent = `pub mod ${helperKey} {\n`;
     modContent += `${indent.get()}#![allow(clippy::type_complexity)]\n`;
-    const deserialize = buildDeserialize(indent, helperType, modUse);
-    const serialize = buildSerialize(indent, helperType, modUse);
+    const deserialize = buildDeserialize(indent, field.type, modUse);
+    const serialize = buildSerialize(indent, field.type, modUse);
     modContent += modUse.text(indent);
     modContent += `${deserialize}\n${serialize}`;
     modContent += '}\n\n'; // end pub mod
@@ -588,13 +593,20 @@ function emitSerDeHelpers(use: Use): string | undefined {
  * 
  * @param indent the indentation helper currently in scope
  * @param name the name of the serialization function
- * @param literal the literal to serialize
+ * @param field the model field containing a literal to serialize
  * @param use the use statement builder at file scope
  * @returns the pub(crate) serialize function definition
  */
-function buildLiteralSerialize(indent: helpers.indentation, name: string, literal: rust.Literal, use: Use): string {
+function buildLiteralSerialize(indent: helpers.indentation, name: string, field: rust.ModelField, use: Use): string {
+  const literal = helpers.unwrapOption(field.type);
+  if (literal.kind !== 'literal') {
+    throw new CodegenError('InternalError', `unexpected kind ${literal.kind}`); 
+  }
+
   use.add('serde', 'Serializer');
-  let content = `pub(crate) fn ${name}<S>(_ignored: &Option<${helpers.getTypeDeclaration(literal)}>, serializer: S) -> std::result::Result<S::Ok, S::Error> where S: Serializer {\n`;
+  const fieldVar = field.optional ? 'value' : '_ignored';
+  let content = `pub(crate) fn ${name}<S>(${fieldVar}: &${helpers.getTypeDeclaration(field.type)}, serializer: S) -> std::result::Result<S::Ok, S::Error> where S: Serializer {\n`;
+
   let serializeMethod: string;
   let serializeValue = literal.value;
   switch (literal.valueKind.kind) {
@@ -606,7 +618,21 @@ function buildLiteralSerialize(indent: helpers.indentation, name: string, litera
       serializeMethod = literal.valueKind.type;
       break;
   }
-  content += `${indent.get()}serializer.serialize_${serializeMethod}(${serializeValue})\n}\n\n`;
+
+  const toSerialize = `serializer.serialize_${serializeMethod}(${serializeValue})\n`;
+  if (field.optional) {
+    content += `${indent.get()}${helpers.buildMatch(indent, `${fieldVar}.is_some()`, [{
+      pattern: 'true',
+      body: (indent) => `${indent.get()}${toSerialize}`,
+    }, {
+      pattern: 'false',
+      body: (indent) => `${indent.get()}serializer.serialize_none()\n`,
+    }])}`
+  } else {
+    content += `${indent.get()}${toSerialize}`;
+  }
+
+  content += '}\n\n';
   return content;
 }
 

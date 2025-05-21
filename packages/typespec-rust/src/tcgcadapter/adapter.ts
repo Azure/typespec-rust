@@ -320,13 +320,13 @@ export class Adapter {
       fieldType = new rust.Option(fieldType.kind === 'box' ? fieldType : this.typeToWireType(fieldType));
     }
 
-    const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, modelVisibility, fieldType);
+    const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, modelVisibility, fieldType, property.optional);
     modelField.docs = this.adaptDocs(property.summary, property.doc);
 
     // if this is a literal, add a doc comment explaining its behavior
     const unwrappedType = helpers.unwrapOption(fieldType);
     if (unwrappedType.kind === 'literal') {
-      const literalDoc = `Field has constant value ${unwrappedType.value}. Any specified value will be ignored.`;
+      const literalDoc = `${modelField.optional ? 'When Some, field' : 'Field'} has constant value ${unwrappedType.value}. Any specified value will be ignored.`;
       if (!modelField.docs.description) {
         modelField.docs.description = '';
       } else {
@@ -424,6 +424,8 @@ export class Adapter {
       case 'model':
         return this.getModel(type, stack);
       case 'endpoint':
+      case 'plainDate':
+      case 'plainTime':
       case 'string':
       case 'url': {
         if (type.kind === 'string' && type.crossLanguageDefinitionId === 'Azure.Core.eTag') {

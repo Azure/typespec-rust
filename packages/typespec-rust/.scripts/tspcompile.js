@@ -59,7 +59,7 @@ const httpSpecsGroup = {
   //'spector_visibility': {input: 'type/model/visibility'},
   //'spector_addlprops': {input: 'type/property/additional-properties'},
   'spector_nullable': {input: 'type/property/nullable'},
-  //'spector_optionality': {input: 'type/property/optionality'},
+  'spector_optionality': {input: 'type/property/optionality'},
   'spector_valuetypes': {input: 'type/property/value-types'},
   'spector_scalar': {input: 'type/scalar'},
   //'spector_union': {input: 'type/union'},
