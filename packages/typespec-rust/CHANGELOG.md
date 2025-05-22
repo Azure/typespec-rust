@@ -2,6 +2,10 @@
 
 ## 0.14.2 (unreleased)
 
+### Features Added
+
+* Added support for `plainDate` and `plainTime` types. They're emitted as `String` types.
+
 ### Bugs Fixed
 
 * Fixed bad codegen when path parameters are aliased as client initializers.
