@@ -202,6 +202,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'jsonValue':
     case 'offsetDateTime':
     case 'responseHeadersTrait':
+    case 'safeint':
     case 'tokenCredential':
       return type.name;
     case 'external':

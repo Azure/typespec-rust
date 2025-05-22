@@ -399,7 +399,7 @@ export class Adapter {
           case 'float64':
           case 'int32':
           case 'int64':
-            return this.getScalar(type.wireType.kind);
+            return this.getScalar(type.wireType.kind, type.wireType.encode);
           case 'string':
             return this.getStringType();
           default:
@@ -416,7 +416,7 @@ export class Adapter {
       case 'uint32':
       case 'uint64':
       case 'uint8':
-        return this.getScalar(type.kind);
+        return this.getScalar(type.kind, type.encode);
       case 'enum':
         return this.getEnum(type);
       case 'enumvalue':
@@ -453,6 +453,15 @@ export class Adapter {
         timeType = new rust.OffsetDateTime(this.crate, encoding, false);
         this.types.set(keyName, timeType);
         return timeType;
+      }
+      case 'safeint': {
+        const keyName = type.kind + (type.encode ? `-${type.encode}` : '');
+        let safeint = this.types.get(keyName);
+        if (!safeint) {
+          safeint = new rust.SafeInt(this.crate, type.encode === 'string');
+          this.types.set(keyName, safeint);
+        }
+        return safeint;
       }
       case 'unknown': {
         const keyName = 'jsonValue';
@@ -516,7 +525,7 @@ export class Adapter {
   }
 
   /** returns a scalar for the specified scalar type */
-  private getScalar(type: tcgcScalarKind): rust.Scalar {
+  private getScalar(type: tcgcScalarKind, encode?: string): rust.Scalar {
     let scalarType: rust.ScalarType;
     switch (type) {
       case 'boolean':
@@ -555,10 +564,11 @@ export class Adapter {
         break;
     }
 
-    let scalar = this.types.get(scalarType);
+    const keyName = scalarType + (encode ? `-${encode}` : '');
+    let scalar = this.types.get(keyName);
     if (!scalar) {
-      scalar = new rust.Scalar(scalarType);
-      this.types.set(scalarType, scalar);
+      scalar = new rust.Scalar(scalarType, encode === 'string');
+      this.types.set(keyName, scalar);
     }
     return <rust.Scalar>scalar;
   }
@@ -642,7 +652,7 @@ export class Adapter {
       case 'uint32':
       case 'uint64':
       case 'uint8':
-        valueKind = this.getScalar(constType.valueType.kind);
+        valueKind = this.getScalar(constType.valueType.kind, constType.valueType.encode);
         keyKind = valueKind.type;
         break;
       case 'string':
@@ -1696,6 +1706,7 @@ export class Adapter {
       case 'model':
       case 'offsetDateTime':
       case 'ref':
+      case 'safeint':
       case 'scalar':
       case 'slice':
       case 'str':
@@ -1835,8 +1846,10 @@ function recursiveKeyName(root: string, type: rust.WireType): string {
       return `${root}-${type.kind}-${type.name}`;
     case 'ref':
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
+    case 'safeint':
+      return `${root}-${type.kind}${type.stringEncoding ? '-string' : ''}`;
     case 'scalar':
-      return `${root}-${type.kind}-${type.type}`;
+      return `${root}-${type.kind}-${type.type}${type.stringEncoding ? '-string' : ''}`;
     case 'slice':
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
     default:

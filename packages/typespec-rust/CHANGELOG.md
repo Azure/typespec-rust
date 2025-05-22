@@ -5,11 +5,13 @@
 ### Features Added
 
 * Added support for `plainDate` and `plainTime` types. They're emitted as `String` types.
+* Added support for the `safeint` type. It's emitted as a `serde_json::Number` type.
 
 ### Bugs Fixed
 
 * Fixed bad codegen when path parameters are aliased as client initializers.
 * Fixed bad codegen for model with literal values.
+* Fixed incorrect behavior for numeric types that use string encoding.
 
 ## 0.14.1 (2025-05-07)
 

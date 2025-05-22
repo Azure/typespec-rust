@@ -26,6 +26,7 @@ const httpSpecsGroup = {
   'spector_bytes': {input: 'encode/bytes'}, // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
   'spector_datetime': {input: 'encode/datetime'},
   'spector_duration': {input: 'encode/duration'},
+  'spector_numeric': {input: 'encode/numeric'},
   //'spector_bodyoptional': {input: 'parameters/body-optionality'},
   'spector_basicparams': {input: 'parameters/basic'},
   'spector_collectionfmt': {input: 'parameters/collection-format'},

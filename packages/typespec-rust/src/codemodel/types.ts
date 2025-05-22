@@ -18,7 +18,7 @@ export interface Docs {
 export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | Pager | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
-export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | Scalar | Slice | StringSlice | StringType | Url | Vector;
+export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
 
 /** Type defines a type within the Rust type system */
 export type Type = SdkType | WireType;
@@ -326,6 +326,14 @@ export interface Result<T extends ResultTypes = ResultTypes> extends External {
   type: T;
 }
 
+/** SafeInt is a serde_json::Number type */
+export interface SafeInt extends External {
+  kind: 'safeint';
+
+  /** indicates that the value is encoded/decoded as a string */
+  stringEncoding: boolean;
+}
+
 /** ScalarType defines the supported Rust scalar type names */
 export type ScalarType = 'bool' | 'f32' | 'f64' | 'i8' | 'i16' | 'i32' | 'i64' | 'u8' | 'u16' | 'u32' | 'u64';
 
@@ -335,6 +343,9 @@ export interface Scalar {
 
   /** the type of scalar */
   type: ScalarType;
+
+  /** indicates that the value is encoded/decoded as a string */
+  stringEncoding: boolean;
 }
 
 /** BodyFormat indicates the wire format for request and response bodies */
@@ -715,10 +726,19 @@ export class Result<T> extends External implements Result<T> {
   }
 }
 
+export class SafeInt extends External implements SafeInt {
+  constructor(crate: Crate, stringEncoding: boolean) {
+    super(crate, 'Number', 'serde_json');
+    this.kind = 'safeint';
+    this.stringEncoding = stringEncoding;
+  }
+}
+
 export class Scalar implements Scalar {
-  constructor(type: ScalarType) {
+  constructor(type: ScalarType, stringEncoding: boolean) {
     this.kind = 'scalar';
     this.type = type;
+    this.stringEncoding = stringEncoding;
   }
 }
 

@@ -110,7 +110,8 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
 
       // NOTE: usage of serde annotations like this means that base64 encoded bytes and
       // XML wrapped lists are mutually exclusive. it's not a real scenario at present.
-      if (helpers.unwrapType(field.type).kind === 'encodedBytes' || helpers.unwrapType(field.type).kind === 'offsetDateTime') {
+      const unwrappedType = helpers.unwrapType(field.type);
+      if (unwrappedType.kind === 'encodedBytes' || unwrappedType.kind === 'literal' || unwrappedType.kind === 'offsetDateTime' || encodeAsString(unwrappedType)) {
         getSerDeHelper(field, serdeParams, use);
       } else if (bodyFormat === 'xml' && helpers.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
@@ -124,9 +125,6 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
       // TODO: omit skip_serializing_if if we need to send explicit JSON null
       // https://github.com/Azure/typespec-rust/issues/78
       if (field.type.kind === 'option') {
-        if (field.type.type.kind === 'literal') {
-          getSerDeHelper(field, serdeParams, use);
-        }
         // optional literals need to skip serializing when it's None
         if (field.type.type.kind !== 'literal' || field.optional) {
           serdeParams.add('skip_serializing_if = "Option::is_none"');
@@ -448,9 +446,19 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
     case 'encodedBytes':
     case 'literal':
     case 'offsetDateTime':
+    case 'safeint':
+    case 'scalar':
       break;
     default:
       throw new CodegenError('InternalError', `getSerDeHelper unexpected kind ${unwrapped.kind}`);
+  }
+
+  if (unwrapped.kind === 'safeint' || unwrapped.kind === 'scalar') {
+    if (unwrapped.stringEncoding) {
+      serdeParams.add(`with = "azure_core::fmt::as_string"`);
+    }
+    // no other processing for these types is required
+    return;
   }
 
   /**
@@ -1033,4 +1041,17 @@ function getSerDeTypeDeclaration(type: rust.Type, usage: 'serialize' | 'deserial
     default:
       throw new CodegenError('InternalError', `unexpected kind ${type.kind}`);
   }
+}
+
+/**
+ * returns true if the provided type should be encoded as a string.
+ * 
+ * @param type the type for which to check the encoding
+ * @returns true if string encoding is required
+ */
+function encodeAsString(type: rust.Type): boolean {
+  if (type.kind !== 'safeint' && type.kind !== 'scalar') {
+    return false;
+  }
+  return type.stringEncoding;
 }
