@@ -34,16 +34,16 @@ importers:
         specifier: 0.1.0-alpha.17
         version: 0.1.0-alpha.17(b0dca9f7ddaf74530642dd826b00e7eb)
       '@azure-tools/typespec-autorest':
-        specifier: 0.56.0
+        specifier: ~0.56.0
         version: 0.56.0(b34d85421950435cc0fc5212559e89c3)
       '@azure-tools/typespec-azure-core':
-        specifier: 0.56.0
+        specifier: ~0.56.0
         version: 0.56.0(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/http@1.0.1(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0(@types/node@20.17.50))))(@typespec/rest@0.70.0(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/http@1.0.1(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0(@types/node@20.17.50)))))
       '@azure-tools/typespec-azure-resource-manager':
-        specifier: 0.56.1
+        specifier: ~0.56.1
         version: 0.56.1(43c89f085871e677b17f819e331991a6)
       '@azure-tools/typespec-client-generator-core':
-        specifier: 0.56.2
+        specifier: ~0.56.2
         version: 0.56.2(2ef5ad14b8ccc10a1bd25676ec20d3f2)
       '@eslint/js':
         specifier: ^9.24.0
@@ -52,28 +52,28 @@ importers:
         specifier: ^20.17.32
         version: 20.17.50
       '@typespec/compiler':
-        specifier: 1.0.0
+        specifier: ^1.0.0
         version: 1.0.0(@types/node@20.17.50)
       '@typespec/http':
-        specifier: 1.0.1
+        specifier: ^1.0.1
         version: 1.0.1(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0(@types/node@20.17.50)))
       '@typespec/http-specs':
         specifier: 0.1.0-alpha.22
         version: 0.1.0-alpha.22(@types/node@20.17.50)(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/http@1.0.1(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0(@types/node@20.17.50))))(@typespec/rest@0.70.0(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/http@1.0.1(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0(@types/node@20.17.50)))))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0(@types/node@20.17.50)))(@typespec/versioning@0.70.0(@typespec/compiler@1.0.0(@types/node@20.17.50)))(@typespec/xml@0.70.0(@typespec/compiler@1.0.0(@types/node@20.17.50)))
       '@typespec/openapi':
-        specifier: 1.0.0
+        specifier: ^1.0.0
         version: 1.0.0(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/http@1.0.1(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0(@types/node@20.17.50))))
       '@typespec/rest':
-        specifier: 0.70.0
+        specifier: ~0.70.0
         version: 0.70.0(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/http@1.0.1(@typespec/compiler@1.0.0(@types/node@20.17.50))(@typespec/streams@0.68.0(@typespec/compiler@1.0.0(@types/node@20.17.50))))
       '@typespec/spector':
         specifier: 0.1.0-alpha.14
         version: 0.1.0-alpha.14(@types/node@20.17.50)(@typespec/streams@0.68.0(@typespec/compiler@1.0.0(@types/node@20.17.50)))
       '@typespec/versioning':
-        specifier: 0.70.0
+        specifier: ~0.70.0
         version: 0.70.0(@typespec/compiler@1.0.0(@types/node@20.17.50))
       '@typespec/xml':
-        specifier: 0.70.0
+        specifier: ~0.70.0
         version: 0.70.0(@typespec/compiler@1.0.0(@types/node@20.17.50))
       '@vitest/coverage-v8':
         specifier: ^3.1.1
@@ -2104,11 +2104,6 @@ packages:
   sax@1.4.1:
     resolution: {integrity: sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg==}
 
-  semver@7.7.1:
-    resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.7.2:
     resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
     engines: {node: '>=10'}
@@ -3243,7 +3238,7 @@ snapshots:
       mustache: 4.2.0
       picocolors: 1.1.1
       prettier: 3.5.3
-      semver: 7.7.1
+      semver: 7.7.2
       tar: 7.4.3
       temporal-polyfill: 0.3.0
       vscode-languageserver: 9.0.1
@@ -4652,8 +4647,6 @@ snapshots:
   safer-buffer@2.1.2: {}
 
   sax@1.4.1: {}
-
-  semver@7.7.1: {}
 
   semver@7.7.2: {}
 

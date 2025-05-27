@@ -1,6 +1,6 @@
 # Release History
 
-## 0.14.2 (unreleased)
+## 0.14.2 (2025-05-27)
 
 ### Features Added
 
@@ -12,6 +12,7 @@
 * Fixed bad codegen when path parameters are aliased as client initializers.
 * Fixed bad codegen for model with literal values.
 * Fixed incorrect behavior for numeric types that use string encoding.
+* Fixed decimal types to properly handle string/float encodings.
 
 ## 0.14.1 (2025-05-07)
 
