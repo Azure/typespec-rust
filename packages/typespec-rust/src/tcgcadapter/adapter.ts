@@ -981,11 +981,15 @@ export class Adapter {
    */
   private adaptClientParameter(param: tcgc.SdkMethodParameter | tcgc.SdkPathParameter, constructable: rust.ClientConstruction): rust.ClientParameter {
     let paramType: rust.Type;
-    if (param.isApiVersionParam) {
-      if (!param.clientDefaultValue) {
-        throw new AdapterError('InternalError', `API version parameter ${param.name} has no clientDefaultValue`, param.__raw?.node);
+    // the second clause is a workaround for https://github.com/Azure/typespec-azure/issues/2745
+    if (param.isApiVersionParam || (param.type.kind === 'enum' && <tcgc.UsageFlags>(param.type.usage & tcgc.UsageFlags.ApiVersionEnum) === tcgc.UsageFlags.ApiVersionEnum)) {
+      if (param.clientDefaultValue) {
+        // this is optional so it goes into the client options type as a String
+        paramType = this.getStringType();
+      } else {
+        // this is a required param so its type is a &str
+        paramType = this.getRefType(this.getStringSlice());
       }
-      paramType = this.getStringType();
     } else {
       paramType = this.getType(param.type);
     }

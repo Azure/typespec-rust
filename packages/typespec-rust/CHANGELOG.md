@@ -1,5 +1,11 @@
 # Release History
 
+## 0.14.3 (unreleased)
+
+### Bugs Fixed
+
+* Fixed handling for required API version client parameter.
+
 ## 0.14.2 (2025-05-27)
 
 ### Features Added

@@ -64,6 +64,12 @@ const httpSpecsGroup = {
   'spector_valuetypes': {input: 'type/property/value-types'},
   'spector_scalar': {input: 'type/scalar'},
   //'spector_union': {input: 'type/union'},
+  //'spector_veradded': {input: 'versioning/added'},
+  'spector_madeoptional': {input: 'versioning/madeOptional'},
+  //'spector_verremoved': {input: 'versioning/removed'},
+  //'spector_renamedfrom': {input: 'versioning/renamedFrom'},
+  //'spector_returntypechanged': {input: 'versioning/returnTypeChangedFrom'},
+  //'spector_typechanged': {input: 'versioning/typeChangedFrom'},
 };
 
 const azureHttpSpecsGroup = {

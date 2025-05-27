@@ -1045,7 +1045,9 @@ function getClientEndpointParamValue(param: rust.ClientEndpointParameter): strin
     paramName = 'options.' + paramName;
   }
 
-  switch (param.type.kind) {
+  const unwrappedType = helpers.unwrapType(param.type);
+
+  switch (unwrappedType.kind) {
     case 'String':
       return `&${paramName}`;
     case 'enum':
@@ -1053,6 +1055,8 @@ function getClientEndpointParamValue(param: rust.ClientEndpointParameter): strin
     case 'offsetDateTime':
     case 'scalar':
       return `&${paramName}.to_string()`;
+    case 'str':
+      return paramName;
     default:
       throw new CodegenError('InternalError', `unhandled ${param.kind} param type kind ${param.type.kind}`);
   }
