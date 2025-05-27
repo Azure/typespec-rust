@@ -85,7 +85,10 @@ pub struct DatetimeProperty {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct Decimal128Property {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(
+        skip_serializing_if = "Option::is_none",
+        with = "rust_decimal::serde::float_option"
+    )]
     pub property: Option<Decimal>,
 }
 
@@ -93,7 +96,10 @@ pub struct Decimal128Property {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
 pub struct DecimalProperty {
     /// Property
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(
+        skip_serializing_if = "Option::is_none",
+        with = "rust_decimal::serde::float_option"
+    )]
     pub property: Option<Decimal>,
 }
 
