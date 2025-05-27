@@ -382,10 +382,10 @@ export class Adapter {
         return this.getLiteral(type);
       case 'decimal':
       case 'decimal128': {
-        const keyName = 'decimal';
+        const keyName = 'decimal' + (type.encode ? `-${type.encode}` : '');
         let decimalType = this.types.get(keyName);
         if (!decimalType) {
-          decimalType = new rust.Decimal(this.crate);
+          decimalType = new rust.Decimal(this.crate, type.encode === 'string');
           this.types.set(keyName, decimalType);
         }
         return decimalType;
@@ -1847,6 +1847,7 @@ function recursiveKeyName(root: string, type: rust.WireType): string {
     case 'ref':
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
     case 'safeint':
+    case 'decimal':
       return `${root}-${type.kind}${type.stringEncoding ? '-string' : ''}`;
     case 'scalar':
       return `${root}-${type.kind}-${type.type}${type.stringEncoding ? '-string' : ''}`;

@@ -136,6 +136,12 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
         serdeParams.add('default');
       }
 
+      // default behavior of rust_decimal is to encode/decode
+      // as string, so disable that as required
+      if (unwrappedType.kind === 'decimal' && !unwrappedType.stringEncoding) {
+        serdeParams.add(`with = "rust_decimal::serde::float${field.type.kind === 'option' ? '_option' : ''}"`);
+      }
+
       if (serdeParams.size > 0) {
         body += `${indent.get()}#[serde(${Array.from(serdeParams).sort().join(', ')})]\n`;
       }

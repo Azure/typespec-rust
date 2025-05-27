@@ -19,9 +19,6 @@ async fn get() {
     assert_eq!(resp.property, Some(Decimal::from_f32(0.33333).unwrap()));
 }
 
-// TODO: https://github.com/Azure/typespec-rust/issues/417
-
-#[should_panic]
 #[tokio::test]
 async fn put() {
     let client = ValueTypesClient::with_no_credential("http://localhost:3000", None).unwrap();

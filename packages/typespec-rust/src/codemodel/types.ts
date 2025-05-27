@@ -50,6 +50,9 @@ export interface Bytes extends External {
 /** Decimal is a rust_decimal::Decimal type */
 export interface Decimal extends External {
   kind: 'decimal';
+
+  /** indicates that the value is encoded/decoded as a string */
+  stringEncoding: boolean;
 }
 
 /** BytesEncoding defines the possible types of base64-encoding. */
@@ -453,14 +456,14 @@ export type Visibility = 'pub' | 'pubCrate';
 interface External extends QualifiedType {}
 
 class External extends QualifiedType implements External {
-  constructor(crate: Crate, name: string, path: string) {
+  constructor(crate: Crate, name: string, path: string, features = new Array<string>) {
     super(name, path);
     let crateName = this.path;
     const pathSep = crateName.indexOf('::');
     if (pathSep > 0) {
       crateName = crateName.substring(0, pathSep);
     }
-    crate.addDependency(new CrateDependency(crateName));
+    crate.addDependency(new CrateDependency(crateName, features));
   }
 }
 
@@ -546,9 +549,10 @@ export class Bytes extends External implements Bytes {
 }
 
 export class Decimal extends External implements Decimal {
-  constructor(crate: Crate) {
-    super(crate, 'Decimal', 'rust_decimal');
+  constructor(crate: Crate, stringEncoding: boolean) {
+    super(crate, 'Decimal', 'rust_decimal', !stringEncoding ? ['serde-with-float'] : undefined);
     this.kind = 'decimal';
+    this.stringEncoding = stringEncoding;
   }
 }
 
