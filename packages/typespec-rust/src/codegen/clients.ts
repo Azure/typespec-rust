@@ -551,7 +551,10 @@ function getClientAccessorMethodBody(indent: helpers.indentation, client: rust.C
   // accessor params and client fields are mutually exclusive
   // so we don't need to worry about potentials for duplication.
   for (const field of client.fields) {
-    initFields.push(`${field.name}: self.${field.name}${nonCopyableType(field.type) ? '.clone()' : ''}`);
+    // it's possible for child clients to not contain all fields of the parent
+    if (clientAccessor.returns.fields.find((e) => e.name === field.name)) {
+      initFields.push(`${field.name}: self.${field.name}${nonCopyableType(field.type) ? '.clone()' : ''}`);
+    }
   }
 
   // sort the fields as the fields in the client are also sorted

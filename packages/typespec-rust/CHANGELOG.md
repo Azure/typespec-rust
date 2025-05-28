@@ -5,6 +5,7 @@
 ### Bugs Fixed
 
 * Fixed handling for required API version client parameter.
+* Don't propagate parent client fields to child clients that aren't used by the child.
 
 ## 0.14.2 (2025-05-27)
 
