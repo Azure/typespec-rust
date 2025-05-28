@@ -119,7 +119,6 @@ fn get_valid_nested_resource() -> NestedProxyResource {
             "lastModifiedAt": "2024-10-04T00:56:07.442Z",
             "lastModifiedByType": "User"
         })).ok(),
-        ..Default::default()
     }
 }
 

@@ -606,7 +606,6 @@ fn get_extension_resource(id: &str) -> ExtensionsResource {
             "lastModifiedByType": "User"
         }))
         .ok(),
-        ..Default::default()
     }
 }
 

@@ -230,6 +230,5 @@ fn get_valid_location_resource() -> LocationResource {
             "lastModifiedAt": "2024-10-04T00:56:07.442Z",
             "lastModifiedByType": "User"
         })).ok(),
-        ..Default::default()
     }
 }
