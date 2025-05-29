@@ -898,24 +898,22 @@ export class Adapter {
         helpers.sortClientParameters(constructor.params);
       }
     } else if (parent) {
-      // this is a sub-client. it will share the fields of the parent.
+      // this is a sub-client. it will share some/all the fields of the parent.
       // NOTE: we must propagate parant params before a potential recursive call
       // to create a child client that will need to inherit our client params.
-      // also note that we need to make a copy of the fields array so that
-      // adding client-unique fields don't inadvertently get shared.
-      rustClient.fields = new Array<rust.StructField>(...parent.fields);
-
-      // adapt any unique fields on this client
       for (const prop of client.clientInitialization.parameters) {
-        if (prop.kind !== 'method' || prop.isApiVersionParam) {
-          // we don't need to care about non-method properties (e.g. credential)
-          // or the API version property as these are handled in the parent client.
-          continue;
-        }
         const name = snakeCaseName(prop.name);
-        if (rustClient.fields.find((v) => v.name === name)) {
+        const parentField = parent.fields.find((v) => v.name === name);
+        if (parentField) {
+          rustClient.fields.push(parentField);
+          continue;
+        } else if (prop.kind !== 'method') {
+          // we don't need to care about non-method properties (e.g. credential)
+          // as these are handled in the parent client.
           continue;
         }
+
+        // unique field for this client
         rustClient.fields.push(new rust.StructField(name, 'pubCrate', this.getType(prop.type)));
       }
     } else {
