@@ -784,8 +784,15 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
  */
 function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, inClosure: boolean): string {
   let body = `${indent.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
+  let optionalContentTypeParam: rust.HeaderParameter | undefined;
 
   for (const headerParam of paramGroups.header) {
+    // if the content-type header is optional, we need to emit it inside the "if let Some(body)" clause below.
+    if (headerParam.kind === 'header' && headerParam.optional && headerParam.header.toLowerCase() === 'content-type') {
+      optionalContentTypeParam = headerParam;
+      continue;
+    }
+
     if (method.kind === 'pageable' && method.strategy?.kind === 'continuationToken' && method.strategy?.requestToken.kind === 'header' && method.strategy?.requestToken === headerParam) {
       // we have some special handling for the header continuation token.
       // if we have a token value, i.e. from the next page, then use that value.
@@ -814,7 +821,12 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
   const bodyParam = paramGroups.body;
   if (bodyParam) {
     body += getParamValueHelper(indent, bodyParam, inClosure, () => {
-      return `${indent.get()}request.set_body(${bodyParam.name}${inClosure ? '.clone()' : ''});\n`;
+      let bodyParamContent = '';
+      if (optionalContentTypeParam) {
+        bodyParamContent = `${indent.get()}request.insert_header("${optionalContentTypeParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, optionalContentTypeParam, !inClosure)});\n`;
+      }
+      bodyParamContent += `${indent.get()}request.set_body(${bodyParam.name}${inClosure ? '.clone()' : ''});\n`;
+      return bodyParamContent;
     });
   } else if (paramGroups.partialBody.length > 0) {
     // all partial body params should point to the same underlying model type.

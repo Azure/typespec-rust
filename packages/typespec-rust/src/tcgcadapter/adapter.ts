@@ -1163,7 +1163,10 @@ export class Adapter {
       adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
       rustMethod.params.push(adaptedParam);
 
-      if (adaptedParam.optional) {
+      // we specially handle an optional content-type header to ensure it's omitted
+      // from the options bag type. this shows up when the request body is optional.
+      // we can't generalize this to optional literal headers though.
+      if (adaptedParam.optional && (adaptedParam.kind !== 'header' || adaptedParam.header.toLowerCase() !== 'content-type')) {
         let fieldType: rust.Type;
         if (adaptedParam.kind === 'partialBody') {
           // for partial body params, adaptedParam.type is the model type that's
