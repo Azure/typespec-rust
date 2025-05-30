@@ -14,8 +14,10 @@ async fn set() {
         name: Some("foo".to_string()),
     };
 
-    let mut options: BodyOptionalityOptionalExplicitClientSetOptions = Default::default();
-    options.body = Some(body_model.try_into().unwrap());
+    let options = BodyOptionalityOptionalExplicitClientSetOptions {
+        body: Some(body_model.try_into().unwrap()),
+        ..Default::default()
+    };
 
     client
         .get_body_optionality_optional_explicit_client()
