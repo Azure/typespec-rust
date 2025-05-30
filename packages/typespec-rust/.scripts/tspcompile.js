@@ -30,6 +30,7 @@ const httpSpecsGroup = {
   'spector_bodyoptional': {input: 'parameters/body-optionality'},
   'spector_basicparams': {input: 'parameters/basic'},
   'spector_collectionfmt': {input: 'parameters/collection-format'},
+  'spector_path': {input: 'parameters/path'},
   'spector_spread': {input: 'parameters/spread'},
   'spector_contentneg': {input: 'payload/content-negotiation'},
   'spector_jmergepatch': {input: 'payload/json-merge-patch'},

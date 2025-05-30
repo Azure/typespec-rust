@@ -1172,6 +1172,11 @@ export class Adapter {
 
       if (adaptedParam.kind === 'headerScalar' || adaptedParam.kind === 'queryScalar') {
         paramsMap.set(param, adaptedParam);
+      } else if (adaptedParam.kind === 'path' && adaptedParam.optional && method.operation.uriTemplate.indexOf(`{/${adaptedParam.segment}}`) > -1) {
+        // the optional path param includes the separator as part the segment
+        // e.g. /some/path{/optional}
+        // when replacing 'optional' with a value, we need to include a '/' during the replacement
+        adaptedParam.needsSeparator = true;
       }
 
       adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
