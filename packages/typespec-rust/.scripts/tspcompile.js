@@ -27,7 +27,7 @@ const httpSpecsGroup = {
   'spector_datetime': {input: 'encode/datetime'},
   'spector_duration': {input: 'encode/duration'},
   'spector_numeric': {input: 'encode/numeric'},
-  //'spector_bodyoptional': {input: 'parameters/body-optionality'},
+  'spector_bodyoptional': {input: 'parameters/body-optionality'},
   'spector_basicparams': {input: 'parameters/basic'},
   'spector_collectionfmt': {input: 'parameters/collection-format'},
   'spector_spread': {input: 'parameters/spread'},
