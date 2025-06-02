@@ -29,6 +29,9 @@ export interface Crate {
   /** models contains all of the models for this crate. can be empty */
   models: Array<types.MarkerType | types.Model>;
 
+  /** taggedEnums contains all of the enum types for discriminated unions. can be empty */
+  taggedEnums: Array<types.TaggedEnum>;
+
   /** clients contains all the clients for this crate. can be empty */
   clients: Array<client.Client>;
 }
@@ -60,6 +63,7 @@ export class Crate implements Crate {
     this.dependencies = new Array<CrateDependency>();
     this.enums = new Array<types.Enum>();
     this.models = new Array<types.Model>();
+    this.taggedEnums = new Array<types.TaggedEnum>();
     this.clients = new Array<client.Client>();
   }
 
@@ -95,6 +99,10 @@ export class Crate implements Crate {
         continue;
       }
       model.fields.sort((a: types.ModelField, b: types.ModelField) => { return sortAscending(a.name, b.name); });
+    }
+    this.taggedEnums.sort((a: types.TaggedEnum, b: types.TaggedEnum) => sortAscending(a.name, b.name));
+    for (const taggedEnum of this.taggedEnums) {
+      taggedEnum.values.sort((a: types.TaggedEnumValue, b: types.TaggedEnumValue) => sortAscending(a.name, b.name));
     }
     this.clients.sort((a: client.Client, b: client.Client) => { return sortAscending(a.name, b.name); });
     for (const client of this.clients) {

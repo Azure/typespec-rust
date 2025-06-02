@@ -133,6 +133,7 @@ export class Use {
         }
         this.addForType(type.content);
         break;
+      case 'taggedEnum':
       case 'responseHeadersTrait':
         switch (this.scope) {
           case 'clients':

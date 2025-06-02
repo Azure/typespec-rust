@@ -18,7 +18,7 @@ export interface Docs {
 export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
-export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
+export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | TaggedEnum | Url | Vector;
 
 /** Type defines a type within the Rust type system */
 export type Type = SdkType | WireType;
@@ -79,8 +79,8 @@ export interface Enum {
   /** any docs for the type */
   docs: Docs;
 
-  /** indicates if the enum and its values should be public */
-  pub: boolean;
+  /** indicates the visibility of the enum type */
+  visibility: Visibility;
 
   /** one or more values for the enum */
   values: Array<EnumValue>;
@@ -417,6 +417,40 @@ export interface TokenCredential extends External {
   scopes: Array<string>;
 }
 
+/** TaggedEnum is a Rust enum type used for discriminated types. */
+export interface TaggedEnum {
+  kind: 'taggedEnum';
+
+  /** the name of the enum type */
+  name: string;
+
+  /** any docs for the type */
+  docs: Docs;
+
+  /** indicates the visibility of the tagged enum type */
+  visibility: Visibility;
+
+  /** one or more values for the enum */
+  values: Array<TaggedEnumValue>;
+}
+
+/** TaggedEnumValue is an enum value for a specific TaggedEnum */
+export interface TaggedEnumValue {
+  kind: 'taggedEnumValue';
+
+  /** the name of the tagged enum value */
+  name: string;
+
+  /** any docs for the value */
+  docs: Docs;
+
+  /** the tagged enum to which this value belongs */
+  type: TaggedEnum;
+
+  /** the model type for the value */
+  value: Model;
+}
+
 /** Unit is the unit type (i.e. "()") */
 export interface Unit {
   kind: 'unit';
@@ -589,10 +623,10 @@ export class EncodedBytes implements EncodedBytes {
 }
 
 export class Enum implements Enum {
-  constructor(name: string, pub: boolean, extensible: boolean) {
+  constructor(name: string, visibility: Visibility, extensible: boolean) {
     this.kind = 'enum';
     this.name = name;
-    this.pub = pub;
+    this.visibility = visibility;
     this.values = new Array<EnumValue>();
     this.extensible = extensible;
     this.docs = {};
@@ -810,6 +844,26 @@ export class Struct extends StructBase implements Struct {
 export class StructField extends StructFieldBase implements StructField {
   constructor(name: string, visibility: Visibility, type: Type) {
     super(name, visibility, type);
+  }
+}
+
+export class TaggedEnum implements TaggedEnum {
+  constructor(name: string, visibility: Visibility) {
+    this.kind = 'taggedEnum';
+    this.name = name;
+    this.visibility = visibility;
+    this.values = new Array<TaggedEnumValue>();
+    this.docs = {};
+  }
+}
+
+export class TaggedEnumValue implements TaggedEnumValue {
+  constructor(name: string, type: TaggedEnum, value: Model) {
+    this.kind = 'taggedEnumValue';
+    this.name = name;
+    this.type = type;
+    this.value = value;
+    this.docs = {};
   }
 }
 

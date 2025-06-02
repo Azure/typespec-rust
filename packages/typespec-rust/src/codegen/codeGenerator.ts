@@ -12,6 +12,7 @@ import { emitLibRs } from './lib.js';
 import { emitHeaderTraits } from './headerTraits.js';
 import { emitClientsModRs, emitGeneratedModRs, emitModelsModRs } from './mod.js';
 import { emitModels } from './models.js';
+import { emitTaggedEnums } from './taggedEnum.js';
 
 import * as rust from '../codemodel/index.js';
 
@@ -95,6 +96,7 @@ export class CodeGenerator {
     addModelsFile(models.xmlHelpers, 'pubCrate');
 
     addModelsFile(emitHeaderTraits(this.crate), 'pubUse');
+    addModelsFile(emitTaggedEnums(this.crate), 'pubUse');
 
     if (modelsModRS.length > 0) {
       files.push({name: `${modelsSubDir}/mod.rs`, content: emitModelsModRs(modelsModRS)})

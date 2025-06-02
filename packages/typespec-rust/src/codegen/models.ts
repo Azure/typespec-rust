@@ -542,6 +542,16 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
     if (literal.valueKind.kind === 'scalar') {
       // if the scalar is a float, replace the . as it's illegal in an identifier
       literalValueName = literalValueName.replace('.', 'point');
+    } else if (literalValueName.match(/\W+/)) {
+      // the string contains one or more characters that are illegal in an identifier.
+      // create a hash of the string and use that for the name.
+      let hash = 0;
+      for (let i = 0; i < literalValueName.length; i++) {
+        const char = literalValueName.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash |= 0;
+      }
+      literalValueName = hash.toString();
     }
 
     const optional = field.optional ? 'optional_' : '';

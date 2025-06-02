@@ -189,7 +189,7 @@ export class Adapter {
       return <rust.Enum>rustEnum;
     }
 
-    rustEnum = new rust.Enum(enumName, sdkEnum.access === 'public', !sdkEnum.isFixed);
+    rustEnum = new rust.Enum(enumName, getVisibility(sdkEnum.access), !sdkEnum.isFixed);
     rustEnum.docs = this.adaptDocs(sdkEnum.summary, sdkEnum.doc);
     this.types.set(enumName, rustEnum);
 
@@ -218,6 +218,45 @@ export class Adapter {
       }
     }
     throw new AdapterError('InternalError', `didn't find enum value for name ${sdkEnumValue.name} in enum ${enumType.name}`, sdkEnumValue.__raw?.node);
+  }
+
+  /**
+   * converts a tcgc base discriminated type to a Rust tagged enum type.
+   * the caller is responsible to check that sdkModel is a discriminated
+   * type before calling this method.
+   * 
+   * @param sdkModel the tcgc discriminated model type
+   * @returns a Rust tagged enum type
+   */
+  private getTaggedEnum(sdkModel: tcgc.SdkModelType): rust.TaggedEnum {
+    if (!sdkModel.discriminatedSubtypes) {
+      // this should have been validated by the caller
+      throw new AdapterError('InternalError', `${sdkModel.name} is not a discriminated type`, sdkModel.__raw?.node)
+    }
+
+    const baseModel = this.getModel(sdkModel);
+
+    // the tagged enum name is the base model type with the suffix Kind
+    const taggedEnumName = baseModel.name + 'Kind';
+    let taggedEnum = this.types.get(taggedEnumName);
+    if (taggedEnum) {
+      return <rust.TaggedEnum>taggedEnum;
+    }
+
+    taggedEnum = new rust.TaggedEnum(taggedEnumName, getVisibility(sdkModel.access));
+
+    // we include the base type as a fallback for unknown discriminants
+    taggedEnum.values.push(new rust.TaggedEnumValue(baseModel.name, taggedEnum, baseModel));
+
+    for (const subtype of values(sdkModel.discriminatedSubtypes)) {
+      const subtypeModel = this.getModel(subtype);
+      const taggedEnumValue = new rust.TaggedEnumValue(subtypeModel.name, taggedEnum, subtypeModel);
+      taggedEnum.values.push(taggedEnumValue);
+    }
+
+    this.types.set(taggedEnumName, taggedEnum);
+    this.crate.taggedEnums.push(taggedEnum);
+    return taggedEnum;
   }
 
   /**
@@ -252,7 +291,7 @@ export class Adapter {
       modelFlags |= rust.ModelFlags.Output;
     }
 
-    rustModel = new rust.Model(modelName, model.access === 'internal' ? 'pubCrate' : 'pub', modelFlags);
+    rustModel = new rust.Model(modelName, getVisibility(model.access), modelFlags);
     rustModel.docs = this.adaptDocs(model.summary, model.doc);
     rustModel.xmlName = getXMLName(model.decorators);
     this.types.set(modelName, rustModel);
@@ -317,6 +356,15 @@ export class Adapter {
     // box it. this is to avoid infinitely recursive type definitions.
     if (fieldType.kind === 'model' && stack.includes(fieldType.name)) {
       fieldType = new rust.Box(fieldType);
+    } else if (fieldType.kind === 'taggedEnum') {
+      // this is a tagged union, so check if the containing
+      // type is one of the tagged union types.
+      for (const subtype of fieldType.values) {
+        if (stack.includes(subtype.value.name)) {
+          fieldType = new rust.Box(fieldType);
+          break;
+        }
+      }
     }
 
     // for public models each field is always an Option<T>.
@@ -426,6 +474,9 @@ export class Adapter {
       case 'enumvalue':
         return this.getEnumValue(type);
       case 'model':
+        if (type.discriminatedSubtypes) {
+          return this.getTaggedEnum(type);
+        }
         return this.getModel(type, stack);
       case 'endpoint':
       case 'plainDate':
@@ -1787,6 +1838,7 @@ export class Adapter {
       case 'scalar':
       case 'slice':
       case 'str':
+      case 'taggedEnum':
       case 'String':
       case 'Url':
       case 'Vec':
@@ -1956,6 +2008,8 @@ function recursiveKeyName(root: string, type: rust.WireType): string {
       return `${root}-${type.kind}-${type.type}${type.stringEncoding ? '-string' : ''}`;
     case 'slice':
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
+    case 'taggedEnum':
+      return `${root}-${type.kind}-${type.name}`;
     default:
       return `${root}-${type.kind}`;
   }
@@ -2017,4 +2071,9 @@ function getXMLKind(decorators: Array<tcgc.DecoratorInfo>, field: rust.ModelFiel
   }
 
   return undefined;
+}
+
+/** converts tcgc access to visibility */
+function getVisibility(access: tcgc.AccessFlags): rust.Visibility {
+  return access === 'public' ? 'pub' : 'pubCrate';
 }
