@@ -38,6 +38,10 @@
   * Paged operations that return a collection and "next link" now return a per-item iterator of type `Pager<T>`.
   * If a paged operation returns more than the above, it returns a `PageIterator<T>` which behaves like previous versions of `Pager<T>`.
 
+### Features Added
+
+* Added support for discriminated types as tagged enums.
+
 ### Bugs Fixed
 
 * Fixed handling for required API version client parameter.
