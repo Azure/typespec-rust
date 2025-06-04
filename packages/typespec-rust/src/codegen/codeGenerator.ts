@@ -96,8 +96,8 @@ export class CodeGenerator {
       addModelsFile(models.serde, 'pubCrate');
     }
 
-    if (models.traits) {
-      addModelsFile(models.traits, 'internal');
+    if (models.impls) {
+      addModelsFile(models.impls, 'internal');
     }
 
     if (models.internal) {

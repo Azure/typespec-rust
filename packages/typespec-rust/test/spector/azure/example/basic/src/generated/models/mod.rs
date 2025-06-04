@@ -5,7 +5,7 @@
 
 mod enums;
 mod method_options;
-mod models_traits;
+mod models_impl;
 mod pub_models;
 pub use enums::*;
 pub use method_options::*;

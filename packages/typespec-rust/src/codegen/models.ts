@@ -18,8 +18,8 @@ export interface Models {
   /** serde helpers for public models */
   serde?: helpers.Module;
 
-  /** traits for public models */
-  traits?: helpers.Module;
+  /** trait impls for public models */
+  impls?: helpers.Module;
 
   /** models that are for internal use only */
   internal?: helpers.Module;
@@ -44,7 +44,7 @@ export function emitModels(crate: rust.Crate, context: Context): Models {
   return {
     public: emitModelsInternal(crate, context, 'pub'),
     serde: emitModelsSerde(),
-    traits: emitModelTraits(crate, context),
+    impls: emitModelImpls(crate, context),
     internal: emitModelsInternal(crate, context, 'pubCrate'),
     xmlHelpers: emitXMLListWrappers(),
   };
@@ -215,7 +215,7 @@ function emitModelsSerde(): helpers.Module | undefined {
  * @param context the context for the provided crate
  * @returns the model serde helpers content or undefined
  */
-function emitModelTraits(crate: rust.Crate, context: Context): helpers.Module | undefined {
+function emitModelImpls(crate: rust.Crate, context: Context): helpers.Module | undefined {
   const use = new Use('modelsOther');
   let body = '';
 
@@ -247,7 +247,7 @@ function emitModelTraits(crate: rust.Crate, context: Context): helpers.Module | 
   content += body;
 
   return {
-    name: 'models_traits',
+    name: 'models_impl',
     content: content,
   };
 }
