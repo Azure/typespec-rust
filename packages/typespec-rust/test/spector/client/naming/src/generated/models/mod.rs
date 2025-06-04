@@ -6,9 +6,9 @@
 mod enums;
 mod header_traits;
 mod method_options;
+mod models_traits;
 mod pub_models;
 pub use enums::*;
 pub use header_traits::*;
 pub use method_options::*;
 pub use pub_models::*;
-pub(crate) mod models_serde;

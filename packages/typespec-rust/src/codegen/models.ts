@@ -18,6 +18,9 @@ export interface Models {
   /** serde helpers for public models */
   serde?: helpers.Module;
 
+  /** traits for public models */
+  traits?: helpers.Module;
+
   /** models that are for internal use only */
   internal?: helpers.Module;
 
@@ -40,7 +43,8 @@ export function emitModels(crate: rust.Crate, context: Context): Models {
 
   return {
     public: emitModelsInternal(crate, context, 'pub'),
-    serde: emitModelsSerde(crate, context),
+    serde: emitModelsSerde(),
+    traits: emitModelTraits(crate, context),
     internal: emitModelsInternal(crate, context, 'pubCrate'),
     xmlHelpers: emitXMLListWrappers(),
   };
@@ -182,11 +186,36 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
  * returns serde helpers for public models.
  * if no helpers are required, undefined is returned.
  * 
+ * @returns the model serde helpers content or undefined
+ */
+function emitModelsSerde(): helpers.Module | undefined {
+  const use = new Use('modelsOther');
+  const serdeHelpers = emitSerDeHelpers(use);
+
+  if (!serdeHelpers) {
+    // no helpers
+    return undefined;
+  }
+
+  let content = helpers.contentPreamble();
+  content += use.text();
+  content += serdeHelpers;
+
+  return {
+    name: 'models_serde',
+    content: content,
+  };
+}
+
+/**
+ * returns any traits for public models.
+ * if no helpers are required, undefined is returned.
+ * 
  * @param crate the crate for which to emit model serde helpers
  * @param context the context for the provided crate
  * @returns the model serde helpers content or undefined
  */
-function emitModelsSerde(crate: rust.Crate, context: Context): helpers.Module | undefined {
+function emitModelTraits(crate: rust.Crate, context: Context): helpers.Module | undefined {
   const use = new Use('modelsOther');
   let body = '';
 
@@ -208,26 +237,17 @@ function emitModelsSerde(crate: rust.Crate, context: Context): helpers.Module | 
     body += forReq;
   }
 
-  const serdeHelpers = emitSerDeHelpers(use);
-
-  if (body.length === 0 && !serdeHelpers) {
+  if (body.length === 0) {
     // no helpers
     return undefined;
   }
 
   let content = helpers.contentPreamble();
-
-  if (body.length > 0) {
-    content += use.text();
-    content += body;
-  }
-
-  if (serdeHelpers) {
-    content += serdeHelpers;
-  }
+  content += use.text();
+  content += body;
 
   return {
-    name: 'models_serde',
+    name: 'models_traits',
     content: content,
   };
 }

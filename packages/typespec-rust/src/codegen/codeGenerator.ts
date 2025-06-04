@@ -67,10 +67,10 @@ export class CodeGenerator {
     const clientsSubDir = 'clients';
     const modelsSubDir = 'models';
 
-    const addModelsFile = function(module: Module, crateOnly: boolean = false): void {
+    const addModelsFile = function(module: Module, visibility: 'internal' | 'pubUse' | 'pubCrate'): void {
       files.push({name: `${modelsSubDir}/${module.name}.rs`, content: module.content});
-      modelsModRS.push(`${crateOnly ? 'pub(crate) ' : ''}mod ${module.name}`);
-      if (!crateOnly) {
+      modelsModRS.push(`${visibility === 'pubCrate' ? 'pub(crate) ' : ''}mod ${module.name}`);
+      if (visibility === 'pubUse') {
         modelsModRS.push(`pub use ${module.name}::*`);
       }
     };
@@ -79,34 +79,38 @@ export class CodeGenerator {
     if (clientModules) {
       files.push(...clientModules.modules.map((module) => { return {name: `${clientsSubDir}/${module.name}.rs`, content: module.content}; }));
       files.push({name: `${clientsSubDir}/mod.rs`, content: emitClientsModRs(clientModules.modules.map((module) => module.name))});
-      addModelsFile(clientModules.options);
+      addModelsFile(clientModules.options, 'pubUse');
     }
 
     const enums = emitEnums(this.crate, this.context);
     if (enums) {
-      addModelsFile(enums);
+      addModelsFile(enums, 'pubUse');
     }
 
     const models = emitModels(this.crate, this.context);
     if (models.public) {
-      addModelsFile(models.public);
+      addModelsFile(models.public, 'pubUse');
     }
 
     if (models.serde) {
-      addModelsFile(models.serde, true);
+      addModelsFile(models.serde, 'pubCrate');
+    }
+
+    if (models.traits) {
+      addModelsFile(models.traits, 'internal');
     }
 
     if (models.internal) {
-      addModelsFile(models.internal, true);
+      addModelsFile(models.internal, 'pubCrate');
     }
 
     if (models.xmlHelpers) {
-      addModelsFile(models.xmlHelpers, true);
+      addModelsFile(models.xmlHelpers, 'pubCrate');
     }
 
     const headerTraits = emitHeaderTraits(this.crate);
     if (headerTraits) {
-      addModelsFile(headerTraits);
+      addModelsFile(headerTraits, 'pubUse');
     }
 
     if (modelsModRS.length > 0) {
