@@ -67,7 +67,10 @@ export class CodeGenerator {
     const clientsSubDir = 'clients';
     const modelsSubDir = 'models';
 
-    const addModelsFile = function(module: Module, visibility: 'internal' | 'pubUse' | 'pubCrate'): void {
+    const addModelsFile = function(module: Module | undefined, visibility: 'internal' | 'pubUse' | 'pubCrate'): void {
+      if (!module) {
+        return;
+      }
       files.push({name: `${modelsSubDir}/${module.name}.rs`, content: module.content});
       modelsModRS.push(`${visibility === 'pubCrate' ? 'pub(crate) ' : ''}mod ${module.name}`);
       if (visibility === 'pubUse') {
@@ -82,36 +85,16 @@ export class CodeGenerator {
       addModelsFile(clientModules.options, 'pubUse');
     }
 
-    const enums = emitEnums(this.crate, this.context);
-    if (enums) {
-      addModelsFile(enums, 'pubUse');
-    }
+    addModelsFile(emitEnums(this.crate, this.context), 'pubUse');
 
     const models = emitModels(this.crate, this.context);
-    if (models.public) {
-      addModelsFile(models.public, 'pubUse');
-    }
+    addModelsFile(models.public, 'pubUse');
+    addModelsFile(models.serde, 'pubCrate');
+    addModelsFile(models.impls, 'internal');
+    addModelsFile(models.internal, 'pubCrate');
+    addModelsFile(models.xmlHelpers, 'pubCrate');
 
-    if (models.serde) {
-      addModelsFile(models.serde, 'pubCrate');
-    }
-
-    if (models.impls) {
-      addModelsFile(models.impls, 'internal');
-    }
-
-    if (models.internal) {
-      addModelsFile(models.internal, 'pubCrate');
-    }
-
-    if (models.xmlHelpers) {
-      addModelsFile(models.xmlHelpers, 'pubCrate');
-    }
-
-    const headerTraits = emitHeaderTraits(this.crate);
-    if (headerTraits) {
-      addModelsFile(headerTraits, 'pubUse');
-    }
+    addModelsFile(emitHeaderTraits(this.crate), 'pubUse');
 
     if (modelsModRS.length > 0) {
       files.push({name: `${modelsSubDir}/mod.rs`, content: emitModelsModRs(modelsModRS)})
