@@ -11,10 +11,15 @@ use serde::{Deserialize, Serialize};
 #[serde(tag = "kind")]
 pub enum BirdKind {
     Bird(Bird),
+    #[serde(rename = "eagle")]
     Eagle(Eagle),
+    #[serde(rename = "goose")]
     Goose(Goose),
+    #[serde(rename = "seagull")]
     SeaGull(SeaGull),
+    #[serde(rename = "sparrow")]
     Sparrow(Sparrow),
+    Unknown(serde_json::Value),
 }
 
 #[derive(Clone, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
