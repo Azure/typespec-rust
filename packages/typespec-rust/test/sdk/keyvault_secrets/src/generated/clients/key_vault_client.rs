@@ -251,11 +251,11 @@ impl KeyVaultClient {
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_link = res.next_link.unwrap_or_default();
                 Ok(if next_link.is_empty() {
-                    PagerResult::Complete { response: rsp }
+                    PagerResult::Done { response: rsp }
                 } else {
-                    PagerResult::Continue {
+                    PagerResult::More {
                         response: rsp,
-                        continuation: next_link.parse()?,
+                        next: next_link.parse()?,
                     }
                 })
             }
@@ -320,11 +320,11 @@ impl KeyVaultClient {
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_link = res.next_link.unwrap_or_default();
                 Ok(if next_link.is_empty() {
-                    PagerResult::Complete { response: rsp }
+                    PagerResult::Done { response: rsp }
                 } else {
-                    PagerResult::Continue {
+                    PagerResult::More {
                         response: rsp,
-                        continuation: next_link.parse()?,
+                        next: next_link.parse()?,
                     }
                 })
             }
@@ -386,11 +386,11 @@ impl KeyVaultClient {
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_link = res.next_link.unwrap_or_default();
                 Ok(if next_link.is_empty() {
-                    PagerResult::Complete { response: rsp }
+                    PagerResult::Done { response: rsp }
                 } else {
-                    PagerResult::Continue {
+                    PagerResult::More {
                         response: rsp,
-                        continuation: next_link.parse()?,
+                        next: next_link.parse()?,
                     }
                 })
             }

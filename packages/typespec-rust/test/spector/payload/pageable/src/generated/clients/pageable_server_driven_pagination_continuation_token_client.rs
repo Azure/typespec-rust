@@ -66,11 +66,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_token = res.next_token.unwrap_or_default();
                 Ok(if next_token.is_empty() {
-                    PagerResult::Complete { response: rsp }
+                    PagerResult::Done { response: rsp }
                 } else {
-                    PagerResult::Continue {
+                    PagerResult::More {
                         response: rsp,
-                        continuation: next_token,
+                        next: next_token,
                     }
                 })
             }
@@ -113,11 +113,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     pipeline.send(&ctx, &mut request).await?.into();
                 let next_token = rsp.next_token()?.unwrap_or_default();
                 Ok(if next_token.is_empty() {
-                    PagerResult::Complete { response: rsp }
+                    PagerResult::Done { response: rsp }
                 } else {
-                    PagerResult::Continue {
+                    PagerResult::More {
                         response: rsp,
-                        continuation: next_token,
+                        next: next_token,
                     }
                 })
             }
@@ -173,11 +173,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_token = res.next_token.unwrap_or_default();
                 Ok(if next_token.is_empty() {
-                    PagerResult::Complete { response: rsp }
+                    PagerResult::Done { response: rsp }
                 } else {
-                    PagerResult::Continue {
+                    PagerResult::More {
                         response: rsp,
-                        continuation: next_token,
+                        next: next_token,
                     }
                 })
             }
@@ -229,11 +229,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     pipeline.send(&ctx, &mut request).await?.into();
                 let next_token = rsp.next_token()?.unwrap_or_default();
                 Ok(if next_token.is_empty() {
-                    PagerResult::Complete { response: rsp }
+                    PagerResult::Done { response: rsp }
                 } else {
-                    PagerResult::Continue {
+                    PagerResult::More {
                         response: rsp,
-                        continuation: next_token,
+                        next: next_token,
                     }
                 })
             }

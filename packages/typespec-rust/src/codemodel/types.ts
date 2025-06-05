@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | Pager | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
 export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
@@ -200,11 +200,22 @@ export interface ModelField extends StructFieldBase {
   /** the name of the field over the wire */
   serde: string;
 
+  /** the flags set for this field */
+  flags: ModelFieldFlags;
+
   /** indicates if the field is optional */
   optional: boolean;
 
   /** contains XML-specific serde info */
   xmlKind?: XMLKind;
+}
+
+/** ModelFieldFlags contains bit flags describing field usage */
+export enum ModelFieldFlags {
+  Unspecified = 0,
+
+  /** field contains the page of items in a paged response */
+  PageItems = 1,
 }
 
 /** ModelFlags contains bit flags describing model usage */
@@ -240,6 +251,14 @@ export interface Option {
    * the generic type param
    */
   type: Box | RequestContent | Struct | WireType;
+}
+
+/** PageIterator is a PageIterator<T> from azure_core */
+export interface PageIterator extends External {
+  kind: 'pageIterator';
+
+  /** the model containing the page of items */
+  type: Response<Payload<Model>>;
 }
 
 /** Pager is a Pager<T> from azure_core */
@@ -318,7 +337,7 @@ export interface Response<T extends ResponseTypes = ResponseTypes> extends Exter
 }
 
 /** ResultTypes defines the type constraint when creating a Result<T> */
-type ResultTypes = Pager | RawResponse | Response;
+type ResultTypes = PageIterator | Pager | RawResponse | Response;
 
 /** Result is a Rust Result<T> from azure_core */
 export interface Result<T extends ResultTypes = ResultTypes> extends External {
@@ -655,6 +674,7 @@ export class ModelField extends StructFieldBase implements ModelField {
   constructor(name: string, serde: string, visibility: Visibility, type: Type, optional: boolean) {
     super(name, visibility, type);
     this.kind = 'modelField';
+    this.flags = ModelFieldFlags.Unspecified;
     this.optional = optional;
     this.serde = serde;
   }
@@ -672,6 +692,14 @@ export class OffsetDateTime extends External implements OffsetDateTime {
 export class Option implements Option {
   constructor(type: Box | WireType | RequestContent | Struct) {
     this.kind = 'option';
+    this.type = type;
+  }
+}
+
+export class PageIterator extends External implements PageIterator {
+  constructor(crate: Crate, type: Response<Payload<Model>>) {
+    super(crate, 'PageIterator', 'azure_core::http');
+    this.kind = 'pageIterator';
     this.type = type;
   }
 }

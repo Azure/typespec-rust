@@ -17,6 +17,7 @@ export class Context {
   private readonly bodyFormatForModels = new Map<rust.Model, rust.BodyFormat>();
   private readonly tryFromForRequestTypes = new Map<string, rust.BodyFormat>();
   private readonly tryFromResponseTypes = new Map<string, rust.BodyFormat>();
+  private readonly pagedResponseTypes = new Set<rust.Model>();
 
   /**
    * instantiates a new Context for the provided crate
@@ -51,6 +52,9 @@ export class Context {
       for (const method of client.methods) {
         if (method.kind === 'clientaccessor') {
           continue;
+        } else if (method.kind === 'pageable' && method.returns.type.kind === 'pager') {
+          // impls are for pagers only (not page iterators)
+          this.pagedResponseTypes.add(method.returns.type.type.type);
         }
 
         // TODO: this doesn't handle the case where a method sends/receives a HashMap<T>
@@ -88,16 +92,16 @@ export class Context {
 
   /**
    * returns the impl TryFrom<T> for RequestContent<T> where T is type.
-   * if no impl is required, it returns the empty string.
+   * if no impl is required, it returns undefined.
    * 
-   * @param type the type for which to implement TryFrom
+   * @param model the model for which to implement TryFrom
    * @param use the use statement builder currently in scope
-   * @returns the impl TryFrom<T> block for type or the empty string
+   * @returns the impl TryFrom<T> block for type or undefined
    */
-  getTryFromForRequestContent(type: rust.Type, use: Use): string {
-    const format = this.tryFromForRequestTypes.get(helpers.getTypeDeclaration(type));
+  getTryFromForRequestContent(model: rust.Enum | rust.Model, use: Use): string | undefined {
+    const format = this.tryFromForRequestTypes.get(helpers.getTypeDeclaration(model));
     if (!format) {
-      return '';
+      return undefined;
     }
 
     use.add('azure_core', 'Result');
@@ -105,9 +109,9 @@ export class Context {
     use.add('azure_core', `${format}::to_${format}`);
 
     const indent = new helpers.indentation();
-    let content = `impl TryFrom<${helpers.getTypeDeclaration(type)}> for RequestContent<${helpers.getTypeDeclaration(type)}> {\n`;
+    let content = `impl TryFrom<${helpers.getTypeDeclaration(model)}> for RequestContent<${helpers.getTypeDeclaration(model)}> {\n`;
     content += `${indent.get()}type Error = azure_core::Error;\n`;
-    content += `${indent.get()}fn try_from(value: ${helpers.getTypeDeclaration(type)}) -> Result<Self> {\n`;
+    content += `${indent.get()}fn try_from(value: ${helpers.getTypeDeclaration(model)}) -> Result<Self> {\n`;
     content += `${indent.push().get()}RequestContent::try_from(to_${format}(&value)?)\n`;
     content += `${indent.pop().get()}}\n`;
     content += '}\n\n';
@@ -130,5 +134,51 @@ export class Context {
       bodyFormat = 'json';
     }
     return bodyFormat;
+  }
+
+  /**
+   * returns an azure_core::http::Page impl for the provided model
+   * or undefined if the model isn't a paged response type.
+   * 
+   * @param model the model for which to create the Page impl
+   * @param use the use statement builder currently in scope
+   * @returns the Page impl or undefined
+   */
+  getPageImplForType(model: rust.Model, use: Use): string | undefined {
+    if (!this.pagedResponseTypes.has(model)) {
+      return undefined;
+    }
+
+    // find the page items field in the model
+    let pageItemsField: rust.ModelField | undefined;
+    for (const field of model.fields) {
+      if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.PageItems) === rust.ModelFieldFlags.PageItems) {
+        pageItemsField = field;
+        break;
+      }
+    }
+
+    if (!pageItemsField) {
+      throw new CodegenError('InternalError', `didn't find page items field in model ${model.name}`);
+    }
+
+    use.addForType(model);
+    use.addForType(pageItemsField.type);
+    use.add('async_trait', 'async_trait');
+    use.add('azure_core', 'http::Page', 'Result');
+
+    const indent = new helpers.indentation();
+
+    let content = '#[cfg_attr(not(target_arch = "wasm32"), async_trait)]\n';
+    content += '#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]\n';
+    content += `impl Page for ${model.name} {\n`;
+    content += `${indent.get()}type Item = ${helpers.getTypeDeclaration(helpers.unwrapType(pageItemsField.type))};\n`;
+    content += `${indent.get()}type IntoIter = <${helpers.getTypeDeclaration(pageItemsField.type)} as IntoIterator>::IntoIter;\n`;
+    content += `${indent.get()}async fn into_items(self) -> Result<Self::IntoIter> {\n`;
+    content += `${indent.push().get()}Ok(self.${pageItemsField.name}.into_iter())\n`;
+    content += `${indent.pop().get()}}\n`; // end fn
+    content += '}\n\n'; // end impl
+
+    return content;
   }
 }

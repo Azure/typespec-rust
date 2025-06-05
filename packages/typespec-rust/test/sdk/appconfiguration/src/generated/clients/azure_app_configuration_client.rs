@@ -32,8 +32,8 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, Pager, PagerResult, Pipeline, RawResponse, Request,
-        RequestContent, Response, Url,
+        ClientOptions, Context, Method, PageIterator, Pager, PagerResult, Pipeline, RawResponse,
+        Request, RequestContent, Response, Url,
     },
     json, Result,
 };
@@ -660,7 +660,7 @@ impl AzureAppConfigurationClient {
         &self,
         accept: String,
         options: Option<AzureAppConfigurationClientListKeyValuesOptions<'_>>,
-    ) -> Result<Pager<KeyValueListResult>> {
+    ) -> Result<PageIterator<Response<KeyValueListResult>>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
@@ -698,56 +698,58 @@ impl AzureAppConfigurationClient {
             }
         }
         let api_version = self.api_version.clone();
-        Ok(Pager::from_callback(move |_next_link: Option<Url>| {
-            let url = match _next_link {
-                Some(_next_link) => {
-                    let qp = _next_link
-                        .query_pairs()
-                        .filter(|(name, _)| name.ne("api-version"));
-                    let mut _next_link = _next_link.clone();
-                    _next_link
-                        .query_pairs_mut()
-                        .clear()
-                        .extend_pairs(qp)
-                        .append_pair("api-version", &api_version);
-                    _next_link
-                }
-                None => first_url.clone(),
-            };
-            let mut request = Request::new(url, Method::Get);
-            request.insert_header("accept", &accept);
-            if let Some(accept_datetime) = &options.accept_datetime {
-                request.insert_header("accept-datetime", accept_datetime);
-            }
-            if let Some(if_match) = &options.if_match {
-                request.insert_header("if-match", if_match);
-            }
-            if let Some(if_none_match) = &options.if_none_match {
-                request.insert_header("if-none-match", if_none_match);
-            }
-            if let Some(sync_token) = &options.sync_token {
-                request.insert_header("sync-token", sync_token);
-            }
-            let ctx = options.method_options.context.clone();
-            let pipeline = pipeline.clone();
-            async move {
-                let rsp: Response<KeyValueListResult> =
-                    pipeline.send(&ctx, &mut request).await?.into();
-                let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: KeyValueListResult = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                let _next_link = res._next_link.unwrap_or_default();
-                Ok(if _next_link.is_empty() {
-                    PagerResult::Complete { response: rsp }
-                } else {
-                    PagerResult::Continue {
-                        response: rsp,
-                        continuation: _next_link.parse()?,
+        Ok(PageIterator::from_callback(
+            move |_next_link: Option<Url>| {
+                let url = match _next_link {
+                    Some(_next_link) => {
+                        let qp = _next_link
+                            .query_pairs()
+                            .filter(|(name, _)| name.ne("api-version"));
+                        let mut _next_link = _next_link.clone();
+                        _next_link
+                            .query_pairs_mut()
+                            .clear()
+                            .extend_pairs(qp)
+                            .append_pair("api-version", &api_version);
+                        _next_link
                     }
-                })
-            }
-        }))
+                    None => first_url.clone(),
+                };
+                let mut request = Request::new(url, Method::Get);
+                request.insert_header("accept", &accept);
+                if let Some(accept_datetime) = &options.accept_datetime {
+                    request.insert_header("accept-datetime", accept_datetime);
+                }
+                if let Some(if_match) = &options.if_match {
+                    request.insert_header("if-match", if_match);
+                }
+                if let Some(if_none_match) = &options.if_none_match {
+                    request.insert_header("if-none-match", if_none_match);
+                }
+                if let Some(sync_token) = &options.sync_token {
+                    request.insert_header("sync-token", sync_token);
+                }
+                let ctx = options.method_options.context.clone();
+                let pipeline = pipeline.clone();
+                async move {
+                    let rsp: Response<KeyValueListResult> =
+                        pipeline.send(&ctx, &mut request).await?.into();
+                    let (status, headers, body) = rsp.deconstruct();
+                    let bytes = body.collect().await?;
+                    let res: KeyValueListResult = json::from_json(&bytes)?;
+                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let _next_link = res._next_link.unwrap_or_default();
+                    Ok(if _next_link.is_empty() {
+                        PagerResult::Done { response: rsp }
+                    } else {
+                        PagerResult::More {
+                            response: rsp,
+                            next: _next_link.parse()?,
+                        }
+                    })
+                }
+            },
+        ))
     }
 
     /// Gets a list of keys.
@@ -810,11 +812,11 @@ impl AzureAppConfigurationClient {
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let _next_link = res._next_link.unwrap_or_default();
                 Ok(if _next_link.is_empty() {
-                    PagerResult::Complete { response: rsp }
+                    PagerResult::Done { response: rsp }
                 } else {
-                    PagerResult::Continue {
+                    PagerResult::More {
                         response: rsp,
-                        continuation: _next_link.parse()?,
+                        next: _next_link.parse()?,
                     }
                 })
             }
@@ -895,11 +897,11 @@ impl AzureAppConfigurationClient {
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let _next_link = res._next_link.unwrap_or_default();
                 Ok(if _next_link.is_empty() {
-                    PagerResult::Complete { response: rsp }
+                    PagerResult::Done { response: rsp }
                 } else {
-                    PagerResult::Continue {
+                    PagerResult::More {
                         response: rsp,
-                        continuation: _next_link.parse()?,
+                        next: _next_link.parse()?,
                     }
                 })
             }
@@ -917,7 +919,7 @@ impl AzureAppConfigurationClient {
         &self,
         accept: String,
         options: Option<AzureAppConfigurationClientListRevisionsOptions<'_>>,
-    ) -> Result<Pager<KeyValueListResult>> {
+    ) -> Result<PageIterator<Response<KeyValueListResult>>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
@@ -950,53 +952,55 @@ impl AzureAppConfigurationClient {
             }
         }
         let api_version = self.api_version.clone();
-        Ok(Pager::from_callback(move |_next_link: Option<Url>| {
-            let url = match _next_link {
-                Some(_next_link) => {
-                    let qp = _next_link
-                        .query_pairs()
-                        .filter(|(name, _)| name.ne("api-version"));
-                    let mut _next_link = _next_link.clone();
-                    _next_link
-                        .query_pairs_mut()
-                        .clear()
-                        .extend_pairs(qp)
-                        .append_pair("api-version", &api_version);
-                    _next_link
-                }
-                None => first_url.clone(),
-            };
-            let mut request = Request::new(url, Method::Get);
-            request.insert_header("accept", &accept);
-            if let Some(accept_datetime) = &options.accept_datetime {
-                request.insert_header("accept-datetime", accept_datetime);
-            }
-            if let Some(sync_token) = &options.sync_token {
-                request.insert_header("sync-token", sync_token);
-            }
-            if let Some(client_request_id) = &options.client_request_id {
-                request.insert_header("x-ms-client-request-id", client_request_id);
-            }
-            let ctx = options.method_options.context.clone();
-            let pipeline = pipeline.clone();
-            async move {
-                let rsp: Response<KeyValueListResult> =
-                    pipeline.send(&ctx, &mut request).await?.into();
-                let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: KeyValueListResult = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                let _next_link = res._next_link.unwrap_or_default();
-                Ok(if _next_link.is_empty() {
-                    PagerResult::Complete { response: rsp }
-                } else {
-                    PagerResult::Continue {
-                        response: rsp,
-                        continuation: _next_link.parse()?,
+        Ok(PageIterator::from_callback(
+            move |_next_link: Option<Url>| {
+                let url = match _next_link {
+                    Some(_next_link) => {
+                        let qp = _next_link
+                            .query_pairs()
+                            .filter(|(name, _)| name.ne("api-version"));
+                        let mut _next_link = _next_link.clone();
+                        _next_link
+                            .query_pairs_mut()
+                            .clear()
+                            .extend_pairs(qp)
+                            .append_pair("api-version", &api_version);
+                        _next_link
                     }
-                })
-            }
-        }))
+                    None => first_url.clone(),
+                };
+                let mut request = Request::new(url, Method::Get);
+                request.insert_header("accept", &accept);
+                if let Some(accept_datetime) = &options.accept_datetime {
+                    request.insert_header("accept-datetime", accept_datetime);
+                }
+                if let Some(sync_token) = &options.sync_token {
+                    request.insert_header("sync-token", sync_token);
+                }
+                if let Some(client_request_id) = &options.client_request_id {
+                    request.insert_header("x-ms-client-request-id", client_request_id);
+                }
+                let ctx = options.method_options.context.clone();
+                let pipeline = pipeline.clone();
+                async move {
+                    let rsp: Response<KeyValueListResult> =
+                        pipeline.send(&ctx, &mut request).await?.into();
+                    let (status, headers, body) = rsp.deconstruct();
+                    let bytes = body.collect().await?;
+                    let res: KeyValueListResult = json::from_json(&bytes)?;
+                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let _next_link = res._next_link.unwrap_or_default();
+                    Ok(if _next_link.is_empty() {
+                        PagerResult::Done { response: rsp }
+                    } else {
+                        PagerResult::More {
+                            response: rsp,
+                            next: _next_link.parse()?,
+                        }
+                    })
+                }
+            },
+        ))
     }
 
     /// Gets a list of key-value snapshots.
@@ -1077,11 +1081,11 @@ impl AzureAppConfigurationClient {
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let _next_link = res._next_link.unwrap_or_default();
                 Ok(if _next_link.is_empty() {
-                    PagerResult::Complete { response: rsp }
+                    PagerResult::Done { response: rsp }
                 } else {
-                    PagerResult::Continue {
+                    PagerResult::More {
                         response: rsp,
-                        continuation: _next_link.parse()?,
+                        next: _next_link.parse()?,
                     }
                 })
             }

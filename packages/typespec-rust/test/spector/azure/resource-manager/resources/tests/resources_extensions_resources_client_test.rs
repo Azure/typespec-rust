@@ -237,10 +237,60 @@ async fn get_by_resource() {
 #[tokio::test]
 async fn list_by_scope_tenant() {
     let client = common::create_client();
-    let mut pager = client
+    let mut iter = client
         .get_resources_extensions_resources_client()
         .list_by_scope(TENANT, None)
         .unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                let expected_resource = get_extension_resource(TENANT);
+
+                assert_eq!(expected_resource.id, item.id);
+                assert_eq!(expected_resource.name, item.name);
+                assert_eq!(expected_resource.type_prop, item.type_prop);
+
+                let expected_props = expected_resource.properties.unwrap();
+                let resource_props = item.properties.unwrap();
+                assert_eq!(
+                    expected_props.provisioning_state,
+                    resource_props.provisioning_state
+                );
+                assert_eq!(expected_props.description, resource_props.description);
+
+                let expected_system_data = expected_resource.system_data.unwrap();
+                let resource_system_data = item.system_data.unwrap();
+                assert_eq!(
+                    expected_system_data.created_by,
+                    resource_system_data.created_by
+                );
+                assert_eq!(
+                    expected_system_data.created_by_type,
+                    resource_system_data.created_by_type
+                );
+
+                // Validate timestamps
+                validate_timestamps(
+                    expected_system_data.created_at,
+                    expected_system_data.last_modified_at,
+                );
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+}
+
+#[tokio::test]
+async fn list_by_scope_tenant_pages() {
+    let client = common::create_client();
+    let mut pager = client
+        .get_resources_extensions_resources_client()
+        .list_by_scope(TENANT, None)
+        .unwrap()
+        .into_pages();
     let mut page_count = 0;
     while let Some(page) = pager.next().await {
         page_count += 1;
@@ -289,10 +339,60 @@ async fn list_by_scope_tenant() {
 #[tokio::test]
 async fn list_by_scope_subscription() {
     let client = common::create_client();
-    let mut pager = client
+    let mut iter = client
         .get_resources_extensions_resources_client()
         .list_by_scope(SUBSCRIPTION, None)
         .unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                let expected_resource = get_extension_resource(SUBSCRIPTION);
+
+                assert_eq!(expected_resource.id, item.id);
+                assert_eq!(expected_resource.name, item.name);
+                assert_eq!(expected_resource.type_prop, item.type_prop);
+
+                let expected_props = expected_resource.properties.unwrap();
+                let resource_props = item.properties.unwrap();
+                assert_eq!(
+                    expected_props.provisioning_state,
+                    resource_props.provisioning_state
+                );
+                assert_eq!(expected_props.description, resource_props.description);
+
+                let expected_system_data = expected_resource.system_data.unwrap();
+                let resource_system_data = item.system_data.unwrap();
+                assert_eq!(
+                    expected_system_data.created_by,
+                    resource_system_data.created_by
+                );
+                assert_eq!(
+                    expected_system_data.created_by_type,
+                    resource_system_data.created_by_type
+                );
+
+                // Validate timestamps
+                validate_timestamps(
+                    expected_system_data.created_at,
+                    expected_system_data.last_modified_at,
+                );
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+}
+
+#[tokio::test]
+async fn list_by_scope_subscription_pages() {
+    let client = common::create_client();
+    let mut pager = client
+        .get_resources_extensions_resources_client()
+        .list_by_scope(SUBSCRIPTION, None)
+        .unwrap()
+        .into_pages();
     let mut page_count = 0;
     while let Some(page) = pager.next().await {
         page_count += 1;
@@ -341,10 +441,60 @@ async fn list_by_scope_subscription() {
 #[tokio::test]
 async fn list_by_scope_resource_group() {
     let client = common::create_client();
-    let mut pager = client
+    let mut iter = client
         .get_resources_extensions_resources_client()
         .list_by_scope(RESOURCE_GROUP, None)
         .unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                let expected_resource = get_extension_resource(RESOURCE_GROUP);
+
+                assert_eq!(expected_resource.id, item.id);
+                assert_eq!(expected_resource.name, item.name);
+                assert_eq!(expected_resource.type_prop, item.type_prop);
+
+                let expected_props = expected_resource.properties.unwrap();
+                let resource_props = item.properties.unwrap();
+                assert_eq!(
+                    expected_props.provisioning_state,
+                    resource_props.provisioning_state
+                );
+                assert_eq!(expected_props.description, resource_props.description);
+
+                let expected_system_data = expected_resource.system_data.unwrap();
+                let resource_system_data = item.system_data.unwrap();
+                assert_eq!(
+                    expected_system_data.created_by,
+                    resource_system_data.created_by
+                );
+                assert_eq!(
+                    expected_system_data.created_by_type,
+                    resource_system_data.created_by_type
+                );
+
+                // Validate timestamps
+                validate_timestamps(
+                    expected_system_data.created_at,
+                    expected_system_data.last_modified_at,
+                );
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+}
+
+#[tokio::test]
+async fn list_by_scope_resource_group_pages() {
+    let client = common::create_client();
+    let mut pager = client
+        .get_resources_extensions_resources_client()
+        .list_by_scope(RESOURCE_GROUP, None)
+        .unwrap()
+        .into_pages();
     let mut page_count = 0;
     while let Some(page) = pager.next().await {
         page_count += 1;
@@ -393,10 +543,60 @@ async fn list_by_scope_resource_group() {
 #[tokio::test]
 async fn list_by_scope_resource() {
     let client = common::create_client();
-    let mut pager = client
+    let mut iter = client
         .get_resources_extensions_resources_client()
         .list_by_scope(RESOURCE, None)
         .unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                let expected_resource = get_extension_resource(RESOURCE);
+
+                assert_eq!(expected_resource.id, item.id);
+                assert_eq!(expected_resource.name, item.name);
+                assert_eq!(expected_resource.type_prop, item.type_prop);
+
+                let expected_props = expected_resource.properties.unwrap();
+                let resource_props = item.properties.unwrap();
+                assert_eq!(
+                    expected_props.provisioning_state,
+                    resource_props.provisioning_state
+                );
+                assert_eq!(expected_props.description, resource_props.description);
+
+                let expected_system_data = expected_resource.system_data.unwrap();
+                let resource_system_data = item.system_data.unwrap();
+                assert_eq!(
+                    expected_system_data.created_by,
+                    resource_system_data.created_by
+                );
+                assert_eq!(
+                    expected_system_data.created_by_type,
+                    resource_system_data.created_by_type
+                );
+
+                // Validate timestamps
+                validate_timestamps(
+                    expected_system_data.created_at,
+                    expected_system_data.last_modified_at,
+                );
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+}
+
+#[tokio::test]
+async fn list_by_scope_resource_pages() {
+    let client = common::create_client();
+    let mut pager = client
+        .get_resources_extensions_resources_client()
+        .list_by_scope(RESOURCE, None)
+        .unwrap()
+        .into_pages();
     let mut page_count = 0;
     while let Some(page) = pager.next().await {
         page_count += 1;

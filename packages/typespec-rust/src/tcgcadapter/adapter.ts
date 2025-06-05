@@ -117,6 +117,10 @@ export class Adapter {
       let done = false;
       for (const method of client.methods) {
         if (method.kind === 'pageable') {
+          if (method.returns.type.kind === 'pager') {
+            this.crate.addDependency(new rust.CrateDependency('async-trait')); // required for azure_core::http::Page trait
+          }
+          // TODO: why is this here?
           this.crate.addDependency(new rust.CrateDependency('futures'));
           done = true;
           break;
@@ -1283,6 +1287,7 @@ export class Adapter {
             // check if this has already been unwrapped (e.g. type is shared across operations)
             if (field.type.kind === 'option') {
               typeToUnwrap.fields[i].type = <rust.WireType>(<rust.Option>typeToUnwrap.fields[i].type).type;
+              typeToUnwrap.fields[i].flags |= rust.ModelFieldFlags.PageItems;
             }
 
             // move to the next segment
@@ -1299,7 +1304,12 @@ export class Adapter {
         throw new AdapterError('InternalError', `failed to unwrap paged items for method ${method.name}`, method.__raw?.node);
       }
 
-      rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Payload(synthesizedModel, format)));
+      // if the response contains more than the Vec<T> and next_link then use a PageIterator
+      if (synthesizedModel.fields.length > 2) {
+        rustMethod.returns = new rust.Result(this.crate, new rust.PageIterator(this.crate, new rust.Response(this.crate, new rust.Payload(synthesizedModel, format))));
+      } else {
+        rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Payload(synthesizedModel, format)));
+      }
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
       const payloadResponse = new rust.Response(this.crate, new rust.Payload(this.typeToWireType(this.getType(method.response.type)), getBodyFormat()));
       rustMethod.returns = new rust.Result(this.crate, payloadResponse);
@@ -1398,6 +1408,9 @@ export class Adapter {
     // response header traits are only ever for marker types and payloads
     let implFor: rust.MarkerType | rust.Payload;
     switch (method.returns.type.kind) {
+      case 'pageIterator':
+        implFor = method.returns.type.type.content;
+        break;
       case 'pager':
         implFor = method.returns.type.type;
         break;

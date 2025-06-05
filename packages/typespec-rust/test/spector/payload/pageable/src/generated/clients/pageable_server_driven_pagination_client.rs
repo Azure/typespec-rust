@@ -62,11 +62,11 @@ impl PageableServerDrivenPaginationClient {
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next = res.next.unwrap_or_default();
                 Ok(if next.is_empty() {
-                    PagerResult::Complete { response: rsp }
+                    PagerResult::Done { response: rsp }
                 } else {
-                    PagerResult::Continue {
+                    PagerResult::More {
                         response: rsp,
-                        continuation: next.parse()?,
+                        next: next.parse()?,
                     }
                 })
             }

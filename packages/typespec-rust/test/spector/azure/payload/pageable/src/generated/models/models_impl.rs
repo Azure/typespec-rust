@@ -5,11 +5,7 @@
 
 use super::{PagedUser, User};
 use async_trait::async_trait;
-use azure_core::{
-    http::{Page, RequestContent},
-    json::to_json,
-    Result,
-};
+use azure_core::{http::Page, Result};
 
 #[cfg_attr(not(target_arch = "wasm32"), async_trait)]
 #[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
@@ -18,12 +14,5 @@ impl Page for PagedUser {
     type IntoIter = <Vec<User> as IntoIterator>::IntoIter;
     async fn into_items(self) -> Result<Self::IntoIter> {
         Ok(self.value.into_iter())
-    }
-}
-
-impl TryFrom<User> for RequestContent<User> {
-    type Error = azure_core::Error;
-    fn try_from(value: User) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
     }
 }
