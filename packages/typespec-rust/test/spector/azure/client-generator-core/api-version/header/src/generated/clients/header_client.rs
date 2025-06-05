@@ -77,7 +77,7 @@ impl HeaderClient {
         url = url.join("azure/client-generator-core/api-version/header")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("x-ms-version", &self.version);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }
 

@@ -80,7 +80,7 @@ impl ParamAliasClient {
         path = path.replace("{blob}", &self.blob_name);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -98,6 +98,6 @@ impl ParamAliasClient {
         path = path.replace("{blobName}", &self.blob_name);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

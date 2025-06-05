@@ -48,7 +48,7 @@ impl UsageModelInOperationClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// "ResultModel" should be usage=output, as it is read-only and does not exist in request body.
@@ -84,7 +84,7 @@ impl UsageModelInOperationClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Serialize the 'OrphanModel' as request body.
@@ -112,7 +112,7 @@ impl UsageModelInOperationClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Expected response body:
@@ -135,6 +135,6 @@ impl UsageModelInOperationClient {
         url = url.join("azure/client-generator-core/usage/outputToInputOutput")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

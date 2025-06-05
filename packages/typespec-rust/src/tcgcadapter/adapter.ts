@@ -1242,7 +1242,6 @@ export class Adapter {
       }
     }
 
-    let returnType: rust.Type;
     if (method.kind === 'paging') {
       // for paged methods, tcgc models method.response.type as an Array<T>.
       // however, we want the synthesized paged response envelope type instead.
@@ -1300,24 +1299,24 @@ export class Adapter {
         throw new AdapterError('InternalError', `failed to unwrap paged items for method ${method.name}`, method.__raw?.node);
       }
 
-      returnType = new rust.Pager(this.crate, new rust.Payload(synthesizedModel, format));
+      rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Payload(synthesizedModel, format)));
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
-      returnType = new rust.Response(this.crate, new rust.Payload(this.typeToWireType(this.getType(method.response.type)), getBodyFormat()));
+      const payloadResponse = new rust.Response(this.crate, new rust.Payload(this.typeToWireType(this.getType(method.response.type)), getBodyFormat()));
+      rustMethod.returns = new rust.Result(this.crate, payloadResponse);
     } else if (responseHeaders.length > 0) {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
       const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name)}Result`);
       markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
-      returnType = new rust.Response(this.crate, markerType);
       this.crate.models.push(markerType);
+      rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, markerType));
     } else if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
       // bytes encoding indicates a streaming binary response
-      returnType = new rust.Response(this.crate, new rust.ResponseBody());
+      rustMethod.returns = new rust.Result(this.crate, new rust.RawResponse(this.crate));
     } else {
-      returnType = new rust.Response(this.crate, this.getUnitType());
+      rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, this.getUnitType()));
     }
 
-    rustMethod.returns = new rust.Result(this.crate, returnType);
     const responseHeadersMap = this.adaptResposeHeaders(responseHeaders);
     rustMethod.responseHeaders = this.adaptResponseHeadersTrait(rustClient, rustMethod, Array.from(responseHeadersMap.values()));
 
@@ -1409,7 +1408,7 @@ export class Adapter {
         implFor = method.returns.type.content;
         break;
       default:
-        // this is Unit which should have been previously skipped
+        // this is RawResponse which should have been previously skipped
         throw new AdapterError('InternalError', `unexpected method return kind ${method.returns.type.kind}`);
     }
 

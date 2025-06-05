@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 
 /// Template type for testing models with nullable property. Pass in the type of the property you are looking for
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct BytesProperty {
     /// Property
     #[serde(
@@ -27,7 +27,7 @@ pub struct BytesProperty {
 }
 
 /// Model with collection bytes properties
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct CollectionsByteProperty {
     /// Property
     #[serde(
@@ -44,7 +44,7 @@ pub struct CollectionsByteProperty {
 }
 
 /// Model with collection models properties
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct CollectionsModelProperty {
     /// Property
     #[serde(rename = "nullableProperty", skip_serializing_if = "Option::is_none")]
@@ -56,7 +56,7 @@ pub struct CollectionsModelProperty {
 }
 
 /// Model with collection string properties
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct CollectionsStringProperty {
     /// Property
     #[serde(rename = "nullableProperty", skip_serializing_if = "Option::is_none")]
@@ -68,7 +68,7 @@ pub struct CollectionsStringProperty {
 }
 
 /// Model with a datetime property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct DatetimeProperty {
     /// Property
     #[serde(
@@ -85,7 +85,7 @@ pub struct DatetimeProperty {
 }
 
 /// Model with a duration property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct DurationProperty {
     /// Property
     #[serde(rename = "nullableProperty", skip_serializing_if = "Option::is_none")]
@@ -97,7 +97,7 @@ pub struct DurationProperty {
 }
 
 /// Inner model used in collections model property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct InnerModel {
     /// Inner model property
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -105,7 +105,7 @@ pub struct InnerModel {
 }
 
 /// Template type for testing models with nullable property. Pass in the type of the property you are looking for
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct StringProperty {
     /// Property
     #[serde(rename = "nullableProperty", skip_serializing_if = "Option::is_none")]

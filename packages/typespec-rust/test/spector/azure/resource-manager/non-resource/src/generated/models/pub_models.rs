@@ -7,7 +7,7 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
 /// Though this model has `id`, `name`, `type` properties, it is not a resource as it doesn't extends `Resource`.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct NonResource {
     /// An id.
     #[serde(skip_serializing_if = "Option::is_none")]

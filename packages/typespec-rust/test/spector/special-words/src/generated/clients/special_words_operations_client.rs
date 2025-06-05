@@ -52,7 +52,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/and")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -68,7 +68,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/as")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -84,7 +84,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/assert")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -100,7 +100,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/async")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -116,7 +116,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/await")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -132,7 +132,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/break")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -148,7 +148,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/class")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -164,7 +164,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/constructor")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -180,7 +180,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/continue")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -196,7 +196,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/def")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -212,7 +212,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/del")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -228,7 +228,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/elif")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -244,7 +244,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/else")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -260,7 +260,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/except")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -276,7 +276,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/exec")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -292,7 +292,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/finally")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -308,7 +308,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/for")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -324,7 +324,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/from")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -340,7 +340,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/global")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -356,7 +356,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/if")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -372,7 +372,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/import")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -388,7 +388,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/in")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -404,7 +404,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/is")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -420,7 +420,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/lambda")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -436,7 +436,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/not")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -452,7 +452,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/or")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -468,7 +468,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/pass")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -484,7 +484,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/raise")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -500,7 +500,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/return")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -516,7 +516,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/try")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -532,7 +532,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/while")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -548,7 +548,7 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/with")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -564,6 +564,6 @@ impl SpecialWordsOperationsClient {
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/yield")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

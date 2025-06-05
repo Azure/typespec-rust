@@ -91,7 +91,7 @@ impl RenamedOperationClient {
         let mut url = self.endpoint.clone();
         url = url.join("five")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -107,7 +107,7 @@ impl RenamedOperationClient {
         let mut url = self.endpoint.clone();
         url = url.join("one")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -123,6 +123,6 @@ impl RenamedOperationClient {
         let mut url = self.endpoint.clone();
         url = url.join("three")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

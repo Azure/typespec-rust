@@ -87,7 +87,7 @@ impl OAuth2Client {
         url = url.join("authentication/oauth2/invalid")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Check whether client is authenticated
@@ -104,6 +104,6 @@ impl OAuth2Client {
         let mut url = self.endpoint.clone();
         url = url.join("authentication/oauth2/valid")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

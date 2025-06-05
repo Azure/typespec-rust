@@ -10,7 +10,7 @@ use std::collections::HashMap;
 use time::OffsetDateTime;
 
 /// Concrete tracked resource types can be created by aliasing this type using a specific property type.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ConfidentialResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -42,7 +42,7 @@ pub struct ConfidentialResource {
 }
 
 /// Confidential Resource Properties.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ConfidentialResourceProperties {
     /// The status of the last operation.
     #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
@@ -53,7 +53,7 @@ pub struct ConfidentialResourceProperties {
 }
 
 /// Concrete tracked resource types can be created by aliasing this type using a specific property type.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ManagedIdentityTrackedResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -89,7 +89,7 @@ pub struct ManagedIdentityTrackedResource {
 }
 
 /// Managed Identity Arm Resource Properties.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ManagedIdentityTrackedResourceProperties {
     /// The status of the last operation.
     #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
@@ -97,7 +97,7 @@ pub struct ManagedIdentityTrackedResourceProperties {
 }
 
 /// Managed service identity (system assigned and/or user assigned identities)
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ManagedServiceIdentity {
     /// The service principal ID of the system assigned identity. This property will only be provided for a system assigned identity.
     #[serde(rename = "principalId", skip_serializing_if = "Option::is_none")]
@@ -120,7 +120,7 @@ pub struct ManagedServiceIdentity {
 }
 
 /// Metadata pertaining to creation and last modification of the resource.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct SystemData {
     /// The timestamp of resource creation (UTC).
@@ -159,7 +159,7 @@ pub struct SystemData {
 }
 
 /// User assigned identity properties
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct UserAssignedIdentity {
     /// The client ID of the assigned identity.
     #[serde(rename = "clientId", skip_serializing_if = "Option::is_none")]

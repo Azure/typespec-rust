@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// Dictionary inner model
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct InnerModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub children: Option<HashMap<String, InnerModel>>,

@@ -89,7 +89,7 @@ impl ResiliencyServiceDrivenClient {
         let mut url = self.endpoint.clone();
         url = url.join("add-optional-param/from-none")?;
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Test that currently accepts one optional parameter, will be updated in next spec to accept a new optional parameter as
@@ -110,7 +110,7 @@ impl ResiliencyServiceDrivenClient {
             url.query_pairs_mut().append_pair("parameter", &parameter);
         }
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Test that currently accepts one required parameter, will be updated in next spec to accept a new optional parameter as
@@ -131,7 +131,7 @@ impl ResiliencyServiceDrivenClient {
         url = url.join("add-optional-param/from-one-required")?;
         url.query_pairs_mut().append_pair("parameter", parameter);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }
 

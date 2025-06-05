@@ -42,7 +42,7 @@ impl DatetimeQueryClient {
         url.query_pairs_mut()
             .append_pair("value", &date::to_rfc3339(&value));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -61,7 +61,7 @@ impl DatetimeQueryClient {
         url.query_pairs_mut()
             .append_pair("value", &date::to_rfc3339(&value));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -80,7 +80,7 @@ impl DatetimeQueryClient {
         url.query_pairs_mut()
             .append_pair("value", &date::to_rfc7231(&value));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -99,7 +99,7 @@ impl DatetimeQueryClient {
         url.query_pairs_mut()
             .append_pair("value", &value.unix_timestamp().to_string());
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -124,6 +124,6 @@ impl DatetimeQueryClient {
                 .join(","),
         );
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

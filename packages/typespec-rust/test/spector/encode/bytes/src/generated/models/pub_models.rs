@@ -7,7 +7,7 @@ use super::models_serde;
 use azure_core::{base64, fmt::SafeDebug};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Base64BytesProperty {
     #[serde(
         default,
@@ -18,7 +18,7 @@ pub struct Base64BytesProperty {
     pub value: Option<Vec<u8>>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Base64urlArrayBytesProperty {
     #[serde(
         default,
@@ -28,7 +28,7 @@ pub struct Base64urlArrayBytesProperty {
     pub value: Option<Vec<Vec<u8>>>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Base64urlBytesProperty {
     #[serde(
         default,
@@ -39,7 +39,7 @@ pub struct Base64urlBytesProperty {
     pub value: Option<Vec<u8>>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct DefaultBytesProperty {
     #[serde(
         default,

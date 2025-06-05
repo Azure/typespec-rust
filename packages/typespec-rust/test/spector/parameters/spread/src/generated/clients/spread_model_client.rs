@@ -43,7 +43,7 @@ impl SpreadModelClient {
         request.insert_header("content-type", "application/json");
         let body: RequestContent<BodyParameter> = BodyParameter { name: Some(name) }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -67,7 +67,7 @@ impl SpreadModelClient {
         request.insert_header("content-type", "application/json");
         request.insert_header("test-header", test_header);
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -93,7 +93,7 @@ impl SpreadModelClient {
         let body: RequestContent<SpreadCompositeRequestMixRequest> =
             SpreadCompositeRequestMixRequest { prop }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -112,7 +112,7 @@ impl SpreadModelClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -134,6 +134,6 @@ impl SpreadModelClient {
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("test-header", test_header);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

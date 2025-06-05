@@ -40,7 +40,7 @@ impl BytesRequestBodyClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(value);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -59,7 +59,7 @@ impl BytesRequestBodyClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(value);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -78,7 +78,7 @@ impl BytesRequestBodyClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "image/png");
         request.set_body(value);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -97,7 +97,7 @@ impl BytesRequestBodyClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/octet-stream");
         request.set_body(value);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -116,6 +116,6 @@ impl BytesRequestBodyClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/octet-stream");
         request.set_body(value);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

@@ -92,7 +92,7 @@ impl BodyOptionalityClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -112,6 +112,6 @@ impl BodyOptionalityClient {
         request.insert_header("content-type", "application/json");
         let body: RequestContent<BodyModel> = BodyModel { name: Some(name) }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

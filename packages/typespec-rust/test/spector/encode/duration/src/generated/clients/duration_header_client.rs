@@ -39,7 +39,7 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -57,7 +57,7 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/float64-seconds")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -75,7 +75,7 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/float-seconds")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -93,7 +93,7 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/int32-seconds")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -111,7 +111,7 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/iso8601")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -129,6 +129,6 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/iso8601-array")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.join(","));
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

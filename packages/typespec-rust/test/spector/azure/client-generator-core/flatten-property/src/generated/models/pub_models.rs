@@ -7,7 +7,7 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
 /// This is the child model to be flattened. And it has flattened property as well.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ChildFlattenModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub properties: Option<ChildModel>,
@@ -17,7 +17,7 @@ pub struct ChildFlattenModel {
 }
 
 /// This is the child model to be flattened.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ChildModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub age: Option<i32>,
@@ -27,7 +27,7 @@ pub struct ChildModel {
 }
 
 /// This is the model with one level of flattening.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct FlattenModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -37,7 +37,7 @@ pub struct FlattenModel {
 }
 
 /// This is the model with two levels of flattening.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct NestedFlattenModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,

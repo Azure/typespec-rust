@@ -7,7 +7,7 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
 /// This is a simple model.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct User {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,

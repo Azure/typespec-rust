@@ -15,7 +15,8 @@ use crate::generated::{
 use azure_core::{
     fmt::SafeDebug,
     http::{
-        ClientOptions, Method, Pager, PagerResult, Pipeline, Request, RequestContent, Response, Url,
+        ClientOptions, Method, Pager, PagerResult, Pipeline, RawResponse, Request, RequestContent,
+        Response, Url,
     },
     json, Result,
 };
@@ -111,11 +112,11 @@ impl PageClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: Response<ParameterizedNextLinkPagingResult> =
-                    pipeline.send(&ctx, &mut request).await?;
+                    pipeline.send(&ctx, &mut request).await?.into();
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: ParameterizedNextLinkPagingResult = json::from_json(&bytes)?;
-                let rsp = Response::from_bytes(status, headers, bytes);
+                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_link = res.next_link.unwrap_or_default();
                 Ok(if next_link.is_empty() {
                     PagerResult::Complete { response: rsp }
@@ -167,11 +168,12 @@ impl PageClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<UserListResults> = pipeline.send(&ctx, &mut request).await?;
+                let rsp: Response<UserListResults> =
+                    pipeline.send(&ctx, &mut request).await?.into();
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: UserListResults = json::from_json(&bytes)?;
-                let rsp = Response::from_bytes(status, headers, bytes);
+                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_link = res.next_link.unwrap_or_default();
                 Ok(if next_link.is_empty() {
                     PagerResult::Complete { response: rsp }
@@ -223,11 +225,11 @@ impl PageClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<PagedUser> = pipeline.send(&ctx, &mut request).await?;
+                let rsp: Response<PagedUser> = pipeline.send(&ctx, &mut request).await?.into();
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;
-                let rsp = Response::from_bytes(status, headers, bytes);
+                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_link = res.next_link.unwrap_or_default();
                 Ok(if next_link.is_empty() {
                     PagerResult::Complete { response: rsp }
@@ -288,11 +290,11 @@ impl PageClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<PagedUser> = pipeline.send(&ctx, &mut request).await?;
+                let rsp: Response<PagedUser> = pipeline.send(&ctx, &mut request).await?.into();
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;
-                let rsp = Response::from_bytes(status, headers, bytes);
+                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_link = res.next_link.unwrap_or_default();
                 Ok(if next_link.is_empty() {
                     PagerResult::Complete { response: rsp }

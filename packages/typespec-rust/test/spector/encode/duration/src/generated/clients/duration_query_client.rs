@@ -39,7 +39,7 @@ impl DurationQueryClient {
         url = url.join("encode/duration/query/default")?;
         url.query_pairs_mut().append_pair("input", input);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -58,7 +58,7 @@ impl DurationQueryClient {
         url.query_pairs_mut()
             .append_pair("input", &input.to_string());
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -77,7 +77,7 @@ impl DurationQueryClient {
         url.query_pairs_mut()
             .append_pair("input", &input.to_string());
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -96,7 +96,7 @@ impl DurationQueryClient {
         url.query_pairs_mut()
             .append_pair("input", &input.to_string());
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -121,7 +121,7 @@ impl DurationQueryClient {
                 .join(","),
         );
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -139,6 +139,6 @@ impl DurationQueryClient {
         url = url.join("encode/duration/query/iso8601")?;
         url.query_pairs_mut().append_pair("input", input);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

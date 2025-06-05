@@ -48,7 +48,7 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadAsRequestBodyRequest> =
             SpreadAsRequestBodyRequest { name }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -74,7 +74,7 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadAsRequestParameterRequest> =
             SpreadAsRequestParameterRequest { name }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// spread an alias with contains another alias property as body.
@@ -104,7 +104,7 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadParameterWithInnerAliasRequest> =
             SpreadParameterWithInnerAliasRequest { name, age }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -130,7 +130,7 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadParameterWithInnerModelRequest> =
             SpreadParameterWithInnerModelRequest { name }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -165,6 +165,6 @@ impl SpreadAliasClient {
             }
             .try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

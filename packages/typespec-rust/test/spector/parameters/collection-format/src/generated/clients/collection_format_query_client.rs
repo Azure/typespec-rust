@@ -40,7 +40,7 @@ impl CollectionFormatQueryClient {
         url.query_pairs_mut()
             .append_pair("colors", &colors.join(","));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -61,7 +61,7 @@ impl CollectionFormatQueryClient {
             url.query_pairs_mut().append_pair("colors", c);
         }
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -81,7 +81,7 @@ impl CollectionFormatQueryClient {
         url.query_pairs_mut()
             .append_pair("colors", &colors.join("|"));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -101,6 +101,6 @@ impl CollectionFormatQueryClient {
         url.query_pairs_mut()
             .append_pair("colors", &colors.join(" "));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

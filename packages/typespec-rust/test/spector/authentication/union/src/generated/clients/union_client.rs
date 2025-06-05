@@ -86,7 +86,7 @@ impl UnionClient {
         let mut url = self.endpoint.clone();
         url = url.join("authentication/union/validkey")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Check whether client is authenticated
@@ -103,6 +103,6 @@ impl UnionClient {
         let mut url = self.endpoint.clone();
         url = url.join("authentication/union/validtoken")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

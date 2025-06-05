@@ -33,7 +33,7 @@ impl FirstGroup3Client {
         let mut url = self.endpoint.clone();
         url = url.join("three")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -49,6 +49,6 @@ impl FirstGroup3Client {
         let mut url = self.endpoint.clone();
         url = url.join("two")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

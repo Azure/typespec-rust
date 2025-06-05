@@ -39,7 +39,7 @@ impl DatetimeResponseHeaderClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/responseheader/default")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -55,7 +55,7 @@ impl DatetimeResponseHeaderClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/responseheader/rfc3339")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -71,7 +71,7 @@ impl DatetimeResponseHeaderClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/responseheader/rfc7231")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -87,6 +87,6 @@ impl DatetimeResponseHeaderClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/responseheader/unix-timestamp")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

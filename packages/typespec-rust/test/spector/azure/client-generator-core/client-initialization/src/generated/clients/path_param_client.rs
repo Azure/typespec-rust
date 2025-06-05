@@ -82,7 +82,7 @@ impl PathParamClient {
         path = path.replace("{blobName}", &self.blob_name);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Delete);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -103,7 +103,7 @@ impl PathParamClient {
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -126,6 +126,6 @@ impl PathParamClient {
             url.query_pairs_mut().append_pair("format", &format);
         }
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

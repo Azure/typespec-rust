@@ -81,7 +81,7 @@ impl JsonMergePatchClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Test content-type: application/merge-patch+json with optional body
@@ -103,7 +103,7 @@ impl JsonMergePatchClient {
         if let Some(body) = options.body {
             request.set_body(body);
         }
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Test content-type: application/merge-patch+json with required body
@@ -124,6 +124,6 @@ impl JsonMergePatchClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

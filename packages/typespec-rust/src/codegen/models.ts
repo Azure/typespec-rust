@@ -89,17 +89,13 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
     const bodyFormat = context.getModelBodyFormat(model);
 
     body += helpers.formatDocComment(model.docs);
-    body += helpers.annotationDerive('Default', 'azure_core::http::Model');
+    body += helpers.annotationDerive('Default');
     if (<rust.ModelFlags>(model.flags & rust.ModelFlags.Output) === rust.ModelFlags.Output && (model.flags & rust.ModelFlags.Input) === 0) {
       // output-only models get the non_exhaustive annotation
       body += helpers.AnnotationNonExhaustive;
     }
     if (model.xmlName) {
       body += `#[serde(rename = "${model.xmlName}")]\n`;
-    }
-    if (bodyFormat === 'xml') {
-      // json is the default if not specified so no need to handle it
-      body += `#[typespec(format = "xml")]\n`;
     }
     body += `${helpers.emitVisibility(model.visibility)}struct ${model.name} {\n`;
 

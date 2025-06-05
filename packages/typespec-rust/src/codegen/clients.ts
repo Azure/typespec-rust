@@ -888,6 +888,7 @@ function urlVarNeedsMut(paramGroups: methodParamGroups, method: ClientMethod): s
  */
 function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
   use.add('azure_core::http', 'Context', 'Method', 'Request');
+
   const paramGroups = getMethodParamGroup(method);
   let body = 'let options = options.unwrap_or_default();\n';
   body += `${indent.get()}let ctx = Context::with_context(&options.method_options.context);\n`;
@@ -895,7 +896,9 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
 
   body += constructUrl(indent, use, method, paramGroups);
   body += constructRequest(indent, use, method, paramGroups, false);
-  body += `${indent.get()}self.pipeline.send(&ctx, &mut request).await\n`;
+  // the mapping for raw responses is useless so omit it
+  const into = method.returns.type.kind === 'rawResponse' ? '' : '.map(Into::into)';
+  body += `${indent.get()}self.pipeline.send(&ctx, &mut request).await${into}\n`;
   return body;
 }
 
@@ -993,15 +996,16 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
-  body += `${indent.push().get()}let rsp: Response<${returnType}> = pipeline.send(&ctx, &mut request).await?;\n`;
+  body += `${indent.push().get()}let rsp: Response<${returnType}> = pipeline.send(&ctx, &mut request).await?.into();\n`;
 
   // check if we need to extract the next link field from the response model
   if (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'modelField') {
+    use.add('azure_core', 'http::RawResponse');
     body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
     body += `${indent.get()}let bytes = body.collect().await?;\n`;
     const deserialize = method.returns.type.type.format === 'json' ? 'json::from_json' : 'xml::read_xml';
     body += `${indent.get()}let res: ${returnType} = ${deserialize}(&bytes)?;\n`;
-    body += `${indent.get()}let rsp = Response::from_bytes(status, headers, bytes);\n`;
+    body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, bytes).into();\n`;
   }
 
   let srcNextPage: string;

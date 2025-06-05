@@ -8,7 +8,7 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ActionRequest {
     #[serde(rename = "arrayProperty", skip_serializing_if = "Option::is_none")]
     pub array_property: Option<Vec<String>>,
@@ -23,7 +23,7 @@ pub struct ActionRequest {
     pub string_property: Option<String>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ActionResponse {
     #[serde(rename = "arrayProperty", skip_serializing_if = "Option::is_none")]
@@ -39,7 +39,7 @@ pub struct ActionResponse {
     pub string_property: Option<String>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Model {
     #[serde(rename = "enumProperty", skip_serializing_if = "Option::is_none")]
     pub enum_property: Option<Enum>,

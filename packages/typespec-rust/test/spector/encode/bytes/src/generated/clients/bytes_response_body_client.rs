@@ -9,7 +9,7 @@ use crate::generated::models::{
     BytesResponseBodyClientOctetStreamOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, Pipeline, RawResponse, Request, Response, Url},
     Result,
 };
 
@@ -38,7 +38,7 @@ impl BytesResponseBodyClient {
         url = url.join("encode/bytes/body/response/base64")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -55,7 +55,7 @@ impl BytesResponseBodyClient {
         url = url.join("encode/bytes/body/response/base64url")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -65,7 +65,7 @@ impl BytesResponseBodyClient {
     pub async fn custom_content_type(
         &self,
         options: Option<BytesResponseBodyClientCustomContentTypeOptions<'_>>,
-    ) -> Result<Response> {
+    ) -> Result<RawResponse> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -82,7 +82,7 @@ impl BytesResponseBodyClient {
     pub async fn default(
         &self,
         options: Option<BytesResponseBodyClientDefaultOptions<'_>>,
-    ) -> Result<Response> {
+    ) -> Result<RawResponse> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -99,7 +99,7 @@ impl BytesResponseBodyClient {
     pub async fn octet_stream(
         &self,
         options: Option<BytesResponseBodyClientOctetStreamOptions<'_>>,
-    ) -> Result<Response> {
+    ) -> Result<RawResponse> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

@@ -13,7 +13,7 @@ use crate::generated::models::{
     RequestQueryResponseHeaderResponse, RequestQueryResponseHeaderResponseHeaders,
 };
 use azure_core::{
-    http::{Method, Pager, PagerResult, Pipeline, Request, Response, Url},
+    http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Response, Url},
     json, Result,
 };
 
@@ -59,11 +59,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: Response<RequestHeaderResponseBodyResponse> =
-                    pipeline.send(&ctx, &mut request).await?;
+                    pipeline.send(&ctx, &mut request).await?.into();
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: RequestHeaderResponseBodyResponse = json::from_json(&bytes)?;
-                let rsp = Response::from_bytes(status, headers, bytes);
+                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_token = res.next_token.unwrap_or_default();
                 Ok(if next_token.is_empty() {
                     PagerResult::Complete { response: rsp }
@@ -110,7 +110,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: Response<RequestHeaderResponseHeaderResponse> =
-                    pipeline.send(&ctx, &mut request).await?;
+                    pipeline.send(&ctx, &mut request).await?.into();
                 let next_token = rsp.next_token()?.unwrap_or_default();
                 Ok(if next_token.is_empty() {
                     PagerResult::Complete { response: rsp }
@@ -166,11 +166,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: Response<RequestQueryResponseBodyResponse> =
-                    pipeline.send(&ctx, &mut request).await?;
+                    pipeline.send(&ctx, &mut request).await?.into();
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: RequestQueryResponseBodyResponse = json::from_json(&bytes)?;
-                let rsp = Response::from_bytes(status, headers, bytes);
+                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_token = res.next_token.unwrap_or_default();
                 Ok(if next_token.is_empty() {
                     PagerResult::Complete { response: rsp }
@@ -226,7 +226,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: Response<RequestQueryResponseHeaderResponse> =
-                    pipeline.send(&ctx, &mut request).await?;
+                    pipeline.send(&ctx, &mut request).await?.into();
                 let next_token = rsp.next_token()?.unwrap_or_default();
                 Ok(if next_token.is_empty() {
                     PagerResult::Complete { response: rsp }

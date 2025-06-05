@@ -36,6 +36,6 @@ impl CollectionFormatHeaderClient {
         url = url.join("parameters/collection-format/header/csv")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("colors", colors.join(","));
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }
