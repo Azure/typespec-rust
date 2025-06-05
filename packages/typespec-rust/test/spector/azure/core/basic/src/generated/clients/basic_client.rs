@@ -11,8 +11,8 @@ use crate::generated::models::{
 use azure_core::{
     fmt::SafeDebug,
     http::{
-        ClientOptions, Context, Method, Pager, PagerResult, Pipeline, Request, RequestContent,
-        Response, Url,
+        ClientOptions, Context, Method, Pager, PagerResult, Pipeline, RawResponse, Request,
+        RequestContent, Response, Url,
     },
     json, Result,
 };
@@ -95,7 +95,7 @@ impl BasicClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(resource);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Adds a user or updates a user's fields.
@@ -125,7 +125,7 @@ impl BasicClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(resource);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Deletes a user.
@@ -151,7 +151,7 @@ impl BasicClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Exports a user.
@@ -180,7 +180,7 @@ impl BasicClient {
         url.query_pairs_mut().append_pair("format", format);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Exports all users.
@@ -205,7 +205,7 @@ impl BasicClient {
         url.query_pairs_mut().append_pair("format", format);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Gets a user.
@@ -231,7 +231,7 @@ impl BasicClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Lists all users.
@@ -304,11 +304,11 @@ impl BasicClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<PagedUser> = pipeline.send(&ctx, &mut request).await?;
+                let rsp: Response<PagedUser> = pipeline.send(&ctx, &mut request).await?.into();
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;
-                let rsp = Response::from_bytes(status, headers, bytes);
+                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_link = res.next_link.unwrap_or_default();
                 Ok(if next_link.is_empty() {
                     PagerResult::Complete { response: rsp }

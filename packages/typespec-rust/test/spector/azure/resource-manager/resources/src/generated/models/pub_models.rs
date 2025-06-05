@@ -10,7 +10,7 @@ use std::collections::HashMap;
 use time::OffsetDateTime;
 
 /// Concrete extension resource types can be created by aliasing this type using a specific property type.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ExtensionsResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -34,7 +34,7 @@ pub struct ExtensionsResource {
 }
 
 /// The response of a ExtensionsResource list operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ExtensionsResourceListResult {
     /// The link to the next page of items
@@ -47,7 +47,7 @@ pub struct ExtensionsResourceListResult {
 }
 
 /// ExtensionsResource properties
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ExtensionsResourceProperties {
     /// The description of the resource.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -59,7 +59,7 @@ pub struct ExtensionsResourceProperties {
 }
 
 /// Concrete proxy resource types can be created by aliasing this type using a specific property type.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct LocationResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -83,7 +83,7 @@ pub struct LocationResource {
 }
 
 /// The response of a LocationResource list operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct LocationResourceListResult {
     /// The link to the next page of items
@@ -96,7 +96,7 @@ pub struct LocationResourceListResult {
 }
 
 /// Location resource properties
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct LocationResourceProperties {
     /// The description of the resource.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -108,7 +108,7 @@ pub struct LocationResourceProperties {
 }
 
 /// Nested child of Top Level Tracked Resource.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct NestedProxyResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -132,7 +132,7 @@ pub struct NestedProxyResource {
 }
 
 /// The response of a NestedProxyResource list operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct NestedProxyResourceListResult {
     /// The link to the next page of items
@@ -145,7 +145,7 @@ pub struct NestedProxyResourceListResult {
 }
 
 /// Nested Proxy Resource Properties.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct NestedProxyResourceProperties {
     /// Nested resource description.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -157,7 +157,7 @@ pub struct NestedProxyResourceProperties {
 }
 
 /// The details of a user notification.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct NotificationDetails {
     /// The notification message.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -169,7 +169,7 @@ pub struct NotificationDetails {
 }
 
 /// Concrete tracked resource types can be created by aliasing this type using a specific property type.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct SingletonTrackedResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -201,7 +201,7 @@ pub struct SingletonTrackedResource {
 }
 
 /// The response of a SingletonTrackedResource list operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct SingletonTrackedResourceListResult {
     /// The link to the next page of items
@@ -214,7 +214,7 @@ pub struct SingletonTrackedResourceListResult {
 }
 
 /// Singleton Arm Resource Properties.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct SingletonTrackedResourceProperties {
     /// The description of the resource.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -226,7 +226,7 @@ pub struct SingletonTrackedResourceProperties {
 }
 
 /// Metadata pertaining to creation and last modification of the resource.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct SystemData {
     /// The timestamp of resource creation (UTC).
@@ -265,7 +265,7 @@ pub struct SystemData {
 }
 
 /// Concrete tracked resource types can be created by aliasing this type using a specific property type.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct TopLevelTrackedResource {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -297,7 +297,7 @@ pub struct TopLevelTrackedResource {
 }
 
 /// The response of a TopLevelTrackedResource list operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct TopLevelTrackedResourceListResult {
     /// The link to the next page of items
@@ -310,7 +310,7 @@ pub struct TopLevelTrackedResourceListResult {
 }
 
 /// Top Level Arm Resource Properties.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct TopLevelTrackedResourceProperties {
     /// The description of the resource.
     #[serde(skip_serializing_if = "Option::is_none")]

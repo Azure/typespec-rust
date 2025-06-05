@@ -73,6 +73,6 @@ impl SingleClient {
         let mut url = self.endpoint.clone();
         url = url.join("server/path/single/myOp")?;
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

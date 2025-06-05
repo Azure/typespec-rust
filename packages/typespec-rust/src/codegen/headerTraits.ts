@@ -151,8 +151,8 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
     }
     body += '}\n\n';
 
-    use.addForType(helpers.unwrapType(trait.implFor));
-    body += `impl ${trait.name} for Response<${helpers.getTypeDeclaration(trait.implFor)}> {\n`;
+    use.addForType(trait.implFor);
+    body += `impl ${trait.name} for Response<${helpers.getTypeDeclaration(trait.implFor)}${helpers.emitXmlFormatForResponse(trait.implFor)}> {\n`;
     for (const header of trait.headers) {
       body += helpers.formatDocComment(header.docs);
       body += `${indent.get()}${getHeaderMethodName(header)} {\n`;
@@ -245,7 +245,7 @@ function getSealedImpls(traitDefs: Array<rust.ResponseHeadersTrait>): string {
   const implsFor = new Array<string>();
   for (const traitDef of traitDefs) {
     use.addForType(traitDef.implFor);
-    implsFor.push(`impl Sealed for Response<${helpers.getTypeDeclaration(traitDef.implFor)}> {}`);
+    implsFor.push(`impl Sealed for Response<${helpers.getTypeDeclaration(traitDef.implFor)}${helpers.emitXmlFormatForResponse(traitDef.implFor)}> {}`);
   }
 
   implsFor.sort();

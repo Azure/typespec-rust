@@ -78,7 +78,7 @@ impl MultipleClient {
         let ctx = Context::with_context(&options.method_options.context);
         let url = self.endpoint.clone();
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -95,7 +95,7 @@ impl MultipleClient {
         let mut url = self.endpoint.clone();
         url = url.join(keyword)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }
 

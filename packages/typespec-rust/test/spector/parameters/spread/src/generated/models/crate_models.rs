@@ -6,22 +6,22 @@
 use azure_core::{fmt::SafeDebug, http::RequestContent, json::to_json, Result};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub(crate) struct SpreadAsRequestBodyRequest {
     pub(crate) name: String,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub(crate) struct SpreadAsRequestParameterRequest {
     pub(crate) name: String,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub(crate) struct SpreadCompositeRequestMixRequest {
     pub(crate) prop: String,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub(crate) struct SpreadParameterWithInnerAliasRequest {
     /// age of the Thing
     pub(crate) age: i32,
@@ -30,12 +30,12 @@ pub(crate) struct SpreadParameterWithInnerAliasRequest {
     pub(crate) name: String,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub(crate) struct SpreadParameterWithInnerModelRequest {
     pub(crate) name: String,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub(crate) struct SpreadWithMultipleParametersRequest {
     /// optional int
     #[serde(rename = "optionalInt", skip_serializing_if = "Option::is_none")]

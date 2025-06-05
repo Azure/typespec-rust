@@ -38,7 +38,7 @@ pub struct AzureAppConfigurationClientCheckSnapshotResult;
 pub struct AzureAppConfigurationClientCheckSnapshotsResult;
 
 /// The error object.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct Error {
     /// One of a server-defined set of error codes.
@@ -63,7 +63,7 @@ pub struct Error {
 }
 
 /// An object containing more specific information about the error. As per Microsoft One API guidelines - <https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md#handling-errors>.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct InnerError {
     /// One of a server-defined set of error codes.
@@ -76,7 +76,7 @@ pub struct InnerError {
 }
 
 /// Keys serve as identifiers for key-values and are used to store and retrieve corresponding values.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct Key {
     /// The name of the key.
@@ -85,7 +85,7 @@ pub struct Key {
 }
 
 /// The result of a list request.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct KeyListResult {
     /// The URI that can be used to request the next set of paged results.
@@ -98,7 +98,7 @@ pub struct KeyListResult {
 }
 
 /// A key-value pair representing application settings.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct KeyValue {
     /// The content type of the value stored within the key-value.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -139,7 +139,7 @@ pub struct KeyValue {
 
 /// Enables filtering of key-values. Syntax reference:
 /// <https://aka.ms/azconfig/docs/restapisnapshots>
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct KeyValueFilter {
     /// Filters key-values by their key field.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -155,7 +155,7 @@ pub struct KeyValueFilter {
 }
 
 /// The result of a list request.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct KeyValueListResult {
     /// The URI that can be used to request the next set of paged results.
@@ -172,7 +172,7 @@ pub struct KeyValueListResult {
 }
 
 /// Labels are used to group key-values.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct Label {
     /// The name of the label.
@@ -181,7 +181,7 @@ pub struct Label {
 }
 
 /// The result of a list request.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct LabelListResult {
     /// The URI that can be used to request the next set of paged results.
@@ -194,7 +194,7 @@ pub struct LabelListResult {
 }
 
 /// Details of a long running operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct OperationDetails {
     /// An error, available when the status is `Failed`, describing why the operation
@@ -212,7 +212,7 @@ pub struct OperationDetails {
 }
 
 /// A snapshot is a named, immutable subset of an App Configuration store's key-values.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Snapshot {
     /// The composition type describes how the key-values within the snapshot are
     /// composed. The 'key' composition type ensures there are no two key-values
@@ -274,7 +274,7 @@ pub struct Snapshot {
 }
 
 /// The result of a snapshot list request.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct SnapshotListResult {
     /// The URI that can be used to request the next set of paged results.
@@ -287,7 +287,7 @@ pub struct SnapshotListResult {
 }
 
 /// Parameters used to update a snapshot.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct SnapshotUpdateParameters {
     /// The desired status of the snapshot.
     #[serde(skip_serializing_if = "Option::is_none")]

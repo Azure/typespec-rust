@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// It is the model used by Resource model
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct InnerModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
@@ -18,7 +18,7 @@ pub struct InnerModel {
 }
 
 /// Details about a resource.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Resource {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub array: Option<Vec<InnerModel>>,
@@ -46,7 +46,7 @@ pub struct Resource {
 }
 
 /// Details about a resource for patch operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ResourcePatch {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub array: Option<Vec<InnerModel>>,

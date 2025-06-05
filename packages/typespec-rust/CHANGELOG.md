@@ -1,6 +1,13 @@
 # Release History
 
-## 0.14.3 (unreleased)
+## 0.15.0 (unreleased)
+
+### Breaking Changes
+
+**NOTE: this version is incompatible with earlier versions of `azure_core`**
+
+* Updated method bodies to use the new `azure_core::http::Format` in the pipeline.
+* Methods that return a streaming response now return a `Result<RawResponse>` type.
 
 ### Bugs Fixed
 

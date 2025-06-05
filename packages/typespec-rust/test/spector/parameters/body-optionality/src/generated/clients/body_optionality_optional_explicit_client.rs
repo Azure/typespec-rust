@@ -40,7 +40,7 @@ impl BodyOptionalityOptionalExplicitClient {
             request.insert_header("content-type", "application/json");
             request.set_body(body);
         }
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -60,6 +60,6 @@ impl BodyOptionalityOptionalExplicitClient {
             request.insert_header("content-type", "application/json");
             request.set_body(body);
         }
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

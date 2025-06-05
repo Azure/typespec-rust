@@ -6,7 +6,7 @@
 use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct JsonEncodedNameModel {
     /// Pass in true
     #[serde(rename = "wireName", skip_serializing_if = "Option::is_none")]

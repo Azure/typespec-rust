@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use azure_core::{
-    credentials::{AccessToken, TokenCredential},
+    credentials::{AccessToken, TokenCredential, TokenRequestOptions},
     date::OffsetDateTime,
     Result,
 };
@@ -23,7 +23,11 @@ impl FakeTokenCredential {
 
 #[async_trait::async_trait]
 impl TokenCredential for FakeTokenCredential {
-    async fn get_token(&self, _scopes: &[&str]) -> Result<AccessToken> {
+    async fn get_token(
+        &self,
+        _scopes: &[&str],
+        _options: Option<TokenRequestOptions>,
+    ) -> Result<AccessToken> {
         Ok(AccessToken::new(
             self.token.clone(),
             OffsetDateTime::now_utc(),

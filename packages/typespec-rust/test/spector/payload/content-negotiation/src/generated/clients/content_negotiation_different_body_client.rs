@@ -8,7 +8,7 @@ use crate::generated::models::{
     ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions, PngImageAsJson,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, Pipeline, RawResponse, Request, Response, Url},
     Result,
 };
 
@@ -37,7 +37,7 @@ impl ContentNegotiationDifferentBodyClient {
         url = url.join("content-negotiation/different-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -47,13 +47,13 @@ impl ContentNegotiationDifferentBodyClient {
     pub async fn get_avatar_as_png(
         &self,
         options: Option<ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions<'_>>,
-    ) -> Result<Response> {
+    ) -> Result<RawResponse> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("content-negotiation/different-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

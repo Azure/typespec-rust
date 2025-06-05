@@ -24,7 +24,7 @@ pub struct DatetimeResponseHeaderClientRfc7231Result;
 #[derive(SafeDebug)]
 pub struct DatetimeResponseHeaderClientUnixTimestampResult;
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct DefaultDatetimeProperty {
     #[serde(
         default,
@@ -34,7 +34,7 @@ pub struct DefaultDatetimeProperty {
     pub value: Option<OffsetDateTime>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Rfc3339DatetimeProperty {
     #[serde(
         default,
@@ -44,7 +44,7 @@ pub struct Rfc3339DatetimeProperty {
     pub value: Option<OffsetDateTime>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Rfc7231DatetimeProperty {
     #[serde(
         default,
@@ -54,7 +54,7 @@ pub struct Rfc7231DatetimeProperty {
     pub value: Option<OffsetDateTime>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct UnixTimestampArrayDatetimeProperty {
     #[serde(
         default,
@@ -64,7 +64,7 @@ pub struct UnixTimestampArrayDatetimeProperty {
     pub value: Option<Vec<OffsetDateTime>>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct UnixTimestampDatetimeProperty {
     #[serde(
         default,

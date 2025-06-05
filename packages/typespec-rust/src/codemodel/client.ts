@@ -113,6 +113,9 @@ export interface AsyncMethod extends HTTPMethodBase {
 
   /** the params passed to the method (excluding self). can be empty */
   params: Array<MethodParameter>;
+
+  /** the type returned by the method */
+  returns: types.Result<types.RawResponse | types.Response>;
 }
 
 /** ClientAccessor is a method that returns a sub-client instance. */

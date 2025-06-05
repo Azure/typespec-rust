@@ -165,6 +165,8 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return `Pager<${getTypeDeclaration(type.type.type, withAnonymousLifetime)}>`;
     case 'payload':
       return getTypeDeclaration(type.type, withAnonymousLifetime);
+    case 'rawResponse':
+      return type.name;
     case 'ref':
       return `&${getTypeDeclaration(type.type)}`;
     case 'requestContent':
@@ -182,10 +184,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
         case 'marker':
           return `${type.name}<${type.content.name}>`;
         case 'payload':
-          return `${type.name}<${getTypeDeclaration(type.content.type, withAnonymousLifetime)}>`;
-        case 'responseBody':
-          // for Response<T>, T defaults to ResponseBody so we can elide it
-          return type.name;
+          return `${type.name}<${getTypeDeclaration(type.content.type, withAnonymousLifetime)}${emitXmlFormatForResponse(type.content)}>`;
         case 'unit':
           return `${type.name}<${getTypeDeclaration(type.content)}>`;
       }
@@ -220,6 +219,21 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'Vec':
       return `${type.kind}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
   }
+}
+
+/**
+ * conditionally returns ", XmlFormat" to be used in Response<T> definitions
+ * when the payload's content type is XML.
+ * if the content type isn't XML, the empty string is returned.
+ * 
+ * @param respType the response type for which to emit the format
+ * @returns the XML format string or the empty string
+ */
+export function emitXmlFormatForResponse(respType: rust.ResponseTypes): string {
+  if (respType.kind === 'payload' && respType.format === 'xml') {
+    return ', XmlFormat';
+  }
+  return '';
 }
 
 // four spaces per indent level

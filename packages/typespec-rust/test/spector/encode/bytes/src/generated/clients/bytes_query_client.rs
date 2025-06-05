@@ -40,7 +40,7 @@ impl BytesQueryClient {
         url.query_pairs_mut()
             .append_pair("value", &base64::encode(value));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -59,7 +59,7 @@ impl BytesQueryClient {
         url.query_pairs_mut()
             .append_pair("value", &base64::encode_url_safe(value));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -84,7 +84,7 @@ impl BytesQueryClient {
                 .join(","),
         );
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -103,6 +103,6 @@ impl BytesQueryClient {
         url.query_pairs_mut()
             .append_pair("value", &base64::encode(value));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

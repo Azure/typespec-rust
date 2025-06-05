@@ -8,7 +8,7 @@ use crate::generated::models::{
     XmlModelWithRenamedArraysValueClientPutOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url, XmlFormat},
     Result,
 };
 
@@ -31,14 +31,14 @@ impl XmlModelWithRenamedArraysValueClient {
     pub async fn get(
         &self,
         options: Option<XmlModelWithRenamedArraysValueClientGetOptions<'_>>,
-    ) -> Result<Response<ModelWithRenamedArrays>> {
+    ) -> Result<Response<ModelWithRenamedArrays, XmlFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("payload/xml/modelWithRenamedArrays")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -57,6 +57,6 @@ impl XmlModelWithRenamedArraysValueClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.set_body(input);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

@@ -6,28 +6,28 @@
 use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ClientModel {
     /// Pass in true
     #[serde(rename = "defaultName", skip_serializing_if = "Option::is_none")]
     pub default_name: Option<bool>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ClientNameAndJsonEncodedNameModel {
     /// Pass in true
     #[serde(rename = "wireName", skip_serializing_if = "Option::is_none")]
     pub client_name: Option<bool>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ClientNameModel {
     /// Pass in true
     #[serde(rename = "defaultName", skip_serializing_if = "Option::is_none")]
     pub client_name: Option<bool>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct LanguageClientNameModel {
     /// Pass in true
     #[serde(rename = "defaultName", skip_serializing_if = "Option::is_none")]
@@ -38,7 +38,7 @@ pub struct LanguageClientNameModel {
 #[derive(SafeDebug)]
 pub struct NamingClientResponseResult;
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct RustName {
     /// Pass in true
     #[serde(rename = "defaultName", skip_serializing_if = "Option::is_none")]

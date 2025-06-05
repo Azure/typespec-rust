@@ -105,11 +105,17 @@ export class Use {
         }
         break;
       case 'option':
-      case 'payload':
       case 'ref':
       case 'result':
       case 'hashmap':
       case 'Vec':
+        this.addForType(type.type);
+        break;
+      case 'payload':
+        if (type.format === 'xml') {
+          // we implicitly add this as it's required for XML payloads
+          this.add('azure_core::http', 'XmlFormat');
+        }
         this.addForType(type.type);
         break;
       case 'requestContent':

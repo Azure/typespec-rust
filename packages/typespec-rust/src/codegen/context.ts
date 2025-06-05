@@ -115,31 +115,6 @@ export class Context {
   }
 
   /**
-   * returns the impl azure_core::Model for the specified type.
-   * if no impl is required, it returns the empty string.
-   * 
-   * @param type the type for which to implement TryFrom
-   * @param use the use statement builder currently in scope
-   * @returns the impl azure_core::Model block for type or the empty string
-   */
-  getModelImplForType(type: rust.Type, use: Use): string {
-    const format = this.tryFromResponseTypes.get(helpers.getTypeDeclaration(type));
-    if (!format) {
-      return '';
-    }
-
-    use.add('azure_core::http', 'response::ResponseBody');
-
-    const indent = new helpers.indentation();
-    let content = `impl azure_core::http::Model for ${helpers.getTypeDeclaration(type)} {\n`;
-    content += `${indent.get()}async fn from_response_body(body: ResponseBody) -> Result<Self> {\n`;
-    content += `${indent.push().get()}body.${format}().await\n`;
-    content += `${indent.pop().get()}}\n`;
-    content += '}\n\n';
-    return content;
-  }
-
-  /**
    * returns the body format for the provided model
    * 
    * @param model the model for which to determine the format

@@ -10,7 +10,7 @@ use std::collections::HashMap;
 use time::OffsetDateTime;
 
 /// The check availability request body.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct CheckNameAvailabilityRequest {
     /// The name of the resource for which availability needs to be checked.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -22,7 +22,7 @@ pub struct CheckNameAvailabilityRequest {
 }
 
 /// The check availability result.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct CheckNameAvailabilityResponse {
     /// Detailed reason why the given name is not available.
@@ -38,14 +38,14 @@ pub struct CheckNameAvailabilityResponse {
     pub reason: Option<CheckNameAvailabilityReason>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ExportRequest {
     /// Format of the exported order.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub format: Option<String>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ExportResult {
     /// Content of the exported order.
@@ -56,7 +56,7 @@ pub struct ExportResult {
 /// REST API Operation
 ///
 /// Details of a REST API operation, returned from the Resource Provider Operations API
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct Operation {
     /// Extensible enum. Indicates the action type. "Internal" refers to actions that are for internal only APIs.
@@ -84,7 +84,7 @@ pub struct Operation {
 }
 
 /// Localized display information for and operation.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct OperationDisplay {
     /// The short, localized friendly description of the operation; suitable for tool tips and detailed views.
@@ -107,7 +107,7 @@ pub struct OperationDisplay {
 
 /// A list of REST API operations supported by an Azure Resource Provider. It contains an URL link to get the next set of
 /// results.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct OperationListResult {
     /// The link to the next page of items
@@ -120,7 +120,7 @@ pub struct OperationListResult {
 }
 
 /// Concrete tracked resource types can be created by aliasing this type using a specific property type.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Order {
     /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -151,7 +151,7 @@ pub struct Order {
     pub type_prop: Option<String>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct OrderProperties {
     /// Amount of the product.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -167,7 +167,7 @@ pub struct OrderProperties {
 }
 
 /// Metadata pertaining to creation and last modification of the resource.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct SystemData {
     /// The timestamp of resource creation (UTC).

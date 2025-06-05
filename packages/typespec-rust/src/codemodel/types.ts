@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | Pager | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | Pager | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
 export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
@@ -268,6 +268,13 @@ export interface Payload<T extends WireType = WireType> {
 }
 
 /**
+ * RawResponse is used for operations that receive a streaming response.
+ */
+export interface RawResponse extends External {
+  kind: 'rawResponse';
+}
+
+/**
  * RefBase is the base type for Ref and is used to avoid
  * a circular dependency in RefType. callers will instantiate
  * instances of Ref.
@@ -300,7 +307,7 @@ export interface RequestContent<T extends RequestContentTypes = RequestContentTy
 }
 
 /** ResponseTypes defines the type constraint when creating a Response<T> */
-type ResponseTypes = MarkerType | Payload | ResponseBody | Unit;
+export type ResponseTypes = MarkerType | Payload | Unit;
 
 /** Response is a Rust Response<T> from azure_core */
 export interface Response<T extends ResponseTypes = ResponseTypes> extends External {
@@ -310,16 +317,8 @@ export interface Response<T extends ResponseTypes = ResponseTypes> extends Exter
   content: T;
 }
 
-/**
- * ResponseBody is used for operations that receive a streaming response.
- * it's the default type parameter for Response<T> in azure_core.
- */
-export interface ResponseBody {
-  kind: 'responseBody';
-}
-
 /** ResultTypes defines the type constraint when creating a Result<T> */
-type ResultTypes = Pager | Response | Unit;
+type ResultTypes = Pager | RawResponse | Response;
 
 /** Result is a Rust Result<T> from azure_core */
 export interface Result<T extends ResultTypes = ResultTypes> extends External {
@@ -693,6 +692,13 @@ export class Payload<T> implements Payload<T> {
   }
 }
 
+export class RawResponse extends External implements RawResponse {
+  constructor(crate: Crate) {
+    super(crate, 'RawResponse', 'azure_core::http');
+    this.kind = 'rawResponse';
+  }
+}
+
 export class Ref<T> implements Ref<T> {
   constructor(type: T) {
     this.kind = 'ref';
@@ -713,12 +719,6 @@ export class Response<T> extends External implements Response<T> {
     super(crate, 'Response', 'azure_core::http');
     this.kind = 'response';
     this.content = content;
-  }
-}
-
-export class ResponseBody implements ResponseBody {
-  constructor() {
-    this.kind = 'responseBody';
   }
 }
 

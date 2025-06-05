@@ -6,7 +6,7 @@
 use azure_core::{fmt::SafeDebug, http::RequestContent, json::to_json, Result};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub(crate) struct SimpleRequest {
     pub(crate) name: String,
 }

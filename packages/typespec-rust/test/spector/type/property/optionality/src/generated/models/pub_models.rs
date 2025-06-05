@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 
 /// Model with boolean literal property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct BooleanLiteralProperty {
     /// Property
     ///
@@ -25,7 +25,7 @@ pub struct BooleanLiteralProperty {
 }
 
 /// Template type for testing models with optional property. Pass in the type of the property you are looking for
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct BytesProperty {
     /// Property
     #[serde(
@@ -38,7 +38,7 @@ pub struct BytesProperty {
 }
 
 /// Model with collection bytes properties
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct CollectionsByteProperty {
     /// Property
     #[serde(
@@ -50,7 +50,7 @@ pub struct CollectionsByteProperty {
 }
 
 /// Model with collection models properties
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct CollectionsModelProperty {
     /// Property
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -58,7 +58,7 @@ pub struct CollectionsModelProperty {
 }
 
 /// Model with a datetime property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct DatetimeProperty {
     /// Property
     #[serde(
@@ -70,7 +70,7 @@ pub struct DatetimeProperty {
 }
 
 /// Model with a duration property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct DurationProperty {
     /// Property
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -78,7 +78,7 @@ pub struct DurationProperty {
 }
 
 /// Model with float literal property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct FloatLiteralProperty {
     /// Property
     ///
@@ -91,7 +91,7 @@ pub struct FloatLiteralProperty {
 }
 
 /// Model with int literal property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct IntLiteralProperty {
     /// Property
     ///
@@ -104,7 +104,7 @@ pub struct IntLiteralProperty {
 }
 
 /// Model with a plainDate property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct PlainDateProperty {
     /// Property
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -112,7 +112,7 @@ pub struct PlainDateProperty {
 }
 
 /// Model with a plainTime property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct PlainTimeProperty {
     /// Property
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -120,7 +120,7 @@ pub struct PlainTimeProperty {
 }
 
 /// Model with required and optional properties
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct RequiredAndOptionalProperty {
     /// optional string property
     #[serde(rename = "optionalProperty", skip_serializing_if = "Option::is_none")]
@@ -132,7 +132,7 @@ pub struct RequiredAndOptionalProperty {
 }
 
 /// Model with string literal property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct StringLiteralProperty {
     /// Property
     ///
@@ -145,7 +145,7 @@ pub struct StringLiteralProperty {
 }
 
 /// Template type for testing models with optional property. Pass in the type of the property you are looking for
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct StringProperty {
     /// Property
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -153,7 +153,7 @@ pub struct StringProperty {
 }
 
 /// Model with union of float literal property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct UnionFloatLiteralProperty {
     /// Property
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -161,7 +161,7 @@ pub struct UnionFloatLiteralProperty {
 }
 
 /// Model with union of int literal property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct UnionIntLiteralProperty {
     /// Property
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -169,7 +169,7 @@ pub struct UnionIntLiteralProperty {
 }
 
 /// Model with union of string literal property
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct UnionStringLiteralProperty {
     /// Property
     #[serde(skip_serializing_if = "Option::is_none")]

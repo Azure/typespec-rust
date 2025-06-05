@@ -8,7 +8,7 @@ use crate::generated::models::{
     ResourcesNestedClientListByTopLevelTrackedResourceOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pager, PagerResult, Pipeline, Request, Response, Url},
+    http::{Context, Method, Pager, PagerResult, Pipeline, RawResponse, Request, Response, Url},
     json, Result,
 };
 
@@ -56,7 +56,7 @@ impl ResourcesNestedClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// List NestedProxyResource resources by TopLevelTrackedResource
@@ -109,11 +109,11 @@ impl ResourcesNestedClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: Response<NestedProxyResourceListResult> =
-                    pipeline.send(&ctx, &mut request).await?;
+                    pipeline.send(&ctx, &mut request).await?.into();
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: NestedProxyResourceListResult = json::from_json(&bytes)?;
-                let rsp = Response::from_bytes(status, headers, bytes);
+                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                 let next_link = res.next_link.unwrap_or_default();
                 Ok(if next_link.is_empty() {
                     PagerResult::Complete { response: rsp }

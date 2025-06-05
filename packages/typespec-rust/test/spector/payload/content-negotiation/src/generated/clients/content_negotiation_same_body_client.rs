@@ -8,7 +8,7 @@ use crate::generated::models::{
     ContentNegotiationSameBodyClientGetAvatarAsPngOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, Pipeline, RawResponse, Request, Url},
     Result,
 };
 
@@ -30,14 +30,14 @@ impl ContentNegotiationSameBodyClient {
     pub async fn get_avatar_as_jpeg(
         &self,
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsJpegOptions<'_>>,
-    ) -> Result<Response> {
+    ) -> Result<RawResponse> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/jpeg");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -47,13 +47,13 @@ impl ContentNegotiationSameBodyClient {
     pub async fn get_avatar_as_png(
         &self,
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsPngOptions<'_>>,
-    ) -> Result<Response> {
+    ) -> Result<RawResponse> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

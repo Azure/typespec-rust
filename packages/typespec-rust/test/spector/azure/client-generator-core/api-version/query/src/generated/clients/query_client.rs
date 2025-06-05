@@ -74,7 +74,7 @@ impl QueryClient {
         url = url.join("azure/client-generator-core/api-version/query")?;
         url.query_pairs_mut().append_pair("version", &self.version);
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }
 

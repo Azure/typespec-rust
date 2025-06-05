@@ -7,7 +7,7 @@ use azure_core::{fmt::SafeDebug, http::Etag};
 use serde::{Deserialize, Serialize};
 
 /// First item.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct FirstItem {
     /// The id of the item.
@@ -16,7 +16,7 @@ pub struct FirstItem {
 }
 
 /// The body of the input.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ListItemInputBody {
     /// The name of the input.
     #[serde(rename = "inputName", skip_serializing_if = "Option::is_none")]
@@ -24,7 +24,7 @@ pub struct ListItemInputBody {
 }
 
 /// Paged collection of FirstItem items
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct PagedFirstItem {
     /// The link to the next page of items
@@ -37,7 +37,7 @@ pub struct PagedFirstItem {
 }
 
 /// Paged collection of SecondItem items
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct PagedSecondItem {
     /// The link to the next page of items
@@ -50,7 +50,7 @@ pub struct PagedSecondItem {
 }
 
 /// Paged collection of User items
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct PagedUser {
     /// The link to the next page of items
@@ -62,7 +62,7 @@ pub struct PagedUser {
     pub value: Vec<User>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ParameterizedNextLinkPagingResult {
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
@@ -73,7 +73,7 @@ pub struct ParameterizedNextLinkPagingResult {
 }
 
 /// Second item.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct SecondItem {
     /// The name of the item.
@@ -82,7 +82,7 @@ pub struct SecondItem {
 }
 
 /// Details about a user.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct User {
     /// The entity tag for this resource.
@@ -102,7 +102,7 @@ pub struct User {
     pub orders: Option<Vec<UserOrder>>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct UserListResults {
     /// List of items.
@@ -115,7 +115,7 @@ pub struct UserListResults {
 }
 
 /// UserOrder for testing list with expand.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct UserOrder {
     /// The user's order detail

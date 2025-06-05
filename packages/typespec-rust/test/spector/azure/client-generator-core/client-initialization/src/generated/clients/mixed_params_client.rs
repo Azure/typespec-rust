@@ -85,7 +85,7 @@ impl MixedParamsClient {
         request.insert_header("content-type", "application/json");
         request.insert_header("name", &self.name);
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -107,6 +107,6 @@ impl MixedParamsClient {
         url.query_pairs_mut().append_pair("region", region);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("name", &self.name);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

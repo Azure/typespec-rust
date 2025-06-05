@@ -100,7 +100,7 @@ impl ResiliencyServiceDrivenClient {
         let mut url = self.endpoint.clone();
         url = url.join("add-operation")?;
         let mut request = Request::new(url, Method::Delete);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Test that grew up from accepting no parameters to an optional input parameter
@@ -121,7 +121,7 @@ impl ResiliencyServiceDrivenClient {
                 .append_pair("new-parameter", &new_parameter);
         }
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Tests that we can grow up an operation from accepting one optional parameter to accepting two optional parameters.
@@ -145,7 +145,7 @@ impl ResiliencyServiceDrivenClient {
             url.query_pairs_mut().append_pair("parameter", &parameter);
         }
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Operation that grew up from accepting one required parameter to accepting a required parameter and an optional parameter.
@@ -169,7 +169,7 @@ impl ResiliencyServiceDrivenClient {
         }
         url.query_pairs_mut().append_pair("parameter", parameter);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }
 

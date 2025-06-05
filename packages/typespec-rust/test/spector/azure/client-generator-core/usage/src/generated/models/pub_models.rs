@@ -7,14 +7,14 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
 /// Usage override to roundtrip.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct InputModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 /// Not used anywhere, but access is override to public so still need to be generated and exported with serialization.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct OrphanModel {
     #[serde(rename = "desc", skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
@@ -24,20 +24,20 @@ pub struct OrphanModel {
 }
 
 /// Usage override to roundtrip.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct OutputModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct ResultModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct RoundTripModel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<ResultModel>,

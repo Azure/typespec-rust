@@ -39,7 +39,7 @@ impl BytesHeaderClient {
         url = url.join("encode/bytes/header/base64")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", base64::encode(value));
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -57,7 +57,7 @@ impl BytesHeaderClient {
         url = url.join("encode/bytes/header/base64url")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", base64::encode_url_safe(value));
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -82,7 +82,7 @@ impl BytesHeaderClient {
                 .collect::<Vec<String>>()
                 .join(","),
         );
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -100,6 +100,6 @@ impl BytesHeaderClient {
         url = url.join("encode/bytes/header/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", base64::encode(value));
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

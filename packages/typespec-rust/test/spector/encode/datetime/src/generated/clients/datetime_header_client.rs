@@ -41,7 +41,7 @@ impl DatetimeHeaderClient {
         url = url.join("encode/datetime/header/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", date::to_rfc7231(&value));
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -59,7 +59,7 @@ impl DatetimeHeaderClient {
         url = url.join("encode/datetime/header/rfc3339")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", date::to_rfc3339(&value));
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -77,7 +77,7 @@ impl DatetimeHeaderClient {
         url = url.join("encode/datetime/header/rfc7231")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", date::to_rfc7231(&value));
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -95,7 +95,7 @@ impl DatetimeHeaderClient {
         url = url.join("encode/datetime/header/unix-timestamp")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", value.unix_timestamp().to_string());
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -120,6 +120,6 @@ impl DatetimeHeaderClient {
                 .collect::<Vec<String>>()
                 .join(","),
         );
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

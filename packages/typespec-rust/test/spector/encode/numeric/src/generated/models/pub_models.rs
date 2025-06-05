@@ -7,7 +7,7 @@ use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 use serde_json::Number;
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct SafeintAsStringProperty {
     #[serde(
         skip_serializing_if = "Option::is_none",
@@ -16,7 +16,7 @@ pub struct SafeintAsStringProperty {
     pub value: Option<Number>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Uint32AsStringProperty {
     #[serde(
         skip_serializing_if = "Option::is_none",
@@ -25,7 +25,7 @@ pub struct Uint32AsStringProperty {
     pub value: Option<u32>,
 }
 
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Uint8AsStringProperty {
     #[serde(
         skip_serializing_if = "Option::is_none",

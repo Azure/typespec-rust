@@ -41,7 +41,7 @@ impl OptionalRequiredAndOptionalClient {
         url = url.join("type/property/optional/requiredAndOptional/all")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Get models that will return only the required properties
@@ -59,7 +59,7 @@ impl OptionalRequiredAndOptionalClient {
         url = url.join("type/property/optional/requiredAndOptional/requiredOnly")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Put a body with all properties present.
@@ -79,7 +79,7 @@ impl OptionalRequiredAndOptionalClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Put a body with only required properties.
@@ -99,6 +99,6 @@ impl OptionalRequiredAndOptionalClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }
