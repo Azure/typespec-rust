@@ -37,7 +37,7 @@ impl ContentNegotiationSameBodyClient {
         url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/jpeg");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     ///
@@ -54,6 +54,6 @@ impl ContentNegotiationSameBodyClient {
         url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        self.pipeline.send(&ctx, &mut request).await
     }
 }

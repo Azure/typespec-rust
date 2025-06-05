@@ -72,7 +72,7 @@ impl BytesResponseBodyClient {
         url = url.join("encode/bytes/body/response/custom-content-type")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     ///
@@ -89,7 +89,7 @@ impl BytesResponseBodyClient {
         url = url.join("encode/bytes/body/response/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/octet-stream");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        self.pipeline.send(&ctx, &mut request).await
     }
 
     ///
@@ -106,6 +106,6 @@ impl BytesResponseBodyClient {
         url = url.join("encode/bytes/body/response/octet-stream")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/octet-stream");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        self.pipeline.send(&ctx, &mut request).await
     }
 }

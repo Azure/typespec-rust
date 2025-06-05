@@ -896,7 +896,9 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
 
   body += constructUrl(indent, use, method, paramGroups);
   body += constructRequest(indent, use, method, paramGroups, false);
-  body += `${indent.get()}self.pipeline.send(&ctx, &mut request).await.map(Into::into)\n`;
+  // the mapping for raw responses is useless so omit it
+  const into = method.returns.type.kind === 'rawResponse' ? '' : '.map(Into::into)';
+  body += `${indent.get()}self.pipeline.send(&ctx, &mut request).await${into}\n`;
   return body;
 }
 

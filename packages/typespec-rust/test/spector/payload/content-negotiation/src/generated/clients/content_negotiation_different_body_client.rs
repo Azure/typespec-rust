@@ -54,6 +54,6 @@ impl ContentNegotiationDifferentBodyClient {
         url = url.join("content-negotiation/different-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        self.pipeline.send(&ctx, &mut request).await
     }
 }
