@@ -17,10 +17,12 @@ pub struct MadeOptionalClient {
 }
 
 /// Options used when creating a [`MadeOptionalClient`](MadeOptionalClient)
-#[derive(Clone, Default, SafeDebug)]
+#[derive(Clone, SafeDebug)]
 pub struct MadeOptionalClientOptions {
     /// Allows customization of the client.
     pub client_options: ClientOptions,
+    /// Need to be set as 'v1' or 'v2' in client.
+    pub version: String,
 }
 
 impl MadeOptionalClient {
@@ -29,11 +31,9 @@ impl MadeOptionalClient {
     /// # Arguments
     ///
     /// * `endpoint` - Service host
-    /// * `version` - Need to be set as 'v1' or 'v2' in client.
     /// * `options` - Optional configuration for the client.
     pub fn with_no_credential(
         endpoint: &str,
-        version: &str,
         options: Option<MadeOptionalClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
@@ -46,7 +46,7 @@ impl MadeOptionalClient {
         }
         endpoint.set_query(None);
         let mut host = String::from("versioning/made-optional/api-version:{version}/");
-        host = host.replace("{version}", version);
+        host = host.replace("{version}", &options.version);
         endpoint = endpoint.join(&host)?;
         Ok(Self {
             endpoint,
@@ -86,5 +86,14 @@ impl MadeOptionalClient {
         request.insert_header("content-type", "application/json");
         request.set_body(body);
         self.pipeline.send(&ctx, &mut request).await
+    }
+}
+
+impl Default for MadeOptionalClientOptions {
+    fn default() -> Self {
+        Self {
+            client_options: ClientOptions::default(),
+            version: String::from("v2"),
+        }
     }
 }
