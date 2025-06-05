@@ -8,6 +8,9 @@
 
 * Updated method bodies to use the new `azure_core::http::Format` in the pipeline.
 * Methods that return a streaming response now return a `Result<RawResponse>` type.
+* Updated implementations of paged methods per changes in `azure_core`.
+  * Paged operations that return a collection and "next link" now return a per-item iterator of type `Pager<T>`.
+  * If a paged operation returns more than the above, it returns a `PageIterator<T>` which behaves like previous versions of `Pager<T>`.
 
 ### Bugs Fixed
 

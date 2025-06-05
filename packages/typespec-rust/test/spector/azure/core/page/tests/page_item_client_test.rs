@@ -11,10 +11,31 @@ use spector_corepage::{
 #[tokio::test]
 async fn list_first_item() {
     let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut pager = client
+    let mut iter = client
         .get_page_two_models_as_page_item_client()
         .list_first_item(None)
         .unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                assert_eq!(item.id, Some(1));
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+}
+
+#[tokio::test]
+async fn list_first_item_pages() {
+    let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut pager = client
+        .get_page_two_models_as_page_item_client()
+        .list_first_item(None)
+        .unwrap()
+        .into_pages();
     let mut page_count = 0;
     while let Some(page) = pager.next().await {
         page_count += 1;
@@ -35,10 +56,31 @@ async fn list_first_item() {
 #[tokio::test]
 async fn list_second_item() {
     let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut pager = client
+    let mut iter = client
         .get_page_two_models_as_page_item_client()
         .list_second_item(None)
         .unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                assert_eq!(item.name, Some("Madge".to_string()));
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+}
+
+#[tokio::test]
+async fn list_second_item_pages() {
+    let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut pager = client
+        .get_page_two_models_as_page_item_client()
+        .list_second_item(None)
+        .unwrap()
+        .into_pages();
     let mut page_count = 0;
     while let Some(page) = pager.next().await {
         page_count += 1;

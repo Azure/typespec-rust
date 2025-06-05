@@ -8,10 +8,45 @@ use spector_corepageable::{models::LinkResponse, PageableClient};
 #[tokio::test]
 async fn list() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut pager = client
+    let mut iter = client
         .get_pageable_server_driven_pagination_client()
         .list(None)
         .unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                assert_eq!(item.id, Some("1".to_string()));
+                assert_eq!(item.name, Some("dog".to_string()));
+            }
+            2 => {
+                assert_eq!(item.id, Some("2".to_string()));
+                assert_eq!(item.name, Some("cat".to_string()));
+            }
+            3 => {
+                assert_eq!(item.id, Some("3".to_string()));
+                assert_eq!(item.name, Some("bird".to_string()));
+            }
+            4 => {
+                assert_eq!(item.id, Some("4".to_string()));
+                assert_eq!(item.name, Some("fish".to_string()));
+            }
+            _ => panic!("unexpected page number"),
+        }
+    }
+    assert_eq!(item_count, 4);
+}
+
+#[tokio::test]
+async fn list_pages() {
+    let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut pager = client
+        .get_pageable_server_driven_pagination_client()
+        .list(None)
+        .unwrap()
+        .into_pages();
     let mut page_count = 0;
     while let Some(page) = pager.next().await {
         page_count += 1;

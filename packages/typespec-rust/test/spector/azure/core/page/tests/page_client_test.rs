@@ -49,7 +49,34 @@ async fn list_parameterized_next_link() {
 #[tokio::test]
 async fn list_with_custom_page_model() {
     let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut pager = client.list_with_custom_page_model(None).unwrap();
+    let mut iter = client.list_with_custom_page_model(None).unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                assert_eq!(
+                    item.etag,
+                    Some(azure_core::http::Etag::from(
+                        "11bdc430-65e8-45ad-81d9-8ffa60d55b59"
+                    ))
+                );
+                assert_eq!(item.id, Some(1));
+                assert_eq!(item.name, Some("Madge".to_string()));
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+}
+
+#[tokio::test]
+async fn list_with_custom_page_model_pages() {
+    let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut pager = client
+        .list_with_custom_page_model(None)
+        .unwrap()
+        .into_pages();
     let mut page_count = 0;
     while let Some(page) = pager.next().await {
         page_count += 1;
@@ -77,7 +104,31 @@ async fn list_with_custom_page_model() {
 #[tokio::test]
 async fn list_with_page() {
     let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut pager = client.list_with_page(None).unwrap();
+    let mut iter = client.list_with_page(None).unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                assert_eq!(
+                    item.etag,
+                    Some(azure_core::http::Etag::from(
+                        "11bdc430-65e8-45ad-81d9-8ffa60d55b59"
+                    ))
+                );
+                assert_eq!(item.id, Some(1));
+                assert_eq!(item.name, Some("Madge".to_string()));
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+}
+
+#[tokio::test]
+async fn list_with_page_pages() {
+    let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut pager = client.list_with_page(None).unwrap().into_pages();
     let mut page_count = 0;
     while let Some(page) = pager.next().await {
         page_count += 1;
@@ -105,7 +156,7 @@ async fn list_with_page() {
 #[tokio::test]
 async fn list_with_parameters() {
     let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut pager = client
+    let mut iter = client
         .list_with_parameters(
             ListItemInputBody {
                 input_name: Some("Madge".to_string()),
@@ -118,6 +169,43 @@ async fn list_with_parameters() {
             }),
         )
         .unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                assert_eq!(
+                    item.etag,
+                    Some(azure_core::http::Etag::from(
+                        "11bdc430-65e8-45ad-81d9-8ffa60d55b59"
+                    ))
+                );
+                assert_eq!(item.id, Some(1));
+                assert_eq!(item.name, Some("Madge".to_string()));
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+}
+
+#[tokio::test]
+async fn list_with_parameters_pages() {
+    let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut pager = client
+        .list_with_parameters(
+            ListItemInputBody {
+                input_name: Some("Madge".to_string()),
+            }
+            .try_into()
+            .unwrap(),
+            Some(PageClientListWithParametersOptions {
+                another: Some(ListItemInputExtensibleEnum::Second),
+                ..Default::default()
+            }),
+        )
+        .unwrap()
+        .into_pages();
     let mut page_count = 0;
     while let Some(page) = pager.next().await {
         page_count += 1;

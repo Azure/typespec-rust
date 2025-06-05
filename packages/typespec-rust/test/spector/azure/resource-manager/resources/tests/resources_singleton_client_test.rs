@@ -53,10 +53,60 @@ async fn get_by_resource_group() {
 #[tokio::test]
 async fn list_by_resource_group() {
     let client = common::create_client();
-    let mut pager = client
+    let mut iter = client
         .get_resources_singleton_client()
         .list_by_resource_group("test-rg", None)
         .unwrap();
+
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                let expected_resource = get_valid_singleton_resource();
+
+                assert_eq!(expected_resource.id, item.id);
+                assert_eq!(expected_resource.name, item.name);
+                assert_eq!(expected_resource.type_prop, item.type_prop);
+
+                let expected_props = expected_resource.properties.unwrap();
+                let resource_props = item.properties.unwrap();
+                assert_eq!(
+                    expected_props.provisioning_state,
+                    resource_props.provisioning_state
+                );
+                assert_eq!(expected_props.description, resource_props.description);
+
+                let expected_system_data = expected_resource.system_data.unwrap();
+                let resource_system_data = item.system_data.unwrap();
+                assert_eq!(
+                    expected_system_data.created_by,
+                    resource_system_data.created_by
+                );
+                assert_eq!(
+                    expected_system_data.created_by_type,
+                    resource_system_data.created_by_type
+                );
+
+                validate_timestamps(
+                    resource_system_data.created_at,
+                    resource_system_data.last_modified_at,
+                );
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+}
+
+#[tokio::test]
+async fn list_by_resource_group_pages() {
+    let client = common::create_client();
+    let mut pager = client
+        .get_resources_singleton_client()
+        .list_by_resource_group("test-rg", None)
+        .unwrap()
+        .into_pages();
 
     let mut page_count = 0;
     while let Some(page) = pager.next().await {

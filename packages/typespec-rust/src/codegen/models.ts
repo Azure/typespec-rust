@@ -204,7 +204,7 @@ function emitModelsSerde(): helpers.Module | undefined {
 }
 
 /**
- * returns any traits for public models.
+ * returns any trait impls for public models.
  * if no helpers are required, undefined is returned.
  * 
  * @param crate the crate for which to emit model serde helpers
@@ -213,7 +213,7 @@ function emitModelsSerde(): helpers.Module | undefined {
  */
 function emitModelImpls(crate: rust.Crate, context: Context): helpers.Module | undefined {
   const use = new Use('modelsOther');
-  let body = '';
+  const entries = new Array<string>();
 
   // emit TryFrom as required
   for (const model of crate.models) {
@@ -226,21 +226,26 @@ function emitModelImpls(crate: rust.Crate, context: Context): helpers.Module | u
 
     // helpers aren't required for all types, so only
     // add a use statement for a type if it has a helper
-    if (forReq.length > 0) {
+    if (forReq) {
       use.addForType(model);
+      entries.push(forReq);
     }
 
-    body += forReq;
+    const pageImpl = context.getPageImplForType(model, use);
+    if (pageImpl) {
+      use.addForType(model);
+      entries.push(pageImpl);
+    }
   }
 
-  if (body.length === 0) {
+  if (entries.length === 0) {
     // no helpers
     return undefined;
   }
 
   let content = helpers.contentPreamble();
   content += use.text();
-  content += body;
+  content += entries.sort().join('');
 
   return {
     name: 'models_impl',

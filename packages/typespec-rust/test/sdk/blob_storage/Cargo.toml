@@ -12,6 +12,3 @@ azure_core = { workspace = true, features = ["xml"] }
 serde = { workspace = true }
 time = { workspace = true }
 typespec_client_core = { workspace = true, features = ["derive"] }
-
-[dev-dependencies]
-tokio = { workspace = true }

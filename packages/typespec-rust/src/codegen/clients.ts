@@ -916,9 +916,20 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     throw new CodegenError('InternalError', 'paged method with no strategy NYI');
   }
 
-  use.add('azure_core::http', 'Method', 'Pager', 'PagerResult', 'Request', 'Response', 'Url');
-  use.add('azure_core', method.returns.type.type.format, 'Result');
-  use.addForType(method.returns.type.type.type);
+  let bodyFormat: rust.BodyFormat;
+  switch (method.returns.type.kind) {
+    case 'pageIterator':
+      bodyFormat = method.returns.type.type.content.format;
+      break;
+    case 'pager':
+      bodyFormat = method.returns.type.type.format;
+      break;
+  }
+
+  use.add('azure_core::http', 'Method', 'PagerResult', 'Request', 'Response', 'Url');
+  use.add('azure_core', bodyFormat, 'Result');
+  use.addForType(method.returns.type);
+  use.addForType(helpers.unwrapType(method.returns.type));
 
   const paramGroups = getMethodParamGroup(method);
   const urlVar = 'first_url';
@@ -934,7 +945,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   switch (method.strategy.kind) {
     case 'continuationToken': {
       const reqTokenParam = method.strategy.requestToken.name;
-      body += `${indent.get()}Ok(Pager::from_callback(move |${reqTokenParam}: Option<String>| {\n`;
+      body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: Option<String>| {\n`;
       body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'query' ? 'mut ': ''}url = first_url.clone();\n`;
       if (method.strategy.requestToken.kind === 'query') {
         // if the url already contains the token query param,
@@ -962,7 +973,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     }
     case 'nextLink': {
       const nextLinkName = method.strategy.nextLink.name;
-      body += `${indent.get()}Ok(Pager::from_callback(move |${nextLinkName}: Option<Url>| {\n`;
+      body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: Option<Url>| {\n`;
       body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
         pattern: `Some(${nextLinkName})`,
         body: (indent) => {
@@ -990,7 +1001,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   }
 
   // here we want the T in Pager<T>
-  const returnType = helpers.getTypeDeclaration(method.returns.type.type.type);
+  const returnType = helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type));
 
   body += constructRequest(indent, use, method, paramGroups, true);
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
@@ -1003,7 +1014,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     use.add('azure_core', 'http::RawResponse');
     body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
     body += `${indent.get()}let bytes = body.collect().await?;\n`;
-    const deserialize = method.returns.type.type.format === 'json' ? 'json::from_json' : 'xml::read_xml';
+    const deserialize = bodyFormat === 'json' ? 'json::from_json' : 'xml::read_xml';
     body += `${indent.get()}let res: ${returnType} = ${deserialize}(&bytes)?;\n`;
     body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, bytes).into();\n`;
   }
@@ -1041,9 +1052,9 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let ${nextPageValue} = ${srcNextPage}.unwrap_or_default();\n`;
   body += `${indent.get()}Ok(${helpers.buildIfBlock(indent, {
     condition: `${nextPageValue}.is_empty()`,
-    body: (indent) => `${indent.get()}PagerResult::Complete { response: rsp }\n`,
+    body: (indent) => `${indent.get()}PagerResult::Done { response: rsp }\n`,
   }, {
-    body: (indent) => `${indent.get()} PagerResult::Continue { response: rsp, continuation: ${continuation} }\n`,
+    body: (indent) => `${indent.get()} PagerResult::More { response: rsp, next: ${continuation} }\n`,
   })}`;
   body += ')\n'; // end Ok
   body += `${indent.pop().get()}}\n`; // end async move

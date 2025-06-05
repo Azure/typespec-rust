@@ -105,7 +105,7 @@ async fn get() {
 #[tokio::test]
 async fn list() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut pager = client
+    let mut iter = client
         .list(Some(BasicClientListOptions {
             expand: Some(vec!["orders".to_string()]),
             filter: Some("id lt 10".to_string()),
@@ -120,6 +120,64 @@ async fn list() {
             ..Default::default()
         }))
         .unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        let item = item.unwrap();
+        item_count += 1;
+        match item_count {
+            1 => {
+                assert_eq!(
+                    item.etag,
+                    Some(Etag::from("11bdc430-65e8-45ad-81d9-8ffa60d55b59"))
+                );
+                assert_eq!(item.id, Some(1));
+                assert_eq!(item.name, Some("Madge".to_string()));
+
+                let orders = item.orders.as_ref().unwrap();
+                assert_eq!(orders.len(), 1);
+                assert_eq!(orders[0].detail, Some("a recorder".to_string()));
+                assert_eq!(orders[0].id, Some(1));
+                assert_eq!(orders[0].user_id, Some(1));
+            }
+            2 => {
+                assert_eq!(
+                    item.etag,
+                    Some(Etag::from("11bdc430-65e8-45ad-81d9-8ffa60d55b5a"))
+                );
+                assert_eq!(item.id, Some(2));
+                assert_eq!(item.name, Some("John".to_string()));
+
+                let orders = item.orders.as_ref().unwrap();
+                assert_eq!(orders.len(), 1);
+                assert_eq!(orders[0].detail, Some("a TV".to_string()));
+                assert_eq!(orders[0].id, Some(2));
+                assert_eq!(orders[0].user_id, Some(2));
+            }
+            _ => panic!("unexpected item number"),
+        }
+    }
+    assert_eq!(item_count, 2);
+}
+
+#[tokio::test]
+async fn list_pages() {
+    let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut pager = client
+        .list(Some(BasicClientListOptions {
+            expand: Some(vec!["orders".to_string()]),
+            filter: Some("id lt 10".to_string()),
+            orderby: Some(vec!["id".to_string()]),
+            select: Some(vec![
+                "id".to_string(),
+                "orders".to_string(),
+                "etag".to_string(),
+            ]),
+            skip: Some(10),
+            top: Some(5),
+            ..Default::default()
+        }))
+        .unwrap()
+        .into_pages();
     let mut page_count = 0;
     while let Some(page) = pager.next().await {
         let page = page.unwrap();

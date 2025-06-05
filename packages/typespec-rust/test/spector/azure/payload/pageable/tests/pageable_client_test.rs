@@ -11,12 +11,47 @@ use spector_azurepageable::{
 #[tokio::test]
 async fn list() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut pager = client
+    let mut iter = client
         .list(Some(PageableClientListOptions {
             maxpagesize: Some(3),
             ..Default::default()
         }))
         .unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                assert_eq!(item.name, Some("user5".to_string()));
+            }
+            2 => {
+                assert_eq!(item.name, Some("user6".to_string()));
+            }
+            3 => {
+                assert_eq!(item.name, Some("user7".to_string()));
+            }
+            4 => {
+                assert_eq!(item.name, Some("user8".to_string()));
+            }
+            _ => {
+                panic!("unexpected item number");
+            }
+        }
+    }
+    assert_eq!(item_count, 4);
+}
+
+#[tokio::test]
+async fn list_pages() {
+    let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut pager = client
+        .list(Some(PageableClientListOptions {
+            maxpagesize: Some(3),
+            ..Default::default()
+        }))
+        .unwrap()
+        .into_pages();
     let mut page_count = 0;
     while let Some(page) = pager.next().await {
         page_count += 1;
