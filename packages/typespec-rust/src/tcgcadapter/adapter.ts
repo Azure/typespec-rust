@@ -1823,13 +1823,25 @@ function fixETagName(name: string): string {
 }
 
 /**
+ * removes any illegal characters from the provided name.
+ * note that characters _ and - are preserved so that the
+ * proper snake-casing can be performed.
+ * 
+ * @param name the name to transform
+ * @returns the transformed name or the original value
+ */
+function removeIllegalChars(name: string): string {
+  return name.replace(/[!@#$%^&*()+=]/g, '');
+}
+
+/**
  * snake-cases the provided name
  * 
  * @param name the name to snake-case
  * @returns name in snake-case format
  */
 function snakeCaseName(name: string): string {
-  return codegen.deconstruct(fixETagName(name)).join('_');
+  return codegen.deconstruct(fixETagName(removeIllegalChars(name))).join('_');
 }
 
 /**

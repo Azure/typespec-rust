@@ -699,19 +699,19 @@ impl AzureAppConfigurationClient {
         }
         let api_version = self.api_version.clone();
         Ok(PageIterator::from_callback(
-            move |_next_link: Option<Url>| {
-                let url = match _next_link {
-                    Some(_next_link) => {
-                        let qp = _next_link
+            move |next_link: Option<Url>| {
+                let url = match next_link {
+                    Some(next_link) => {
+                        let qp = next_link
                             .query_pairs()
                             .filter(|(name, _)| name.ne("api-version"));
-                        let mut _next_link = _next_link.clone();
-                        _next_link
+                        let mut next_link = next_link.clone();
+                        next_link
                             .query_pairs_mut()
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-                        _next_link
+                        next_link
                     }
                     None => first_url.clone(),
                 };
@@ -738,13 +738,13 @@ impl AzureAppConfigurationClient {
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                    let _next_link = res._next_link.unwrap_or_default();
-                    Ok(if _next_link.is_empty() {
+                    let next_link = res.next_link.unwrap_or_default();
+                    Ok(if next_link.is_empty() {
                         PagerResult::Done { response: rsp }
                     } else {
                         PagerResult::More {
                             response: rsp,
-                            next: _next_link.parse()?,
+                            next: next_link.parse()?,
                         }
                     })
                 }
@@ -778,19 +778,19 @@ impl AzureAppConfigurationClient {
             first_url.query_pairs_mut().append_pair("name", &name);
         }
         let api_version = self.api_version.clone();
-        Ok(Pager::from_callback(move |_next_link: Option<Url>| {
-            let url = match _next_link {
-                Some(_next_link) => {
-                    let qp = _next_link
+        Ok(Pager::from_callback(move |next_link: Option<Url>| {
+            let url = match next_link {
+                Some(next_link) => {
+                    let qp = next_link
                         .query_pairs()
                         .filter(|(name, _)| name.ne("api-version"));
-                    let mut _next_link = _next_link.clone();
-                    _next_link
+                    let mut next_link = next_link.clone();
+                    next_link
                         .query_pairs_mut()
                         .clear()
                         .extend_pairs(qp)
                         .append_pair("api-version", &api_version);
-                    _next_link
+                    next_link
                 }
                 None => first_url.clone(),
             };
@@ -810,13 +810,13 @@ impl AzureAppConfigurationClient {
                 let bytes = body.collect().await?;
                 let res: KeyListResult = json::from_json(&bytes)?;
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                let _next_link = res._next_link.unwrap_or_default();
-                Ok(if _next_link.is_empty() {
+                let next_link = res.next_link.unwrap_or_default();
+                Ok(if next_link.is_empty() {
                     PagerResult::Done { response: rsp }
                 } else {
                     PagerResult::More {
                         response: rsp,
-                        next: _next_link.parse()?,
+                        next: next_link.parse()?,
                     }
                 })
             }
@@ -859,19 +859,19 @@ impl AzureAppConfigurationClient {
             first_url.query_pairs_mut().append_pair("name", &name);
         }
         let api_version = self.api_version.clone();
-        Ok(Pager::from_callback(move |_next_link: Option<Url>| {
-            let url = match _next_link {
-                Some(_next_link) => {
-                    let qp = _next_link
+        Ok(Pager::from_callback(move |next_link: Option<Url>| {
+            let url = match next_link {
+                Some(next_link) => {
+                    let qp = next_link
                         .query_pairs()
                         .filter(|(name, _)| name.ne("api-version"));
-                    let mut _next_link = _next_link.clone();
-                    _next_link
+                    let mut next_link = next_link.clone();
+                    next_link
                         .query_pairs_mut()
                         .clear()
                         .extend_pairs(qp)
                         .append_pair("api-version", &api_version);
-                    _next_link
+                    next_link
                 }
                 None => first_url.clone(),
             };
@@ -895,13 +895,13 @@ impl AzureAppConfigurationClient {
                 let bytes = body.collect().await?;
                 let res: LabelListResult = json::from_json(&bytes)?;
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                let _next_link = res._next_link.unwrap_or_default();
-                Ok(if _next_link.is_empty() {
+                let next_link = res.next_link.unwrap_or_default();
+                Ok(if next_link.is_empty() {
                     PagerResult::Done { response: rsp }
                 } else {
                     PagerResult::More {
                         response: rsp,
-                        next: _next_link.parse()?,
+                        next: next_link.parse()?,
                     }
                 })
             }
@@ -953,19 +953,19 @@ impl AzureAppConfigurationClient {
         }
         let api_version = self.api_version.clone();
         Ok(PageIterator::from_callback(
-            move |_next_link: Option<Url>| {
-                let url = match _next_link {
-                    Some(_next_link) => {
-                        let qp = _next_link
+            move |next_link: Option<Url>| {
+                let url = match next_link {
+                    Some(next_link) => {
+                        let qp = next_link
                             .query_pairs()
                             .filter(|(name, _)| name.ne("api-version"));
-                        let mut _next_link = _next_link.clone();
-                        _next_link
+                        let mut next_link = next_link.clone();
+                        next_link
                             .query_pairs_mut()
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-                        _next_link
+                        next_link
                     }
                     None => first_url.clone(),
                 };
@@ -989,13 +989,13 @@ impl AzureAppConfigurationClient {
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                    let _next_link = res._next_link.unwrap_or_default();
-                    Ok(if _next_link.is_empty() {
+                    let next_link = res.next_link.unwrap_or_default();
+                    Ok(if next_link.is_empty() {
                         PagerResult::Done { response: rsp }
                     } else {
                         PagerResult::More {
                             response: rsp,
-                            next: _next_link.parse()?,
+                            next: next_link.parse()?,
                         }
                     })
                 }
@@ -1049,19 +1049,19 @@ impl AzureAppConfigurationClient {
             );
         }
         let api_version = self.api_version.clone();
-        Ok(Pager::from_callback(move |_next_link: Option<Url>| {
-            let url = match _next_link {
-                Some(_next_link) => {
-                    let qp = _next_link
+        Ok(Pager::from_callback(move |next_link: Option<Url>| {
+            let url = match next_link {
+                Some(next_link) => {
+                    let qp = next_link
                         .query_pairs()
                         .filter(|(name, _)| name.ne("api-version"));
-                    let mut _next_link = _next_link.clone();
-                    _next_link
+                    let mut next_link = next_link.clone();
+                    next_link
                         .query_pairs_mut()
                         .clear()
                         .extend_pairs(qp)
                         .append_pair("api-version", &api_version);
-                    _next_link
+                    next_link
                 }
                 None => first_url.clone(),
             };
@@ -1079,13 +1079,13 @@ impl AzureAppConfigurationClient {
                 let bytes = body.collect().await?;
                 let res: SnapshotListResult = json::from_json(&bytes)?;
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                let _next_link = res._next_link.unwrap_or_default();
-                Ok(if _next_link.is_empty() {
+                let next_link = res.next_link.unwrap_or_default();
+                Ok(if next_link.is_empty() {
                     PagerResult::Done { response: rsp }
                 } else {
                     PagerResult::More {
                         response: rsp,
-                        next: _next_link.parse()?,
+                        next: next_link.parse()?,
                     }
                 })
             }

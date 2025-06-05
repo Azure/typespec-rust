@@ -88,13 +88,13 @@ pub struct Key {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct KeyListResult {
-    /// The URI that can be used to request the next set of paged results.
-    #[serde(rename = "@nextLink", skip_serializing_if = "Option::is_none")]
-    pub _next_link: Option<String>,
-
     /// The collection value.
     #[serde(default)]
     pub items: Vec<Key>,
+
+    /// The URI that can be used to request the next set of paged results.
+    #[serde(rename = "@nextLink", skip_serializing_if = "Option::is_none")]
+    pub next_link: Option<String>,
 }
 
 /// A key-value pair representing application settings.
@@ -158,10 +158,6 @@ pub struct KeyValueFilter {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct KeyValueListResult {
-    /// The URI that can be used to request the next set of paged results.
-    #[serde(rename = "@nextLink", skip_serializing_if = "Option::is_none")]
-    pub _next_link: Option<String>,
-
     /// An identifier representing the returned state of the resource.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub etag: Option<String>,
@@ -169,6 +165,10 @@ pub struct KeyValueListResult {
     /// The collection value.
     #[serde(default)]
     pub items: Vec<KeyValue>,
+
+    /// The URI that can be used to request the next set of paged results.
+    #[serde(rename = "@nextLink", skip_serializing_if = "Option::is_none")]
+    pub next_link: Option<String>,
 }
 
 /// Labels are used to group key-values.
@@ -184,13 +184,13 @@ pub struct Label {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct LabelListResult {
-    /// The URI that can be used to request the next set of paged results.
-    #[serde(rename = "@nextLink", skip_serializing_if = "Option::is_none")]
-    pub _next_link: Option<String>,
-
     /// The collection value.
     #[serde(default)]
     pub items: Vec<Label>,
+
+    /// The URI that can be used to request the next set of paged results.
+    #[serde(rename = "@nextLink", skip_serializing_if = "Option::is_none")]
+    pub next_link: Option<String>,
 }
 
 /// Details of a long running operation.
@@ -277,13 +277,13 @@ pub struct Snapshot {
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct SnapshotListResult {
-    /// The URI that can be used to request the next set of paged results.
-    #[serde(rename = "@nextLink", skip_serializing_if = "Option::is_none")]
-    pub _next_link: Option<String>,
-
     /// The collection value.
     #[serde(default)]
     pub items: Vec<Snapshot>,
+
+    /// The URI that can be used to request the next set of paged results.
+    #[serde(rename = "@nextLink", skip_serializing_if = "Option::is_none")]
+    pub next_link: Option<String>,
 }
 
 /// Parameters used to update a snapshot.
