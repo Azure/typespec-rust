@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// This is base model for polymorphic single level inheritance with a discriminator.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Bird {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>,
@@ -19,7 +19,7 @@ pub struct Bird {
 }
 
 /// Define a base class in the legacy way. Discriminator property is not explicitly defined in the model.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct Dinosaur {
     /// Discriminator property for Dinosaur.
@@ -31,7 +31,7 @@ pub struct Dinosaur {
 }
 
 /// The second level model in polymorphic single levels inheritance which contains references to other polymorphic instances.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Eagle {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub friends: Option<Vec<BirdKind>>,
@@ -51,7 +51,7 @@ pub struct Eagle {
 }
 
 /// The second level model in polymorphic single level inheritance.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Goose {
     /// Field has constant value goose. Any specified value will be ignored.
     #[serde(serialize_with = "models_serde::serialize_string_literal_goose")]
@@ -62,7 +62,7 @@ pub struct Goose {
 }
 
 /// The second level model in polymorphic single level inheritance.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct SeaGull {
     /// Field has constant value seagull. Any specified value will be ignored.
     #[serde(serialize_with = "models_serde::serialize_string_literal_seagull")]
@@ -73,7 +73,7 @@ pub struct SeaGull {
 }
 
 /// The second level model in polymorphic single level inheritance.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Sparrow {
     /// Field has constant value sparrow. Any specified value will be ignored.
     #[serde(serialize_with = "models_serde::serialize_string_literal_sparrow")]
@@ -84,7 +84,7 @@ pub struct Sparrow {
 }
 
 /// The second level legacy model in polymorphic single level inheritance.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct TRex {
     /// Field has constant value t-rex. Any specified value will be ignored.

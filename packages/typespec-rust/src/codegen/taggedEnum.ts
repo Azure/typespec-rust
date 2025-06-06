@@ -28,7 +28,7 @@ export function emitTaggedEnums(crate: rust.Crate): helpers.Module | undefined {
   let body = '';
   for (const taggedEnum of crate.taggedEnums) {
     body += helpers.formatDocComment(taggedEnum.docs);
-    body += helpers.annotationDerive('azure_core::http::Model');
+    body += helpers.annotationDerive();
     body += `${helpers.emitVisibility(taggedEnum.visibility)}enum ${taggedEnum.name} {\n`;
 
     for (const value of taggedEnum.values) {

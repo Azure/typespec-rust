@@ -7,7 +7,7 @@ use super::{Bird, Dinosaur, Eagle, Goose, SeaGull, Sparrow, TRex};
 use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 #[serde(tag = "kind")]
 pub enum BirdKind {
     Bird(Bird),
@@ -22,7 +22,7 @@ pub enum BirdKind {
     Unknown(serde_json::Value),
 }
 
-#[derive(Clone, Deserialize, SafeDebug, Serialize, azure_core::http::Model)]
+#[derive(Clone, Deserialize, SafeDebug, Serialize)]
 #[serde(tag = "kind")]
 pub enum DinosaurKind {
     Dinosaur(Dinosaur),

@@ -80,7 +80,7 @@ impl SingleDiscriminatorClient {
         url = url.join("type/model/inheritance/single-discriminator/legacy-model")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -97,7 +97,7 @@ impl SingleDiscriminatorClient {
         url = url.join("type/model/inheritance/single-discriminator/missingdiscriminator")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -114,7 +114,7 @@ impl SingleDiscriminatorClient {
         url = url.join("type/model/inheritance/single-discriminator/model")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -131,7 +131,7 @@ impl SingleDiscriminatorClient {
         url = url.join("type/model/inheritance/single-discriminator/recursivemodel")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -148,7 +148,7 @@ impl SingleDiscriminatorClient {
         url = url.join("type/model/inheritance/single-discriminator/wrongdiscriminator")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -167,7 +167,7 @@ impl SingleDiscriminatorClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -186,6 +186,6 @@ impl SingleDiscriminatorClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

@@ -2,7 +2,10 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_singledisc::{models::{BirdKind, DinosaurKind}, SingleDiscriminatorClient};
+use spector_singledisc::{
+    models::{BirdKind, DinosaurKind},
+    SingleDiscriminatorClient,
+};
 
 #[tokio::test]
 async fn get_legacy_model() {
@@ -53,7 +56,7 @@ async fn get_model() {
         BirdKind::Sparrow(resp) => {
             assert_eq!(resp.wingspan, Some(1));
         }
-        _ => panic!("unexpected bird kind")
+        _ => panic!("unexpected bird kind"),
     }
 }
 
@@ -69,7 +72,8 @@ async fn get_wrong_discriminator() {
         .await
         .unwrap()
         .into_body()
-        .await.unwrap();
+        .await
+        .unwrap();
     // TODO: this is the unknown case. this SHOULD fall back to the base kind and/or expose the raw JSON
     //assert!(resp.is_err());
 }
