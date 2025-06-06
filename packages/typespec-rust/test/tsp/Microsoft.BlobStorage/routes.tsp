@@ -39,6 +39,18 @@ namespace Storage.Blob {
     contentType: ResponseMediaType;
   }) | TError;
 
+  /** Azure Storage Blob basic operation template */
+  #suppress "@azure-tools/typespec-azure-core/operation-missing-api-version" "Existing API. Storage API version parameter pre-dates current guidance."
+  op StorageOperationNoBody<
+    TParams extends TypeSpec.Reflection.Model | void,
+    TResponse extends TypeSpec.Reflection.Model | void,
+    TError = StorageError
+  >(
+    ...ApiVersionHeader,
+    ...TParams,
+    ...ClientRequestIdHeader,
+  ): TResponse | TError;
+
   /** Sets properties for a storage account's Blob service endpoint, including properties for Storage Analytics and CORS (Cross-Origin Resource Sharing) rules */
   #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
   #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
@@ -751,7 +763,7 @@ namespace Storage.Blob {
       #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
       @head
       @route("{blobName}")
-      op getProperties is StorageOperation<
+      op getProperties is StorageOperationNoBody<
         {
           ...ContainerNamePathParameter;
           ...BlobPathParameter;
@@ -828,8 +840,7 @@ namespace Storage.Blob {
           ...ImmutabilityPolicyExpiresOnResponseHeader;
           ...ImmutabilityPolicyModeResponseHeader;
           ...LegalHoldResponseHeader;
-        },
-        "application/octet-stream"
+        }
       >;
 
       /** If the storage account's soft delete feature is disabled then, when a blob is deleted, it is permanently removed from the storage account. If the storage account's soft delete feature is enabled, then, when a blob is deleted, it is marked for deletion and becomes inaccessible immediately. However, the blob service retains the blob or snapshot for the number of days specified by the DeleteRetentionPolicy section of [Storage service properties] (Set-Blob-Service-Properties.md). After the specified number of days has passed, the blob's data is permanently removed from the storage account. Note that you continue to be charged for the soft-deleted blob's storage until it is permanently removed. Use the List Blobs API and specify the \"include=deleted\" query parameter to discover which blobs and snapshots have been soft deleted. You can then use the Undelete Blob API to restore a soft-deleted blob. All other operations on a soft-deleted blob or snapshot causes the service to return an HTTP status code of 404 (ResourceNotFound). */
@@ -1105,6 +1116,7 @@ namespace Storage.Blob {
       #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
       #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
       @put
+      @sharedRoute
       @route("{blobName}?comp=lease&break")
       op breakLease is StorageOperation<
         {
@@ -1128,6 +1140,7 @@ namespace Storage.Blob {
       #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
       #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
       @put
+      @sharedRoute
       @route("{blobName}?comp=snapshot")
       op createSnapshot is StorageOperation<
         {
@@ -1162,6 +1175,7 @@ namespace Storage.Blob {
       #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
       #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
       @put
+      @sharedRoute
       @route("{blobName}")
       op startCopyFromUrl is StorageOperation<
         {
@@ -1205,6 +1219,7 @@ namespace Storage.Blob {
       #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
       #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
       @put
+      @sharedRoute
       @route("{blobName}?comp=copy&sync")
       op copyFromUrl is StorageOperation<
         {
@@ -1247,6 +1262,7 @@ namespace Storage.Blob {
       /** The Abort Copy From URL operation aborts a pending Copy From URL operation, and leaves a destination blob with zero length and full metadata. */
       #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
       @put
+      @sharedRoute
       @route("{blobName}?comp=copy&copyid")
       op abortCopyFromUrl is StorageOperation<
         {
@@ -1272,6 +1288,7 @@ namespace Storage.Blob {
       #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
       #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
       @put
+      @sharedRoute
       @route("{blobName}?comp=tier")
       op setTier is StorageOperation<
         {
@@ -1299,6 +1316,7 @@ namespace Storage.Blob {
       #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
       #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
       @get
+      @sharedRoute
       @route("{blobName}?restype=account&comp=properties&blob")
       op getAccountInfo is StorageOperation<
         {
@@ -1317,6 +1335,7 @@ namespace Storage.Blob {
       /** The Get Blob Tags operation enables users to get tags on a blob. */
       #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
       @get
+      @sharedRoute
       @route("{blobName}?comp=tags")
       op getTags is StorageOperation<
         {
@@ -1368,8 +1387,9 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?PageBlob")
-        op create is StorageOperation<
+        op create is StorageOperationNoBody<
           {
             ...MetadataHeaders;
             ...ContainerNamePathParameter;
@@ -1415,8 +1435,7 @@ namespace Storage.Blob {
             ...IsServerEncryptedResponseHeader;
             ...EncryptionKeySha256ResponseHeader;
             ...EncryptionScopeResponseHeader;
-          },
-          "application/octet-stream"
+          }
         >;
 
         /** The Upload Pages operation writes a range of pages to a page blob */
@@ -1425,6 +1444,7 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/byos" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?comp=page&update")
         op uploadPages is StorageOperation<
           {
@@ -1473,8 +1493,9 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?comp=page&clear")
-        op clearPages is StorageOperation<
+        op clearPages is StorageOperationNoBody<
           {
             ...ContainerNamePathParameter;
             ...BlobPathParameter;
@@ -1500,8 +1521,7 @@ namespace Storage.Blob {
             ...ContentCrc64ResponseHeader;
             ...BlobSequenceNumberResponseHeader;
             ...DateResponseHeader;
-          },
-          "application/octet-stream"
+          }
         >;
 
         /** The Upload Pages operation writes a range of pages to a page blob where the contents are read from a URL. */
@@ -1509,8 +1529,9 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?comp=page&update&fromUrl")
-        op uploadPagesFromUrl is StorageOperation<
+        op uploadPagesFromUrl is StorageOperationNoBody<
           {
             ...ContainerNamePathParameter;
             ...BlobPathParameter;
@@ -1556,8 +1577,7 @@ namespace Storage.Blob {
             ...IsServerEncryptedResponseHeader;
             ...EncryptionKeySha256ResponseHeader;
             ...EncryptionScopeResponseHeader;
-          },
-          "application/octet-stream"
+          }
         >;
 
         /** The Get Page Ranges operation returns the list of valid page ranges for a page blob or snapshot of a page blob. */
@@ -1626,6 +1646,7 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?comp=properties&Resize")
         op resize is StorageOperation<
           {
@@ -1654,6 +1675,7 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?comp=properties&UpdateSequenceNumber")
         op updateSequenceNumber is StorageOperation<
           {
@@ -1678,6 +1700,7 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?comp=incrementalcopy")
         op copyIncremental is StorageOperation<
           {
@@ -1705,8 +1728,9 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?AppendBlob")
-        op create is StorageOperation<
+        op create is StorageOperationNoBody<
           {
             ...MetadataHeaders;
             ...ContainerNamePathParameter;
@@ -1745,8 +1769,7 @@ namespace Storage.Blob {
             ...IsServerEncryptedResponseHeader;
             ...EncryptionKeySha256ResponseHeader;
             ...EncryptionScopeResponseHeader;
-          },
-          "application/octet-stream"
+          }
         >;
 
         /** The Append Block operation commits a new block of data to the end of an append blob. */
@@ -1755,6 +1778,7 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/byos" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?comp=appendblock")
         op appendBlock is StorageOperation<
           {
@@ -1802,6 +1826,7 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?comp=appendblock&fromUrl")
         op appendBlockFromUrl is StorageOperation<
           {
@@ -1849,6 +1874,7 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?comp=seal")
         op seal is StorageOperation<
           {
@@ -1876,6 +1902,7 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/byos" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?BlockBlob")
         op upload is StorageOperation<
           {
@@ -1928,8 +1955,9 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?BlockBlob&fromUrl")
-        op putBlobFromUrl is StorageOperation<
+        op putBlobFromUrl is StorageOperationNoBody<
           {
             ...MetadataHeaders;
             ...ContainerNamePathParameter;
@@ -1977,8 +2005,7 @@ namespace Storage.Blob {
             ...IsServerEncryptedResponseHeader;
             ...EncryptionKeySha256ResponseHeader;
             ...EncryptionScopeResponseHeader;
-          },
-          "application/octet-stream"
+          }
         >;
 
         /** The Stage Block operation creates a new block to be committed as part of a blob */
@@ -1987,6 +2014,7 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/byos" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?comp=block")
         op stageBlock is StorageOperation<
           {
@@ -2020,6 +2048,7 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?comp=block&fromURL")
         op stageBlockFromUrl is StorageOperation<
           {
@@ -2059,6 +2088,7 @@ namespace Storage.Blob {
         #suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
         #suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
         @put
+        @sharedRoute
         @route("{blobName}?comp=blocklist")
         op commitBlockList is StorageOperation<
           {
