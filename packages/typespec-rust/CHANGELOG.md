@@ -1,5 +1,15 @@
 # Release History
 
+## 0.20.1 (unreleased)
+
+### Features Added
+
+* Added support for optional path parameters.
+
+### Other Changes
+
+* Required path parameters that are empty will return an error.
+
 ## 0.20.0 (2025-08-01)
 
 ### Breaking Changes
@@ -86,7 +96,6 @@
 
 * Added support for `plainDate` and `plainTime` types. They're emitted as `String` types.
 * Added support for the `safeint` type. It's emitted as a `serde_json::Number` type.
-* Added support for optional path parameters.
 
 ### Bugs Fixed
 
@@ -94,10 +103,6 @@
 * Fixed bad codegen for model with literal values.
 * Fixed incorrect behavior for numeric types that use string encoding.
 * Fixed decimal types to properly handle string/float encodings.
-
-### Other Changes
-
-* Required path parameters that are empty will return an error.
 
 ## 0.14.1 (2025-05-07)
 
