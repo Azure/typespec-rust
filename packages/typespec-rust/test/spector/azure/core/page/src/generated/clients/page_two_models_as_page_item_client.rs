@@ -8,7 +8,7 @@ use crate::generated::models::{
     PageTwoModelsAsPageItemClientListSecondItemOptions, PagedFirstItem, PagedSecondItem,
 };
 use azure_core::{
-    http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Response, Url},
+    http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
     json, Result,
 };
 
@@ -62,7 +62,7 @@ impl PageTwoModelsAsPageItemClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<PagedFirstItem> = pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedFirstItem = json::from_json(&bytes)?;
@@ -116,8 +116,7 @@ impl PageTwoModelsAsPageItemClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<PagedSecondItem> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedSecondItem = json::from_json(&bytes)?;

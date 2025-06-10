@@ -732,8 +732,7 @@ impl AzureAppConfigurationClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: Response<KeyValueListResult> =
-                        pipeline.send(&ctx, &mut request).await?.into();
+                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
@@ -803,7 +802,7 @@ impl AzureAppConfigurationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<KeyListResult> = pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: KeyListResult = json::from_json(&bytes)?;
@@ -885,8 +884,7 @@ impl AzureAppConfigurationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<LabelListResult> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: LabelListResult = json::from_json(&bytes)?;
@@ -977,8 +975,7 @@ impl AzureAppConfigurationClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: Response<KeyValueListResult> =
-                        pipeline.send(&ctx, &mut request).await?.into();
+                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
@@ -1065,8 +1062,7 @@ impl AzureAppConfigurationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<SnapshotListResult> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: SnapshotListResult = json::from_json(&bytes)?;

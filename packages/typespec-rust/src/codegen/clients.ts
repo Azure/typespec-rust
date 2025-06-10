@@ -918,7 +918,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
-  use.add('azure_core::http', 'Method', 'PagerResult', 'Request', 'Response', 'Url');
+  use.add('azure_core::http', 'Method', 'PagerResult', 'Request', 'Url');
   use.add('azure_core', bodyFormat, 'Result');
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));
@@ -992,14 +992,27 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     }
   }
 
-  // here we want the T in Pager<T>
-  const returnType = helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type));
+  let rspType: string;
+  let rspInto: string;
+  if (method.strategy.kind === 'continuationToken' && method.strategy.responseToken.kind === 'responseHeaderScalar') {
+    // the continuation token comes from a response header. therefore,
+    // we need a Response<T> so we have access to the header trait.
+    use.addForType(method.returns.type.type);
+    rspType = helpers.getTypeDeclaration(method.returns.type.type);
+    rspInto = '.into()';
+  } else {
+    // continuatioin token comes from the response body.
+    // we'll deconstruct the raw response and parse it later.
+    use.add('azure_core', 'http::RawResponse');
+    rspType = 'RawResponse';
+    rspInto = '';
+  }
 
   body += constructRequest(indent, use, method, paramGroups, true);
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
-  body += `${indent.push().get()}let rsp: Response<${returnType}> = pipeline.send(&ctx, &mut request).await?.into();\n`;
+  body += `${indent.push().get()}let rsp: ${rspType} = pipeline.send(&ctx, &mut request).await?${rspInto};\n`;
 
   // check if we need to extract the next link field from the response model
   if (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'modelField') {
@@ -1007,7 +1020,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
     body += `${indent.get()}let bytes = body.collect().await?;\n`;
     const deserialize = bodyFormat === 'json' ? 'json::from_json' : 'xml::read_xml';
-    body += `${indent.get()}let res: ${returnType} = ${deserialize}(&bytes)?;\n`;
+    body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&bytes)?;\n`;
     body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, bytes).into();\n`;
   }
 

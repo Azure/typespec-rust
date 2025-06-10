@@ -97,8 +97,7 @@ impl ResourcesSingletonClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<SingletonTrackedResourceListResult> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: SingletonTrackedResourceListResult = json::from_json(&bytes)?;

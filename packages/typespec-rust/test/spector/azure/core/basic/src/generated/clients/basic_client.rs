@@ -304,7 +304,7 @@ impl BasicClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<PagedUser> = pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;

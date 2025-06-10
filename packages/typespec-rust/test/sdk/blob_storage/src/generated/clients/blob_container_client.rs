@@ -556,8 +556,7 @@ impl BlobContainerClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: Response<ListBlobsFlatSegmentResponse> =
-                        pipeline.send(&ctx, &mut request).await?.into();
+                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let bytes = body.collect().await?;
                     let res: ListBlobsFlatSegmentResponse = xml::read_xml(&bytes)?;
@@ -651,8 +650,7 @@ impl BlobContainerClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: Response<ListBlobsHierarchySegmentResponse> =
-                        pipeline.send(&ctx, &mut request).await?.into();
+                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let bytes = body.collect().await?;
                     let res: ListBlobsHierarchySegmentResponse = xml::read_xml(&bytes)?;

@@ -243,8 +243,7 @@ impl KeyVaultClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<DeletedSecretListResult> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: DeletedSecretListResult = json::from_json(&bytes)?;
@@ -310,8 +309,7 @@ impl KeyVaultClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<SecretListResult> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: SecretListResult = json::from_json(&bytes)?;
@@ -374,8 +372,7 @@ impl KeyVaultClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<SecretListResult> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: SecretListResult = json::from_json(&bytes)?;
