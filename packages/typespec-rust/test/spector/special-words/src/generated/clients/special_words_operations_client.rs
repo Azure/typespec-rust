@@ -23,7 +23,7 @@ use crate::generated::models::{
     SpecialWordsOperationsClientYieldOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -46,7 +46,7 @@ impl SpecialWordsOperationsClient {
     pub async fn and(
         &self,
         options: Option<SpecialWordsOperationsClientAndOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -62,7 +62,7 @@ impl SpecialWordsOperationsClient {
     pub async fn as_fn(
         &self,
         options: Option<SpecialWordsOperationsClientAsOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -78,7 +78,7 @@ impl SpecialWordsOperationsClient {
     pub async fn assert(
         &self,
         options: Option<SpecialWordsOperationsClientAssertOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -94,7 +94,7 @@ impl SpecialWordsOperationsClient {
     pub async fn async_fn(
         &self,
         options: Option<SpecialWordsOperationsClientAsyncOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -110,7 +110,7 @@ impl SpecialWordsOperationsClient {
     pub async fn await_fn(
         &self,
         options: Option<SpecialWordsOperationsClientAwaitOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -126,7 +126,7 @@ impl SpecialWordsOperationsClient {
     pub async fn break_fn(
         &self,
         options: Option<SpecialWordsOperationsClientBreakOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -142,7 +142,7 @@ impl SpecialWordsOperationsClient {
     pub async fn class(
         &self,
         options: Option<SpecialWordsOperationsClientClassOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -158,7 +158,7 @@ impl SpecialWordsOperationsClient {
     pub async fn constructor(
         &self,
         options: Option<SpecialWordsOperationsClientConstructorOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -174,7 +174,7 @@ impl SpecialWordsOperationsClient {
     pub async fn continue_fn(
         &self,
         options: Option<SpecialWordsOperationsClientContinueOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -190,7 +190,7 @@ impl SpecialWordsOperationsClient {
     pub async fn def(
         &self,
         options: Option<SpecialWordsOperationsClientDefOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -206,7 +206,7 @@ impl SpecialWordsOperationsClient {
     pub async fn del(
         &self,
         options: Option<SpecialWordsOperationsClientDelOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -222,7 +222,7 @@ impl SpecialWordsOperationsClient {
     pub async fn elif(
         &self,
         options: Option<SpecialWordsOperationsClientElifOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -238,7 +238,7 @@ impl SpecialWordsOperationsClient {
     pub async fn else_fn(
         &self,
         options: Option<SpecialWordsOperationsClientElseOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -254,7 +254,7 @@ impl SpecialWordsOperationsClient {
     pub async fn except(
         &self,
         options: Option<SpecialWordsOperationsClientExceptOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -270,7 +270,7 @@ impl SpecialWordsOperationsClient {
     pub async fn exec(
         &self,
         options: Option<SpecialWordsOperationsClientExecOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -286,7 +286,7 @@ impl SpecialWordsOperationsClient {
     pub async fn finally(
         &self,
         options: Option<SpecialWordsOperationsClientFinallyOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -302,7 +302,7 @@ impl SpecialWordsOperationsClient {
     pub async fn for_fn(
         &self,
         options: Option<SpecialWordsOperationsClientForOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -318,7 +318,7 @@ impl SpecialWordsOperationsClient {
     pub async fn from(
         &self,
         options: Option<SpecialWordsOperationsClientFromOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -334,7 +334,7 @@ impl SpecialWordsOperationsClient {
     pub async fn global(
         &self,
         options: Option<SpecialWordsOperationsClientGlobalOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -350,7 +350,7 @@ impl SpecialWordsOperationsClient {
     pub async fn if_fn(
         &self,
         options: Option<SpecialWordsOperationsClientIfOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -366,7 +366,7 @@ impl SpecialWordsOperationsClient {
     pub async fn import(
         &self,
         options: Option<SpecialWordsOperationsClientImportOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -382,7 +382,7 @@ impl SpecialWordsOperationsClient {
     pub async fn in_fn(
         &self,
         options: Option<SpecialWordsOperationsClientInOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -398,7 +398,7 @@ impl SpecialWordsOperationsClient {
     pub async fn is(
         &self,
         options: Option<SpecialWordsOperationsClientIsOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -414,7 +414,7 @@ impl SpecialWordsOperationsClient {
     pub async fn lambda(
         &self,
         options: Option<SpecialWordsOperationsClientLambdaOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -430,7 +430,7 @@ impl SpecialWordsOperationsClient {
     pub async fn not(
         &self,
         options: Option<SpecialWordsOperationsClientNotOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -446,7 +446,7 @@ impl SpecialWordsOperationsClient {
     pub async fn or(
         &self,
         options: Option<SpecialWordsOperationsClientOrOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -462,7 +462,7 @@ impl SpecialWordsOperationsClient {
     pub async fn pass(
         &self,
         options: Option<SpecialWordsOperationsClientPassOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -478,7 +478,7 @@ impl SpecialWordsOperationsClient {
     pub async fn raise(
         &self,
         options: Option<SpecialWordsOperationsClientRaiseOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -494,7 +494,7 @@ impl SpecialWordsOperationsClient {
     pub async fn return_fn(
         &self,
         options: Option<SpecialWordsOperationsClientReturnOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -510,7 +510,7 @@ impl SpecialWordsOperationsClient {
     pub async fn try_fn(
         &self,
         options: Option<SpecialWordsOperationsClientTryOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -526,7 +526,7 @@ impl SpecialWordsOperationsClient {
     pub async fn while_fn(
         &self,
         options: Option<SpecialWordsOperationsClientWhileOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -542,7 +542,7 @@ impl SpecialWordsOperationsClient {
     pub async fn with(
         &self,
         options: Option<SpecialWordsOperationsClientWithOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -558,7 +558,7 @@ impl SpecialWordsOperationsClient {
     pub async fn yield_fn(
         &self,
         options: Option<SpecialWordsOperationsClientYieldOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

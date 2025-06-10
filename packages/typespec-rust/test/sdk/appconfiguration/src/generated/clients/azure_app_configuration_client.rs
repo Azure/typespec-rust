@@ -32,8 +32,8 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, PageIterator, Pager, PagerResult, Pipeline, RawResponse,
-        Request, RequestContent, Response, Url,
+        ClientOptions, Context, Method, NoFormat, PageIterator, Pager, PagerResult, Pipeline,
+        RawResponse, Request, RequestContent, Response, Url,
     },
     json, Result,
 };
@@ -112,7 +112,7 @@ impl AzureAppConfigurationClient {
         &self,
         key: &str,
         options: Option<AzureAppConfigurationClientCheckKeyValueOptions<'_>>,
-    ) -> Result<Response<AzureAppConfigurationClientCheckKeyValueResult>> {
+    ) -> Result<Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -169,7 +169,7 @@ impl AzureAppConfigurationClient {
     pub async fn check_key_values(
         &self,
         options: Option<AzureAppConfigurationClientCheckKeyValuesOptions<'_>>,
-    ) -> Result<Response<AzureAppConfigurationClientCheckKeyValuesResult>> {
+    ) -> Result<Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -233,7 +233,7 @@ impl AzureAppConfigurationClient {
     pub async fn check_keys(
         &self,
         options: Option<AzureAppConfigurationClientCheckKeysOptions<'_>>,
-    ) -> Result<Response<AzureAppConfigurationClientCheckKeysResult>> {
+    ) -> Result<Response<AzureAppConfigurationClientCheckKeysResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -270,7 +270,7 @@ impl AzureAppConfigurationClient {
     pub async fn check_labels(
         &self,
         options: Option<AzureAppConfigurationClientCheckLabelsOptions<'_>>,
-    ) -> Result<Response<AzureAppConfigurationClientCheckLabelsResult>> {
+    ) -> Result<Response<AzureAppConfigurationClientCheckLabelsResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -317,7 +317,7 @@ impl AzureAppConfigurationClient {
     pub async fn check_revisions(
         &self,
         options: Option<AzureAppConfigurationClientCheckRevisionsOptions<'_>>,
-    ) -> Result<Response<AzureAppConfigurationClientCheckRevisionsResult>> {
+    ) -> Result<Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -374,7 +374,7 @@ impl AzureAppConfigurationClient {
         &self,
         name: &str,
         options: Option<AzureAppConfigurationClientCheckSnapshotOptions<'_>>,
-    ) -> Result<Response<AzureAppConfigurationClientCheckSnapshotResult>> {
+    ) -> Result<Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -410,7 +410,7 @@ impl AzureAppConfigurationClient {
     pub async fn check_snapshots(
         &self,
         options: Option<AzureAppConfigurationClientCheckSnapshotsOptions<'_>>,
-    ) -> Result<Response<AzureAppConfigurationClientCheckSnapshotsResult>> {
+    ) -> Result<Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

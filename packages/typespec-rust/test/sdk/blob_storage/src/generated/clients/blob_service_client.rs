@@ -19,8 +19,8 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, PageIterator, PagerResult, Pipeline, RawResponse, Request,
-        RequestContent, Response, Url, XmlFormat,
+        ClientOptions, Context, Method, NoFormat, PageIterator, PagerResult, Pipeline, RawResponse,
+        Request, RequestContent, Response, Url, XmlFormat,
     },
     xml, Result,
 };
@@ -141,7 +141,7 @@ impl BlobServiceClient {
     pub async fn get_account_info(
         &self,
         options: Option<BlobServiceClientGetAccountInfoOptions<'_>>,
-    ) -> Result<Response<BlobServiceClientGetAccountInfoResult>> {
+    ) -> Result<Response<BlobServiceClientGetAccountInfoResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -361,7 +361,7 @@ impl BlobServiceClient {
         &self,
         storage_service_properties: RequestContent<StorageServiceProperties>,
         options: Option<BlobServiceClientSetPropertiesOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

@@ -15,7 +15,7 @@ use crate::generated::models::{
     SpreadAliasClientSpreadWithMultipleParametersOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     Result,
 };
 
@@ -38,7 +38,7 @@ impl SpreadAliasClient {
         &self,
         name: String,
         options: Option<SpreadAliasClientSpreadAsRequestBodyOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -61,7 +61,7 @@ impl SpreadAliasClient {
         x_ms_test_header: String,
         name: String,
         options: Option<SpreadAliasClientSpreadAsRequestParameterOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -91,7 +91,7 @@ impl SpreadAliasClient {
         age: i32,
         x_ms_test_header: String,
         options: Option<SpreadAliasClientSpreadParameterWithInnerAliasOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -117,7 +117,7 @@ impl SpreadAliasClient {
         name: String,
         x_ms_test_header: String,
         options: Option<SpreadAliasClientSpreadParameterWithInnerModelOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -146,7 +146,7 @@ impl SpreadAliasClient {
         required_string: String,
         required_int_list: Vec<i32>,
         options: Option<SpreadAliasClientSpreadWithMultipleParametersOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

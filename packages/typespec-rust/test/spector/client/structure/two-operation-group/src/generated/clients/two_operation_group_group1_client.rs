@@ -8,7 +8,7 @@ use crate::generated::models::{
     TwoOperationGroupGroup1ClientThreeOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -30,7 +30,7 @@ impl TwoOperationGroupGroup1Client {
     pub async fn four(
         &self,
         options: Option<TwoOperationGroupGroup1ClientFourOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -46,7 +46,7 @@ impl TwoOperationGroupGroup1Client {
     pub async fn one(
         &self,
         options: Option<TwoOperationGroupGroup1ClientOneOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -62,7 +62,7 @@ impl TwoOperationGroupGroup1Client {
     pub async fn three(
         &self,
         options: Option<TwoOperationGroupGroup1ClientThreeOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

@@ -5,7 +5,7 @@
 
 use crate::generated::models::CollectionFormatHeaderClientCsvOptions;
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -29,7 +29,7 @@ impl CollectionFormatHeaderClient {
         &self,
         colors: &[&str],
         options: Option<CollectionFormatHeaderClientCsvOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

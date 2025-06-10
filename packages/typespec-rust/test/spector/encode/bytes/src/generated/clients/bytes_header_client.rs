@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     base64,
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -32,7 +32,7 @@ impl BytesHeaderClient {
         &self,
         value: &[u8],
         options: Option<BytesHeaderClientBase64Options<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -50,7 +50,7 @@ impl BytesHeaderClient {
         &self,
         value: &[u8],
         options: Option<BytesHeaderClientBase64UrlOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -68,7 +68,7 @@ impl BytesHeaderClient {
         &self,
         value: &[&[u8]],
         options: Option<BytesHeaderClientBase64UrlArrayOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -93,7 +93,7 @@ impl BytesHeaderClient {
         &self,
         value: &[u8],
         options: Option<BytesHeaderClientDefaultOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

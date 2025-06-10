@@ -8,7 +8,7 @@ use crate::generated::models::{
     CollectionFormatQueryClientPipesOptions, CollectionFormatQueryClientSsvOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -32,7 +32,7 @@ impl CollectionFormatQueryClient {
         &self,
         colors: &[&str],
         options: Option<CollectionFormatQueryClientCsvOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -52,7 +52,7 @@ impl CollectionFormatQueryClient {
         &self,
         colors: &[&str],
         options: Option<CollectionFormatQueryClientMultiOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -73,7 +73,7 @@ impl CollectionFormatQueryClient {
         &self,
         colors: &[&str],
         options: Option<CollectionFormatQueryClientPipesOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -93,7 +93,7 @@ impl CollectionFormatQueryClient {
         &self,
         colors: &[&str],
         options: Option<CollectionFormatQueryClientSsvOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

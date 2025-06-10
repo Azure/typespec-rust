@@ -11,7 +11,7 @@ use azure_core::{
     date,
     http::{
         headers::{HeaderName, Headers},
-        Response,
+        NoFormat, Response,
     },
     Result,
 };
@@ -25,7 +25,7 @@ pub trait DatetimeResponseHeaderClientDefaultResultHeaders: private::Sealed {
 }
 
 impl DatetimeResponseHeaderClientDefaultResultHeaders
-    for Response<DatetimeResponseHeaderClientDefaultResult>
+    for Response<DatetimeResponseHeaderClientDefaultResult, NoFormat>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &VALUE, |h| date::parse_rfc7231(h.as_str()))
@@ -38,7 +38,7 @@ pub trait DatetimeResponseHeaderClientRfc3339ResultHeaders: private::Sealed {
 }
 
 impl DatetimeResponseHeaderClientRfc3339ResultHeaders
-    for Response<DatetimeResponseHeaderClientRfc3339Result>
+    for Response<DatetimeResponseHeaderClientRfc3339Result, NoFormat>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &VALUE, |h| date::parse_rfc3339(h.as_str()))
@@ -51,7 +51,7 @@ pub trait DatetimeResponseHeaderClientRfc7231ResultHeaders: private::Sealed {
 }
 
 impl DatetimeResponseHeaderClientRfc7231ResultHeaders
-    for Response<DatetimeResponseHeaderClientRfc7231Result>
+    for Response<DatetimeResponseHeaderClientRfc7231Result, NoFormat>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &VALUE, |h| date::parse_rfc7231(h.as_str()))
@@ -64,7 +64,7 @@ pub trait DatetimeResponseHeaderClientUnixTimestampResultHeaders: private::Seale
 }
 
 impl DatetimeResponseHeaderClientUnixTimestampResultHeaders
-    for Response<DatetimeResponseHeaderClientUnixTimestampResult>
+    for Response<DatetimeResponseHeaderClientUnixTimestampResult, NoFormat>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &VALUE, |h| {
@@ -78,12 +78,12 @@ mod private {
         DatetimeResponseHeaderClientDefaultResult, DatetimeResponseHeaderClientRfc3339Result,
         DatetimeResponseHeaderClientRfc7231Result, DatetimeResponseHeaderClientUnixTimestampResult,
     };
-    use azure_core::http::Response;
+    use azure_core::http::{NoFormat, Response};
 
     pub trait Sealed {}
 
-    impl Sealed for Response<DatetimeResponseHeaderClientDefaultResult> {}
-    impl Sealed for Response<DatetimeResponseHeaderClientRfc3339Result> {}
-    impl Sealed for Response<DatetimeResponseHeaderClientRfc7231Result> {}
-    impl Sealed for Response<DatetimeResponseHeaderClientUnixTimestampResult> {}
+    impl Sealed for Response<DatetimeResponseHeaderClientDefaultResult, NoFormat> {}
+    impl Sealed for Response<DatetimeResponseHeaderClientRfc3339Result, NoFormat> {}
+    impl Sealed for Response<DatetimeResponseHeaderClientRfc7231Result, NoFormat> {}
+    impl Sealed for Response<DatetimeResponseHeaderClientUnixTimestampResult, NoFormat> {}
 }

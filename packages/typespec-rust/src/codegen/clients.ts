@@ -916,15 +916,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     throw new CodegenError('InternalError', 'paged method with no strategy NYI');
   }
 
-  let bodyFormat: rust.BodyFormat;
-  switch (method.returns.type.kind) {
-    case 'pageIterator':
-      bodyFormat = method.returns.type.type.content.format;
-      break;
-    case 'pager':
-      bodyFormat = method.returns.type.type.format;
-      break;
-  }
+  const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
   use.add('azure_core::http', 'Method', 'PagerResult', 'Request', 'Response', 'Url');
   use.add('azure_core', bodyFormat, 'Result');

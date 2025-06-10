@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -74,7 +74,7 @@ impl ClientAClient {
     pub async fn renamed_five(
         &self,
         options: Option<ClientAClientRenamedFiveOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -90,7 +90,7 @@ impl ClientAClient {
     pub async fn renamed_one(
         &self,
         options: Option<ClientAClientRenamedOneOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -106,7 +106,7 @@ impl ClientAClient {
     pub async fn renamed_three(
         &self,
         options: Option<ClientAClientRenamedThreeOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

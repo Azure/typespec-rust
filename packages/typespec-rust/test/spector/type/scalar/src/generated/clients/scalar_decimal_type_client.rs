@@ -8,7 +8,7 @@ use crate::generated::models::{
     ScalarDecimalTypeClientResponseBodyOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     Result,
 };
 use rust_decimal::Decimal;
@@ -33,7 +33,7 @@ impl ScalarDecimalTypeClient {
         &self,
         body: RequestContent<Decimal>,
         options: Option<ScalarDecimalTypeClientRequestBodyOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -52,7 +52,7 @@ impl ScalarDecimalTypeClient {
         &self,
         value: Decimal,
         options: Option<ScalarDecimalTypeClientRequestParameterOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

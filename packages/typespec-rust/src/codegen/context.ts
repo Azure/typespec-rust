@@ -14,9 +14,8 @@ import * as rust from '../codemodel/index.js';
  * for use outside of that class.
  */
 export class Context {
-  private readonly bodyFormatForModels = new Map<rust.Model, rust.BodyFormat>();
-  private readonly tryFromForRequestTypes = new Map<string, rust.BodyFormat>();
-  private readonly tryFromResponseTypes = new Map<string, rust.BodyFormat>();
+  private readonly bodyFormatForModels = new Map<rust.Model, helpers.ModelFormat>();
+  private readonly tryFromForRequestTypes = new Map<string, rust.PayloadFormat>();
   private readonly pagedResponseTypes = new Set<rust.Model>();
 
   /**
@@ -25,7 +24,7 @@ export class Context {
    * @param crate the crate for which the context will be constructed
    */
   constructor(crate: rust.Crate) {
-    const recursiveAddBodyFormat = (type: rust.Type, format: rust.BodyFormat) => {
+    const recursiveAddBodyFormat = (type: rust.Type, format: helpers.ModelFormat) => {
       type = helpers.unwrapType(type);
       if (type.kind !== 'model') {
         return;
@@ -54,7 +53,7 @@ export class Context {
           continue;
         } else if (method.kind === 'pageable' && method.returns.type.kind === 'pager') {
           // impls are for pagers only (not page iterators)
-          this.pagedResponseTypes.add(method.returns.type.type.type);
+          this.pagedResponseTypes.add(method.returns.type.type.content);
         }
 
         // TODO: this doesn't handle the case where a method sends/receives a HashMap<T>
@@ -74,17 +73,18 @@ export class Context {
           }
         }
 
-        if (method.returns.type.kind === 'response' && method.returns.type.content.kind === 'payload') {
-          if (!method.returns.type.content.format) {
-            throw new CodegenError('InternalError', `method ${client.name}.${method.name} returns a body but no format was specified`);
+        switch (method.returns.type.kind) {
+          case 'pageIterator':
+          case 'pager': {
+            recursiveAddBodyFormat(method.returns.type.type.content, helpers.convertResponseFormat(method.returns.type.type.format));
+            break;
           }
-          if (method.returns.type.content.type.kind === 'enum' || method.returns.type.content.type.kind === 'model') {
-            this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.content.type), method.returns.type.content.format);
+          case 'response': {
+            if (method.returns.type.format !== 'NoFormat') {
+              recursiveAddBodyFormat(method.returns.type.content, helpers.convertResponseFormat(method.returns.type.format));
+            }
+            break;
           }
-          recursiveAddBodyFormat(method.returns.type.content.type, method.returns.type.content.format);
-        } else if (method.returns.type.kind === 'pager') {
-          this.tryFromResponseTypes.set(helpers.getTypeDeclaration(method.returns.type.type.type), method.returns.type.type.format);
-          recursiveAddBodyFormat(method.returns.type.type.type, method.returns.type.type.format);
         }
       }
     }
@@ -124,7 +124,7 @@ export class Context {
    * @param model the model for which to determine the format
    * @returns the body format
    */
-  getModelBodyFormat(model: rust.Model): rust.BodyFormat {
+  getModelBodyFormat(model: rust.Model): helpers.ModelFormat {
     let bodyFormat = this.bodyFormatForModels.get(model);
     if (!bodyFormat) {
       // tsp behavior is to default to json when not specified.

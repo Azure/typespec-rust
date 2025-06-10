@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     date,
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 use time::OffsetDateTime;
@@ -34,7 +34,7 @@ impl DatetimeQueryClient {
         &self,
         value: OffsetDateTime,
         options: Option<DatetimeQueryClientDefaultOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -53,7 +53,7 @@ impl DatetimeQueryClient {
         &self,
         value: OffsetDateTime,
         options: Option<DatetimeQueryClientRfc3339Options<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -72,7 +72,7 @@ impl DatetimeQueryClient {
         &self,
         value: OffsetDateTime,
         options: Option<DatetimeQueryClientRfc7231Options<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -91,7 +91,7 @@ impl DatetimeQueryClient {
         &self,
         value: OffsetDateTime,
         options: Option<DatetimeQueryClientUnixTimestampOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -110,7 +110,7 @@ impl DatetimeQueryClient {
         &self,
         value: &[OffsetDateTime],
         options: Option<DatetimeQueryClientUnixTimestampArrayOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

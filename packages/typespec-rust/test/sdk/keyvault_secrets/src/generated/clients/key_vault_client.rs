@@ -18,8 +18,8 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, Pager, PagerResult, Pipeline, RawResponse, Request,
-        RequestContent, Response, Url,
+        ClientOptions, Context, Method, NoFormat, Pager, PagerResult, Pipeline, RawResponse,
+        Request, RequestContent, Response, Url,
     },
     json, Result,
 };
@@ -404,7 +404,7 @@ impl KeyVaultClient {
         &self,
         secret_name: &str,
         options: Option<KeyVaultClientPurgeDeletedSecretOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

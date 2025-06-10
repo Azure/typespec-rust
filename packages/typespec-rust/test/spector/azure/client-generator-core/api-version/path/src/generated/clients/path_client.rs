@@ -6,7 +6,7 @@
 use crate::generated::models::PathClientPathApiVersionOptions;
 use azure_core::{
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -67,7 +67,7 @@ impl PathClient {
     pub async fn path_api_version(
         &self,
         options: Option<PathClientPathApiVersionOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
