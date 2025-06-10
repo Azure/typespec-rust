@@ -1279,10 +1279,16 @@ export class Adapter {
         let serde: string;
         switch (responseFormat) {
           case 'JsonFormat':
-            serde = segment.serializationOptions.json!.name;
+            if (!segment.serializationOptions.json) {
+              throw new AdapterError('InternalError', `paged method ${method.name} is missing JSON serialization data`, method.__raw?.node);
+            }
+            serde = segment.serializationOptions.json.name;
             break;
           case 'XmlFormat':
-            serde = segment.serializationOptions.xml!.name;
+            if (!segment.serializationOptions.xml) {
+              throw new AdapterError('InternalError', `paged method ${method.name} is missing XML serialization data`, method.__raw?.node);
+            }
+            serde = segment.serializationOptions.xml.name;
             break;
         }
 
