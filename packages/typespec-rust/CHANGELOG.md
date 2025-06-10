@@ -1,5 +1,11 @@
 # Release History
 
+## 0.15.1 (unreleased)
+
+### Other Changes
+
+* Small refactoring to pageable method bodies.
+
 ## 0.15.0 (2025-06-05)
 
 ### Breaking Changes

@@ -60,14 +60,12 @@ impl PageableServerDrivenPaginationClient {
                 let bytes = body.collect().await?;
                 let res: LinkResponse = json::from_json(&bytes)?;
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                let next = res.next.unwrap_or_default();
-                Ok(if next.is_empty() {
-                    PagerResult::Done { response: rsp }
-                } else {
-                    PagerResult::More {
+                Ok(match res.next {
+                    Some(next) if !next.is_empty() => PagerResult::More {
                         response: rsp,
                         next: next.parse()?,
-                    }
+                    },
+                    _ => PagerResult::Done { response: rsp },
                 })
             }
         }))

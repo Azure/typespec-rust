@@ -64,14 +64,12 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 let bytes = body.collect().await?;
                 let res: RequestHeaderResponseBodyResponse = json::from_json(&bytes)?;
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                let next_token = res.next_token.unwrap_or_default();
-                Ok(if next_token.is_empty() {
-                    PagerResult::Done { response: rsp }
-                } else {
-                    PagerResult::More {
+                Ok(match res.next_token {
+                    Some(next_token) if !next_token.is_empty() => PagerResult::More {
                         response: rsp,
                         next: next_token,
-                    }
+                    },
+                    _ => PagerResult::Done { response: rsp },
                 })
             }
         }))
@@ -111,14 +109,12 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             async move {
                 let rsp: Response<RequestHeaderResponseHeaderResponse> =
                     pipeline.send(&ctx, &mut request).await?.into();
-                let next_token = rsp.next_token()?.unwrap_or_default();
-                Ok(if next_token.is_empty() {
-                    PagerResult::Done { response: rsp }
-                } else {
-                    PagerResult::More {
+                Ok(match rsp.next_token()? {
+                    Some(next_token) if !next_token.is_empty() => PagerResult::More {
                         response: rsp,
                         next: next_token,
-                    }
+                    },
+                    _ => PagerResult::Done { response: rsp },
                 })
             }
         }))
@@ -171,14 +167,12 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 let bytes = body.collect().await?;
                 let res: RequestQueryResponseBodyResponse = json::from_json(&bytes)?;
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                let next_token = res.next_token.unwrap_or_default();
-                Ok(if next_token.is_empty() {
-                    PagerResult::Done { response: rsp }
-                } else {
-                    PagerResult::More {
+                Ok(match res.next_token {
+                    Some(next_token) if !next_token.is_empty() => PagerResult::More {
                         response: rsp,
                         next: next_token,
-                    }
+                    },
+                    _ => PagerResult::Done { response: rsp },
                 })
             }
         }))
@@ -227,14 +221,12 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             async move {
                 let rsp: Response<RequestQueryResponseHeaderResponse> =
                     pipeline.send(&ctx, &mut request).await?.into();
-                let next_token = rsp.next_token()?.unwrap_or_default();
-                Ok(if next_token.is_empty() {
-                    PagerResult::Done { response: rsp }
-                } else {
-                    PagerResult::More {
+                Ok(match rsp.next_token()? {
+                    Some(next_token) if !next_token.is_empty() => PagerResult::More {
                         response: rsp,
                         next: next_token,
-                    }
+                    },
+                    _ => PagerResult::Done { response: rsp },
                 })
             }
         }))

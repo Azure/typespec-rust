@@ -562,14 +562,12 @@ impl BlobContainerClient {
                     let bytes = body.collect().await?;
                     let res: ListBlobsFlatSegmentResponse = xml::read_xml(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                    let next_marker = res.next_marker.unwrap_or_default();
-                    Ok(if next_marker.is_empty() {
-                        PagerResult::Done { response: rsp }
-                    } else {
-                        PagerResult::More {
+                    Ok(match res.next_marker {
+                        Some(next_marker) if !next_marker.is_empty() => PagerResult::More {
                             response: rsp,
                             next: next_marker,
-                        }
+                        },
+                        _ => PagerResult::Done { response: rsp },
                     })
                 }
             },
@@ -659,14 +657,12 @@ impl BlobContainerClient {
                     let bytes = body.collect().await?;
                     let res: ListBlobsHierarchySegmentResponse = xml::read_xml(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                    let next_marker = res.next_marker.unwrap_or_default();
-                    Ok(if next_marker.is_empty() {
-                        PagerResult::Done { response: rsp }
-                    } else {
-                        PagerResult::More {
+                    Ok(match res.next_marker {
+                        Some(next_marker) if !next_marker.is_empty() => PagerResult::More {
                             response: rsp,
                             next: next_marker,
-                        }
+                        },
+                        _ => PagerResult::Done { response: rsp },
                     })
                 }
             },
