@@ -1783,7 +1783,6 @@ export class Adapter {
   private adaptPayloadFormat(contentType: string): rust.PayloadFormat {
     // we only recognize/support JSON and XML content types.
     if (contentType.match(/json/i)) {
-      this.crate.addDependency(new rust.CrateDependency('serde_json'));
       return 'json';
     } else if (contentType.match(/xml/i)) {
       // XML support is disabled by default
@@ -1804,7 +1803,6 @@ export class Adapter {
     // we only recognize/support JSON and XML content types.
     // anything else is NoFormat
     if (accept.match(/json/i)) {
-      this.crate.addDependency(new rust.CrateDependency('serde_json'));
       return 'JsonFormat';
     } else if (accept.match(/xml/i)) {
       // XML support is disabled by default
