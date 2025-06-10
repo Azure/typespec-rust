@@ -1049,13 +1049,19 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   // we need to handle the case where the next page value is the empty string,
   // so checking strickly for None(theNextLink) is insufficient.
   // the most common case for this is XML, e.g. an empty tag like <NextLink />
-  body += `${indent.get()}let ${nextPageValue} = ${srcNextPage}.unwrap_or_default();\n`;
-  body += `${indent.get()}Ok(${helpers.buildIfBlock(indent, {
-    condition: `${nextPageValue}.is_empty()`,
-    body: (indent) => `${indent.get()}PagerResult::Done { response: rsp }\n`,
+  body += `${indent.get()}Ok(${helpers.buildMatch(indent, srcNextPage, [{
+    pattern: `Some(${nextPageValue}) if !${nextPageValue}.is_empty()`,
+    body: (indent) => {
+      return `${indent.get()}response: rsp, next: ${continuation}`;
+    },
+    returns: 'PagerResult::More',
   }, {
-    body: (indent) => `${indent.get()} PagerResult::More { response: rsp, next: ${continuation} }\n`,
-  })}`;
+    pattern: '_',
+    body: (indent) => {
+      return `${indent.get()}response: rsp`;
+    },
+    returns: 'PagerResult::Done',
+  }])}`;
   body += ')\n'; // end Ok
   body += `${indent.pop().get()}}\n`; // end async move
   body += `${indent.pop().get()}}))`; // end Ok/Pager::from_callback

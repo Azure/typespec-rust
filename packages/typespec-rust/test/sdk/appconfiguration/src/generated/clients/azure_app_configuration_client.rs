@@ -738,14 +738,12 @@ impl AzureAppConfigurationClient {
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                    let next_link = res.next_link.unwrap_or_default();
-                    Ok(if next_link.is_empty() {
-                        PagerResult::Done { response: rsp }
-                    } else {
-                        PagerResult::More {
+                    Ok(match res.next_link {
+                        Some(next_link) if !next_link.is_empty() => PagerResult::More {
                             response: rsp,
                             next: next_link.parse()?,
-                        }
+                        },
+                        _ => PagerResult::Done { response: rsp },
                     })
                 }
             },
@@ -810,14 +808,12 @@ impl AzureAppConfigurationClient {
                 let bytes = body.collect().await?;
                 let res: KeyListResult = json::from_json(&bytes)?;
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                let next_link = res.next_link.unwrap_or_default();
-                Ok(if next_link.is_empty() {
-                    PagerResult::Done { response: rsp }
-                } else {
-                    PagerResult::More {
+                Ok(match res.next_link {
+                    Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
                         next: next_link.parse()?,
-                    }
+                    },
+                    _ => PagerResult::Done { response: rsp },
                 })
             }
         }))
@@ -895,14 +891,12 @@ impl AzureAppConfigurationClient {
                 let bytes = body.collect().await?;
                 let res: LabelListResult = json::from_json(&bytes)?;
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                let next_link = res.next_link.unwrap_or_default();
-                Ok(if next_link.is_empty() {
-                    PagerResult::Done { response: rsp }
-                } else {
-                    PagerResult::More {
+                Ok(match res.next_link {
+                    Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
                         next: next_link.parse()?,
-                    }
+                    },
+                    _ => PagerResult::Done { response: rsp },
                 })
             }
         }))
@@ -989,14 +983,12 @@ impl AzureAppConfigurationClient {
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                    let next_link = res.next_link.unwrap_or_default();
-                    Ok(if next_link.is_empty() {
-                        PagerResult::Done { response: rsp }
-                    } else {
-                        PagerResult::More {
+                    Ok(match res.next_link {
+                        Some(next_link) if !next_link.is_empty() => PagerResult::More {
                             response: rsp,
                             next: next_link.parse()?,
-                        }
+                        },
+                        _ => PagerResult::Done { response: rsp },
                     })
                 }
             },
@@ -1079,14 +1071,12 @@ impl AzureAppConfigurationClient {
                 let bytes = body.collect().await?;
                 let res: SnapshotListResult = json::from_json(&bytes)?;
                 let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                let next_link = res.next_link.unwrap_or_default();
-                Ok(if next_link.is_empty() {
-                    PagerResult::Done { response: rsp }
-                } else {
-                    PagerResult::More {
+                Ok(match res.next_link {
+                    Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
                         next: next_link.parse()?,
-                    }
+                    },
+                    _ => PagerResult::Done { response: rsp },
                 })
             }
         }))
