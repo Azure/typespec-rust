@@ -1426,6 +1426,9 @@ export class Adapter {
         break;
       case 'response':
         if (method.returns.type.content.kind === 'unit') {
+          // this is to filter out unit from ResponseTypes.
+          // methods that return unit should have been skipped by our caller
+          // so we should never hit this (if we do, we have a bug elsewhere).
           throw new AdapterError('InternalError', `unexpected method content kind ${method.returns.type.content.kind}`);
         }
         implFor = <rust.Response<rust.MarkerType | rust.WireType>>method.returns.type;
