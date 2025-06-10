@@ -164,7 +164,8 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'pageIterator':
       return `PageIterator<${getTypeDeclaration(type.type)}>`;
     case 'pager':
-      return `Pager<${getTypeDeclaration(type.type.type, withAnonymousLifetime)}>`;
+      // we explicitly omit the Response<T> from the type decl
+      return `Pager<${getTypeDeclaration(type.type.content, withAnonymousLifetime)}>`;
     case 'payload':
       return getTypeDeclaration(type.type, withAnonymousLifetime);
     case 'rawResponse':
@@ -182,15 +183,8 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'result':
       return `${type.name}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'response':
-      switch (type.content.kind) {
-        case 'marker':
-          return `${type.name}<${type.content.name}>`;
-        case 'payload':
-          return `${type.name}<${getTypeDeclaration(type.content.type, withAnonymousLifetime)}${emitXmlFormatForResponse(type.content)}>`;
-        case 'unit':
-          return `${type.name}<${getTypeDeclaration(type.content)}>`;
-      }
-      break;
+      // JsonFormat is the default, so we can elide it
+      return `${type.name}<${getTypeDeclaration(type.content)}${type.format !== 'JsonFormat' ? `, ${type.format}` : ''}>`;
     case 'String':
     case 'Url':
     case 'str':
@@ -221,21 +215,6 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'Vec':
       return `${type.kind}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
   }
-}
-
-/**
- * conditionally returns ", XmlFormat" to be used in Response<T> definitions
- * when the payload's content type is XML.
- * if the content type isn't XML, the empty string is returned.
- * 
- * @param respType the response type for which to emit the format
- * @returns the XML format string or the empty string
- */
-export function emitXmlFormatForResponse(respType: rust.ResponseTypes): string {
-  if (respType.kind === 'payload' && respType.format === 'xml') {
-    return ', XmlFormat';
-  }
-  return '';
 }
 
 // four spaces per indent level
@@ -438,12 +417,29 @@ export function unwrapType(type: rust.Payload | rust.Type): rust.Type {
     case 'Vec':
       return unwrapType(type.type);
     case 'pageIterator':
+    case 'pager':
       return unwrapType(type.type.content);
-    case 'pager':      
-      return type.type.type;
     case 'payload':
       return unwrapType(type.type);
     default:
       return type;
+  }
+}
+
+/** the wire format used */
+export type ModelFormat = 'json' | 'xml';
+
+/**
+ * converts a ResponseFormat to json or xml
+ * 
+ * @param format is the format to convert
+ * @returns json or xml
+ */
+export function convertResponseFormat(format: Exclude<rust.ResponseFormat, 'NoFormat'>): ModelFormat {
+  switch (format) {
+    case 'JsonFormat':
+      return 'json';
+    case 'XmlFormat':
+      return 'xml';
   }
 }

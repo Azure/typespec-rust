@@ -1155,7 +1155,7 @@ export class Adapter {
       // if the method param's type DOES match the op param's type and the op param has multiple corresponding method params, it's a spread param
       // - e.g. op param is an intersection of multiple model types, and each model type is exposed as a discrete param
       if (opParam.kind === 'body' && opParam.type.kind === 'model' && (opParam.type.kind !== param.type.kind || opParam.correspondingMethodParams.length > 1)) {
-        adaptedParam = this.adaptMethodSpreadParameter(param, this.adaptBodyFormat(opParam.defaultContentType), opParam.type);
+        adaptedParam = this.adaptMethodSpreadParameter(param, this.adaptPayloadFormat(opParam.defaultContentType), opParam.type);
       } else {
         adaptedParam = this.adaptMethodParameter(opParam);
       }
@@ -1202,8 +1202,7 @@ export class Adapter {
       }
     }
 
-    /** called IFF the operation returns a modeled response */
-    const getBodyFormat = (): rust.BodyFormat => {
+    const getResponseFormat = (): rust.ResponseFormat => {
       // fetch the body format from the HTTP responses.
       // they should all have the same type so no need to match responses to type.
       let defaultContentType: string | undefined;
@@ -1219,10 +1218,10 @@ export class Adapter {
       }
 
       if (!defaultContentType) {
-        throw new AdapterError('InternalError', `unable to determine content type for method ${method.name}`, method.__raw?.node);
+        return 'NoFormat';
       }
 
-      return this.adaptBodyFormat(defaultContentType);
+      return this.adaptResponseFormat(defaultContentType);
     };
 
     // add any response headers
@@ -1246,7 +1245,13 @@ export class Adapter {
       }
     }
 
+    const responseFormat = getResponseFormat();
+
     if (method.kind === 'paging') {
+      if (responseFormat === 'NoFormat') {
+        throw new AdapterError('InternalError', `paged method ${method.name} unexpected response format ${responseFormat}`, method.__raw?.node);
+      }
+
       // for paged methods, tcgc models method.response.type as an Array<T>.
       // however, we want the synthesized paged response envelope type instead.
       const synthesizedType = method.operation.responses[0].type;
@@ -1256,7 +1261,6 @@ export class Adapter {
         throw new AdapterError('UnsupportedTsp', `paged method ${method.name} synthesized response type has unexpected kind ${synthesizedType.kind}`, method.__raw?.node);
       }
 
-      const format = getBodyFormat();
       const synthesizedModel = this.getModel(synthesizedType, new Array<string>());
       if (!this.crate.models.includes(synthesizedModel)) {
         this.crate.models.push(synthesizedModel);
@@ -1273,14 +1277,21 @@ export class Adapter {
       for (const pageItemsSegment of method.pagingMetadata.pageItemsSegments) {
         const segment = <tcgc.SdkBodyModelPropertyType>pageItemsSegment;
         let serde: string;
-        switch (format) {
-          case 'json':
-            serde = segment.serializationOptions.json!.name;
+        switch (responseFormat) {
+          case 'JsonFormat':
+            if (!segment.serializationOptions.json) {
+              throw new AdapterError('InternalError', `paged method ${method.name} is missing JSON serialization data`, method.__raw?.node);
+            }
+            serde = segment.serializationOptions.json.name;
             break;
-          case 'xml':
-            serde = segment.serializationOptions.xml!.name;
+          case 'XmlFormat':
+            if (!segment.serializationOptions.xml) {
+              throw new AdapterError('InternalError', `paged method ${method.name} is missing XML serialization data`, method.__raw?.node);
+            }
+            serde = segment.serializationOptions.xml.name;
             break;
         }
+
         for (let i = 0; i < typeToUnwrap.fields.length; ++i) {
           const field = typeToUnwrap.fields[i];
           if (field.serde === serde) {
@@ -1306,25 +1317,25 @@ export class Adapter {
 
       // if the response contains more than the Vec<T> and next_link then use a PageIterator
       if (synthesizedModel.fields.length > 2) {
-        rustMethod.returns = new rust.Result(this.crate, new rust.PageIterator(this.crate, new rust.Response(this.crate, new rust.Payload(synthesizedModel, format))));
+        rustMethod.returns = new rust.Result(this.crate, new rust.PageIterator(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
       } else {
-        rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Payload(synthesizedModel, format)));
+        rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
       }
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
-      const payloadResponse = new rust.Response(this.crate, new rust.Payload(this.typeToWireType(this.getType(method.response.type)), getBodyFormat()));
-      rustMethod.returns = new rust.Result(this.crate, payloadResponse);
+      const response = new rust.Response(this.crate, this.typeToWireType(this.getType(method.response.type)), responseFormat);
+      rustMethod.returns = new rust.Result(this.crate, response);
     } else if (responseHeaders.length > 0) {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
       const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name)}Result`);
       markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
       this.crate.models.push(markerType);
-      rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, markerType));
+      rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, markerType, responseFormat));
     } else if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
       // bytes encoding indicates a streaming binary response
       rustMethod.returns = new rust.Result(this.crate, new rust.RawResponse(this.crate));
     } else {
-      rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, this.getUnitType()));
+      rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, this.getUnitType(), responseFormat));
     }
 
     const responseHeadersMap = this.adaptResposeHeaders(responseHeaders);
@@ -1385,9 +1396,10 @@ export class Adapter {
      * @param type the type for which to build a name
      * @returns the name
      */
-    const recursiveTypeName = function(type: rust.WireType): string {
+    const recursiveTypeName = function(type: rust.MarkerType | rust.WireType): string {
       switch (type.kind) {
         case 'enum':
+        case 'marker':
         case 'model':
           return type.name;
         case 'hashmap':
@@ -1406,35 +1418,27 @@ export class Adapter {
     };
 
     // response header traits are only ever for marker types and payloads
-    let implFor: rust.MarkerType | rust.Payload;
+    let implFor: rust.Response<rust.MarkerType | rust.WireType>;
     switch (method.returns.type.kind) {
       case 'pageIterator':
-        implFor = method.returns.type.type.content;
-        break;
       case 'pager':
         implFor = method.returns.type.type;
         break;
       case 'response':
-        if (method.returns.type.content.kind !== 'marker' && method.returns.type.content.kind !== 'payload') {
+        if (method.returns.type.content.kind === 'unit') {
+          // this is to filter out unit from ResponseTypes.
+          // methods that return unit should have been skipped by our caller
+          // so we should never hit this (if we do, we have a bug elsewhere).
           throw new AdapterError('InternalError', `unexpected method content kind ${method.returns.type.content.kind}`);
         }
-        implFor = method.returns.type.content;
+        implFor = <rust.Response<rust.MarkerType | rust.WireType>>method.returns.type;
         break;
       default:
         // this is RawResponse which should have been previously skipped
         throw new AdapterError('InternalError', `unexpected method return kind ${method.returns.type.kind}`);
     }
 
-    let traitName: string;
-    switch (implFor.kind) {
-      case 'marker':
-        traitName = implFor.name;
-        break;
-      case 'payload':
-        traitName = recursiveTypeName(implFor.type);
-        break;
-    }
-    traitName += 'Headers';
+    const traitName = `${recursiveTypeName(implFor.content)}Headers`;
 
     // NOTE: the complete doc text will be emitted at codegen time
     const docs = this.asDocLink(`${client.name}::${method.name}()`, `crate::generated::clients::${client.name}::${method.name}()`);
@@ -1589,7 +1593,7 @@ export class Adapter {
           // bytes encoding indicates a streaming binary request
           requestType = new rust.Bytes(this.crate);
         } else {
-          requestType = new rust.Payload(this.typeToWireType(paramType), this.adaptBodyFormat(param.defaultContentType));
+          requestType = new rust.Payload(this.typeToWireType(paramType), this.adaptPayloadFormat(param.defaultContentType));
         }
         adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, requestType));
         break;
@@ -1744,47 +1748,41 @@ export class Adapter {
    * @param opParamType the tcgc model to which the spread parameter belongs
    * @returns a Rust partial body parameter
    */
-  private adaptMethodSpreadParameter(param: tcgc.SdkMethodParameter, format: rust.BodyFormat, opParamType: tcgc.SdkModelType): rust.PartialBodyParameter {
-    switch (format) {
-      case 'json':
-      case 'xml': {
-        // find the corresponding field within the model so we can get its index
-        let serializedName: string | undefined;
-        for (const property of opParamType.properties) {
-          if (property.name === param.name) {
-            serializedName = (<tcgc.SdkBodyModelPropertyType>property).serializedName;
-            break;
-          }
-        }
-
-        if (serializedName === undefined) {
-          throw new AdapterError('InternalError', `didn't find body model property for spread parameter ${param.name}`, param.__raw?.node);
-        }
-
-        // this is the internal model type that the spread params coalesce into
-        const payloadType = this.getType(opParamType);
-        if (payloadType.kind !== 'model') {
-          throw new AdapterError('InternalError', `unexpected kind ${payloadType.kind} for spread body param`, opParamType.__raw?.node);
-        }
-
-        const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
-        const paramLoc: rust.ParameterLocation = 'method';
-        const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, this.getType(param.type), new rust.RequestContent(this.crate, new rust.Payload(payloadType, format)));
-        return adaptedParam;
+  private adaptMethodSpreadParameter(param: tcgc.SdkMethodParameter, format: rust.PayloadFormat, opParamType: tcgc.SdkModelType): rust.PartialBodyParameter {
+    // find the corresponding field within the model so we can get its index
+    let serializedName: string | undefined;
+    for (const property of opParamType.properties) {
+      if (property.name === param.name) {
+        serializedName = (<tcgc.SdkBodyModelPropertyType>property).serializedName;
+        break;
       }
     }
+
+    if (serializedName === undefined) {
+      throw new AdapterError('InternalError', `didn't find body model property for spread parameter ${param.name}`, param.__raw?.node);
+    }
+
+    // this is the internal model type that the spread params coalesce into
+    const payloadType = this.getType(opParamType);
+    if (payloadType.kind !== 'model') {
+      throw new AdapterError('InternalError', `unexpected kind ${payloadType.kind} for spread body param`, opParamType.__raw?.node);
+    }
+
+    const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
+    const paramLoc: rust.ParameterLocation = 'method';
+    const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, this.getType(param.type), new rust.RequestContent(this.crate, new rust.Payload(payloadType, format)));
+    return adaptedParam;
   }
 
   /**
-   * converts a Content-Type header value into a Rust body format
+   * converts a Content-Type header value into a payload format
    * 
    * @param contentType the value of the Content-Type header
-   * @returns a Rust body format
+   * @returns a payload format
    */
-  private adaptBodyFormat(contentType: string): rust.BodyFormat {
-    // we only recognize/support JSON, text, and XML content types.
+  private adaptPayloadFormat(contentType: string): rust.PayloadFormat {
+    // we only recognize/support JSON and XML content types.
     if (contentType.match(/json/i)) {
-      this.crate.addDependency(new rust.CrateDependency('serde_json'));
       return 'json';
     } else if (contentType.match(/xml/i)) {
       // XML support is disabled by default
@@ -1792,6 +1790,26 @@ export class Adapter {
       return 'xml';
     } else {
       throw new AdapterError('InternalError', `unexpected contentType ${contentType}`);
+    }
+  }
+
+  /**
+   * converts an accept header value into a response format
+   * 
+   * @param accept the value of the Content-Type header
+   * @returns a response format
+   */
+  private adaptResponseFormat(accept: string): rust.ResponseFormat {
+    // we only recognize/support JSON and XML content types.
+    // anything else is NoFormat
+    if (accept.match(/json/i)) {
+      return 'JsonFormat';
+    } else if (accept.match(/xml/i)) {
+      // XML support is disabled by default
+      this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
+      return 'XmlFormat';
+    } else {
+      return 'NoFormat';
     }
   }
 }

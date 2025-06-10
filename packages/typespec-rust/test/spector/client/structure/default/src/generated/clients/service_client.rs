@@ -9,7 +9,7 @@ use crate::generated::{
 };
 use azure_core::{
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -110,7 +110,10 @@ impl ServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    pub async fn one(&self, options: Option<ServiceClientOneOptions<'_>>) -> Result<Response<()>> {
+    pub async fn one(
+        &self,
+        options: Option<ServiceClientOneOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -123,7 +126,10 @@ impl ServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    pub async fn two(&self, options: Option<ServiceClientTwoOptions<'_>>) -> Result<Response<()>> {
+    pub async fn two(
+        &self,
+        options: Option<ServiceClientTwoOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

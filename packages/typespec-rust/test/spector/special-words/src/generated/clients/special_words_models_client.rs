@@ -25,7 +25,7 @@ use crate::generated::models::{
     SpecialWordsModelsClientWithYieldOptions, Try, While, With, Yield,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     Result,
 };
 
@@ -49,7 +49,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<And>,
         options: Option<SpecialWordsModelsClientWithAndOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -68,7 +68,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<As>,
         options: Option<SpecialWordsModelsClientWithAsOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -87,7 +87,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Assert>,
         options: Option<SpecialWordsModelsClientWithAssertOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -106,7 +106,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Async>,
         options: Option<SpecialWordsModelsClientWithAsyncOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -125,7 +125,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Await>,
         options: Option<SpecialWordsModelsClientWithAwaitOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -144,7 +144,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Break>,
         options: Option<SpecialWordsModelsClientWithBreakOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -163,7 +163,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Class>,
         options: Option<SpecialWordsModelsClientWithClassOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -182,7 +182,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Constructor>,
         options: Option<SpecialWordsModelsClientWithConstructorOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -201,7 +201,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Continue>,
         options: Option<SpecialWordsModelsClientWithContinueOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -220,7 +220,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Def>,
         options: Option<SpecialWordsModelsClientWithDefOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -239,7 +239,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Del>,
         options: Option<SpecialWordsModelsClientWithDelOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -258,7 +258,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Elif>,
         options: Option<SpecialWordsModelsClientWithElifOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -277,7 +277,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Else>,
         options: Option<SpecialWordsModelsClientWithElseOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -296,7 +296,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Except>,
         options: Option<SpecialWordsModelsClientWithExceptOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -315,7 +315,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Exec>,
         options: Option<SpecialWordsModelsClientWithExecOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -334,7 +334,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Finally>,
         options: Option<SpecialWordsModelsClientWithFinallyOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -353,7 +353,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<For>,
         options: Option<SpecialWordsModelsClientWithForOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -372,7 +372,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<From>,
         options: Option<SpecialWordsModelsClientWithFromOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -391,7 +391,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Global>,
         options: Option<SpecialWordsModelsClientWithGlobalOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -410,7 +410,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<If>,
         options: Option<SpecialWordsModelsClientWithIfOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -429,7 +429,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Import>,
         options: Option<SpecialWordsModelsClientWithImportOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -448,7 +448,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<In>,
         options: Option<SpecialWordsModelsClientWithInOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -467,7 +467,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Is>,
         options: Option<SpecialWordsModelsClientWithIsOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -486,7 +486,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Lambda>,
         options: Option<SpecialWordsModelsClientWithLambdaOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -505,7 +505,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Not>,
         options: Option<SpecialWordsModelsClientWithNotOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -524,7 +524,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Or>,
         options: Option<SpecialWordsModelsClientWithOrOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -543,7 +543,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Pass>,
         options: Option<SpecialWordsModelsClientWithPassOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -562,7 +562,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Raise>,
         options: Option<SpecialWordsModelsClientWithRaiseOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -581,7 +581,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Return>,
         options: Option<SpecialWordsModelsClientWithReturnOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -600,7 +600,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Try>,
         options: Option<SpecialWordsModelsClientWithTryOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -619,7 +619,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<While>,
         options: Option<SpecialWordsModelsClientWithWhileOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -638,7 +638,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<With>,
         options: Option<SpecialWordsModelsClientWithOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -657,7 +657,7 @@ impl SpecialWordsModelsClient {
         &self,
         body: RequestContent<Yield>,
         options: Option<SpecialWordsModelsClientWithYieldOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

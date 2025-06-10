@@ -11,7 +11,7 @@ use crate::generated::models::{
     DatetimeResponseHeaderClientUnixTimestampResult,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -33,7 +33,7 @@ impl DatetimeResponseHeaderClient {
     pub async fn default(
         &self,
         options: Option<DatetimeResponseHeaderClientDefaultOptions<'_>>,
-    ) -> Result<Response<DatetimeResponseHeaderClientDefaultResult>> {
+    ) -> Result<Response<DatetimeResponseHeaderClientDefaultResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -49,7 +49,7 @@ impl DatetimeResponseHeaderClient {
     pub async fn rfc3339(
         &self,
         options: Option<DatetimeResponseHeaderClientRfc3339Options<'_>>,
-    ) -> Result<Response<DatetimeResponseHeaderClientRfc3339Result>> {
+    ) -> Result<Response<DatetimeResponseHeaderClientRfc3339Result, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -65,7 +65,7 @@ impl DatetimeResponseHeaderClient {
     pub async fn rfc7231(
         &self,
         options: Option<DatetimeResponseHeaderClientRfc7231Options<'_>>,
-    ) -> Result<Response<DatetimeResponseHeaderClientRfc7231Result>> {
+    ) -> Result<Response<DatetimeResponseHeaderClientRfc7231Result, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -81,7 +81,7 @@ impl DatetimeResponseHeaderClient {
     pub async fn unix_timestamp(
         &self,
         options: Option<DatetimeResponseHeaderClientUnixTimestampOptions<'_>>,
-    ) -> Result<Response<DatetimeResponseHeaderClientUnixTimestampResult>> {
+    ) -> Result<Response<DatetimeResponseHeaderClientUnixTimestampResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

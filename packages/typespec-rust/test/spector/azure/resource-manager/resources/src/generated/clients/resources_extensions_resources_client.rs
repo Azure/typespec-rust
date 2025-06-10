@@ -11,8 +11,8 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{
-        Context, Method, Pager, PagerResult, Pipeline, RawResponse, Request, RequestContent,
-        Response, Url,
+        Context, Method, NoFormat, Pager, PagerResult, Pipeline, RawResponse, Request,
+        RequestContent, Response, Url,
     },
     json, Result,
 };
@@ -43,7 +43,7 @@ impl ResourcesExtensionsResourcesClient {
         resource_uri: &str,
         extensions_resource_name: &str,
         options: Option<ResourcesExtensionsResourcesClientDeleteOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

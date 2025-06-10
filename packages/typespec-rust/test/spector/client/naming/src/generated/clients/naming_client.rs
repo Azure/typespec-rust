@@ -15,7 +15,9 @@ use crate::generated::{
 };
 use azure_core::{
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{
+        ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
+    },
     Result,
 };
 
@@ -77,7 +79,7 @@ impl NamingClient {
         &self,
         body: RequestContent<ClientNameModel>,
         options: Option<NamingClientClientOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -95,7 +97,7 @@ impl NamingClient {
     pub async fn client_name(
         &self,
         options: Option<NamingClientClientNameOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -112,7 +114,7 @@ impl NamingClient {
         &self,
         body: RequestContent<ClientNameAndJsonEncodedNameModel>,
         options: Option<NamingClientCompatibleWithEncodedNameOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -147,7 +149,7 @@ impl NamingClient {
         &self,
         body: RequestContent<LanguageClientNameModel>,
         options: Option<NamingClientLanguageOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -166,7 +168,7 @@ impl NamingClient {
         &self,
         client_name: &str,
         options: Option<NamingClientParameterOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -185,7 +187,7 @@ impl NamingClient {
         &self,
         client_name: String,
         options: Option<NamingClientRequestOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -202,7 +204,7 @@ impl NamingClient {
     pub async fn response(
         &self,
         options: Option<NamingClientResponseOptions<'_>>,
-    ) -> Result<Response<NamingClientResponseResult>> {
+    ) -> Result<Response<NamingClientResponseResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

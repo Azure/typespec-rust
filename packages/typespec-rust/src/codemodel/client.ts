@@ -359,7 +359,7 @@ export interface ResponseHeadersTrait {
   name: string;
 
   /** the type for which to implement the trait */
-  implFor: types.MarkerType | types.Payload;
+  implFor: types.Response<types.MarkerType | types.WireType>;
 
   /** the headers in the trait */
   headers: Array<ResponseHeader>;
@@ -636,7 +636,7 @@ export class ResponseHeaderScalar implements ResponseHeaderScalar {
 }
 
 export class ResponseHeadersTrait implements ResponseHeadersTrait {
-  constructor(name: string, implFor: types.MarkerType | types.Payload, docs: string) {
+  constructor(name: string, implFor: types.Response<types.MarkerType | types.WireType>, docs: string) {
     this.kind = 'responseHeadersTrait';
     this.name = name;
     this.implFor = implFor;

@@ -16,7 +16,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url,
+        ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
     Bytes, Result,
 };
@@ -102,7 +102,7 @@ impl AppendBlobClient {
         body: RequestContent<Bytes>,
         content_length: u64,
         options: Option<AppendBlobClientAppendBlockOptions<'_>>,
-    ) -> Result<Response<AppendBlobClientAppendBlockResult>> {
+    ) -> Result<Response<AppendBlobClientAppendBlockResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -200,7 +200,7 @@ impl AppendBlobClient {
         source_url: String,
         content_length: u64,
         options: Option<AppendBlobClientAppendBlockFromUrlOptions<'_>>,
-    ) -> Result<Response<AppendBlobClientAppendBlockFromUrlResult>> {
+    ) -> Result<Response<AppendBlobClientAppendBlockFromUrlResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -318,7 +318,7 @@ impl AppendBlobClient {
         &self,
         content_length: u64,
         options: Option<AppendBlobClientCreateOptions<'_>>,
-    ) -> Result<Response<AppendBlobClientCreateResult>> {
+    ) -> Result<Response<AppendBlobClientCreateResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -428,7 +428,7 @@ impl AppendBlobClient {
     pub async fn seal(
         &self,
         options: Option<AppendBlobClientSealOptions<'_>>,
-    ) -> Result<Response<AppendBlobClientSealResult>> {
+    ) -> Result<Response<AppendBlobClientSealResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

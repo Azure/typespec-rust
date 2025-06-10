@@ -6,7 +6,7 @@
 use crate::generated::models::SingleClientMyOpOptions;
 use azure_core::{
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -67,7 +67,7 @@ impl SingleClient {
     pub async fn my_op(
         &self,
         options: Option<SingleClientMyOpOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

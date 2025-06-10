@@ -7,7 +7,7 @@ use super::NamingClientResponseResult;
 use azure_core::{
     http::{
         headers::{HeaderName, Headers},
-        Response,
+        NoFormat, Response,
     },
     Result,
 };
@@ -19,7 +19,7 @@ pub trait NamingClientResponseResultHeaders: private::Sealed {
     fn client_name(&self) -> Result<Option<String>>;
 }
 
-impl NamingClientResponseResultHeaders for Response<NamingClientResponseResult> {
+impl NamingClientResponseResultHeaders for Response<NamingClientResponseResult, NoFormat> {
     fn client_name(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &DEFAULT_NAME)
     }
@@ -27,9 +27,9 @@ impl NamingClientResponseResultHeaders for Response<NamingClientResponseResult> 
 
 mod private {
     use super::NamingClientResponseResult;
-    use azure_core::http::Response;
+    use azure_core::http::{NoFormat, Response};
 
     pub trait Sealed {}
 
-    impl Sealed for Response<NamingClientResponseResult> {}
+    impl Sealed for Response<NamingClientResponseResult, NoFormat> {}
 }

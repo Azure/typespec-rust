@@ -6,7 +6,7 @@
 use crate::generated::models::QueryClientQueryApiVersionOptions;
 use azure_core::{
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -67,7 +67,7 @@ impl QueryClient {
     pub async fn query_api_version(
         &self,
         options: Option<QueryClientQueryApiVersionOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

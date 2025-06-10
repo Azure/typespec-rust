@@ -112,10 +112,6 @@ export class Use {
         this.addForType(type.type);
         break;
       case 'payload':
-        if (type.format === 'xml') {
-          // we implicitly add this as it's required for XML payloads
-          this.add('azure_core::http', 'XmlFormat');
-        }
         this.addForType(type.type);
         break;
       case 'requestContent':
@@ -129,12 +125,11 @@ export class Use {
         }
         break;
       case 'response':
-        switch (type.content.kind) {
-          case 'marker':
-          case 'payload':
-            this.addForType(type.content);
-            break;
+        if (type.format !== 'JsonFormat') {
+          // JsonFormat is the default so no need to bring it into scope
+          this.add('azure_core::http', type.format);
         }
+        this.addForType(type.content);
         break;
       case 'responseHeadersTrait':
         switch (this.scope) {

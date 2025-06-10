@@ -8,7 +8,9 @@ use crate::generated::models::{
 };
 use azure_core::{
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{
+        ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
+    },
     Result,
 };
 
@@ -74,7 +76,7 @@ impl MixedParamsClient {
         region: &str,
         body: RequestContent<WithBodyRequest>,
         options: Option<MixedParamsClientWithBodyOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -97,7 +99,7 @@ impl MixedParamsClient {
         region: &str,
         id: &str,
         options: Option<MixedParamsClientWithQueryOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

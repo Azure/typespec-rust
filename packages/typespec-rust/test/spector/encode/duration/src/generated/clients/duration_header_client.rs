@@ -9,7 +9,7 @@ use crate::generated::models::{
     DurationHeaderClientIso8601ArrayOptions, DurationHeaderClientIso8601Options,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -32,7 +32,7 @@ impl DurationHeaderClient {
         &self,
         duration: String,
         options: Option<DurationHeaderClientDefaultOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -50,7 +50,7 @@ impl DurationHeaderClient {
         &self,
         duration: f64,
         options: Option<DurationHeaderClientFloat64SecondsOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -68,7 +68,7 @@ impl DurationHeaderClient {
         &self,
         duration: f32,
         options: Option<DurationHeaderClientFloatSecondsOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -86,7 +86,7 @@ impl DurationHeaderClient {
         &self,
         duration: i32,
         options: Option<DurationHeaderClientInt32SecondsOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -104,7 +104,7 @@ impl DurationHeaderClient {
         &self,
         duration: String,
         options: Option<DurationHeaderClientIso8601Options<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -122,7 +122,7 @@ impl DurationHeaderClient {
         &self,
         duration: &[&str],
         options: Option<DurationHeaderClientIso8601ArrayOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

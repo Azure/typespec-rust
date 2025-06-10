@@ -8,7 +8,9 @@ use crate::generated::models::{
     XmlModelWithSimpleArraysValueClientPutOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url, XmlFormat},
+    http::{
+        Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url, XmlFormat,
+    },
     Result,
 };
 
@@ -49,7 +51,7 @@ impl XmlModelWithSimpleArraysValueClient {
         &self,
         input: RequestContent<ModelWithSimpleArrays>,
         options: Option<XmlModelWithSimpleArraysValueClientPutOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

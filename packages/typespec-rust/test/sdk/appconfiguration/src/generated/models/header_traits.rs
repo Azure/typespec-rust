@@ -16,7 +16,7 @@ use super::{
 use azure_core::{
     http::{
         headers::{HeaderName, Headers},
-        Response,
+        NoFormat, Response,
     },
     Result,
 };
@@ -34,7 +34,7 @@ pub trait AzureAppConfigurationClientCheckKeyValueResultHeaders: private::Sealed
 }
 
 impl AzureAppConfigurationClientCheckKeyValueResultHeaders
-    for Response<AzureAppConfigurationClientCheckKeyValueResult>
+    for Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat>
 {
     /// Used to guarantee real-time consistency between requests.
     fn sync_token(&self) -> Result<Option<String>> {
@@ -54,7 +54,7 @@ pub trait AzureAppConfigurationClientCheckKeyValuesResultHeaders: private::Seale
 }
 
 impl AzureAppConfigurationClientCheckKeyValuesResultHeaders
-    for Response<AzureAppConfigurationClientCheckKeyValuesResult>
+    for Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat>
 {
     /// Used to guarantee real-time consistency between requests.
     fn sync_token(&self) -> Result<Option<String>> {
@@ -73,7 +73,7 @@ pub trait AzureAppConfigurationClientCheckKeysResultHeaders: private::Sealed {
 }
 
 impl AzureAppConfigurationClientCheckKeysResultHeaders
-    for Response<AzureAppConfigurationClientCheckKeysResult>
+    for Response<AzureAppConfigurationClientCheckKeysResult, NoFormat>
 {
     /// Used to guarantee real-time consistency between requests.
     fn sync_token(&self) -> Result<Option<String>> {
@@ -87,7 +87,7 @@ pub trait AzureAppConfigurationClientCheckLabelsResultHeaders: private::Sealed {
 }
 
 impl AzureAppConfigurationClientCheckLabelsResultHeaders
-    for Response<AzureAppConfigurationClientCheckLabelsResult>
+    for Response<AzureAppConfigurationClientCheckLabelsResult, NoFormat>
 {
     /// Used to guarantee real-time consistency between requests.
     fn sync_token(&self) -> Result<Option<String>> {
@@ -102,7 +102,7 @@ pub trait AzureAppConfigurationClientCheckRevisionsResultHeaders: private::Seale
 }
 
 impl AzureAppConfigurationClientCheckRevisionsResultHeaders
-    for Response<AzureAppConfigurationClientCheckRevisionsResult>
+    for Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat>
 {
     /// Used to guarantee real-time consistency between requests.
     fn sync_token(&self) -> Result<Option<String>> {
@@ -123,7 +123,7 @@ pub trait AzureAppConfigurationClientCheckSnapshotResultHeaders: private::Sealed
 }
 
 impl AzureAppConfigurationClientCheckSnapshotResultHeaders
-    for Response<AzureAppConfigurationClientCheckSnapshotResult>
+    for Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat>
 {
     /// Includes links to related resources.
     fn link(&self) -> Result<Option<String>> {
@@ -147,7 +147,7 @@ pub trait AzureAppConfigurationClientCheckSnapshotsResultHeaders: private::Seale
 }
 
 impl AzureAppConfigurationClientCheckSnapshotsResultHeaders
-    for Response<AzureAppConfigurationClientCheckSnapshotsResult>
+    for Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat>
 {
     /// Used to guarantee real-time consistency between requests.
     fn sync_token(&self) -> Result<Option<String>> {
@@ -318,17 +318,17 @@ mod private {
         AzureAppConfigurationClientCheckSnapshotsResult, KeyListResult, KeyValue,
         KeyValueListResult, LabelListResult, Snapshot, SnapshotListResult,
     };
-    use azure_core::http::Response;
+    use azure_core::http::{NoFormat, Response};
 
     pub trait Sealed {}
 
-    impl Sealed for Response<AzureAppConfigurationClientCheckKeyValueResult> {}
-    impl Sealed for Response<AzureAppConfigurationClientCheckKeyValuesResult> {}
-    impl Sealed for Response<AzureAppConfigurationClientCheckKeysResult> {}
-    impl Sealed for Response<AzureAppConfigurationClientCheckLabelsResult> {}
-    impl Sealed for Response<AzureAppConfigurationClientCheckRevisionsResult> {}
-    impl Sealed for Response<AzureAppConfigurationClientCheckSnapshotResult> {}
-    impl Sealed for Response<AzureAppConfigurationClientCheckSnapshotsResult> {}
+    impl Sealed for Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat> {}
+    impl Sealed for Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat> {}
+    impl Sealed for Response<AzureAppConfigurationClientCheckKeysResult, NoFormat> {}
+    impl Sealed for Response<AzureAppConfigurationClientCheckLabelsResult, NoFormat> {}
+    impl Sealed for Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat> {}
+    impl Sealed for Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat> {}
+    impl Sealed for Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat> {}
     impl Sealed for Response<KeyListResult> {}
     impl Sealed for Response<KeyValue> {}
     impl Sealed for Response<KeyValueListResult> {}

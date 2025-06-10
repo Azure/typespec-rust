@@ -7,7 +7,7 @@ use crate::generated::models::{
     BytesProperty, ValueTypesBytesClientGetOptions, ValueTypesBytesClientPutOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     Result,
 };
 
@@ -50,7 +50,7 @@ impl ValueTypesBytesClient {
         &self,
         body: RequestContent<BytesProperty>,
         options: Option<ValueTypesBytesClientPutOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

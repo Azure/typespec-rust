@@ -11,7 +11,7 @@ use crate::generated::models::{
     SpreadModelClientSpreadCompositeRequestWithoutBodyOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     Result,
 };
 
@@ -34,7 +34,7 @@ impl SpreadModelClient {
         &self,
         name: String,
         options: Option<SpreadModelClientSpreadAsRequestBodyOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -56,7 +56,7 @@ impl SpreadModelClient {
         test_header: String,
         body: RequestContent<BodyParameter>,
         options: Option<SpreadModelClientSpreadCompositeRequestOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -80,7 +80,7 @@ impl SpreadModelClient {
         test_header: String,
         prop: String,
         options: Option<SpreadModelClientSpreadCompositeRequestMixOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -104,7 +104,7 @@ impl SpreadModelClient {
         &self,
         body: RequestContent<BodyParameter>,
         options: Option<SpreadModelClientSpreadCompositeRequestOnlyWithBodyOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -124,7 +124,7 @@ impl SpreadModelClient {
         name: &str,
         test_header: String,
         options: Option<SpreadModelClientSpreadCompositeRequestWithoutBodyOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

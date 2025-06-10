@@ -10,7 +10,7 @@ use crate::generated::models::{
     NullableCollectionsModelClientPatchNullOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     Result,
 };
 
@@ -70,7 +70,7 @@ impl NullableCollectionsModelClient {
         &self,
         body: RequestContent<CollectionsModelProperty>,
         options: Option<NullableCollectionsModelClientPatchNonNullOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -90,7 +90,7 @@ impl NullableCollectionsModelClient {
         &self,
         body: RequestContent<CollectionsModelProperty>,
         options: Option<NullableCollectionsModelClientPatchNullOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

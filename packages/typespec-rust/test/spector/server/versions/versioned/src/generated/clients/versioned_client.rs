@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -73,7 +73,7 @@ impl VersionedClient {
     pub async fn with_path_api_version(
         &self,
         options: Option<VersionedClientWithPathApiVersionOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -91,7 +91,7 @@ impl VersionedClient {
     pub async fn with_query_api_version(
         &self,
         options: Option<VersionedClientWithQueryApiVersionOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -109,7 +109,7 @@ impl VersionedClient {
     pub async fn with_query_old_api_version(
         &self,
         options: Option<VersionedClientWithQueryOldApiVersionOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -127,7 +127,7 @@ impl VersionedClient {
     pub async fn without_api_version(
         &self,
         options: Option<VersionedClientWithoutApiVersionOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

@@ -8,7 +8,7 @@ use crate::generated::models::{
     RenamedOperationGroupClientRenamedTwoOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -30,7 +30,7 @@ impl RenamedOperationGroupClient {
     pub async fn renamed_four(
         &self,
         options: Option<RenamedOperationGroupClientRenamedFourOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -46,7 +46,7 @@ impl RenamedOperationGroupClient {
     pub async fn renamed_six(
         &self,
         options: Option<RenamedOperationGroupClientRenamedSixOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -62,7 +62,7 @@ impl RenamedOperationGroupClient {
     pub async fn renamed_two(
         &self,
         options: Option<RenamedOperationGroupClientRenamedTwoOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

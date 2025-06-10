@@ -21,7 +21,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url,
+        ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
         XmlFormat,
     },
     Bytes, Result,
@@ -106,7 +106,7 @@ impl PageBlobClient {
         &self,
         content_length: u64,
         options: Option<PageBlobClientClearPagesOptions<'_>>,
-    ) -> Result<Response<PageBlobClientClearPagesResult>> {
+    ) -> Result<Response<PageBlobClientClearPagesResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -205,7 +205,7 @@ impl PageBlobClient {
         &self,
         copy_source: String,
         options: Option<PageBlobClientCopyIncrementalOptions<'_>>,
-    ) -> Result<Response<PageBlobClientCopyIncrementalResult>> {
+    ) -> Result<Response<PageBlobClientCopyIncrementalResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -260,7 +260,7 @@ impl PageBlobClient {
         content_length: u64,
         blob_content_length: u64,
         options: Option<PageBlobClientCreateOptions<'_>>,
-    ) -> Result<Response<PageBlobClientCreateResult>> {
+    ) -> Result<Response<PageBlobClientCreateResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -521,7 +521,7 @@ impl PageBlobClient {
         &self,
         blob_content_length: u64,
         options: Option<PageBlobClientResizeOptions<'_>>,
-    ) -> Result<Response<PageBlobClientResizeResult>> {
+    ) -> Result<Response<PageBlobClientResizeResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -595,7 +595,7 @@ impl PageBlobClient {
         &self,
         sequence_number_action: SequenceNumberActionType,
         options: Option<PageBlobClientUpdateSequenceNumberOptions<'_>>,
-    ) -> Result<Response<PageBlobClientUpdateSequenceNumberResult>> {
+    ) -> Result<Response<PageBlobClientUpdateSequenceNumberResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -663,7 +663,7 @@ impl PageBlobClient {
         body: RequestContent<Bytes>,
         content_length: u64,
         options: Option<PageBlobClientUploadPagesOptions<'_>>,
-    ) -> Result<Response<PageBlobClientUploadPagesResult>> {
+    ) -> Result<Response<PageBlobClientUploadPagesResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -785,7 +785,7 @@ impl PageBlobClient {
         content_length: u64,
         range: String,
         options: Option<PageBlobClientUploadPagesFromUrlOptions<'_>>,
-    ) -> Result<Response<PageBlobClientUploadPagesFromUrlResult>> {
+    ) -> Result<Response<PageBlobClientUploadPagesFromUrlResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

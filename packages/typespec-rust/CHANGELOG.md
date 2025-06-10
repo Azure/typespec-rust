@@ -1,6 +1,12 @@
 # Release History
 
-## 0.15.1 (unreleased)
+## 0.16.0 (unreleased)
+
+### Breaking Changes
+
+**NOTE: this version is incompatible with earlier versions of `azure_core`**
+
+* Methods that return a raw response with a marker type or no response have a return type of `Response<T, NoFormat>`.
 
 ### Other Changes
 
