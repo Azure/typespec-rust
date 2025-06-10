@@ -58,8 +58,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<RequestHeaderResponseBodyResponse> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: RequestHeaderResponseBodyResponse = json::from_json(&bytes)?;
@@ -161,8 +160,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<RequestQueryResponseBodyResponse> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: RequestQueryResponseBodyResponse = json::from_json(&bytes)?;

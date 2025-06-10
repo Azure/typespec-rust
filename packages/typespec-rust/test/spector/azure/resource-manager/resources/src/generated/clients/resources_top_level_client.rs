@@ -139,8 +139,7 @@ impl ResourcesTopLevelClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<TopLevelTrackedResourceListResult> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: TopLevelTrackedResourceListResult = json::from_json(&bytes)?;
@@ -196,8 +195,7 @@ impl ResourcesTopLevelClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<TopLevelTrackedResourceListResult> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: TopLevelTrackedResourceListResult = json::from_json(&bytes)?;

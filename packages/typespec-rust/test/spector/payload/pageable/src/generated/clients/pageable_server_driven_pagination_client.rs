@@ -8,7 +8,7 @@ use crate::generated::{
     models::{LinkResponse, PageableServerDrivenPaginationClientListOptions},
 };
 use azure_core::{
-    http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Response, Url},
+    http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
     json, Result,
 };
 
@@ -55,7 +55,7 @@ impl PageableServerDrivenPaginationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<LinkResponse> = pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: LinkResponse = json::from_json(&bytes)?;
