@@ -52,10 +52,10 @@ importers:
         specifier: ^20.17.32
         version: 20.19.0
       '@typespec/compiler':
-        specifier: ^1.0.0
+        specifier: ^1.1.0
         version: 1.1.0(@types/node@20.19.0)
       '@typespec/http':
-        specifier: ^1.0.1
+        specifier: ^1.1.0
         version: 1.1.0(@typespec/compiler@1.1.0(@types/node@20.19.0))(@typespec/streams@0.68.0(@typespec/compiler@1.1.0(@types/node@20.19.0)))
       '@typespec/http-specs':
         specifier: 0.1.0-alpha.23
