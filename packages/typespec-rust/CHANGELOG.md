@@ -12,6 +12,7 @@
 
 * Small refactoring to pageable method bodies.
 * Updated to the latest tsp toolset.
+* Response headers decorated with `Access.internal` are omitted from the response headers trait.
 
 ## 0.15.0 (2025-06-05)
 
