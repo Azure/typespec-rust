@@ -9,7 +9,7 @@ use crate::generated::models::{
     RoutesPathParametersLabelExpansionStandardClientRecordOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 use std::collections::HashMap;
@@ -33,7 +33,7 @@ impl RoutesPathParametersLabelExpansionStandardClient {
         &self,
         param: &[&str],
         options: Option<RoutesPathParametersLabelExpansionStandardClientArrayOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -52,7 +52,7 @@ impl RoutesPathParametersLabelExpansionStandardClient {
         &self,
         param: &str,
         options: Option<RoutesPathParametersLabelExpansionStandardClientPrimitiveOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -71,7 +71,7 @@ impl RoutesPathParametersLabelExpansionStandardClient {
         &self,
         param: HashMap<String, i32>,
         options: Option<RoutesPathParametersLabelExpansionStandardClientRecordOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

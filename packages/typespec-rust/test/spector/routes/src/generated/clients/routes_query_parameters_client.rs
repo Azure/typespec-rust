@@ -13,7 +13,7 @@ use crate::generated::{
     },
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 
@@ -36,7 +36,7 @@ impl RoutesQueryParametersClient {
         &self,
         param: &str,
         options: Option<RoutesQueryParametersClientAnnotationOnlyOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -54,7 +54,7 @@ impl RoutesQueryParametersClient {
         &self,
         param: &str,
         options: Option<RoutesQueryParametersClientExplicitOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -92,7 +92,7 @@ impl RoutesQueryParametersClient {
         &self,
         param: &str,
         options: Option<RoutesQueryParametersClientTemplateOnlyOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

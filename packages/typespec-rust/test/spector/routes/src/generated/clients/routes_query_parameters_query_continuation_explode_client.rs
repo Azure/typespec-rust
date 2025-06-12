@@ -9,7 +9,7 @@ use crate::generated::models::{
     RoutesQueryParametersQueryContinuationExplodeClientRecordOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     Result,
 };
 use std::collections::HashMap;
@@ -33,7 +33,7 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         &self,
         param: &[&str],
         options: Option<RoutesQueryParametersQueryContinuationExplodeClientArrayOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -54,7 +54,7 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         &self,
         param: &str,
         options: Option<RoutesQueryParametersQueryContinuationExplodeClientPrimitiveOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -73,7 +73,7 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         &self,
         param: HashMap<String, i32>,
         options: Option<RoutesQueryParametersQueryContinuationExplodeClientRecordOptions<'_>>,
-    ) -> Result<Response<()>> {
+    ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
