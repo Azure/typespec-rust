@@ -1239,6 +1239,15 @@ export class Adapter {
           // callers can still retrieve the value from the raw
           // response headers if they need it.
           continue;
+        } else if (header.access === 'internal') {
+          // if a header has been marked as internal then skip it.
+          // this happens if the tsp includes the header for documentation
+          // purposes but the desire is to omit it from the generated code.
+          // we skip them instead of making them pub(crate) to avoid the
+          // case where all headers are internal, which would result in a
+          // marker type where all its trait methods aren't public, making
+          // it effectively useless.
+          continue;
         }
 
         responseHeaders.push(header);
