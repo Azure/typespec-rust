@@ -149,7 +149,7 @@ export interface PageableStrategyContinuationToken {
   kind: 'continuationToken';
 
   /** the parameter that contains the continuation token */
-  requestToken: HeaderParameter | QueryParameter;
+  requestToken: HeaderScalarParameter | QueryScalarParameter;
 
   /**
    * the location in the response that contains the continuation token.
@@ -183,7 +183,7 @@ export type ExtendedCollectionFormat = CollectionFormat | 'multi';
 export type ParameterLocation = 'client' | 'method';
 
 /** MethodParameter defines the possible method parameter types */
-export type MethodParameter = BodyParameter | HeaderCollectionParameter | HeaderHashMapParameter | HeaderParameter | PartialBodyParameter | PathParameter | QueryCollectionParameter | QueryParameter;
+export type MethodParameter = BodyParameter | HeaderCollectionParameter | HeaderHashMapParameter | HeaderScalarParameter | PartialBodyParameter | PathScalarParameter | QueryCollectionParameter | QueryScalarParameter;
 
 /** BodyParameter is a param that's passed via the HTTP request body */
 export interface BodyParameter extends HTTPParameterBase {
@@ -221,15 +221,18 @@ export interface HeaderHashMapParameter extends HTTPParameterBase {
   type: types.HashMap;
 }
 
-/** HeaderParameter is a param that goes in a HTTP header */
-export interface HeaderParameter extends HTTPParameterBase {
-  kind: 'header';
+/** HeaderScalarParameterType defines the possible types for a HeaderScalarParameter */
+export type HeaderScalarParameterType = Exclude<types.WireType, types.HashMap | types.JsonValue | types.Model | types.Slice | types.StringSlice | types.Vector>;
+
+/** HeaderScalarParameter is a scalar param that goes in a HTTP header */
+export interface HeaderScalarParameter extends HTTPParameterBase {
+  kind: 'headerScalar';
 
   /** the header in the HTTP request */
   header: string;
 
   /** the type of the param */
-  type: types.WireType;
+  type: HeaderScalarParameterType;
 
   /**
    * indicates this is an API version parameter 
@@ -260,15 +263,18 @@ export interface PartialBodyParameter extends HTTPParameterBase {
   serde: string;
 }
 
-/** PathParameter is a param that goes in the HTTP path */
-export interface PathParameter extends HTTPParameterBase {
-  kind: 'path';
+/** PathScalarParameterType defines the possible types for a PathScalarParameter */
+export type PathScalarParameterType = Exclude<types.WireType, types.HashMap | types.JsonValue | types.Model | types.Slice | types.StringSlice | types.Vector>;
+
+/** PathScalarParameter is a scalar param that goes in the HTTP path */
+export interface PathScalarParameter extends HTTPParameterBase {
+  kind: 'pathScalar';
 
   /** the segment name to be replaced with the param's value */
   segment: string;
 
   /** the type of the param */
-  type: types.WireType;
+  type: PathScalarParameterType;
 
   /** indicates if the path parameter should be URL encoded */
   encoded: boolean;
@@ -291,15 +297,18 @@ export interface QueryCollectionParameter extends HTTPParameterBase {
   format: ExtendedCollectionFormat;
 }
 
-/** QueryParameter is a param that goes in the HTTP query string */
-export interface QueryParameter extends HTTPParameterBase {
-  kind: 'query';
+/** QueryScalarParameterType defines the possible types for a QueryScalarParameter */
+export type QueryScalarParameterType = Exclude<types.WireType, types.HashMap | types.JsonValue | types.Model | types.Slice | types.StringSlice | types.Vector>;
+
+/** QueryScalarParameter is a scalar param that goes in the HTTP query string */
+export interface QueryScalarParameter extends HTTPParameterBase {
+  kind: 'queryScalar';
 
   /** key is the query param's key name */
   key: string;
 
   /** the type of the param */
-  type: types.WireType;
+  type: QueryScalarParameterType;
 
   /** indicates if the query parameter should be URL encoded */
   encoded: boolean;
@@ -538,10 +547,10 @@ export class HeaderHashMapParameter extends HTTPParameterBase implements HeaderH
   }
 }
 
-export class HeaderParameter extends HTTPParameterBase implements HeaderParameter {
-  constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.WireType) {
+export class HeaderScalarParameter extends HTTPParameterBase implements HeaderScalarParameter {
+  constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: HeaderScalarParameterType) {
     super(name, location, optional, type);
-    this.kind = 'header';
+    this.kind = 'headerScalar';
     this.header = header;
     this.isApiVersion = false;
   }
@@ -563,7 +572,7 @@ export class PageableMethod extends HTTPMethodBase implements PageableMethod {
 }
 
 export class PageableStrategyContinuationToken implements PageableStrategyContinuationToken {
-  constructor(requestToken: HeaderParameter | QueryParameter, responseToken: ResponseHeaderScalar | types.ModelField) {
+  constructor(requestToken: HeaderScalarParameter | QueryScalarParameter, responseToken: ResponseHeaderScalar | types.ModelField) {
     this.kind = 'continuationToken';
     this.requestToken = requestToken;
     this.responseToken = responseToken;
@@ -586,10 +595,10 @@ export class PartialBodyParameter extends HTTPParameterBase implements PartialBo
   }
 }
 
-export class PathParameter extends HTTPParameterBase implements PathParameter {
-  constructor(name: string, segment: string, location: ParameterLocation, optional: boolean, type: types.WireType, encoded: boolean) {
+export class PathScalarParameter extends HTTPParameterBase implements PathScalarParameter {
+  constructor(name: string, segment: string, location: ParameterLocation, optional: boolean, type: PathScalarParameterType, encoded: boolean) {
     super(name, location, optional, type);
-    this.kind = 'path';
+    this.kind = 'pathScalar';
     this.segment = segment;
     this.encoded = encoded;
   }
@@ -605,10 +614,10 @@ export class QueryCollectionParameter extends HTTPParameterBase implements Query
   }
 }
 
-export class QueryParameter extends HTTPParameterBase implements QueryParameter {
-  constructor(name: string, key: string, location: ParameterLocation, optional: boolean, type: types.WireType, encoded: boolean) {
+export class QueryScalarParameter extends HTTPParameterBase implements QueryScalarParameter {
+  constructor(name: string, key: string, location: ParameterLocation, optional: boolean, type: QueryScalarParameterType, encoded: boolean) {
     super(name, location, optional, type);
-    this.kind = 'query';
+    this.kind = 'queryScalar';
     this.key = key;
     this.encoded = encoded;
     this.isApiVersion = false;
