@@ -60,7 +60,7 @@ async fn path_reserved_expansion_template() {
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_reserved_expansion_client();
 
-    let resp = client.template("bar baz", None).await.unwrap();
+    let resp = client.template("foo/bar baz", None).await.unwrap();
     assert_eq!(resp.status(), 204);
 }
 
@@ -71,7 +71,7 @@ async fn path_reserved_expansion_annotation() {
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_reserved_expansion_client();
 
-    let resp = client.annotation("bar baz", None).await.unwrap();
+    let resp = client.annotation("foo/bar baz", None).await.unwrap();
     assert_eq!(resp.status(), 204);
 }
 

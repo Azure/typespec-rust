@@ -38,7 +38,7 @@ impl RoutesPathParametersPathExpansionExplodeClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/path/explode/array{param}");
-        path = path.replace("{param}", &param.join("/"));
+        path = path.replace("{param}", &format!("/{}", param.join("/")));
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await.map(Into::into)

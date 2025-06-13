@@ -750,7 +750,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
               paramExpression = pathParam.explode
                 ? (`&format!(";{}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
                   + `format!("{}={}", k, v)).collect::<Vec<_>>().join(";"))`)
-                : (`&format!("${pathParam.name}={}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
+                : (`&format!(";${pathParam.name}={}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
                   + `format!("{},{}", k, v)).collect::<Vec<_>>().join(","))`);
               break;
           }
@@ -763,14 +763,14 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
           paramExpression = `&${pathParam.name}.join(",")`;
           switch (pathParam.style) {
             case 'path':
-              paramExpression = `&${pathParam.name}.join("${pathParam.explode ? '/' : ','}")`;
+              paramExpression = `&format!("/{}", ${pathParam.name}.join("${pathParam.explode ? '/' : ','}"))`;
               break;
             case 'label':
               paramExpression = `&format!(".{}", ${pathParam.name}.join("${pathParam.explode ? '.' : ','}"))`;
               break;
             case 'matrix':
               paramExpression = `&format!(";${pathParam.name}={}", ${pathParam.name}.join(`
-                + `"${pathParam.explode ? ';${pathParam.name}=' : ','}"))`;
+                + `"${pathParam.explode ? `;${pathParam.name}=` : ','}"))`;
               break;
           }
         } else {
@@ -782,7 +782,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
               paramExpression = `&format!(".{}", ${paramExpression})`;
               break;
             case 'matrix':
-              paramExpression = `&format!("${pathParam.name}={}", ${paramExpression})`;
+              paramExpression = `&format!(";${pathParam.name}={}", ${paramExpression})`;
               break;
           }
         }
