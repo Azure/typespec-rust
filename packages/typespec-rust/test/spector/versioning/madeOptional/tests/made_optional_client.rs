@@ -6,7 +6,7 @@ use spector_madeoptional::{models::TestModel, MadeOptionalClient};
 
 #[tokio::test]
 async fn test() {
-    let client = MadeOptionalClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let client = MadeOptionalClient::with_no_credential("http://localhost:3000", "v2", None).unwrap();
     let body = TestModel {
         prop: Some("foo".to_string()),
         ..Default::default()

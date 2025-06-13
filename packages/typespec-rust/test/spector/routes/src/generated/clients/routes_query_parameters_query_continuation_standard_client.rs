@@ -84,7 +84,7 @@ impl RoutesQueryParametersQueryContinuationStandardClient {
                 "param",
                 param_vec
                     .into_iter()
-                    .map(|(k, v)| format!("{},{}", k, v.to_string()))
+                    .map(|(k, v)| format!("{},{}", k, v))
                     .collect::<Vec<_>>()
                     .join(",")
                     .as_str(),

@@ -842,7 +842,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
             paramKeyExpression = `&k`
             paramValueExpression = `&v.to_string()`;
           } else {
-            paramValueExpression = `${queryParam.name}_vec.into_iter().map(|(k,v)| format!("{},{}", k, v.to_string())).collect::<Vec<_>>().join(",").as_str()`;
+            paramValueExpression = `${queryParam.name}_vec.into_iter().map(|(k,v)| format!("{},{}", k, v)).collect::<Vec<_>>().join(",").as_str()`;
           }
         } else if (
           queryParam.type.kind === 'ref'
