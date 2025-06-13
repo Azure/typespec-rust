@@ -1131,7 +1131,7 @@ export class Adapter {
     }
 
     // maps tcgc method header/query params to their Rust method params
-    const paramsMap = new Map<tcgc.SdkMethodParameter, rust.HeaderParameter | rust.QueryParameter>();
+    const paramsMap = new Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | rust.QueryScalarParameter>();
 
     for (const param of method.parameters) {
       // we need to translate from the method param to its underlying operation param.
@@ -1160,7 +1160,7 @@ export class Adapter {
         adaptedParam = this.adaptMethodParameter(opParam);
       }
 
-      if (adaptedParam.kind === 'header' || adaptedParam.kind === 'query') {
+      if (adaptedParam.kind === 'headerScalar' || adaptedParam.kind === 'queryScalar') {
         paramsMap.set(param, adaptedParam);
       }
 
@@ -1170,7 +1170,7 @@ export class Adapter {
       // we specially handle an optional content-type header to ensure it's omitted
       // from the options bag type. this shows up when the request body is optional.
       // we can't generalize this to optional literal headers though.
-      if (adaptedParam.optional && (adaptedParam.kind !== 'header' || adaptedParam.header.toLowerCase() !== 'content-type')) {
+      if (adaptedParam.optional && (adaptedParam.kind !== 'headerScalar' || adaptedParam.header.toLowerCase() !== 'content-type')) {
         let fieldType: rust.Type;
         if (adaptedParam.kind === 'partialBody') {
           // for partial body params, adaptedParam.type is the model type that's
@@ -1465,7 +1465,7 @@ export class Adapter {
    * @param respHeadersMap maps tcgc response headers to Rust response headers (needed for continuation token strategy)
    * @returns the pageable strategy
    */
-  private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderParameter | rust.QueryParameter>, respHeadersMap: Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>): rust.PageableStrategyKind {
+  private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | rust.QueryScalarParameter>, respHeadersMap: Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>): rust.PageableStrategyKind {
     if (method.pagingMetadata.nextLinkOperation) {
       // TODO: https://github.com/Azure/autorest.rust/issues/103
       throw new AdapterError('UnsupportedTsp', 'next page operation NYI', method.__raw?.node);
@@ -1499,7 +1499,7 @@ export class Adapter {
       const tokenResp = method.pagingMetadata.continuationTokenResponseSegments[0];
 
       // find the continuation token parameter
-      let requestToken: rust.HeaderParameter | rust.QueryParameter;
+      let requestToken: rust.HeaderScalarParameter | rust.QueryScalarParameter;
       switch (tokenReq.kind) {
         case 'method': {
           const tokenParam = paramsMap.get(tokenReq);
@@ -1636,12 +1636,32 @@ export class Adapter {
           }
           adaptedParam = new rust.HeaderHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
         } else {
-          adaptedParam = new rust.HeaderParameter(paramName, param.serializedName, paramLoc, param.optional, this.typeToWireType(paramType));
+          paramType = this.typeToWireType(paramType);
+          switch (paramType.kind) {
+            case 'hashmap':
+            case 'jsonValue':
+            case 'model':
+            case 'slice':
+            case 'str':
+            case 'Vec':
+              throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar header ${param.serializedName}`, param.__raw?.node);
+          }
+          adaptedParam = new rust.HeaderScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
           adaptedParam.isApiVersion = param.isApiVersionParam;
         }
         break;
       case 'path':
-        adaptedParam = new rust.PathParameter(paramName, param.serializedName, paramLoc, param.optional, this.typeToWireType(paramType), param.allowReserved);
+        paramType = this.typeToWireType(paramType);
+        switch (paramType.kind) {
+          case 'hashmap':
+          case 'jsonValue':
+          case 'model':
+          case 'slice':
+          case 'str':
+          case 'Vec':
+            throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar path ${param.serializedName}`, param.__raw?.node);
+        }
+        adaptedParam = new rust.PathScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved);
         break;
       case 'query':
         if (param.collectionFormat) {
@@ -1652,8 +1672,18 @@ export class Adapter {
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
           adaptedParam = new rust.QueryCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, format);
         } else {
+          paramType = this.typeToWireType(paramType);
+          switch (paramType.kind) {
+            case 'hashmap':
+            case 'jsonValue':
+            case 'model':
+            case 'slice':
+            case 'str':
+            case 'Vec':
+              throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar query ${param.serializedName}`, param.__raw?.node);
+          }
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
-          adaptedParam = new rust.QueryParameter(paramName, param.serializedName, paramLoc, param.optional, this.typeToWireType(paramType), true);
+          adaptedParam = new rust.QueryScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true);
           adaptedParam.isApiVersion = param.isApiVersionParam;
         }
         break;

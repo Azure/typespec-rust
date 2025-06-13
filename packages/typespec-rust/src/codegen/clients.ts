@@ -568,9 +568,9 @@ function getClientAccessorMethodBody(indent: helpers.indentation, client: rust.C
 }
 
 type ClientMethod = rust.AsyncMethod | rust.PageableMethod;
-type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderHashMapParameter | rust.HeaderParameter;
-type QueryParamType = rust.QueryCollectionParameter | rust.QueryParameter;
-type ApiVersionParamType = rust.HeaderParameter | rust.QueryParameter;
+type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderHashMapParameter | rust.HeaderScalarParameter;
+type QueryParamType = rust.QueryCollectionParameter | rust.QueryScalarParameter;
+type ApiVersionParamType = rust.HeaderScalarParameter | rust.QueryScalarParameter;
 
 /** groups method parameters based on their kind */
 interface methodParamGroups {
@@ -587,7 +587,7 @@ interface methodParamGroups {
   partialBody: Array<rust.PartialBodyParameter>;
 
   /** path parameters. can be empty */
-  path: Array<rust.PathParameter>;
+  path: Array<rust.PathScalarParameter>;
 
   /** query parameters. can be empty */
   query: Array<QueryParamType>;
@@ -603,13 +603,13 @@ function getMethodParamGroup(method: ClientMethod): methodParamGroups {
   // collect and sort all the header/path/query params
   let apiVersionParam: ApiVersionParamType | undefined;
   const headerParams = new Array<HeaderParamType>();
-  const pathParams = new Array<rust.PathParameter>();
+  const pathParams = new Array<rust.PathScalarParameter>();
   const queryParams = new Array<QueryParamType>();
   const partialBodyParams = new Array<rust.PartialBodyParameter>();
 
   for (const param of method.params) {
     switch (param.kind) {
-      case 'header':
+      case 'headerScalar':
       case 'headerCollection':
       case 'headerHashMap':
         headerParams.push(param);
@@ -617,21 +617,21 @@ function getMethodParamGroup(method: ClientMethod): methodParamGroups {
       case 'partialBody':
         partialBodyParams.push(param);
         break;
-      case 'path':
+      case 'pathScalar':
         pathParams.push(param);
         break;
-      case 'query':
+      case 'queryScalar':
       case 'queryCollection':
         queryParams.push(param);
         break;
     }
-    if ((param.kind === 'header' || param.kind === 'query') && param.isApiVersion) {
+    if ((param.kind === 'headerScalar' || param.kind === 'queryScalar') && param.isApiVersion) {
       apiVersionParam = param;
     }
   }
 
   headerParams.sort((a: HeaderParamType, b: HeaderParamType) => { return helpers.sortAscending(a.header, b.header); });
-  pathParams.sort((a: rust.PathParameter, b: rust.PathParameter) => { return helpers.sortAscending(a.segment, b.segment); });
+  pathParams.sort((a: rust.PathScalarParameter, b: rust.PathScalarParameter) => { return helpers.sortAscending(a.segment, b.segment); });
   queryParams.sort((a: QueryParamType, b: QueryParamType) => { return helpers.sortAscending(a.key, b.key); });
 
   let bodyParam: rust.BodyParameter | undefined;
@@ -784,16 +784,16 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
  */
 function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, inClosure: boolean): string {
   let body = `${indent.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
-  let optionalContentTypeParam: rust.HeaderParameter | undefined;
+  let optionalContentTypeParam: rust.HeaderScalarParameter | undefined;
 
   for (const headerParam of paramGroups.header) {
     // if the content-type header is optional, we need to emit it inside the "if let Some(body)" clause below.
-    if (headerParam.kind === 'header' && headerParam.optional && headerParam.header.toLowerCase() === 'content-type') {
+    if (headerParam.kind === 'headerScalar' && headerParam.optional && headerParam.header.toLowerCase() === 'content-type') {
       optionalContentTypeParam = headerParam;
       continue;
     }
 
-    if (method.kind === 'pageable' && method.strategy?.kind === 'continuationToken' && method.strategy?.requestToken.kind === 'header' && method.strategy?.requestToken === headerParam) {
+    if (method.kind === 'pageable' && method.strategy?.kind === 'continuationToken' && method.strategy?.requestToken.kind === 'headerScalar' && method.strategy?.requestToken === headerParam) {
       // we have some special handling for the header continuation token.
       // if we have a token value, i.e. from the next page, then use that value.
       // if not, then check if an optional token value was provided.
@@ -938,8 +938,8 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     case 'continuationToken': {
       const reqTokenParam = method.strategy.requestToken.name;
       body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: Option<String>| {\n`;
-      body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'query' ? 'mut ': ''}url = first_url.clone();\n`;
-      if (method.strategy.requestToken.kind === 'query') {
+      body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ': ''}url = first_url.clone();\n`;
+      if (method.strategy.requestToken.kind === 'queryScalar') {
         // if the url already contains the token query param,
         // e.g. we started on some page, then we need to remove
         // it before appending the token for the next page.
@@ -969,7 +969,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
         pattern: `Some(${nextLinkName})`,
         body: (indent) => {
-          if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'query') {
+          if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'queryScalar') {
             const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
             // there are no APIs to set/update an existing query parameter.
             // so, we filter the existing query params to remove the api-version
@@ -1117,7 +1117,7 @@ function getClientEndpointParamValue(param: rust.ClientEndpointParameter): strin
  * @param fromSelf applicable for client params. when true, the prefix "self." is included
  * @returns the code to use for the param's value
  */
-function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.PathParameter | QueryParamType, fromSelf: boolean): string {
+function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.PathScalarParameter | QueryParamType, fromSelf: boolean): string {
   let paramName = param.name;
   // when fromSelf is false we assume that there's a local with the same name.
   // e.g. in pageable methods where we need to clone the params so they can be
@@ -1188,7 +1188,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.Pa
       return encodeBytes(paramType, paramName);
     case 'enum':
     case 'scalar':
-      if (paramType.kind === 'enum' && param.kind === 'query') {
+      if (paramType.kind === 'enum' && param.kind === 'queryScalar') {
         // append_pair wants a reference to the string
         // TODO: https://github.com/Azure/typespec-rust/issues/25
         return `${paramName}.as_ref()`;
