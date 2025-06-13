@@ -15,7 +15,8 @@ async fn fixed() {
 
 #[tokio::test]
 async fn in_interface_fixed() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_in_interface_client();
 
     let resp = client.fixed(None).await.unwrap();
@@ -24,7 +25,8 @@ async fn in_interface_fixed() {
 
 #[tokio::test]
 async fn path_template_only() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client();
 
     let resp = client.template_only("a", None).await.unwrap();
@@ -33,7 +35,8 @@ async fn path_template_only() {
 
 #[tokio::test]
 async fn path_explicit() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client();
 
     let resp = client.explicit("a", None).await.unwrap();
@@ -42,7 +45,8 @@ async fn path_explicit() {
 
 #[tokio::test]
 async fn path_annotation_only() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client();
 
     let resp = client.annotation_only("a", None).await.unwrap();
@@ -51,7 +55,8 @@ async fn path_annotation_only() {
 
 #[tokio::test]
 async fn path_reserved_expansion_template() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_reserved_expansion_client();
 
@@ -61,7 +66,8 @@ async fn path_reserved_expansion_template() {
 
 #[tokio::test]
 async fn path_reserved_expansion_annotation() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_reserved_expansion_client();
 
@@ -71,7 +77,8 @@ async fn path_reserved_expansion_annotation() {
 
 #[tokio::test]
 async fn path_simple_standard_primitive() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_simple_expansion_client()
         .get_routes_path_parameters_simple_expansion_standard_client();
@@ -82,7 +89,8 @@ async fn path_simple_standard_primitive() {
 
 #[tokio::test]
 async fn path_simple_standard_array() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_simple_expansion_client()
         .get_routes_path_parameters_simple_expansion_standard_client();
@@ -93,18 +101,26 @@ async fn path_simple_standard_array() {
 
 #[tokio::test]
 async fn path_simple_standard_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_simple_expansion_client()
         .get_routes_path_parameters_simple_expansion_standard_client();
 
-    let resp = client.record(HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]), None).await.unwrap();
+    let resp = client
+        .record(
+            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]
 async fn path_simple_explode_primitive() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_simple_expansion_client()
         .get_routes_path_parameters_simple_expansion_explode_client();
@@ -115,7 +131,8 @@ async fn path_simple_explode_primitive() {
 
 #[tokio::test]
 async fn path_simple_explode_array() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_simple_expansion_client()
         .get_routes_path_parameters_simple_expansion_explode_client();
@@ -126,18 +143,26 @@ async fn path_simple_explode_array() {
 
 #[tokio::test]
 async fn path_simple_explode_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_simple_expansion_client()
         .get_routes_path_parameters_simple_expansion_explode_client();
 
-    let resp = client.record(HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]), None).await.unwrap();
+    let resp = client
+        .record(
+            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]
 async fn path_path_standard_primitive() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_path_expansion_client()
         .get_routes_path_parameters_path_expansion_standard_client();
@@ -148,7 +173,8 @@ async fn path_path_standard_primitive() {
 
 #[tokio::test]
 async fn path_path_standard_array() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_path_expansion_client()
         .get_routes_path_parameters_path_expansion_standard_client();
@@ -159,18 +185,26 @@ async fn path_path_standard_array() {
 
 #[tokio::test]
 async fn path_path_standard_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_path_expansion_client()
         .get_routes_path_parameters_path_expansion_standard_client();
 
-    let resp = client.record(HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]), None).await.unwrap();
+    let resp = client
+        .record(
+            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]
 async fn path_path_explode_primitive() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_path_expansion_client()
         .get_routes_path_parameters_path_expansion_explode_client();
@@ -181,7 +215,8 @@ async fn path_path_explode_primitive() {
 
 #[tokio::test]
 async fn path_path_explode_array() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_path_expansion_client()
         .get_routes_path_parameters_path_expansion_explode_client();
@@ -192,18 +227,26 @@ async fn path_path_explode_array() {
 
 #[tokio::test]
 async fn path_path_explode_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_path_expansion_client()
         .get_routes_path_parameters_path_expansion_explode_client();
 
-    let resp = client.record(HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]), None).await.unwrap();
+    let resp = client
+        .record(
+            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]
 async fn path_label_standard_primitive() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_label_expansion_client()
         .get_routes_path_parameters_label_expansion_standard_client();
@@ -214,7 +257,8 @@ async fn path_label_standard_primitive() {
 
 #[tokio::test]
 async fn path_label_standard_array() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_label_expansion_client()
         .get_routes_path_parameters_label_expansion_standard_client();
@@ -225,18 +269,26 @@ async fn path_label_standard_array() {
 
 #[tokio::test]
 async fn path_label_standard_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_label_expansion_client()
         .get_routes_path_parameters_label_expansion_standard_client();
 
-    let resp = client.record(HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]), None).await.unwrap();
+    let resp = client
+        .record(
+            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]
 async fn path_label_explode_primitive() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_label_expansion_client()
         .get_routes_path_parameters_label_expansion_explode_client();
@@ -247,7 +299,8 @@ async fn path_label_explode_primitive() {
 
 #[tokio::test]
 async fn path_label_explode_array() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_label_expansion_client()
         .get_routes_path_parameters_label_expansion_explode_client();
@@ -258,18 +311,26 @@ async fn path_label_explode_array() {
 
 #[tokio::test]
 async fn path_label_explode_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_label_expansion_client()
         .get_routes_path_parameters_label_expansion_explode_client();
 
-    let resp = client.record(HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]), None).await.unwrap();
+    let resp = client
+        .record(
+            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]
 async fn path_matrix_standard_primitive() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_matrix_expansion_client()
         .get_routes_path_parameters_matrix_expansion_standard_client();
@@ -280,7 +341,8 @@ async fn path_matrix_standard_primitive() {
 
 #[tokio::test]
 async fn path_matrix_standard_array() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_matrix_expansion_client()
         .get_routes_path_parameters_matrix_expansion_standard_client();
@@ -291,18 +353,26 @@ async fn path_matrix_standard_array() {
 
 #[tokio::test]
 async fn path_matrix_standard_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_matrix_expansion_client()
         .get_routes_path_parameters_matrix_expansion_standard_client();
 
-    let resp = client.record(HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]), None).await.unwrap();
+    let resp = client
+        .record(
+            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]
 async fn path_matrix_explode_primitive() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_matrix_expansion_client()
         .get_routes_path_parameters_matrix_expansion_explode_client();
@@ -313,7 +383,8 @@ async fn path_matrix_explode_primitive() {
 
 #[tokio::test]
 async fn path_matrix_explode_array() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_matrix_expansion_client()
         .get_routes_path_parameters_matrix_expansion_explode_client();
@@ -324,18 +395,26 @@ async fn path_matrix_explode_array() {
 
 #[tokio::test]
 async fn path_matrix_explode_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_path_parameters_client()
         .get_routes_path_parameters_matrix_expansion_client()
         .get_routes_path_parameters_matrix_expansion_explode_client();
 
-    let resp = client.record(HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]), None).await.unwrap();
+    let resp = client
+        .record(
+            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]
 async fn query_template_only() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client();
 
     let resp = client.template_only("a", None).await.unwrap();
@@ -344,7 +423,8 @@ async fn query_template_only() {
 
 #[tokio::test]
 async fn query_explicit() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client();
 
     let resp = client.explicit("a", None).await.unwrap();
@@ -353,7 +433,8 @@ async fn query_explicit() {
 
 #[tokio::test]
 async fn query_annotation_only() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client();
 
     let resp = client.annotation_only("a", None).await.unwrap();
@@ -362,7 +443,8 @@ async fn query_annotation_only() {
 
 #[tokio::test]
 async fn query_query_expansion_standard_primitive() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client()
         .get_routes_query_parameters_query_expansion_client()
         .get_routes_query_parameters_query_expansion_standard_client();
@@ -373,7 +455,8 @@ async fn query_query_expansion_standard_primitive() {
 
 #[tokio::test]
 async fn query_query_expansion_standard_array() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client()
         .get_routes_query_parameters_query_expansion_client()
         .get_routes_query_parameters_query_expansion_standard_client();
@@ -384,18 +467,26 @@ async fn query_query_expansion_standard_array() {
 
 #[tokio::test]
 async fn query_query_expansion_standard_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client()
         .get_routes_query_parameters_query_expansion_client()
         .get_routes_query_parameters_query_expansion_standard_client();
 
-    let resp = client.record(HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]), None).await.unwrap();
+    let resp = client
+        .record(
+            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]
 async fn query_query_expansion_explode_primitive() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client()
         .get_routes_query_parameters_query_expansion_client()
         .get_routes_query_parameters_query_expansion_explode_client();
@@ -406,7 +497,8 @@ async fn query_query_expansion_explode_primitive() {
 
 #[tokio::test]
 async fn query_query_expansion_explode_array() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client()
         .get_routes_query_parameters_query_expansion_client()
         .get_routes_query_parameters_query_expansion_explode_client();
@@ -417,18 +509,26 @@ async fn query_query_expansion_explode_array() {
 
 #[tokio::test]
 async fn query_query_expansion_explode_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client()
         .get_routes_query_parameters_query_expansion_client()
         .get_routes_query_parameters_query_expansion_explode_client();
 
-    let resp = client.record(HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]), None).await.unwrap();
+    let resp = client
+        .record(
+            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]
 async fn query_query_continuation_standard_primitive() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client()
         .get_routes_query_parameters_query_continuation_client()
         .get_routes_query_parameters_query_continuation_standard_client();
@@ -439,7 +539,8 @@ async fn query_query_continuation_standard_primitive() {
 
 #[tokio::test]
 async fn query_query_continuation_standard_array() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client()
         .get_routes_query_parameters_query_continuation_client()
         .get_routes_query_parameters_query_continuation_standard_client();
@@ -450,18 +551,26 @@ async fn query_query_continuation_standard_array() {
 
 #[tokio::test]
 async fn query_query_continuation_standard_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client()
         .get_routes_query_parameters_query_continuation_client()
         .get_routes_query_parameters_query_continuation_standard_client();
 
-    let resp = client.record(HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]), None).await.unwrap();
+    let resp = client
+        .record(
+            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]
 async fn query_query_continuation_explode_primitive() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client()
         .get_routes_query_parameters_query_continuation_client()
         .get_routes_query_parameters_query_continuation_explode_client();
@@ -472,7 +581,8 @@ async fn query_query_continuation_explode_primitive() {
 
 #[tokio::test]
 async fn query_query_continuation_explode_array() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client()
         .get_routes_query_parameters_query_continuation_client()
         .get_routes_query_parameters_query_continuation_explode_client();
@@ -483,11 +593,18 @@ async fn query_query_continuation_explode_array() {
 
 #[tokio::test]
 async fn query_query_continuation_explode_record() {
-    let client = RoutesClient::with_no_credential("http://localhost:3000", None).unwrap()
+    let client = RoutesClient::with_no_credential("http://localhost:3000", None)
+        .unwrap()
         .get_routes_query_parameters_client()
         .get_routes_query_parameters_query_continuation_client()
         .get_routes_query_parameters_query_continuation_explode_client();
 
-    let resp = client.record(HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]), None).await.unwrap();
+    let resp = client
+        .record(
+            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            None,
+        )
+        .await
+        .unwrap();
     assert_eq!(resp.status(), 204);
 }
