@@ -193,6 +193,9 @@ export interface BodyParameter extends HTTPParameterBase {
   type: types.RequestContent;
 }
 
+/** HeaderCollectionParameterType defines the possible types for a HeaderCollectionParameter */
+export type HeaderCollectionParameterType = types.Ref<types.Slice> | types.Vector;
+
 /** HeaderCollectionParameter is a param that goes in a HTTP header */
 export interface HeaderCollectionParameter extends HTTPParameterBase {
   kind: 'headerCollection';
@@ -201,7 +204,7 @@ export interface HeaderCollectionParameter extends HTTPParameterBase {
   header: string;
 
   /** the collection of header param values */
-  type: types.Ref<types.Slice> | types.Vector;
+  type: HeaderCollectionParameterType;
 
   /** the format of the collection */
   format: CollectionFormat;
@@ -280,6 +283,9 @@ export interface PathScalarParameter extends HTTPParameterBase {
   encoded: boolean;
 }
 
+/** QueryCollectionParameterType defines the possible types for a QueryCollectionParameter */
+export type QueryCollectionParameterType = types.HashMap | types.Ref<types.Slice> | types.Vector;
+
 /** QueryCollectionParameter is a param that goes in the HTTP query string */
 export interface QueryCollectionParameter extends HTTPParameterBase {
   kind: 'queryCollection';
@@ -288,7 +294,7 @@ export interface QueryCollectionParameter extends HTTPParameterBase {
   key: string;
 
   /** the collection of query param values */
-  type: types.Ref<types.Slice> | types.Vector;
+  type: QueryCollectionParameterType;
 
   /** indicates if the query parameter should be URL encoded */
   encoded: boolean;
@@ -531,7 +537,7 @@ export class ClientEndpointParameter extends ClientParameterBase implements Clie
 }
 
 export class HeaderCollectionParameter extends HTTPParameterBase implements HeaderCollectionParameter {
-  constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.Ref<types.Slice> | types.Vector, format: CollectionFormat) {
+  constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: HeaderCollectionParameterType, format: CollectionFormat) {
     super(name, location, optional, type);
     this.kind = 'headerCollection';
     this.header = header;
@@ -605,7 +611,7 @@ export class PathScalarParameter extends HTTPParameterBase implements PathScalar
 }
 
 export class QueryCollectionParameter extends HTTPParameterBase implements QueryCollectionParameter {
-  constructor(name: string, key: string, location: ParameterLocation, optional: boolean, type: types.Ref<types.Slice> | types.Vector, encoded: boolean, format: ExtendedCollectionFormat) {
+  constructor(name: string, key: string, location: ParameterLocation, optional: boolean, type: QueryCollectionParameterType, encoded: boolean, format: ExtendedCollectionFormat) {
     super(name, location, optional, type);
     this.kind = 'queryCollection';
     this.key = key;
