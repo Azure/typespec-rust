@@ -2,7 +2,7 @@
 * @jhendrixMSFT @RickWinter @HeathS
 
 # codegen (autorest and typespec)
-/packages/typespec-rust       @jhendrixMSFT @RickWinter @HeathS
+/packages/typespec-rust       @jhendrixMSFT @RickWinter @HeathS @antkmsft
 
 # Git Hub bot rules
 /.github/CODEOWNERS   @jhendrixMSFT @RickWinter @HeathS @jsquire @ronniegeraghty
