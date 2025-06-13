@@ -720,8 +720,74 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
     } else {
       // we have path params that need to have their segments replaced with the param values
       body += `${indent.get()}let mut path = String::from(${path});\n`;
+
+      let wrapSortedVec: (s: string) => string = (s) => s;
       for (const pathParam of paramGroups.path) {
-        body += `${indent.get()}path = path.replace("{${pathParam.segment}}", ${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)});\n`;
+        let paramExpression = `${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)}`;
+        if (pathParam.type.kind === 'hashmap') {
+          wrapSortedVec = (s) => `{let mut ${pathParam.name}_vec = ${pathParam.name}.into_iter().collect::<Vec<_>>();`
+            + `${pathParam.name}_vec.sort_by_key(|p| p.1);${s}}`;
+
+          paramExpression = `&${pathParam.name}_vec.into_iter().map(|(k,v)| `
+            + (pathParam.explode
+              ? `format!("{}={}", k, v)).collect::<Vec<_>>().join(",")`
+              : `format!("{},{}", k, v)).collect::<Vec<_>>().join(",")`);
+
+          switch (pathParam.style) {
+            case 'path':
+              paramExpression = `&format!("/{}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
+                + (pathParam.explode
+                  ? `format!("{}={}", k, v)).collect::<Vec<_>>().join("/"))`
+                  : `format!("{},{}", k, v)).collect::<Vec<_>>().join(","))`);
+              break;
+            case 'label':
+              paramExpression = `&format!(".{}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
+                + (pathParam.explode
+                  ? `format!("{}={}", k, v)).collect::<Vec<_>>().join("."))`
+                  : `format!("{},{}", k, v)).collect::<Vec<_>>().join(","))`);
+              break;
+            case 'matrix':
+              paramExpression = pathParam.explode
+                ? (`&format!(";{}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
+                  + `format!("{}={}", k, v)).collect::<Vec<_>>().join(";"))`)
+                : (`&format!("${pathParam.name}={}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
+                  + `format!("{},{}", k, v)).collect::<Vec<_>>().join(","))`);
+              break;
+          }
+        } else if (
+          pathParam.type.kind === 'ref'
+          && pathParam.type.type.kind === 'slice'
+          && pathParam.type.type.type.kind === 'ref'
+          && pathParam.type.type.type.type.kind === 'str'
+        ) {
+          paramExpression = `&${pathParam.name}.join(",")`;
+          switch (pathParam.style) {
+            case 'path':
+              paramExpression = `&${pathParam.name}.join("${pathParam.explode ? '/' : ','}")`;
+              break;
+            case 'label':
+              paramExpression = `&format!(".{}", ${pathParam.name}.join("${pathParam.explode ? '.' : ','}"))`;
+              break;
+            case 'matrix':
+              paramExpression = `&format!(";${pathParam.name}={}", ${pathParam.name}.join(`
+                + `"${pathParam.explode ? ';${pathParam.name}=' : ','}"))`;
+              break;
+          }
+        } else {
+          switch (pathParam.style) {
+            case 'path':
+              paramExpression = `&format!("/{}", ${paramExpression})`;
+              break;
+            case 'label':
+              paramExpression = `&format!(".{}", ${paramExpression})`;
+              break;
+            case 'matrix':
+              paramExpression = `&format!("${pathParam.name}={}", ${paramExpression})`;
+              break;
+          }
+        }
+
+        body += wrapSortedVec(`${indent.get()}path = path.replace("{${pathParam.segment}}", ${paramExpression});\n`);
       }
       path = '&path';
       body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
@@ -762,7 +828,38 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       body += getParamValueHelper(indent, queryParam, false, () => {
         // for enums we call .as_ref() which elides the need to borrow
         const borrow = queryParam.type.kind === 'enum' ? '' : borrowOrNot(queryParam);
-        return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${borrow}${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional)});\n`;
+        let paramKeyExpression = `"${queryParam.key}"`;
+        let paramValueExpression = `${borrow}${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional)}`;
+
+        let wrapSortedVec: (s: string) => string = (s) => s;
+        let wrapIntoLoop: (s: string) => string = (s) => s;
+        if (queryParam.type.kind === 'hashmap') {
+          wrapSortedVec = (s) => `{let mut ${queryParam.name}_vec = ${queryParam.name}.into_iter().collect::<Vec<_>>();`
+            + `${queryParam.name}_vec.sort_by_key(|p| p.1);${s}}`;
+
+          if (queryParam.explode) {
+            wrapIntoLoop = (s) => `for (k,v) in ${queryParam.name}_vec { ${s} }\n`;
+            paramKeyExpression = `&k`
+            paramValueExpression = `&v.to_string()`;
+          } else {
+            paramValueExpression = `${queryParam.name}_vec.into_iter().map(|(k,v)| format!("{},{}", k, v.to_string())).collect::<Vec<_>>().join(",").as_str()`;
+          }
+        } else if (
+          queryParam.type.kind === 'ref'
+          && queryParam.type.type.kind === 'slice'
+          && queryParam.type.type.type.kind === 'ref'
+          && queryParam.type.type.type.type.kind === 'str'
+        ) {
+          if (queryParam.explode) {
+            paramValueExpression = `p`;
+            wrapIntoLoop = (s) => `for p in ${queryParam.name} { ${s} }\n`;
+          } else {
+            const delimiter = (queryParam.kind === 'queryCollection' && queryParam.format !== 'multi') ? getCollectionDelimiter(queryParam.format) : ',';
+            paramValueExpression = `&${queryParam.name}.join("${delimiter}")`;
+          }
+        }
+
+        return wrapSortedVec(wrapIntoLoop(`${indent.get()}${urlVarName}.query_pairs_mut().append_pair(${paramKeyExpression}, ${paramValueExpression});\n`));
       });
     }
   }

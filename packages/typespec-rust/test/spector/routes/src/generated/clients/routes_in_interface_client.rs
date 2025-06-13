@@ -33,6 +33,6 @@ impl RoutesInInterfaceClient {
         let mut url = self.endpoint.clone();
         url = url.join("routes/in-interface/fixed")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

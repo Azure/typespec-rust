@@ -53,8 +53,6 @@ pub struct ExportResult {
     pub content: Option<String>,
 }
 
-/// REST API Operation
-///
 /// Details of a REST API operation, returned from the Resource Provider Operations API
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]

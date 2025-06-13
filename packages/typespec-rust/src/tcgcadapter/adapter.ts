@@ -1686,6 +1686,7 @@ export class Adapter {
           adaptedParam = new rust.QueryScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true);
           adaptedParam.isApiVersion = param.isApiVersionParam;
         }
+        adaptedParam.explode = param.explode;
         break;
     }
 

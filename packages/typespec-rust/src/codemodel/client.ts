@@ -432,6 +432,12 @@ interface HTTPParameterBase extends method.Parameter {
 
   /** optional params go in the method's MethodOptions type */
   optional: boolean;
+
+  /** the parameter's style */
+  style: "" | "simple" | "path" | "label" | "matrix" | "fragment";
+
+  /** indicates if the parameter should be passed with "explode" styling. defaults to false */
+  explode: boolean;
 }
 
 class ClientParameterBase implements ClientParameterBase {
@@ -458,6 +464,8 @@ class HTTPParameterBase extends method.Parameter {
     this.location = location;
     this.optional = optional;
     this.docs = {};
+    this.style = "";
+    this.explode = false;
   }
 }
 

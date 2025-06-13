@@ -76,7 +76,7 @@ impl RoutesClient {
         let mut url = self.endpoint.clone();
         url = url.join("routes/fixed")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Returns a new instance of RoutesInInterfaceClient.

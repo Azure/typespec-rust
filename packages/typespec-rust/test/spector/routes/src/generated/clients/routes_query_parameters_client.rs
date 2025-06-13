@@ -43,7 +43,7 @@ impl RoutesQueryParametersClient {
         url = url.join("routes/query/annotation-only")?;
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -61,7 +61,7 @@ impl RoutesQueryParametersClient {
         url = url.join("routes/query/explicit")?;
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     /// Returns a new instance of RoutesQueryParametersQueryContinuationClient.
@@ -99,6 +99,6 @@ impl RoutesQueryParametersClient {
         url = url.join("routes/query/template-only")?;
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

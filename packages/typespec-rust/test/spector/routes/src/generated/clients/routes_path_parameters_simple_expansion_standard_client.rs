@@ -38,10 +38,10 @@ impl RoutesPathParametersSimpleExpansionStandardClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/simple/standard/array{param}");
-        path = path.replace("{param}", &param);
+        path = path.replace("{param}", &param.join(","));
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -60,7 +60,7 @@ impl RoutesPathParametersSimpleExpansionStandardClient {
         path = path.replace("{param}", param);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -76,9 +76,20 @@ impl RoutesPathParametersSimpleExpansionStandardClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/simple/standard/record{param}");
-        path = path.replace("{param}", &param.to_string());
+        {
+            let mut param_vec = param.into_iter().collect::<Vec<_>>();
+            param_vec.sort_by_key(|p| p.1);
+            path = path.replace(
+                "{param}",
+                &param_vec
+                    .into_iter()
+                    .map(|(k, v)| format!("{},{}", k, v))
+                    .collect::<Vec<_>>()
+                    .join(","),
+            );
+        }
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }

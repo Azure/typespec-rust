@@ -39,9 +39,9 @@ impl RoutesQueryParametersQueryContinuationStandardClient {
         let mut url = self.endpoint.clone();
         url = url.join("routes/query/query-continuation/standard/array")?;
         url.query_pairs_mut().append_pair("fixed", "true");
-        url.query_pairs_mut().append_pair("param", &param);
+        url.query_pairs_mut().append_pair("param", &param.join(","));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -60,7 +60,7 @@ impl RoutesQueryParametersQueryContinuationStandardClient {
         url.query_pairs_mut().append_pair("fixed", "true");
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 
     ///
@@ -77,9 +77,20 @@ impl RoutesQueryParametersQueryContinuationStandardClient {
         let mut url = self.endpoint.clone();
         url = url.join("routes/query/query-continuation/standard/record")?;
         url.query_pairs_mut().append_pair("fixed", "true");
-        url.query_pairs_mut()
-            .append_pair("param", &param.to_string());
+        {
+            let mut param_vec = param.into_iter().collect::<Vec<_>>();
+            param_vec.sort_by_key(|p| p.1);
+            url.query_pairs_mut().append_pair(
+                "param",
+                param_vec
+                    .into_iter()
+                    .map(|(k, v)| format!("{},{}", k, v.to_string()))
+                    .collect::<Vec<_>>()
+                    .join(",")
+                    .as_str(),
+            );
+        }
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await
+        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
 }
