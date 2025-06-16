@@ -83,7 +83,8 @@ impl RoutesQueryParametersQueryExpansionStandardClient {
                     .iter()
                     .map(|(k, v)| format!("{},{}", k, v))
                     .collect::<Vec<String>>()
-                    .join(","),
+                    .join(",")
+                    .as_str(),
             );
         }
         let mut request = Request::new(url, Method::Get);

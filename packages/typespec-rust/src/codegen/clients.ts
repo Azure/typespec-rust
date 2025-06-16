@@ -729,8 +729,11 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         let wrapSortedVec: (s: string) => string = (s) => s;
         let paramExpression = `${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)}`;
         if (pathParam.kind === 'pathHashMap') {
-          wrapSortedVec = (s) => `{let mut ${pathParam.name}_vec = ${pathParam.name}.iter().collect::<Vec<_>>();`
-            + `${pathParam.name}_vec.sort_by_key(|p| p.1);${s}}`;
+          wrapSortedVec = (s) => `${indent.get()}{`
+            + `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParam.name}.iter().collect::<Vec<_>>();\n`
+            + `${indent.get()}${pathParam.name}_vec.sort_by_key(|p| p.1);\n`
+            + `${s}`
+            + `${indent.pop().get()}}`;
 
           paramExpression = `&${pathParam.name}_vec.iter().map(|(k,v)| `
             + (pathParam.explode
@@ -833,7 +836,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
           text += `${indent.push().get()}${urlVarName}.query_pairs_mut().append_pair(&k, &v.to_string());\n`;
           text += `${indent.pop().get()}}\n`;
         } else {
-          text += `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${queryParam.name}_vec.iter().map(|(k, v)| format!("{},{}", k, v)).collect::<Vec<String>>().join(","));\n`;
+          text += `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${queryParam.name}_vec.iter().map(|(k, v)| format!("{},{}", k, v)).collect::<Vec<String>>().join(",").as_str());\n`;
         }
         text += `${indent.pop().get()}}\n`;
         return text;
