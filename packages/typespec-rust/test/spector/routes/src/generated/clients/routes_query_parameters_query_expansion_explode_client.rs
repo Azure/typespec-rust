@@ -80,7 +80,7 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
             let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.1);
             for (k, v) in param_vec.iter() {
-                url.query_pairs_mut().append_pair(&k, &v.to_string());
+                url.query_pairs_mut().append_pair(k, &v.to_string());
             }
         }
         let mut request = Request::new(url, Method::Get);

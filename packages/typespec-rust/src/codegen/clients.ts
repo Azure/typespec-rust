@@ -833,7 +833,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         text += `${indent.get()}${queryParam.name}_vec.sort_by_key(|p| p.1);\n`;
         if (queryParam.explode) {
           text += `${indent.get()}for (k, v) in ${queryParam.name}_vec.iter() {\n`;
-          text += `${indent.push().get()}${urlVarName}.query_pairs_mut().append_pair(&k, &v.to_string());\n`;
+          text += `${indent.push().get()}${urlVarName}.query_pairs_mut().append_pair(k, &v.to_string());\n`;
           text += `${indent.pop().get()}}\n`;
         } else {
           text += `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${queryParam.name}_vec.iter().map(|(k, v)| format!("{},{}", k, v)).collect::<Vec<String>>().join(",").as_str());\n`;
