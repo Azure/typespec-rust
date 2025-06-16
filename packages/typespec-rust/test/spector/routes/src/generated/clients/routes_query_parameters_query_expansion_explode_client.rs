@@ -38,7 +38,7 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         url = url.join("routes/query/query-expansion/explode/array")?;
-        for p in param {
+        for p in param.iter() {
             url.query_pairs_mut().append_pair("param", p);
         }
         let mut request = Request::new(url, Method::Get);
@@ -77,9 +77,9 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
         let mut url = self.endpoint.clone();
         url = url.join("routes/query/query-expansion/explode/record")?;
         {
-            let mut param_vec = param.into_iter().collect::<Vec<_>>();
+            let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.1);
-            for (k, v) in param_vec {
+            for (k, v) in param_vec.iter() {
                 url.query_pairs_mut().append_pair(&k, &v.to_string());
             }
         }

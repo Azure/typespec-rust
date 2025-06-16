@@ -77,12 +77,12 @@ impl RoutesPathParametersSimpleExpansionStandardClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/simple/standard/record{param}");
         {
-            let mut param_vec = param.into_iter().collect::<Vec<_>>();
+            let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.1);
             path = path.replace(
                 "{param}",
                 &param_vec
-                    .into_iter()
+                    .iter()
                     .map(|(k, v)| format!("{},{}", k, v))
                     .collect::<Vec<_>>()
                     .join(","),

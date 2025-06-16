@@ -75,16 +75,15 @@ impl RoutesQueryParametersQueryExpansionStandardClient {
         let mut url = self.endpoint.clone();
         url = url.join("routes/query/query-expansion/standard/record")?;
         {
-            let mut param_vec = param.into_iter().collect::<Vec<_>>();
+            let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.1);
             url.query_pairs_mut().append_pair(
                 "param",
                 param_vec
-                    .into_iter()
+                    .iter()
                     .map(|(k, v)| format!("{},{}", k, v))
-                    .collect::<Vec<_>>()
-                    .join(",")
-                    .as_str(),
+                    .collect::<Vec<String>>()
+                    .join(","),
             );
         }
         let mut request = Request::new(url, Method::Get);

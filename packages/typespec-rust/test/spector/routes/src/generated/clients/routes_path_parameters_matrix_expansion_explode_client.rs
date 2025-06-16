@@ -77,7 +77,7 @@ impl RoutesPathParametersMatrixExpansionExplodeClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/matrix/explode/record{param}");
         {
-            let mut param_vec = param.into_iter().collect::<Vec<_>>();
+            let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.1);
             path = path.replace(
                 "{param}",

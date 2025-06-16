@@ -39,7 +39,7 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         let mut url = self.endpoint.clone();
         url = url.join("routes/query/query-continuation/explode/array")?;
         url.query_pairs_mut().append_pair("fixed", "true");
-        for p in param {
+        for p in param.iter() {
             url.query_pairs_mut().append_pair("param", p);
         }
         let mut request = Request::new(url, Method::Get);
@@ -80,9 +80,9 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         url = url.join("routes/query/query-continuation/explode/record")?;
         url.query_pairs_mut().append_pair("fixed", "true");
         {
-            let mut param_vec = param.into_iter().collect::<Vec<_>>();
+            let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.1);
-            for (k, v) in param_vec {
+            for (k, v) in param_vec.iter() {
                 url.query_pairs_mut().append_pair(&k, &v.to_string());
             }
         }
