@@ -176,7 +176,34 @@ export type PageableStrategyKind = PageableStrategyContinuationToken | PageableS
 /** ParameterStyle indicates how a collection is styled on the wire */
 // https://spec.openapis.org/oas/v3.1.0#style-examples
 // https://swagger.io/docs/specification/v3_0/serialization/
-export type ParameterStyle = 'simple' | 'path' | 'label' | 'matrix' | 'fragment';
+export type ParameterStyle =
+  /** Simple replacement of "{placeholder}" to "value" */
+  // For scalar values, it works the same regardless of 'explode'.
+  // For arrays, "{placeholder}" becomes "v,a,l,u,e,s", regardless of 'explode'.
+  // For hashmaps, it is "k1,v1,k2,v2" when 'explode' is false, "k1=v1,k2=v2" when true.
+  'simple' |
+
+  /** Expansion of value into path components via '/': "{placeholder}" becomes "/value" */
+  // For scalar values, it works the same regardless of 'explode'.
+  // For arrays, "{placeholder}" becomes "/v,a,l,u,e,s" when 'explode' is false, "/v/a/l/u/e/s" when true.
+  // For hashmaps, it is "/k1,v1,k2,v2" when 'explode' is false, "/k1=v1/k2=v2" when true.
+  'path' |
+
+  /** Expansion of value into a label via '.': "{placeholder}" becomes ".value" */
+  // For scalar values, it works the same regardless of 'explode'.
+  // For arrays, "{placeholder}" becomes ".v,a,l,u,e,s" when 'explode' is false, ".v.a.l.u.e.s" when true.
+  // For hashmaps, it is ".k1,v1,k2,v2" when 'explode' is false, ".k1=v1.k2=v2" when true.
+  'label' |
+
+  /** Semicolon separated, 'name=value' form: "{placeholder}" becomes ";param=value" */
+  // For scalar values, it works the same regardless of 'explode'.
+  // For arrays, "{placeholder}" becomes ";param=v,a,l,u,e,s" when 'explode' is false, ";param=v;param=a;param=l;param=u;param=e;param=s" when true.
+  // For hashmaps, it is ";param=k1,v1,k2,v2" when 'explode' is false, ";k1=v1;k2=v2" when true.
+  'matrix' |
+
+  /** Not currently supported, temporarily defaulted to the same behavior as 'simple' */
+  // Spector does not currently have a test for this.
+  'fragment';
 
 /** CollectionFormat indicates how a collection is formatted on the wire */
 export type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes';
