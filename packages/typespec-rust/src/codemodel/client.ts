@@ -362,7 +362,7 @@ export interface PathScalarParameter extends HTTPParameterBase {
 }
 
 /** QueryCollectionParameterType defines the possible types for a QueryCollectionParameter */
-export type QueryCollectionParameterType = types.HashMap | types.Ref<types.Slice> | types.Vector;
+export type QueryCollectionParameterType = types.Ref<types.Slice> | types.Vector;
 
 /** QueryCollectionParameter is a param that goes in the HTTP query string */
 export interface QueryCollectionParameter extends HTTPParameterBase {
@@ -527,12 +527,6 @@ interface HTTPParameterBase extends method.Parameter {
 
   /** optional params go in the method's MethodOptions type */
   optional: boolean;
-
-  /** the parameter's style */
-  style: "" | "simple" | "path" | "label" | "matrix" | "fragment";
-
-  /** indicates if the parameter should be passed with "explode" styling. defaults to false */
-  explode: boolean;
 }
 
 class ClientParameterBase implements ClientParameterBase {
@@ -559,8 +553,6 @@ class HTTPParameterBase extends method.Parameter {
     this.location = location;
     this.optional = optional;
     this.docs = {};
-    this.style = "";
-    this.explode = false;
   }
 }
 
