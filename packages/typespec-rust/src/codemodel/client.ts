@@ -199,11 +199,7 @@ export type ParameterStyle =
   // For scalar values, it works the same regardless of 'explode'.
   // For arrays, "{placeholder}" becomes ";param=v,a,l,u,e,s" when 'explode' is false, ";param=v;param=a;param=l;param=u;param=e;param=s" when true.
   // For hashmaps, it is ";param=k1,v1,k2,v2" when 'explode' is false, ";k1=v1;k2=v2" when true.
-  'matrix' |
-
-  /** Not currently supported, temporarily defaulted to the same behavior as 'simple' */
-  // Spector does not currently have a test for this.
-  'fragment';
+  'matrix';
 
 /** CollectionFormat indicates how a collection is formatted on the wire */
 export type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes';

@@ -1650,12 +1650,22 @@ export class Adapter {
           adaptedParam.isApiVersion = param.isApiVersionParam;
         }
         break;
-      case 'path':
+      case 'path': {
         paramType = this.typeToWireType(paramType);
+        let style: rust.ParameterStyle = 'simple';
+        {
+          const tspStyleString = (param.style as string);
+          if (!['simple', 'path', 'label', 'matrix'].includes(tspStyleString)) {
+            throw new AdapterError('InternalError', `unsupported style ${tspStyleString} for parameter ${param.serializedName}`, param.__raw?.node);
+          } else {
+            style = tspStyleString as rust.ParameterStyle;
+          }
+        }
+
         if (isRefSlice(paramType)) {
-          adaptedParam = new rust.PathCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, param.style, param.explode);
-        } else if(paramType.kind === 'hashmap') {
-          adaptedParam = new rust.PathHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, param.style, param.explode);
+          adaptedParam = new rust.PathCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
+        } else if (paramType.kind === 'hashmap') {
+          adaptedParam = new rust.PathHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
         } else {
           switch (paramType.kind) {
             case 'jsonValue':
@@ -1666,9 +1676,9 @@ export class Adapter {
               throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar path ${param.serializedName}`, param.__raw?.node);
           }
 
-          adaptedParam = new rust.PathScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, param.style);
+          adaptedParam = new rust.PathScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style);
         }
-        break;
+      } break;
       case 'query':
         paramType = this.typeToWireType(paramType);
         if (paramType.kind === 'Vec' || isRefSlice(paramType)) {
