@@ -174,6 +174,8 @@ export type PageableStrategyKind = PageableStrategyContinuationToken | PageableS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** ParameterStyle indicates how a collection is styled on the wire */
+// https://spec.openapis.org/oas/v3.1.0#style-examples
+// https://swagger.io/docs/specification/v3_0/serialization/
 export type ParameterStyle = 'simple' | 'path' | 'label' | 'matrix' | 'fragment';
 
 /** CollectionFormat indicates how a collection is formatted on the wire */
