@@ -466,10 +466,11 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
  */
 function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
   for (const param of ctor.params) {
-    if (param.type.kind === 'arc' && param.type.type.kind === 'tokenCredential') {
+    const arcTokenCred = helpers.asTypeOf<rust.TokenCredential>(param.type, 'tokenCredential', 'arc');
+    if (arcTokenCred) {
       use.add('azure_core::http::policies', 'BearerTokenCredentialPolicy', 'Policy');
       const scopes = new Array<string>();
-      for (const scope of param.type.type.scopes) {
+      for (const scope of arcTokenCred.scopes) {
         scopes.push(`"${scope}"`);
       }
       return `let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(credential, vec![${scopes.join(', ')}]));`;

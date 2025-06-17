@@ -23,6 +23,9 @@ export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag 
 /** Type defines a type within the Rust type system */
 export type Type = SdkType | WireType;
 
+/** Kind contains the set of discriminator values for all types */
+export type Kind = Type['kind'];
+
 /** Arc is a std::sync::Arc<T> */
 export interface Arc extends QualifiedType {
   kind: 'arc';

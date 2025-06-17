@@ -7,7 +7,7 @@ import * as rust from '../src/codemodel/index.js';
 import { CodeGenerator } from '../src/codegen/codeGenerator.js';
 import * as helpers from '../src/codegen/helpers.js';
 import { strictEqual } from 'assert';
-import { describe, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 describe('typespec-rust: codegen', () => {
   describe('generateCargoTomlFile', () => {
@@ -144,6 +144,15 @@ describe('typespec-rust: codegen', () => {
       '    },\n' +
       '}';
       strictEqual(match, expected);
+    });
+
+    it('unwraps named types', () => {
+      const crate = new rust.Crate('test_crate', '1.2.3', 'data-plane');
+      expect(helpers.asTypeOf<rust.StringType>(new rust.Etag(crate), 'String')).toBeUndefined();
+      expect(helpers.asTypeOf<rust.StringType>(new rust.StringType(), 'String')).toHaveProperty('kind', 'String');
+      expect(helpers.asTypeOf<rust.StringSlice>(new rust.Ref(new rust.StringSlice()), 'str')).toBeUndefined();
+      expect(helpers.asTypeOf<rust.StringSlice>(new rust.Ref(new rust.StringSlice()), 'str', 'ref')).toHaveProperty('kind', 'str');
+      expect(helpers.asTypeOf<rust.StringSlice>(new rust.Ref(new rust.Slice(new rust.Ref(new rust.StringSlice()))), 'str', 'ref', 'slice', 'ref')).toHaveProperty('kind', 'str');
     });
   });
 });
