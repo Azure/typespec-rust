@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType = Arc | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
 export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
@@ -477,7 +477,7 @@ export type Visibility = 'pub' | 'pubCrate';
  * 
  * the value in path will be used to determine the crate name
  */
-interface External extends QualifiedType {}
+interface External extends QualifiedType { }
 
 class External extends QualifiedType implements External {
   constructor(crate: Crate, name: string, path: string, features = new Array<string>) {
@@ -688,7 +688,7 @@ export class ModelField extends StructFieldBase implements ModelField {
 
 export class OffsetDateTime extends External implements OffsetDateTime {
   constructor(crate: Crate, encoding: DateTimeEncoding, utc: boolean) {
-    super(crate, 'OffsetDateTime', 'time');
+    super(crate, 'OffsetDateTime', 'azure_core::time');
     this.kind = 'offsetDateTime';
     this.encoding = encoding;
     this.utc = utc;
