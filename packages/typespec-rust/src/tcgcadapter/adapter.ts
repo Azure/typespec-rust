@@ -1650,36 +1650,53 @@ export class Adapter {
           adaptedParam.isApiVersion = param.isApiVersionParam;
         }
         break;
-      case 'path':
+      case 'path': {
         paramType = this.typeToWireType(paramType);
-        switch (paramType.kind) {
-          case 'hashmap':
-          case 'jsonValue':
-          case 'model':
-          case 'slice':
-          case 'str':
-          case 'Vec':
-            throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar path ${param.serializedName}`, param.__raw?.node);
-        }
-        adaptedParam = new rust.PathScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved);
-        break;
-      case 'query':
-        if (param.collectionFormat) {
-          const format = param.collectionFormat === 'simple' ? 'csv' : (param.collectionFormat === 'form' ? 'multi' : param.collectionFormat);
-          if (paramType.kind !== 'Vec' && !isRefSlice(paramType)) {
-            throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for QueryCollectionParameter`, param.__raw?.node);
+        let style: rust.ParameterStyle = 'simple';
+        {
+          const tspStyleString = (param.style as string);
+          if (!['simple', 'path', 'label', 'matrix'].includes(tspStyleString)) {
+            throw new AdapterError('InternalError', `unsupported style ${tspStyleString} for parameter ${param.serializedName}`, param.__raw?.node);
+          } else {
+            style = tspStyleString as rust.ParameterStyle;
           }
-          // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
-          adaptedParam = new rust.QueryCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, format);
+        }
+
+        if (isRefSlice(paramType)) {
+          adaptedParam = new rust.PathCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
+        } else if (paramType.kind === 'hashmap') {
+          adaptedParam = new rust.PathHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
         } else {
-          paramType = this.typeToWireType(paramType);
           switch (paramType.kind) {
-            case 'hashmap':
             case 'jsonValue':
             case 'model':
             case 'slice':
             case 'str':
             case 'Vec':
+              throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar path ${param.serializedName}`, param.__raw?.node);
+          }
+
+          adaptedParam = new rust.PathScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style);
+        }
+      } break;
+      case 'query':
+        paramType = this.typeToWireType(paramType);
+        if (paramType.kind === 'Vec' || isRefSlice(paramType)) {
+          let format: rust.ExtendedCollectionFormat = param.explode ? 'multi' : 'csv';
+          if (param.collectionFormat) {
+            format = param.collectionFormat === 'simple' ? 'csv' : (param.collectionFormat === 'form' ? 'multi' : param.collectionFormat);
+          }
+          // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
+          adaptedParam = new rust.QueryCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, format);
+        } else if (paramType.kind === 'hashmap') {
+          // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
+          adaptedParam = new rust.QueryHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, param.explode);
+        } else {
+          switch (paramType.kind) {
+            case 'jsonValue':
+            case 'model':
+            case 'slice':
+            case 'str':
               throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar query ${param.serializedName}`, param.__raw?.node);
           }
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314

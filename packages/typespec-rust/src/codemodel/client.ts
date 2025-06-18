@@ -173,6 +173,34 @@ export type PageableStrategyKind = PageableStrategyContinuationToken | PageableS
 // parameters
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+/** ParameterStyle indicates how a collection is styled on the wire */
+// https://spec.openapis.org/oas/v3.1.0#style-examples
+// https://swagger.io/docs/specification/v3_0/serialization/
+export type ParameterStyle =
+  /** Simple replacement of "{placeholder}" to "value" */
+  // For scalar values, it works the same regardless of 'explode'.
+  // For arrays, "{placeholder}" becomes "v,a,l,u,e,s", regardless of 'explode'.
+  // For hashmaps, it is "k1,v1,k2,v2" when 'explode' is false, "k1=v1,k2=v2" when true.
+  'simple' |
+
+  /** Expansion of value into path components via '/': "{placeholder}" becomes "/value" */
+  // For scalar values, it works the same regardless of 'explode'.
+  // For arrays, "{placeholder}" becomes "/v,a,l,u,e,s" when 'explode' is false, "/v/a/l/u/e/s" when true.
+  // For hashmaps, it is "/k1,v1,k2,v2" when 'explode' is false, "/k1=v1/k2=v2" when true.
+  'path' |
+
+  /** Expansion of value into a label via '.': "{placeholder}" becomes ".value" */
+  // For scalar values, it works the same regardless of 'explode'.
+  // For arrays, "{placeholder}" becomes ".v,a,l,u,e,s" when 'explode' is false, ".v.a.l.u.e.s" when true.
+  // For hashmaps, it is ".k1,v1,k2,v2" when 'explode' is false, ".k1=v1.k2=v2" when true.
+  'label' |
+
+  /** Semicolon separated, 'name=value' form: "{placeholder}" becomes ";param=value" */
+  // For scalar values, it works the same regardless of 'explode'.
+  // For arrays, "{placeholder}" becomes ";param=v,a,l,u,e,s" when 'explode' is false, ";param=v;param=a;param=l;param=u;param=e;param=s" when true.
+  // For hashmaps, it is ";param=k1,v1,k2,v2" when 'explode' is false, ";k1=v1;k2=v2" when true.
+  'matrix';
+
 /** CollectionFormat indicates how a collection is formatted on the wire */
 export type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes';
 
@@ -183,7 +211,7 @@ export type ExtendedCollectionFormat = CollectionFormat | 'multi';
 export type ParameterLocation = 'client' | 'method';
 
 /** MethodParameter defines the possible method parameter types */
-export type MethodParameter = BodyParameter | HeaderCollectionParameter | HeaderHashMapParameter | HeaderScalarParameter | PartialBodyParameter | PathScalarParameter | QueryCollectionParameter | QueryScalarParameter;
+export type MethodParameter = BodyParameter | HeaderCollectionParameter | HeaderHashMapParameter | HeaderScalarParameter | PartialBodyParameter | PathCollectionParameter | PathHashMapParameter | PathScalarParameter | QueryCollectionParameter | QueryHashMapParameter | QueryScalarParameter;
 
 /** BodyParameter is a param that's passed via the HTTP request body */
 export interface BodyParameter extends HTTPParameterBase {
@@ -266,6 +294,49 @@ export interface PartialBodyParameter extends HTTPParameterBase {
   serde: string;
 }
 
+/** PathCollectionParameterType defines the possible types for a PathCollectionParameter */
+export type PathCollectionParameterType = types.HashMap | types.Ref<types.Slice>;
+
+/** PathCollectionParameter is a param that goes in the HTTP path */
+export interface PathCollectionParameter extends HTTPParameterBase {
+  kind: 'pathCollection';
+
+  /** the segment name to be replaced with the param's value */
+  segment: string;
+
+  /** the type of the param */
+  type: PathCollectionParameterType;
+
+  /** indicates if the path parameter should be URL encoded */
+  encoded: boolean;
+
+  /** parameter style */
+  style: ParameterStyle;
+
+  /** indicates if the parameter should be passed with "explode" styling. defaults to false */
+  explode: boolean;
+}
+
+/** PathHashMapParameter is a param that goes in the HTTP path */
+export interface PathHashMapParameter extends HTTPParameterBase {
+  kind: 'pathHashMap';
+
+  /** the segment name to be replaced with the param's value */
+  segment: string;
+
+  /** contains key/value pairs */
+  type: types.HashMap;
+
+  /** indicates if the path parameter should be URL encoded */
+  encoded: boolean;
+
+  /** parameter style */
+  style: ParameterStyle;
+
+  /** indicates if the parameter should be passed with "explode" styling. defaults to false */
+  explode: boolean;
+}
+
 /** PathScalarParameterType defines the possible types for a PathScalarParameter */
 export type PathScalarParameterType = Exclude<types.WireType, types.HashMap | types.JsonValue | types.Model | types.Slice | types.StringSlice | types.Vector>;
 
@@ -281,10 +352,13 @@ export interface PathScalarParameter extends HTTPParameterBase {
 
   /** indicates if the path parameter should be URL encoded */
   encoded: boolean;
+
+  /** parameter style */
+  style: ParameterStyle;
 }
 
 /** QueryCollectionParameterType defines the possible types for a QueryCollectionParameter */
-export type QueryCollectionParameterType = types.HashMap | types.Ref<types.Slice> | types.Vector;
+export type QueryCollectionParameterType = types.Ref<types.Slice> | types.Vector;
 
 /** QueryCollectionParameter is a param that goes in the HTTP query string */
 export interface QueryCollectionParameter extends HTTPParameterBase {
@@ -301,6 +375,23 @@ export interface QueryCollectionParameter extends HTTPParameterBase {
 
   /** the format of the collection */
   format: ExtendedCollectionFormat;
+}
+
+/** QueryHashMapParameter is a param that goes in the HTTP query string */
+export interface QueryHashMapParameter extends HTTPParameterBase {
+  kind: 'queryHashMap';
+
+  /** key is the query param's key name */
+  key: string;
+
+  /** contains key/value pairs */
+  type: types.HashMap;
+
+  /** indicates if the query parameter should be URL encoded */
+  encoded: boolean;
+
+  /** indicates if the parameter should be passed with "explode" styling. defaults to false */
+  explode: boolean;
 }
 
 /** QueryScalarParameterType defines the possible types for a QueryScalarParameter */
@@ -601,12 +692,35 @@ export class PartialBodyParameter extends HTTPParameterBase implements PartialBo
   }
 }
 
+export class PathCollectionParameter extends HTTPParameterBase implements PathCollectionParameter {
+  constructor(name: string, segment: string, location: ParameterLocation, optional: boolean, type: PathCollectionParameterType, encoded: boolean, style: ParameterStyle, explode: boolean) {
+    super(name, location, optional, type);
+    this.kind = 'pathCollection';
+    this.segment = segment;
+    this.encoded = encoded;
+    this.style = style;
+    this.explode = explode;
+  }
+}
+
+export class PathHashMapParameter extends HTTPParameterBase implements PathHashMapParameter {
+  constructor(name: string, segment: string, location: ParameterLocation, optional: boolean, type: types.HashMap, encoded: boolean, style: ParameterStyle, explode: boolean) {
+    super(name, location, optional, type);
+    this.kind = 'pathHashMap';
+    this.segment = segment;
+    this.encoded = encoded;
+    this.style = style;
+    this.explode = explode;
+  }
+}
+
 export class PathScalarParameter extends HTTPParameterBase implements PathScalarParameter {
-  constructor(name: string, segment: string, location: ParameterLocation, optional: boolean, type: PathScalarParameterType, encoded: boolean) {
+  constructor(name: string, segment: string, location: ParameterLocation, optional: boolean, type: PathScalarParameterType, encoded: boolean, style: ParameterStyle) {
     super(name, location, optional, type);
     this.kind = 'pathScalar';
     this.segment = segment;
     this.encoded = encoded;
+    this.style = style;
   }
 }
 
@@ -617,6 +731,16 @@ export class QueryCollectionParameter extends HTTPParameterBase implements Query
     this.key = key;
     this.encoded = encoded;
     this.format = format;
+  }
+}
+
+export class QueryHashMapParameter extends HTTPParameterBase implements QueryHashMapParameter {
+  constructor(name: string, key: string, location: ParameterLocation, optional: boolean, type: types.HashMap, encoded: boolean, explode: boolean) {
+    super(name, location, optional, type);
+    this.kind = 'queryHashMap';
+    this.key = key;
+    this.encoded = encoded;
+    this.explode = explode;
   }
 }
 

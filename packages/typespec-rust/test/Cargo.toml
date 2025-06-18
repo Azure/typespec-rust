@@ -45,6 +45,7 @@ members = [
     "spector/client/structure/two-operation-group",
     "spector/resiliency/srv-driven/new",
     "spector/resiliency/srv-driven/old",
+    "spector/routes",
     "spector/serialization/encoded-name/json",
     "spector/server/endpoint/not-defined",
     "spector/server/path/multiple",

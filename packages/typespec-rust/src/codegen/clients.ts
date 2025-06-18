@@ -569,11 +569,12 @@ function getClientAccessorMethodBody(indent: helpers.indentation, client: rust.C
 
 type ClientMethod = rust.AsyncMethod | rust.PageableMethod;
 type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderHashMapParameter | rust.HeaderScalarParameter;
-type QueryParamType = rust.QueryCollectionParameter | rust.QueryScalarParameter;
+type PathParamType = rust.PathCollectionParameter | rust.PathHashMapParameter | rust.PathScalarParameter;
+type QueryParamType = rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter;
 type ApiVersionParamType = rust.HeaderScalarParameter | rust.QueryScalarParameter;
 
 /** groups method parameters based on their kind */
-interface methodParamGroups {
+interface MethodParamGroups {
   /** the api version parameter if applicable */
   apiVersion?: ApiVersionParamType;
 
@@ -587,7 +588,7 @@ interface methodParamGroups {
   partialBody: Array<rust.PartialBodyParameter>;
 
   /** path parameters. can be empty */
-  path: Array<rust.PathScalarParameter>;
+  path: Array<PathParamType>;
 
   /** query parameters. can be empty */
   query: Array<QueryParamType>;
@@ -599,11 +600,11 @@ interface methodParamGroups {
  * @param method the method containing the parameters to group
  * @returns the groups parameters
  */
-function getMethodParamGroup(method: ClientMethod): methodParamGroups {
+function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
   // collect and sort all the header/path/query params
   let apiVersionParam: ApiVersionParamType | undefined;
   const headerParams = new Array<HeaderParamType>();
-  const pathParams = new Array<rust.PathScalarParameter>();
+  const pathParams = new Array<PathParamType>();
   const queryParams = new Array<QueryParamType>();
   const partialBodyParams = new Array<rust.PartialBodyParameter>();
 
@@ -618,10 +619,13 @@ function getMethodParamGroup(method: ClientMethod): methodParamGroups {
         partialBodyParams.push(param);
         break;
       case 'pathScalar':
+      case 'pathCollection':
+      case 'pathHashMap':
         pathParams.push(param);
         break;
       case 'queryScalar':
       case 'queryCollection':
+      case 'queryHashMap':
         queryParams.push(param);
         break;
     }
@@ -631,7 +635,7 @@ function getMethodParamGroup(method: ClientMethod): methodParamGroups {
   }
 
   headerParams.sort((a: HeaderParamType, b: HeaderParamType) => { return helpers.sortAscending(a.header, b.header); });
-  pathParams.sort((a: rust.PathScalarParameter, b: rust.PathScalarParameter) => { return helpers.sortAscending(a.segment, b.segment); });
+  pathParams.sort((a: PathParamType, b: PathParamType) => { return helpers.sortAscending(a.segment, b.segment); });
   queryParams.sort((a: QueryParamType, b: QueryParamType) => { return helpers.sortAscending(a.key, b.key); });
 
   let bodyParam: rust.BodyParameter | undefined;
@@ -689,7 +693,7 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
  * @param urlVarName the name of the var that contains the azure_core::Url. defaults to 'url'
  * @returns the URL construction code
  */
-function constructUrl(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, urlVarName: string = 'url'): string {
+function constructUrl(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, urlVarName: string = 'url'): string {
   // for paths that contain query parameters, we must set the query params separately.
   // including them in the call to set_path() causes the chars to be path-escaped.
   const pathChunks = method.httpPath.split('?');
@@ -720,8 +724,72 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
     } else {
       // we have path params that need to have their segments replaced with the param values
       body += `${indent.get()}let mut path = String::from(${path});\n`;
+
       for (const pathParam of paramGroups.path) {
-        body += `${indent.get()}path = path.replace("{${pathParam.segment}}", ${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)});\n`;
+        let wrapSortedVec: (s: string) => string = (s) => s;
+        let paramExpression = `${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)}`;
+        if (pathParam.kind === 'pathHashMap') {
+          wrapSortedVec = (s) => `${indent.get()}{`
+            + `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParam.name}.iter().collect::<Vec<_>>();\n`
+            + `${indent.get()}${pathParam.name}_vec.sort_by_key(|p| p.1);\n`
+            + `${s}`
+            + `${indent.pop().get()}}`;
+
+          paramExpression = `&${pathParam.name}_vec.iter().map(|(k,v)| `
+            + (pathParam.explode
+              ? `format!("{}={}", k, v)).collect::<Vec<_>>().join(",")`
+              : `format!("{},{}", k, v)).collect::<Vec<_>>().join(",")`);
+
+          switch (pathParam.style) {
+            case 'path':
+              paramExpression = `&format!("/{}", ${pathParam.name}_vec.iter().map(|(k,v)| `
+                + (pathParam.explode
+                  ? `format!("{}={}", k, v)).collect::<Vec<_>>().join("/"))`
+                  : `format!("{},{}", k, v)).collect::<Vec<_>>().join(","))`);
+              break;
+            case 'label':
+              paramExpression = `&format!(".{}", ${pathParam.name}_vec.iter().map(|(k,v)| `
+                + (pathParam.explode
+                  ? `format!("{}={}", k, v)).collect::<Vec<_>>().join("."))`
+                  : `format!("{},{}", k, v)).collect::<Vec<_>>().join(","))`);
+              break;
+            case 'matrix':
+              paramExpression = pathParam.explode
+                ? (`&format!(";{}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
+                  + `format!("{}={}", k, v)).collect::<Vec<_>>().join(";"))`)
+                : (`&format!(";${pathParam.name}={}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
+                  + `format!("{},{}", k, v)).collect::<Vec<_>>().join(","))`);
+              break;
+          }
+        } else if (pathParam.kind === 'pathCollection') {
+          paramExpression = `&${pathParam.name}.join(",")`;
+          switch (pathParam.style) {
+            case 'path':
+              paramExpression = `&format!("/{}", ${pathParam.name}.join("${pathParam.explode ? '/' : ','}"))`;
+              break;
+            case 'label':
+              paramExpression = `&format!(".{}", ${pathParam.name}.join("${pathParam.explode ? '.' : ','}"))`;
+              break;
+            case 'matrix':
+              paramExpression = `&format!(";${pathParam.name}={}", ${pathParam.name}.join(`
+                + `"${pathParam.explode ? `;${pathParam.name}=` : ','}"))`;
+              break;
+          }
+        } else {
+          switch (pathParam.style) {
+            case 'path':
+              paramExpression = `&format!("/{}", ${paramExpression})`;
+              break;
+            case 'label':
+              paramExpression = `&format!(".{}", ${paramExpression})`;
+              break;
+            case 'matrix':
+              paramExpression = `&format!(";${pathParam.name}={}", ${paramExpression})`;
+              break;
+          }
+        }
+
+        body += wrapSortedVec(`${indent.get()}path = path.replace("{${pathParam.segment}}", ${paramExpression});\n`);
       }
       path = '&path';
       body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
@@ -758,6 +826,21 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         text += `${indent.pop().get()}}\n`;
         return text;
       });
+    } else if (queryParam.kind === 'queryHashMap') {
+      body += getParamValueHelper(indent, queryParam, false, () => {
+        let text = `${indent.get()}{\n`;
+        text += `${indent.push().get()}let mut ${queryParam.name}_vec = ${queryParam.name}.iter().collect::<Vec<_>>();\n`;
+        text += `${indent.get()}${queryParam.name}_vec.sort_by_key(|p| p.1);\n`;
+        if (queryParam.explode) {
+          text += `${indent.get()}for (k, v) in ${queryParam.name}_vec.iter() {\n`;
+          text += `${indent.push().get()}${urlVarName}.query_pairs_mut().append_pair(k, &v.to_string());\n`;
+          text += `${indent.pop().get()}}\n`;
+        } else {
+          text += `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${queryParam.name}_vec.iter().map(|(k, v)| format!("{},{}", k, v)).collect::<Vec<String>>().join(",").as_str());\n`;
+        }
+        text += `${indent.pop().get()}}\n`;
+        return text;
+      });
     } else {
       body += getParamValueHelper(indent, queryParam, false, () => {
         // for enums we call .as_ref() which elides the need to borrow
@@ -782,7 +865,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
  * @param inClosure indicates if the request is being constructed within a closure (e.g. pageable methods)
  * @returns the request construction code
  */
-function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: methodParamGroups, inClosure: boolean): string {
+function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean): string {
   let body = `${indent.get()}let mut request = Request::new(url, Method::${codegen.capitalize(method.httpMethod)});\n`;
   let optionalContentTypeParam: rust.HeaderScalarParameter | undefined;
 
@@ -870,7 +953,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
  * @param method the method associated with the Url being constructed.
  * @returns 'mut ' or the empty string
  */
-function urlVarNeedsMut(paramGroups: methodParamGroups, method: ClientMethod): string {
+function urlVarNeedsMut(paramGroups: MethodParamGroups, method: ClientMethod): string {
   if (paramGroups.path.length > 0 || paramGroups.query.length > 0 || method.httpPath !== '/') {
     return 'mut ';
   }
@@ -1117,7 +1200,7 @@ function getClientEndpointParamValue(param: rust.ClientEndpointParameter): strin
  * @param fromSelf applicable for client params. when true, the prefix "self." is included
  * @returns the code to use for the param's value
  */
-function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | rust.PathScalarParameter | QueryParamType, fromSelf: boolean): string {
+function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathParamType | QueryParamType, fromSelf: boolean): string {
   let paramName = param.name;
   // when fromSelf is false we assume that there's a local with the same name.
   // e.g. in pageable methods where we need to clone the params so they can be

@@ -37,7 +37,7 @@ const httpSpecsGroup = {
   //'spector_mediatype': {input: 'payload/media-type'},
   //'spector_multipart': {input: 'payload/multipart'},
   'spector_xml': {input: 'payload/xml'},
-  //'spector_routes': {input: 'routes'},
+  'spector_routes': {input: 'routes'},
   'spector_jsonencodedname': {input: 'serialization/encoded-name/json'},
   'spector_noendpoint': {input: 'server/endpoint/not-defined'},
   'spector_multiple': {input: 'server/path/multiple'},
