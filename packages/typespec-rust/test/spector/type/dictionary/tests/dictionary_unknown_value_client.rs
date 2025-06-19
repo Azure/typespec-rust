@@ -37,7 +37,10 @@ async fn put() {
     let client = DictionaryClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_dictionary_unknown_value_client()
-        .put(r#"{"k1": 1, "k2": "hello", "k3": null}"#.try_into().unwrap(), None)
+        .put(
+            r#"{"k1": 1, "k2": "hello", "k3": null}"#.try_into().unwrap(),
+            None,
+        )
         .await
         .unwrap();
 

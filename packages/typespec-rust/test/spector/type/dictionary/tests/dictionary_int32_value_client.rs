@@ -41,5 +41,3 @@ async fn put() {
 
     assert_eq!(resp.status(), 204);
 }
-
-

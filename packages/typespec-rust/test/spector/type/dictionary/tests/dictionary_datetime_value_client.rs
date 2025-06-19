@@ -21,7 +21,10 @@ async fn put() {
     let client = DictionaryClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_dictionary_datetime_value_client()
-        .put(r#"{"k1": "2022-08-26T18:38:00Z"}"#.try_into().unwrap(), None)
+        .put(
+            r#"{"k1": "2022-08-26T18:38:00Z"}"#.try_into().unwrap(),
+            None,
+        )
         .await
         .unwrap();
 

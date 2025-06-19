@@ -37,7 +37,12 @@ async fn put() {
     let client = DictionaryClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_dictionary_model_value_client()
-        .put(r#"{"k1": {"property": "hello"}, "k2": {"property": "world"}}"#.try_into().unwrap(), None)
+        .put(
+            r#"{"k1": {"property": "hello"}, "k2": {"property": "world"}}"#
+                .try_into()
+                .unwrap(),
+            None,
+        )
         .await
         .unwrap();
 

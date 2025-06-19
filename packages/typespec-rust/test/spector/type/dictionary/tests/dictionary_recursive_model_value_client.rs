@@ -29,7 +29,13 @@ async fn get() {
     assert_eq!(vec[0].1.property, Some("hello".to_string()));
     assert_eq!(vec[0].1.children.is_some(), true);
     {
-        let mut child_vec = vec[0].1.children.clone().unwrap().into_iter().collect::<Vec<_>>();
+        let mut child_vec = vec[0]
+            .1
+            .children
+            .clone()
+            .unwrap()
+            .into_iter()
+            .collect::<Vec<_>>();
         child_vec.sort_by_key(|p| p.0.clone());
 
         assert_eq!(child_vec.len(), 0);
@@ -39,7 +45,13 @@ async fn get() {
     assert_eq!(vec[1].1.property, Some("world".to_string()));
     assert_eq!(vec[1].1.children.is_some(), true);
     {
-        let mut child_vec = vec[1].1.children.clone().unwrap().into_iter().collect::<Vec<_>>();
+        let mut child_vec = vec[1]
+            .1
+            .children
+            .clone()
+            .unwrap()
+            .into_iter()
+            .collect::<Vec<_>>();
         child_vec.sort_by_key(|p| p.0.clone());
 
         assert_eq!(child_vec.len(), 1);
@@ -60,4 +72,3 @@ async fn put() {
 
     assert_eq!(resp.status(), 204);
 }
-
