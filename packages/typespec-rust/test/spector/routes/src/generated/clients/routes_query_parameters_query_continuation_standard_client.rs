@@ -79,7 +79,7 @@ impl RoutesQueryParametersQueryContinuationStandardClient {
         url.query_pairs_mut().append_pair("fixed", "true");
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
-            param_vec.sort_by_key(|p| p.1);
+            param_vec.sort_by_key(|p| p.0);
             url.query_pairs_mut().append_pair(
                 "param",
                 param_vec

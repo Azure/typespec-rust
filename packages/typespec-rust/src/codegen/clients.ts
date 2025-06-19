@@ -731,7 +731,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         if (pathParam.kind === 'pathHashMap') {
           wrapSortedVec = (s) => `${indent.get()}{`
             + `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParam.name}.iter().collect::<Vec<_>>();\n`
-            + `${indent.get()}${pathParam.name}_vec.sort_by_key(|p| p.1);\n`
+            + `${indent.get()}${pathParam.name}_vec.sort_by_key(|p| p.0);\n`
             + `${s}`
             + `${indent.pop().get()}}`;
 
@@ -830,7 +830,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       body += getParamValueHelper(indent, queryParam, false, () => {
         let text = `${indent.get()}{\n`;
         text += `${indent.push().get()}let mut ${queryParam.name}_vec = ${queryParam.name}.iter().collect::<Vec<_>>();\n`;
-        text += `${indent.get()}${queryParam.name}_vec.sort_by_key(|p| p.1);\n`;
+        text += `${indent.get()}${queryParam.name}_vec.sort_by_key(|p| p.0);\n`;
         if (queryParam.explode) {
           text += `${indent.get()}for (k, v) in ${queryParam.name}_vec.iter() {\n`;
           text += `${indent.push().get()}${urlVarName}.query_pairs_mut().append_pair(k, &v.to_string());\n`;
