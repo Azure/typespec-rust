@@ -13,6 +13,8 @@ async fn get_known_value() {
         .get_known_value(None)
         .await
         .unwrap();
+
+    assert_eq!(resp.status(), 200);
     let value: DaysOfWeekEnum = resp.into_body().await.unwrap();
     assert_eq!(value, DaysOfWeekEnum::Monday);
 }
@@ -21,11 +23,13 @@ async fn get_known_value() {
 async fn put_known_value() {
     let client = FixedClient::with_no_credential("http://localhost:3000", None).unwrap();
     let req = DaysOfWeekEnum::Monday.try_into().unwrap();
-    client
+    let resp = client
         .get_fixed_string_client()
         .put_known_value(req, None)
         .await
         .unwrap();
+
+    assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]

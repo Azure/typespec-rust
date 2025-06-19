@@ -36,11 +36,13 @@ async fn get_unknown_value() {
 async fn put_known_value() {
     let client = ExtensibleClient::with_no_credential("http://localhost:3000", None).unwrap();
     let req = DaysOfWeekExtensibleEnum::Monday.try_into().unwrap();
-    client
+    let resp = client
         .get_extensible_string_client()
         .put_known_value(req, None)
         .await
         .unwrap();
+
+    assert_eq!(resp.status(), 204);
 }
 
 #[tokio::test]
@@ -49,9 +51,11 @@ async fn put_unknown_value() {
     let req = DaysOfWeekExtensibleEnum::UnknownValue("Weekend".to_string())
         .try_into()
         .unwrap();
-    client
+    let resp = client
         .get_extensible_string_client()
         .put_unknown_value(req, None)
         .await
         .unwrap();
+
+    assert_eq!(resp.status(), 204);
 }
