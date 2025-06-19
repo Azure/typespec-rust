@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
-use azure_core::date::OffsetDateTime;
+use azure_core::time::OffsetDateTime;
 use azure_core::Result;
 use spector_oauth2::OAuth2Client;
 use std::sync::Arc;

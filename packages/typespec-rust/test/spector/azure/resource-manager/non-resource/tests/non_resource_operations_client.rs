@@ -4,7 +4,7 @@
 
 use azure_core::{
     credentials::{AccessToken, TokenCredential, TokenRequestOptions},
-    date::OffsetDateTime,
+    time::OffsetDateTime,
     Result,
 };
 use spector_armnonresource::{models::NonResource, NonResourceClient};

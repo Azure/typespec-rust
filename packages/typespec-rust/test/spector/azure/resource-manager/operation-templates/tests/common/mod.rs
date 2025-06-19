@@ -5,7 +5,7 @@
 use azure_core::Result;
 use azure_core::{
     credentials::{AccessToken, TokenCredential, TokenRequestOptions},
-    date::OffsetDateTime,
+    time::OffsetDateTime,
 };
 use spector_armoptemplates::OperationTemplatesClient;
 use std::sync::Arc;

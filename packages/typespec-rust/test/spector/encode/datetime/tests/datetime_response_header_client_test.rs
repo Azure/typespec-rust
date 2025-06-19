@@ -2,7 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use azure_core::date::OffsetDateTime;
+use azure_core::time::OffsetDateTime;
 use spector_datetime::{
     models::{
         DatetimeResponseHeaderClientDefaultResultHeaders,

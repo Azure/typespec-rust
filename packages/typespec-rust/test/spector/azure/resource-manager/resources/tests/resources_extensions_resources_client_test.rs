@@ -4,7 +4,7 @@
 
 mod common;
 
-use azure_core::date::OffsetDateTime;
+use azure_core::time::OffsetDateTime;
 use futures::StreamExt;
 use spector_armresources::models::{ExtensionsResource, ExtensionsResourceProperties};
 use time::{Date, Month, Time};
