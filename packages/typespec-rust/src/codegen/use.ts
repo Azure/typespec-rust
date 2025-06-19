@@ -7,6 +7,9 @@ import * as helpers from './helpers.js';
 import { CodegenError } from './errors.js';
 import * as rust from '../codemodel/index.js';
 
+/** sentinel value indicating the module name should be brought into scope */
+const useModule = 'ZZ-USE-MODULE';
+
 /** used to generate use statements */
 export class Use {
   private trees: Array<useTree>;
@@ -43,6 +46,14 @@ export class Use {
       // parts that build the fully qualified path.
       const chunks = module.split('::');
       chunks.push(...type.split('::'));
+
+      // if we're adding say 'azure_core::time::' it means we want
+      // to bring 'time' into scope. for this case, the last element
+      // in the array will be the empty string. if this is the case
+      // the replace it with our sentinel value.
+      if (chunks[chunks.length - 1] === '') {
+        chunks[chunks.length - 1] = useModule;
+      }
 
       // each tree starts at the root of the fully qualified path
       let tree = this.trees.find(v => v.root.name === chunks[0]);
@@ -210,15 +221,24 @@ export class Use {
 class useTree {
   readonly root: useNode;
   constructor(item: string) {
-    this.root = new useNode(item);
+    this.root = new useNode(item, false);
   }
 
   insert(items: Array<string>): void {
     let node = this.root;
-    for (const item of items) {
-      let next = node.children.find((n) => n.name === item);
+    for (let i = 0; i < items.length; ++i) {
+      const item = items[i];
+      if (item === useModule) {
+        // useModule, if specified, is always the last item in the array
+        break;
+      }
+
+      // check if item should be inserted into the tree as its own module.
+      // this allows emitting constructs like "use azure_core::{time, time::OffsetDateTime};"
+      const asModule = i + 1 === items.length ? false : items[i + 1] === useModule;
+      let next = node.children.find((n) => n.name === item && n.asModule === asModule);
       if (!next) {
-        next = new useNode(item);
+        next = new useNode(item, asModule);
         node.children.push(next);
       }
       node = next;
@@ -230,8 +250,10 @@ class useTree {
 class useNode {
   readonly name: string;
   readonly children: Array<useNode>;
-  constructor(name: string) {
+  readonly asModule: boolean;
+  constructor(name: string, asModule: boolean) {
     this.name = name;
     this.children = new Array<useNode>;
+    this.asModule = asModule;
   }
 }

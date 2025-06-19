@@ -1210,7 +1210,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
   }
 
   const encodeBytes = function(type: rust.EncodedBytes, param?: string): string {
-    use.add('azure_core', 'base64');
+    use.add('azure_core', 'base64::');
     let encoding: string;
     switch (type.encoding) {
       case 'std':
@@ -1227,11 +1227,11 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
   };
 
   const encodeDateTime = function(type: rust.OffsetDateTime, param: string): string {
-    use.add('azure_core', 'date');
+    use.add('azure_core', 'time::');
     switch (type.encoding) {
       case 'rfc3339':
       case 'rfc7231':
-        return `date::to_${type.encoding}(&${param})`;
+        return `time::to_${type.encoding}(&${param})`;
       case 'unix_time':
         return `${param}.unix_timestamp().to_string()`;
     }

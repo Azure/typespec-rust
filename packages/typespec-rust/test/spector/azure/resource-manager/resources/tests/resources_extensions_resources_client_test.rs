@@ -4,9 +4,10 @@
 
 mod common;
 
+use azure_core::date::OffsetDateTime;
 use futures::StreamExt;
 use spector_armresources::models::{ExtensionsResource, ExtensionsResourceProperties};
-use time::{Date, Month, OffsetDateTime, Time};
+use time::{Date, Month, Time};
 
 const TENANT: &str = "";
 const SUBSCRIPTION: &str = "/subscriptions/00000000-0000-0000-0000-000000000000";

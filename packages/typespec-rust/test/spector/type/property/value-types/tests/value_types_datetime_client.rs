@@ -2,8 +2,8 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use azure_core::date::OffsetDateTime;
 use spector_valuetypes::{models::DatetimeProperty, ValueTypesClient};
-use time::OffsetDateTime;
 
 #[tokio::test]
 async fn get() {

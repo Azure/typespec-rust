@@ -8,10 +8,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    time::OffsetDateTime,
     Result,
 };
 use std::collections::HashMap;
-use time::OffsetDateTime;
 
 /// Dictionary of datetime values
 pub struct DictionaryDatetimeValueClient {

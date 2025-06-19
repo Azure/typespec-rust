@@ -688,7 +688,7 @@ export class ModelField extends StructFieldBase implements ModelField {
 
 export class OffsetDateTime extends External implements OffsetDateTime {
   constructor(crate: Crate, encoding: DateTimeEncoding, utc: boolean) {
-    super(crate, 'OffsetDateTime', 'time');
+    super(crate, 'OffsetDateTime', 'azure_core::time');
     this.kind = 'offsetDateTime';
     this.encoding = encoding;
     this.utc = utc;

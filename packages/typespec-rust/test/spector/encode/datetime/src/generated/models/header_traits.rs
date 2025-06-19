@@ -8,14 +8,14 @@ use super::{
     DatetimeResponseHeaderClientRfc7231Result, DatetimeResponseHeaderClientUnixTimestampResult,
 };
 use azure_core::{
-    date,
     http::{
         headers::{HeaderName, Headers},
         NoFormat, Response,
     },
+    time,
+    time::OffsetDateTime,
     Result,
 };
-use time::OffsetDateTime;
 
 const VALUE: HeaderName = HeaderName::from_static("value");
 
@@ -28,7 +28,7 @@ impl DatetimeResponseHeaderClientDefaultResultHeaders
     for Response<DatetimeResponseHeaderClientDefaultResult, NoFormat>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
-        Headers::get_optional_with(self.headers(), &VALUE, |h| date::parse_rfc7231(h.as_str()))
+        Headers::get_optional_with(self.headers(), &VALUE, |h| time::parse_rfc7231(h.as_str()))
     }
 }
 
@@ -41,7 +41,7 @@ impl DatetimeResponseHeaderClientRfc3339ResultHeaders
     for Response<DatetimeResponseHeaderClientRfc3339Result, NoFormat>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
-        Headers::get_optional_with(self.headers(), &VALUE, |h| date::parse_rfc3339(h.as_str()))
+        Headers::get_optional_with(self.headers(), &VALUE, |h| time::parse_rfc3339(h.as_str()))
     }
 }
 
@@ -54,7 +54,7 @@ impl DatetimeResponseHeaderClientRfc7231ResultHeaders
     for Response<DatetimeResponseHeaderClientRfc7231Result, NoFormat>
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
-        Headers::get_optional_with(self.headers(), &VALUE, |h| date::parse_rfc7231(h.as_str()))
+        Headers::get_optional_with(self.headers(), &VALUE, |h| time::parse_rfc7231(h.as_str()))
     }
 }
 
@@ -68,7 +68,7 @@ impl DatetimeResponseHeaderClientUnixTimestampResultHeaders
 {
     fn value(&self) -> Result<Option<OffsetDateTime>> {
         Headers::get_optional_with(self.headers(), &VALUE, |h| {
-            date::parse_unix_time(h.as_str())
+            time::parse_unix_time(h.as_str())
         })
     }
 }

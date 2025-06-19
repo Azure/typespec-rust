@@ -2,8 +2,9 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use azure_core::date::OffsetDateTime;
 use spector_datetime::DatetimeClient;
-use time::{Date, Month, OffsetDateTime, Time};
+use time::{Date, Month, Time};
 
 #[tokio::test]
 async fn default() {

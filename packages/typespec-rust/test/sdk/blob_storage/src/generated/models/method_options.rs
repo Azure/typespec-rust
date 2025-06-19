@@ -8,9 +8,8 @@ use super::{
     EncryptionAlgorithmType, FilterBlobsIncludeItem, LeaseDuration, ListBlobsIncludeItem,
     ListContainersIncludeType, PremiumPageBlobAccessTier, PublicAccessType, RehydratePriority,
 };
-use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
+use azure_core::{fmt::SafeDebug, http::ClientMethodOptions, time::OffsetDateTime};
 use std::collections::HashMap;
-use time::OffsetDateTime;
 
 /// Options to be passed to `AppendBlobClient::append_block()`
 #[derive(Clone, Default, SafeDebug)]

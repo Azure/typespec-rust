@@ -1,6 +1,16 @@
 # Release History
 
-## 0.16.1 (unreleased)
+## 0.17.0 (2025-06-19)
+
+### Breaking Changes
+
+**NOTE: this version is incompatible with earlier versions of `azure_core`**
+
+* Switch to using `OffsetDateTime` from `azure_core::time` instead of the `time` crate.
+
+### Features Added
+
+* Added support for stylized path collection parameters.
 
 ## 0.16.0 (2025-06-12)
 

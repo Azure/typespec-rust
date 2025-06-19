@@ -2,8 +2,11 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
 use azure_core::Result;
+use azure_core::{
+    credentials::{AccessToken, TokenCredential, TokenRequestOptions},
+    date::OffsetDateTime,
+};
 use spector_armoptemplates::OperationTemplatesClient;
 use std::sync::Arc;
 
@@ -27,7 +30,7 @@ impl TokenCredential for FakeTokenCredential {
     ) -> Result<AccessToken> {
         Ok(AccessToken::new(
             self.token.clone(),
-            time::OffsetDateTime::now_utc() + time::Duration::hours(1),
+            OffsetDateTime::now_utc() + time::Duration::hours(1),
         ))
     }
 }

@@ -359,10 +359,9 @@ pub mod option_hashmap_hashmap_hashmap_encoded_bytes_url {
 
 pub mod option_hashmap_hashmap_hashmap_offset_date_time_rfc3339 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -385,7 +384,7 @@ pub mod option_hashmap_hashmap_hashmap_offset_date_time_rfc3339 {
                         for kv in kv.1 {
                             decoded2.insert(
                                 kv.0,
-                                date::parse_rfc3339(&kv.1).map_err(serde::de::Error::custom)?,
+                                time::parse_rfc3339(&kv.1).map_err(serde::de::Error::custom)?,
                             );
                         }
                         decoded1.insert(kv.0, decoded2);
@@ -413,7 +412,7 @@ pub mod option_hashmap_hashmap_hashmap_offset_date_time_rfc3339 {
                 for kv in kv.1 {
                     let mut encoded2 = <HashMap<&String, String>>::new();
                     for kv in kv.1 {
-                        encoded2.insert(kv.0, date::to_rfc3339(kv.1));
+                        encoded2.insert(kv.0, time::to_rfc3339(kv.1));
                     }
                     encoded1.insert(kv.0, encoded2);
                 }
@@ -431,10 +430,9 @@ pub mod option_hashmap_hashmap_hashmap_offset_date_time_rfc3339 {
 
 pub mod option_hashmap_hashmap_hashmap_offset_date_time_rfc7231 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -457,7 +455,7 @@ pub mod option_hashmap_hashmap_hashmap_offset_date_time_rfc7231 {
                         for kv in kv.1 {
                             decoded2.insert(
                                 kv.0,
-                                date::parse_rfc7231(&kv.1).map_err(serde::de::Error::custom)?,
+                                time::parse_rfc7231(&kv.1).map_err(serde::de::Error::custom)?,
                             );
                         }
                         decoded1.insert(kv.0, decoded2);
@@ -485,7 +483,7 @@ pub mod option_hashmap_hashmap_hashmap_offset_date_time_rfc7231 {
                 for kv in kv.1 {
                     let mut encoded2 = <HashMap<&String, String>>::new();
                     for kv in kv.1 {
-                        encoded2.insert(kv.0, date::to_rfc7231(kv.1));
+                        encoded2.insert(kv.0, time::to_rfc7231(kv.1));
                     }
                     encoded1.insert(kv.0, encoded2);
                 }
@@ -503,9 +501,9 @@ pub mod option_hashmap_hashmap_hashmap_offset_date_time_rfc7231 {
 
 pub mod option_hashmap_hashmap_hashmap_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
+    use azure_core::time::OffsetDateTime;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -574,10 +572,9 @@ pub mod option_hashmap_hashmap_hashmap_offset_date_time_unix_time {
 
 pub mod option_hashmap_hashmap_offset_date_time_rfc3339 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -595,7 +592,7 @@ pub mod option_hashmap_hashmap_offset_date_time_rfc3339 {
                     for kv in kv.1 {
                         decoded1.insert(
                             kv.0,
-                            date::parse_rfc3339(&kv.1).map_err(serde::de::Error::custom)?,
+                            time::parse_rfc3339(&kv.1).map_err(serde::de::Error::custom)?,
                         );
                     }
                     decoded0.insert(kv.0, decoded1);
@@ -618,7 +615,7 @@ pub mod option_hashmap_hashmap_offset_date_time_rfc3339 {
             for kv in to_serialize {
                 let mut encoded1 = <HashMap<&String, String>>::new();
                 for kv in kv.1 {
-                    encoded1.insert(kv.0, date::to_rfc3339(kv.1));
+                    encoded1.insert(kv.0, time::to_rfc3339(kv.1));
                 }
                 encoded0.insert(kv.0, encoded1);
             }
@@ -634,10 +631,9 @@ pub mod option_hashmap_hashmap_offset_date_time_rfc3339 {
 
 pub mod option_hashmap_hashmap_offset_date_time_rfc7231 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -655,7 +651,7 @@ pub mod option_hashmap_hashmap_offset_date_time_rfc7231 {
                     for kv in kv.1 {
                         decoded1.insert(
                             kv.0,
-                            date::parse_rfc7231(&kv.1).map_err(serde::de::Error::custom)?,
+                            time::parse_rfc7231(&kv.1).map_err(serde::de::Error::custom)?,
                         );
                     }
                     decoded0.insert(kv.0, decoded1);
@@ -678,7 +674,7 @@ pub mod option_hashmap_hashmap_offset_date_time_rfc7231 {
             for kv in to_serialize {
                 let mut encoded1 = <HashMap<&String, String>>::new();
                 for kv in kv.1 {
-                    encoded1.insert(kv.0, date::to_rfc7231(kv.1));
+                    encoded1.insert(kv.0, time::to_rfc7231(kv.1));
                 }
                 encoded0.insert(kv.0, encoded1);
             }
@@ -694,9 +690,9 @@ pub mod option_hashmap_hashmap_offset_date_time_rfc7231 {
 
 pub mod option_hashmap_hashmap_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
+    use azure_core::time::OffsetDateTime;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -754,10 +750,9 @@ pub mod option_hashmap_hashmap_offset_date_time_unix_time {
 
 pub mod option_hashmap_offset_date_time_rfc3339 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -772,7 +767,7 @@ pub mod option_hashmap_offset_date_time_rfc3339 {
                 for kv in to_deserialize {
                     decoded0.insert(
                         kv.0,
-                        date::parse_rfc3339(&kv.1).map_err(serde::de::Error::custom)?,
+                        time::parse_rfc3339(&kv.1).map_err(serde::de::Error::custom)?,
                     );
                 }
                 Ok(Some(decoded0))
@@ -791,7 +786,7 @@ pub mod option_hashmap_offset_date_time_rfc3339 {
         if let Some(to_serialize) = to_serialize {
             let mut encoded0 = <HashMap<&String, String>>::new();
             for kv in to_serialize {
-                encoded0.insert(kv.0, date::to_rfc3339(kv.1));
+                encoded0.insert(kv.0, time::to_rfc3339(kv.1));
             }
             <Option<HashMap<&String, String>>>::serialize(&Some(encoded0), serializer)
         } else {
@@ -802,10 +797,9 @@ pub mod option_hashmap_offset_date_time_rfc3339 {
 
 pub mod option_hashmap_offset_date_time_rfc7231 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -820,7 +814,7 @@ pub mod option_hashmap_offset_date_time_rfc7231 {
                 for kv in to_deserialize {
                     decoded0.insert(
                         kv.0,
-                        date::parse_rfc7231(&kv.1).map_err(serde::de::Error::custom)?,
+                        time::parse_rfc7231(&kv.1).map_err(serde::de::Error::custom)?,
                     );
                 }
                 Ok(Some(decoded0))
@@ -839,7 +833,7 @@ pub mod option_hashmap_offset_date_time_rfc7231 {
         if let Some(to_serialize) = to_serialize {
             let mut encoded0 = <HashMap<&String, String>>::new();
             for kv in to_serialize {
-                encoded0.insert(kv.0, date::to_rfc7231(kv.1));
+                encoded0.insert(kv.0, time::to_rfc7231(kv.1));
             }
             <Option<HashMap<&String, String>>>::serialize(&Some(encoded0), serializer)
         } else {
@@ -850,9 +844,9 @@ pub mod option_hashmap_offset_date_time_rfc7231 {
 
 pub mod option_hashmap_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
+    use azure_core::time::OffsetDateTime;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -995,10 +989,9 @@ pub mod option_hashmap_vec_encoded_bytes_url {
 
 pub mod option_hashmap_vec_offset_date_time_rfc7231 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -1013,7 +1006,7 @@ pub mod option_hashmap_vec_offset_date_time_rfc7231 {
                 for kv in to_deserialize {
                     let mut decoded1 = <Vec<OffsetDateTime>>::new();
                     for v in kv.1 {
-                        decoded1.push(date::parse_rfc7231(&v).map_err(serde::de::Error::custom)?);
+                        decoded1.push(time::parse_rfc7231(&v).map_err(serde::de::Error::custom)?);
                     }
                     decoded0.insert(kv.0, decoded1);
                 }
@@ -1033,7 +1026,7 @@ pub mod option_hashmap_vec_offset_date_time_rfc7231 {
         if let Some(to_serialize) = to_serialize {
             let mut encoded0 = <HashMap<&String, Vec<String>>>::new();
             for kv in to_serialize {
-                encoded0.insert(kv.0, kv.1.iter().map(date::to_rfc7231).collect());
+                encoded0.insert(kv.0, kv.1.iter().map(time::to_rfc7231).collect());
             }
             <Option<HashMap<&String, Vec<String>>>>::serialize(&Some(encoded0), serializer)
         } else {
@@ -1044,9 +1037,9 @@ pub mod option_hashmap_vec_offset_date_time_rfc7231 {
 
 pub mod option_hashmap_vec_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
+    use azure_core::time::OffsetDateTime;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -1293,10 +1286,9 @@ pub mod option_vec_hashmap_vec_encoded_bytes_url {
 
 pub mod option_vec_hashmap_vec_offset_date_time_rfc3339 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -1315,7 +1307,7 @@ pub mod option_vec_hashmap_vec_offset_date_time_rfc3339 {
                         let mut decoded2 = <Vec<OffsetDateTime>>::new();
                         for v in kv.1 {
                             decoded2
-                                .push(date::parse_rfc3339(&v).map_err(serde::de::Error::custom)?);
+                                .push(time::parse_rfc3339(&v).map_err(serde::de::Error::custom)?);
                         }
                         decoded1.insert(kv.0, decoded2);
                     }
@@ -1340,7 +1332,7 @@ pub mod option_vec_hashmap_vec_offset_date_time_rfc3339 {
                 .map(|v| {
                     let mut encoded1 = <HashMap<&String, Vec<String>>>::new();
                     for kv in v {
-                        encoded1.insert(kv.0, kv.1.iter().map(date::to_rfc3339).collect());
+                        encoded1.insert(kv.0, kv.1.iter().map(time::to_rfc3339).collect());
                     }
                     encoded1
                 })
@@ -1354,9 +1346,9 @@ pub mod option_vec_hashmap_vec_offset_date_time_rfc3339 {
 
 pub mod option_vec_hashmap_vec_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
+    use azure_core::time::OffsetDateTime;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::{collections::HashMap, result::Result};
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -1415,10 +1407,9 @@ pub mod option_vec_hashmap_vec_offset_date_time_unix_time {
 
 pub mod option_vec_offset_date_time_rfc3339 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Vec<OffsetDateTime>>, D::Error>
     where
@@ -1429,7 +1420,7 @@ pub mod option_vec_offset_date_time_rfc3339 {
             Some(to_deserialize) => {
                 let mut decoded0 = <Vec<OffsetDateTime>>::new();
                 for v in to_deserialize {
-                    decoded0.push(date::parse_rfc3339(&v).map_err(serde::de::Error::custom)?);
+                    decoded0.push(time::parse_rfc3339(&v).map_err(serde::de::Error::custom)?);
                 }
                 Ok(Some(decoded0))
             }
@@ -1445,7 +1436,7 @@ pub mod option_vec_offset_date_time_rfc3339 {
         S: Serializer,
     {
         if let Some(to_serialize) = to_serialize {
-            let encoded0 = to_serialize.iter().map(date::to_rfc3339).collect();
+            let encoded0 = to_serialize.iter().map(time::to_rfc3339).collect();
             <Option<Vec<String>>>::serialize(&Some(encoded0), serializer)
         } else {
             serializer.serialize_none()
@@ -1455,10 +1446,9 @@ pub mod option_vec_offset_date_time_rfc3339 {
 
 pub mod option_vec_offset_date_time_rfc7231 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Vec<OffsetDateTime>>, D::Error>
     where
@@ -1469,7 +1459,7 @@ pub mod option_vec_offset_date_time_rfc7231 {
             Some(to_deserialize) => {
                 let mut decoded0 = <Vec<OffsetDateTime>>::new();
                 for v in to_deserialize {
-                    decoded0.push(date::parse_rfc7231(&v).map_err(serde::de::Error::custom)?);
+                    decoded0.push(time::parse_rfc7231(&v).map_err(serde::de::Error::custom)?);
                 }
                 Ok(Some(decoded0))
             }
@@ -1485,7 +1475,7 @@ pub mod option_vec_offset_date_time_rfc7231 {
         S: Serializer,
     {
         if let Some(to_serialize) = to_serialize {
-            let encoded0 = to_serialize.iter().map(date::to_rfc7231).collect();
+            let encoded0 = to_serialize.iter().map(time::to_rfc7231).collect();
             <Option<Vec<String>>>::serialize(&Some(encoded0), serializer)
         } else {
             serializer.serialize_none()
@@ -1495,9 +1485,9 @@ pub mod option_vec_offset_date_time_rfc7231 {
 
 pub mod option_vec_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
+    use azure_core::time::OffsetDateTime;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Vec<OffsetDateTime>>, D::Error>
     where
@@ -1629,10 +1619,9 @@ pub mod option_vec_vec_encoded_bytes_url {
 
 pub mod option_vec_vec_offset_date_time_rfc3339 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -1647,7 +1636,7 @@ pub mod option_vec_vec_offset_date_time_rfc3339 {
                 for v in to_deserialize {
                     let mut decoded1 = <Vec<OffsetDateTime>>::new();
                     for v in v {
-                        decoded1.push(date::parse_rfc3339(&v).map_err(serde::de::Error::custom)?);
+                        decoded1.push(time::parse_rfc3339(&v).map_err(serde::de::Error::custom)?);
                     }
                     decoded0.push(decoded1);
                 }
@@ -1667,7 +1656,7 @@ pub mod option_vec_vec_offset_date_time_rfc3339 {
         if let Some(to_serialize) = to_serialize {
             let encoded0 = to_serialize
                 .iter()
-                .map(|v| v.iter().map(date::to_rfc3339).collect())
+                .map(|v| v.iter().map(time::to_rfc3339).collect())
                 .collect();
             <Option<Vec<Vec<String>>>>::serialize(&Some(encoded0), serializer)
         } else {
@@ -1678,10 +1667,9 @@ pub mod option_vec_vec_offset_date_time_rfc3339 {
 
 pub mod option_vec_vec_offset_date_time_rfc7231 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -1696,7 +1684,7 @@ pub mod option_vec_vec_offset_date_time_rfc7231 {
                 for v in to_deserialize {
                     let mut decoded1 = <Vec<OffsetDateTime>>::new();
                     for v in v {
-                        decoded1.push(date::parse_rfc7231(&v).map_err(serde::de::Error::custom)?);
+                        decoded1.push(time::parse_rfc7231(&v).map_err(serde::de::Error::custom)?);
                     }
                     decoded0.push(decoded1);
                 }
@@ -1716,7 +1704,7 @@ pub mod option_vec_vec_offset_date_time_rfc7231 {
         if let Some(to_serialize) = to_serialize {
             let encoded0 = to_serialize
                 .iter()
-                .map(|v| v.iter().map(date::to_rfc7231).collect())
+                .map(|v| v.iter().map(time::to_rfc7231).collect())
                 .collect();
             <Option<Vec<Vec<String>>>>::serialize(&Some(encoded0), serializer)
         } else {
@@ -1727,9 +1715,9 @@ pub mod option_vec_vec_offset_date_time_rfc7231 {
 
 pub mod option_vec_vec_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
+    use azure_core::time::OffsetDateTime;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -1888,10 +1876,9 @@ pub mod option_vec_vec_vec_encoded_bytes_url {
 
 pub mod option_vec_vec_vec_offset_date_time_rfc3339 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -1909,7 +1896,7 @@ pub mod option_vec_vec_vec_offset_date_time_rfc3339 {
                         let mut decoded2 = <Vec<OffsetDateTime>>::new();
                         for v in v {
                             decoded2
-                                .push(date::parse_rfc3339(&v).map_err(serde::de::Error::custom)?);
+                                .push(time::parse_rfc3339(&v).map_err(serde::de::Error::custom)?);
                         }
                         decoded1.push(decoded2);
                     }
@@ -1933,7 +1920,7 @@ pub mod option_vec_vec_vec_offset_date_time_rfc3339 {
                 .iter()
                 .map(|v| {
                     v.iter()
-                        .map(|v| v.iter().map(date::to_rfc3339).collect())
+                        .map(|v| v.iter().map(time::to_rfc3339).collect())
                         .collect()
                 })
                 .collect();
@@ -1946,10 +1933,9 @@ pub mod option_vec_vec_vec_offset_date_time_rfc3339 {
 
 pub mod option_vec_vec_vec_offset_date_time_rfc7231 {
     #![allow(clippy::type_complexity)]
-    use azure_core::date;
+    use azure_core::{time, time::OffsetDateTime};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,
@@ -1967,7 +1953,7 @@ pub mod option_vec_vec_vec_offset_date_time_rfc7231 {
                         let mut decoded2 = <Vec<OffsetDateTime>>::new();
                         for v in v {
                             decoded2
-                                .push(date::parse_rfc7231(&v).map_err(serde::de::Error::custom)?);
+                                .push(time::parse_rfc7231(&v).map_err(serde::de::Error::custom)?);
                         }
                         decoded1.push(decoded2);
                     }
@@ -1991,7 +1977,7 @@ pub mod option_vec_vec_vec_offset_date_time_rfc7231 {
                 .iter()
                 .map(|v| {
                     v.iter()
-                        .map(|v| v.iter().map(date::to_rfc7231).collect())
+                        .map(|v| v.iter().map(time::to_rfc7231).collect())
                         .collect()
                 })
                 .collect();
@@ -2004,9 +1990,9 @@ pub mod option_vec_vec_vec_offset_date_time_rfc7231 {
 
 pub mod option_vec_vec_vec_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
+    use azure_core::time::OffsetDateTime;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(
         deserializer: D,

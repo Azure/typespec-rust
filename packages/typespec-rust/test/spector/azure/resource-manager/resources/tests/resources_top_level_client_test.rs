@@ -4,9 +4,10 @@
 
 mod common;
 
+use azure_core::date::OffsetDateTime;
 use futures::StreamExt;
 use spector_armresources::models::{TopLevelTrackedResource, TopLevelTrackedResourceProperties};
-use time::{Date, Month, OffsetDateTime, Time};
+use time::{Date, Month, Time};
 
 #[tokio::test]
 async fn action_sync() {

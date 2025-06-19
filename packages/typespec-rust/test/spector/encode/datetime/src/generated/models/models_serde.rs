@@ -5,9 +5,9 @@
 
 pub mod option_vec_offset_date_time_unix_time {
     #![allow(clippy::type_complexity)]
+    use azure_core::time::OffsetDateTime;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use std::result::Result;
-    use time::OffsetDateTime;
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Vec<OffsetDateTime>>, D::Error>
     where

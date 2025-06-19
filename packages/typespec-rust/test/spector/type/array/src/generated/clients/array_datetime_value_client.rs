@@ -8,9 +8,9 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    time::OffsetDateTime,
     Result,
 };
-use time::OffsetDateTime;
 
 /// Array of datetime values
 pub struct ArrayDatetimeValueClient {
