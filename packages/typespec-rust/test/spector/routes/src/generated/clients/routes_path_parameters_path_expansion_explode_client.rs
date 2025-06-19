@@ -78,7 +78,7 @@ impl RoutesPathParametersPathExpansionExplodeClient {
         let mut path = String::from("routes/path/path/explode/record{param}");
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
-            param_vec.sort_by_key(|p| p.1);
+            param_vec.sort_by_key(|p| p.0);
             path = path.replace(
                 "{param}",
                 &format!(

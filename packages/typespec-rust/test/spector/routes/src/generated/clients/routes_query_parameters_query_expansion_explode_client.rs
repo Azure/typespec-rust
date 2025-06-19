@@ -78,7 +78,7 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
         url = url.join("routes/query/query-expansion/explode/record")?;
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
-            param_vec.sort_by_key(|p| p.1);
+            param_vec.sort_by_key(|p| p.0);
             for (k, v) in param_vec.iter() {
                 url.query_pairs_mut().append_pair(k, &v.to_string());
             }
