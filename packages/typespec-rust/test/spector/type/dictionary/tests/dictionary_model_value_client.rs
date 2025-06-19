@@ -26,10 +26,10 @@ async fn get() {
     assert_eq!(vec.len(), 2);
     assert_eq!(vec[0].0, "k1");
     assert_eq!(vec[0].1.property, Some("hello".to_string()));
-    assert_eq!(vec[0].1.children.is_some(), false);
+    assert!(vec[0].1.children.is_none());
     assert_eq!(vec[1].0, "k2");
     assert_eq!(vec[1].1.property, Some("world".to_string()));
-    assert_eq!(vec[1].1.children.is_some(), false);
+    assert!(vec[1].1.children.is_none());
 }
 
 #[tokio::test]

@@ -25,9 +25,9 @@ async fn get() {
 
     assert_eq!(vec.len(), 2);
     assert_eq!(vec[0].0, "k1");
-    assert_eq!(vec[0].1.clone(), true);
+    assert!(vec[0].1);
     assert_eq!(vec[1].0, "k2");
-    assert_eq!(vec[1].1.clone(), false);
+    assert!(!vec[1].1);
 }
 
 #[tokio::test]

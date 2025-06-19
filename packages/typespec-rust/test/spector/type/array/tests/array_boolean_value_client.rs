@@ -17,8 +17,8 @@ async fn get() {
 
     let vec = resp.into_body().await.unwrap();
     assert_eq!(vec.len(), 2);
-    assert_eq!(vec[0], true);
-    assert_eq!(vec[1], false);
+    assert!(vec[0]);
+    assert!(!vec[1]);
 }
 
 #[tokio::test]

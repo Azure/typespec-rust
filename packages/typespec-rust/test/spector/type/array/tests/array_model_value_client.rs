@@ -18,9 +18,9 @@ async fn get() {
     let vec = resp.into_body().await.unwrap();
     assert_eq!(vec.len(), 2);
     assert_eq!(vec[0].property, Some("hello".to_string()));
-    assert_eq!(vec[0].children.is_some(), false);
+    assert!(vec[0].children.is_none());
     assert_eq!(vec[1].property, Some("world".to_string()));
-    assert_eq!(vec[1].children.is_some(), false);
+    assert!(vec[1].children.is_none());
 }
 
 #[tokio::test]

@@ -27,7 +27,7 @@ async fn get() {
 
     assert_eq!(vec[0].0, "k1");
     assert_eq!(vec[0].1.property, Some("hello".to_string()));
-    assert_eq!(vec[0].1.children.is_some(), true);
+    assert!(vec[0].1.children.is_some());
     {
         let mut child_vec = vec[0]
             .1
@@ -43,7 +43,7 @@ async fn get() {
 
     assert_eq!(vec[1].0, "k2");
     assert_eq!(vec[1].1.property, Some("world".to_string()));
-    assert_eq!(vec[1].1.children.is_some(), true);
+    assert!(vec[1].1.children.is_some());
     {
         let mut child_vec = vec[1]
             .1
@@ -57,7 +57,7 @@ async fn get() {
         assert_eq!(child_vec.len(), 1);
         assert_eq!(child_vec[0].0, "k2.1");
         assert_eq!(child_vec[0].1.property, Some("inner world".to_string()));
-        assert_eq!(child_vec[0].1.children.is_some(), false);
+        assert!(child_vec[0].1.children.is_none());
     }
 }
 
