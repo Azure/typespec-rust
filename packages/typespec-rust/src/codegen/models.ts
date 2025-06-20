@@ -521,10 +521,12 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
   /** non-collection based impl */
   const serdeEncodedBytes = function(encoding: rust.BytesEncoding): void {
     const format = encoding === 'url' ? '_url_safe' : '';
+    const deserializer = `deserialize${format}`;
+    const serializer = `serialize${format}`;
     serdeParams.add('default');
-    serdeParams.add(`deserialize_with = "base64::deserialize${format}"`);
-    serdeParams.add(`serialize_with = "base64::serialize${format}"`);
-    use.add('azure_core', 'base64::');
+    serdeParams.add(`deserialize_with = "${deserializer}"`);
+    serdeParams.add(`serialize_with = "${serializer}"`);
+    use.add('azure_core', `base64::${deserializer}`, `base64::${serializer}`);
   };
 
   /** non-collection based impl */
@@ -844,8 +846,7 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
   switch (ctx.type.kind) {
     case 'encodedBytes': {
       // terminal case (NEVER the start case)
-      use.add('azure_core', 'base64::');
-      const base64Decode = `base64::${ctx.type.encoding === 'std' ? 'decode' : 'decode_url_safe'}`;
+      const base64Decode = helpers.getBytesEncodingMethod(ctx.type.encoding, 'decode', use);
       content = `${base64Decode}(${ctx.srcVar}).map_err(serde::de::Error::custom)?`;
       content = insertOrPush(content, true);
       break;
@@ -867,10 +868,7 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
     }
     case 'offsetDateTime': {
       // terminal case (NEVER the start case)
-      if (ctx.type.encoding !== 'unix_time') {
-        use.add('azure_core', 'time::');
-      }
-      const dateParse = ctx.type.encoding === 'unix_time' ? 'OffsetDateTime::from_unix_timestamp' : `time::parse_${ctx.type.encoding}`;
+      const dateParse = helpers.getDateTimeEncodingMethod(ctx.type.encoding, 'parse', use);
       content = `${dateParse}(${ctx.type.encoding !== 'unix_time' ? '&' : ''}${ctx.srcVar}).map_err(serde::de::Error::custom)?`;
       content = insertOrPush(content, true);
       break;
@@ -928,8 +926,7 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
   switch (ctx.type.kind) {
     case 'encodedBytes': {
       // terminal case (NEVER the start case)
-      use.add('azure_core', 'base64::');
-      const base64Encode = `base64::${ctx.type.encoding === 'std' ? 'encode' : 'encode_url_safe'}`;
+      const base64Encode = helpers.getBytesEncodingMethod(ctx.type.encoding, 'encode', use);
       switch (ctx.caller) {
         case 'hashmap':
           content = `${hashMapInsert(`${base64Encode}(${ctx.srcVar})`)}`;
@@ -971,10 +968,8 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
     }
     case 'offsetDateTime': {
       // terminal case (NEVER the start case)
-      if (ctx.type.encoding !== 'unix_time') {
-        use.add('azure_core', 'time::');
-      }
-      content = ctx.type.encoding === 'unix_time' ? `${ctx.srcVar}.unix_timestamp()` : `time::to_${ctx.type.encoding}`;
+      const dateTo = helpers.getDateTimeEncodingMethod(ctx.type.encoding, 'to', use);
+      content = ctx.type.encoding === 'unix_time' ? `${ctx.srcVar}.${dateTo}` : dateTo;
       switch (ctx.caller) {
         case 'hashmap':
           content = `${hashMapInsert(`${content}${ctx.type.encoding !== 'unix_time' ? `(${ctx.srcVar})` : ''}`)}`;

@@ -7,7 +7,11 @@ use super::{
     models_serde, ExtendedEnum, FixedInnerEnum, InnerEnum, UnionFloatLiteralPropertyProperty,
     UnionIntLiteralPropertyProperty, UnionStringLiteralPropertyProperty,
 };
-use azure_core::{base64, fmt::SafeDebug, time::OffsetDateTime};
+use azure_core::{
+    base64::{deserialize, serialize},
+    fmt::SafeDebug,
+    time::OffsetDateTime,
+};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -37,8 +41,8 @@ pub struct BytesProperty {
     /// Property
     #[serde(
         default,
-        deserialize_with = "base64::deserialize",
-        serialize_with = "base64::serialize",
+        deserialize_with = "deserialize",
+        serialize_with = "serialize",
         skip_serializing_if = "Option::is_none"
     )]
     pub property: Option<Vec<u8>>,

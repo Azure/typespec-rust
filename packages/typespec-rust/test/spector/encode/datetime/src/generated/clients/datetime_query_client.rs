@@ -10,8 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    time,
-    time::OffsetDateTime,
+    time::{to_rfc3339, to_rfc7231, OffsetDateTime},
     Result,
 };
 
@@ -40,7 +39,7 @@ impl DatetimeQueryClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/query/default")?;
         url.query_pairs_mut()
-            .append_pair("value", &time::to_rfc3339(&value));
+            .append_pair("value", &to_rfc3339(&value));
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
@@ -59,7 +58,7 @@ impl DatetimeQueryClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/query/rfc3339")?;
         url.query_pairs_mut()
-            .append_pair("value", &time::to_rfc3339(&value));
+            .append_pair("value", &to_rfc3339(&value));
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }
@@ -78,7 +77,7 @@ impl DatetimeQueryClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/query/rfc7231")?;
         url.query_pairs_mut()
-            .append_pair("value", &time::to_rfc7231(&value));
+            .append_pair("value", &to_rfc7231(&value));
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await.map(Into::into)
     }

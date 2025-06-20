@@ -214,17 +214,17 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
 
   switch (header.type.kind) {
     case 'encodedBytes': {
-      use.add('azure_core', 'base64::');
-      const decoder = header.type.encoding === 'std' ? 'decode' : 'decode_url_safe';
-      return `${indent.get()}Headers::get_optional_with(self.headers(), &${headerConstName}, |h| base64::${decoder}(h.as_str()))\n`;
+      const decoder = helpers.getBytesEncodingMethod(header.type.encoding, 'decode', use);
+      return `${indent.get()}Headers::get_optional_with(self.headers(), &${headerConstName}, |h| ${decoder}(h.as_str()))\n`;
     }
     case 'enum':
     case 'scalar':
     case 'String':
       return `${indent.get()}Headers::get_optional_as(self.headers(), &${headerConstName})\n`
     case 'offsetDateTime': {
-      use.add('azure_core', 'time::');
-      return `${indent.get()}Headers::get_optional_with(self.headers(), &${headerConstName}, |h| time::parse_${header.type.encoding}(h.as_str()))\n`;
+      const timeParse = `parse_${header.type.encoding}`;
+      use.add('azure_core', `time::${timeParse}`);
+      return `${indent.get()}Headers::get_optional_with(self.headers(), &${headerConstName}, |h| ${timeParse}(h.as_str()))\n`;
     }
     default:
       return `${indent.get()}todo!();\n`;

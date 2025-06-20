@@ -6,6 +6,7 @@
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
 import { CodegenError } from './errors.js';
+import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
 const headerText = `// Copyright (c) Microsoft Corporation. All rights reserved.
@@ -442,4 +443,50 @@ export function convertResponseFormat(format: Exclude<rust.ResponseFormat, 'NoFo
     case 'XmlFormat':
       return 'xml';
   }
+}
+
+/**
+ * returns the applicable base64 decoding/encoding function and brings it into scope
+ * 
+ * @param encoding the type of encoding
+ * @param direction if the payload is being decoded or encoded
+ * @param use the use statement builder currently in scope
+ * @returns the base64 decode/encode method
+ */
+export function getBytesEncodingMethod(encoding: rust.BytesEncoding, direction: 'decode' | 'encode', use: Use): string {
+  let method: string;
+  switch (encoding) {
+    case 'std':
+      method = direction;
+      break;
+    case 'url':
+      method = `${direction}_url_safe`;
+      break;
+  }
+  use.add('azure_core', `base64::${method}`);
+  return method;
+}
+
+/**
+ * returns the applicable OffsetDateTime parse/to helper and brings it into scope.
+ * note that for unix_time, the 'to' direction returns a method on the OffsetDateTime type.
+ * 
+ * @param encoding the type of encoding
+ * @param direction if the value is being parsed or converted to another format
+ * @param use the use statement builder currently in scope
+ * @returns the helper function or method
+ */
+export function getDateTimeEncodingMethod(encoding: rust.DateTimeEncoding, direction: 'parse' | 'to', use: Use): string {
+  if (encoding === 'unix_time') {
+    switch (direction) {
+      case 'parse':
+        return 'OffsetDateTime::from_unix_timestamp';
+      case 'to':
+        return 'unix_timestamp()';
+    }
+  }
+
+  const method = `${direction}_${encoding}`;
+  use.add('azure_core', `time::${method}`);
+  return method;
 }
