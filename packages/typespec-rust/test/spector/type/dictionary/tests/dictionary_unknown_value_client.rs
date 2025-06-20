@@ -26,6 +26,7 @@ async fn get() {
 
     assert_eq!(vec.len(), 3);
     assert_eq!(vec[0].0, "k1");
+    assert_eq!(vec[0].1, Value::Number(1.into()));
     assert_eq!(vec[1].0, "k2");
     assert_eq!(vec[1].1.clone(), Value::String("hello".to_string()));
     assert_eq!(vec[2].0, "k3");

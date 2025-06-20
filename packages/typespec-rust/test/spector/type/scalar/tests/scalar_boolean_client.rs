@@ -13,7 +13,10 @@ async fn get() {
     assert!(resp.into_body().await.unwrap());
 }
 
+// This test is ignored because it uses #r syntax which technically allows user to pass the value, but this is
+// not the experience we want users to have. Once we enable better syntax, we whould update it and then enable.
 #[tokio::test]
+#[ignore]
 async fn put() {
     let client = ScalarClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client

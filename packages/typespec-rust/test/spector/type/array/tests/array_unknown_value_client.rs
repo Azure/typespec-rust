@@ -18,6 +18,7 @@ async fn get() {
 
     let vec = resp.into_body().await.unwrap();
     assert_eq!(vec.len(), 3);
+    assert_eq!(vec[0], Value::Number(1.into()));
     assert_eq!(vec[1], Value::String("hello".to_string()));
     assert_eq!(vec[2], Value::Null);
 }
