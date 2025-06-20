@@ -4,7 +4,7 @@
 
 use spector_array::ArrayClient;
 
-// This test is ignored because it does not use the syntax to veryfy the value received.
+// This test is ignored because it does not use the syntax to verify the value received.
 // Once users can read durations they receive, the tests should be updated and enabled.
 #[tokio::test]
 #[ignore]

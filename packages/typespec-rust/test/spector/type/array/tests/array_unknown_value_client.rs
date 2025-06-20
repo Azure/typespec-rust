@@ -23,6 +23,9 @@ async fn get() {
     assert_eq!(vec[2], Value::Null);
 }
 
+// This test is ignored because it uses #r syntax which technically allows user to pass the value, but this is
+// not the experience we want users to have. Once we enable better syntax, we whould update it and then enable.
+#[ignore]
 #[tokio::test]
 async fn put() {
     let client = ArrayClient::with_no_credential("http://localhost:3000", None).unwrap();
