@@ -10,6 +10,7 @@ import * as helpers from './helpers.js';
 import queryString from 'query-string';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
+import * as shared from '../shared/shared.js';
 
 /** the client modules */
 export interface ClientModules {
@@ -466,7 +467,7 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
  */
 function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
   for (const param of ctor.params) {
-    const arcTokenCred = helpers.asTypeOf<rust.TokenCredential>(param.type, 'tokenCredential', 'arc');
+    const arcTokenCred = shared.asTypeOf<rust.TokenCredential>(param.type, 'tokenCredential', 'arc');
     if (arcTokenCred) {
       use.add('azure_core::http::policies', 'BearerTokenCredentialPolicy', 'Policy');
       const scopes = new Array<string>();
@@ -1302,7 +1303,7 @@ function getCollectionDelimiter(format: rust.CollectionFormat): string {
 
 /** returns true if the type isn't copyable thus nees to be cloned */
 function nonCopyableType(type: rust.Type): boolean {
-  const unwrappedType = helpers.unwrapOption(type);
+  const unwrappedType = shared.unwrapOption(type);
   switch (unwrappedType.kind) {
     case 'String':
     case 'Url':

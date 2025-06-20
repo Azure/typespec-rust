@@ -10,6 +10,7 @@ import * as http from '@typespec/http';
 import * as helpers from './helpers.js';
 import * as naming from './naming.js';
 import { RustEmitterOptions } from '../lib.js';
+import * as shared from '../shared/shared.js';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as rust from '../codemodel/index.js';
 
@@ -328,7 +329,7 @@ export class Adapter {
     modelField.docs = this.adaptDocs(property.summary, property.doc);
 
     // if this is a literal, add a doc comment explaining its behavior
-    const unwrappedType = helpers.unwrapOption(fieldType);
+    const unwrappedType = shared.unwrapOption(fieldType);
     if (unwrappedType.kind === 'literal') {
       const literalDoc = `${modelField.optional ? 'When Some, field' : 'Field'} has constant value ${unwrappedType.value}. Any specified value will be ignored.`;
       if (!modelField.docs.description) {
@@ -1741,6 +1742,13 @@ export class Adapter {
       }
     };
 
+    const recursiveUnwrapVec = function(type: rust.Type): rust.Type {
+      if (type.kind === 'Vec') {
+        return recursiveUnwrapVec(type.type);
+      }
+      return type;
+    };
+
     switch (type.kind) {
       case 'String':
         // header String params are always owned
@@ -1750,7 +1758,7 @@ export class Adapter {
         break;
       case 'Vec': {
         // if this is an array of string, we ultimately want a slice of &str
-        const unwrapped = helpers.unwrapVec(type);
+        const unwrapped = recursiveUnwrapVec(type);
         if (unwrapped.kind === 'String' || unwrapped.kind === 'encodedBytes') {
           return this.getRefType(this.getSlice(recursiveBuildVecStr(type.type)));
         }
@@ -1872,7 +1880,7 @@ export class Adapter {
 
 /** typeguard to determine if type is a Ref<Slice> */
 function isRefSlice(type: rust.Type): type is rust.Ref<rust.Slice> {
-  return type.kind === 'ref' && type.type.kind === 'slice';
+  return shared.asTypeOf<rust.Ref<rust.Slice>>(type, 'slice', 'ref') !== undefined;
 }
 
 /** method types that send/receive data */
@@ -2004,7 +2012,7 @@ function getXMLKind(decorators: Array<tcgc.DecoratorInfo>, field: rust.ModelFiel
       case 'TypeSpec.Xml.@attribute':
         return 'attribute';
       case 'TypeSpec.Xml.@unwrapped': {
-        const fieldType = helpers.unwrapOption(field.type);
+        const fieldType = shared.unwrapOption(field.type);
         switch (fieldType.kind) {
           case 'Vec':
             return 'unwrappedList';

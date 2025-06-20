@@ -102,33 +102,6 @@ export function sortClientParameters(params: Array<rust.ClientParameter>): void 
   });
 }
 
-/**
- * if type is an Option<T>, returns the T, else returns type
- * 
- * @param type the type to unwrap
- * @returns the unwrapped type. can be the original value if no unwrapping was required
- */
-export function unwrapOption(type: rust.Type): rust.Type {
-  if (type.kind === 'option') {
-    return type.type;
-  }
-  return type;
-}
-
-/**
- * if type is a Vec<T> returns the T, else returns type.
- * this function is recursive (e.g. Vec<Vec<T>>).
- * 
- * @param type the type to unwrap
- * @returns the unwrapped type. can be the original value if no unwrapping was required
- */
-export function unwrapVec(type: rust.Type): rust.Type {
-  if (type.kind === 'Vec') {
-    return unwrapVec(type.type);
-  }
-  return type;
-}
-
 // used by formatDocs
 const tds = new turndownService({codeBlockStyle: 'fenced', fence: '```'});
 

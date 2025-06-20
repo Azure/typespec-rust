@@ -9,6 +9,7 @@ import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
+import * as shared from '../shared/shared.js';
 
 /** contains different types of models to emit */
 export interface Models {
@@ -113,7 +114,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
       const unwrappedType = helpers.unwrapType(field.type);
       if (unwrappedType.kind === 'encodedBytes' || unwrappedType.kind === 'literal' || unwrappedType.kind === 'offsetDateTime' || encodeAsString(unwrappedType)) {
         getSerDeHelper(field, serdeParams, use);
-      } else if (bodyFormat === 'xml' && helpers.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
+      } else if (bodyFormat === 'xml' && shared.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
         serdeParams.add('default');
@@ -536,8 +537,7 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
   };
 
   /** serializing literal values */
-  const serdeLiteral = function(): void {
-    const literal = <rust.Literal>helpers.unwrapOption(field.type);
+  const serdeLiteral = function(literal: rust.Literal): void {
     let literalValueName = literal.value.toString();
     if (literal.valueKind.kind === 'scalar') {
       // if the scalar is a float, replace the . as it's illegal in an identifier
@@ -561,7 +561,7 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
     case 'encodedBytes':
       return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding);
     case 'literal':
-      return serdeLiteral();
+      return serdeLiteral(field.type);
     case 'offsetDateTime':
       return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, false);
     default:
@@ -570,7 +570,7 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
           case 'encodedBytes':
             return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding);
           case 'literal':
-            return serdeLiteral();
+            return serdeLiteral(field.type.type);
           case 'offsetDateTime':
             return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, true);
         }
@@ -604,7 +604,7 @@ function emitSerDeHelpers(use: Use): string | undefined {
     const indent = new helpers.indentation();
     const field = serdeHelpers.get(helperKey)!;
 
-    if (helpers.unwrapOption(field.type).kind === 'literal') {
+    if (shared.unwrapOption(field.type).kind === 'literal') {
       content += buildLiteralSerialize(indent, helperKey, field, use);
       continue;
     }
@@ -635,7 +635,7 @@ function emitSerDeHelpers(use: Use): string | undefined {
  * @returns the pub(crate) serialize function definition
  */
 function buildLiteralSerialize(indent: helpers.indentation, name: string, field: rust.ModelField, use: Use): string {
-  const literal = helpers.unwrapOption(field.type);
+  const literal = shared.unwrapOption(field.type);
   if (literal.kind !== 'literal') {
     throw new CodegenError('InternalError', `unexpected kind ${literal.kind}`); 
   }
