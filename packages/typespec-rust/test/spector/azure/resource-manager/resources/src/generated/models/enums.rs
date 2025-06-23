@@ -6,39 +6,39 @@
 use azure_core::{create_enum, create_extensible_enum};
 
 create_extensible_enum!(
-    #[doc = r#"/// The kind of entity that created the resource."#]
+    #[doc = r#"The kind of entity that created the resource."#]
     CreatedByType,
-    #[doc = r#"/// The entity was created by an application."#]
+    #[doc = r#"The entity was created by an application."#]
     (Application, "Application"),
-    #[doc = r#"/// The entity was created by a key."#]
+    #[doc = r#"The entity was created by a key."#]
     (Key, "Key"),
-    #[doc = r#"/// The entity was created by a managed identity."#]
+    #[doc = r#"The entity was created by a managed identity."#]
     (ManagedIdentity, "ManagedIdentity"),
-    #[doc = r#"/// The entity was created by a user."#]
+    #[doc = r#"The entity was created by a user."#]
     (User, "User")
 );
 
 create_extensible_enum!(
     ProvisioningState,
     (Accepted, "Accepted"),
-    #[doc = r#"/// Resource creation was canceled."#]
+    #[doc = r#"Resource creation was canceled."#]
     (Canceled, "Canceled"),
     (Deleting, "Deleting"),
-    #[doc = r#"/// Resource creation failed."#]
+    #[doc = r#"Resource creation failed."#]
     (Failed, "Failed"),
     (Provisioning, "Provisioning"),
-    #[doc = r#"/// Resource has been created."#]
+    #[doc = r#"Resource has been created."#]
     (Succeeded, "Succeeded"),
     (Updating, "Updating")
 );
 
 create_extensible_enum!(
-    #[doc = r#"/// The provisioning state of a resource type."#]
+    #[doc = r#"The provisioning state of a resource type."#]
     ResourceProvisioningState,
-    #[doc = r#"/// Resource creation was canceled."#]
+    #[doc = r#"Resource creation was canceled."#]
     (Canceled, "Canceled"),
-    #[doc = r#"/// Resource creation failed."#]
+    #[doc = r#"Resource creation failed."#]
     (Failed, "Failed"),
-    #[doc = r#"/// Resource has been created."#]
+    #[doc = r#"Resource has been created."#]
     (Succeeded, "Succeeded")
 );
