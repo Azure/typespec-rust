@@ -41,11 +41,12 @@ export function contentPreamble(includeDNE: boolean = true): string {
  * formats doc comments if available
  * 
  * @param docs contains any doc comments
+ * @param forDocAttr indicates doc comments will be in a #[doc] attribute, thus omitting the /// prefixes (defaults to false)
  * @param prefix optional prefix to insert before the docs
  * @param indent optional indentation helper to set per-line indentation
  * @returns formatted doc comments or the empty string
  */
-export function formatDocComment(docs: rust.Docs, prefix?: string, indent?: indentation): string {
+export function formatDocComment(docs: rust.Docs, forDocAttr = false, prefix?: string, indent?: indentation): string {
   if (!docs.summary && !docs.description) {
     return '';
   }
@@ -59,7 +60,7 @@ export function formatDocComment(docs: rust.Docs, prefix?: string, indent?: inde
     let commentedLines = '';
     const lines = docs.split('\n');
     for (const line of lines) {
-      if (line === '' || line.match(/^\s+$/)) {
+      if ((line === '' || line.match(/^\s+$/)) && !forDocAttr) {
         // "something something\n\nsomething else" becomes:
         // /// something something
         // ///
@@ -88,6 +89,12 @@ export function formatDocComment(docs: rust.Docs, prefix?: string, indent?: inde
         formattedLine = chunks.join('\n');
       }
       commentedLines += formattedLine + '\n';
+    }
+
+    if (forDocAttr) {
+      // #[doc] are the uncommon case, so just remove the ///
+      // instead of trying to be clever when forming the comment block.
+      commentedLines = commentedLines.replace(new RegExp('/// ', 'g'), '');
     }
     return commentedLines;
   };

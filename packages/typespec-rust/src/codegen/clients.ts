@@ -368,13 +368,13 @@ function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Co
       continue;
     }
 
-    paramsContent += helpers.formatDocComment(param.docs, formatParamBullet(param.name), indent);
+    paramsContent += helpers.formatDocComment(param.docs, false, formatParamBullet(param.name), indent);
   }
 
   if (callable.kind === 'constructor') {
-    paramsContent += helpers.formatDocComment({summary: 'Optional configuration for the client.'}, formatParamBullet('options'), indent);
+    paramsContent += helpers.formatDocComment({summary: 'Optional configuration for the client.'}, false, formatParamBullet('options'), indent);
   } else if (callable.kind !== 'clientaccessor') {
-    paramsContent += helpers.formatDocComment({summary: 'Optional parameters for the request.'}, formatParamBullet('options'), indent);
+    paramsContent += helpers.formatDocComment({summary: 'Optional parameters for the request.'}, false, formatParamBullet('options'), indent);
   }
 
   if (paramsContent.length === 0) {

@@ -8,20 +8,20 @@ use azure_core::{create_enum, create_extensible_enum};
 create_extensible_enum!(ExtendedEnum, (EnumValue2, "value2"));
 
 create_enum!(
-    #[doc = r#"/// Enum that will be used as a property for model EnumProperty. Non-extensible."#]
+    #[doc = r#"Enum that will be used as a property for model EnumProperty. Non-extensible."#]
     FixedInnerEnum,
-    #[doc = r#"/// First value."#]
+    #[doc = r#"First value."#]
     (ValueOne, "ValueOne"),
-    #[doc = r#"/// Second value."#]
+    #[doc = r#"Second value."#]
     (ValueTwo, "ValueTwo")
 );
 
 create_extensible_enum!(
-    #[doc = r#"/// Enum that will be used as a property for model EnumProperty. Extensible."#]
+    #[doc = r#"Enum that will be used as a property for model EnumProperty. Extensible."#]
     InnerEnum,
-    #[doc = r#"/// First value."#]
+    #[doc = r#"First value."#]
     (ValueOne, "ValueOne"),
-    #[doc = r#"/// Second value."#]
+    #[doc = r#"Second value."#]
     (ValueTwo, "ValueTwo")
 );
 

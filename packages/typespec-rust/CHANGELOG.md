@@ -1,5 +1,11 @@
 # Release History
 
+## 0.17.1 (unreleased)
+
+### Other Changes
+
+* Fixed malformed doc comments for enums and their values.
+
 ## 0.17.0 (2025-06-19)
 
 ### Breaking Changes

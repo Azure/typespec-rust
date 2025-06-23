@@ -6,11 +6,11 @@
 use azure_core::{create_enum, create_extensible_enum};
 
 create_extensible_enum!(
-    #[doc = r#"/// Composition types."#]
+    #[doc = r#"Composition types."#]
     CompositionType,
-    #[doc = r#"/// The 'key' composition type."#]
+    #[doc = r#"The 'key' composition type."#]
     (Key, "key"),
-    #[doc = r#"/// The 'key_label' composition type."#]
+    #[doc = r#"The 'key_label' composition type."#]
     (KeyLabel, "key_label")
 );
 
@@ -78,45 +78,45 @@ create_enum!(
 );
 
 create_extensible_enum!(
-    #[doc = r#"/// Key-value fields."#]
+    #[doc = r#"Key-value fields."#]
     KeyValueFields,
-    #[doc = r#"/// Content type field."#]
+    #[doc = r#"Content type field."#]
     (ContentType, "content_type"),
-    #[doc = r#"/// Etag field."#]
+    #[doc = r#"Etag field."#]
     (Etag, "etag"),
-    #[doc = r#"/// Key field."#]
+    #[doc = r#"Key field."#]
     (Key, "key"),
-    #[doc = r#"/// Label field."#]
+    #[doc = r#"Label field."#]
     (Label, "label"),
-    #[doc = r#"/// Last modified field."#]
+    #[doc = r#"Last modified field."#]
     (LastModified, "last_modified"),
-    #[doc = r#"/// Locked field."#]
+    #[doc = r#"Locked field."#]
     (Locked, "locked"),
-    #[doc = r#"/// Tags field."#]
+    #[doc = r#"Tags field."#]
     (Tags, "tags"),
-    #[doc = r#"/// Value field."#]
+    #[doc = r#"Value field."#]
     (Value, "value")
 );
 
 create_extensible_enum!(
-    #[doc = r#"/// Label fields."#]
+    #[doc = r#"Label fields."#]
     LabelFields,
-    #[doc = r#"/// Name field."#]
+    #[doc = r#"Name field."#]
     (Name, "name")
 );
 
 create_extensible_enum!(
-    #[doc = r#"/// Enum describing allowed operation states."#]
+    #[doc = r#"Enum describing allowed operation states."#]
     OperationState,
-    #[doc = r#"/// The operation has been canceled by the user."#]
+    #[doc = r#"The operation has been canceled by the user."#]
     (Canceled, "Canceled"),
-    #[doc = r#"/// The operation has failed."#]
+    #[doc = r#"The operation has failed."#]
     (Failed, "Failed"),
-    #[doc = r#"/// The operation has not started."#]
+    #[doc = r#"The operation has not started."#]
     (NotStarted, "NotStarted"),
-    #[doc = r#"/// The operation is in progress."#]
+    #[doc = r#"The operation is in progress."#]
     (Running, "Running"),
-    #[doc = r#"/// The operation has completed successfully."#]
+    #[doc = r#"The operation has completed successfully."#]
     (Succeeded, "Succeeded")
 );
 
@@ -137,42 +137,42 @@ create_enum!(
 );
 
 create_extensible_enum!(
-    #[doc = r#"/// Snapshot fields."#]
+    #[doc = r#"Snapshot fields."#]
     SnapshotFields,
-    #[doc = r#"/// Composition type field."#]
+    #[doc = r#"Composition type field."#]
     (CompositionType, "composition_type"),
-    #[doc = r#"/// Created field."#]
+    #[doc = r#"Created field."#]
     (Created, "created"),
-    #[doc = r#"/// Etag field."#]
+    #[doc = r#"Etag field."#]
     (Etag, "etag"),
-    #[doc = r#"/// Expires field."#]
+    #[doc = r#"Expires field."#]
     (Expires, "expires"),
-    #[doc = r#"/// Filters field."#]
+    #[doc = r#"Filters field."#]
     (Filters, "filters"),
-    #[doc = r#"/// Items count field."#]
+    #[doc = r#"Items count field."#]
     (ItemsCount, "items_count"),
-    #[doc = r#"/// Name field."#]
+    #[doc = r#"Name field."#]
     (Name, "name"),
-    #[doc = r#"/// Retention period field."#]
+    #[doc = r#"Retention period field."#]
     (RetentionPeriod, "retention_period"),
-    #[doc = r#"/// Size field."#]
+    #[doc = r#"Size field."#]
     (Size, "size"),
-    #[doc = r#"/// Status field."#]
+    #[doc = r#"Status field."#]
     (Status, "status"),
-    #[doc = r#"/// Tags field."#]
+    #[doc = r#"Tags field."#]
     (Tags, "tags")
 );
 
 create_extensible_enum!(
-    #[doc = r#"/// Snapshot status."#]
+    #[doc = r#"Snapshot status."#]
     SnapshotStatus,
-    #[doc = r#"/// Archived"#]
+    #[doc = r#"Archived"#]
     (Archived, "archived"),
-    #[doc = r#"/// Failed"#]
+    #[doc = r#"Failed"#]
     (Failed, "failed"),
-    #[doc = r#"/// Provisioning"#]
+    #[doc = r#"Provisioning"#]
     (Provisioning, "provisioning"),
-    #[doc = r#"/// Ready"#]
+    #[doc = r#"Ready"#]
     (Ready, "ready")
 );
 

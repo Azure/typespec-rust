@@ -36,7 +36,7 @@ export function emitEnums(crate: rust.Crate, context: Context): helpers.Module |
     }
 
     body += `${enumType}!(\n`;
-    const docs = helpers.formatDocComment(rustEnum.docs);
+    const docs = helpers.formatDocComment(rustEnum.docs, true);
     if (docs.length > 0) {
       body += `${indent.get()}#[doc = r#"${docs.substring(0, docs.length - 1)}"#]\n`;
     }
@@ -44,7 +44,7 @@ export function emitEnums(crate: rust.Crate, context: Context): helpers.Module |
 
     for (let i = 0; i < rustEnum.values.length; ++i) {
       const value = rustEnum.values[i];
-      const docs = helpers.formatDocComment(value.docs);
+      const docs = helpers.formatDocComment(value.docs, true);
       if (docs.length > 0) {
         body += `${indent.get()}#[doc = r#"${docs.substring(0, docs.length - 1)}"#]\n`;
       }

@@ -6,53 +6,53 @@
 use azure_core::{create_enum, create_extensible_enum};
 
 create_extensible_enum!(
-    #[doc = r#"/// Extensible enum. Indicates the action type. "Internal" refers to actions that are for internal only APIs."#]
+    #[doc = r#"Extensible enum. Indicates the action type. "Internal" refers to actions that are for internal only APIs."#]
     ActionType,
-    #[doc = r#"/// Actions are for internal-only APIs."#]
+    #[doc = r#"Actions are for internal-only APIs."#]
     (Internal, "Internal")
 );
 
 create_extensible_enum!(
-    #[doc = r#"/// Possible reasons for a name not being available."#]
+    #[doc = r#"Possible reasons for a name not being available."#]
     CheckNameAvailabilityReason,
-    #[doc = r#"/// Name already exists."#]
+    #[doc = r#"Name already exists."#]
     (AlreadyExists, "AlreadyExists"),
-    #[doc = r#"/// Name is invalid."#]
+    #[doc = r#"Name is invalid."#]
     (Invalid, "Invalid")
 );
 
 create_extensible_enum!(
-    #[doc = r#"/// The kind of entity that created the resource."#]
+    #[doc = r#"The kind of entity that created the resource."#]
     CreatedByType,
-    #[doc = r#"/// The entity was created by an application."#]
+    #[doc = r#"The entity was created by an application."#]
     (Application, "Application"),
-    #[doc = r#"/// The entity was created by a key."#]
+    #[doc = r#"The entity was created by a key."#]
     (Key, "Key"),
-    #[doc = r#"/// The entity was created by a managed identity."#]
+    #[doc = r#"The entity was created by a managed identity."#]
     (ManagedIdentity, "ManagedIdentity"),
-    #[doc = r#"/// The entity was created by a user."#]
+    #[doc = r#"The entity was created by a user."#]
     (User, "User")
 );
 
 create_extensible_enum!(
-    #[doc = r#"/// The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is
-/// "user,system""#]
+    #[doc = r#"The intended executor of the operation; as in Resource Based Access Control (RBAC) and audit logs UX. Default value is
+"user,system""#]
     Origin,
-    #[doc = r#"/// Indicates the operation is initiated by a system."#]
+    #[doc = r#"Indicates the operation is initiated by a system."#]
     (System, "system"),
-    #[doc = r#"/// Indicates the operation is initiated by a user."#]
+    #[doc = r#"Indicates the operation is initiated by a user."#]
     (User, "user"),
-    #[doc = r#"/// Indicates the operation is initiated by a user or system."#]
+    #[doc = r#"Indicates the operation is initiated by a user or system."#]
     (Usersystem, "user,system")
 );
 
 create_extensible_enum!(
-    #[doc = r#"/// The provisioning state of a resource type."#]
+    #[doc = r#"The provisioning state of a resource type."#]
     ResourceProvisioningState,
-    #[doc = r#"/// Resource creation was canceled."#]
+    #[doc = r#"Resource creation was canceled."#]
     (Canceled, "Canceled"),
-    #[doc = r#"/// Resource creation failed."#]
+    #[doc = r#"Resource creation failed."#]
     (Failed, "Failed"),
-    #[doc = r#"/// Resource has been created."#]
+    #[doc = r#"Resource has been created."#]
     (Succeeded, "Succeeded")
 );

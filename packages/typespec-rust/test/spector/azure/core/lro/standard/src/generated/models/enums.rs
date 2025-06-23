@@ -6,16 +6,16 @@
 use azure_core::{create_enum, create_extensible_enum};
 
 create_extensible_enum!(
-    #[doc = r#"/// Enum describing allowed operation states."#]
+    #[doc = r#"Enum describing allowed operation states."#]
     OperationState,
-    #[doc = r#"/// The operation has been canceled by the user."#]
+    #[doc = r#"The operation has been canceled by the user."#]
     (Canceled, "Canceled"),
-    #[doc = r#"/// The operation has failed."#]
+    #[doc = r#"The operation has failed."#]
     (Failed, "Failed"),
-    #[doc = r#"/// The operation has not started."#]
+    #[doc = r#"The operation has not started."#]
     (NotStarted, "NotStarted"),
-    #[doc = r#"/// The operation is in progress."#]
+    #[doc = r#"The operation is in progress."#]
     (Running, "Running"),
-    #[doc = r#"/// The operation has completed successfully."#]
+    #[doc = r#"The operation has completed successfully."#]
     (Succeeded, "Succeeded")
 );

@@ -6,10 +6,10 @@
 use azure_core::create_enum;
 
 create_enum!(
-    #[doc = r#"/// An extensible enum input parameter."#]
+    #[doc = r#"An extensible enum input parameter."#]
     ListItemInputExtensibleEnum,
-    #[doc = r#"/// The first enum value."#]
+    #[doc = r#"The first enum value."#]
     (First, "First"),
-    #[doc = r#"/// The second enum value."#]
+    #[doc = r#"The second enum value."#]
     (Second, "Second")
 );
