@@ -4,10 +4,7 @@
 
 use spector_array::ArrayClient;
 
-// This test is ignored because it does not use the syntax to verify the value received.
-// Once users can read durations they receive, the tests should be updated and enabled.
 #[tokio::test]
-#[ignore]
 async fn get() {
     let client = ArrayClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
@@ -20,6 +17,7 @@ async fn get() {
 
     let vec = resp.into_body().await.unwrap();
     assert_eq!(vec.len(), 1);
+    assert_eq!(vec[0], "P123DT22H14M12.011S");
 }
 
 // This test is ignored because it uses #r syntax which technically allows user to pass the value, but this is
