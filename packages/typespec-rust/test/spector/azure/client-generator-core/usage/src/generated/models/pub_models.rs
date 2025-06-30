@@ -6,7 +6,7 @@
 use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
-/// Usage override to roundtrip.
+/// Usage additive to roundtrip.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct InputModel {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -23,7 +23,7 @@ pub struct OrphanModel {
     pub model_name: Option<String>,
 }
 
-/// Usage override to roundtrip.
+/// Usage additive to roundtrip.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct OutputModel {
     #[serde(skip_serializing_if = "Option::is_none")]

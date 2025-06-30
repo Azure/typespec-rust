@@ -5,7 +5,7 @@
 
 use crate::generated::clients::{
     OperationTemplatesCheckNameAvailabilityClient, OperationTemplatesLroClient,
-    OperationTemplatesOperationsClient,
+    OperationTemplatesOperationsClient, OperationTemplatesOptionalBodyClient,
 };
 use azure_core::{
     credentials::TokenCredential,
@@ -111,6 +111,18 @@ impl OperationTemplatesClient {
             api_version: self.api_version.clone(),
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
+        }
+    }
+
+    /// Returns a new instance of OperationTemplatesOptionalBodyClient.
+    pub fn get_operation_templates_optional_body_client(
+        &self,
+    ) -> OperationTemplatesOptionalBodyClient {
+        OperationTemplatesOptionalBodyClient {
+            api_version: self.api_version.clone(),
+            endpoint: self.endpoint.clone(),
+            pipeline: self.pipeline.clone(),
+            subscription_id: self.subscription_id.clone(),
         }
     }
 }
