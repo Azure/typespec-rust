@@ -1137,12 +1137,12 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   }
 
   // we need to handle the case where the next page value is the empty string,
-  // so checking strickly for None(theNextLink) is insufficient.
+  // so checking strictly for None(theNextLink) is insufficient.
   // the most common case for this is XML, e.g. an empty tag like <NextLink />
   body += `${indent.get()}Ok(${helpers.buildMatch(indent, srcNextPage, [{
     pattern: `Some(${nextPageValue}) if !${nextPageValue}.is_empty()`,
     body: (indent) => {
-      return `${indent.get()}response: rsp, next: ${continuation}`;
+      return `${indent.get()}response: rsp, continuation: ${continuation}`;
     },
     returns: 'PagerResult::More',
   }, {

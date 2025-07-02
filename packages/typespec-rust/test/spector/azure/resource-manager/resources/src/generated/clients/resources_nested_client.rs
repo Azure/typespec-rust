@@ -116,7 +116,7 @@ impl ResourcesNestedClient {
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
-                        next: next_link.parse()?,
+                        continuation: next_link.parse()?,
                     },
                     _ => PagerResult::Done { response: rsp },
                 })

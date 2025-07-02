@@ -63,7 +63,7 @@ impl PageableServerDrivenPaginationClient {
                 Ok(match res.next {
                     Some(next) if !next.is_empty() => PagerResult::More {
                         response: rsp,
-                        next: next.parse()?,
+                        continuation: next.parse()?,
                     },
                     _ => PagerResult::Done { response: rsp },
                 })

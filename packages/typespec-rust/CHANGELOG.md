@@ -2,6 +2,12 @@
 
 ## 0.17.1 (unreleased)
 
+### Breaking Changes
+
+**NOTE: this version is incompatible with earlier versions of `azure_core`**
+
+* Renamed `PagerResult::More { next, .. }` to `PagerResult::More { continuation, .. }`.
+
 ### Other Changes
 
 * Fixed malformed doc comments for enums and their values.

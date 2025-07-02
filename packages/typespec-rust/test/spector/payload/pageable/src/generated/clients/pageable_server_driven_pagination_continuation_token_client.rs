@@ -66,7 +66,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 Ok(match res.next_token {
                     Some(next_token) if !next_token.is_empty() => PagerResult::More {
                         response: rsp,
-                        next: next_token,
+                        continuation: next_token,
                     },
                     _ => PagerResult::Done { response: rsp },
                 })
@@ -111,7 +111,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 Ok(match rsp.next_token()? {
                     Some(next_token) if !next_token.is_empty() => PagerResult::More {
                         response: rsp,
-                        next: next_token,
+                        continuation: next_token,
                     },
                     _ => PagerResult::Done { response: rsp },
                 })
@@ -168,7 +168,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 Ok(match res.next_token {
                     Some(next_token) if !next_token.is_empty() => PagerResult::More {
                         response: rsp,
-                        next: next_token,
+                        continuation: next_token,
                     },
                     _ => PagerResult::Done { response: rsp },
                 })
@@ -222,7 +222,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 Ok(match rsp.next_token()? {
                     Some(next_token) if !next_token.is_empty() => PagerResult::More {
                         response: rsp,
-                        next: next_token,
+                        continuation: next_token,
                     },
                     _ => PagerResult::Done { response: rsp },
                 })
