@@ -315,12 +315,6 @@ export interface PathCollectionParameter extends HTTPParameterBase {
 
   /** indicates if the parameter should be passed with "explode" styling. defaults to false */
   explode: boolean;
-
-  /**
-   * indicates if the path parameter required a forward-slash during replacement.
-   * this only applies to optional path parameters. the default is false.
-   */
-  needsSeparator: boolean;
 }
 
 /** PathHashMapParameter is a param that goes in the HTTP path */
@@ -341,12 +335,6 @@ export interface PathHashMapParameter extends HTTPParameterBase {
 
   /** indicates if the parameter should be passed with "explode" styling. defaults to false */
   explode: boolean;
-
-  /**
-   * indicates if the path parameter required a forward-slash during replacement.
-   * this only applies to optional path parameters. the default is false.
-   */
-  needsSeparator: boolean;
 }
 
 /** PathScalarParameterType defines the possible types for a PathScalarParameter */
@@ -367,12 +355,6 @@ export interface PathScalarParameter extends HTTPParameterBase {
 
   /** parameter style */
   style: ParameterStyle;
-
-  /**
-   * indicates if the path parameter required a forward-slash during replacement.
-   * this only applies to optional path parameters. the default is false.
-   */
-  needsSeparator: boolean;
 }
 
 /** QueryCollectionParameterType defines the possible types for a QueryCollectionParameter */
@@ -718,7 +700,6 @@ export class PathCollectionParameter extends HTTPParameterBase implements PathCo
     this.encoded = encoded;
     this.style = style;
     this.explode = explode;
-    this.needsSeparator = false;
   }
 }
 
@@ -730,7 +711,6 @@ export class PathHashMapParameter extends HTTPParameterBase implements PathHashM
     this.encoded = encoded;
     this.style = style;
     this.explode = explode;
-    this.needsSeparator = false;
   }
 }
 
@@ -741,7 +721,6 @@ export class PathScalarParameter extends HTTPParameterBase implements PathScalar
     this.segment = segment;
     this.encoded = encoded;
     this.style = style;
-    this.needsSeparator = false;
   }
 }
 

@@ -1170,13 +1170,11 @@ export class Adapter {
         adaptedParam = this.adaptMethodParameter(opParam);
       }
 
-      if (adaptedParam.kind === 'headerScalar' || adaptedParam.kind === 'queryScalar') {
-        paramsMap.set(param, adaptedParam);
-      } else if (adaptedParam.kind === 'path' && adaptedParam.optional && method.operation.uriTemplate.indexOf(`{/${adaptedParam.segment}}`) > -1) {
-        // the optional path param includes the separator as part the segment
-        // e.g. /some/path{/optional}
-        // when replacing 'optional' with a value, we need to include a '/' during the replacement
-        adaptedParam.needsSeparator = true;
+      switch (adaptedParam.kind) {
+        case 'headerScalar':
+        case 'queryScalar':
+          paramsMap.set(param, adaptedParam);
+          break;
       }
 
       adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
@@ -1669,13 +1667,11 @@ export class Adapter {
       case 'path': {
         paramType = this.typeToWireType(paramType);
         let style: rust.ParameterStyle = 'simple';
-        {
-          const tspStyleString = (param.style as string);
-          if (!['simple', 'path', 'label', 'matrix'].includes(tspStyleString)) {
-            throw new AdapterError('InternalError', `unsupported style ${tspStyleString} for parameter ${param.serializedName}`, param.__raw?.node);
-          } else {
-            style = tspStyleString as rust.ParameterStyle;
-          }
+        const tspStyleString = (param.style as string);
+        if (!['simple', 'path', 'label', 'matrix'].includes(tspStyleString)) {
+          throw new AdapterError('InternalError', `unsupported style ${tspStyleString} for parameter ${param.serializedName}`, param.__raw?.node);
+        } else {
+          style = tspStyleString as rust.ParameterStyle;
         }
 
         if (isRefSlice(paramType)) {

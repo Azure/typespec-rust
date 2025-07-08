@@ -812,12 +812,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         if (pathParam.optional) {
           body += `${indent.get()}path = ${helpers.buildMatch(indent, `options.${pathParam.name}`, [{
             pattern: `Some(${pathParam.name})`,
-            body: (indent) => {
-              if (pathParam.needsSeparator) {
-                paramExpression = `format!("/{${paramExpression}}")`;
-              }
-              return `${indent.get()}path.replace("{${pathParam.segment}}", &${paramExpression})\n`;
-            }
+            body: (indent) => wrapSortedVec(`${indent.get()}path.replace("{${pathParam.segment}}", ${paramExpression})\n`),
           }, {
             pattern: `None`,
             body: (indent) => `${indent.get()}path.replace("{${pathParam.segment}}", "")\n`,
