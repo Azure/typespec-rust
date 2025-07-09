@@ -391,7 +391,7 @@ impl BlobClient {
         }
         if let Some(metadata) = options.metadata {
             for (k, v) in &metadata {
-                request.insert_header(format!("x-ms-meta-{}", k), v);
+                request.insert_header(format!("x-ms-meta-{k}"), v);
             }
         }
         if let Some(source_content_md5) = options.source_content_md5 {
@@ -484,7 +484,7 @@ impl BlobClient {
         }
         if let Some(metadata) = options.metadata {
             for (k, v) in &metadata {
-                request.insert_header(format!("x-ms-meta-{}", k), v);
+                request.insert_header(format!("x-ms-meta-{k}"), v);
             }
         }
         request.insert_header("x-ms-version", &self.version);
@@ -1155,7 +1155,7 @@ impl BlobClient {
         }
         if let Some(metadata) = options.metadata {
             for (k, v) in &metadata {
-                request.insert_header(format!("x-ms-meta-{}", k), v);
+                request.insert_header(format!("x-ms-meta-{k}"), v);
             }
         }
         request.insert_header("x-ms-version", &self.version);
@@ -1400,7 +1400,7 @@ impl BlobClient {
         }
         if let Some(metadata) = options.metadata {
             for (k, v) in &metadata {
-                request.insert_header(format!("x-ms-meta-{}", k), v);
+                request.insert_header(format!("x-ms-meta-{k}"), v);
             }
         }
         if let Some(rehydrate_priority) = options.rehydrate_priority {
