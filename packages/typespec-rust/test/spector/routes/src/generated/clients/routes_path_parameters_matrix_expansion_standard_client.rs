@@ -57,7 +57,7 @@ impl RoutesPathParametersMatrixExpansionStandardClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/matrix/standard/primitive{param}");
-        path = path.replace("{param}", &format!(";param={}", param));
+        path = path.replace("{param}", &format!(";param={param}"));
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
         self.pipeline.send(&ctx, &mut request).await.map(Into::into)
@@ -85,7 +85,7 @@ impl RoutesPathParametersMatrixExpansionStandardClient {
                     ";param={}",
                     param_vec
                         .into_iter()
-                        .map(|(k, v)| format!("{},{}", k, v))
+                        .map(|(k, v)| format!("{k},{v}"))
                         .collect::<Vec<_>>()
                         .join(",")
                 ),

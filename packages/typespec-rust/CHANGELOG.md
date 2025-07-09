@@ -11,6 +11,7 @@
 ### Other Changes
 
 * Fixed malformed doc comments for enums and their values.
+* Retooled some usage of `format!` macros.
 
 ## 0.17.0 (2025-06-19)
 
