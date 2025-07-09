@@ -247,9 +247,7 @@ impl KeyVaultClient {
         let mut path = String::from("secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", secret_name);
         path = match options.secret_version {
-            Some(secret_version) => {
-                path.replace("{secret-version}", &format!("/{&secret_version}"))
-            }
+            Some(secret_version) => path.replace("{secret-version}", &format!("/{secret_version}")),
             None => path.replace("{secret-version}", ""),
         };
         url = url.join(&path)?;

@@ -744,7 +744,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
       for (const pathParam of paramGroups.path) {
         let wrapSortedVec: (s: string) => string = (s) => s;
-        let paramExpression: string = `${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)}`;
+        let paramExpression = getHeaderPathQueryParamValue(use, pathParam, true);
         if (pathParam.kind === 'pathHashMap') {
           wrapSortedVec = (s) => `${indent.get()}{`
             + `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParam.name}.iter().collect::<Vec<_>>();\n`
@@ -806,6 +806,8 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
             case 'matrix':
               paramExpression = `&format!(";${pathParam.name}={${paramExpression}}")`;
               break;
+            default:
+              paramExpression = `${borrowOrNot(pathParam)}${paramExpression}`;
           }
         }
 

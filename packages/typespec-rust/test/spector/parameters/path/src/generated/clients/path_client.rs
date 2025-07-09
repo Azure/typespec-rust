@@ -95,7 +95,7 @@ impl PathClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/path/optional{name}");
         path = match options.name {
-            Some(name) => path.replace("{name}", &format!("/{&name}")),
+            Some(name) => path.replace("{name}", &format!("/{name}")),
             None => path.replace("{name}", ""),
         };
         url = url.join(&path)?;
