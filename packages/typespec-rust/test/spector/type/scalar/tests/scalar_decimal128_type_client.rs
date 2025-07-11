@@ -17,15 +17,12 @@ async fn request_parameter() {
     assert_eq!(resp.status(), 204);
 }
 
-// This test is ignored because it uses #r syntax which technically allows user to pass the value, but this is
-// not the experience we want users to have. Once we enable better syntax, we whould update it and then enable.
-#[ignore]
 #[tokio::test]
 async fn request_body() {
     let client = ScalarClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_scalar_decimal128_type_client()
-        .request_body(r#"0.33333"#.try_into().unwrap(), None)
+        .request_body(Decimal::from_f32(0.33333).try_into().unwrap(), None)
         .await
         .unwrap();
 

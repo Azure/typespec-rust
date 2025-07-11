@@ -21,15 +21,12 @@ async fn get() {
     assert_eq!(vec[1], "");
 }
 
-// This test is ignored because it uses #r syntax which technically allows user to pass the value, but this is
-// not the experience we want users to have. Once we enable better syntax, we whould update it and then enable.
 #[tokio::test]
-#[ignore]
 async fn put() {
     let client = ArrayClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_array_string_value_client()
-        .put(r#"["hello", ""]"#.try_into().unwrap(), None)
+        .put(vec!["hello", ""].try_into().unwrap(), None)
         .await
         .unwrap();
 

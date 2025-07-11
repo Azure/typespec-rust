@@ -30,15 +30,16 @@ async fn get() {
     assert!(!vec[1].1);
 }
 
-// This test is ignored because it uses #r syntax which technically allows user to pass the value, but this is
-// not the experience we want users to have. Once we enable better syntax, we whould update it and then enable.
 #[tokio::test]
-#[ignore]
 async fn put() {
+    let mut body = std::collections::HashMap::<String, bool>::new();
+    body.insert("k1".to_string(), true);
+    body.insert("k2".to_string(), false);
+
     let client = DictionaryClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_dictionary_boolean_value_client()
-        .put(r#"{"k1": true, "k2": false}"#.try_into().unwrap(), None)
+        .put(body.try_into().unwrap(), None)
         .await
         .unwrap();
 

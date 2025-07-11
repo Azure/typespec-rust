@@ -33,18 +33,17 @@ async fn get() {
     assert_eq!(vec[2].1.clone(), Value::Null);
 }
 
-// This test is ignored because it uses #r syntax which technically allows user to pass the value, but this is
-// not the experience we want users to have. Once we enable better syntax, we whould update it and then enable.
-#[ignore]
 #[tokio::test]
 async fn put() {
+    let mut body = std::collections::HashMap::<String, Value>::new();
+    body.insert("k1".to_string(), Value::Number(1.into()));
+    body.insert("k2".to_string(), Value::String("hello".to_string()));
+    body.insert("k3".to_string(), Value::Null);
+
     let client = DictionaryClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_dictionary_unknown_value_client()
-        .put(
-            r#"{"k1": 1, "k2": "hello", "k3": null}"#.try_into().unwrap(),
-            None,
-        )
+        .put(body.try_into().unwrap(), None)
         .await
         .unwrap();
 
