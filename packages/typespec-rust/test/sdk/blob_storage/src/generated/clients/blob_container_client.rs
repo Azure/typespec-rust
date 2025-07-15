@@ -269,7 +269,7 @@ impl BlobContainerClient {
         }
         if let Some(metadata) = options.metadata {
             for (k, v) in &metadata {
-                request.insert_header(format!("x-ms-meta-{}", k), v);
+                request.insert_header(format!("x-ms-meta-{k}"), v);
             }
         }
         request.insert_header("x-ms-version", &self.version);
@@ -552,7 +552,7 @@ impl BlobContainerClient {
                     Ok(match res.next_marker {
                         Some(next_marker) if !next_marker.is_empty() => PagerResult::More {
                             response: rsp,
-                            next: next_marker,
+                            continuation: next_marker,
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
@@ -646,7 +646,7 @@ impl BlobContainerClient {
                     Ok(match res.next_marker {
                         Some(next_marker) if !next_marker.is_empty() => PagerResult::More {
                             response: rsp,
-                            next: next_marker,
+                            continuation: next_marker,
                         },
                         _ => PagerResult::Done { response: rsp },
                     })
@@ -890,7 +890,7 @@ impl BlobContainerClient {
         }
         if let Some(metadata) = options.metadata {
             for (k, v) in &metadata {
-                request.insert_header(format!("x-ms-meta-{}", k), v);
+                request.insert_header(format!("x-ms-meta-{k}"), v);
             }
         }
         request.insert_header("x-ms-version", &self.version);

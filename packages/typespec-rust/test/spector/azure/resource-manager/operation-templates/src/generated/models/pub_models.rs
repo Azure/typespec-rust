@@ -8,6 +8,48 @@ use azure_core::{fmt::SafeDebug, time::OffsetDateTime};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ActionRequest {
+    /// The action type to perform.
+    #[serde(rename = "actionType", skip_serializing_if = "Option::is_none")]
+    pub action_type: Option<String>,
+
+    /// Additional action parameters.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parameters: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct ActionResult {
+    /// The result of the action.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub result: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ChangeAllowanceRequest {
+    /// The reason for the change.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
+
+    /// The new total allowed widgets.
+    #[serde(rename = "totalAllowed", skip_serializing_if = "Option::is_none")]
+    pub total_allowed: Option<i32>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct ChangeAllowanceResult {
+    /// The status of the change.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<String>,
+
+    /// The new total allowed widgets.
+    #[serde(rename = "totalAllowed", skip_serializing_if = "Option::is_none")]
+    pub total_allowed: Option<i32>,
+}
+
 /// The check availability request body.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct CheckNameAvailabilityRequest {
@@ -202,4 +244,51 @@ pub struct SystemData {
     /// The type of identity that last modified the resource.
     #[serde(rename = "lastModifiedByType", skip_serializing_if = "Option::is_none")]
     pub last_modified_by_type: Option<CreatedByType>,
+}
+
+/// Concrete tracked resource types can be created by aliasing this type using a specific property type.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct Widget {
+    /// Fully qualified resource ID for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The geo-location where the resource lives
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub location: Option<String>,
+
+    /// The name of the Widget
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// The resource-specific properties for this resource.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub properties: Option<WidgetProperties>,
+
+    /// Azure Resource Manager metadata containing createdBy and modifiedBy information.
+    #[serde(rename = "systemData", skip_serializing_if = "Option::is_none")]
+    pub system_data: Option<SystemData>,
+
+    /// Resource tags.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tags: Option<HashMap<String, String>>,
+
+    /// The type of the resource. E.g. "Microsoft.Compute/virtualMachines" or "Microsoft.Storage/storageAccounts"
+    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
+    pub type_prop: Option<String>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct WidgetProperties {
+    /// The description of the widget.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    /// The name of the widget.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// The provisioning state of the widget.
+    #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
+    pub provisioning_state: Option<String>,
 }

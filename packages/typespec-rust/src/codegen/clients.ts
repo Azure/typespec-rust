@@ -737,30 +737,33 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
             + `${s}`
             + `${indent.pop().get()}}`;
 
+          const kEqualsV = '"{k}={v}"';
+          const kCommaV = '"{k},{v}"';
+
           paramExpression = `&${pathParam.name}_vec.iter().map(|(k,v)| `
             + (pathParam.explode
-              ? `format!("{}={}", k, v)).collect::<Vec<_>>().join(",")`
-              : `format!("{},{}", k, v)).collect::<Vec<_>>().join(",")`);
+              ? `format!(${kEqualsV})).collect::<Vec<_>>().join(",")`
+              : `format!(${kCommaV})).collect::<Vec<_>>().join(",")`);
 
           switch (pathParam.style) {
             case 'path':
               paramExpression = `&format!("/{}", ${pathParam.name}_vec.iter().map(|(k,v)| `
                 + (pathParam.explode
-                  ? `format!("{}={}", k, v)).collect::<Vec<_>>().join("/"))`
-                  : `format!("{},{}", k, v)).collect::<Vec<_>>().join(","))`);
+                  ? `format!(${kEqualsV})).collect::<Vec<_>>().join("/"))`
+                  : `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
               break;
             case 'label':
               paramExpression = `&format!(".{}", ${pathParam.name}_vec.iter().map(|(k,v)| `
                 + (pathParam.explode
-                  ? `format!("{}={}", k, v)).collect::<Vec<_>>().join("."))`
-                  : `format!("{},{}", k, v)).collect::<Vec<_>>().join(","))`);
+                  ? `format!(${kEqualsV})).collect::<Vec<_>>().join("."))`
+                  : `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
               break;
             case 'matrix':
               paramExpression = pathParam.explode
                 ? (`&format!(";{}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
-                  + `format!("{}={}", k, v)).collect::<Vec<_>>().join(";"))`)
+                  + `format!(${kEqualsV})).collect::<Vec<_>>().join(";"))`)
                 : (`&format!(";${pathParam.name}={}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
-                  + `format!("{},{}", k, v)).collect::<Vec<_>>().join(","))`);
+                  + `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
               break;
           }
         } else if (pathParam.kind === 'pathCollection') {
@@ -780,13 +783,13 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         } else {
           switch (pathParam.style) {
             case 'path':
-              paramExpression = `&format!("/{}", ${paramExpression})`;
+              paramExpression = `&format!("/{${paramExpression}}")`;
               break;
             case 'label':
-              paramExpression = `&format!(".{}", ${paramExpression})`;
+              paramExpression = `&format!(".{${paramExpression}}")`;
               break;
             case 'matrix':
-              paramExpression = `&format!(";${pathParam.name}={}", ${paramExpression})`;
+              paramExpression = `&format!(";${pathParam.name}={${paramExpression}}")`;
               break;
           }
         }
@@ -838,7 +841,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
           text += `${indent.push().get()}${urlVarName}.query_pairs_mut().append_pair(k, &v.to_string());\n`;
           text += `${indent.pop().get()}}\n`;
         } else {
-          text += `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${queryParam.name}_vec.iter().map(|(k, v)| format!("{},{}", k, v)).collect::<Vec<String>>().join(",").as_str());\n`;
+          text += `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${queryParam.name}_vec.iter().map(|(k, v)| format!("{k},{v}")).collect::<Vec<String>>().join(",").as_str());\n`;
         }
         text += `${indent.pop().get()}}\n`;
         return text;
@@ -892,7 +895,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
     body += getParamValueHelper(indent, headerParam, inClosure, () => {
       if (headerParam.kind === 'headerHashMap') {
         let setter = `for (k, v) in &${headerParam.name} {\n`;
-        setter += `${indent.push().get()}request.insert_header(format!("${headerParam.header}-{}", k), v);\n`;
+        setter += `${indent.push().get()}request.insert_header(format!("${headerParam.header}-{k}"), v);\n`;
         setter += `${indent.pop().get()}}\n`;
         return setter;
       }
@@ -1137,12 +1140,12 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   }
 
   // we need to handle the case where the next page value is the empty string,
-  // so checking strickly for None(theNextLink) is insufficient.
+  // so checking strictly for None(theNextLink) is insufficient.
   // the most common case for this is XML, e.g. an empty tag like <NextLink />
   body += `${indent.get()}Ok(${helpers.buildMatch(indent, srcNextPage, [{
     pattern: `Some(${nextPageValue}) if !${nextPageValue}.is_empty()`,
     body: (indent) => {
-      return `${indent.get()}response: rsp, next: ${continuation}`;
+      return `${indent.get()}response: rsp, continuation: ${continuation}`;
     },
     returns: 'PagerResult::More',
   }, {

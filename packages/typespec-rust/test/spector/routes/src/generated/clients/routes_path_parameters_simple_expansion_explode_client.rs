@@ -83,7 +83,7 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
                 "{param}",
                 &param_vec
                     .iter()
-                    .map(|(k, v)| format!("{}={}", k, v))
+                    .map(|(k, v)| format!("{k}={v}"))
                     .collect::<Vec<_>>()
                     .join(","),
             );
