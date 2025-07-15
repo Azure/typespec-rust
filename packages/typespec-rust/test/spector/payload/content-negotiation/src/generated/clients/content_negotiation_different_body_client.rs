@@ -8,8 +8,9 @@ use crate::generated::models::{
     ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions, PngImageAsJson,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, RawResponse, Request, Response, Url},
-    Result,
+    Error, Result,
 };
 
 pub struct ContentNegotiationDifferentBodyClient {
@@ -37,7 +38,17 @@ impl ContentNegotiationDifferentBodyClient {
         url = url.join("content-negotiation/different-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
