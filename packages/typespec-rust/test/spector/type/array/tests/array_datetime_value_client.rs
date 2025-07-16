@@ -2,8 +2,8 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_array::ArrayClient;
 use azure_core::time::OffsetDateTime;
+use spector_array::ArrayClient;
 use time::format_description::well_known::Rfc3339;
 
 // This test is ignored because it does not use the syntax to verify the value received.
@@ -26,7 +26,12 @@ async fn put() {
     let client = ArrayClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_array_datetime_value_client()
-        .put(vec![OffsetDateTime::parse("2022-08-26T18:38:00Z", &Rfc3339).unwrap()].try_into().unwrap(), None)
+        .put(
+            vec![OffsetDateTime::parse("2022-08-26T18:38:00Z", &Rfc3339).unwrap()]
+                .try_into()
+                .unwrap(),
+            None,
+        )
         .await
         .unwrap();
 

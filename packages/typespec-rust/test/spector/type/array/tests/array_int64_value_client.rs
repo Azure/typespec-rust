@@ -27,7 +27,9 @@ async fn put() {
     let resp = client
         .get_array_int64_value_client()
         .put(
-            vec![9007199254740991i64, -9007199254740991i64].try_into().unwrap(),
+            vec![9007199254740991i64, -9007199254740991i64]
+                .try_into()
+                .unwrap(),
             None,
         )
         .await

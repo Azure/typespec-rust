@@ -28,7 +28,16 @@ async fn put() {
     let client = ArrayClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_array_unknown_value_client()
-        .put(vec![Value::Number(1.into()), Value::String("hello".into()), Value::Null].try_into().unwrap(), None)
+        .put(
+            vec![
+                Value::Number(1.into()),
+                Value::String("hello".into()),
+                Value::Null,
+            ]
+            .try_into()
+            .unwrap(),
+            None,
+        )
         .await
         .unwrap();
 

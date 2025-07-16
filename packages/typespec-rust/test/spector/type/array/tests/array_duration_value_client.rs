@@ -25,7 +25,10 @@ async fn put() {
     let client = ArrayClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_array_duration_value_client()
-        .put(vec!["P123DT22H14M12.011S".to_string()].try_into().unwrap(), None)
+        .put(
+            vec!["P123DT22H14M12.011S".to_string()].try_into().unwrap(),
+            None,
+        )
         .await
         .unwrap();
 
