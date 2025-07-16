@@ -33,7 +33,7 @@ const httpSpecsGroup = {
   'spector_spread': {input: 'parameters/spread'},
   'spector_contentneg': {input: 'payload/content-negotiation'},
   'spector_jmergepatch': {input: 'payload/json-merge-patch'},
-  'spector_corepageable': {input: 'payload/pageable'},
+  //'spector_corepageable': {input: 'payload/pageable'}, // TODO: https://github.com/Azure/typespec-rust/issues/508
   //'spector_mediatype': {input: 'payload/media-type'},
   //'spector_multipart': {input: 'payload/multipart'},
   'spector_xml': {input: 'payload/xml'},
