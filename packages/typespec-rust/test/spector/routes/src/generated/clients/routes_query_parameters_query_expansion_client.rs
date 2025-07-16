@@ -7,8 +7,12 @@ use crate::generated::clients::{
     RoutesQueryParametersQueryExpansionExplodeClient,
     RoutesQueryParametersQueryExpansionStandardClient,
 };
-use azure_core::http::{Pipeline, Url};
+use azure_core::{
+    http::{Pipeline, Url},
+    tracing,
+};
 
+#[tracing::client]
 pub struct RoutesQueryParametersQueryExpansionClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -21,6 +25,7 @@ impl RoutesQueryParametersQueryExpansionClient {
     }
 
     /// Returns a new instance of RoutesQueryParametersQueryExpansionExplodeClient.
+    #[tracing::subclient]
     pub fn get_routes_query_parameters_query_expansion_explode_client(
         &self,
     ) -> RoutesQueryParametersQueryExpansionExplodeClient {
@@ -31,6 +36,7 @@ impl RoutesQueryParametersQueryExpansionClient {
     }
 
     /// Returns a new instance of RoutesQueryParametersQueryExpansionStandardClient.
+    #[tracing::subclient]
     pub fn get_routes_query_parameters_query_expansion_standard_client(
         &self,
     ) -> RoutesQueryParametersQueryExpansionStandardClient {

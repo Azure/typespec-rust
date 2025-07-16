@@ -9,9 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct CommonPropertiesErrorClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -33,6 +34,7 @@ impl CommonPropertiesErrorClient {
     /// * `confidential_resource_name` - The name of the ConfidentialResource
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("CommonPropertiesErrorClient.create_for_user_defined_error")]
     pub async fn create_for_user_defined_error(
         &self,
         resource_group_name: &str,
@@ -64,6 +66,7 @@ impl CommonPropertiesErrorClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `confidential_resource_name` - The name of the ConfidentialResource
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("CommonPropertiesErrorClient.get_for_predefined_error")]
     pub async fn get_for_predefined_error(
         &self,
         resource_group_name: &str,

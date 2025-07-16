@@ -11,10 +11,11 @@ use azure_core::{
     http::{
         Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url, XmlFormat,
     },
-    Result,
+    tracing, Result,
 };
 
 /// Operations for the ModelWithUnwrappedArray type.
+#[tracing::client]
 pub struct XmlModelWithUnwrappedArrayValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl XmlModelWithUnwrappedArrayValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("XmlModelWithUnwrappedArrayValueClient.get")]
     pub async fn get(
         &self,
         options: Option<XmlModelWithUnwrappedArrayValueClientGetOptions<'_>>,
@@ -47,6 +49,7 @@ impl XmlModelWithUnwrappedArrayValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("XmlModelWithUnwrappedArrayValueClient.put")]
     pub async fn put(
         &self,
         input: RequestContent<ModelWithUnwrappedArray>,

@@ -12,10 +12,11 @@ use azure_core::{
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Result,
+    tracing, Result,
 };
 
 /// Illustrates usage of Record in different places(Operation parameters, return type or both).
+#[tracing::client]
 pub struct UsageClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -35,6 +36,7 @@ impl UsageClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_usage")]
     pub fn with_no_credential(endpoint: &str, options: Option<UsageClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -66,6 +68,7 @@ impl UsageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("UsageClient.input")]
     pub async fn input(
         &self,
         input: RequestContent<InputRecord>,
@@ -85,6 +88,7 @@ impl UsageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("UsageClient.input_and_output")]
     pub async fn input_and_output(
         &self,
         body: RequestContent<InputOutputRecord>,
@@ -105,6 +109,7 @@ impl UsageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("UsageClient.output")]
     pub async fn output(
         &self,
         options: Option<UsageClientOutputOptions<'_>>,

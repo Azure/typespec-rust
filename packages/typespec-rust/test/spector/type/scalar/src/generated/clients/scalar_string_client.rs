@@ -6,9 +6,10 @@
 use crate::generated::models::{ScalarStringClientGetOptions, ScalarStringClientPutOptions};
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ScalarStringClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -25,6 +26,7 @@ impl ScalarStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ScalarStringClient.get")]
     pub async fn get(
         &self,
         options: Option<ScalarStringClientGetOptions<'_>>,
@@ -44,6 +46,7 @@ impl ScalarStringClient {
     ///
     /// * `body` - _
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ScalarStringClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<String>,

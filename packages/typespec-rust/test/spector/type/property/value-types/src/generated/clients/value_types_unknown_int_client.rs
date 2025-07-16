@@ -8,9 +8,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ValueTypesUnknownIntClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl ValueTypesUnknownIntClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesUnknownIntClient.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesUnknownIntClientGetOptions<'_>>,
@@ -46,6 +48,7 @@ impl ValueTypesUnknownIntClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesUnknownIntClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<UnknownIntProperty>,

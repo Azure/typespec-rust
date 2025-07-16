@@ -8,9 +8,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ValueTypesDecimal128Client {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl ValueTypesDecimal128Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesDecimal128Client.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesDecimal128ClientGetOptions<'_>>,
@@ -46,6 +48,7 @@ impl ValueTypesDecimal128Client {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesDecimal128Client.put")]
     pub async fn put(
         &self,
         body: RequestContent<Decimal128Property>,

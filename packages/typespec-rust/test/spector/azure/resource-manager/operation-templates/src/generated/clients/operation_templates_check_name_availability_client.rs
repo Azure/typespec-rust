@@ -10,9 +10,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct OperationTemplatesCheckNameAvailabilityClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -32,6 +33,7 @@ impl OperationTemplatesCheckNameAvailabilityClient {
     ///
     /// * `body` - The CheckAvailability request
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OperationTemplatesCheckNameAvailabilityClient.check_global")]
     pub async fn check_global(
         &self,
         body: RequestContent<CheckNameAvailabilityRequest>,
@@ -59,6 +61,7 @@ impl OperationTemplatesCheckNameAvailabilityClient {
     /// * `location` - The name of the Azure region.
     /// * `body` - The CheckAvailability request
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OperationTemplatesCheckNameAvailabilityClient.check_local")]
     pub async fn check_local(
         &self,
         location: &str,

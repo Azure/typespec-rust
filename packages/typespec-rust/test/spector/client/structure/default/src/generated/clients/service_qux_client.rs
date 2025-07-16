@@ -6,9 +6,10 @@
 use crate::generated::{clients::ServiceQuxBarClient, models::ServiceQuxClientEightOptions};
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ServiceQuxClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -24,6 +25,7 @@ impl ServiceQuxClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ServiceQuxClient.eight")]
     pub async fn eight(
         &self,
         options: Option<ServiceQuxClientEightOptions<'_>>,
@@ -37,6 +39,7 @@ impl ServiceQuxClient {
     }
 
     /// Returns a new instance of ServiceQuxBarClient.
+    #[tracing::subclient]
     pub fn get_service_qux_bar_client(&self) -> ServiceQuxBarClient {
         ServiceQuxBarClient {
             endpoint: self.endpoint.clone(),

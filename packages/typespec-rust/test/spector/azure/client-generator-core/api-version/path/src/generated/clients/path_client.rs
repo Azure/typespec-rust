@@ -7,9 +7,10 @@ use crate::generated::models::PathClientPathApiVersionOptions;
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct PathClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -31,6 +32,7 @@ impl PathClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_apiverpath")]
     pub fn with_no_credential(endpoint: &str, options: Option<PathClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -64,6 +66,7 @@ impl PathClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PathClient.path_api_version")]
     pub async fn path_api_version(
         &self,
         options: Option<PathClientPathApiVersionOptions<'_>>,

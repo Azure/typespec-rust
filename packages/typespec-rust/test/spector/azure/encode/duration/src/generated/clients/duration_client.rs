@@ -9,10 +9,11 @@ use azure_core::{
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Result,
+    tracing, Result,
 };
 
 /// Test for azure related encode decorator.
+#[tracing::client]
 pub struct DurationClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +33,7 @@ impl DurationClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_azureduration")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<DurationClientOptions>,
@@ -67,6 +69,7 @@ impl DurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationClient.duration_constant")]
     pub async fn duration_constant(
         &self,
         body: RequestContent<DurationModel>,

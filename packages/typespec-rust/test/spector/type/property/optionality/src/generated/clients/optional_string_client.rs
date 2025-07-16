@@ -9,9 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct OptionalStringClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl OptionalStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalStringClient.get_all")]
     pub async fn get_all(
         &self,
         options: Option<OptionalStringClientGetAllOptions<'_>>,
@@ -46,6 +48,7 @@ impl OptionalStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalStringClient.get_default")]
     pub async fn get_default(
         &self,
         options: Option<OptionalStringClientGetDefaultOptions<'_>>,
@@ -64,6 +67,7 @@ impl OptionalStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalStringClient.put_all")]
     pub async fn put_all(
         &self,
         body: RequestContent<StringProperty>,
@@ -84,6 +88,7 @@ impl OptionalStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalStringClient.put_default")]
     pub async fn put_default(
         &self,
         body: RequestContent<StringProperty>,

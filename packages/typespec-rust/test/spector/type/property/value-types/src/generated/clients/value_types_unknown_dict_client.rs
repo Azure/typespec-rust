@@ -9,9 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ValueTypesUnknownDictClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl ValueTypesUnknownDictClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesUnknownDictClient.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesUnknownDictClientGetOptions<'_>>,
@@ -47,6 +49,7 @@ impl ValueTypesUnknownDictClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesUnknownDictClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<UnknownDictProperty>,

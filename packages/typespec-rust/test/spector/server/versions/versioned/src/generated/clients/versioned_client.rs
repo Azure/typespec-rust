@@ -10,10 +10,11 @@ use crate::generated::models::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Illustrates versioned server.
+#[tracing::client]
 pub struct VersionedClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -35,6 +36,7 @@ impl VersionedClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_versioned")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<VersionedClientOptions>,
@@ -70,6 +72,7 @@ impl VersionedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("VersionedClient.with_path_api_version")]
     pub async fn with_path_api_version(
         &self,
         options: Option<VersionedClientWithPathApiVersionOptions<'_>>,
@@ -88,6 +91,7 @@ impl VersionedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("VersionedClient.with_query_api_version")]
     pub async fn with_query_api_version(
         &self,
         options: Option<VersionedClientWithQueryApiVersionOptions<'_>>,
@@ -106,6 +110,7 @@ impl VersionedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("VersionedClient.with_query_old_api_version")]
     pub async fn with_query_old_api_version(
         &self,
         options: Option<VersionedClientWithQueryOldApiVersionOptions<'_>>,
@@ -124,6 +129,7 @@ impl VersionedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("VersionedClient.without_api_version")]
     pub async fn without_api_version(
         &self,
         options: Option<VersionedClientWithoutApiVersionOptions<'_>>,

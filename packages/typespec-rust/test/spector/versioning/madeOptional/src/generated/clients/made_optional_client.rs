@@ -7,10 +7,11 @@ use crate::generated::models::{MadeOptionalClientTestOptions, TestModel};
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test for the `@madeOptional` decorator.
+#[tracing::client]
 pub struct MadeOptionalClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +33,7 @@ impl MadeOptionalClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_madeoptional")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<MadeOptionalClientOptions>,
@@ -69,6 +71,7 @@ impl MadeOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("MadeOptionalClient.test")]
     pub async fn test(
         &self,
         body: RequestContent<TestModel>,

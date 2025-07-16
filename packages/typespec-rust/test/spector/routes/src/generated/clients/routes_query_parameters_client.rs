@@ -14,9 +14,10 @@ use crate::generated::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct RoutesQueryParametersClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +33,7 @@ impl RoutesQueryParametersClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("RoutesQueryParametersClient.annotation_only")]
     pub async fn annotation_only(
         &self,
         param: &str,
@@ -50,6 +52,7 @@ impl RoutesQueryParametersClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("RoutesQueryParametersClient.explicit")]
     pub async fn explicit(
         &self,
         param: &str,
@@ -65,6 +68,7 @@ impl RoutesQueryParametersClient {
     }
 
     /// Returns a new instance of RoutesQueryParametersQueryContinuationClient.
+    #[tracing::subclient]
     pub fn get_routes_query_parameters_query_continuation_client(
         &self,
     ) -> RoutesQueryParametersQueryContinuationClient {
@@ -75,6 +79,7 @@ impl RoutesQueryParametersClient {
     }
 
     /// Returns a new instance of RoutesQueryParametersQueryExpansionClient.
+    #[tracing::subclient]
     pub fn get_routes_query_parameters_query_expansion_client(
         &self,
     ) -> RoutesQueryParametersQueryExpansionClient {
@@ -88,6 +93,7 @@ impl RoutesQueryParametersClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("RoutesQueryParametersClient.template_only")]
     pub async fn template_only(
         &self,
         param: &str,

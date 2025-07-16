@@ -6,10 +6,11 @@
 use crate::generated::models::{ScalarUnknownClientGetOptions, ScalarUnknownClientPutOptions};
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 use serde_json::Value;
 
+#[tracing::client]
 pub struct ScalarUnknownClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -26,6 +27,7 @@ impl ScalarUnknownClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ScalarUnknownClient.get")]
     pub async fn get(
         &self,
         options: Option<ScalarUnknownClientGetOptions<'_>>,
@@ -45,6 +47,7 @@ impl ScalarUnknownClient {
     ///
     /// * `body` - _
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ScalarUnknownClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<Value>,

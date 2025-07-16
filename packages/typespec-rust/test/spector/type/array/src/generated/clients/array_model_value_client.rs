@@ -8,10 +8,11 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Array of model values
+#[tracing::client]
 pub struct ArrayModelValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl ArrayModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ArrayModelValueClient.get")]
     pub async fn get(
         &self,
         options: Option<ArrayModelValueClientGetOptions<'_>>,
@@ -44,6 +46,7 @@ impl ArrayModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ArrayModelValueClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<InnerModel>>,

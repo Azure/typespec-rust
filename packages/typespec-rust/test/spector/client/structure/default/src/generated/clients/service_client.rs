@@ -10,7 +10,7 @@ use crate::generated::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test that we can use @client and @operationGroup decorators to customize client side code structure, such as:
@@ -20,6 +20,7 @@ use azure_core::{
 /// 4. split one interface into two clients
 /// 5. have two clients with operations come from different interfaces
 /// 6. have two clients with a hierarchy relation.
+#[tracing::client]
 pub struct ServiceClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -40,6 +41,7 @@ impl ServiceClient {
     /// * `endpoint` - Service host
     /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_default")]
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -75,6 +77,7 @@ impl ServiceClient {
     }
 
     /// Returns a new instance of ServiceBarClient.
+    #[tracing::subclient]
     pub fn get_service_bar_client(&self) -> ServiceBarClient {
         ServiceBarClient {
             endpoint: self.endpoint.clone(),
@@ -83,6 +86,7 @@ impl ServiceClient {
     }
 
     /// Returns a new instance of ServiceBazClient.
+    #[tracing::subclient]
     pub fn get_service_baz_client(&self) -> ServiceBazClient {
         ServiceBazClient {
             endpoint: self.endpoint.clone(),
@@ -91,6 +95,7 @@ impl ServiceClient {
     }
 
     /// Returns a new instance of ServiceFooClient.
+    #[tracing::subclient]
     pub fn get_service_foo_client(&self) -> ServiceFooClient {
         ServiceFooClient {
             endpoint: self.endpoint.clone(),
@@ -99,6 +104,7 @@ impl ServiceClient {
     }
 
     /// Returns a new instance of ServiceQuxClient.
+    #[tracing::subclient]
     pub fn get_service_qux_client(&self) -> ServiceQuxClient {
         ServiceQuxClient {
             endpoint: self.endpoint.clone(),
@@ -110,6 +116,7 @@ impl ServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ServiceClient.one")]
     pub async fn one(
         &self,
         options: Option<ServiceClientOneOptions<'_>>,
@@ -126,6 +133,7 @@ impl ServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ServiceClient.two")]
     pub async fn two(
         &self,
         options: Option<ServiceClientTwoOptions<'_>>,

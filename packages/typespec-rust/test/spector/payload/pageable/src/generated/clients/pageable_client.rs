@@ -7,10 +7,11 @@ use crate::generated::clients::PageableServerDrivenPaginationClient;
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test for pageable payload.
+#[tracing::client]
 pub struct PageableClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl PageableClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_corepageable")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<PageableClientOptions>,
@@ -61,6 +63,7 @@ impl PageableClient {
     }
 
     /// Returns a new instance of PageableServerDrivenPaginationClient.
+    #[tracing::subclient]
     pub fn get_pageable_server_driven_pagination_client(
         &self,
     ) -> PageableServerDrivenPaginationClient {

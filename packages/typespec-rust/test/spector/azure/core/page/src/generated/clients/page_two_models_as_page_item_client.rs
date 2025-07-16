@@ -9,9 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
-    json, Result,
+    json, tracing, Result,
 };
 
+#[tracing::client]
 pub struct PageTwoModelsAsPageItemClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -29,6 +30,7 @@ impl PageTwoModelsAsPageItemClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageTwoModelsAsPageItemClient.list_first_item")]
     pub fn list_first_item(
         &self,
         options: Option<PageTwoModelsAsPageItemClientListFirstItemOptions<'_>>,
@@ -83,6 +85,7 @@ impl PageTwoModelsAsPageItemClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageTwoModelsAsPageItemClient.list_second_item")]
     pub fn list_second_item(
         &self,
         options: Option<PageTwoModelsAsPageItemClientListSecondItemOptions<'_>>,

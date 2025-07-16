@@ -7,9 +7,10 @@ use crate::generated::clients::ExtensibleStringClient;
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ExtensibleClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl ExtensibleClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_extensible")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<ExtensibleClientOptions>,
@@ -60,6 +62,7 @@ impl ExtensibleClient {
     }
 
     /// Returns a new instance of ExtensibleStringClient.
+    #[tracing::subclient]
     pub fn get_extensible_string_client(&self) -> ExtensibleStringClient {
         ExtensibleStringClient {
             endpoint: self.endpoint.clone(),

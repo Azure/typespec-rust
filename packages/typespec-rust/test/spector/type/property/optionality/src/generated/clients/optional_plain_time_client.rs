@@ -10,9 +10,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct OptionalPlainTimeClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl OptionalPlainTimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalPlainTimeClient.get_all")]
     pub async fn get_all(
         &self,
         options: Option<OptionalPlainTimeClientGetAllOptions<'_>>,
@@ -47,6 +49,7 @@ impl OptionalPlainTimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalPlainTimeClient.get_default")]
     pub async fn get_default(
         &self,
         options: Option<OptionalPlainTimeClientGetDefaultOptions<'_>>,
@@ -65,6 +68,7 @@ impl OptionalPlainTimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalPlainTimeClient.put_all")]
     pub async fn put_all(
         &self,
         body: RequestContent<PlainTimeProperty>,
@@ -85,6 +89,7 @@ impl OptionalPlainTimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalPlainTimeClient.put_default")]
     pub async fn put_default(
         &self,
         body: RequestContent<PlainTimeProperty>,

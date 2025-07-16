@@ -7,9 +7,10 @@ use crate::generated::models::QueryClientQueryApiVersionOptions;
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct QueryClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -31,6 +32,7 @@ impl QueryClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_apiverquery")]
     pub fn with_no_credential(endpoint: &str, options: Option<QueryClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -64,6 +66,7 @@ impl QueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("QueryClient.query_api_version")]
     pub async fn query_api_version(
         &self,
         options: Option<QueryClientQueryApiVersionOptions<'_>>,

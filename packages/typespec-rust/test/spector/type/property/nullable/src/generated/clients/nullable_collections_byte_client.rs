@@ -10,9 +10,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct NullableCollectionsByteClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl NullableCollectionsByteClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("NullableCollectionsByteClient.get_non_null")]
     pub async fn get_non_null(
         &self,
         options: Option<NullableCollectionsByteClientGetNonNullOptions<'_>>,
@@ -47,6 +49,7 @@ impl NullableCollectionsByteClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("NullableCollectionsByteClient.get_null")]
     pub async fn get_null(
         &self,
         options: Option<NullableCollectionsByteClientGetNullOptions<'_>>,
@@ -65,6 +68,7 @@ impl NullableCollectionsByteClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("NullableCollectionsByteClient.patch_non_null")]
     pub async fn patch_non_null(
         &self,
         body: RequestContent<CollectionsByteProperty>,
@@ -85,6 +89,7 @@ impl NullableCollectionsByteClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("NullableCollectionsByteClient.patch_null")]
     pub async fn patch_null(
         &self,
         body: RequestContent<CollectionsByteProperty>,

@@ -9,9 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ValueTypesUnionStringLiteralClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl ValueTypesUnionStringLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesUnionStringLiteralClient.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesUnionStringLiteralClientGetOptions<'_>>,
@@ -47,6 +49,7 @@ impl ValueTypesUnionStringLiteralClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesUnionStringLiteralClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<UnionStringLiteralProperty>,

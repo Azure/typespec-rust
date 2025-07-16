@@ -6,10 +6,11 @@
 use crate::generated::models::{ArrayInt64ValueClientGetOptions, ArrayInt64ValueClientPutOptions};
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Array of int64 values
+#[tracing::client]
 pub struct ArrayInt64ValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -25,6 +26,7 @@ impl ArrayInt64ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ArrayInt64ValueClient.get")]
     pub async fn get(
         &self,
         options: Option<ArrayInt64ValueClientGetOptions<'_>>,
@@ -42,6 +44,7 @@ impl ArrayInt64ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ArrayInt64ValueClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<i64>>,

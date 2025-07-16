@@ -11,11 +11,12 @@ use azure_core::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url,
     },
-    Result,
+    tracing, Result,
 };
 use std::sync::Arc;
 
 /// Illustrates clients generated with OAuth2 authentication.
+#[tracing::client]
 pub struct OAuth2Client {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -37,6 +38,7 @@ impl OAuth2Client {
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_oauth2")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -77,6 +79,7 @@ impl OAuth2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OAuth2Client.invalid")]
     pub async fn invalid(
         &self,
         options: Option<OAuth2ClientInvalidOptions<'_>>,
@@ -95,6 +98,7 @@ impl OAuth2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OAuth2Client.valid")]
     pub async fn valid(
         &self,
         options: Option<OAuth2ClientValidOptions<'_>>,

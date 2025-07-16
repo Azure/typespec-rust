@@ -10,9 +10,10 @@ use crate::generated::models::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ParentChildClient {
     pub(crate) blob_name: String,
     pub(crate) endpoint: Url,
@@ -34,6 +35,7 @@ impl ParentChildClient {
     /// * `endpoint` - Service host
     /// * `blob_name` - The name of the blob. This parameter is used as a path parameter in all operations.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_clientinit")]
     pub fn with_no_credential(
         endpoint: &str,
         blob_name: String,
@@ -70,6 +72,7 @@ impl ParentChildClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ParentChildClient.delete_standalone")]
     pub async fn delete_standalone(
         &self,
         options: Option<ParentChildClientDeleteStandaloneOptions<'_>>,
@@ -90,6 +93,7 @@ impl ParentChildClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ParentChildClient.get_standalone")]
     pub async fn get_standalone(
         &self,
         options: Option<ParentChildClientGetStandaloneOptions<'_>>,
@@ -109,6 +113,7 @@ impl ParentChildClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ParentChildClient.with_query")]
     pub async fn with_query(
         &self,
         options: Option<ParentChildClientWithQueryOptions<'_>>,

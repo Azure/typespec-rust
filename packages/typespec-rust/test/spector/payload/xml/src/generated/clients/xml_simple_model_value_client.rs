@@ -10,10 +10,11 @@ use azure_core::{
     http::{
         Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url, XmlFormat,
     },
-    Result,
+    tracing, Result,
 };
 
 /// Operations for the SimpleModel type.
+#[tracing::client]
 pub struct XmlSimpleModelValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl XmlSimpleModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("XmlSimpleModelValueClient.get")]
     pub async fn get(
         &self,
         options: Option<XmlSimpleModelValueClientGetOptions<'_>>,
@@ -46,6 +48,7 @@ impl XmlSimpleModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("XmlSimpleModelValueClient.put")]
     pub async fn put(
         &self,
         input: RequestContent<SimpleModel>,

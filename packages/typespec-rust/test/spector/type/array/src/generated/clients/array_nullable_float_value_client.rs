@@ -8,10 +8,11 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Array of nullable float values
+#[tracing::client]
 pub struct ArrayNullableFloatValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl ArrayNullableFloatValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ArrayNullableFloatValueClient.get")]
     pub async fn get(
         &self,
         options: Option<ArrayNullableFloatValueClientGetOptions<'_>>,
@@ -44,6 +46,7 @@ impl ArrayNullableFloatValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ArrayNullableFloatValueClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<f32>>,

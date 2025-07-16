@@ -10,9 +10,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct DurationQueryClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl DurationQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationQueryClient.default")]
     pub async fn default(
         &self,
         input: &str,
@@ -46,6 +48,7 @@ impl DurationQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationQueryClient.float64_seconds")]
     pub async fn float64_seconds(
         &self,
         input: f64,
@@ -65,6 +68,7 @@ impl DurationQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationQueryClient.float_seconds")]
     pub async fn float_seconds(
         &self,
         input: f32,
@@ -84,6 +88,7 @@ impl DurationQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationQueryClient.int32_seconds")]
     pub async fn int32_seconds(
         &self,
         input: i32,
@@ -103,6 +108,7 @@ impl DurationQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationQueryClient.int32_seconds_array")]
     pub async fn int32_seconds_array(
         &self,
         input: &[i32],
@@ -128,6 +134,7 @@ impl DurationQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationQueryClient.iso8601")]
     pub async fn iso8601(
         &self,
         input: &str,

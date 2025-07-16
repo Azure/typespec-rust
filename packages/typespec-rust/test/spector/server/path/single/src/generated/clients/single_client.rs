@@ -7,10 +7,11 @@ use crate::generated::models::SingleClientMyOpOptions;
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Illustrates server with a single path parameter @server
+#[tracing::client]
 pub struct SingleClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl SingleClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_single")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<SingleClientOptions>,
@@ -64,6 +66,7 @@ impl SingleClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SingleClient.my_op")]
     pub async fn my_op(
         &self,
         options: Option<SingleClientMyOpOptions<'_>>,

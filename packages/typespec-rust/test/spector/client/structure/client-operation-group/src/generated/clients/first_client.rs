@@ -10,9 +10,10 @@ use crate::generated::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct FirstClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -33,6 +34,7 @@ impl FirstClient {
     /// * `endpoint` - Service host
     /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_clientopgroup")]
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -68,6 +70,7 @@ impl FirstClient {
     }
 
     /// Returns a new instance of FirstGroup3Client.
+    #[tracing::subclient]
     pub fn get_first_group3_client(&self) -> FirstGroup3Client {
         FirstGroup3Client {
             endpoint: self.endpoint.clone(),
@@ -76,6 +79,7 @@ impl FirstClient {
     }
 
     /// Returns a new instance of FirstGroup4Client.
+    #[tracing::subclient]
     pub fn get_first_group4_client(&self) -> FirstGroup4Client {
         FirstGroup4Client {
             endpoint: self.endpoint.clone(),
@@ -87,6 +91,7 @@ impl FirstClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("FirstClient.one")]
     pub async fn one(
         &self,
         options: Option<FirstClientOneOptions<'_>>,

@@ -10,9 +10,10 @@ use crate::generated::models::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ClientAClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -33,6 +34,7 @@ impl ClientAClient {
     /// * `endpoint` - Service host
     /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_multiclient")]
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -71,6 +73,7 @@ impl ClientAClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ClientAClient.renamed_five")]
     pub async fn renamed_five(
         &self,
         options: Option<ClientAClientRenamedFiveOptions<'_>>,
@@ -87,6 +90,7 @@ impl ClientAClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ClientAClient.renamed_one")]
     pub async fn renamed_one(
         &self,
         options: Option<ClientAClientRenamedOneOptions<'_>>,
@@ -103,6 +107,7 @@ impl ClientAClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ClientAClient.renamed_three")]
     pub async fn renamed_three(
         &self,
         options: Option<ClientAClientRenamedThreeOptions<'_>>,

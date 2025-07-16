@@ -9,9 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct CollectionFormatQueryClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl CollectionFormatQueryClient {
     ///
     /// * `colors` - Possible values for colors are [blue,red,green]
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("CollectionFormatQueryClient.csv")]
     pub async fn csv(
         &self,
         colors: &[&str],
@@ -48,6 +50,7 @@ impl CollectionFormatQueryClient {
     ///
     /// * `colors` - Possible values for colors are [blue,red,green]
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("CollectionFormatQueryClient.multi")]
     pub async fn multi(
         &self,
         colors: &[&str],
@@ -69,6 +72,7 @@ impl CollectionFormatQueryClient {
     ///
     /// * `colors` - Possible values for colors are [blue,red,green]
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("CollectionFormatQueryClient.pipes")]
     pub async fn pipes(
         &self,
         colors: &[&str],
@@ -89,6 +93,7 @@ impl CollectionFormatQueryClient {
     ///
     /// * `colors` - Possible values for colors are [blue,red,green]
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("CollectionFormatQueryClient.ssv")]
     pub async fn ssv(
         &self,
         colors: &[&str],

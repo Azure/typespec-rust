@@ -10,10 +10,11 @@ use crate::generated::clients::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test for encode decorator on bytes.
+#[tracing::client]
 pub struct BytesClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -33,6 +34,7 @@ impl BytesClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_bytes")]
     pub fn with_no_credential(endpoint: &str, options: Option<BytesClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -61,6 +63,7 @@ impl BytesClient {
     }
 
     /// Returns a new instance of BytesHeaderClient.
+    #[tracing::subclient]
     pub fn get_bytes_header_client(&self) -> BytesHeaderClient {
         BytesHeaderClient {
             endpoint: self.endpoint.clone(),
@@ -69,6 +72,7 @@ impl BytesClient {
     }
 
     /// Returns a new instance of BytesPropertyClient.
+    #[tracing::subclient]
     pub fn get_bytes_property_client(&self) -> BytesPropertyClient {
         BytesPropertyClient {
             endpoint: self.endpoint.clone(),
@@ -77,6 +81,7 @@ impl BytesClient {
     }
 
     /// Returns a new instance of BytesQueryClient.
+    #[tracing::subclient]
     pub fn get_bytes_query_client(&self) -> BytesQueryClient {
         BytesQueryClient {
             endpoint: self.endpoint.clone(),
@@ -85,6 +90,7 @@ impl BytesClient {
     }
 
     /// Returns a new instance of BytesRequestBodyClient.
+    #[tracing::subclient]
     pub fn get_bytes_request_body_client(&self) -> BytesRequestBodyClient {
         BytesRequestBodyClient {
             endpoint: self.endpoint.clone(),
@@ -93,6 +99,7 @@ impl BytesClient {
     }
 
     /// Returns a new instance of BytesResponseBodyClient.
+    #[tracing::subclient]
     pub fn get_bytes_response_body_client(&self) -> BytesResponseBodyClient {
         BytesResponseBodyClient {
             endpoint: self.endpoint.clone(),

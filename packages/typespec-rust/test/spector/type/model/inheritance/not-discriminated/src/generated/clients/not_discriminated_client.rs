@@ -12,10 +12,11 @@ use azure_core::{
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Result,
+    tracing, Result,
 };
 
 /// Illustrates not-discriminated inheritance model.
+#[tracing::client]
 pub struct NotDiscriminatedClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -35,6 +36,7 @@ impl NotDiscriminatedClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_nodisc")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NotDiscriminatedClientOptions>,
@@ -69,6 +71,7 @@ impl NotDiscriminatedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("NotDiscriminatedClient.get_valid")]
     pub async fn get_valid(
         &self,
         options: Option<NotDiscriminatedClientGetValidOptions<'_>>,
@@ -86,6 +89,7 @@ impl NotDiscriminatedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("NotDiscriminatedClient.post_valid")]
     pub async fn post_valid(
         &self,
         input: RequestContent<Siamese>,
@@ -105,6 +109,7 @@ impl NotDiscriminatedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("NotDiscriminatedClient.put_valid")]
     pub async fn put_valid(
         &self,
         input: RequestContent<Siamese>,

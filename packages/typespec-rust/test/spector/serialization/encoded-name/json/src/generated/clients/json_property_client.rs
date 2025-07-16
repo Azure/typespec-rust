@@ -8,9 +8,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct JsonPropertyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -26,6 +27,7 @@ impl JsonPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("JsonPropertyClient.get")]
     pub async fn get(
         &self,
         options: Option<JsonPropertyClientGetOptions<'_>>,
@@ -43,6 +45,7 @@ impl JsonPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("JsonPropertyClient.send")]
     pub async fn send(
         &self,
         body: RequestContent<JsonEncodedNameModel>,

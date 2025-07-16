@@ -18,10 +18,11 @@ use azure_core::{
         ClientOptions, Method, Pager, PagerResult, Pipeline, RawResponse, Request, RequestContent,
         Url,
     },
-    json, Result,
+    json, tracing, Result,
 };
 
 /// Illustrates bodies templated with Azure Core with paging support
+#[tracing::client]
 pub struct PageClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -44,6 +45,7 @@ impl PageClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_corepage")]
     pub fn with_no_credential(endpoint: &str, options: Option<PageClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -73,6 +75,7 @@ impl PageClient {
     }
 
     /// Returns a new instance of PageTwoModelsAsPageItemClient.
+    #[tracing::subclient]
     pub fn get_page_two_models_as_page_item_client(&self) -> PageTwoModelsAsPageItemClient {
         PageTwoModelsAsPageItemClient {
             api_version: self.api_version.clone(),
@@ -86,6 +89,7 @@ impl PageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageClient.list_parameterized_next_link")]
     pub fn list_parameterized_next_link(
         &self,
         select: &str,
@@ -132,6 +136,7 @@ impl PageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageClient.list_with_custom_page_model")]
     pub fn list_with_custom_page_model(
         &self,
         options: Option<PageClientListWithCustomPageModelOptions<'_>>,
@@ -186,6 +191,7 @@ impl PageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageClient.list_with_page")]
     pub fn list_with_page(
         &self,
         options: Option<PageClientListWithPageOptions<'_>>,
@@ -241,6 +247,7 @@ impl PageClient {
     ///
     /// * `body_input` - The body of the input.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageClient.list_with_parameters")]
     pub fn list_with_parameters(
         &self,
         body_input: RequestContent<ListItemInputBody>,

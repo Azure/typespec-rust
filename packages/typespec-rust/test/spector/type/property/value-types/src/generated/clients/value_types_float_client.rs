@@ -8,9 +8,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ValueTypesFloatClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl ValueTypesFloatClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesFloatClient.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesFloatClientGetOptions<'_>>,
@@ -46,6 +48,7 @@ impl ValueTypesFloatClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesFloatClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<FloatProperty>,

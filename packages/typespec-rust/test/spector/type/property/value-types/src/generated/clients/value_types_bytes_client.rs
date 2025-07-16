@@ -8,9 +8,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ValueTypesBytesClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl ValueTypesBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesBytesClient.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesBytesClientGetOptions<'_>>,
@@ -46,6 +48,7 @@ impl ValueTypesBytesClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesBytesClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<BytesProperty>,

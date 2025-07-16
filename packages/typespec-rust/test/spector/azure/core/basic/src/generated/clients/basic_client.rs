@@ -14,10 +14,11 @@ use azure_core::{
         ClientOptions, Context, Method, NoFormat, Pager, PagerResult, Pipeline, RawResponse,
         Request, RequestContent, Response, Url,
     },
-    json, Result,
+    json, tracing, Result,
 };
 
 /// Illustrates bodies templated with Azure Core
+#[tracing::client]
 pub struct BasicClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -40,6 +41,7 @@ impl BasicClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_basic")]
     pub fn with_no_credential(endpoint: &str, options: Option<BasicClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -77,6 +79,7 @@ impl BasicClient {
     /// * `id` - The user's id.
     /// * `resource` - The resource instance.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BasicClient.create_or_replace")]
     pub async fn create_or_replace(
         &self,
         id: i32,
@@ -107,6 +110,7 @@ impl BasicClient {
     /// * `id` - The user's id.
     /// * `resource` - The resource instance.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BasicClient.create_or_update")]
     pub async fn create_or_update(
         &self,
         id: i32,
@@ -136,6 +140,7 @@ impl BasicClient {
     ///
     /// * `id` - The user's id.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BasicClient.delete")]
     pub async fn delete(
         &self,
         id: i32,
@@ -163,6 +168,7 @@ impl BasicClient {
     /// * `id` - The user's id.
     /// * `format` - The format of the data.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BasicClient.export")]
     pub async fn export(
         &self,
         id: i32,
@@ -191,6 +197,7 @@ impl BasicClient {
     ///
     /// * `format` - The format of the data.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BasicClient.export_all_users")]
     pub async fn export_all_users(
         &self,
         format: &str,
@@ -216,6 +223,7 @@ impl BasicClient {
     ///
     /// * `id` - The user's id.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BasicClient.get")]
     pub async fn get(
         &self,
         id: i32,
@@ -241,6 +249,7 @@ impl BasicClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BasicClient.list")]
     pub fn list(&self, options: Option<BasicClientListOptions<'_>>) -> Result<Pager<PagedUser>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();

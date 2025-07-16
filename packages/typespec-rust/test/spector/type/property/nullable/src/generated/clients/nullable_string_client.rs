@@ -9,9 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct NullableStringClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl NullableStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("NullableStringClient.get_non_null")]
     pub async fn get_non_null(
         &self,
         options: Option<NullableStringClientGetNonNullOptions<'_>>,
@@ -46,6 +48,7 @@ impl NullableStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("NullableStringClient.get_null")]
     pub async fn get_null(
         &self,
         options: Option<NullableStringClientGetNullOptions<'_>>,
@@ -64,6 +67,7 @@ impl NullableStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("NullableStringClient.patch_non_null")]
     pub async fn patch_non_null(
         &self,
         body: RequestContent<StringProperty>,
@@ -84,6 +88,7 @@ impl NullableStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("NullableStringClient.patch_null")]
     pub async fn patch_null(
         &self,
         body: RequestContent<StringProperty>,

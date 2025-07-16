@@ -7,10 +7,11 @@ use crate::generated::models::{PageableClientListOptions, PagedUser};
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
-    json, Result,
+    json, tracing, Result,
 };
 
 /// Test describing pageable.
+#[tracing::client]
 pub struct PageableClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl PageableClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_azurepageable")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<PageableClientOptions>,
@@ -65,6 +67,7 @@ impl PageableClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageableClient.list")]
     pub fn list(&self, options: Option<PageableClientListOptions<'_>>) -> Result<Pager<PagedUser>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();

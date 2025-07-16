@@ -9,9 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct BodyOptionalityOptionalExplicitClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl BodyOptionalityOptionalExplicitClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BodyOptionalityOptionalExplicitClient.omit")]
     pub async fn omit(
         &self,
         options: Option<BodyOptionalityOptionalExplicitClientOmitOptions<'_>>,
@@ -47,6 +49,7 @@ impl BodyOptionalityOptionalExplicitClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BodyOptionalityOptionalExplicitClient.set")]
     pub async fn set(
         &self,
         options: Option<BodyOptionalityOptionalExplicitClientSetOptions<'_>>,

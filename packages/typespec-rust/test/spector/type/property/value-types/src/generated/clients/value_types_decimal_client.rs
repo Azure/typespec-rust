@@ -8,9 +8,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ValueTypesDecimalClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl ValueTypesDecimalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesDecimalClient.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesDecimalClientGetOptions<'_>>,
@@ -46,6 +48,7 @@ impl ValueTypesDecimalClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ValueTypesDecimalClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<DecimalProperty>,

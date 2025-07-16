@@ -10,10 +10,11 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 use std::collections::HashMap;
 
+#[tracing::client]
 pub struct RoutesQueryParametersQueryExpansionExplodeClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("RoutesQueryParametersQueryExpansionExplodeClient.array")]
     pub async fn array(
         &self,
         param: &[&str],
@@ -49,6 +51,7 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("RoutesQueryParametersQueryExpansionExplodeClient.primitive")]
     pub async fn primitive(
         &self,
         param: &str,
@@ -67,6 +70,7 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("RoutesQueryParametersQueryExpansionExplodeClient.record")]
     pub async fn record(
         &self,
         param: HashMap<String, i32>,

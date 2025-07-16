@@ -9,9 +9,10 @@ use crate::generated::models::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct MultipleClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -33,6 +34,7 @@ impl MultipleClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_multiple")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<MultipleClientOptions>,
@@ -70,6 +72,7 @@ impl MultipleClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("MultipleClient.no_operation_params")]
     pub async fn no_operation_params(
         &self,
         options: Option<MultipleClientNoOperationParamsOptions<'_>>,
@@ -85,6 +88,7 @@ impl MultipleClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("MultipleClient.with_operation_path_param")]
     pub async fn with_operation_path_param(
         &self,
         keyword: &str,

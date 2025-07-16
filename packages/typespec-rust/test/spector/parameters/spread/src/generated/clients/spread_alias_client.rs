@@ -16,9 +16,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct SpreadAliasClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -34,6 +35,7 @@ impl SpreadAliasClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpreadAliasClient.spread_as_request_body")]
     pub async fn spread_as_request_body(
         &self,
         name: String,
@@ -55,6 +57,7 @@ impl SpreadAliasClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpreadAliasClient.spread_as_request_parameter")]
     pub async fn spread_as_request_parameter(
         &self,
         id: &str,
@@ -84,6 +87,7 @@ impl SpreadAliasClient {
     /// * `name` - name of the Thing
     /// * `age` - age of the Thing
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpreadAliasClient.spread_parameter_with_inner_alias")]
     pub async fn spread_parameter_with_inner_alias(
         &self,
         id: &str,
@@ -111,6 +115,7 @@ impl SpreadAliasClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpreadAliasClient.spread_parameter_with_inner_model")]
     pub async fn spread_parameter_with_inner_model(
         &self,
         id: &str,
@@ -139,6 +144,7 @@ impl SpreadAliasClient {
     /// * `required_string` - required string
     /// * `required_int_list` - required int
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpreadAliasClient.spread_with_multiple_parameters")]
     pub async fn spread_with_multiple_parameters(
         &self,
         id: &str,

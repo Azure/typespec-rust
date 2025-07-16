@@ -10,10 +10,11 @@ use azure_core::{
     http::{
         Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url, XmlFormat,
     },
-    Result,
+    tracing, Result,
 };
 
 /// Operations for the ModelWithText type.
+#[tracing::client]
 pub struct XmlModelWithTextValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl XmlModelWithTextValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("XmlModelWithTextValueClient.get")]
     pub async fn get(
         &self,
         options: Option<XmlModelWithTextValueClientGetOptions<'_>>,
@@ -46,6 +48,7 @@ impl XmlModelWithTextValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("XmlModelWithTextValueClient.put")]
     pub async fn put(
         &self,
         input: RequestContent<ModelWithText>,

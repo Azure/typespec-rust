@@ -11,10 +11,11 @@ use azure_core::{
     http::{
         Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url, XmlFormat,
     },
-    Result,
+    tracing, Result,
 };
 
 /// Operations for the ModelWithArrayOfModel type.
+#[tracing::client]
 pub struct XmlModelWithArrayOfModelValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl XmlModelWithArrayOfModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("XmlModelWithArrayOfModelValueClient.get")]
     pub async fn get(
         &self,
         options: Option<XmlModelWithArrayOfModelValueClientGetOptions<'_>>,
@@ -47,6 +49,7 @@ impl XmlModelWithArrayOfModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("XmlModelWithArrayOfModelValueClient.put")]
     pub async fn put(
         &self,
         input: RequestContent<ModelWithArrayOfModel>,

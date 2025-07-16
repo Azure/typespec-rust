@@ -7,9 +7,10 @@ use crate::generated::models::HeaderClientHeaderApiVersionOptions;
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct HeaderClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -31,6 +32,7 @@ impl HeaderClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_apiverheader")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<HeaderClientOptions>,
@@ -67,6 +69,7 @@ impl HeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("HeaderClient.header_api_version")]
     pub async fn header_api_version(
         &self,
         options: Option<HeaderClientHeaderApiVersionOptions<'_>>,

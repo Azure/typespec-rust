@@ -14,9 +14,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Response, Url},
-    json, Result,
+    json, tracing, Result,
 };
 
+#[tracing::client]
 pub struct PageableServerDrivenPaginationContinuationTokenClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +33,9 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "PageableServerDrivenPaginationContinuationTokenClient.list_header_response_body"
+    )]
     pub fn list_header_response_body(
         &self,
         options: Option<
@@ -78,6 +82,9 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "PageableServerDrivenPaginationContinuationTokenClient.list_header_response_header"
+    )]
     pub fn list_header_response_header(
         &self,
         options: Option<
@@ -123,6 +130,9 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "PageableServerDrivenPaginationContinuationTokenClient.list_query_response_body"
+    )]
     pub fn list_query_response_body(
         &self,
         options: Option<
@@ -180,6 +190,9 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "PageableServerDrivenPaginationContinuationTokenClient.list_query_response_header"
+    )]
     pub fn list_query_response_header(
         &self,
         options: Option<

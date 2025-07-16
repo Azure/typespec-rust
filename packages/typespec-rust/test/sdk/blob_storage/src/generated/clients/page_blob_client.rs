@@ -24,10 +24,11 @@ use azure_core::{
         XmlFormat,
     },
     time::to_rfc7231,
-    Bytes, Result,
+    tracing, Bytes, Result,
 };
 use std::sync::Arc;
 
+#[tracing::client]
 pub struct PageBlobClient {
     pub(crate) blob_name: String,
     pub(crate) container_name: String,
@@ -56,6 +57,7 @@ impl PageBlobClient {
     /// * `container_name` - The name of the container.
     /// * `blob_name` - The name of the blob.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("blob_storage")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -102,6 +104,7 @@ impl PageBlobClient {
     ///
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageBlobClient.clear_pages")]
     pub async fn clear_pages(
         &self,
         content_length: u64,
@@ -198,6 +201,7 @@ impl PageBlobClient {
     ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
     ///   either be public or must be authenticated via a shared access signature.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageBlobClient.copy_incremental")]
     pub async fn copy_incremental(
         &self,
         copy_source: String,
@@ -249,6 +253,7 @@ impl PageBlobClient {
     /// * `blob_content_length` - This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must
     ///   be aligned to a 512-byte boundary.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageBlobClient.create")]
     pub async fn create(
         &self,
         content_length: u64,
@@ -367,6 +372,7 @@ impl PageBlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageBlobClient.get_page_ranges")]
     pub async fn get_page_ranges(
         &self,
         options: Option<PageBlobClientGetPageRangesOptions<'_>>,
@@ -429,6 +435,7 @@ impl PageBlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageBlobClient.get_page_ranges_diff")]
     pub async fn get_page_ranges_diff(
         &self,
         options: Option<PageBlobClientGetPageRangesDiffOptions<'_>>,
@@ -502,6 +509,7 @@ impl PageBlobClient {
     /// * `blob_content_length` - This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must
     ///   be aligned to a 512-byte boundary.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageBlobClient.resize")]
     pub async fn resize(
         &self,
         blob_content_length: u64,
@@ -573,6 +581,7 @@ impl PageBlobClient {
     /// * `sequence_number_action` - Required if the x-ms-blob-sequence-number header is set for the request. This property applies
     ///   to page blobs only. This property indicates how the service should modify the blob's sequence number
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageBlobClient.update_sequence_number")]
     pub async fn update_sequence_number(
         &self,
         sequence_number_action: SequenceNumberActionType,
@@ -637,6 +646,7 @@ impl PageBlobClient {
     /// * `body` - The body of the request.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageBlobClient.upload_pages")]
     pub async fn upload_pages(
         &self,
         body: RequestContent<Bytes>,
@@ -751,6 +761,7 @@ impl PageBlobClient {
     /// * `range` - Bytes of source data in the specified range. The length of this range should match the ContentLength header
     ///   and x-ms-range/Range destination range header.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("PageBlobClient.upload_pages_from_url")]
     pub async fn upload_pages_from_url(
         &self,
         source_url: String,

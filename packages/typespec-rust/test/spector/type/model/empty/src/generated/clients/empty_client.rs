@@ -12,10 +12,11 @@ use azure_core::{
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Result,
+    tracing, Result,
 };
 
 /// Illustrates usage of empty model used in operation's parameters and responses.
+#[tracing::client]
 pub struct EmptyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -35,6 +36,7 @@ impl EmptyClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_empty")]
     pub fn with_no_credential(endpoint: &str, options: Option<EmptyClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -66,6 +68,7 @@ impl EmptyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("EmptyClient.get_empty")]
     pub async fn get_empty(
         &self,
         options: Option<EmptyClientGetEmptyOptions<'_>>,
@@ -83,6 +86,7 @@ impl EmptyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("EmptyClient.post_round_trip_empty")]
     pub async fn post_round_trip_empty(
         &self,
         body: RequestContent<EmptyInputOutput>,
@@ -103,6 +107,7 @@ impl EmptyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("EmptyClient.put_empty")]
     pub async fn put_empty(
         &self,
         input: RequestContent<EmptyInput>,

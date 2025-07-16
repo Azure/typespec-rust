@@ -13,9 +13,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct DurationPropertyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -31,6 +32,7 @@ impl DurationPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationPropertyClient.default")]
     pub async fn default(
         &self,
         body: RequestContent<DefaultDurationProperty>,
@@ -51,6 +53,7 @@ impl DurationPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationPropertyClient.float64_seconds")]
     pub async fn float64_seconds(
         &self,
         body: RequestContent<Float64SecondsDurationProperty>,
@@ -71,6 +74,7 @@ impl DurationPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationPropertyClient.float_seconds")]
     pub async fn float_seconds(
         &self,
         body: RequestContent<FloatSecondsDurationProperty>,
@@ -91,6 +95,7 @@ impl DurationPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationPropertyClient.float_seconds_array")]
     pub async fn float_seconds_array(
         &self,
         body: RequestContent<FloatSecondsDurationArrayProperty>,
@@ -111,6 +116,7 @@ impl DurationPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationPropertyClient.int32_seconds")]
     pub async fn int32_seconds(
         &self,
         body: RequestContent<Int32SecondsDurationProperty>,
@@ -131,6 +137,7 @@ impl DurationPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationPropertyClient.iso8601")]
     pub async fn iso8601(
         &self,
         body: RequestContent<ISO8601DurationProperty>,

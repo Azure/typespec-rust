@@ -11,9 +11,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct CommonPropertiesManagedIdentityClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -35,6 +36,7 @@ impl CommonPropertiesManagedIdentityClient {
     /// * `managed_identity_tracked_resource_name` - arm resource name for path
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("CommonPropertiesManagedIdentityClient.create_with_system_assigned")]
     pub async fn create_with_system_assigned(
         &self,
         resource_group_name: &str,
@@ -69,6 +71,7 @@ impl CommonPropertiesManagedIdentityClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `managed_identity_tracked_resource_name` - arm resource name for path
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("CommonPropertiesManagedIdentityClient.get")]
     pub async fn get(
         &self,
         resource_group_name: &str,
@@ -101,6 +104,9 @@ impl CommonPropertiesManagedIdentityClient {
     /// * `managed_identity_tracked_resource_name` - arm resource name for path
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "CommonPropertiesManagedIdentityClient.update_with_user_assigned_and_system_assigned"
+    )]
     pub async fn update_with_user_assigned_and_system_assigned(
         &self,
         resource_group_name: &str,

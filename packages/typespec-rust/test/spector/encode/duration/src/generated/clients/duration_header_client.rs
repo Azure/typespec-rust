@@ -10,9 +10,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct DurationHeaderClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationHeaderClient.default")]
     pub async fn default(
         &self,
         duration: String,
@@ -46,6 +48,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationHeaderClient.float64_seconds")]
     pub async fn float64_seconds(
         &self,
         duration: f64,
@@ -64,6 +67,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationHeaderClient.float_seconds")]
     pub async fn float_seconds(
         &self,
         duration: f32,
@@ -82,6 +86,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationHeaderClient.int32_seconds")]
     pub async fn int32_seconds(
         &self,
         duration: i32,
@@ -100,6 +105,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationHeaderClient.iso8601")]
     pub async fn iso8601(
         &self,
         duration: String,
@@ -118,6 +124,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DurationHeaderClient.iso8601_array")]
     pub async fn iso8601_array(
         &self,
         duration: &[&str],

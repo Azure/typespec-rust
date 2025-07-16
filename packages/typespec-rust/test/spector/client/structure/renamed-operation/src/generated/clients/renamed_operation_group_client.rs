@@ -9,9 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct RenamedOperationGroupClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl RenamedOperationGroupClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("RenamedOperationGroupClient.renamed_four")]
     pub async fn renamed_four(
         &self,
         options: Option<RenamedOperationGroupClientRenamedFourOptions<'_>>,
@@ -43,6 +45,7 @@ impl RenamedOperationGroupClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("RenamedOperationGroupClient.renamed_six")]
     pub async fn renamed_six(
         &self,
         options: Option<RenamedOperationGroupClientRenamedSixOptions<'_>>,
@@ -59,6 +62,7 @@ impl RenamedOperationGroupClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("RenamedOperationGroupClient.renamed_two")]
     pub async fn renamed_two(
         &self,
         options: Option<RenamedOperationGroupClientRenamedTwoOptions<'_>>,

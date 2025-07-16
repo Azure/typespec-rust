@@ -9,9 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct RoutesPathParametersReservedExpansionClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl RoutesPathParametersReservedExpansionClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("RoutesPathParametersReservedExpansionClient.annotation")]
     pub async fn annotation(
         &self,
         param: &str,
@@ -46,6 +48,7 @@ impl RoutesPathParametersReservedExpansionClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("RoutesPathParametersReservedExpansionClient.template")]
     pub async fn template(
         &self,
         param: &str,

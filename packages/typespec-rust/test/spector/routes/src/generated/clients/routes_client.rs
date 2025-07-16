@@ -10,10 +10,11 @@ use crate::generated::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Define scenario in building the http route/uri
+#[tracing::client]
 pub struct RoutesClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -33,6 +34,7 @@ impl RoutesClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_routes")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<RoutesClientOptions>,
@@ -67,6 +69,7 @@ impl RoutesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("RoutesClient.fixed")]
     pub async fn fixed(
         &self,
         options: Option<RoutesClientFixedOptions<'_>>,
@@ -80,6 +83,7 @@ impl RoutesClient {
     }
 
     /// Returns a new instance of RoutesInInterfaceClient.
+    #[tracing::subclient]
     pub fn get_routes_in_interface_client(&self) -> RoutesInInterfaceClient {
         RoutesInInterfaceClient {
             endpoint: self.endpoint.clone(),
@@ -88,6 +92,7 @@ impl RoutesClient {
     }
 
     /// Returns a new instance of RoutesPathParametersClient.
+    #[tracing::subclient]
     pub fn get_routes_path_parameters_client(&self) -> RoutesPathParametersClient {
         RoutesPathParametersClient {
             endpoint: self.endpoint.clone(),
@@ -96,6 +101,7 @@ impl RoutesClient {
     }
 
     /// Returns a new instance of RoutesQueryParametersClient.
+    #[tracing::subclient]
     pub fn get_routes_query_parameters_client(&self) -> RoutesQueryParametersClient {
         RoutesQueryParametersClient {
             endpoint: self.endpoint.clone(),

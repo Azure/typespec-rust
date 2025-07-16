@@ -35,10 +35,11 @@ use azure_core::{
         XmlFormat,
     },
     time::to_rfc7231,
-    Result,
+    tracing, Result,
 };
 use std::sync::Arc;
 
+#[tracing::client]
 pub struct BlobClient {
     pub(crate) blob_name: String,
     pub(crate) container_name: String,
@@ -67,6 +68,7 @@ impl BlobClient {
     /// * `container_name` - The name of the container.
     /// * `blob_name` - The name of the blob.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("blob_storage")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -114,6 +116,7 @@ impl BlobClient {
     ///
     /// * `copy_id` - The copy identifier provided in the x-ms-copy-id header of the original Copy Blob operation.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.abort_copy_from_url")]
     pub async fn abort_copy_from_url(
         &self,
         copy_id: &str,
@@ -153,6 +156,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.acquire_lease")]
     pub async fn acquire_lease(
         &self,
         options: Option<BlobClientAcquireLeaseOptions<'_>>,
@@ -208,6 +212,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.break_lease")]
     pub async fn break_lease(
         &self,
         options: Option<BlobClientBreakLeaseOptions<'_>>,
@@ -262,6 +267,7 @@ impl BlobClient {
     ///   lease ID must match.
     /// * `proposed_lease_id` - Required. The proposed lease ID for the container.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.change_lease")]
     pub async fn change_lease(
         &self,
         lease_id: String,
@@ -318,6 +324,7 @@ impl BlobClient {
     ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
     ///   either be public or must be authenticated via a shared access signature.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.copy_from_url")]
     pub async fn copy_from_url(
         &self,
         copy_source: String,
@@ -427,6 +434,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.create_snapshot")]
     pub async fn create_snapshot(
         &self,
         options: Option<BlobClientCreateSnapshotOptions<'_>>,
@@ -504,6 +512,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.delete")]
     pub async fn delete(
         &self,
         options: Option<BlobClientDeleteOptions<'_>>,
@@ -565,6 +574,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.delete_immutability_policy")]
     pub async fn delete_immutability_policy(
         &self,
         options: Option<BlobClientDeleteImmutabilityPolicyOptions<'_>>,
@@ -604,6 +614,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.download")]
     pub async fn download(
         &self,
         options: Option<BlobClientDownloadOptions<'_>>,
@@ -687,6 +698,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.get_account_info")]
     pub async fn get_account_info(
         &self,
         options: Option<BlobClientGetAccountInfoOptions<'_>>,
@@ -717,6 +729,7 @@ impl BlobClient {
     }
 
     /// Returns a new instance of AppendBlobClient.
+    #[tracing::subclient]
     pub fn get_append_blob_client(&self) -> AppendBlobClient {
         AppendBlobClient {
             blob_name: self.blob_name.clone(),
@@ -728,6 +741,7 @@ impl BlobClient {
     }
 
     /// Returns a new instance of BlockBlobClient.
+    #[tracing::subclient]
     pub fn get_block_blob_client(&self) -> BlockBlobClient {
         BlockBlobClient {
             blob_name: self.blob_name.clone(),
@@ -739,6 +753,7 @@ impl BlobClient {
     }
 
     /// Returns a new instance of PageBlobClient.
+    #[tracing::subclient]
     pub fn get_page_blob_client(&self) -> PageBlobClient {
         PageBlobClient {
             blob_name: self.blob_name.clone(),
@@ -755,6 +770,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.get_properties")]
     pub async fn get_properties(
         &self,
         options: Option<BlobClientGetPropertiesOptions<'_>>,
@@ -820,6 +836,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.get_tags")]
     pub async fn get_tags(
         &self,
         options: Option<BlobClientGetTagsOptions<'_>>,
@@ -866,6 +883,7 @@ impl BlobClient {
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.release_lease")]
     pub async fn release_lease(
         &self,
         lease_id: String,
@@ -918,6 +936,7 @@ impl BlobClient {
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.renew_lease")]
     pub async fn renew_lease(
         &self,
         lease_id: String,
@@ -969,6 +988,7 @@ impl BlobClient {
     ///
     /// * `expiry_options` - Required. Indicates mode of the expiry time
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.set_expiry")]
     pub async fn set_expiry(
         &self,
         expiry_options: BlobExpiryOptions,
@@ -1005,6 +1025,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.set_immutability_policy")]
     pub async fn set_immutability_policy(
         &self,
         options: Option<BlobClientSetImmutabilityPolicyOptions<'_>>,
@@ -1059,6 +1080,7 @@ impl BlobClient {
     ///
     /// * `legal_hold` - Required. Specifies the legal hold status to set on the blob.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.set_legal_hold")]
     pub async fn set_legal_hold(
         &self,
         legal_hold: bool,
@@ -1098,6 +1120,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.set_metadata")]
     pub async fn set_metadata(
         &self,
         options: Option<BlobClientSetMetadataOptions<'_>>,
@@ -1167,6 +1190,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.set_properties")]
     pub async fn set_properties(
         &self,
         options: Option<BlobClientSetPropertiesOptions<'_>>,
@@ -1237,6 +1261,7 @@ impl BlobClient {
     ///
     /// * `tags` - The blob tags.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.set_tags")]
     pub async fn set_tags(
         &self,
         tags: RequestContent<BlobTags>,
@@ -1288,6 +1313,7 @@ impl BlobClient {
     ///
     /// * `tier` - Indicates the tier to be set on the blob.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.set_tier")]
     pub async fn set_tier(
         &self,
         tier: AccessTier,
@@ -1339,6 +1365,7 @@ impl BlobClient {
     ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
     ///   either be public or must be authenticated via a shared access signature.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.start_copy_from_url")]
     pub async fn start_copy_from_url(
         &self,
         copy_source: String,
@@ -1442,6 +1469,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BlobClient.undelete")]
     pub async fn undelete(
         &self,
         options: Option<BlobClientUndeleteOptions<'_>>,

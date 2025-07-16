@@ -9,11 +9,12 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 use std::collections::HashMap;
 
 /// Dictionary of model values
+#[tracing::client]
 pub struct DictionaryRecursiveModelValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl DictionaryRecursiveModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DictionaryRecursiveModelValueClient.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryRecursiveModelValueClientGetOptions<'_>>,
@@ -46,6 +48,7 @@ impl DictionaryRecursiveModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("DictionaryRecursiveModelValueClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, InnerModel>>,

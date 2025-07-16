@@ -6,9 +6,10 @@
 use crate::generated::models::{BasicExplicitBodyClientSimpleOptions, User};
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct BasicExplicitBodyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -24,6 +25,7 @@ impl BasicExplicitBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BasicExplicitBodyClient.simple")]
     pub async fn simple(
         &self,
         body: RequestContent<User>,

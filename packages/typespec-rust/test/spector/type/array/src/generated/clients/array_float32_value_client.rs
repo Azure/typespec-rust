@@ -8,10 +8,11 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Array of float values
+#[tracing::client]
 pub struct ArrayFloat32ValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl ArrayFloat32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ArrayFloat32ValueClient.get")]
     pub async fn get(
         &self,
         options: Option<ArrayFloat32ValueClientGetOptions<'_>>,
@@ -44,6 +46,7 @@ impl ArrayFloat32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ArrayFloat32ValueClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<f32>>,

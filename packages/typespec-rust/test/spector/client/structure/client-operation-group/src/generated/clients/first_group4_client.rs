@@ -6,9 +6,10 @@
 use crate::generated::models::FirstGroup4ClientFourOptions;
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct FirstGroup4Client {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -24,6 +25,7 @@ impl FirstGroup4Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("FirstGroup4Client.four")]
     pub async fn four(
         &self,
         options: Option<FirstGroup4ClientFourOptions<'_>>,

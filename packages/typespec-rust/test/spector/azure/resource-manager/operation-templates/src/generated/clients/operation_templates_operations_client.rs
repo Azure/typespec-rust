@@ -8,9 +8,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
-    json, Result,
+    json, tracing, Result,
 };
 
+#[tracing::client]
 pub struct OperationTemplatesOperationsClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -28,6 +29,7 @@ impl OperationTemplatesOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OperationTemplatesOperationsClient.list")]
     pub fn list(
         &self,
         options: Option<OperationTemplatesOperationsClientListOptions<'_>>,

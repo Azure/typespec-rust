@@ -6,9 +6,10 @@
 use crate::generated::models::ServiceQuxBarClientNineOptions;
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ServiceQuxBarClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -24,6 +25,7 @@ impl ServiceQuxBarClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ServiceQuxBarClient.nine")]
     pub async fn nine(
         &self,
         options: Option<ServiceQuxBarClientNineOptions<'_>>,

@@ -10,9 +10,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct OptionalCollectionsModelClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl OptionalCollectionsModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalCollectionsModelClient.get_all")]
     pub async fn get_all(
         &self,
         options: Option<OptionalCollectionsModelClientGetAllOptions<'_>>,
@@ -47,6 +49,7 @@ impl OptionalCollectionsModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalCollectionsModelClient.get_default")]
     pub async fn get_default(
         &self,
         options: Option<OptionalCollectionsModelClientGetDefaultOptions<'_>>,
@@ -65,6 +68,7 @@ impl OptionalCollectionsModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalCollectionsModelClient.put_all")]
     pub async fn put_all(
         &self,
         body: RequestContent<CollectionsModelProperty>,
@@ -85,6 +89,7 @@ impl OptionalCollectionsModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalCollectionsModelClient.put_default")]
     pub async fn put_default(
         &self,
         body: RequestContent<CollectionsModelProperty>,

@@ -9,10 +9,11 @@ use crate::generated::models::{
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     time::OffsetDateTime,
-    Result,
+    tracing, Result,
 };
 
 /// Array of datetime values
+#[tracing::client]
 pub struct ArrayDatetimeValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl ArrayDatetimeValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ArrayDatetimeValueClient.get")]
     pub async fn get(
         &self,
         options: Option<ArrayDatetimeValueClientGetOptions<'_>>,
@@ -45,6 +47,7 @@ impl ArrayDatetimeValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ArrayDatetimeValueClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<OffsetDateTime>>,

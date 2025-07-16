@@ -10,9 +10,10 @@ use crate::generated::models::{
 use azure_core::{
     base64::{encode, encode_url_safe},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct BytesQueryClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl BytesQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BytesQueryClient.base64")]
     pub async fn base64(
         &self,
         value: &[u8],
@@ -46,6 +48,7 @@ impl BytesQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BytesQueryClient.base64_url")]
     pub async fn base64_url(
         &self,
         value: &[u8],
@@ -65,6 +68,7 @@ impl BytesQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BytesQueryClient.base64_url_array")]
     pub async fn base64_url_array(
         &self,
         value: &[&[u8]],
@@ -90,6 +94,7 @@ impl BytesQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("BytesQueryClient.default")]
     pub async fn default(
         &self,
         value: &[u8],

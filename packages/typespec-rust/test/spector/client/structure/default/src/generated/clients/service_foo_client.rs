@@ -6,9 +6,10 @@
 use crate::generated::models::{ServiceFooClientFourOptions, ServiceFooClientThreeOptions};
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ServiceFooClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -24,6 +25,7 @@ impl ServiceFooClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ServiceFooClient.four")]
     pub async fn four(
         &self,
         options: Option<ServiceFooClientFourOptions<'_>>,
@@ -40,6 +42,7 @@ impl ServiceFooClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ServiceFooClient.three")]
     pub async fn three(
         &self,
         options: Option<ServiceFooClientThreeOptions<'_>>,

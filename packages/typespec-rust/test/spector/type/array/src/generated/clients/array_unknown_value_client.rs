@@ -8,11 +8,12 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 use serde_json::Value;
 
 /// Array of unknown values
+#[tracing::client]
 pub struct ArrayUnknownValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl ArrayUnknownValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ArrayUnknownValueClient.get")]
     pub async fn get(
         &self,
         options: Option<ArrayUnknownValueClientGetOptions<'_>>,
@@ -45,6 +47,7 @@ impl ArrayUnknownValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ArrayUnknownValueClient.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<Value>>,

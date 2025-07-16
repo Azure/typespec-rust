@@ -9,9 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, Pipeline, RawResponse, Request, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ContentNegotiationSameBodyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl ContentNegotiationSameBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ContentNegotiationSameBodyClient.get_avatar_as_jpeg")]
     pub async fn get_avatar_as_jpeg(
         &self,
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsJpegOptions<'_>>,
@@ -44,6 +46,7 @@ impl ContentNegotiationSameBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ContentNegotiationSameBodyClient.get_avatar_as_png")]
     pub async fn get_avatar_as_png(
         &self,
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsPngOptions<'_>>,

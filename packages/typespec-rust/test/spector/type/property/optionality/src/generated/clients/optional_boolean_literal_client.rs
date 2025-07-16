@@ -10,9 +10,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct OptionalBooleanLiteralClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl OptionalBooleanLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalBooleanLiteralClient.get_all")]
     pub async fn get_all(
         &self,
         options: Option<OptionalBooleanLiteralClientGetAllOptions<'_>>,
@@ -47,6 +49,7 @@ impl OptionalBooleanLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalBooleanLiteralClient.get_default")]
     pub async fn get_default(
         &self,
         options: Option<OptionalBooleanLiteralClientGetDefaultOptions<'_>>,
@@ -65,6 +68,7 @@ impl OptionalBooleanLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalBooleanLiteralClient.put_all")]
     pub async fn put_all(
         &self,
         body: RequestContent<BooleanLiteralProperty>,
@@ -85,6 +89,7 @@ impl OptionalBooleanLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalBooleanLiteralClient.put_default")]
     pub async fn put_default(
         &self,
         body: RequestContent<BooleanLiteralProperty>,

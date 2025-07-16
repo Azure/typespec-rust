@@ -11,10 +11,11 @@ use azure_core::{
     http::{
         Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url, XmlFormat,
     },
-    Result,
+    tracing, Result,
 };
 
 /// Operations for the ModelWithEmptyArray type.
+#[tracing::client]
 pub struct XmlModelWithEmptyArrayValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl XmlModelWithEmptyArrayValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("XmlModelWithEmptyArrayValueClient.get")]
     pub async fn get(
         &self,
         options: Option<XmlModelWithEmptyArrayValueClientGetOptions<'_>>,
@@ -47,6 +49,7 @@ impl XmlModelWithEmptyArrayValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("XmlModelWithEmptyArrayValueClient.put")]
     pub async fn put(
         &self,
         input: RequestContent<ModelWithEmptyArray>,

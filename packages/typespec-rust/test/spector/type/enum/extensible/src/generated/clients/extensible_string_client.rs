@@ -10,9 +10,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ExtensibleStringClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl ExtensibleStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ExtensibleStringClient.get_known_value")]
     pub async fn get_known_value(
         &self,
         options: Option<ExtensibleStringClientGetKnownValueOptions<'_>>,
@@ -45,6 +47,7 @@ impl ExtensibleStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ExtensibleStringClient.get_unknown_value")]
     pub async fn get_unknown_value(
         &self,
         options: Option<ExtensibleStringClientGetUnknownValueOptions<'_>>,
@@ -62,6 +65,7 @@ impl ExtensibleStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ExtensibleStringClient.put_known_value")]
     pub async fn put_known_value(
         &self,
         body: RequestContent<DaysOfWeekExtensibleEnum>,
@@ -81,6 +85,7 @@ impl ExtensibleStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ExtensibleStringClient.put_unknown_value")]
     pub async fn put_unknown_value(
         &self,
         body: RequestContent<DaysOfWeekExtensibleEnum>,

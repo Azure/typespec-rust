@@ -18,10 +18,11 @@ use azure_core::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
     time::to_rfc7231,
-    Bytes, Result,
+    tracing, Bytes, Result,
 };
 use std::sync::Arc;
 
+#[tracing::client]
 pub struct AppendBlobClient {
     pub(crate) blob_name: String,
     pub(crate) container_name: String,
@@ -50,6 +51,7 @@ impl AppendBlobClient {
     /// * `container_name` - The name of the container.
     /// * `blob_name` - The name of the blob.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("blob_storage")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -97,6 +99,7 @@ impl AppendBlobClient {
     /// * `body` - The body of the request.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AppendBlobClient.append_block")]
     pub async fn append_block(
         &self,
         body: RequestContent<Bytes>,
@@ -189,6 +192,7 @@ impl AppendBlobClient {
     /// * `source_url` - Specify a URL to the copy source.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AppendBlobClient.append_block_from_url")]
     pub async fn append_block_from_url(
         &self,
         source_url: String,
@@ -299,6 +303,7 @@ impl AppendBlobClient {
     ///
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AppendBlobClient.create")]
     pub async fn create(
         &self,
         content_length: u64,
@@ -407,6 +412,7 @@ impl AppendBlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AppendBlobClient.seal")]
     pub async fn seal(
         &self,
         options: Option<AppendBlobClientSealOptions<'_>>,

@@ -10,9 +10,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct OptionalUnionIntLiteralClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl OptionalUnionIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalUnionIntLiteralClient.get_all")]
     pub async fn get_all(
         &self,
         options: Option<OptionalUnionIntLiteralClientGetAllOptions<'_>>,
@@ -47,6 +49,7 @@ impl OptionalUnionIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalUnionIntLiteralClient.get_default")]
     pub async fn get_default(
         &self,
         options: Option<OptionalUnionIntLiteralClientGetDefaultOptions<'_>>,
@@ -65,6 +68,7 @@ impl OptionalUnionIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalUnionIntLiteralClient.put_all")]
     pub async fn put_all(
         &self,
         body: RequestContent<UnionIntLiteralProperty>,
@@ -85,6 +89,7 @@ impl OptionalUnionIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("OptionalUnionIntLiteralClient.put_default")]
     pub async fn put_default(
         &self,
         body: RequestContent<UnionIntLiteralProperty>,

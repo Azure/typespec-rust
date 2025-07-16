@@ -9,9 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{Context, Method, Pager, PagerResult, Pipeline, RawResponse, Request, Response, Url},
-    json, Result,
+    json, tracing, Result,
 };
 
+#[tracing::client]
 pub struct ResourcesNestedClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -33,6 +34,7 @@ impl ResourcesNestedClient {
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `nexted_proxy_resource_name` - Name of the nested resource.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ResourcesNestedClient.get")]
     pub async fn get(
         &self,
         resource_group_name: &str,
@@ -66,6 +68,7 @@ impl ResourcesNestedClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("ResourcesNestedClient.list_by_top_level_tracked_resource")]
     pub fn list_by_top_level_tracked_resource(
         &self,
         resource_group_name: &str,
