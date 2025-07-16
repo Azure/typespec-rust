@@ -1005,13 +1005,13 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
 
   body += constructUrl(indent, use, method, paramGroups);
   body += constructRequest(indent, use, method, paramGroups, false);
+  body += `${indent.get()}let rsp = self.pipeline.send(&ctx, &mut request).await?;\n`;
+  body += errIfNotSuccessResponse(use, indent);
+  let rspInto = 'rsp.into()';
   if (method.returns.type.kind === 'rawResponse') {
-    body += `${indent.get()}self.pipeline.send(&ctx, &mut request).await`;
-  } else {
-    body += `${indent.get()}let rsp = self.pipeline.send(&ctx, &mut request).await?;\n`;
-    body += errIfNotSuccessResponse(use, indent);
-    body += `${indent.get()}Ok(rsp.into())\n`;
+    rspInto = 'rsp';
   }
+  body += `${indent.get()}Ok(${rspInto})\n`;
   return body;
 }
 

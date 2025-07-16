@@ -8,8 +8,9 @@ use crate::generated::models::{
     ContentNegotiationSameBodyClientGetAvatarAsPngOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, RawResponse, Request, Url},
-    Result,
+    Error, Result,
 };
 
 pub struct ContentNegotiationSameBodyClient {
@@ -37,7 +38,17 @@ impl ContentNegotiationSameBodyClient {
         url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/jpeg");
-        self.pipeline.send(&ctx, &mut request).await
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp)
     }
 
     ///
@@ -54,6 +65,16 @@ impl ContentNegotiationSameBodyClient {
         url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
-        self.pipeline.send(&ctx, &mut request).await
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp)
     }
 }
