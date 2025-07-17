@@ -35,8 +35,6 @@ cd packages/typespec-rust
 Install dependencies:
 
 ```bash
-npm install
-# or
 pnpm install
 ```
 
