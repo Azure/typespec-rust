@@ -9,6 +9,8 @@ This document serves as an index to task-specific instructions for GitHub Copilo
 - Use `pnpm install` to install dependencies
 - Use `pnpm build` to build every package
 - Use `pnpm format` under each subfolder of `packages` folder to format all files
+- Make sure that cspell is installed and configured in your editor for spell checking
+- Ensure that "cspell -c ./.vscode/cspell.json ./packages" succeeds before committing changes
 
 ## Files and Directories
 - Content in files should end with a newline character.

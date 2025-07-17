@@ -10,6 +10,10 @@ steps:
     displayName: Run Lint
     workingDirectory: $(TypeSpecRustPkgDir)
 
+  - script: cspell -c ./.vscode/cspell.json ./packages
+    displayName: Run Spell Check
+    workingDirectory: $(TypeSpecRustPkgDir)
+
   - script: pnpm run test-ci
     displayName: Run TypeScript Tests
     workingDirectory: $(TypeSpecRustPkgDir)
