@@ -10,8 +10,5 @@ This document serves as an index to task-specific instructions for GitHub Copilo
 - Use `pnpm build` to build every package
 - Use `pnpm format` under each subfolder of `packages` folder to format all files
 
-## Describing changes
-
-- Repo use `@chronus/chronus` for changelogs
-- Use `pnpm change add` to add a change description for the touched packages
-- Types of changes are described in `.chronus/config.yaml`
+## Files and Directories
+- Content in files should end with a newline character.
