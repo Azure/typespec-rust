@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as rust from '../src/codemodel/index.js';
-import * as codegen from '../src/codegen/clients.js';
 import { strictEqual } from 'assert';
 import { describe, it } from 'vitest';
 
