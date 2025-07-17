@@ -3,6 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+//cspell: ignore tcgcadapter
+
 import { CodeGenerator } from './codegen/codeGenerator.js';
 import { CodegenError } from './codegen/errors.js';
 import { Adapter, AdapterError } from './tcgcadapter/adapter.js';
@@ -25,7 +27,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
     const adapter = await Adapter.create(context);
     const crate = adapter.tcgcToCrate();
 
-    await mkdir(`${context.emitterOutputDir}/src`, {recursive: true});
+    await mkdir(`${context.emitterOutputDir}/src`, { recursive: true });
 
     const codegen = new CodeGenerator(crate);
 
@@ -128,7 +130,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
 async function writeToGeneratedDir(outDir: string, filename: string, content: string): Promise<void> {
   const fullFilePath = path.join(outDir, 'src', 'generated', filename);
   const fullDirPath = fullFilePath.substring(0, fullFilePath.lastIndexOf(path.sep));
-  await mkdir(fullDirPath, {recursive: true});
+  await mkdir(fullDirPath, { recursive: true });
   await writeFile(fullFilePath, content);
 }
 

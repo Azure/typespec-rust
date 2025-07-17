@@ -3,6 +3,8 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+// cspell: ignore conv
+
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
 import { CodegenError } from './errors.js';
@@ -33,7 +35,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
   }
 
   // returns true if the client options type needs to explicitly implement Default
-  const clientOptionsImplDefault = function(constructable: rust.ClientConstruction): boolean {
+  const clientOptionsImplDefault = function (constructable: rust.ClientConstruction): boolean {
     // only implement Default when there's more than one field (i.e. more than just client_options)
     // and the field(s) contain a client default value.
     return constructable.options.type.fields.length > 1 && values(constructable.options.type.fields)
@@ -264,7 +266,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     content += body;
 
     const clientMod = codegen.deconstruct(client.name).join('_');
-    clientModules.push({name: clientMod, content: content});
+    clientModules.push({ name: clientMod, content: content });
   }
 
   return {
@@ -347,7 +349,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
  * @returns the parameters doc comments or undefined
  */
 function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Constructor | rust.MethodType): string | undefined {
-  const formatParamBullet = function(paramName: string): string {
+  const formatParamBullet = function (paramName: string): string {
     return `* \`${paramName}\` - `;
   };
 
@@ -372,9 +374,9 @@ function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Co
   }
 
   if (callable.kind === 'constructor') {
-    paramsContent += helpers.formatDocComment({summary: 'Optional configuration for the client.'}, false, formatParamBullet('options'), indent);
+    paramsContent += helpers.formatDocComment({ summary: 'Optional configuration for the client.' }, false, formatParamBullet('options'), indent);
   } else if (callable.kind !== 'clientaccessor') {
-    paramsContent += helpers.formatDocComment({summary: 'Optional parameters for the request.'}, false, formatParamBullet('options'), indent);
+    paramsContent += helpers.formatDocComment({ summary: 'Optional parameters for the request.' }, false, formatParamBullet('options'), indent);
   }
 
   if (paramsContent.length === 0) {
@@ -520,7 +522,7 @@ function getEndpointFieldName(client: rust.Client): string {
   // a Url. the name will be uniform across clients
   let endpointFieldName: string | undefined;
   for (const field of client.fields) {
-    if (field.type.kind === 'Url' ) {
+    if (field.type.kind === 'Url') {
       if (endpointFieldName) {
         throw new CodegenError('InternalError', `found multiple URL fields in client ${client.name} which is unexpected`);
       }
@@ -704,7 +706,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
   }
 
   /** returns & if the param needs to be borrowed (which is the majority of cases), else the empty string */
-  const borrowOrNot = function(param: rust.Parameter): string {
+  const borrowOrNot = function (param: rust.Parameter): string {
     if (param.type.kind !== 'ref' || param.type.type.kind === 'encodedBytes' || param.type.type.kind === 'slice') {
       return '&';
     }
@@ -1026,13 +1028,13 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     case 'continuationToken': {
       const reqTokenParam = method.strategy.requestToken.name;
       body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: Option<String>| {\n`;
-      body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ': ''}url = first_url.clone();\n`;
+      body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ' : ''}url = first_url.clone();\n`;
       if (method.strategy.requestToken.kind === 'queryScalar') {
         // if the url already contains the token query param,
         // e.g. we started on some page, then we need to remove
         // it before appending the token for the next page.
         const reqTokenValue = method.strategy.requestToken.key;
-        body +=`${indent.get()}${helpers.buildIfBlock(indent, {
+        body += `${indent.get()}${helpers.buildIfBlock(indent, {
           condition: `let Some(${reqTokenParam}) = ${reqTokenParam}`,
           body: (indent) => {
             let body = indent.get() + helpers.buildIfBlock(indent, {
@@ -1089,7 +1091,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     rspType = helpers.getTypeDeclaration(method.returns.type.type);
     rspInto = '.into()';
   } else {
-    // continuatioin token comes from the response body.
+    // continuation token comes from the response body.
     // we'll deconstruct the raw response and parse it later.
     use.add('azure_core', 'http::RawResponse');
     rspType = 'RawResponse';
@@ -1214,7 +1216,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
     paramName = 'self.' + paramName;
   }
 
-  const encodeBytes = function(type: rust.EncodedBytes, param?: string): string {
+  const encodeBytes = function (type: rust.EncodedBytes, param?: string): string {
     const encoding = helpers.getBytesEncodingMethod(type.encoding, 'encode', use);
     if (param) {
       return `${encoding}(${param})`;
@@ -1222,7 +1224,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
     return encoding;
   };
 
-  const encodeDateTime = function(type: rust.OffsetDateTime, param: string): string {
+  const encodeDateTime = function (type: rust.OffsetDateTime, param: string): string {
     const encoding = helpers.getDateTimeEncodingMethod(type.encoding, 'to', use);
     switch (type.encoding) {
       case 'rfc3339':
@@ -1304,7 +1306,7 @@ function getCollectionDelimiter(format: rust.CollectionFormat): string {
   }
 }
 
-/** returns true if the type isn't copyable thus nees to be cloned */
+/** returns true if the type isn't copyable thus needs to be cloned */
 function nonCopyableType(type: rust.Type): boolean {
   const unwrappedType = shared.unwrapOption(type);
   switch (unwrappedType.kind) {

@@ -43,7 +43,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
   const traits = new Array<rust.ResponseHeadersTrait>();
 
   /** adds response headers to headers, avoiding duplicates */
-  const addHeaders = function(...responseHeaders: Array<rust.ResponseHeader>): void {
+  const addHeaders = function (...responseHeaders: Array<rust.ResponseHeader>): void {
     for (const responseHeader of responseHeaders) {
       if (!headers.find(v => v.header === responseHeader.header)) {
         headers.push(responseHeader);
@@ -86,7 +86,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
   traits.sort((a: rust.ResponseHeadersTrait, b: rust.ResponseHeadersTrait) => helpers.sortAscending(a.name, b.name));
 
   // this specializes literals to return the value's underlying type
-  const getTypeDeclaration = function(type: rust.Type): string {
+  const getTypeDeclaration = function (type: rust.Type): string {
     if (type.kind === 'literal') {
       switch (typeof type.value) {
         case 'boolean':
@@ -103,7 +103,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
     }
   };
 
-  const getHeaderMethodName = function(header: rust.ResponseHeader): string {
+  const getHeaderMethodName = function (header: rust.ResponseHeader): string {
     let resultType: string;
     switch (header.kind) {
       case 'responseHeaderHashMap':

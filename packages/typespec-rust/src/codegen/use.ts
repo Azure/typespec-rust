@@ -16,7 +16,7 @@ export class Use {
    * instantiates a new instance of the Use type
    * 
    * @param scope indicates a scope in which use statements are constructed.
-   * this is only applicable when construcing the path to generated types.
+   * this is only applicable when constructing the path to generated types.
    *      clients - we're in generated/clients
    *       models - we're in generated/models/models.rs
    *  modelsOther - we're in generated/models but not models.rs
@@ -155,8 +155,8 @@ export class Use {
 
   /**
    * emits Rust use statements for the contents of this Use object
-   * 
-   * @param indent optional indentation helper currently in scope, else defauls to no indentation
+   *
+   * @param indent optional indentation helper currently in scope, else defaults to no indentation
    * @returns returns Rust formatted use statements
    */
   text(indent?: helpers.indentation): string {
@@ -172,7 +172,7 @@ export class Use {
     let content = '';
 
     /** recursively populates content with the guts of the use statement */
-    const recursiveText = function(node: useNode, siblings: boolean) {
+    const recursiveText = function (node: useNode, siblings: boolean) {
       content += node.name;
       if (node.children.length === 1) {
         content += '::';
