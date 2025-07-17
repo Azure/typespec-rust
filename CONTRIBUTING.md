@@ -41,8 +41,6 @@ pnpm install
 Build the TypeScript emitter:
 
 ```bash
-npm run build
-# or  
 pnpm build
 ```
 
@@ -54,8 +52,6 @@ The project includes extensive test suites generated from TypeSpec specification
 
 ```bash
 cd packages/typespec-rust
-npm run tspcompile
-# or
 pnpm run tspcompile
 ```
 
@@ -64,14 +60,12 @@ pnpm run tspcompile
 To regenerate only specific test crates (useful during development):
 
 ```bash
-npm run tspcompile -- --filter=<pattern>
-# or
 pnpm run tspcompile --filter=<pattern>
 ```
 
 For example, to regenerate only tests containing "oauth":
 ```bash
-npm run tspcompile -- --filter=oauth
+pnpm run tspcompile --filter=oauth
 ```
 
 ### What Test Regeneration Does
@@ -115,15 +109,11 @@ Run the emitter's TypeScript unit tests:
 
 ```bash
 cd packages/typespec-rust
-npm run test
-# or
 pnpm test
 ```
 
 For CI with coverage:
 ```bash
-npm run test-ci
-# or  
 pnpm run test-ci
 ```
 
@@ -146,8 +136,6 @@ Start the spector server:
 
 ```bash
 cd packages/typespec-rust
-npm run spector -- --start
-# or
 pnpm spector --start
 ```
 
@@ -162,8 +150,6 @@ Stop the spector server when done:
 
 ```bash
 cd packages/typespec-rust  
-npm run spector -- --stop
-# or
 pnpm spector --stop
 ```
 
@@ -192,7 +178,7 @@ cargo test -- --nocapture
 ```
 
 **Debugging Test Failures**: If tests fail, check:
-1. That the spector server is running (`npm run spector -- --start`)
+1. That the spector server is running (`pnpm spector --start`)
 2. That the generated code compiled successfully (`cargo build`)
 3. Review the test output for HTTP errors or assertion failures
 4. Check if the TypeSpec specification changed and regeneration is needed
@@ -203,8 +189,6 @@ cargo test -- --nocapture
 
 ```bash
 cd packages/typespec-rust
-npx eslint .
-# or
 pnpm eslint
 ```
 
@@ -234,17 +218,17 @@ cargo fmt --all
 2. **Build the emitter**:
    ```bash
    cd packages/typespec-rust
-   npm run build
+   pnpm build
    ```
 
    For continuous development, use watch mode:
    ```bash
-   npm run watch
+   pnpm watch
    ```
 
 3. **Regenerate test crates** to test your changes:
    ```bash
-   npm run tspcompile
+   pnpm run tspcompile
    ```
 
 4. **Build generated Rust code**:
@@ -257,21 +241,21 @@ cargo fmt --all
    ```bash
    # TypeScript tests
    cd packages/typespec-rust
-   npm run test
+   pnpm test
    
    # Rust integration tests  
-   npm run spector -- --start
+   pnpm spector --start
    cd test/spector
    cargo test
    cd ../../
-   npm run spector -- --stop
+   pnpm spector --stop
    ```
 
 6. **Run linting**:
    ```bash
    # TypeScript linting
    cd packages/typespec-rust
-   npx eslint .
+   pnpm eslint
    
    # Rust linting
    cd test
