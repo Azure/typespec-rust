@@ -1487,7 +1487,33 @@ export class Adapter {
         // the most likely explanation for this is lack of reference equality
         throw new AdapterError('InternalError', `missing next link field name ${nextLinkSegment.name} for operation ${method.name}`, method.__raw?.node);
       }
-      return new rust.PageableStrategyNextLink(nextLinkField);
+
+      // Handle reinjected parameters if they exist
+      let reinjectedParameters: Array<rust.ModelField> | undefined;
+      if (method.pagingMetadata.nextLinkReInjectedParametersSegments && method.pagingMetadata.nextLinkReInjectedParametersSegments.length > 0) {
+        reinjectedParameters = new Array<rust.ModelField>();
+        
+        for (const reinjectedSegments of method.pagingMetadata.nextLinkReInjectedParametersSegments) {
+          if (reinjectedSegments.length > 1) {
+            // For now, we only support simple parameter reinjection (no nested segments)
+            throw new AdapterError('UnsupportedTsp', 'nested reinjected parameter segments NYI', method.__raw?.node);
+          }
+          
+          const reinjectedSegment = reinjectedSegments[0];
+          if (reinjectedSegment.kind !== 'property') {
+            throw new AdapterError('InternalError', `unexpected kind ${reinjectedSegment.kind} for reinjected parameter segment in operation ${method.name}`, method.__raw?.node);
+          }
+          
+          const reinjectedField = this.fieldsMap.get(reinjectedSegment);
+          if (!reinjectedField) {
+            throw new AdapterError('InternalError', `missing reinjected parameter field name ${reinjectedSegment.name} for operation ${method.name}`, method.__raw?.node);
+          }
+          
+          reinjectedParameters.push(reinjectedField);
+        }
+      }
+
+      return new rust.PageableStrategyNextLink(nextLinkField, reinjectedParameters);
     } else if (method.pagingMetadata.continuationTokenParameterSegments && method.pagingMetadata.continuationTokenResponseSegments) {
       if (method.pagingMetadata.continuationTokenParameterSegments.length > 1) {
         throw new AdapterError('UnsupportedTsp', `nested continuationTokenParameterSegments NYI`, method.__raw?.node);

@@ -164,6 +164,9 @@ export interface PageableStrategyNextLink {
 
   /** the field in the response that contains the next link URL */
   nextLink: types.ModelField;
+
+  /** parameters that need to be reinjected in subsequent page requests */
+  reinjectedParameters?: Array<types.ModelField>;
 }
 
 /** PageableStrategyKind contains different strategies for fetching subsequent pages */
@@ -677,9 +680,10 @@ export class PageableStrategyContinuationToken implements PageableStrategyContin
 }
 
 export class PageableStrategyNextLink implements PageableStrategyNextLink {
-  constructor(nextLink: types.ModelField) {
+  constructor(nextLink: types.ModelField, reinjectedParameters?: Array<types.ModelField>) {
     this.kind = 'nextLink';
     this.nextLink = nextLink;
+    this.reinjectedParameters = reinjectedParameters;
   }
 }
 

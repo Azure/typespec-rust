@@ -74,4 +74,29 @@ describe('typespec-rust: tcgcadapter', () => {
       strictEqual(helpers.formatDocs('https://contoso.com/some-link-one https://contoso.com/some-link-two https://contoso.com/some-link-three'), '<https://contoso.com/some-link-one> <https://contoso.com/some-link-two> <https://contoso.com/some-link-three>');
     });
   });
+
+  describe('pageable reinjection', () => {
+    it('PageableStrategyNextLink supports reinjected parameters', () => {
+      const nextLinkField = new rust.ModelField('next_link', 'next_link', 'pub', new rust.StringType(), false);
+      const param1Field = new rust.ModelField('filter', 'filter', 'pub', new rust.StringType(), true);
+      const param2Field = new rust.ModelField('sort', 'sort', 'pub', new rust.StringType(), true);
+      const reinjectedParameters = [param1Field, param2Field];
+
+      const strategy = new rust.PageableStrategyNextLink(nextLinkField, reinjectedParameters);
+
+      strictEqual(strategy.kind, 'nextLink');
+      strictEqual(strategy.nextLink, nextLinkField);
+      deepEqual(strategy.reinjectedParameters, reinjectedParameters);
+    });
+
+    it('PageableStrategyNextLink works without reinjected parameters', () => {
+      const nextLinkField = new rust.ModelField('next_link', 'next_link', 'pub', new rust.StringType(), false);
+
+      const strategy = new rust.PageableStrategyNextLink(nextLinkField);
+
+      strictEqual(strategy.kind, 'nextLink');
+      strictEqual(strategy.nextLink, nextLinkField);
+      strictEqual(strategy.reinjectedParameters, undefined);
+    });
+  });
 });

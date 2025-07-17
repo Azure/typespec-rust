@@ -1069,7 +1069,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
             setApiVerBody += `${indent.get()}${nextLinkName}\n`;
             return setApiVerBody;
           }
-          return `${indent.get()} ${nextLinkName}\n`;
+          return `${indent.get()}${nextLinkName}\n`;
         }
       }, {
         pattern: 'None',
@@ -1135,7 +1135,29 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     case 'nextLink':
       nextPageValue = method.strategy.nextLink.name;
       srcNextPage = `res.${nextPageValue}`;
-      continuation = `${nextPageValue}.parse()?`;
+      
+      // Build continuation with reinjected parameters if they exist
+      if (method.strategy.reinjectedParameters && method.strategy.reinjectedParameters.length > 0) {
+        const reinjectedParams = method.strategy.reinjectedParameters.map(param => {
+          const paramKey = param.serde || param.name;
+          return `("${paramKey}", res.${param.name}.as_ref().map(|v| v.to_string()).unwrap_or_default())`;
+        }).join(', ');
+        
+        continuation = `{
+          let mut url = ${nextPageValue}.parse()?;
+          {
+            let mut query_pairs = url.query_pairs_mut();
+            for (key, value) in [${reinjectedParams}] {
+              if !value.is_empty() {
+                query_pairs.append_pair(key, &value);
+              }
+            }
+          }
+          url
+        }`;
+      } else {
+        continuation = `${nextPageValue}.parse()?`;
+      }
       break;
   }
 
