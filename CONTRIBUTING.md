@@ -1,3 +1,5 @@
+
+<!-- cspell: ignore nocapture RUSTFLAGS Dwarnings -->
 # Contributing Guide
 
 This guide explains how to contribute to the TypeSpec Rust emitter project, including how to build, test, and develop the codebase.
@@ -64,6 +66,7 @@ pnpm run tspcompile --filter=<pattern>
 ```
 
 For example, to regenerate only tests containing "oauth":
+
 ```bash
 pnpm run tspcompile --filter=oauth
 ```
@@ -85,6 +88,7 @@ The `tspcompile` script:
 3. Updates the workspace `Cargo.toml` with all generated crates
 
 Each generated crate includes:
+
 - `Cargo.toml` - Rust package configuration
 - `src/lib.rs` - Entry point (usually not regenerated to preserve customizations)
 - `src/generated/` - Generated Rust client code (fully regenerated)
@@ -113,6 +117,7 @@ pnpm test
 ```
 
 For CI with coverage:
+
 ```bash
 pnpm run test-ci
 ```
@@ -178,6 +183,7 @@ cargo test -- --nocapture
 ```
 
 **Debugging Test Failures**: If tests fail, check:
+
 1. That the spector server is running (`pnpm spector --start`)
 2. That the generated code compiled successfully (`cargo build`)
 3. Review the test output for HTTP errors or assertion failures
@@ -200,6 +206,7 @@ cargo clippy --workspace --all-features --all-targets --keep-going --no-deps
 ```
 
 For strict linting (CI mode):
+
 ```bash
 RUSTFLAGS='-Dwarnings' cargo clippy --workspace --all-features --all-targets --keep-going --no-deps
 ```
@@ -216,28 +223,33 @@ cargo fmt --all
 1. **Make changes** to the TypeScript emitter code in `packages/typespec-rust/src/`
 
 2. **Build the emitter**:
+
    ```bash
    cd packages/typespec-rust
    pnpm build
    ```
 
    For continuous development, use watch mode:
+
    ```bash
    pnpm watch
    ```
 
 3. **Regenerate test crates** to test your changes:
+
    ```bash
    pnpm run tspcompile
    ```
 
 4. **Build generated Rust code**:
+
    ```bash
    cd test
    cargo build
    ```
 
 5. **Run tests**:
+
    ```bash
    # TypeScript tests
    cd packages/typespec-rust
@@ -252,6 +264,7 @@ cargo fmt --all
    ```
 
 6. **Run linting**:
+
    ```bash
    # TypeScript linting
    cd packages/typespec-rust
@@ -269,6 +282,7 @@ When making changes to the emitter, follow these versioning guidelines:
 ### Patch Version Bump (0.18.X)
 
 Increment the patch version for:
+
 - Bug fixes that don't change the public API
 - Internal refactoring or improvements
 - Documentation updates
@@ -278,6 +292,7 @@ Increment the patch version for:
 ### Minor Version Bump (0.X.0)
 
 Increment the minor version for:
+
 - New features or capabilities in the emitter
 - Support for new TypeSpec constructs or decorators
 - Breaking changes to generated Rust code structure
@@ -287,6 +302,7 @@ Increment the minor version for:
 ### Major Version Bump (X.0.0)
 
 Increment the major version for:
+
 - Breaking changes to the emitter's public API
 - Changes that require TypeSpec specification updates
 - Fundamental changes to the emitter architecture
