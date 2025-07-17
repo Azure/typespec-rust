@@ -27,6 +27,9 @@ describe('typespec-rust: tcgcadapter', () => {
       strictEqual(helpers.fixUpEnumValueNameWorker('3.14', 'float'), 'FloatValue3Point14');
       strictEqual(helpers.fixUpEnumValueNameWorker('42', 'int32'), 'Int32Value42');
       strictEqual(helpers.fixUpEnumValueNameWorker('3.14', 'float64'), 'Float64Value3Point14');
+      // Test cases for consistent PascalCase (issue #480)
+      strictEqual(helpers.fixUpEnumValueNameWorker('A128CBC', 'string'), 'A128Cbc');
+      strictEqual(helpers.fixUpEnumValueNameWorker('A128CBCPAD', 'string'), 'A128Cbcpad');
     });
 
     it('sortClientParameters', () => {

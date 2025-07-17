@@ -82,6 +82,22 @@ export function fixUpEnumValueNameWorker(name: string, kind: tcgc.SdkBuiltInKind
         name += '_';
       }
     }
+  } else {
+    // For strings without explicit separators, detect word boundaries and apply PascalCase
+    // Split on transitions: number-to-letter, letter-to-number, or lowercase-to-uppercase
+    const wordBoundaryParts = name.split(/(?<=\d)(?=[A-Z])|(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/);
+    if (wordBoundaryParts.length > 1) {
+      name = '';
+      for (let i = 0; i < wordBoundaryParts.length; ++i) {
+        const part = wordBoundaryParts[i];
+        if (part.match(/^[a-zA-Z]{2,}$/)) {
+          wordBoundaryParts[i] = codegen.pascalCase(part);
+        } else {
+          wordBoundaryParts[i] = codegen.capitalize(part);
+        }
+        name += wordBoundaryParts[i];
+      }
+    }
   }
 
   return name;
