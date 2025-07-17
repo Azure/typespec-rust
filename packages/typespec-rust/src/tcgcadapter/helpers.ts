@@ -84,8 +84,8 @@ export function fixUpEnumValueNameWorker(name: string, kind: tcgc.SdkBuiltInKind
     }
   } else {
     // For strings without explicit separators, detect word boundaries and apply PascalCase
-    // Split on transitions: number-to-letter, letter-to-number, or lowercase-to-uppercase
-    const wordBoundaryParts = name.split(/(?<=\d)(?=[A-Z])|(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/);
+    // Split on transitions: number-to-letter, letter-to-number, uppercase-to-number, or lowercase-to-uppercase
+    const wordBoundaryParts = name.split(/(?<=\d)(?=[A-Za-z])|(?<=[a-zA-Z])(?=\d)|(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/);
     if (wordBoundaryParts.length > 1) {
       name = '';
       for (let i = 0; i < wordBoundaryParts.length; ++i) {

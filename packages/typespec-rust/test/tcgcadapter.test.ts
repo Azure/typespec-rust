@@ -30,6 +30,32 @@ describe('typespec-rust: tcgcadapter', () => {
       // Test cases for consistent PascalCase (issue #480)
       strictEqual(helpers.fixUpEnumValueNameWorker('A128CBC', 'string'), 'A128Cbc');
       strictEqual(helpers.fixUpEnumValueNameWorker('A128CBCPAD', 'string'), 'A128Cbcpad');
+      
+      // More thorough test cases for word boundary detection
+      strictEqual(helpers.fixUpEnumValueNameWorker('aaBBcc', 'string'), 'AaBBcc');
+      strictEqual(helpers.fixUpEnumValueNameWorker('aa12BBB', 'string'), 'Aa12Bbb');
+      strictEqual(helpers.fixUpEnumValueNameWorker('XMLHttpRequest', 'string'), 'XmlHttpRequest');
+      strictEqual(helpers.fixUpEnumValueNameWorker('HTTPSConnection', 'string'), 'HttpsConnection');
+      strictEqual(helpers.fixUpEnumValueNameWorker('IOError', 'string'), 'IoError');
+      strictEqual(helpers.fixUpEnumValueNameWorker('URLParser', 'string'), 'UrlParser');
+      strictEqual(helpers.fixUpEnumValueNameWorker('HTMLElement', 'string'), 'HtmlElement');
+      strictEqual(helpers.fixUpEnumValueNameWorker('myVarName', 'string'), 'MyVarName');
+      strictEqual(helpers.fixUpEnumValueNameWorker('someHTTPConnection', 'string'), 'SomeHttpConnection');
+      strictEqual(helpers.fixUpEnumValueNameWorker('value123ABC', 'string'), 'Value123Abc');
+      strictEqual(helpers.fixUpEnumValueNameWorker('ABC123DEF', 'string'), 'Abc123Def');
+      strictEqual(helpers.fixUpEnumValueNameWorker('testABC123DEF456', 'string'), 'TestAbc123Def456');
+      
+      // Test cases with separators (should use existing logic)
+      strictEqual(helpers.fixUpEnumValueNameWorker('a-1-bb-BB', 'string'), 'A1BbBb');
+      strictEqual(helpers.fixUpEnumValueNameWorker('test_123_ABC', 'string'), 'Test123Abc');
+      strictEqual(helpers.fixUpEnumValueNameWorker('my-var-NAME', 'string'), 'MyVarName');
+      
+      // Edge cases
+      strictEqual(helpers.fixUpEnumValueNameWorker('ABCD', 'string'), 'ABCD'); // No clear boundaries
+      strictEqual(helpers.fixUpEnumValueNameWorker('abcd', 'string'), 'Abcd'); // All lowercase
+      strictEqual(helpers.fixUpEnumValueNameWorker('A', 'string'), 'A'); // Single character
+      strictEqual(helpers.fixUpEnumValueNameWorker('123', 'string'), 'StringValue123'); // Numbers only
+      strictEqual(helpers.fixUpEnumValueNameWorker('a1b2c3', 'string'), 'A1B2C3'); // Alternating letters/numbers
     });
 
     it('sortClientParameters', () => {
