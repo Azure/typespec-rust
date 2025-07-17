@@ -103,6 +103,12 @@ The `tspcompile` script:
 
 3. Updates the workspace `Cargo.toml` with all generated crates
 
+Each generated crate includes:
+- `Cargo.toml` - Rust package configuration
+- `src/lib.rs` - Entry point (usually not regenerated to preserve customizations)
+- `src/generated/` - Generated Rust client code (fully regenerated)
+- `tests/` - Integration test files that use the generated client
+
 ## Executing Test Suites
 
 ### TypeScript Unit Tests
@@ -136,7 +142,9 @@ cargo build
 
 #### Running Tests with Spector Server
 
-Most integration tests require the spector test server. Start it before running tests:
+Most integration tests require the spector test server running on `localhost:3000`. The integration tests make HTTP calls to this server to validate the generated Rust client code.
+
+Start the spector server:
 
 ```bash
 cd packages/typespec-rust
@@ -161,6 +169,8 @@ npm run spector -- --stop
 pnpm spector --stop
 ```
 
+**Note**: Integration tests connect to the test server and make real HTTP requests to validate that the generated client code works correctly with the expected API responses.
+
 #### Running Individual Test Crates
 
 To test a specific generated crate:
@@ -169,6 +179,25 @@ To test a specific generated crate:
 cd packages/typespec-rust/test/spector/<test-name>
 cargo test
 ```
+
+To run a specific test within a crate:
+
+```bash
+cd packages/typespec-rust/test/spector/<test-name>
+cargo test <test-function-name>
+```
+
+To see detailed test output:
+
+```bash
+cargo test -- --nocapture
+```
+
+**Debugging Test Failures**: If tests fail, check:
+1. That the spector server is running (`npm run spector -- --start`)
+2. That the generated code compiled successfully (`cargo build`)
+3. Review the test output for HTTP errors or assertion failures
+4. Check if the TypeSpec specification changed and regeneration is needed
 
 ### Code Quality Checks
 
@@ -208,6 +237,11 @@ cargo fmt --all
    ```bash
    cd packages/typespec-rust
    npm run build
+   ```
+
+   For continuous development, use watch mode:
+   ```bash
+   npm run watch
    ```
 
 3. **Regenerate test crates** to test your changes:
