@@ -48,17 +48,6 @@ pnpm build
 
 This compiles the TypeScript source code to JavaScript in the `dist/` directory.
 
-### Building Generated Rust Code
-
-After generating Rust test crates (see [Regenerating Test Suites](#regenerating-test-suites)), you can build the Rust code:
-
-```bash
-cd packages/typespec-rust/test
-cargo build
-```
-
-This builds all generated Rust crates in the workspace.
-
 ## Regenerating Test Suites
 
 The project includes extensive test suites generated from TypeSpec specifications. When you modify the emitter or need to update tests, regenerate them:
@@ -106,6 +95,17 @@ Each generated crate includes:
 - `src/lib.rs` - Entry point (usually not regenerated to preserve customizations)
 - `src/generated/` - Generated Rust client code (fully regenerated)
 - `tests/` - Integration test files that use the generated client
+
+### Building Generated Rust Code
+
+After generating Rust test crates (as described above), you can build the Rust code:
+
+```bash
+cd packages/typespec-rust/test
+cargo build
+```
+
+This builds all generated Rust crates in the workspace.
 
 ## Executing Test Suites
 
