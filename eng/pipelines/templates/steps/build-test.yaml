@@ -11,8 +11,6 @@ steps:
     workingDirectory: $(TypeSpecRustPkgDir)
 
   - script: |
-      pwd
-      ls
       cspell -c .vscode/cspell.json .
     displayName: Run Spell Check
     workingDirectory: $(System.DefaultWorkingDirectory)
