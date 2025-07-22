@@ -199,24 +199,24 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
       // for the callee to indent right away.
       let methodBody: (indentation: helpers.indentation) => string;
       use.addForType(method.returns);
-      let is_public_api = false;
-      let is_subclient_new = false;
+      let isPublicApi = false;
+      let isSubclientNew = false;
       switch (method.kind) {
         case 'async':
-          is_public_api = true;
+          isPublicApi = true;
           async = 'async ';
           methodBody = (indentation: helpers.indentation): string => {
             return getAsyncMethodBody(indentation, use, client, method);
           };
           break;
         case 'pageable':
-          is_public_api = true;
+          isPublicApi = true;
           methodBody = (indentation: helpers.indentation): string => {
             return getPageableMethodBody(indentation, use, client, method);
           };
           break;
         case 'clientaccessor':
-          is_subclient_new = true;
+          isSubclientNew = true;
           methodBody = (indentation: helpers.indentation): string => {
             return getClientAccessorMethodBody(indentation, client, method);
           };
@@ -227,9 +227,9 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
       if (paramsDocs) {
         body += paramsDocs;
       }
-      if (is_public_api) {
+      if (isPublicApi) {
         body += `${indent.get()}#[tracing::function("${client.name}.${method.name}")]\n`;
-      } else if (is_subclient_new) {
+      } else if (isSubclientNew) {
         body += `${indent.get()}#[tracing::subclient]\n`;
       }
       body += `${indent.get()}${helpers.emitVisibility(method.visibility)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
