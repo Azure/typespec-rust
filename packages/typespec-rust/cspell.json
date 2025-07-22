@@ -1,0 +1,36 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "codegen",
+    "tcgc",
+    "codemodel",
+    "tcgcadapter",
+    "CBCPAD",
+    "Cbcpad",
+    "linq",
+    "serde",
+    "pageable",
+    "Pageable",
+    "clientaccessor",
+    "impls",
+    "Impls",
+    "enumvalue",
+    "safeint",
+    "clippy",
+    "subclients",
+    "lropaging",
+    "Entra",
+    "responseheader",
+    "typeguard",
+    "ifblock",
+    "cargotoml",
+    "uninstantiable",
+    "Conv"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    "dist/**",
+    "*.log"
+  ]
+}

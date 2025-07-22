@@ -25,7 +25,8 @@
     "test-ci": "vitest run --coverage --reporter=junit --reporter=default --no-file-parallelism",
     "tspcompile": "node .scripts/tspcompile.js",
     "watch": "tsc -p . --watch",
-    "workspace-members": "node .scripts/workspace-members.js"
+    "workspace-members": "node .scripts/workspace-members.js",
+    "cspell": "cspell --config cspell.json \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "files": [
     "dist/src/**",
