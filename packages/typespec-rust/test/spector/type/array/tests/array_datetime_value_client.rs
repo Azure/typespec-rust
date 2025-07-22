@@ -2,8 +2,8 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use spector_array::ArrayClient;
 use azure_core::time::OffsetDateTime;
+use spector_array::ArrayClient;
 use time::format_description::well_known::Rfc3339;
 
 // This test is ignored because it does not use the syntax to verify the value received.
