@@ -11,7 +11,7 @@ This document serves as an index to task-specific instructions for GitHub Copilo
 - Use `pnpm format` under each subfolder of `packages` folder to format all files.
 
 ## Coding Standards
-- Validate all changes are linter clean by running `pnpm eslint`.\
+- Validate all changes are linter clean by running `pnpm eslint`.
 - Make sure that cspell is installed and configured in your editor for spell checking.
 - Ensure that "cspell -c ./.vscode/cspell.json ./packages" succeeds before committing changes.
 
