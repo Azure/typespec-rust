@@ -32,9 +32,9 @@ async fn get() {
 
 #[tokio::test]
 async fn put() {
-    let mut body = std::collections::HashMap::<String, i64>::new();
-    body.insert("k1".to_string(), 9007199254740991);
-    body.insert("k2".to_string(), -9007199254740991);
+    let mut body = std::collections::HashMap::new();
+    body.insert("k1".to_string(), 9007199254740991i64);
+    body.insert("k2".to_string(), -9007199254740991i64);
 
     let client = DictionaryClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client

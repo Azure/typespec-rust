@@ -30,7 +30,7 @@ async fn get() {
 
 #[tokio::test]
 async fn put() {
-    let mut body = std::collections::HashMap::<String, String>::new();
+    let mut body = std::collections::HashMap::new();
     body.insert("k1".to_string(), "P123DT22H14M12.011S".to_string());
 
     let client = DictionaryClient::with_no_credential("http://localhost:3000", None).unwrap();

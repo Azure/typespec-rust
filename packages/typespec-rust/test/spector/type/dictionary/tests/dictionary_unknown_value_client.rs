@@ -35,7 +35,7 @@ async fn get() {
 
 #[tokio::test]
 async fn put() {
-    let mut body = std::collections::HashMap::<String, Value>::new();
+    let mut body = std::collections::HashMap::new();
     body.insert("k1".to_string(), Value::Number(1.into()));
     body.insert("k2".to_string(), Value::String("hello".to_string()));
     body.insert("k3".to_string(), Value::Null);

@@ -32,7 +32,7 @@ async fn get() {
 
 #[tokio::test]
 async fn put() {
-    let mut body = std::collections::HashMap::<String, i32>::new();
+    let mut body = std::collections::HashMap::new();
     body.insert("k1".to_string(), 1);
     body.insert("k2".to_string(), 2);
 

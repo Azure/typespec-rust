@@ -23,7 +23,7 @@ async fn get() {
 
 #[tokio::test]
 async fn put() {
-    let mut body = std::collections::HashMap::<String, OffsetDateTime>::new();
+    let mut body = std::collections::HashMap::new();
     body.insert(
         "k1".to_string(),
         OffsetDateTime::parse("2022-08-26T18:38:00Z", &Rfc3339).unwrap(),
