@@ -39,7 +39,7 @@ impl ResourcesExtensionsResourcesClient {
     /// * `resource_uri` - The fully qualified Azure Resource manager identifier of the resource.
     /// * `extensions_resource_name` - The name of the ExtensionsResource
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesExtensionsResourcesClient.delete")]
+    #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.delete")]
     pub async fn delete(
         &self,
         resource_uri: &str,
@@ -67,7 +67,7 @@ impl ResourcesExtensionsResourcesClient {
     /// * `resource_uri` - The fully qualified Azure Resource manager identifier of the resource.
     /// * `extensions_resource_name` - The name of the ExtensionsResource
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesExtensionsResourcesClient.get")]
+    #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.get")]
     pub async fn get(
         &self,
         resource_uri: &str,
@@ -94,7 +94,7 @@ impl ResourcesExtensionsResourcesClient {
     ///
     /// * `resource_uri` - The fully qualified Azure Resource manager identifier of the resource.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesExtensionsResourcesClient.list_by_scope")]
+    #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.listByScope")]
     pub fn list_by_scope(
         &self,
         resource_uri: &str,
@@ -157,7 +157,7 @@ impl ResourcesExtensionsResourcesClient {
     /// * `extensions_resource_name` - The name of the ExtensionsResource
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesExtensionsResourcesClient.update")]
+    #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.update")]
     pub async fn update(
         &self,
         resource_uri: &str,

@@ -27,7 +27,7 @@ impl ScalarUnknownClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ScalarUnknownClient.get")]
+    #[tracing::function("Type.Scalar.Unknown.get")]
     pub async fn get(
         &self,
         options: Option<ScalarUnknownClientGetOptions<'_>>,
@@ -47,7 +47,7 @@ impl ScalarUnknownClient {
     ///
     /// * `body` - _
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ScalarUnknownClient.put")]
+    #[tracing::function("Type.Scalar.Unknown.put")]
     pub async fn put(
         &self,
         body: RequestContent<Value>,

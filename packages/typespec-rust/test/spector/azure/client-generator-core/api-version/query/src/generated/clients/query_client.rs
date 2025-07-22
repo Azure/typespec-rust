@@ -66,7 +66,7 @@ impl QueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("QueryClient.query_api_version")]
+    #[tracing::function("Client.AlternateApiVersion.Service.Query.queryApiVersion")]
     pub async fn query_api_version(
         &self,
         options: Option<QueryClientQueryApiVersionOptions<'_>>,

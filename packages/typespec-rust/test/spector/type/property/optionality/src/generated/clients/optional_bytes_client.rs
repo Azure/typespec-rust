@@ -29,7 +29,7 @@ impl OptionalBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalBytesClient.get_all")]
+    #[tracing::function("Type.Property.Optional.Bytes.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalBytesClientGetAllOptions<'_>>,
@@ -48,7 +48,7 @@ impl OptionalBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalBytesClient.get_default")]
+    #[tracing::function("Type.Property.Optional.Bytes.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalBytesClientGetDefaultOptions<'_>>,
@@ -67,7 +67,7 @@ impl OptionalBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalBytesClient.put_all")]
+    #[tracing::function("Type.Property.Optional.Bytes.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<BytesProperty>,
@@ -88,7 +88,7 @@ impl OptionalBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalBytesClient.put_default")]
+    #[tracing::function("Type.Property.Optional.Bytes.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<BytesProperty>,

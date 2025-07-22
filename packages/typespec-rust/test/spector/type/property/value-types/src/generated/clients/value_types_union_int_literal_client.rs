@@ -29,7 +29,7 @@ impl ValueTypesUnionIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesUnionIntLiteralClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.UnionIntLiteral.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesUnionIntLiteralClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl ValueTypesUnionIntLiteralClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesUnionIntLiteralClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.UnionIntLiteral.put")]
     pub async fn put(
         &self,
         body: RequestContent<UnionIntLiteralProperty>,

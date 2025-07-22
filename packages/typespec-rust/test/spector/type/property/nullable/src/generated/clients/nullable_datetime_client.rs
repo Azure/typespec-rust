@@ -30,7 +30,7 @@ impl NullableDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableDatetimeClient.get_non_null")]
+    #[tracing::function("Type.Property.Nullable.Datetime.getNonNull")]
     pub async fn get_non_null(
         &self,
         options: Option<NullableDatetimeClientGetNonNullOptions<'_>>,
@@ -49,7 +49,7 @@ impl NullableDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableDatetimeClient.get_null")]
+    #[tracing::function("Type.Property.Nullable.Datetime.getNull")]
     pub async fn get_null(
         &self,
         options: Option<NullableDatetimeClientGetNullOptions<'_>>,
@@ -68,7 +68,7 @@ impl NullableDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableDatetimeClient.patch_non_null")]
+    #[tracing::function("Type.Property.Nullable.Datetime.patchNonNull")]
     pub async fn patch_non_null(
         &self,
         body: RequestContent<DatetimeProperty>,
@@ -89,7 +89,7 @@ impl NullableDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableDatetimeClient.patch_null")]
+    #[tracing::function("Type.Property.Nullable.Datetime.patchNull")]
     pub async fn patch_null(
         &self,
         body: RequestContent<DatetimeProperty>,

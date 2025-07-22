@@ -29,7 +29,7 @@ impl ValueTypesBooleanLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesBooleanLiteralClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.BooleanLiteral.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesBooleanLiteralClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl ValueTypesBooleanLiteralClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesBooleanLiteralClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.BooleanLiteral.put")]
     pub async fn put(
         &self,
         body: RequestContent<BooleanLiteralProperty>,

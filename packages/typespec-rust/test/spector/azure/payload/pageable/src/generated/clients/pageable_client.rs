@@ -67,7 +67,7 @@ impl PageableClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageableClient.list")]
+    #[tracing::function("_Specs_.Azure.Payload.Pageable.list")]
     pub fn list(&self, options: Option<PageableClientListOptions<'_>>) -> Result<Pager<PagedUser>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();

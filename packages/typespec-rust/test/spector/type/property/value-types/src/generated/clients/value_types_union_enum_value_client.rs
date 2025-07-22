@@ -29,7 +29,7 @@ impl ValueTypesUnionEnumValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesUnionEnumValueClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.UnionEnumValue.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesUnionEnumValueClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl ValueTypesUnionEnumValueClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesUnionEnumValueClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.UnionEnumValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<UnionEnumValueProperty>,

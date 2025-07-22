@@ -29,7 +29,7 @@ impl DictionaryNullableFloatValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryNullableFloatValueClient.get")]
+    #[tracing::function("Type.Dictionary.NullableFloatValue.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryNullableFloatValueClientGetOptions<'_>>,
@@ -47,7 +47,7 @@ impl DictionaryNullableFloatValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryNullableFloatValueClient.put")]
+    #[tracing::function("Type.Dictionary.NullableFloatValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, f32>>,

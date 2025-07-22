@@ -31,7 +31,7 @@ impl XmlModelWithEncodedNamesValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlModelWithEncodedNamesValueClient.get")]
+    #[tracing::function("Payload.Xml.ModelWithEncodedNamesValue.get")]
     pub async fn get(
         &self,
         options: Option<XmlModelWithEncodedNamesValueClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl XmlModelWithEncodedNamesValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlModelWithEncodedNamesValueClient.put")]
+    #[tracing::function("Payload.Xml.ModelWithEncodedNamesValue.put")]
     pub async fn put(
         &self,
         input: RequestContent<ModelWithEncodedNames>,

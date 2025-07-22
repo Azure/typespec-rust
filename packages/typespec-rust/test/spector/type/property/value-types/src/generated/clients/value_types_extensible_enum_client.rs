@@ -29,7 +29,7 @@ impl ValueTypesExtensibleEnumClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesExtensibleEnumClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.ExtensibleEnum.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesExtensibleEnumClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl ValueTypesExtensibleEnumClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesExtensibleEnumClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.ExtensibleEnum.put")]
     pub async fn put(
         &self,
         body: RequestContent<ExtensibleEnumProperty>,

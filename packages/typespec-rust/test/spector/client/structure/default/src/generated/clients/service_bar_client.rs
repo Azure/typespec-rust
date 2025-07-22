@@ -25,7 +25,7 @@ impl ServiceBarClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ServiceBarClient.five")]
+    #[tracing::function("Client.Structure.Service.Bar.five")]
     pub async fn five(
         &self,
         options: Option<ServiceBarClientFiveOptions<'_>>,
@@ -42,7 +42,7 @@ impl ServiceBarClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ServiceBarClient.six")]
+    #[tracing::function("Client.Structure.Service.Bar.six")]
     pub async fn six(
         &self,
         options: Option<ServiceBarClientSixOptions<'_>>,

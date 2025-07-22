@@ -25,7 +25,7 @@ impl FirstGroup3Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("FirstGroup3Client.three")]
+    #[tracing::function("Client.Structure.ClientOperationGroup.Group3.three")]
     pub async fn three(
         &self,
         options: Option<FirstGroup3ClientThreeOptions<'_>>,
@@ -42,7 +42,7 @@ impl FirstGroup3Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("FirstGroup3Client.two")]
+    #[tracing::function("Client.Structure.ClientOperationGroup.Group3.two")]
     pub async fn two(
         &self,
         options: Option<FirstGroup3ClientTwoOptions<'_>>,

@@ -29,7 +29,7 @@ impl ValueTypesCollectionsIntClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesCollectionsIntClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.CollectionsInt.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesCollectionsIntClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl ValueTypesCollectionsIntClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesCollectionsIntClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.CollectionsInt.put")]
     pub async fn put(
         &self,
         body: RequestContent<CollectionsIntProperty>,

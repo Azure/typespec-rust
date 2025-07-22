@@ -28,7 +28,7 @@ impl ArrayNullableFloatValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayNullableFloatValueClient.get")]
+    #[tracing::function("Type.Array.NullableFloatValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayNullableFloatValueClientGetOptions<'_>>,
@@ -46,7 +46,7 @@ impl ArrayNullableFloatValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayNullableFloatValueClient.put")]
+    #[tracing::function("Type.Array.NullableFloatValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<f32>>,

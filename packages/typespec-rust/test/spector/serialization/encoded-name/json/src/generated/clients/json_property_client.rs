@@ -27,7 +27,7 @@ impl JsonPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("JsonPropertyClient.get")]
+    #[tracing::function("Serialization.EncodedName.Json.Property.get")]
     pub async fn get(
         &self,
         options: Option<JsonPropertyClientGetOptions<'_>>,
@@ -45,7 +45,7 @@ impl JsonPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("JsonPropertyClient.send")]
+    #[tracing::function("Serialization.EncodedName.Json.Property.send")]
     pub async fn send(
         &self,
         body: RequestContent<JsonEncodedNameModel>,

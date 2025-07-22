@@ -79,7 +79,7 @@ impl OAuth2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OAuth2Client.invalid")]
+    #[tracing::function("Authentication.OAuth2.invalid")]
     pub async fn invalid(
         &self,
         options: Option<OAuth2ClientInvalidOptions<'_>>,
@@ -98,7 +98,7 @@ impl OAuth2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OAuth2Client.valid")]
+    #[tracing::function("Authentication.OAuth2.valid")]
     pub async fn valid(
         &self,
         options: Option<OAuth2ClientValidOptions<'_>>,

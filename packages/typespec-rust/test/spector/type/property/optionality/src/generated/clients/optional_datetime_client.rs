@@ -29,7 +29,7 @@ impl OptionalDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalDatetimeClient.get_all")]
+    #[tracing::function("Type.Property.Optional.Datetime.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalDatetimeClientGetAllOptions<'_>>,
@@ -48,7 +48,7 @@ impl OptionalDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalDatetimeClient.get_default")]
+    #[tracing::function("Type.Property.Optional.Datetime.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalDatetimeClientGetDefaultOptions<'_>>,
@@ -67,7 +67,7 @@ impl OptionalDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalDatetimeClient.put_all")]
+    #[tracing::function("Type.Property.Optional.Datetime.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<DatetimeProperty>,
@@ -88,7 +88,7 @@ impl OptionalDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalDatetimeClient.put_default")]
+    #[tracing::function("Type.Property.Optional.Datetime.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<DatetimeProperty>,

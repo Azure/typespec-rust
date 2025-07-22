@@ -30,7 +30,7 @@ impl OptionalStringLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalStringLiteralClient.get_all")]
+    #[tracing::function("Type.Property.Optional.StringLiteral.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalStringLiteralClientGetAllOptions<'_>>,
@@ -49,7 +49,7 @@ impl OptionalStringLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalStringLiteralClient.get_default")]
+    #[tracing::function("Type.Property.Optional.StringLiteral.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalStringLiteralClientGetDefaultOptions<'_>>,
@@ -68,7 +68,7 @@ impl OptionalStringLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalStringLiteralClient.put_all")]
+    #[tracing::function("Type.Property.Optional.StringLiteral.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<StringLiteralProperty>,
@@ -89,7 +89,7 @@ impl OptionalStringLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalStringLiteralClient.put_default")]
+    #[tracing::function("Type.Property.Optional.StringLiteral.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<StringLiteralProperty>,

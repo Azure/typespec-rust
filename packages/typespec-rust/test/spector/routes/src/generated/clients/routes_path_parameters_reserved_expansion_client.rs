@@ -28,7 +28,7 @@ impl RoutesPathParametersReservedExpansionClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesPathParametersReservedExpansionClient.annotation")]
+    #[tracing::function("Routes.PathParameters.ReservedExpansion.annotation")]
     pub async fn annotation(
         &self,
         param: &str,
@@ -48,7 +48,7 @@ impl RoutesPathParametersReservedExpansionClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesPathParametersReservedExpansionClient.template")]
+    #[tracing::function("Routes.PathParameters.ReservedExpansion.template")]
     pub async fn template(
         &self,
         param: &str,

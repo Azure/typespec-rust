@@ -71,7 +71,7 @@ impl MadeOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("MadeOptionalClient.test")]
+    #[tracing::function("Versioning.MadeOptional.test")]
     pub async fn test(
         &self,
         body: RequestContent<TestModel>,

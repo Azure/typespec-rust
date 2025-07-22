@@ -99,7 +99,7 @@ impl AppendBlobClient {
     /// * `body` - The body of the request.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("AppendBlobClient.append_block")]
+    #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.appendBlock")]
     pub async fn append_block(
         &self,
         body: RequestContent<Bytes>,
@@ -192,7 +192,7 @@ impl AppendBlobClient {
     /// * `source_url` - Specify a URL to the copy source.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("AppendBlobClient.append_block_from_url")]
+    #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.appendBlockFromUrl")]
     pub async fn append_block_from_url(
         &self,
         source_url: String,
@@ -303,7 +303,7 @@ impl AppendBlobClient {
     ///
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("AppendBlobClient.create")]
+    #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.create")]
     pub async fn create(
         &self,
         content_length: u64,
@@ -412,7 +412,7 @@ impl AppendBlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("AppendBlobClient.seal")]
+    #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.seal")]
     pub async fn seal(
         &self,
         options: Option<AppendBlobClientSealOptions<'_>>,

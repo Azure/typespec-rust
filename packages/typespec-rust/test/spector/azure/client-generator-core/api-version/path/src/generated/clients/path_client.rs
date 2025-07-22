@@ -66,7 +66,7 @@ impl PathClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PathClient.path_api_version")]
+    #[tracing::function("Client.AlternateApiVersion.Service.Path.pathApiVersion")]
     pub async fn path_api_version(
         &self,
         options: Option<PathClientPathApiVersionOptions<'_>>,

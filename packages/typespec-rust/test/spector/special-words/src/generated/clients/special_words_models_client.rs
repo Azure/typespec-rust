@@ -46,7 +46,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_and")]
+    #[tracing::function("SpecialWords.Models.withAnd")]
     pub async fn with_and(
         &self,
         body: RequestContent<And>,
@@ -66,7 +66,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_as")]
+    #[tracing::function("SpecialWords.Models.withAs")]
     pub async fn with_as(
         &self,
         body: RequestContent<As>,
@@ -86,7 +86,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_assert")]
+    #[tracing::function("SpecialWords.Models.withAssert")]
     pub async fn with_assert(
         &self,
         body: RequestContent<Assert>,
@@ -106,7 +106,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_async")]
+    #[tracing::function("SpecialWords.Models.withAsync")]
     pub async fn with_async(
         &self,
         body: RequestContent<Async>,
@@ -126,7 +126,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_await")]
+    #[tracing::function("SpecialWords.Models.withAwait")]
     pub async fn with_await(
         &self,
         body: RequestContent<Await>,
@@ -146,7 +146,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_break")]
+    #[tracing::function("SpecialWords.Models.withBreak")]
     pub async fn with_break(
         &self,
         body: RequestContent<Break>,
@@ -166,7 +166,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_class")]
+    #[tracing::function("SpecialWords.Models.withClass")]
     pub async fn with_class(
         &self,
         body: RequestContent<Class>,
@@ -186,7 +186,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_constructor")]
+    #[tracing::function("SpecialWords.Models.withConstructor")]
     pub async fn with_constructor(
         &self,
         body: RequestContent<Constructor>,
@@ -206,7 +206,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_continue")]
+    #[tracing::function("SpecialWords.Models.withContinue")]
     pub async fn with_continue(
         &self,
         body: RequestContent<Continue>,
@@ -226,7 +226,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_def")]
+    #[tracing::function("SpecialWords.Models.withDef")]
     pub async fn with_def(
         &self,
         body: RequestContent<Def>,
@@ -246,7 +246,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_del")]
+    #[tracing::function("SpecialWords.Models.withDel")]
     pub async fn with_del(
         &self,
         body: RequestContent<Del>,
@@ -266,7 +266,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_elif")]
+    #[tracing::function("SpecialWords.Models.withElif")]
     pub async fn with_elif(
         &self,
         body: RequestContent<Elif>,
@@ -286,7 +286,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_else")]
+    #[tracing::function("SpecialWords.Models.withElse")]
     pub async fn with_else(
         &self,
         body: RequestContent<Else>,
@@ -306,7 +306,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_except")]
+    #[tracing::function("SpecialWords.Models.withExcept")]
     pub async fn with_except(
         &self,
         body: RequestContent<Except>,
@@ -326,7 +326,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_exec")]
+    #[tracing::function("SpecialWords.Models.withExec")]
     pub async fn with_exec(
         &self,
         body: RequestContent<Exec>,
@@ -346,7 +346,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_finally")]
+    #[tracing::function("SpecialWords.Models.withFinally")]
     pub async fn with_finally(
         &self,
         body: RequestContent<Finally>,
@@ -366,7 +366,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_for")]
+    #[tracing::function("SpecialWords.Models.withFor")]
     pub async fn with_for(
         &self,
         body: RequestContent<For>,
@@ -386,7 +386,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_from")]
+    #[tracing::function("SpecialWords.Models.withFrom")]
     pub async fn with_from(
         &self,
         body: RequestContent<From>,
@@ -406,7 +406,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_global")]
+    #[tracing::function("SpecialWords.Models.withGlobal")]
     pub async fn with_global(
         &self,
         body: RequestContent<Global>,
@@ -426,7 +426,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_if")]
+    #[tracing::function("SpecialWords.Models.withIf")]
     pub async fn with_if(
         &self,
         body: RequestContent<If>,
@@ -446,7 +446,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_import")]
+    #[tracing::function("SpecialWords.Models.withImport")]
     pub async fn with_import(
         &self,
         body: RequestContent<Import>,
@@ -466,7 +466,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_in")]
+    #[tracing::function("SpecialWords.Models.withIn")]
     pub async fn with_in(
         &self,
         body: RequestContent<In>,
@@ -486,7 +486,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_is")]
+    #[tracing::function("SpecialWords.Models.withIs")]
     pub async fn with_is(
         &self,
         body: RequestContent<Is>,
@@ -506,7 +506,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_lambda")]
+    #[tracing::function("SpecialWords.Models.withLambda")]
     pub async fn with_lambda(
         &self,
         body: RequestContent<Lambda>,
@@ -526,7 +526,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_not")]
+    #[tracing::function("SpecialWords.Models.withNot")]
     pub async fn with_not(
         &self,
         body: RequestContent<Not>,
@@ -546,7 +546,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_or")]
+    #[tracing::function("SpecialWords.Models.withOr")]
     pub async fn with_or(
         &self,
         body: RequestContent<Or>,
@@ -566,7 +566,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_pass")]
+    #[tracing::function("SpecialWords.Models.withPass")]
     pub async fn with_pass(
         &self,
         body: RequestContent<Pass>,
@@ -586,7 +586,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_raise")]
+    #[tracing::function("SpecialWords.Models.withRaise")]
     pub async fn with_raise(
         &self,
         body: RequestContent<Raise>,
@@ -606,7 +606,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_return")]
+    #[tracing::function("SpecialWords.Models.withReturn")]
     pub async fn with_return(
         &self,
         body: RequestContent<Return>,
@@ -626,7 +626,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_try")]
+    #[tracing::function("SpecialWords.Models.withTry")]
     pub async fn with_try(
         &self,
         body: RequestContent<Try>,
@@ -646,7 +646,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_while")]
+    #[tracing::function("SpecialWords.Models.withWhile")]
     pub async fn with_while(
         &self,
         body: RequestContent<While>,
@@ -666,7 +666,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_with")]
+    #[tracing::function("SpecialWords.Models.withWith")]
     pub async fn with_with(
         &self,
         body: RequestContent<With>,
@@ -686,7 +686,7 @@ impl SpecialWordsModelsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelsClient.with_yield")]
+    #[tracing::function("SpecialWords.Models.withYield")]
     pub async fn with_yield(
         &self,
         body: RequestContent<Yield>,

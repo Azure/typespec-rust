@@ -30,7 +30,7 @@ impl OptionalPlainDateClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalPlainDateClient.get_all")]
+    #[tracing::function("Type.Property.Optional.PlainDate.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalPlainDateClientGetAllOptions<'_>>,
@@ -49,7 +49,7 @@ impl OptionalPlainDateClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalPlainDateClient.get_default")]
+    #[tracing::function("Type.Property.Optional.PlainDate.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalPlainDateClientGetDefaultOptions<'_>>,
@@ -68,7 +68,7 @@ impl OptionalPlainDateClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalPlainDateClient.put_all")]
+    #[tracing::function("Type.Property.Optional.PlainDate.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<PlainDateProperty>,
@@ -89,7 +89,7 @@ impl OptionalPlainDateClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalPlainDateClient.put_default")]
+    #[tracing::function("Type.Property.Optional.PlainDate.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<PlainDateProperty>,

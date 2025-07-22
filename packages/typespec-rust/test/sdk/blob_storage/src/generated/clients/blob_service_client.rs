@@ -93,7 +93,7 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobServiceClient.filter_blobs")]
+    #[tracing::function("Storage.Blob.filterBlobs")]
     pub async fn filter_blobs(
         &self,
         options: Option<BlobServiceClientFilterBlobsOptions<'_>>,
@@ -141,7 +141,7 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobServiceClient.get_account_info")]
+    #[tracing::function("Storage.Blob.getAccountInfo")]
     pub async fn get_account_info(
         &self,
         options: Option<BlobServiceClientGetAccountInfoOptions<'_>>,
@@ -187,7 +187,7 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobServiceClient.get_properties")]
+    #[tracing::function("Storage.Blob.getProperties")]
     pub async fn get_properties(
         &self,
         options: Option<BlobServiceClientGetPropertiesOptions<'_>>,
@@ -218,7 +218,7 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobServiceClient.get_statistics")]
+    #[tracing::function("Storage.Blob.getStatistics")]
     pub async fn get_statistics(
         &self,
         options: Option<BlobServiceClientGetStatisticsOptions<'_>>,
@@ -249,7 +249,7 @@ impl BlobServiceClient {
     ///
     /// * `key_info` - Key information provided in the request
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobServiceClient.get_user_delegation_key")]
+    #[tracing::function("Storage.Blob.getUserDelegationKey")]
     pub async fn get_user_delegation_key(
         &self,
         key_info: RequestContent<KeyInfo>,
@@ -281,7 +281,7 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobServiceClient.list_containers_segment")]
+    #[tracing::function("Storage.Blob.listContainersSegment")]
     pub fn list_containers_segment(
         &self,
         options: Option<BlobServiceClientListContainersSegmentOptions<'_>>,
@@ -365,7 +365,7 @@ impl BlobServiceClient {
     ///
     /// * `storage_service_properties` - The storage service properties to set.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobServiceClient.set_properties")]
+    #[tracing::function("Storage.Blob.setProperties")]
     pub async fn set_properties(
         &self,
         storage_service_properties: RequestContent<StorageServiceProperties>,

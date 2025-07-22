@@ -28,7 +28,7 @@ impl BasicServiceOperationGroupClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BasicServiceOperationGroupClient.basic")]
+    #[tracing::function("_Specs_.Azure.Example.Basic.ServiceOperationGroup.basic")]
     pub async fn basic(
         &self,
         query_param: &str,

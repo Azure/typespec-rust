@@ -28,7 +28,7 @@ impl ArrayNullableModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayNullableModelValueClient.get")]
+    #[tracing::function("Type.Array.NullableModelValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayNullableModelValueClientGetOptions<'_>>,
@@ -46,7 +46,7 @@ impl ArrayNullableModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayNullableModelValueClient.put")]
+    #[tracing::function("Type.Array.NullableModelValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<InnerModel>>,

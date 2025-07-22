@@ -31,7 +31,7 @@ impl SpreadModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpreadModelClient.spread_as_request_body")]
+    #[tracing::function("Parameters.Spread.Model.spreadAsRequestBody")]
     pub async fn spread_as_request_body(
         &self,
         name: String,
@@ -52,7 +52,7 @@ impl SpreadModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpreadModelClient.spread_composite_request")]
+    #[tracing::function("Parameters.Spread.Model.spreadCompositeRequest")]
     pub async fn spread_composite_request(
         &self,
         name: &str,
@@ -77,7 +77,7 @@ impl SpreadModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpreadModelClient.spread_composite_request_mix")]
+    #[tracing::function("Parameters.Spread.Model.spreadCompositeRequestMix")]
     pub async fn spread_composite_request_mix(
         &self,
         name: &str,
@@ -104,7 +104,7 @@ impl SpreadModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpreadModelClient.spread_composite_request_only_with_body")]
+    #[tracing::function("Parameters.Spread.Model.spreadCompositeRequestOnlyWithBody")]
     pub async fn spread_composite_request_only_with_body(
         &self,
         body: RequestContent<BodyParameter>,
@@ -124,7 +124,7 @@ impl SpreadModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpreadModelClient.spread_composite_request_without_body")]
+    #[tracing::function("Parameters.Spread.Model.spreadCompositeRequestWithoutBody")]
     pub async fn spread_composite_request_without_body(
         &self,
         name: &str,

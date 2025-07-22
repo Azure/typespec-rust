@@ -29,7 +29,7 @@ impl DictionaryInt64ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryInt64ValueClient.get")]
+    #[tracing::function("Type.Dictionary.Int64Value.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryInt64ValueClientGetOptions<'_>>,
@@ -47,7 +47,7 @@ impl DictionaryInt64ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryInt64ValueClient.put")]
+    #[tracing::function("Type.Dictionary.Int64Value.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, i64>>,

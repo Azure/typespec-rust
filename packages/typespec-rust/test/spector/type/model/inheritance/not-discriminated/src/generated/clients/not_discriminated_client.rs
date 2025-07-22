@@ -71,7 +71,7 @@ impl NotDiscriminatedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NotDiscriminatedClient.get_valid")]
+    #[tracing::function("Type.Model.Inheritance.NotDiscriminated.getValid")]
     pub async fn get_valid(
         &self,
         options: Option<NotDiscriminatedClientGetValidOptions<'_>>,
@@ -89,7 +89,7 @@ impl NotDiscriminatedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NotDiscriminatedClient.post_valid")]
+    #[tracing::function("Type.Model.Inheritance.NotDiscriminated.postValid")]
     pub async fn post_valid(
         &self,
         input: RequestContent<Siamese>,
@@ -109,7 +109,7 @@ impl NotDiscriminatedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NotDiscriminatedClient.put_valid")]
+    #[tracing::function("Type.Model.Inheritance.NotDiscriminated.putValid")]
     pub async fn put_valid(
         &self,
         input: RequestContent<Siamese>,

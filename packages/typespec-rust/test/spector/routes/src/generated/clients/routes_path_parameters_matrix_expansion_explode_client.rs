@@ -30,7 +30,7 @@ impl RoutesPathParametersMatrixExpansionExplodeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesPathParametersMatrixExpansionExplodeClient.array")]
+    #[tracing::function("Routes.PathParameters.MatrixExpansion.Explode.array")]
     pub async fn array(
         &self,
         param: &[&str],
@@ -50,7 +50,7 @@ impl RoutesPathParametersMatrixExpansionExplodeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesPathParametersMatrixExpansionExplodeClient.primitive")]
+    #[tracing::function("Routes.PathParameters.MatrixExpansion.Explode.primitive")]
     pub async fn primitive(
         &self,
         param: &str,
@@ -70,7 +70,7 @@ impl RoutesPathParametersMatrixExpansionExplodeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesPathParametersMatrixExpansionExplodeClient.record")]
+    #[tracing::function("Routes.PathParameters.MatrixExpansion.Explode.record")]
     pub async fn record(
         &self,
         param: HashMap<String, i32>,

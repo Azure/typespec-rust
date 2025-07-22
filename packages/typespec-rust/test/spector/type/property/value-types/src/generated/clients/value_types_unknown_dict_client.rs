@@ -29,7 +29,7 @@ impl ValueTypesUnknownDictClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesUnknownDictClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.UnknownDict.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesUnknownDictClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl ValueTypesUnknownDictClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesUnknownDictClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.UnknownDict.put")]
     pub async fn put(
         &self,
         body: RequestContent<UnknownDictProperty>,

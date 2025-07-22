@@ -31,7 +31,7 @@ impl XmlModelWithDictionaryValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlModelWithDictionaryValueClient.get")]
+    #[tracing::function("Payload.Xml.ModelWithDictionaryValue.get")]
     pub async fn get(
         &self,
         options: Option<XmlModelWithDictionaryValueClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl XmlModelWithDictionaryValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlModelWithDictionaryValueClient.put")]
+    #[tracing::function("Payload.Xml.ModelWithDictionaryValue.put")]
     pub async fn put(
         &self,
         input: RequestContent<ModelWithDictionary>,

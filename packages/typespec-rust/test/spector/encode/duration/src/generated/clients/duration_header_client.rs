@@ -29,7 +29,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DurationHeaderClient.default")]
+    #[tracing::function("Encode.Duration.Header.default")]
     pub async fn default(
         &self,
         duration: String,
@@ -48,7 +48,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DurationHeaderClient.float64_seconds")]
+    #[tracing::function("Encode.Duration.Header.float64Seconds")]
     pub async fn float64_seconds(
         &self,
         duration: f64,
@@ -67,7 +67,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DurationHeaderClient.float_seconds")]
+    #[tracing::function("Encode.Duration.Header.floatSeconds")]
     pub async fn float_seconds(
         &self,
         duration: f32,
@@ -86,7 +86,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DurationHeaderClient.int32_seconds")]
+    #[tracing::function("Encode.Duration.Header.int32Seconds")]
     pub async fn int32_seconds(
         &self,
         duration: i32,
@@ -105,7 +105,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DurationHeaderClient.iso8601")]
+    #[tracing::function("Encode.Duration.Header.iso8601")]
     pub async fn iso8601(
         &self,
         duration: String,
@@ -124,7 +124,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DurationHeaderClient.iso8601_array")]
+    #[tracing::function("Encode.Duration.Header.iso8601Array")]
     pub async fn iso8601_array(
         &self,
         duration: &[&str],

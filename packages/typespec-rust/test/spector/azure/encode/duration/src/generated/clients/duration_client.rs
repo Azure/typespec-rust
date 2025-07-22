@@ -69,7 +69,7 @@ impl DurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DurationClient.duration_constant")]
+    #[tracing::function("_Specs_.Azure.Encode.Duration.durationConstant")]
     pub async fn duration_constant(
         &self,
         body: RequestContent<DurationModel>,

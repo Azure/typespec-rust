@@ -30,7 +30,7 @@ impl DictionaryDatetimeValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryDatetimeValueClient.get")]
+    #[tracing::function("Type.Dictionary.DatetimeValue.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryDatetimeValueClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl DictionaryDatetimeValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryDatetimeValueClient.put")]
+    #[tracing::function("Type.Dictionary.DatetimeValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, OffsetDateTime>>,

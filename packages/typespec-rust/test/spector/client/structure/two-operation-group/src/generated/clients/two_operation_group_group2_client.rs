@@ -28,7 +28,7 @@ impl TwoOperationGroupGroup2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("TwoOperationGroupGroup2Client.five")]
+    #[tracing::function("Client.Structure.TwoOperationGroup.Group2.five")]
     pub async fn five(
         &self,
         options: Option<TwoOperationGroupGroup2ClientFiveOptions<'_>>,
@@ -45,7 +45,7 @@ impl TwoOperationGroupGroup2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("TwoOperationGroupGroup2Client.six")]
+    #[tracing::function("Client.Structure.TwoOperationGroup.Group2.six")]
     pub async fn six(
         &self,
         options: Option<TwoOperationGroupGroup2ClientSixOptions<'_>>,
@@ -62,7 +62,7 @@ impl TwoOperationGroupGroup2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("TwoOperationGroupGroup2Client.two")]
+    #[tracing::function("Client.Structure.TwoOperationGroup.Group2.two")]
     pub async fn two(
         &self,
         options: Option<TwoOperationGroupGroup2ClientTwoOptions<'_>>,

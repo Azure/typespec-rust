@@ -40,7 +40,7 @@ impl ResourcesLocationResourcesClient {
     /// * `location_resource_name` - The name of the LocationResource
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesLocationResourcesClient.create_or_update")]
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.createOrUpdate")]
     pub async fn create_or_update(
         &self,
         location: &str,
@@ -72,7 +72,7 @@ impl ResourcesLocationResourcesClient {
     /// * `location` - The name of the Azure region.
     /// * `location_resource_name` - The name of the LocationResource
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesLocationResourcesClient.delete")]
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.delete")]
     pub async fn delete(
         &self,
         location: &str,
@@ -101,7 +101,7 @@ impl ResourcesLocationResourcesClient {
     /// * `location` - The name of the Azure region.
     /// * `location_resource_name` - The name of the LocationResource
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesLocationResourcesClient.get")]
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.get")]
     pub async fn get(
         &self,
         location: &str,
@@ -129,7 +129,7 @@ impl ResourcesLocationResourcesClient {
     ///
     /// * `location` - The name of the Azure region.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesLocationResourcesClient.list_by_location")]
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.listByLocation")]
     pub fn list_by_location(
         &self,
         location: &str,
@@ -191,7 +191,7 @@ impl ResourcesLocationResourcesClient {
     /// * `location_resource_name` - The name of the LocationResource
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesLocationResourcesClient.update")]
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.update")]
     pub async fn update(
         &self,
         location: &str,

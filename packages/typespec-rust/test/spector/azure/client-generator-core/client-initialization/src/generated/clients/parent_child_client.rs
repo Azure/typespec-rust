@@ -72,7 +72,7 @@ impl ParentChildClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ParentChildClient.delete_standalone")]
+    #[tracing::function("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParentClient.ChildClient.deleteStandalone")]
     pub async fn delete_standalone(
         &self,
         options: Option<ParentChildClientDeleteStandaloneOptions<'_>>,
@@ -93,7 +93,7 @@ impl ParentChildClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ParentChildClient.get_standalone")]
+    #[tracing::function("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParentClient.ChildClient.getStandalone")]
     pub async fn get_standalone(
         &self,
         options: Option<ParentChildClientGetStandaloneOptions<'_>>,
@@ -113,7 +113,9 @@ impl ParentChildClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ParentChildClient.with_query")]
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParentClient.ChildClient.withQuery"
+    )]
     pub async fn with_query(
         &self,
         options: Option<ParentChildClientWithQueryOptions<'_>>,

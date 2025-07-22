@@ -71,7 +71,9 @@ impl ParamAliasClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ParamAliasClient.with_aliased_name")]
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParamAlias.withAliasedName"
+    )]
     pub async fn with_aliased_name(
         &self,
         options: Option<ParamAliasClientWithAliasedNameOptions<'_>>,
@@ -90,7 +92,9 @@ impl ParamAliasClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ParamAliasClient.with_original_name")]
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParamAlias.withOriginalName"
+    )]
     pub async fn with_original_name(
         &self,
         options: Option<ParamAliasClientWithOriginalNameOptions<'_>>,

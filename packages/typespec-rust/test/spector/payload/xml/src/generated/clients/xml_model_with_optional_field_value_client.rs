@@ -31,7 +31,7 @@ impl XmlModelWithOptionalFieldValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlModelWithOptionalFieldValueClient.get")]
+    #[tracing::function("Payload.Xml.ModelWithOptionalFieldValue.get")]
     pub async fn get(
         &self,
         options: Option<XmlModelWithOptionalFieldValueClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl XmlModelWithOptionalFieldValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlModelWithOptionalFieldValueClient.put")]
+    #[tracing::function("Payload.Xml.ModelWithOptionalFieldValue.put")]
     pub async fn put(
         &self,
         input: RequestContent<ModelWithOptionalField>,

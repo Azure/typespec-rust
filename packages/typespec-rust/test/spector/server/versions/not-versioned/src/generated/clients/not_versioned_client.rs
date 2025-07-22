@@ -69,7 +69,7 @@ impl NotVersionedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NotVersionedClient.with_path_api_version")]
+    #[tracing::function("Server.Versions.NotVersioned.withPathApiVersion")]
     pub async fn with_path_api_version(
         &self,
         api_version: &str,
@@ -90,7 +90,7 @@ impl NotVersionedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NotVersionedClient.with_query_api_version")]
+    #[tracing::function("Server.Versions.NotVersioned.withQueryApiVersion")]
     pub async fn with_query_api_version(
         &self,
         api_version: &str,
@@ -110,7 +110,7 @@ impl NotVersionedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NotVersionedClient.without_api_version")]
+    #[tracing::function("Server.Versions.NotVersioned.withoutApiVersion")]
     pub async fn without_api_version(
         &self,
         options: Option<NotVersionedClientWithoutApiVersionOptions<'_>>,

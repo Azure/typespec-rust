@@ -29,7 +29,7 @@ impl ValueTypesFloatLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesFloatLiteralClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.FloatLiteral.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesFloatLiteralClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl ValueTypesFloatLiteralClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesFloatLiteralClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.FloatLiteral.put")]
     pub async fn put(
         &self,
         body: RequestContent<FloatLiteralProperty>,

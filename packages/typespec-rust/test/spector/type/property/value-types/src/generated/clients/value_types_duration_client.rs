@@ -28,7 +28,7 @@ impl ValueTypesDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesDurationClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.Duration.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesDurationClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl ValueTypesDurationClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesDurationClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.Duration.put")]
     pub async fn put(
         &self,
         body: RequestContent<DurationProperty>,

@@ -29,7 +29,7 @@ impl DictionaryDurationValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryDurationValueClient.get")]
+    #[tracing::function("Type.Dictionary.DurationValue.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryDurationValueClientGetOptions<'_>>,
@@ -47,7 +47,7 @@ impl DictionaryDurationValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryDurationValueClient.put")]
+    #[tracing::function("Type.Dictionary.DurationValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, String>>,

@@ -31,7 +31,7 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeResponseHeaderClient.default")]
+    #[tracing::function("Encode.Datetime.ResponseHeader.default")]
     pub async fn default(
         &self,
         options: Option<DatetimeResponseHeaderClientDefaultOptions<'_>>,
@@ -48,7 +48,7 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeResponseHeaderClient.rfc3339")]
+    #[tracing::function("Encode.Datetime.ResponseHeader.rfc3339")]
     pub async fn rfc3339(
         &self,
         options: Option<DatetimeResponseHeaderClientRfc3339Options<'_>>,
@@ -65,7 +65,7 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeResponseHeaderClient.rfc7231")]
+    #[tracing::function("Encode.Datetime.ResponseHeader.rfc7231")]
     pub async fn rfc7231(
         &self,
         options: Option<DatetimeResponseHeaderClientRfc7231Options<'_>>,
@@ -82,7 +82,7 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeResponseHeaderClient.unix_timestamp")]
+    #[tracing::function("Encode.Datetime.ResponseHeader.unixTimestamp")]
     pub async fn unix_timestamp(
         &self,
         options: Option<DatetimeResponseHeaderClientUnixTimestampOptions<'_>>,

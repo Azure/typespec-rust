@@ -33,7 +33,9 @@ impl OperationTemplatesCheckNameAvailabilityClient {
     ///
     /// * `body` - The CheckAvailability request
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OperationTemplatesCheckNameAvailabilityClient.check_global")]
+    #[tracing::function(
+        "Azure.ResourceManager.OperationTemplates.CheckNameAvailability.checkGlobal"
+    )]
     pub async fn check_global(
         &self,
         body: RequestContent<CheckNameAvailabilityRequest>,
@@ -61,7 +63,9 @@ impl OperationTemplatesCheckNameAvailabilityClient {
     /// * `location` - The name of the Azure region.
     /// * `body` - The CheckAvailability request
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OperationTemplatesCheckNameAvailabilityClient.check_local")]
+    #[tracing::function(
+        "Azure.ResourceManager.OperationTemplates.CheckNameAvailability.checkLocal"
+    )]
     pub async fn check_local(
         &self,
         location: &str,

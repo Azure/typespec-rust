@@ -28,7 +28,7 @@ impl ValueTypesFloatClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesFloatClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.Float.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesFloatClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl ValueTypesFloatClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesFloatClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.Float.put")]
     pub async fn put(
         &self,
         body: RequestContent<FloatProperty>,

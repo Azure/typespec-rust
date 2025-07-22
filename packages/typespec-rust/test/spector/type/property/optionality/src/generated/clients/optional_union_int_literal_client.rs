@@ -30,7 +30,7 @@ impl OptionalUnionIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalUnionIntLiteralClient.get_all")]
+    #[tracing::function("Type.Property.Optional.UnionIntLiteral.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalUnionIntLiteralClientGetAllOptions<'_>>,
@@ -49,7 +49,7 @@ impl OptionalUnionIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalUnionIntLiteralClient.get_default")]
+    #[tracing::function("Type.Property.Optional.UnionIntLiteral.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalUnionIntLiteralClientGetDefaultOptions<'_>>,
@@ -68,7 +68,7 @@ impl OptionalUnionIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalUnionIntLiteralClient.put_all")]
+    #[tracing::function("Type.Property.Optional.UnionIntLiteral.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<UnionIntLiteralProperty>,
@@ -89,7 +89,7 @@ impl OptionalUnionIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalUnionIntLiteralClient.put_default")]
+    #[tracing::function("Type.Property.Optional.UnionIntLiteral.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<UnionIntLiteralProperty>,

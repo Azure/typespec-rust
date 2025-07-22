@@ -29,7 +29,7 @@ impl BytesHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesHeaderClient.base64")]
+    #[tracing::function("Encode.Bytes.Header.base64")]
     pub async fn base64(
         &self,
         value: &[u8],
@@ -48,7 +48,7 @@ impl BytesHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesHeaderClient.base64_url")]
+    #[tracing::function("Encode.Bytes.Header.base64url")]
     pub async fn base64_url(
         &self,
         value: &[u8],
@@ -67,7 +67,7 @@ impl BytesHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesHeaderClient.base64_url_array")]
+    #[tracing::function("Encode.Bytes.Header.base64urlArray")]
     pub async fn base64_url_array(
         &self,
         value: &[&[u8]],
@@ -93,7 +93,7 @@ impl BytesHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesHeaderClient.default")]
+    #[tracing::function("Encode.Bytes.Header.default")]
     pub async fn default(
         &self,
         value: &[u8],

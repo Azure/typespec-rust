@@ -30,7 +30,7 @@ impl OptionalIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalIntLiteralClient.get_all")]
+    #[tracing::function("Type.Property.Optional.IntLiteral.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalIntLiteralClientGetAllOptions<'_>>,
@@ -49,7 +49,7 @@ impl OptionalIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalIntLiteralClient.get_default")]
+    #[tracing::function("Type.Property.Optional.IntLiteral.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalIntLiteralClientGetDefaultOptions<'_>>,
@@ -68,7 +68,7 @@ impl OptionalIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalIntLiteralClient.put_all")]
+    #[tracing::function("Type.Property.Optional.IntLiteral.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<IntLiteralProperty>,
@@ -89,7 +89,7 @@ impl OptionalIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalIntLiteralClient.put_default")]
+    #[tracing::function("Type.Property.Optional.IntLiteral.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<IntLiteralProperty>,

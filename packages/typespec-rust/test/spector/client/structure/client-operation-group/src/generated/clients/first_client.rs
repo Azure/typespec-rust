@@ -91,7 +91,7 @@ impl FirstClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("FirstClient.one")]
+    #[tracing::function("Client.Structure.ClientOperationGroup.one")]
     pub async fn one(
         &self,
         options: Option<FirstClientOneOptions<'_>>,

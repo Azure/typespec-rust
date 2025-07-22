@@ -28,7 +28,7 @@ impl ValueTypesDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesDatetimeClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.Datetime.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesDatetimeClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl ValueTypesDatetimeClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesDatetimeClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.Datetime.put")]
     pub async fn put(
         &self,
         body: RequestContent<DatetimeProperty>,

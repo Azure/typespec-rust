@@ -85,7 +85,7 @@ impl RenamedOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RenamedOperationClient.renamed_five")]
+    #[tracing::function("Client.Structure.RenamedOperation.renamedFive")]
     pub async fn renamed_five(
         &self,
         options: Option<RenamedOperationClientRenamedFiveOptions<'_>>,
@@ -102,7 +102,7 @@ impl RenamedOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RenamedOperationClient.renamed_one")]
+    #[tracing::function("Client.Structure.RenamedOperation.renamedOne")]
     pub async fn renamed_one(
         &self,
         options: Option<RenamedOperationClientRenamedOneOptions<'_>>,
@@ -119,7 +119,7 @@ impl RenamedOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RenamedOperationClient.renamed_three")]
+    #[tracing::function("Client.Structure.RenamedOperation.renamedThree")]
     pub async fn renamed_three(
         &self,
         options: Option<RenamedOperationClientRenamedThreeOptions<'_>>,

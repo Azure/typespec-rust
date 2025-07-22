@@ -29,7 +29,7 @@ impl NullableStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableStringClient.get_non_null")]
+    #[tracing::function("Type.Property.Nullable.String.getNonNull")]
     pub async fn get_non_null(
         &self,
         options: Option<NullableStringClientGetNonNullOptions<'_>>,
@@ -48,7 +48,7 @@ impl NullableStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableStringClient.get_null")]
+    #[tracing::function("Type.Property.Nullable.String.getNull")]
     pub async fn get_null(
         &self,
         options: Option<NullableStringClientGetNullOptions<'_>>,
@@ -67,7 +67,7 @@ impl NullableStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableStringClient.patch_non_null")]
+    #[tracing::function("Type.Property.Nullable.String.patchNonNull")]
     pub async fn patch_non_null(
         &self,
         body: RequestContent<StringProperty>,
@@ -88,7 +88,7 @@ impl NullableStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableStringClient.patch_null")]
+    #[tracing::function("Type.Property.Nullable.String.patchNull")]
     pub async fn patch_null(
         &self,
         body: RequestContent<StringProperty>,

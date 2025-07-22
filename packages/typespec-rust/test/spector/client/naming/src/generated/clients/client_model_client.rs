@@ -27,7 +27,7 @@ impl ClientModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ClientModelClient.client")]
+    #[tracing::function("Client.Naming.Model.client")]
     pub async fn client(
         &self,
         body: RequestContent<ClientModel>,
@@ -47,7 +47,7 @@ impl ClientModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ClientModelClient.language")]
+    #[tracing::function("Client.Naming.Model.language")]
     pub async fn language(
         &self,
         body: RequestContent<RustName>,

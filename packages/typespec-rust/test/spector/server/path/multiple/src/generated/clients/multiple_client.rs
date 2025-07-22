@@ -72,7 +72,7 @@ impl MultipleClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("MultipleClient.no_operation_params")]
+    #[tracing::function("Server.Path.Multiple.noOperationParams")]
     pub async fn no_operation_params(
         &self,
         options: Option<MultipleClientNoOperationParamsOptions<'_>>,
@@ -88,7 +88,7 @@ impl MultipleClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("MultipleClient.with_operation_path_param")]
+    #[tracing::function("Server.Path.Multiple.withOperationPathParam")]
     pub async fn with_operation_path_param(
         &self,
         keyword: &str,

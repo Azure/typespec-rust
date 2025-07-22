@@ -28,7 +28,7 @@ impl ValueTypesModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesModelClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.Model.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesModelClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl ValueTypesModelClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesModelClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.Model.put")]
     pub async fn put(
         &self,
         body: RequestContent<ModelProperty>,

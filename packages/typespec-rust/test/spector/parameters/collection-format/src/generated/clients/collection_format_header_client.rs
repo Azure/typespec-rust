@@ -26,7 +26,7 @@ impl CollectionFormatHeaderClient {
     ///
     /// * `colors` - Possible values for colors are [blue,red,green]
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("CollectionFormatHeaderClient.csv")]
+    #[tracing::function("Parameters.CollectionFormat.Header.csv")]
     pub async fn csv(
         &self,
         colors: &[&str],

@@ -30,7 +30,7 @@ impl DictionaryUnknownValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryUnknownValueClient.get")]
+    #[tracing::function("Type.Dictionary.UnknownValue.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryUnknownValueClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl DictionaryUnknownValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryUnknownValueClient.put")]
+    #[tracing::function("Type.Dictionary.UnknownValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, Value>>,

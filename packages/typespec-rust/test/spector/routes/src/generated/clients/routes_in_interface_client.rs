@@ -25,7 +25,7 @@ impl RoutesInInterfaceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesInInterfaceClient.fixed")]
+    #[tracing::function("Routes.InInterface.fixed")]
     pub async fn fixed(
         &self,
         options: Option<RoutesInInterfaceClientFixedOptions<'_>>,

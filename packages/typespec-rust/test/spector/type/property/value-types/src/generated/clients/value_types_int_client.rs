@@ -28,7 +28,7 @@ impl ValueTypesIntClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesIntClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.Int.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesIntClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl ValueTypesIntClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesIntClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.Int.put")]
     pub async fn put(
         &self,
         body: RequestContent<IntProperty>,

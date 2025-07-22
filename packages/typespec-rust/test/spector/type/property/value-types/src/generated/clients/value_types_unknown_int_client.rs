@@ -28,7 +28,7 @@ impl ValueTypesUnknownIntClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesUnknownIntClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.UnknownInt.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesUnknownIntClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl ValueTypesUnknownIntClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesUnknownIntClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.UnknownInt.put")]
     pub async fn put(
         &self,
         body: RequestContent<UnknownIntProperty>,

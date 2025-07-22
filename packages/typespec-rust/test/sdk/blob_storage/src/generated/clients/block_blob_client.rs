@@ -107,7 +107,7 @@ impl BlockBlobClient {
     ///
     /// * `blocks` - Blob Blocks.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlockBlobClient.commit_block_list")]
+    #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.commitBlockList")]
     pub async fn commit_block_list(
         &self,
         blocks: RequestContent<BlockLookupList>,
@@ -226,7 +226,7 @@ impl BlockBlobClient {
     /// * `list_type` - Specifies whether to return the list of committed blocks, the list of uncommitted blocks, or both lists
     ///   together.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlockBlobClient.get_block_list")]
+    #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.getBlockList")]
     pub async fn get_block_list(
         &self,
         list_type: BlockListType,
@@ -277,7 +277,7 @@ impl BlockBlobClient {
     ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
     ///   either be public or must be authenticated via a shared access signature.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlockBlobClient.put_blob_from_url")]
+    #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.putBlobFromUrl")]
     pub async fn put_blob_from_url(
         &self,
         content_length: u64,
@@ -417,7 +417,7 @@ impl BlockBlobClient {
     ///
     /// * `query_request` - The query request
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlockBlobClient.query")]
+    #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.query")]
     pub async fn query(
         &self,
         query_request: RequestContent<QueryRequest>,
@@ -489,7 +489,7 @@ impl BlockBlobClient {
     /// * `content_length` - The length of the request.
     /// * `body` - The body of the request.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlockBlobClient.stage_block")]
+    #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.stageBlock")]
     pub async fn stage_block(
         &self,
         block_id: &[u8],
@@ -558,7 +558,7 @@ impl BlockBlobClient {
     /// * `content_length` - The length of the request.
     /// * `source_url` - Specify a URL to the copy source.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlockBlobClient.stage_block_from_url")]
+    #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.stageBlockFromUrl")]
     pub async fn stage_block_from_url(
         &self,
         block_id: &[u8],
@@ -652,7 +652,7 @@ impl BlockBlobClient {
     /// * `body` - The body of the request.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlockBlobClient.upload")]
+    #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.upload")]
     pub async fn upload(
         &self,
         body: RequestContent<Bytes>,

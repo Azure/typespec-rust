@@ -25,7 +25,7 @@ impl FirstGroup4Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("FirstGroup4Client.four")]
+    #[tracing::function("Client.Structure.ClientOperationGroup.Group4.four")]
     pub async fn four(
         &self,
         options: Option<FirstGroup4ClientFourOptions<'_>>,

@@ -25,7 +25,7 @@ impl ServiceQuxBarClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ServiceQuxBarClient.nine")]
+    #[tracing::function("Client.Structure.Service.Qux.Bar.nine")]
     pub async fn nine(
         &self,
         options: Option<ServiceQuxBarClientNineOptions<'_>>,

@@ -28,7 +28,7 @@ impl ArrayFloat32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayFloat32ValueClient.get")]
+    #[tracing::function("Type.Array.Float32Value.get")]
     pub async fn get(
         &self,
         options: Option<ArrayFloat32ValueClientGetOptions<'_>>,
@@ -46,7 +46,7 @@ impl ArrayFloat32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayFloat32ValueClient.put")]
+    #[tracing::function("Type.Array.Float32Value.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<f32>>,

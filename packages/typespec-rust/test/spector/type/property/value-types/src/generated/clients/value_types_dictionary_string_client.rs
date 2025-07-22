@@ -29,7 +29,7 @@ impl ValueTypesDictionaryStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesDictionaryStringClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.DictionaryString.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesDictionaryStringClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl ValueTypesDictionaryStringClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesDictionaryStringClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.DictionaryString.put")]
     pub async fn put(
         &self,
         body: RequestContent<DictionaryStringProperty>,

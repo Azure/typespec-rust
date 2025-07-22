@@ -30,7 +30,7 @@ impl PageTwoModelsAsPageItemClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageTwoModelsAsPageItemClient.list_first_item")]
+    #[tracing::function("_Specs_.Azure.Core.Page.TwoModelsAsPageItem.listFirstItem")]
     pub fn list_first_item(
         &self,
         options: Option<PageTwoModelsAsPageItemClientListFirstItemOptions<'_>>,
@@ -85,7 +85,7 @@ impl PageTwoModelsAsPageItemClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageTwoModelsAsPageItemClient.list_second_item")]
+    #[tracing::function("_Specs_.Azure.Core.Page.TwoModelsAsPageItem.listSecondItem")]
     pub fn list_second_item(
         &self,
         options: Option<PageTwoModelsAsPageItemClientListSecondItemOptions<'_>>,

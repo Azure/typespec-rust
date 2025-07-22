@@ -36,7 +36,7 @@ impl ResourcesSingletonClient {
     ///
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesSingletonClient.get_by_resource_group")]
+    #[tracing::function("Azure.ResourceManager.Resources.Singleton.getByResourceGroup")]
     pub async fn get_by_resource_group(
         &self,
         resource_group_name: &str,
@@ -62,7 +62,7 @@ impl ResourcesSingletonClient {
     ///
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesSingletonClient.list_by_resource_group")]
+    #[tracing::function("Azure.ResourceManager.Resources.Singleton.listByResourceGroup")]
     pub fn list_by_resource_group(
         &self,
         resource_group_name: &str,
@@ -123,7 +123,7 @@ impl ResourcesSingletonClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesSingletonClient.update")]
+    #[tracing::function("Azure.ResourceManager.Resources.Singleton.update")]
     pub async fn update(
         &self,
         resource_group_name: &str,

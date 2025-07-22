@@ -29,7 +29,7 @@ impl ArrayUnknownValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayUnknownValueClient.get")]
+    #[tracing::function("Type.Array.UnknownValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayUnknownValueClientGetOptions<'_>>,
@@ -47,7 +47,7 @@ impl ArrayUnknownValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayUnknownValueClient.put")]
+    #[tracing::function("Type.Array.UnknownValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<Value>>,

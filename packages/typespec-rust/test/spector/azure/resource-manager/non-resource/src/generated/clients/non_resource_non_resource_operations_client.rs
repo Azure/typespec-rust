@@ -34,7 +34,7 @@ impl NonResourceNonResourceOperationsClient {
     /// * `parameter` - Another parameter.
     /// * `body` - The request body.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NonResourceNonResourceOperationsClient.create")]
+    #[tracing::function("Azure.ResourceManager.NonResource.NonResourceOperations.create")]
     pub async fn create(
         &self,
         location: &str,
@@ -65,7 +65,7 @@ impl NonResourceNonResourceOperationsClient {
     /// * `location` - The location parameter.
     /// * `parameter` - Another parameter.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NonResourceNonResourceOperationsClient.get")]
+    #[tracing::function("Azure.ResourceManager.NonResource.NonResourceOperations.get")]
     pub async fn get(
         &self,
         location: &str,

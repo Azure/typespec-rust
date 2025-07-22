@@ -30,7 +30,7 @@ impl OptionalPlainTimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalPlainTimeClient.get_all")]
+    #[tracing::function("Type.Property.Optional.PlainTime.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalPlainTimeClientGetAllOptions<'_>>,
@@ -49,7 +49,7 @@ impl OptionalPlainTimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalPlainTimeClient.get_default")]
+    #[tracing::function("Type.Property.Optional.PlainTime.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalPlainTimeClientGetDefaultOptions<'_>>,
@@ -68,7 +68,7 @@ impl OptionalPlainTimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalPlainTimeClient.put_all")]
+    #[tracing::function("Type.Property.Optional.PlainTime.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<PlainTimeProperty>,
@@ -89,7 +89,7 @@ impl OptionalPlainTimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalPlainTimeClient.put_default")]
+    #[tracing::function("Type.Property.Optional.PlainTime.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<PlainTimeProperty>,

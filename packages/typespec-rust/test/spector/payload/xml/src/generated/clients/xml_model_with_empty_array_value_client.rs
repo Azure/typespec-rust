@@ -31,7 +31,7 @@ impl XmlModelWithEmptyArrayValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlModelWithEmptyArrayValueClient.get")]
+    #[tracing::function("Payload.Xml.ModelWithEmptyArrayValue.get")]
     pub async fn get(
         &self,
         options: Option<XmlModelWithEmptyArrayValueClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl XmlModelWithEmptyArrayValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlModelWithEmptyArrayValueClient.put")]
+    #[tracing::function("Payload.Xml.ModelWithEmptyArrayValue.put")]
     pub async fn put(
         &self,
         input: RequestContent<ModelWithEmptyArray>,

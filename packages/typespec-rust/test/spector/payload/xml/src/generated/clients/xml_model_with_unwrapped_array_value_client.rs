@@ -31,7 +31,7 @@ impl XmlModelWithUnwrappedArrayValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlModelWithUnwrappedArrayValueClient.get")]
+    #[tracing::function("Payload.Xml.ModelWithUnwrappedArrayValue.get")]
     pub async fn get(
         &self,
         options: Option<XmlModelWithUnwrappedArrayValueClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl XmlModelWithUnwrappedArrayValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlModelWithUnwrappedArrayValueClient.put")]
+    #[tracing::function("Payload.Xml.ModelWithUnwrappedArrayValue.put")]
     pub async fn put(
         &self,
         input: RequestContent<ModelWithUnwrappedArray>,

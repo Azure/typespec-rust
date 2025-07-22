@@ -30,7 +30,7 @@ impl DatetimeQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeQueryClient.default")]
+    #[tracing::function("Encode.Datetime.Query.default")]
     pub async fn default(
         &self,
         value: OffsetDateTime,
@@ -50,7 +50,7 @@ impl DatetimeQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeQueryClient.rfc3339")]
+    #[tracing::function("Encode.Datetime.Query.rfc3339")]
     pub async fn rfc3339(
         &self,
         value: OffsetDateTime,
@@ -70,7 +70,7 @@ impl DatetimeQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeQueryClient.rfc7231")]
+    #[tracing::function("Encode.Datetime.Query.rfc7231")]
     pub async fn rfc7231(
         &self,
         value: OffsetDateTime,
@@ -90,7 +90,7 @@ impl DatetimeQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeQueryClient.unix_timestamp")]
+    #[tracing::function("Encode.Datetime.Query.unixTimestamp")]
     pub async fn unix_timestamp(
         &self,
         value: OffsetDateTime,
@@ -110,7 +110,7 @@ impl DatetimeQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeQueryClient.unix_timestamp_array")]
+    #[tracing::function("Encode.Datetime.Query.unixTimestampArray")]
     pub async fn unix_timestamp_array(
         &self,
         value: &[OffsetDateTime],

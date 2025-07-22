@@ -34,7 +34,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "PageableServerDrivenPaginationContinuationTokenClient.list_header_response_body"
+        "Payload.Pageable.ServerDrivenPagination.ContinuationToken.requestHeaderResponseBody"
     )]
     pub fn list_header_response_body(
         &self,
@@ -83,7 +83,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "PageableServerDrivenPaginationContinuationTokenClient.list_header_response_header"
+        "Payload.Pageable.ServerDrivenPagination.ContinuationToken.requestHeaderResponseHeader"
     )]
     pub fn list_header_response_header(
         &self,
@@ -131,7 +131,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "PageableServerDrivenPaginationContinuationTokenClient.list_query_response_body"
+        "Payload.Pageable.ServerDrivenPagination.ContinuationToken.requestQueryResponseBody"
     )]
     pub fn list_query_response_body(
         &self,
@@ -191,7 +191,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     ///
     /// * `options` - Optional parameters for the request.
     #[tracing::function(
-        "PageableServerDrivenPaginationContinuationTokenClient.list_query_response_header"
+        "Payload.Pageable.ServerDrivenPagination.ContinuationToken.requestQueryResponseHeader"
     )]
     pub fn list_query_response_header(
         &self,

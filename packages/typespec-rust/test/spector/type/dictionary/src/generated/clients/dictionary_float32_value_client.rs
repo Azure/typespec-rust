@@ -29,7 +29,7 @@ impl DictionaryFloat32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryFloat32ValueClient.get")]
+    #[tracing::function("Type.Dictionary.Float32Value.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryFloat32ValueClientGetOptions<'_>>,
@@ -47,7 +47,7 @@ impl DictionaryFloat32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryFloat32ValueClient.put")]
+    #[tracing::function("Type.Dictionary.Float32Value.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, f32>>,

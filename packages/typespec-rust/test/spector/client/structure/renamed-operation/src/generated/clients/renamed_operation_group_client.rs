@@ -28,7 +28,7 @@ impl RenamedOperationGroupClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RenamedOperationGroupClient.renamed_four")]
+    #[tracing::function("Client.Structure.RenamedOperation.Group.renamedFour")]
     pub async fn renamed_four(
         &self,
         options: Option<RenamedOperationGroupClientRenamedFourOptions<'_>>,
@@ -45,7 +45,7 @@ impl RenamedOperationGroupClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RenamedOperationGroupClient.renamed_six")]
+    #[tracing::function("Client.Structure.RenamedOperation.Group.renamedSix")]
     pub async fn renamed_six(
         &self,
         options: Option<RenamedOperationGroupClientRenamedSixOptions<'_>>,
@@ -62,7 +62,7 @@ impl RenamedOperationGroupClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RenamedOperationGroupClient.renamed_two")]
+    #[tracing::function("Client.Structure.RenamedOperation.Group.renamedTwo")]
     pub async fn renamed_two(
         &self,
         options: Option<RenamedOperationGroupClientRenamedTwoOptions<'_>>,

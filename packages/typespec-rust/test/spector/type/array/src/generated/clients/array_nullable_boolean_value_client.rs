@@ -28,7 +28,7 @@ impl ArrayNullableBooleanValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayNullableBooleanValueClient.get")]
+    #[tracing::function("Type.Array.NullableBooleanValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayNullableBooleanValueClientGetOptions<'_>>,
@@ -46,7 +46,7 @@ impl ArrayNullableBooleanValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayNullableBooleanValueClient.put")]
+    #[tracing::function("Type.Array.NullableBooleanValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<bool>>,

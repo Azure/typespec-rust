@@ -30,7 +30,7 @@ impl OptionalCollectionsByteClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalCollectionsByteClient.get_all")]
+    #[tracing::function("Type.Property.Optional.CollectionsByte.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalCollectionsByteClientGetAllOptions<'_>>,
@@ -49,7 +49,7 @@ impl OptionalCollectionsByteClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalCollectionsByteClient.get_default")]
+    #[tracing::function("Type.Property.Optional.CollectionsByte.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalCollectionsByteClientGetDefaultOptions<'_>>,
@@ -68,7 +68,7 @@ impl OptionalCollectionsByteClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalCollectionsByteClient.put_all")]
+    #[tracing::function("Type.Property.Optional.CollectionsByte.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<CollectionsByteProperty>,
@@ -89,7 +89,7 @@ impl OptionalCollectionsByteClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalCollectionsByteClient.put_default")]
+    #[tracing::function("Type.Property.Optional.CollectionsByte.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<CollectionsByteProperty>,

@@ -29,7 +29,7 @@ impl BytesQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesQueryClient.base64")]
+    #[tracing::function("Encode.Bytes.Query.base64")]
     pub async fn base64(
         &self,
         value: &[u8],
@@ -48,7 +48,7 @@ impl BytesQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesQueryClient.base64_url")]
+    #[tracing::function("Encode.Bytes.Query.base64url")]
     pub async fn base64_url(
         &self,
         value: &[u8],
@@ -68,7 +68,7 @@ impl BytesQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesQueryClient.base64_url_array")]
+    #[tracing::function("Encode.Bytes.Query.base64urlArray")]
     pub async fn base64_url_array(
         &self,
         value: &[&[u8]],
@@ -94,7 +94,7 @@ impl BytesQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesQueryClient.default")]
+    #[tracing::function("Encode.Bytes.Query.default")]
     pub async fn default(
         &self,
         value: &[u8],

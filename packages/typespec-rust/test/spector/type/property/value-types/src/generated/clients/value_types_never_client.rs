@@ -28,7 +28,7 @@ impl ValueTypesNeverClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesNeverClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.Never.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesNeverClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl ValueTypesNeverClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesNeverClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.Never.put")]
     pub async fn put(
         &self,
         body: RequestContent<NeverProperty>,

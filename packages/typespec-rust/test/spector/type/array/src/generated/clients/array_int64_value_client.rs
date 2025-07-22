@@ -26,7 +26,7 @@ impl ArrayInt64ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayInt64ValueClient.get")]
+    #[tracing::function("Type.Array.Int64Value.get")]
     pub async fn get(
         &self,
         options: Option<ArrayInt64ValueClientGetOptions<'_>>,
@@ -44,7 +44,7 @@ impl ArrayInt64ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayInt64ValueClient.put")]
+    #[tracing::function("Type.Array.Int64Value.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<i64>>,

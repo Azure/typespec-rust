@@ -68,7 +68,7 @@ impl EmptyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("EmptyClient.get_empty")]
+    #[tracing::function("Type.Model.Empty.getEmpty")]
     pub async fn get_empty(
         &self,
         options: Option<EmptyClientGetEmptyOptions<'_>>,
@@ -86,7 +86,7 @@ impl EmptyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("EmptyClient.post_round_trip_empty")]
+    #[tracing::function("Type.Model.Empty.postRoundTripEmpty")]
     pub async fn post_round_trip_empty(
         &self,
         body: RequestContent<EmptyInputOutput>,
@@ -107,7 +107,7 @@ impl EmptyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("EmptyClient.put_empty")]
+    #[tracing::function("Type.Model.Empty.putEmpty")]
     pub async fn put_empty(
         &self,
         input: RequestContent<EmptyInput>,

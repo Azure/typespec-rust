@@ -29,7 +29,7 @@ impl OptionalDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalDurationClient.get_all")]
+    #[tracing::function("Type.Property.Optional.Duration.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalDurationClientGetAllOptions<'_>>,
@@ -48,7 +48,7 @@ impl OptionalDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalDurationClient.get_default")]
+    #[tracing::function("Type.Property.Optional.Duration.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalDurationClientGetDefaultOptions<'_>>,
@@ -67,7 +67,7 @@ impl OptionalDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalDurationClient.put_all")]
+    #[tracing::function("Type.Property.Optional.Duration.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<DurationProperty>,
@@ -88,7 +88,7 @@ impl OptionalDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalDurationClient.put_default")]
+    #[tracing::function("Type.Property.Optional.Duration.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<DurationProperty>,

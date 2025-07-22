@@ -28,7 +28,7 @@ impl ContentNegotiationDifferentBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ContentNegotiationDifferentBodyClient.get_avatar_as_json")]
+    #[tracing::function("Payload.ContentNegotiation.DifferentBody.getAvatarAsJson")]
     pub async fn get_avatar_as_json(
         &self,
         options: Option<ContentNegotiationDifferentBodyClientGetAvatarAsJsonOptions<'_>>,
@@ -46,7 +46,7 @@ impl ContentNegotiationDifferentBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ContentNegotiationDifferentBodyClient.get_avatar_as_png")]
+    #[tracing::function("Payload.ContentNegotiation.DifferentBody.getAvatarAsPng")]
     pub async fn get_avatar_as_png(
         &self,
         options: Option<ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions<'_>>,

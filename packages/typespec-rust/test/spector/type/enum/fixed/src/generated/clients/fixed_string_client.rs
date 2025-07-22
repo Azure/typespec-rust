@@ -29,7 +29,7 @@ impl FixedStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("FixedStringClient.get_known_value")]
+    #[tracing::function("Type.Enum.Fixed.String.getKnownValue")]
     pub async fn get_known_value(
         &self,
         options: Option<FixedStringClientGetKnownValueOptions<'_>>,
@@ -49,7 +49,7 @@ impl FixedStringClient {
     ///
     /// * `body` - _
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("FixedStringClient.put_known_value")]
+    #[tracing::function("Type.Enum.Fixed.String.putKnownValue")]
     pub async fn put_known_value(
         &self,
         body: RequestContent<DaysOfWeekEnum>,
@@ -71,7 +71,7 @@ impl FixedStringClient {
     ///
     /// * `body` - _
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("FixedStringClient.put_unknown_value")]
+    #[tracing::function("Type.Enum.Fixed.String.putUnknownValue")]
     pub async fn put_unknown_value(
         &self,
         body: RequestContent<DaysOfWeekEnum>,

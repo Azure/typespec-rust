@@ -44,7 +44,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.and")]
+    #[tracing::function("SpecialWords.Operations.and")]
     pub async fn and(
         &self,
         options: Option<SpecialWordsOperationsClientAndOptions<'_>>,
@@ -61,7 +61,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.as_fn")]
+    #[tracing::function("SpecialWords.Operations.as")]
     pub async fn as_fn(
         &self,
         options: Option<SpecialWordsOperationsClientAsOptions<'_>>,
@@ -78,7 +78,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.assert")]
+    #[tracing::function("SpecialWords.Operations.assert")]
     pub async fn assert(
         &self,
         options: Option<SpecialWordsOperationsClientAssertOptions<'_>>,
@@ -95,7 +95,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.async_fn")]
+    #[tracing::function("SpecialWords.Operations.async")]
     pub async fn async_fn(
         &self,
         options: Option<SpecialWordsOperationsClientAsyncOptions<'_>>,
@@ -112,7 +112,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.await_fn")]
+    #[tracing::function("SpecialWords.Operations.await")]
     pub async fn await_fn(
         &self,
         options: Option<SpecialWordsOperationsClientAwaitOptions<'_>>,
@@ -129,7 +129,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.break_fn")]
+    #[tracing::function("SpecialWords.Operations.break")]
     pub async fn break_fn(
         &self,
         options: Option<SpecialWordsOperationsClientBreakOptions<'_>>,
@@ -146,7 +146,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.class")]
+    #[tracing::function("SpecialWords.Operations.class")]
     pub async fn class(
         &self,
         options: Option<SpecialWordsOperationsClientClassOptions<'_>>,
@@ -163,7 +163,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.constructor")]
+    #[tracing::function("SpecialWords.Operations.constructor")]
     pub async fn constructor(
         &self,
         options: Option<SpecialWordsOperationsClientConstructorOptions<'_>>,
@@ -180,7 +180,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.continue_fn")]
+    #[tracing::function("SpecialWords.Operations.continue")]
     pub async fn continue_fn(
         &self,
         options: Option<SpecialWordsOperationsClientContinueOptions<'_>>,
@@ -197,7 +197,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.def")]
+    #[tracing::function("SpecialWords.Operations.def")]
     pub async fn def(
         &self,
         options: Option<SpecialWordsOperationsClientDefOptions<'_>>,
@@ -214,7 +214,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.del")]
+    #[tracing::function("SpecialWords.Operations.del")]
     pub async fn del(
         &self,
         options: Option<SpecialWordsOperationsClientDelOptions<'_>>,
@@ -231,7 +231,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.elif")]
+    #[tracing::function("SpecialWords.Operations.elif")]
     pub async fn elif(
         &self,
         options: Option<SpecialWordsOperationsClientElifOptions<'_>>,
@@ -248,7 +248,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.else_fn")]
+    #[tracing::function("SpecialWords.Operations.else")]
     pub async fn else_fn(
         &self,
         options: Option<SpecialWordsOperationsClientElseOptions<'_>>,
@@ -265,7 +265,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.except")]
+    #[tracing::function("SpecialWords.Operations.except")]
     pub async fn except(
         &self,
         options: Option<SpecialWordsOperationsClientExceptOptions<'_>>,
@@ -282,7 +282,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.exec")]
+    #[tracing::function("SpecialWords.Operations.exec")]
     pub async fn exec(
         &self,
         options: Option<SpecialWordsOperationsClientExecOptions<'_>>,
@@ -299,7 +299,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.finally")]
+    #[tracing::function("SpecialWords.Operations.finally")]
     pub async fn finally(
         &self,
         options: Option<SpecialWordsOperationsClientFinallyOptions<'_>>,
@@ -316,7 +316,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.for_fn")]
+    #[tracing::function("SpecialWords.Operations.for")]
     pub async fn for_fn(
         &self,
         options: Option<SpecialWordsOperationsClientForOptions<'_>>,
@@ -333,7 +333,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.from")]
+    #[tracing::function("SpecialWords.Operations.from")]
     pub async fn from(
         &self,
         options: Option<SpecialWordsOperationsClientFromOptions<'_>>,
@@ -350,7 +350,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.global")]
+    #[tracing::function("SpecialWords.Operations.global")]
     pub async fn global(
         &self,
         options: Option<SpecialWordsOperationsClientGlobalOptions<'_>>,
@@ -367,7 +367,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.if_fn")]
+    #[tracing::function("SpecialWords.Operations.if")]
     pub async fn if_fn(
         &self,
         options: Option<SpecialWordsOperationsClientIfOptions<'_>>,
@@ -384,7 +384,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.import")]
+    #[tracing::function("SpecialWords.Operations.import")]
     pub async fn import(
         &self,
         options: Option<SpecialWordsOperationsClientImportOptions<'_>>,
@@ -401,7 +401,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.in_fn")]
+    #[tracing::function("SpecialWords.Operations.in")]
     pub async fn in_fn(
         &self,
         options: Option<SpecialWordsOperationsClientInOptions<'_>>,
@@ -418,7 +418,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.is")]
+    #[tracing::function("SpecialWords.Operations.is")]
     pub async fn is(
         &self,
         options: Option<SpecialWordsOperationsClientIsOptions<'_>>,
@@ -435,7 +435,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.lambda")]
+    #[tracing::function("SpecialWords.Operations.lambda")]
     pub async fn lambda(
         &self,
         options: Option<SpecialWordsOperationsClientLambdaOptions<'_>>,
@@ -452,7 +452,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.not")]
+    #[tracing::function("SpecialWords.Operations.not")]
     pub async fn not(
         &self,
         options: Option<SpecialWordsOperationsClientNotOptions<'_>>,
@@ -469,7 +469,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.or")]
+    #[tracing::function("SpecialWords.Operations.or")]
     pub async fn or(
         &self,
         options: Option<SpecialWordsOperationsClientOrOptions<'_>>,
@@ -486,7 +486,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.pass")]
+    #[tracing::function("SpecialWords.Operations.pass")]
     pub async fn pass(
         &self,
         options: Option<SpecialWordsOperationsClientPassOptions<'_>>,
@@ -503,7 +503,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.raise")]
+    #[tracing::function("SpecialWords.Operations.raise")]
     pub async fn raise(
         &self,
         options: Option<SpecialWordsOperationsClientRaiseOptions<'_>>,
@@ -520,7 +520,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.return_fn")]
+    #[tracing::function("SpecialWords.Operations.return")]
     pub async fn return_fn(
         &self,
         options: Option<SpecialWordsOperationsClientReturnOptions<'_>>,
@@ -537,7 +537,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.try_fn")]
+    #[tracing::function("SpecialWords.Operations.try")]
     pub async fn try_fn(
         &self,
         options: Option<SpecialWordsOperationsClientTryOptions<'_>>,
@@ -554,7 +554,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.while_fn")]
+    #[tracing::function("SpecialWords.Operations.while")]
     pub async fn while_fn(
         &self,
         options: Option<SpecialWordsOperationsClientWhileOptions<'_>>,
@@ -571,7 +571,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.with")]
+    #[tracing::function("SpecialWords.Operations.with")]
     pub async fn with(
         &self,
         options: Option<SpecialWordsOperationsClientWithOptions<'_>>,
@@ -588,7 +588,7 @@ impl SpecialWordsOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsOperationsClient.yield_fn")]
+    #[tracing::function("SpecialWords.Operations.yield")]
     pub async fn yield_fn(
         &self,
         options: Option<SpecialWordsOperationsClientYieldOptions<'_>>,

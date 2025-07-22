@@ -28,7 +28,7 @@ impl ValueTypesStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesStringClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.String.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesStringClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl ValueTypesStringClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesStringClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.String.put")]
     pub async fn put(
         &self,
         body: RequestContent<StringProperty>,

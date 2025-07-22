@@ -29,7 +29,7 @@ impl ScalarDecimalVerifyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ScalarDecimalVerifyClient.prepare_verify")]
+    #[tracing::function("Type.Scalar.DecimalVerify.prepareVerify")]
     pub async fn prepare_verify(
         &self,
         options: Option<ScalarDecimalVerifyClientPrepareVerifyOptions<'_>>,
@@ -47,7 +47,7 @@ impl ScalarDecimalVerifyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ScalarDecimalVerifyClient.verify")]
+    #[tracing::function("Type.Scalar.DecimalVerify.verify")]
     pub async fn verify(
         &self,
         body: RequestContent<Decimal>,

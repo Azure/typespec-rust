@@ -104,7 +104,7 @@ impl PageBlobClient {
     ///
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageBlobClient.clear_pages")]
+    #[tracing::function("Storage.Blob.Container.Blob.PageBlob.clearPages")]
     pub async fn clear_pages(
         &self,
         content_length: u64,
@@ -201,7 +201,7 @@ impl PageBlobClient {
     ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
     ///   either be public or must be authenticated via a shared access signature.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageBlobClient.copy_incremental")]
+    #[tracing::function("Storage.Blob.Container.Blob.PageBlob.copyIncremental")]
     pub async fn copy_incremental(
         &self,
         copy_source: String,
@@ -253,7 +253,7 @@ impl PageBlobClient {
     /// * `blob_content_length` - This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must
     ///   be aligned to a 512-byte boundary.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageBlobClient.create")]
+    #[tracing::function("Storage.Blob.Container.Blob.PageBlob.create")]
     pub async fn create(
         &self,
         content_length: u64,
@@ -372,7 +372,7 @@ impl PageBlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageBlobClient.get_page_ranges")]
+    #[tracing::function("Storage.Blob.Container.Blob.PageBlob.getPageRanges")]
     pub async fn get_page_ranges(
         &self,
         options: Option<PageBlobClientGetPageRangesOptions<'_>>,
@@ -435,7 +435,7 @@ impl PageBlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageBlobClient.get_page_ranges_diff")]
+    #[tracing::function("Storage.Blob.Container.Blob.PageBlob.getPageRangesDiff")]
     pub async fn get_page_ranges_diff(
         &self,
         options: Option<PageBlobClientGetPageRangesDiffOptions<'_>>,
@@ -509,7 +509,7 @@ impl PageBlobClient {
     /// * `blob_content_length` - This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must
     ///   be aligned to a 512-byte boundary.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageBlobClient.resize")]
+    #[tracing::function("Storage.Blob.Container.Blob.PageBlob.resize")]
     pub async fn resize(
         &self,
         blob_content_length: u64,
@@ -581,7 +581,7 @@ impl PageBlobClient {
     /// * `sequence_number_action` - Required if the x-ms-blob-sequence-number header is set for the request. This property applies
     ///   to page blobs only. This property indicates how the service should modify the blob's sequence number
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageBlobClient.update_sequence_number")]
+    #[tracing::function("Storage.Blob.Container.Blob.PageBlob.updateSequenceNumber")]
     pub async fn update_sequence_number(
         &self,
         sequence_number_action: SequenceNumberActionType,
@@ -646,7 +646,7 @@ impl PageBlobClient {
     /// * `body` - The body of the request.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageBlobClient.upload_pages")]
+    #[tracing::function("Storage.Blob.Container.Blob.PageBlob.uploadPages")]
     pub async fn upload_pages(
         &self,
         body: RequestContent<Bytes>,
@@ -761,7 +761,7 @@ impl PageBlobClient {
     /// * `range` - Bytes of source data in the specified range. The length of this range should match the ContentLength header
     ///   and x-ms-range/Range destination range header.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageBlobClient.upload_pages_from_url")]
+    #[tracing::function("Storage.Blob.Container.Blob.PageBlob.uploadPagesFromUrl")]
     pub async fn upload_pages_from_url(
         &self,
         source_url: String,

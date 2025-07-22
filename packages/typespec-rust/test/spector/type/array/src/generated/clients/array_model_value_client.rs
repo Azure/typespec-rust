@@ -28,7 +28,7 @@ impl ArrayModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayModelValueClient.get")]
+    #[tracing::function("Type.Array.ModelValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayModelValueClientGetOptions<'_>>,
@@ -46,7 +46,7 @@ impl ArrayModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayModelValueClient.put")]
+    #[tracing::function("Type.Array.ModelValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<InnerModel>>,

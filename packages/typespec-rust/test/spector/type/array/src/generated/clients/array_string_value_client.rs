@@ -28,7 +28,7 @@ impl ArrayStringValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayStringValueClient.get")]
+    #[tracing::function("Type.Array.StringValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayStringValueClientGetOptions<'_>>,
@@ -46,7 +46,7 @@ impl ArrayStringValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayStringValueClient.put")]
+    #[tracing::function("Type.Array.StringValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<String>>,

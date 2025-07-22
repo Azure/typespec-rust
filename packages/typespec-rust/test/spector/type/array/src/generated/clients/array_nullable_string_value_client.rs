@@ -28,7 +28,7 @@ impl ArrayNullableStringValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayNullableStringValueClient.get")]
+    #[tracing::function("Type.Array.NullableStringValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayNullableStringValueClientGetOptions<'_>>,
@@ -46,7 +46,7 @@ impl ArrayNullableStringValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayNullableStringValueClient.put")]
+    #[tracing::function("Type.Array.NullableStringValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<String>>,

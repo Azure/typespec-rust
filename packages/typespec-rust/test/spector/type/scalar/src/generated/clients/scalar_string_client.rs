@@ -26,7 +26,7 @@ impl ScalarStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ScalarStringClient.get")]
+    #[tracing::function("Type.Scalar.String.get")]
     pub async fn get(
         &self,
         options: Option<ScalarStringClientGetOptions<'_>>,
@@ -46,7 +46,7 @@ impl ScalarStringClient {
     ///
     /// * `body` - _
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ScalarStringClient.put")]
+    #[tracing::function("Type.Scalar.String.put")]
     pub async fn put(
         &self,
         body: RequestContent<String>,

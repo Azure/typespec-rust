@@ -30,7 +30,7 @@ impl XmlSimpleModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlSimpleModelValueClient.get")]
+    #[tracing::function("Payload.Xml.SimpleModelValue.get")]
     pub async fn get(
         &self,
         options: Option<XmlSimpleModelValueClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl XmlSimpleModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlSimpleModelValueClient.put")]
+    #[tracing::function("Payload.Xml.SimpleModelValue.put")]
     pub async fn put(
         &self,
         input: RequestContent<SimpleModel>,

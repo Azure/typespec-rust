@@ -30,7 +30,7 @@ impl OptionalBooleanLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalBooleanLiteralClient.get_all")]
+    #[tracing::function("Type.Property.Optional.BooleanLiteral.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalBooleanLiteralClientGetAllOptions<'_>>,
@@ -49,7 +49,7 @@ impl OptionalBooleanLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalBooleanLiteralClient.get_default")]
+    #[tracing::function("Type.Property.Optional.BooleanLiteral.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalBooleanLiteralClientGetDefaultOptions<'_>>,
@@ -68,7 +68,7 @@ impl OptionalBooleanLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalBooleanLiteralClient.put_all")]
+    #[tracing::function("Type.Property.Optional.BooleanLiteral.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<BooleanLiteralProperty>,
@@ -89,7 +89,7 @@ impl OptionalBooleanLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalBooleanLiteralClient.put_default")]
+    #[tracing::function("Type.Property.Optional.BooleanLiteral.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<BooleanLiteralProperty>,

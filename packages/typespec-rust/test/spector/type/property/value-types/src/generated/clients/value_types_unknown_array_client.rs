@@ -29,7 +29,7 @@ impl ValueTypesUnknownArrayClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesUnknownArrayClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.UnknownArray.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesUnknownArrayClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl ValueTypesUnknownArrayClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesUnknownArrayClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.UnknownArray.put")]
     pub async fn put(
         &self,
         body: RequestContent<UnknownArrayProperty>,

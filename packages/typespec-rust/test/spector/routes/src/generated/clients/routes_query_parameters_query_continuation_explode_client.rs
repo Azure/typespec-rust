@@ -30,7 +30,7 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesQueryParametersQueryContinuationExplodeClient.array")]
+    #[tracing::function("Routes.QueryParameters.QueryContinuation.Explode.array")]
     pub async fn array(
         &self,
         param: &[&str],
@@ -52,7 +52,7 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesQueryParametersQueryContinuationExplodeClient.primitive")]
+    #[tracing::function("Routes.QueryParameters.QueryContinuation.Explode.primitive")]
     pub async fn primitive(
         &self,
         param: &str,
@@ -72,7 +72,7 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesQueryParametersQueryContinuationExplodeClient.record")]
+    #[tracing::function("Routes.QueryParameters.QueryContinuation.Explode.record")]
     pub async fn record(
         &self,
         param: HashMap<String, i32>,

@@ -73,7 +73,9 @@ impl MixedParamsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("MixedParamsClient.with_body")]
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MixedParams.withBody"
+    )]
     pub async fn with_body(
         &self,
         region: &str,
@@ -97,7 +99,9 @@ impl MixedParamsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("MixedParamsClient.with_query")]
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MixedParams.withQuery"
+    )]
     pub async fn with_query(
         &self,
         region: &str,

@@ -30,7 +30,7 @@ impl ScalarDecimalTypeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ScalarDecimalTypeClient.request_body")]
+    #[tracing::function("Type.Scalar.DecimalType.requestBody")]
     pub async fn request_body(
         &self,
         body: RequestContent<Decimal>,
@@ -50,7 +50,7 @@ impl ScalarDecimalTypeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ScalarDecimalTypeClient.request_parameter")]
+    #[tracing::function("Type.Scalar.DecimalType.requestParameter")]
     pub async fn request_parameter(
         &self,
         value: Decimal,
@@ -70,7 +70,7 @@ impl ScalarDecimalTypeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ScalarDecimalTypeClient.response_body")]
+    #[tracing::function("Type.Scalar.DecimalType.responseBody")]
     pub async fn response_body(
         &self,
         options: Option<ScalarDecimalTypeClientResponseBodyOptions<'_>>,

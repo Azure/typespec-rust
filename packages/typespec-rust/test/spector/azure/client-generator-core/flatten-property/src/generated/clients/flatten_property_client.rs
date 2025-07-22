@@ -69,7 +69,7 @@ impl FlattenPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("FlattenPropertyClient.put_flatten_model")]
+    #[tracing::function("_Specs_.Azure.ClientGenerator.Core.FlattenProperty.putFlattenModel")]
     pub async fn put_flatten_model(
         &self,
         input: RequestContent<FlattenModel>,
@@ -90,7 +90,7 @@ impl FlattenPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("FlattenPropertyClient.put_nested_flatten_model")]
+    #[tracing::function("_Specs_.Azure.ClientGenerator.Core.FlattenProperty.putNestedFlattenModel")]
     pub async fn put_nested_flatten_model(
         &self,
         input: RequestContent<NestedFlattenModel>,

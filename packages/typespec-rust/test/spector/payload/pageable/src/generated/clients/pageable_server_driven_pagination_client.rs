@@ -39,7 +39,7 @@ impl PageableServerDrivenPaginationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageableServerDrivenPaginationClient.list")]
+    #[tracing::function("Payload.Pageable.ServerDrivenPagination.link")]
     pub fn list(
         &self,
         options: Option<PageableServerDrivenPaginationClientListOptions<'_>>,

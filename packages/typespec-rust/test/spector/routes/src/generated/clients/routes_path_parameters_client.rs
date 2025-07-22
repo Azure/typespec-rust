@@ -35,7 +35,7 @@ impl RoutesPathParametersClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesPathParametersClient.annotation_only")]
+    #[tracing::function("Routes.PathParameters.annotationOnly")]
     pub async fn annotation_only(
         &self,
         param: &str,
@@ -55,7 +55,7 @@ impl RoutesPathParametersClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesPathParametersClient.explicit")]
+    #[tracing::function("Routes.PathParameters.explicit")]
     pub async fn explicit(
         &self,
         param: &str,
@@ -130,7 +130,7 @@ impl RoutesPathParametersClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesPathParametersClient.template_only")]
+    #[tracing::function("Routes.PathParameters.templateOnly")]
     pub async fn template_only(
         &self,
         param: &str,

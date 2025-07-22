@@ -82,7 +82,7 @@ impl ResiliencyServiceDrivenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResiliencyServiceDrivenClient.from_none")]
+    #[tracing::function("Resiliency.ServiceDriven.AddOptionalParam.fromNone")]
     pub async fn from_none(
         &self,
         options: Option<ResiliencyServiceDrivenClientFromNoneOptions<'_>>,
@@ -101,7 +101,7 @@ impl ResiliencyServiceDrivenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResiliencyServiceDrivenClient.from_one_optional")]
+    #[tracing::function("Resiliency.ServiceDriven.AddOptionalParam.fromOneOptional")]
     pub async fn from_one_optional(
         &self,
         options: Option<ResiliencyServiceDrivenClientFromOneOptionalOptions<'_>>,
@@ -124,7 +124,7 @@ impl ResiliencyServiceDrivenClient {
     ///
     /// * `parameter` - I am a required parameter
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResiliencyServiceDrivenClient.from_one_required")]
+    #[tracing::function("Resiliency.ServiceDriven.AddOptionalParam.fromOneRequired")]
     pub async fn from_one_required(
         &self,
         parameter: &str,

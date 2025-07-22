@@ -29,7 +29,7 @@ impl NullableBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableBytesClient.get_non_null")]
+    #[tracing::function("Type.Property.Nullable.Bytes.getNonNull")]
     pub async fn get_non_null(
         &self,
         options: Option<NullableBytesClientGetNonNullOptions<'_>>,
@@ -48,7 +48,7 @@ impl NullableBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableBytesClient.get_null")]
+    #[tracing::function("Type.Property.Nullable.Bytes.getNull")]
     pub async fn get_null(
         &self,
         options: Option<NullableBytesClientGetNullOptions<'_>>,
@@ -67,7 +67,7 @@ impl NullableBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableBytesClient.patch_non_null")]
+    #[tracing::function("Type.Property.Nullable.Bytes.patchNonNull")]
     pub async fn patch_non_null(
         &self,
         body: RequestContent<BytesProperty>,
@@ -88,7 +88,7 @@ impl NullableBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableBytesClient.patch_null")]
+    #[tracing::function("Type.Property.Nullable.Bytes.patchNull")]
     pub async fn patch_null(
         &self,
         body: RequestContent<BytesProperty>,

@@ -79,7 +79,7 @@ impl UnionClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("UnionClient.valid_key")]
+    #[tracing::function("Authentication.Union.validKey")]
     pub async fn valid_key(
         &self,
         options: Option<UnionClientValidKeyOptions<'_>>,
@@ -97,7 +97,7 @@ impl UnionClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("UnionClient.valid_token")]
+    #[tracing::function("Authentication.Union.validToken")]
     pub async fn valid_token(
         &self,
         options: Option<UnionClientValidTokenOptions<'_>>,

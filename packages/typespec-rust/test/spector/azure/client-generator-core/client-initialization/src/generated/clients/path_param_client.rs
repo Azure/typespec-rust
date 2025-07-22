@@ -72,7 +72,9 @@ impl PathParamClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PathParamClient.delete_standalone")]
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.PathParam.deleteStandalone"
+    )]
     pub async fn delete_standalone(
         &self,
         options: Option<PathParamClientDeleteStandaloneOptions<'_>>,
@@ -92,7 +94,9 @@ impl PathParamClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PathParamClient.get_standalone")]
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.PathParam.getStandalone"
+    )]
     pub async fn get_standalone(
         &self,
         options: Option<PathParamClientGetStandaloneOptions<'_>>,
@@ -114,7 +118,9 @@ impl PathParamClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PathParamClient.with_query")]
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.PathParam.withQuery"
+    )]
     pub async fn with_query(
         &self,
         options: Option<PathParamClientWithQueryOptions<'_>>,

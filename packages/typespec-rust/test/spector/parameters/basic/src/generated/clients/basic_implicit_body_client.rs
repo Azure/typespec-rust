@@ -25,7 +25,7 @@ impl BasicImplicitBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BasicImplicitBodyClient.simple")]
+    #[tracing::function("Parameters.Basic.ImplicitBody.simple")]
     pub async fn simple(
         &self,
         name: String,

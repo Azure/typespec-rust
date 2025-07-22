@@ -34,7 +34,7 @@ impl ResourcesNestedClient {
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `nexted_proxy_resource_name` - Name of the nested resource.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesNestedClient.get")]
+    #[tracing::function("Azure.ResourceManager.Resources.Nested.get")]
     pub async fn get(
         &self,
         resource_group_name: &str,
@@ -68,7 +68,7 @@ impl ResourcesNestedClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesNestedClient.list_by_top_level_tracked_resource")]
+    #[tracing::function("Azure.ResourceManager.Resources.Nested.listByTopLevelTrackedResource")]
     pub fn list_by_top_level_tracked_resource(
         &self,
         resource_group_name: &str,

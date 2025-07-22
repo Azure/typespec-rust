@@ -29,7 +29,7 @@ impl BytesPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesPropertyClient.base64")]
+    #[tracing::function("Encode.Bytes.Property.base64")]
     pub async fn base64(
         &self,
         body: RequestContent<Base64BytesProperty>,
@@ -50,7 +50,7 @@ impl BytesPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesPropertyClient.base64_url")]
+    #[tracing::function("Encode.Bytes.Property.base64url")]
     pub async fn base64_url(
         &self,
         body: RequestContent<Base64urlBytesProperty>,
@@ -71,7 +71,7 @@ impl BytesPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesPropertyClient.base64_url_array")]
+    #[tracing::function("Encode.Bytes.Property.base64urlArray")]
     pub async fn base64_url_array(
         &self,
         body: RequestContent<Base64urlArrayBytesProperty>,
@@ -92,7 +92,7 @@ impl BytesPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesPropertyClient.default")]
+    #[tracing::function("Encode.Bytes.Property.default")]
     pub async fn default(
         &self,
         body: RequestContent<DefaultBytesProperty>,

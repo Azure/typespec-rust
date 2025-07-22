@@ -28,7 +28,7 @@ impl NamingUnionEnumClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NamingUnionEnumClient.union_enum_member_name")]
+    #[tracing::function("Client.Naming.UnionEnum.unionEnumMemberName")]
     pub async fn union_enum_member_name(
         &self,
         body: RequestContent<ExtensibleEnum>,
@@ -48,7 +48,7 @@ impl NamingUnionEnumClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NamingUnionEnumClient.union_enum_name")]
+    #[tracing::function("Client.Naming.UnionEnum.unionEnumName")]
     pub async fn union_enum_name(
         &self,
         body: RequestContent<ClientExtensibleEnum>,

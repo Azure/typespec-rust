@@ -28,7 +28,7 @@ impl ArrayNullableInt32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayNullableInt32ValueClient.get")]
+    #[tracing::function("Type.Array.NullableInt32Value.get")]
     pub async fn get(
         &self,
         options: Option<ArrayNullableInt32ValueClientGetOptions<'_>>,
@@ -46,7 +46,7 @@ impl ArrayNullableInt32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayNullableInt32ValueClient.put")]
+    #[tracing::function("Type.Array.NullableInt32Value.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<i32>>,

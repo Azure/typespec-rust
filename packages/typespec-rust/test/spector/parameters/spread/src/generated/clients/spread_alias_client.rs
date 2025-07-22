@@ -35,7 +35,7 @@ impl SpreadAliasClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpreadAliasClient.spread_as_request_body")]
+    #[tracing::function("Parameters.Spread.Alias.spreadAsRequestBody")]
     pub async fn spread_as_request_body(
         &self,
         name: String,
@@ -57,7 +57,7 @@ impl SpreadAliasClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpreadAliasClient.spread_as_request_parameter")]
+    #[tracing::function("Parameters.Spread.Alias.spreadAsRequestParameter")]
     pub async fn spread_as_request_parameter(
         &self,
         id: &str,
@@ -87,7 +87,7 @@ impl SpreadAliasClient {
     /// * `name` - name of the Thing
     /// * `age` - age of the Thing
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpreadAliasClient.spread_parameter_with_inner_alias")]
+    #[tracing::function("Parameters.Spread.Alias.spreadParameterWithInnerAlias")]
     pub async fn spread_parameter_with_inner_alias(
         &self,
         id: &str,
@@ -115,7 +115,7 @@ impl SpreadAliasClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpreadAliasClient.spread_parameter_with_inner_model")]
+    #[tracing::function("Parameters.Spread.Alias.spreadParameterWithInnerModel")]
     pub async fn spread_parameter_with_inner_model(
         &self,
         id: &str,
@@ -144,7 +144,7 @@ impl SpreadAliasClient {
     /// * `required_string` - required string
     /// * `required_int_list` - required int
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpreadAliasClient.spread_with_multiple_parameters")]
+    #[tracing::function("Parameters.Spread.Alias.spreadWithMultipleParameters")]
     pub async fn spread_with_multiple_parameters(
         &self,
         id: &str,

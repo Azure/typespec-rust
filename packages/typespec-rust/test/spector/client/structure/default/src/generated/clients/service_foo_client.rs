@@ -25,7 +25,7 @@ impl ServiceFooClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ServiceFooClient.four")]
+    #[tracing::function("Client.Structure.Service.Foo.four")]
     pub async fn four(
         &self,
         options: Option<ServiceFooClientFourOptions<'_>>,
@@ -42,7 +42,7 @@ impl ServiceFooClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ServiceFooClient.three")]
+    #[tracing::function("Client.Structure.Service.Foo.three")]
     pub async fn three(
         &self,
         options: Option<ServiceFooClientThreeOptions<'_>>,

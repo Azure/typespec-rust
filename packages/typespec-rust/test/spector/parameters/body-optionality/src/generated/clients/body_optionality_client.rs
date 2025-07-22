@@ -85,7 +85,7 @@ impl BodyOptionalityClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BodyOptionalityClient.required_explicit")]
+    #[tracing::function("Parameters.BodyOptionality.requiredExplicit")]
     pub async fn required_explicit(
         &self,
         body: RequestContent<BodyModel>,
@@ -105,7 +105,7 @@ impl BodyOptionalityClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BodyOptionalityClient.required_implicit")]
+    #[tracing::function("Parameters.BodyOptionality.requiredImplicit")]
     pub async fn required_implicit(
         &self,
         name: String,

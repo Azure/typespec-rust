@@ -29,7 +29,7 @@ impl OperationTemplatesOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OperationTemplatesOperationsClient.list")]
+    #[tracing::function("Azure.ResourceManager.Operations.list")]
     pub fn list(
         &self,
         options: Option<OperationTemplatesOperationsClientListOptions<'_>>,

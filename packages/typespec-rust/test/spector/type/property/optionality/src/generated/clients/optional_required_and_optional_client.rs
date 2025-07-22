@@ -32,7 +32,7 @@ impl OptionalRequiredAndOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalRequiredAndOptionalClient.get_all")]
+    #[tracing::function("Type.Property.Optional.RequiredAndOptional.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalRequiredAndOptionalClientGetAllOptions<'_>>,
@@ -51,7 +51,7 @@ impl OptionalRequiredAndOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalRequiredAndOptionalClient.get_required_only")]
+    #[tracing::function("Type.Property.Optional.RequiredAndOptional.getRequiredOnly")]
     pub async fn get_required_only(
         &self,
         options: Option<OptionalRequiredAndOptionalClientGetRequiredOnlyOptions<'_>>,
@@ -70,7 +70,7 @@ impl OptionalRequiredAndOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalRequiredAndOptionalClient.put_all")]
+    #[tracing::function("Type.Property.Optional.RequiredAndOptional.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<RequiredAndOptionalProperty>,
@@ -91,7 +91,7 @@ impl OptionalRequiredAndOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalRequiredAndOptionalClient.put_required_only")]
+    #[tracing::function("Type.Property.Optional.RequiredAndOptional.putRequiredOnly")]
     pub async fn put_required_only(
         &self,
         body: RequestContent<RequiredAndOptionalProperty>,

@@ -28,7 +28,7 @@ impl ValueTypesBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesBytesClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.Bytes.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesBytesClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl ValueTypesBytesClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesBytesClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.Bytes.put")]
     pub async fn put(
         &self,
         body: RequestContent<BytesProperty>,

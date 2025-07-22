@@ -39,7 +39,7 @@ impl ResourcesTopLevelClient {
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `body` - The content of the action request
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesTopLevelClient.action_sync")]
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.actionSync")]
     pub async fn action_sync(
         &self,
         resource_group_name: &str,
@@ -74,7 +74,7 @@ impl ResourcesTopLevelClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesTopLevelClient.get")]
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.get")]
     pub async fn get(
         &self,
         resource_group_name: &str,
@@ -105,7 +105,7 @@ impl ResourcesTopLevelClient {
     ///
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesTopLevelClient.list_by_resource_group")]
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.listByResourceGroup")]
     pub fn list_by_resource_group(
         &self,
         resource_group_name: &str,
@@ -164,7 +164,7 @@ impl ResourcesTopLevelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesTopLevelClient.list_by_subscription")]
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.listBySubscription")]
     pub fn list_by_subscription(
         &self,
         options: Option<ResourcesTopLevelClientListBySubscriptionOptions<'_>>,

@@ -25,7 +25,7 @@ impl ServiceBazFooClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ServiceBazFooClient.seven")]
+    #[tracing::function("Client.Structure.Service.Baz.Foo.seven")]
     pub async fn seven(
         &self,
         options: Option<ServiceBazFooClientSevenOptions<'_>>,

@@ -89,7 +89,7 @@ impl PageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageClient.list_parameterized_next_link")]
+    #[tracing::function("_Specs_.Azure.Core.Page.withParameterizedNextLink")]
     pub fn list_parameterized_next_link(
         &self,
         select: &str,
@@ -136,7 +136,7 @@ impl PageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageClient.list_with_custom_page_model")]
+    #[tracing::function("_Specs_.Azure.Core.Page.listWithCustomPageModel")]
     pub fn list_with_custom_page_model(
         &self,
         options: Option<PageClientListWithCustomPageModelOptions<'_>>,
@@ -191,7 +191,7 @@ impl PageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageClient.list_with_page")]
+    #[tracing::function("_Specs_.Azure.Core.Page.listWithPage")]
     pub fn list_with_page(
         &self,
         options: Option<PageClientListWithPageOptions<'_>>,
@@ -247,7 +247,7 @@ impl PageClient {
     ///
     /// * `body_input` - The body of the input.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("PageClient.list_with_parameters")]
+    #[tracing::function("_Specs_.Azure.Core.Page.listWithParameters")]
     pub fn list_with_parameters(
         &self,
         body_input: RequestContent<ListItemInputBody>,

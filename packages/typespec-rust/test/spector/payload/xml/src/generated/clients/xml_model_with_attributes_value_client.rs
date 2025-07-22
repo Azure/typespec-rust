@@ -31,7 +31,7 @@ impl XmlModelWithAttributesValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlModelWithAttributesValueClient.get")]
+    #[tracing::function("Payload.Xml.ModelWithAttributesValue.get")]
     pub async fn get(
         &self,
         options: Option<XmlModelWithAttributesValueClientGetOptions<'_>>,
@@ -49,7 +49,7 @@ impl XmlModelWithAttributesValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("XmlModelWithAttributesValueClient.put")]
+    #[tracing::function("Payload.Xml.ModelWithAttributesValue.put")]
     pub async fn put(
         &self,
         input: RequestContent<ModelWithAttributes>,

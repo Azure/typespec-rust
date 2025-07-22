@@ -30,7 +30,7 @@ impl DatetimeHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeHeaderClient.default")]
+    #[tracing::function("Encode.Datetime.Header.default")]
     pub async fn default(
         &self,
         value: OffsetDateTime,
@@ -49,7 +49,7 @@ impl DatetimeHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeHeaderClient.rfc3339")]
+    #[tracing::function("Encode.Datetime.Header.rfc3339")]
     pub async fn rfc3339(
         &self,
         value: OffsetDateTime,
@@ -68,7 +68,7 @@ impl DatetimeHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeHeaderClient.rfc7231")]
+    #[tracing::function("Encode.Datetime.Header.rfc7231")]
     pub async fn rfc7231(
         &self,
         value: OffsetDateTime,
@@ -87,7 +87,7 @@ impl DatetimeHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeHeaderClient.unix_timestamp")]
+    #[tracing::function("Encode.Datetime.Header.unixTimestamp")]
     pub async fn unix_timestamp(
         &self,
         value: OffsetDateTime,
@@ -106,7 +106,7 @@ impl DatetimeHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DatetimeHeaderClient.unix_timestamp_array")]
+    #[tracing::function("Encode.Datetime.Header.unixTimestampArray")]
     pub async fn unix_timestamp_array(
         &self,
         value: &[OffsetDateTime],

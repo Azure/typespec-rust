@@ -68,7 +68,7 @@ impl UsageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("UsageClient.input")]
+    #[tracing::function("Type.Model.Usage.input")]
     pub async fn input(
         &self,
         input: RequestContent<InputRecord>,
@@ -88,7 +88,7 @@ impl UsageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("UsageClient.input_and_output")]
+    #[tracing::function("Type.Model.Usage.inputAndOutput")]
     pub async fn input_and_output(
         &self,
         body: RequestContent<InputOutputRecord>,
@@ -109,7 +109,7 @@ impl UsageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("UsageClient.output")]
+    #[tracing::function("Type.Model.Usage.output")]
     pub async fn output(
         &self,
         options: Option<UsageClientOutputOptions<'_>>,

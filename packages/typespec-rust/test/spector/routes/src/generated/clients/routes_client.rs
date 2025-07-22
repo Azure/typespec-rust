@@ -69,7 +69,7 @@ impl RoutesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("RoutesClient.fixed")]
+    #[tracing::function("Routes.fixed")]
     pub async fn fixed(
         &self,
         options: Option<RoutesClientFixedOptions<'_>>,

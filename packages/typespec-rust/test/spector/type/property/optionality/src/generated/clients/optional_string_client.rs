@@ -29,7 +29,7 @@ impl OptionalStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalStringClient.get_all")]
+    #[tracing::function("Type.Property.Optional.String.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalStringClientGetAllOptions<'_>>,
@@ -48,7 +48,7 @@ impl OptionalStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalStringClient.get_default")]
+    #[tracing::function("Type.Property.Optional.String.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalStringClientGetDefaultOptions<'_>>,
@@ -67,7 +67,7 @@ impl OptionalStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalStringClient.put_all")]
+    #[tracing::function("Type.Property.Optional.String.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<StringProperty>,
@@ -88,7 +88,7 @@ impl OptionalStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("OptionalStringClient.put_default")]
+    #[tracing::function("Type.Property.Optional.String.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<StringProperty>,

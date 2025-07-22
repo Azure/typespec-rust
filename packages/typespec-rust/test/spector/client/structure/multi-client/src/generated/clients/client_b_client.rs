@@ -73,7 +73,7 @@ impl ClientBClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ClientBClient.renamed_four")]
+    #[tracing::function("Client.Structure.MultiClient.ClientB.renamedFour")]
     pub async fn renamed_four(
         &self,
         options: Option<ClientBClientRenamedFourOptions<'_>>,
@@ -90,7 +90,7 @@ impl ClientBClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ClientBClient.renamed_six")]
+    #[tracing::function("Client.Structure.MultiClient.ClientB.renamedSix")]
     pub async fn renamed_six(
         &self,
         options: Option<ClientBClientRenamedSixOptions<'_>>,
@@ -107,7 +107,7 @@ impl ClientBClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ClientBClient.renamed_two")]
+    #[tracing::function("Client.Structure.MultiClient.ClientB.renamedTwo")]
     pub async fn renamed_two(
         &self,
         options: Option<ClientBClientRenamedTwoOptions<'_>>,

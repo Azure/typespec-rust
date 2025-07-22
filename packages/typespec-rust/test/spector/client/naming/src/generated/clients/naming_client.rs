@@ -77,7 +77,7 @@ impl NamingClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NamingClient.client")]
+    #[tracing::function("Client.Naming.Property.client")]
     pub async fn client(
         &self,
         body: RequestContent<ClientNameModel>,
@@ -97,7 +97,7 @@ impl NamingClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NamingClient.client_name")]
+    #[tracing::function("Client.Naming.operation")]
     pub async fn client_name(
         &self,
         options: Option<NamingClientClientNameOptions<'_>>,
@@ -114,7 +114,7 @@ impl NamingClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NamingClient.compatible_with_encoded_name")]
+    #[tracing::function("Client.Naming.Property.compatibleWithEncodedName")]
     pub async fn compatible_with_encoded_name(
         &self,
         body: RequestContent<ClientNameAndJsonEncodedNameModel>,
@@ -152,7 +152,7 @@ impl NamingClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NamingClient.language")]
+    #[tracing::function("Client.Naming.Property.language")]
     pub async fn language(
         &self,
         body: RequestContent<LanguageClientNameModel>,
@@ -172,7 +172,7 @@ impl NamingClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NamingClient.parameter")]
+    #[tracing::function("Client.Naming.parameter")]
     pub async fn parameter(
         &self,
         client_name: &str,
@@ -192,7 +192,7 @@ impl NamingClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NamingClient.request")]
+    #[tracing::function("Client.Naming.Header.request")]
     pub async fn request(
         &self,
         client_name: String,
@@ -211,7 +211,7 @@ impl NamingClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NamingClient.response")]
+    #[tracing::function("Client.Naming.Header.response")]
     pub async fn response(
         &self,
         options: Option<NamingClientResponseOptions<'_>>,

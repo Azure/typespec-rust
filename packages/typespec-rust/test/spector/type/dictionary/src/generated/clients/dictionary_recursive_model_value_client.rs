@@ -30,7 +30,7 @@ impl DictionaryRecursiveModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryRecursiveModelValueClient.get")]
+    #[tracing::function("Type.Dictionary.RecursiveModelValue.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryRecursiveModelValueClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl DictionaryRecursiveModelValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryRecursiveModelValueClient.put")]
+    #[tracing::function("Type.Dictionary.RecursiveModelValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, InnerModel>>,

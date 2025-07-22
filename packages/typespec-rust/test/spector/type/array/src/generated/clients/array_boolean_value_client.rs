@@ -28,7 +28,7 @@ impl ArrayBooleanValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayBooleanValueClient.get")]
+    #[tracing::function("Type.Array.BooleanValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayBooleanValueClientGetOptions<'_>>,
@@ -46,7 +46,7 @@ impl ArrayBooleanValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayBooleanValueClient.put")]
+    #[tracing::function("Type.Array.BooleanValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<bool>>,

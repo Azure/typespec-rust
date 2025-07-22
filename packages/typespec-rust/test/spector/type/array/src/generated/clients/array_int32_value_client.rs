@@ -26,7 +26,7 @@ impl ArrayInt32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayInt32ValueClient.get")]
+    #[tracing::function("Type.Array.Int32Value.get")]
     pub async fn get(
         &self,
         options: Option<ArrayInt32ValueClientGetOptions<'_>>,
@@ -44,7 +44,7 @@ impl ArrayInt32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayInt32ValueClient.put")]
+    #[tracing::function("Type.Array.Int32Value.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<i32>>,

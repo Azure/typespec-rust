@@ -28,7 +28,7 @@ impl ArrayDurationValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayDurationValueClient.get")]
+    #[tracing::function("Type.Array.DurationValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayDurationValueClientGetOptions<'_>>,
@@ -46,7 +46,7 @@ impl ArrayDurationValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayDurationValueClient.put")]
+    #[tracing::function("Type.Array.DurationValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<String>>,

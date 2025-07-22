@@ -69,7 +69,7 @@ impl HeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("HeaderClient.header_api_version")]
+    #[tracing::function("Client.AlternateApiVersion.Service.Header.headerApiVersion")]
     pub async fn header_api_version(
         &self,
         options: Option<HeaderClientHeaderApiVersionOptions<'_>>,

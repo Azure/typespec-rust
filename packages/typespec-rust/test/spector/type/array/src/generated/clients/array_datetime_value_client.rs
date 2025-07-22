@@ -29,7 +29,7 @@ impl ArrayDatetimeValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayDatetimeValueClient.get")]
+    #[tracing::function("Type.Array.DatetimeValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayDatetimeValueClientGetOptions<'_>>,
@@ -47,7 +47,7 @@ impl ArrayDatetimeValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ArrayDatetimeValueClient.put")]
+    #[tracing::function("Type.Array.DatetimeValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<OffsetDateTime>>,

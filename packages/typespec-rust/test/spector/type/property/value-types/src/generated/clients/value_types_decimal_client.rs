@@ -28,7 +28,7 @@ impl ValueTypesDecimalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesDecimalClient.get")]
+    #[tracing::function("Type.Property.ValueTypes.Decimal.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesDecimalClientGetOptions<'_>>,
@@ -48,7 +48,7 @@ impl ValueTypesDecimalClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ValueTypesDecimalClient.put")]
+    #[tracing::function("Type.Property.ValueTypes.Decimal.put")]
     pub async fn put(
         &self,
         body: RequestContent<DecimalProperty>,

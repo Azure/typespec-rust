@@ -77,7 +77,9 @@ impl MultipleParamsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("MultipleParamsClient.with_body")]
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MultipleParams.withBody"
+    )]
     pub async fn with_body(
         &self,
         body: RequestContent<Input>,
@@ -100,7 +102,9 @@ impl MultipleParamsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("MultipleParamsClient.with_query")]
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MultipleParams.withQuery"
+    )]
     pub async fn with_query(
         &self,
         id: &str,

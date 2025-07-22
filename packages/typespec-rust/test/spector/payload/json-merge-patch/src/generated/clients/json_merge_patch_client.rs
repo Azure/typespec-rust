@@ -70,7 +70,7 @@ impl JsonMergePatchClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("JsonMergePatchClient.create_resource")]
+    #[tracing::function("Payload.JsonMergePatch.createResource")]
     pub async fn create_resource(
         &self,
         body: RequestContent<Resource>,
@@ -92,7 +92,7 @@ impl JsonMergePatchClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("JsonMergePatchClient.update_optional_resource")]
+    #[tracing::function("Payload.JsonMergePatch.updateOptionalResource")]
     pub async fn update_optional_resource(
         &self,
         options: Option<JsonMergePatchClientUpdateOptionalResourceOptions<'_>>,
@@ -115,7 +115,7 @@ impl JsonMergePatchClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("JsonMergePatchClient.update_resource")]
+    #[tracing::function("Payload.JsonMergePatch.updateResource")]
     pub async fn update_resource(
         &self,
         body: RequestContent<ResourcePatch>,

@@ -28,7 +28,7 @@ impl BodyOptionalityOptionalExplicitClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BodyOptionalityOptionalExplicitClient.omit")]
+    #[tracing::function("Parameters.BodyOptionality.OptionalExplicit.omit")]
     pub async fn omit(
         &self,
         options: Option<BodyOptionalityOptionalExplicitClientOmitOptions<'_>>,
@@ -49,7 +49,7 @@ impl BodyOptionalityOptionalExplicitClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BodyOptionalityOptionalExplicitClient.set")]
+    #[tracing::function("Parameters.BodyOptionality.OptionalExplicit.set")]
     pub async fn set(
         &self,
         options: Option<BodyOptionalityOptionalExplicitClientSetOptions<'_>>,

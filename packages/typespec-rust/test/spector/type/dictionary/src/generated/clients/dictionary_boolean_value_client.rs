@@ -29,7 +29,7 @@ impl DictionaryBooleanValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryBooleanValueClient.get")]
+    #[tracing::function("Type.Dictionary.BooleanValue.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryBooleanValueClientGetOptions<'_>>,
@@ -47,7 +47,7 @@ impl DictionaryBooleanValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("DictionaryBooleanValueClient.put")]
+    #[tracing::function("Type.Dictionary.BooleanValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, bool>>,

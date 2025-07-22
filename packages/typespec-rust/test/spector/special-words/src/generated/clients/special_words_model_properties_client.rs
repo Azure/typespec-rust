@@ -26,7 +26,7 @@ impl SpecialWordsModelPropertiesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SpecialWordsModelPropertiesClient.same_as_model")]
+    #[tracing::function("SpecialWords.ModelProperties.sameAsModel")]
     pub async fn same_as_model(
         &self,
         body: RequestContent<SameAsModel>,

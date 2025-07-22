@@ -30,7 +30,7 @@ impl NullableDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableDurationClient.get_non_null")]
+    #[tracing::function("Type.Property.Nullable.Duration.getNonNull")]
     pub async fn get_non_null(
         &self,
         options: Option<NullableDurationClientGetNonNullOptions<'_>>,
@@ -49,7 +49,7 @@ impl NullableDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableDurationClient.get_null")]
+    #[tracing::function("Type.Property.Nullable.Duration.getNull")]
     pub async fn get_null(
         &self,
         options: Option<NullableDurationClientGetNullOptions<'_>>,
@@ -68,7 +68,7 @@ impl NullableDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableDurationClient.patch_non_null")]
+    #[tracing::function("Type.Property.Nullable.Duration.patchNonNull")]
     pub async fn patch_non_null(
         &self,
         body: RequestContent<DurationProperty>,
@@ -89,7 +89,7 @@ impl NullableDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NullableDurationClient.patch_null")]
+    #[tracing::function("Type.Property.Nullable.Duration.patchNull")]
     pub async fn patch_null(
         &self,
         body: RequestContent<DurationProperty>,

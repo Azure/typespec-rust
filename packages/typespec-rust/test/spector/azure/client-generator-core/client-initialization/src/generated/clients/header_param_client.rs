@@ -74,7 +74,9 @@ impl HeaderParamClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("HeaderParamClient.with_body")]
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.HeaderParam.withBody"
+    )]
     pub async fn with_body(
         &self,
         body: RequestContent<Input>,
@@ -96,7 +98,9 @@ impl HeaderParamClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("HeaderParamClient.with_query")]
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.HeaderParam.withQuery"
+    )]
     pub async fn with_query(
         &self,
         id: &str,

@@ -29,7 +29,7 @@ impl BytesRequestBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesRequestBodyClient.base64")]
+    #[tracing::function("Encode.Bytes.RequestBody.base64")]
     pub async fn base64(
         &self,
         value: RequestContent<Vec<u8>>,
@@ -49,7 +49,7 @@ impl BytesRequestBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesRequestBodyClient.base64_url")]
+    #[tracing::function("Encode.Bytes.RequestBody.base64url")]
     pub async fn base64_url(
         &self,
         value: RequestContent<Vec<u8>>,
@@ -69,7 +69,7 @@ impl BytesRequestBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesRequestBodyClient.custom_content_type")]
+    #[tracing::function("Encode.Bytes.RequestBody.customContentType")]
     pub async fn custom_content_type(
         &self,
         value: RequestContent<Bytes>,
@@ -89,7 +89,7 @@ impl BytesRequestBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesRequestBodyClient.default")]
+    #[tracing::function("Encode.Bytes.RequestBody.default")]
     pub async fn default(
         &self,
         value: RequestContent<Bytes>,
@@ -109,7 +109,7 @@ impl BytesRequestBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BytesRequestBodyClient.octet_stream")]
+    #[tracing::function("Encode.Bytes.RequestBody.octetStream")]
     pub async fn octet_stream(
         &self,
         value: RequestContent<Bytes>,

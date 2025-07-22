@@ -66,7 +66,7 @@ impl SingleClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("SingleClient.my_op")]
+    #[tracing::function("Server.Path.Single.myOp")]
     pub async fn my_op(
         &self,
         options: Option<SingleClientMyOpOptions<'_>>,

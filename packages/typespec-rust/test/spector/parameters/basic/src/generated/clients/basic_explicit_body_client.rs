@@ -25,7 +25,7 @@ impl BasicExplicitBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BasicExplicitBodyClient.simple")]
+    #[tracing::function("Parameters.Basic.ExplicitBody.simple")]
     pub async fn simple(
         &self,
         body: RequestContent<User>,

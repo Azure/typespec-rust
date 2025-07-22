@@ -109,7 +109,7 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.acquire_lease")]
+    #[tracing::function("Storage.Blob.Container.acquireLease")]
     pub async fn acquire_lease(
         &self,
         options: Option<BlobContainerClientAcquireLeaseOptions<'_>>,
@@ -154,7 +154,7 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.break_lease")]
+    #[tracing::function("Storage.Blob.Container.breakLease")]
     pub async fn break_lease(
         &self,
         options: Option<BlobContainerClientBreakLeaseOptions<'_>>,
@@ -198,7 +198,7 @@ impl BlobContainerClient {
     ///   lease ID must match.
     /// * `proposed_lease_id` - Required. The proposed lease ID for the container.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.change_lease")]
+    #[tracing::function("Storage.Blob.Container.changeLease")]
     pub async fn change_lease(
         &self,
         lease_id: String,
@@ -241,7 +241,7 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.create")]
+    #[tracing::function("Storage.Blob.Container.create")]
     pub async fn create(
         &self,
         options: Option<BlobContainerClientCreateOptions<'_>>,
@@ -288,7 +288,7 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.delete")]
+    #[tracing::function("Storage.Blob.Container.delete")]
     pub async fn delete(
         &self,
         options: Option<BlobContainerClientDeleteOptions<'_>>,
@@ -327,7 +327,7 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.filter_blobs")]
+    #[tracing::function("Storage.Blob.Container.filterBlobs")]
     pub async fn filter_blobs(
         &self,
         options: Option<BlobContainerClientFilterBlobsOptions<'_>>,
@@ -378,7 +378,7 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.get_access_policy")]
+    #[tracing::function("Storage.Blob.Container.getAccessPolicy")]
     pub async fn get_access_policy(
         &self,
         options: Option<BlobContainerClientGetAccessPolicyOptions<'_>>,
@@ -412,7 +412,7 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.get_account_info")]
+    #[tracing::function("Storage.Blob.Container.getAccountInfo")]
     pub async fn get_account_info(
         &self,
         options: Option<BlobContainerClientGetAccountInfoOptions<'_>>,
@@ -460,7 +460,7 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.get_properties")]
+    #[tracing::function("Storage.Blob.Container.getProperties")]
     pub async fn get_properties(
         &self,
         options: Option<BlobContainerClientGetPropertiesOptions<'_>>,
@@ -492,7 +492,7 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.list_blob_flat_segment")]
+    #[tracing::function("Storage.Blob.Container.listBlobFlatSegment")]
     pub fn list_blob_flat_segment(
         &self,
         options: Option<BlobContainerClientListBlobFlatSegmentOptions<'_>>,
@@ -583,7 +583,7 @@ impl BlobContainerClient {
     ///   that acts as a placeholder for all blobs whose names begin with the same substring up to the appearance of the delimiter
     ///   character. The delimiter may be a single character or a string.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.list_blob_hierarchy_segment")]
+    #[tracing::function("Storage.Blob.Container.listBlobHierarchySegment")]
     pub fn list_blob_hierarchy_segment(
         &self,
         delimiter: &str,
@@ -677,7 +677,7 @@ impl BlobContainerClient {
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.release_lease")]
+    #[tracing::function("Storage.Blob.Container.releaseLease")]
     pub async fn release_lease(
         &self,
         lease_id: String,
@@ -718,7 +718,7 @@ impl BlobContainerClient {
     ///
     /// * `source_container_name` - Required. Specifies the name of the container to rename.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.rename")]
+    #[tracing::function("Storage.Blob.Container.rename")]
     pub async fn rename(
         &self,
         source_container_name: String,
@@ -756,7 +756,7 @@ impl BlobContainerClient {
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.renew_lease")]
+    #[tracing::function("Storage.Blob.Container.renewLease")]
     pub async fn renew_lease(
         &self,
         lease_id: String,
@@ -796,7 +796,7 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.restore")]
+    #[tracing::function("Storage.Blob.Container.restore")]
     pub async fn restore(
         &self,
         options: Option<BlobContainerClientRestoreOptions<'_>>,
@@ -835,7 +835,7 @@ impl BlobContainerClient {
     ///
     /// * `container_acl` - The access control list for the container.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.set_access_policy")]
+    #[tracing::function("Storage.Blob.Container.setAccessPolicy")]
     pub async fn set_access_policy(
         &self,
         container_acl: RequestContent<Vec<SignedIdentifier>>,
@@ -880,7 +880,7 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("BlobContainerClient.set_metadata")]
+    #[tracing::function("Storage.Blob.Container.setMetadata")]
     pub async fn set_metadata(
         &self,
         options: Option<BlobContainerClientSetMetadataOptions<'_>>,

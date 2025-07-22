@@ -66,7 +66,7 @@ impl NotDefinedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("NotDefinedClient.valid")]
+    #[tracing::function("Server.Endpoint.NotDefined.valid")]
     pub async fn valid(
         &self,
         options: Option<NotDefinedClientValidOptions<'_>>,

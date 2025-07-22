@@ -97,7 +97,7 @@ impl KeyVaultClient {
     ///
     /// * `secret_name` - The name of the secret.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("KeyVaultClient.backup_secret")]
+    #[tracing::function("KeyVault.backupSecret")]
     pub async fn backup_secret(
         &self,
         secret_name: &str,
@@ -125,7 +125,7 @@ impl KeyVaultClient {
     ///
     /// * `secret_name` - The name of the secret.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("KeyVaultClient.delete_secret")]
+    #[tracing::function("KeyVault.deleteSecret")]
     pub async fn delete_secret(
         &self,
         secret_name: &str,
@@ -153,7 +153,7 @@ impl KeyVaultClient {
     ///
     /// * `secret_name` - The name of the secret.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("KeyVaultClient.get_deleted_secret")]
+    #[tracing::function("KeyVault.getDeletedSecret")]
     pub async fn get_deleted_secret(
         &self,
         secret_name: &str,
@@ -182,7 +182,7 @@ impl KeyVaultClient {
     /// * `secret_version` - The version of the secret. This URI fragment is optional. If not specified, the latest version of
     ///   the secret is returned.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("KeyVaultClient.get_secret")]
+    #[tracing::function("KeyVault.getSecret")]
     pub async fn get_secret(
         &self,
         secret_name: &str,
@@ -211,7 +211,7 @@ impl KeyVaultClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("KeyVaultClient.list_deleted_secrets")]
+    #[tracing::function("KeyVault.getDeletedSecrets")]
     pub fn list_deleted_secrets(
         &self,
         options: Option<KeyVaultClientListDeletedSecretsOptions<'_>>,
@@ -275,7 +275,7 @@ impl KeyVaultClient {
     ///
     /// * `secret_name` - The name of the secret.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("KeyVaultClient.list_secret_versions")]
+    #[tracing::function("KeyVault.getSecretVersions")]
     pub fn list_secret_versions(
         &self,
         secret_name: &str,
@@ -342,7 +342,7 @@ impl KeyVaultClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("KeyVaultClient.list_secrets")]
+    #[tracing::function("KeyVault.getSecrets")]
     pub fn list_secrets(
         &self,
         options: Option<KeyVaultClientListSecretsOptions<'_>>,
@@ -406,7 +406,7 @@ impl KeyVaultClient {
     ///
     /// * `secret_name` - The name of the secret.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("KeyVaultClient.purge_deleted_secret")]
+    #[tracing::function("KeyVault.purgeDeletedSecret")]
     pub async fn purge_deleted_secret(
         &self,
         secret_name: &str,
@@ -434,7 +434,7 @@ impl KeyVaultClient {
     ///
     /// * `secret_name` - The name of the deleted secret.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("KeyVaultClient.recover_deleted_secret")]
+    #[tracing::function("KeyVault.recoverDeletedSecret")]
     pub async fn recover_deleted_secret(
         &self,
         secret_name: &str,
@@ -461,7 +461,7 @@ impl KeyVaultClient {
     ///
     /// * `parameters` - The parameters to restore the secret.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("KeyVaultClient.restore_secret")]
+    #[tracing::function("KeyVault.restoreSecret")]
     pub async fn restore_secret(
         &self,
         parameters: RequestContent<SecretRestoreParameters>,
@@ -491,7 +491,7 @@ impl KeyVaultClient {
     ///   service. The value provided should not include personally identifiable or sensitive information.
     /// * `parameters` - The parameters for setting the secret.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("KeyVaultClient.set_secret")]
+    #[tracing::function("KeyVault.setSecret")]
     pub async fn set_secret(
         &self,
         secret_name: &str,
@@ -524,7 +524,7 @@ impl KeyVaultClient {
     /// * `secret_version` - The version of the secret.
     /// * `parameters` - The parameters for update secret operation.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("KeyVaultClient.update_secret")]
+    #[tracing::function("KeyVault.updateSecret")]
     pub async fn update_secret(
         &self,
         secret_name: &str,
