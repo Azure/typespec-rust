@@ -94,7 +94,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         if (paramsDocs) {
           body += paramsDocs;
         }
-        body += `${indent.get()}#[tracing::new("${crate.name}")]`;
+        body += `${indent.get()}#[tracing::new("${crate.name}")]\n`;
         body += `${indent.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.params, client.constructable.options, use)}) -> Result<Self> {\n`;
         body += `${indent.get()}let options = options.unwrap_or_default();\n`;
         // by convention, the endpoint param is always the first ctor param
