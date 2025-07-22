@@ -6,16 +6,44 @@
 import { $lib } from '../src/lib.js';
 import { describe, expect, it } from 'vitest';
 
+// Type definitions for the schema structure
+interface SchemaProperty {
+  type?: string;
+  description?: string;
+  default?: unknown;
+  nullable?: boolean;
+}
+
+interface EmitterOptionsSchema {
+  type: string;
+  properties: Record<string, SchemaProperty>;
+  required: string[];
+}
+
+// Type guard to check if schema is properly structured
+function isEmitterOptionsSchema(schema: unknown): schema is EmitterOptionsSchema {
+  return typeof schema === 'object' && 
+         schema !== null && 
+         'properties' in schema && 
+         typeof (schema as Record<string, unknown>).properties === 'object' &&
+         'required' in schema &&
+         Array.isArray((schema as Record<string, unknown>).required);
+}
+
+// Type guard to check if property has description
+function hasDescription(property: SchemaProperty): property is SchemaProperty & { description: string } {
+  return typeof property.description === 'string' && property.description.length > 0;
+}
+
 describe('typespec-rust: lib', () => {
   it('should have documentation for all emitter options', () => {
     const schema = $lib.emitter?.options;
     expect(schema).toBeDefined();
     
-    if (!schema?.properties) {
-      throw new Error('Emitter options schema properties not defined');
+    if (!isEmitterOptionsSchema(schema)) {
+      throw new Error('Emitter options schema is not properly structured');
     }
 
-    // Get all the option properties
     const properties = schema.properties;
     const optionNames = Object.keys(properties);
 
@@ -33,10 +61,11 @@ describe('typespec-rust: lib', () => {
       expect(typeof property).toBe('object');
       
       // Each property should have a description
-      if (typeof property === 'object' && property !== null) {
-        expect(property).toHaveProperty('description');
-        expect(typeof (property as any).description).toBe('string');
-        expect((property as any).description.length).toBeGreaterThan(0);
+      if (property) {
+        expect(hasDescription(property)).toBe(true);
+        if (hasDescription(property)) {
+          expect(property.description.length).toBeGreaterThan(0);
+        }
       }
     }
   });
@@ -44,23 +73,28 @@ describe('typespec-rust: lib', () => {
   it('should have required options marked correctly', () => {
     const schema = $lib.emitter?.options;
     expect(schema).toBeDefined();
-    expect(schema?.required).toContain('crate-name');
-    expect(schema?.required).toContain('crate-version');
+    
+    if (!isEmitterOptionsSchema(schema)) {
+      throw new Error('Emitter options schema is not properly structured');
+    }
+
+    expect(schema.required).toContain('crate-name');
+    expect(schema.required).toContain('crate-version');
   });
 
   it('should have appropriate default values for optional options', () => {
     const schema = $lib.emitter?.options;
     expect(schema).toBeDefined();
     
-    if (!schema?.properties) {
-      throw new Error('Emitter options schema properties not defined');
+    if (!isEmitterOptionsSchema(schema)) {
+      throw new Error('Emitter options schema is not properly structured');
     }
 
     const properties = schema.properties;
     
     // Check that boolean options have default values
-    expect((properties as any)['overwrite-cargo-toml']).toHaveProperty('default', false);
-    expect((properties as any)['overwrite-lib-rs']).toHaveProperty('default', false);
-    expect((properties as any)['temp-omit-doc-links']).toHaveProperty('default', false);
+    expect(properties['overwrite-cargo-toml']).toHaveProperty('default', false);
+    expect(properties['overwrite-lib-rs']).toHaveProperty('default', false);
+    expect(properties['temp-omit-doc-links']).toHaveProperty('default', false);
   });
 });
