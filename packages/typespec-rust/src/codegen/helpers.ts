@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
@@ -16,7 +16,7 @@ const headerText = `// Copyright (c) Microsoft Corporation. All rights reserved.
 
 export const AnnotationNonExhaustive = '#[non_exhaustive]\n';
 
-export const AnonymousLifetimeAnnotation = '<\'_>';
+export const AnonymousLifetimeAnnotation = "<'_>";
 
 /** a module to emit */
 export interface Module {
@@ -29,7 +29,7 @@ export interface Module {
 
 /**
  * returns the content preamble common to all emitted files
- * 
+ *
  * @param [includeDNE=true] controls if the phrase 'DO NOT EDIT' should be included
  * @returns the preamble content
  */
@@ -39,7 +39,7 @@ export function contentPreamble(includeDNE: boolean = true): string {
 
 /**
  * formats doc comments if available
- * 
+ *
  * @param docs contains any doc comments
  * @param forDocAttr indicates doc comments will be in a #[doc] attribute, thus omitting the /// prefixes (defaults to false)
  * @param prefix optional prefix to insert before the docs
@@ -56,7 +56,7 @@ export function formatDocComment(docs: rust.Docs, forDocAttr = false, prefix?: s
     indentLevel = indent.get();
   }
 
-  const commentLines = function(docs: string): string {
+  const commentLines = function (docs: string): string {
     let commentedLines = '';
     const lines = docs.split('\n');
     for (const line of lines) {
@@ -80,7 +80,12 @@ export function formatDocComment(docs: rust.Docs, forDocAttr = false, prefix?: s
       // * foo - some comment first line
       //   and it finishes here.
       const blockStartMatch = formattedLine.match(/^\/\/\/\s+([*-]|(?:\d+\.))/);
-      if (blockStartMatch && values(formattedLine).where((c) => c === '\n').count() > 0) {
+      if (
+        blockStartMatch &&
+        values(formattedLine)
+          .where((c) => c === '\n')
+          .count() > 0
+      ) {
         const chunks = formattedLine.split('\n');
         for (let i = 1; i < chunks.length; ++i) {
           // indent size is based on the size of the captured starting block minus 3 for the /// chars
@@ -124,7 +129,7 @@ export function formatDocComment(docs: rust.Docs, forDocAttr = false, prefix?: s
 
 /**
  * returns the specified visibility prefix
- * 
+ *
  * @param visibility the visibility to evaluate
  * @returns the prefix
  */
@@ -139,10 +144,10 @@ export function emitVisibility(visibility: rust.Visibility): string {
 
 /**
  * returns the type declaration string for the specified Rust type
- * 
+ *
  * @param type is the Rust type for which to emit the declaration
  * @param withAnonymousLifetime indicates if an existing lifetime annotation should be substituted with the anonymous lifetime
- * @returns 
+ * @returns
  */
 export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.ResponseHeadersTrait | rust.Type, withAnonymousLifetime = false): string {
   switch (type.kind) {
@@ -219,7 +224,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       }
       return `${type.name}${getGenericLifetimeAnnotation(type.lifetime)}`;
     case 'unit':
-      return '()';      
+      return '()';
     case 'Vec':
       return `${type.kind}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
   }
@@ -242,7 +247,7 @@ export class indentation {
 
   /**
    * returns spaces for the current indentation level
-   * 
+   *
    * @returns a string with the current indentation level
    */
   get(): string {
@@ -255,7 +260,7 @@ export class indentation {
 
   /**
    * increments the indentation level
-   * 
+   *
    * @returns this indentation instance
    */
   push(): indentation {
@@ -265,7 +270,7 @@ export class indentation {
 
   /**
    * decrements the indentation level
-   * 
+   *
    * @returns this indentation instance
    */
   pop(): indentation {
@@ -279,14 +284,14 @@ export class indentation {
 
 /**
  * emits the derive annotation with the standard and any additional values
- * 
+ *
  * @param extra contains any extra derive values
  * @returns a derive macro
  */
 export function annotationDerive(...extra: Array<string>): string {
   const derive = new Array<string>('Clone', 'Deserialize', 'SafeDebug', 'Serialize');
   // remove any empty values
-  extra = extra.filter(entry => entry.trim() !== '');
+  extra = extra.filter((entry) => entry.trim() !== '');
   derive.push(...extra);
   derive.sort();
   return `#[derive(${derive.join(', ')})]\n`;
@@ -294,7 +299,7 @@ export function annotationDerive(...extra: Array<string>): string {
 
 /**
  * used to sort strings in ascending order
- * 
+ *
  * @param a is the value on the left side
  * @param b is the value on the right side
  * @returns -1 if a < b, 1 if a > b, or 0 if they're equal
@@ -305,7 +310,7 @@ export function sortAscending(a: string, b: string): number {
 
 /**
  * returns the generic lifetime annotation string for lifetime (e.g. <'a>)
- * 
+ *
  * @param lifetime contains the Rust lifetime value
  * @returns the properly formatted lifetime annotation
  */
@@ -330,7 +335,7 @@ export interface elseBlock {
 
 /**
  * constructs an if block (can expand to include else if/else as necessary)
- * 
+ *
  * @param indent the current indentation helper in scope
  * @param ifBlock the if block definition
  * @param elseBlock optional else block definition
@@ -364,7 +369,7 @@ export interface matchArm {
 
 /**
  * constructs a match expression at the provided indentation level
- * 
+ *
  * @param indent the current indentation helper in scope
  * @param expr the expression to match
  * @param arms one or more match arms
@@ -388,7 +393,7 @@ export function buildMatch(indent: indentation, expr: string, arms: Array<matchA
 /**
  * returns capitalized str
  * e.g. foo -> Foo
- * 
+ *
  * @param str the string to capitalize
  * @returns the capitalized value
  */
@@ -398,7 +403,7 @@ export function capitalize(str: string): string {
 
 /**
  * recursively unwraps a type. if type is an Option<Vec<T>>, returns the T
- * 
+ *
  * @param type is the type to unwrap
  * @returns the wrapped type or the original type if it wasn't wrapped
  */
@@ -426,7 +431,7 @@ export type ModelFormat = 'json' | 'xml';
 
 /**
  * converts a ResponseFormat to json or xml
- * 
+ *
  * @param format is the format to convert
  * @returns json or xml
  */
@@ -441,7 +446,7 @@ export function convertResponseFormat(format: Exclude<rust.ResponseFormat, 'NoFo
 
 /**
  * returns the applicable base64 decoding/encoding function and brings it into scope
- * 
+ *
  * @param encoding the type of encoding
  * @param direction if the payload is being decoded or encoded
  * @param use the use statement builder currently in scope
@@ -464,7 +469,7 @@ export function getBytesEncodingMethod(encoding: rust.BytesEncoding, direction: 
 /**
  * returns the applicable OffsetDateTime parse/to helper and brings it into scope.
  * note that for unix_time, the 'to' direction returns a method on the OffsetDateTime type.
- * 
+ *
  * @param encoding the type of encoding
  * @param direction if the value is being parsed or converted to another format
  * @param use the use statement builder currently in scope

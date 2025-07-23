@@ -18,7 +18,7 @@ import 'source-map-support/register.js';
 
 /**
  * entry point called by the tsp compiler
- * 
+ *
  * @param context the emit context
  */
 export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
@@ -71,7 +71,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
         target: error.target,
         format: {
           stack: error.stack ? truncateStack(error.stack, 'tcgcToCrate') : 'Stack trace unavailable\n',
-        }
+        },
       });
     } else if (error instanceof CodegenError) {
       reportDiagnostic(context.program, {
@@ -79,7 +79,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
         target: NoTarget,
         format: {
           stack: error.stack ? truncateStack(error.stack, 'tcgcToCrate') : 'Stack trace unavailable\n',
-        }
+        },
       });
     } else {
       throw error;
@@ -122,7 +122,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
 }
 
 /**
- * 
+ *
  * @param outDir the output directory provided by the tsp compiler
  * @param filename the name of the file to write. can contain sub-directories
  * @param content the contents of the file
@@ -136,7 +136,7 @@ async function writeToGeneratedDir(outDir: string, filename: string, content: st
 
 /**
  * drop frames after the specified frame.
- * 
+ *
  * @param stack the stack to truncate
  * @returns the truncated stack
  */

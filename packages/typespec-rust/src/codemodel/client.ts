@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import * as method from './method.js';
 import * as types from './types.js';
@@ -181,25 +181,25 @@ export type ParameterStyle =
   // For scalar values, it works the same regardless of 'explode'.
   // For arrays, "{placeholder}" becomes "v,a,l,u,e,s", regardless of 'explode'.
   // For hashmaps, it is "k1,v1,k2,v2" when 'explode' is false, "k1=v1,k2=v2" when true.
-  'simple' |
+  | 'simple'
 
   /** Expansion of value into path components via '/': "{placeholder}" becomes "/value" */
   // For scalar values, it works the same regardless of 'explode'.
   // For arrays, "{placeholder}" becomes "/v,a,l,u,e,s" when 'explode' is false, "/v/a/l/u/e/s" when true.
   // For hashmaps, it is "/k1,v1,k2,v2" when 'explode' is false, "/k1=v1/k2=v2" when true.
-  'path' |
+  | 'path'
 
   /** Expansion of value into a label via '.': "{placeholder}" becomes ".value" */
   // For scalar values, it works the same regardless of 'explode'.
   // For arrays, "{placeholder}" becomes ".v,a,l,u,e,s" when 'explode' is false, ".v.a.l.u.e.s" when true.
   // For hashmaps, it is ".k1,v1,k2,v2" when 'explode' is false, ".k1=v1.k2=v2" when true.
-  'label' |
+  | 'label'
 
   /** Semicolon separated, 'name=value' form: "{placeholder}" becomes ";param=value" */
   // For scalar values, it works the same regardless of 'explode'.
   // For arrays, "{placeholder}" becomes ";param=v,a,l,u,e,s" when 'explode' is false, ";param=v;param=a;param=l;param=u;param=e;param=s" when true.
   // For hashmaps, it is ";param=k1,v1,k2,v2" when 'explode' is false, ";k1=v1;k2=v2" when true.
-  'matrix';
+  | 'matrix';
 
 /** CollectionFormat indicates how a collection is formatted on the wire */
 export type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes';
@@ -211,7 +211,18 @@ export type ExtendedCollectionFormat = CollectionFormat | 'multi';
 export type ParameterLocation = 'client' | 'method';
 
 /** MethodParameter defines the possible method parameter types */
-export type MethodParameter = BodyParameter | HeaderCollectionParameter | HeaderHashMapParameter | HeaderScalarParameter | PartialBodyParameter | PathCollectionParameter | PathHashMapParameter | PathScalarParameter | QueryCollectionParameter | QueryHashMapParameter | QueryScalarParameter;
+export type MethodParameter =
+  | BodyParameter
+  | HeaderCollectionParameter
+  | HeaderHashMapParameter
+  | HeaderScalarParameter
+  | PartialBodyParameter
+  | PathCollectionParameter
+  | PathHashMapParameter
+  | PathScalarParameter
+  | QueryCollectionParameter
+  | QueryHashMapParameter
+  | QueryScalarParameter;
 
 /** BodyParameter is a param that's passed via the HTTP request body */
 export interface BodyParameter extends HTTPParameterBase {
@@ -266,7 +277,7 @@ export interface HeaderScalarParameter extends HTTPParameterBase {
   type: HeaderScalarParameterType;
 
   /**
-   * indicates this is an API version parameter 
+   * indicates this is an API version parameter
    * the default value is false.
    */
   isApiVersion: boolean;
@@ -411,7 +422,7 @@ export interface QueryScalarParameter extends HTTPParameterBase {
   encoded: boolean;
 
   /**
-   * indicates this is an API version parameter 
+   * indicates this is an API version parameter
    * the default value is false.
    */
   isApiVersion: boolean;
@@ -619,7 +630,7 @@ export class Constructor implements Constructor {
   }
 }
 
-export class ClientEndpointParameter extends ClientParameterBase implements ClientEndpointParameter{
+export class ClientEndpointParameter extends ClientParameterBase implements ClientEndpointParameter {
   constructor(name: string, type: types.Type, optional: boolean, segment: string) {
     super(name, type, optional);
     this.kind = 'clientEndpoint';
@@ -693,7 +704,16 @@ export class PartialBodyParameter extends HTTPParameterBase implements PartialBo
 }
 
 export class PathCollectionParameter extends HTTPParameterBase implements PathCollectionParameter {
-  constructor(name: string, segment: string, location: ParameterLocation, optional: boolean, type: PathCollectionParameterType, encoded: boolean, style: ParameterStyle, explode: boolean) {
+  constructor(
+    name: string,
+    segment: string,
+    location: ParameterLocation,
+    optional: boolean,
+    type: PathCollectionParameterType,
+    encoded: boolean,
+    style: ParameterStyle,
+    explode: boolean,
+  ) {
     super(name, location, optional, type);
     this.kind = 'pathCollection';
     this.segment = segment;
@@ -784,7 +804,7 @@ export class ResponseHeadersTrait implements ResponseHeadersTrait {
   }
 }
 
-export class SupplementalEndpoint implements SupplementalEndpoint{
+export class SupplementalEndpoint implements SupplementalEndpoint {
   constructor(path: string) {
     this.path = path;
     this.parameters = new Array<ClientEndpointParameter>();

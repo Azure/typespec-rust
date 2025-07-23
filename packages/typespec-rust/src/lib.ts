@@ -23,68 +23,66 @@ const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
   type: 'object',
   additionalProperties: true,
   properties: {
-    'crate-name': { 
-      type: 'string', 
+    'crate-name': {
+      type: 'string',
       nullable: false,
-      description: 'The name of the generated Rust crate'
+      description: 'The name of the generated Rust crate',
     },
-    'crate-version': { 
-      type: 'string', 
+    'crate-version': {
+      type: 'string',
       nullable: false,
-      description: 'The version of the generated Rust crate'
+      description: 'The version of the generated Rust crate',
     },
-    'overwrite-cargo-toml': { 
-      type: 'boolean', 
-      nullable: false, 
+    'overwrite-cargo-toml': {
+      type: 'boolean',
+      nullable: false,
       default: false,
-      description: 'Whether to overwrite an existing Cargo.toml file. Defaults to false'
+      description: 'Whether to overwrite an existing Cargo.toml file. Defaults to false',
     },
-    'overwrite-lib-rs': { 
-      type: 'boolean', 
-      nullable: false, 
+    'overwrite-lib-rs': {
+      type: 'boolean',
+      nullable: false,
       default: false,
-      description: 'Whether to overwrite an existing lib.rs file. Defaults to false'
+      description: 'Whether to overwrite an existing lib.rs file. Defaults to false',
     },
-    'temp-omit-doc-links': { 
-      type: 'boolean', 
-      nullable: false, 
+    'temp-omit-doc-links': {
+      type: 'boolean',
+      nullable: false,
       default: false,
-      description: 'Whether to omit documentation links in generated code. Defaults to false'
+      description: 'Whether to omit documentation links in generated code. Defaults to false',
     },
   },
-  required: [
-    'crate-name',
-    'crate-version',
-  ],
+  required: ['crate-name', 'crate-version'],
 };
 
 const libDef = {
   name: '@azure-tools/typespec-rust',
   diagnostics: {
-    'InternalError': {
+    InternalError: {
       severity: 'error',
       messages: {
-        default: paramMessage`The emitter encountered an internal error during preprocessing. Please open an issue at https://github.com/Azure/typespec-rust/issues and include the complete error message.\n${'stack'}`
-      }
+        default: paramMessage`The emitter encountered an internal error during preprocessing. Please open an issue at https://github.com/Azure/typespec-rust/issues and include the complete error message.\n${'stack'}`,
+      },
     },
-    'InvalidArgument': {
+    InvalidArgument: {
       severity: 'error',
       messages: {
-        default: 'Invalid arguments were passed to the emitter.'
-      }
+        default: 'Invalid arguments were passed to the emitter.',
+      },
     },
-    'NameCollision': {
+    NameCollision: {
       severity: 'error',
       messages: {
-        default: 'The emitter automatically renamed one or more items which resulted in a name collision. Please update the client.tsp to rename the type(s) to avoid the collision.'
-      }
+        default:
+          'The emitter automatically renamed one or more items which resulted in a name collision. Please update the client.tsp to rename the type(s) to avoid the collision.',
+      },
     },
-    'UnsupportedTsp': {
+    UnsupportedTsp: {
       severity: 'error',
       messages: {
-        default: paramMessage`The emitter encountered a TypeSpec definition that is currently not supported.\n${'stack'}`
-      }
-    }
+        default: paramMessage`The emitter encountered a TypeSpec definition that is currently not supported.\n${'stack'}`,
+      },
+    },
   },
   emitter: {
     options: <JSONSchemaType<RustEmitterOptions>>EmitterOptionsSchema,

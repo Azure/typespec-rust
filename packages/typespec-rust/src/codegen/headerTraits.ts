@@ -13,7 +13,7 @@ import * as rust from '../codemodel/index.js';
  * returns the emitted header traits, or undefined if there
  * are no header traits.
  * the header traits provide access to typed response headers
- * 
+ *
  * @param crate the crate for which to emit header traits
  * @returns the header traits content or undefined
  */
@@ -45,7 +45,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
   /** adds response headers to headers, avoiding duplicates */
   const addHeaders = function (...responseHeaders: Array<rust.ResponseHeader>): void {
     for (const responseHeader of responseHeaders) {
-      if (!headers.find(v => v.header === responseHeader.header)) {
+      if (!headers.find((v) => v.header === responseHeader.header)) {
         headers.push(responseHeader);
       }
     }
@@ -66,7 +66,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       mergedDocs += `/// * ${src.docs}\n`;
 
       for (const responseHeader of src.headers) {
-        const matchingHeader = mergedHeaders.find(h => h.header === responseHeader.header);
+        const matchingHeader = mergedHeaders.find((h) => h.header === responseHeader.header);
         if (!matchingHeader) {
           mergedHeaders.push(responseHeader);
         } else if (matchingHeader.type !== responseHeader.type) {
@@ -176,20 +176,20 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
 /**
  * creates the name to use for a header constant
  * e.g. header Content-Type becomes CONTENT_TYPE
- * 
+ *
  * @param header the name of the header
  * @returns the header constant
  */
 function getHeaderConstName(header: rust.ResponseHeader): string {
   // strip off any x-ms- prefix
   const chunks = codegen.deconstruct(header.header.replace(/^x-ms-/i, ''));
-  return `${chunks.map(i => i.toUpperCase()).join('_')}`;
+  return `${chunks.map((i) => i.toUpperCase()).join('_')}`;
 }
 
 /**
  * returns the body of a header trait method,
  * performing any deserialization as required.
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param header the header to deserialize
  * @returns the header method body
@@ -220,7 +220,7 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
     case 'enum':
     case 'scalar':
     case 'String':
-      return `${indent.get()}Headers::get_optional_as(self.headers(), &${headerConstName})\n`
+      return `${indent.get()}Headers::get_optional_as(self.headers(), &${headerConstName})\n`;
     case 'offsetDateTime': {
       const timeParse = `parse_${header.type.encoding}`;
       use.add('azure_core', `time::${timeParse}`);
@@ -233,7 +233,7 @@ function getHeaderDeserialization(indent: helpers.indentation, use: Use, header:
 
 /**
  * returns the mod private {...} section used to seal the header traits.
- * 
+ *
  * @param traitDefs the trait definitions to seal
  * @returns the private mod definition
  */

@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 // cspell: ignore responseheader subclients lropaging
 
@@ -19,19 +19,19 @@ import * as rust from '../codemodel/index.js';
 /** ErrorCode defines the types of adapter errors */
 export type ErrorCode =
   /** the emitter encountered an internal error. this is always a bug in the emitter */
-  'InternalError' |
+  | 'InternalError'
 
   /** invalid arguments were passed to the emitter */
-  'InvalidArgument' |
+  | 'InvalidArgument'
 
   /**
    * renaming items resulted in one or more name collisions.
    * this will likely require an update to client.tsp to resolve.
    */
-  'NameCollision' |
+  | 'NameCollision'
 
   /** the emitter does not support the encountered TypeSpec construct */
-  'UnsupportedTsp';
+  | 'UnsupportedTsp';
 
 /**
  * AdapterError is thrown when the emitter fails to convert part of the tcgc code
@@ -53,9 +53,9 @@ export class AdapterError extends Error {
 export class Adapter {
   /**
    * Creates an Adapter for the specified EmitContext.
-   * 
+   *
    * @param context the compiler context from which to create the Adapter
-   * @returns 
+   * @returns
    */
   static async create(context: EmitContext<RustEmitterOptions>): Promise<Adapter> {
     // @encodedName can be used in XML scenarios, it is effectively the
@@ -107,7 +107,12 @@ export class Adapter {
     this.adaptClients();
 
     // marker models don't require serde so exclude them from the check
-    if (this.crate.enums.length > 0 || values(this.crate.models).where(e => e.kind === 'model').any()) {
+    if (
+      this.crate.enums.length > 0 ||
+      values(this.crate.models)
+        .where((e) => e.kind === 'model')
+        .any()
+    ) {
       this.crate.addDependency(new rust.CrateDependency('serde'));
     }
 
@@ -150,7 +155,7 @@ export class Adapter {
     return {
       summary: summary,
       description: doc,
-    }
+    };
   }
 
   /** converts all tcgc types to their Rust type equivalent */
@@ -181,7 +186,7 @@ export class Adapter {
 
   /**
    * converts a tcgc enum to a Rust enum
-   * 
+   *
    * @param sdkEnum the tcgc enum to convert
    * @returns a Rust enum
    */
@@ -208,7 +213,7 @@ export class Adapter {
   /**
    * converts a tcgc enumvalue to a Rust enum value.
    * this is typically used when a literal enum value is specified.
-   * 
+   *
    * @param sdkEnumValue the tcgc enumvalue to convert
    * @returns a Rust enum value
    */
@@ -225,7 +230,7 @@ export class Adapter {
 
   /**
    * converts a tcgc model to a Rust model
-   * 
+   *
    * @param model the tcgc model to convert
    * @param stack is a stack of model type names used to detect recursive type definitions
    * @returns a Rust model
@@ -269,7 +274,11 @@ export class Adapter {
     let parent = model.baseModel;
     while (parent) {
       for (const parentProp of parent.properties) {
-        const exists = values(allProps).where(p => { return p.name === parentProp.name; }).first();
+        const exists = values(allProps)
+          .where((p) => {
+            return p.name === parentProp.name;
+          })
+          .first();
         if (exists) {
           // don't add the duplicate. the TS compiler has better enforcement than OpenAPI
           // to ensure that duplicate fields with different types aren't added.
@@ -307,7 +316,7 @@ export class Adapter {
 
   /**
    * converts a tcgc model property to a model field
-   * 
+   *
    * @param property the tcgc model property to convert
    * @param modelVisibility the visibility of the model that contains the property
    * @param stack is a stack of model type names used to detect recursive type definitions
@@ -327,7 +336,13 @@ export class Adapter {
       fieldType = new rust.Option(fieldType.kind === 'box' ? fieldType : this.typeToWireType(fieldType));
     }
 
-    const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, modelVisibility, fieldType, property.optional);
+    const modelField = new rust.ModelField(
+      naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'),
+      property.serializedName,
+      modelVisibility,
+      fieldType,
+      property.optional,
+    );
     modelField.docs = this.adaptDocs(property.summary, property.doc);
 
     // if this is a literal, add a doc comment explaining its behavior
@@ -359,7 +374,7 @@ export class Adapter {
 
   /**
    * converts a tcgc type to a Rust type
-   * 
+   *
    * @param type the tcgc type to convert
    * @param stack is a stack of model type names used to detect recursive type definitions
    * @returns the adapted Rust type
@@ -612,7 +627,7 @@ export class Adapter {
     stringType = new rust.StringType();
     this.types.set(typeKey, stringType);
     return stringType;
-  };
+  }
 
   /** returns the Rust unit type */
   private getUnitType(): rust.Unit {
@@ -640,7 +655,7 @@ export class Adapter {
 
   /**
    * converts a tcgc constant to a Rust literal
-   * 
+   *
    * @param constType the constant to convert
    * @returns a Rust literal
    */
@@ -694,7 +709,7 @@ export class Adapter {
    * formats input as a doc link.
    * e.g. [`${id}`](${link})
    * if doc links are disabled, id is returned
-   * 
+   *
    * @param id the ID of the doc link
    * @param link the target of the doc link
    * @returns the doc link or id
@@ -709,7 +724,7 @@ export class Adapter {
   /**
    * recursively converts a client and its methods.
    * this simplifies the case for hierarchical clients.
-   * 
+   *
    * @param client the tcgc client to recursively convert
    * @param parent contains the parent Rust client when converting a child client
    * @returns a Rust client
@@ -954,7 +969,7 @@ export class Adapter {
   /**
    * creates a client constructor for the TokenCredential type.
    * the constructor is named new.
-   * 
+   *
    * @param cred the OAuth2 credential to adapt
    * @returns a client constructor for TokenCredential
    */
@@ -979,7 +994,7 @@ export class Adapter {
 
   /**
    * converts a tcgc client parameter to a Rust client parameter
-   * 
+   *
    * @param param the tcgc client parameter to convert
    * @param constructable contains client construction info. if the param is optional, it will go in the options type
    * @returns the Rust client parameter
@@ -1030,13 +1045,18 @@ export class Adapter {
 
   /**
    * converts a tcgc client accessor method to a Rust method
-   * 
+   *
    * @param client the tcgc client that contains the accessor method
    * @param method the tcgc client accessor method to convert
    * @param rustClient the client to which the method belongs
    * @param subClient the sub-client type that the method returns
    */
-  private adaptClientAccessor(parentClient: tcgc.SdkClientType<tcgc.SdkHttpOperation>, childClient: tcgc.SdkClientType<tcgc.SdkHttpOperation>, rustClient: rust.Client, subClient: rust.Client): void {
+  private adaptClientAccessor(
+    parentClient: tcgc.SdkClientType<tcgc.SdkHttpOperation>,
+    childClient: tcgc.SdkClientType<tcgc.SdkHttpOperation>,
+    rustClient: rust.Client,
+    subClient: rust.Client,
+  ): void {
     const clientAccessor = new rust.ClientAccessor(`get_${snakeCaseName(subClient.name)}`, rustClient, subClient);
     clientAccessor.docs.summary = `Returns a new instance of ${subClient.name}.`;
     for (const param of childClient.clientInitialization.parameters) {
@@ -1062,7 +1082,7 @@ export class Adapter {
 
   /**
    * converts a tcgc method to a Rust method for the specified client
-   * 
+   *
    * @param method the tcgc method to convert
    * @param rustClient the client to which the method belongs
    */
@@ -1141,11 +1161,15 @@ export class Adapter {
       // most params have a one-to-one mapping. however, for spread params, there will
       // be a many-to-one mapping. i.e. multiple params will map to the same underlying
       // operation param. each param corresponds to a field within the operation param.
-      const opParam = values(allOpParams).where((opParam: tcgc.SdkHttpParameter) => {
-        return values(opParam.correspondingMethodParams).where((methodParam: tcgc.SdkModelPropertyType) => {
-          return methodParam.name === param.name;
-        }).any();
-      }).first();
+      const opParam = values(allOpParams)
+        .where((opParam: tcgc.SdkHttpParameter) => {
+          return values(opParam.correspondingMethodParams)
+            .where((methodParam: tcgc.SdkModelPropertyType) => {
+              return methodParam.name === param.name;
+            })
+            .any();
+        })
+        .first();
 
       if (!opParam) {
         throw new AdapterError('InternalError', `didn't find operation parameter for method ${method.name} parameter ${param.name}`, param.__raw?.node);
@@ -1180,7 +1204,9 @@ export class Adapter {
           // sent in the request. we want the field within the model for this param.
           // NOTE: if the param is optional then the field is optional, thus it's
           // already wrapped in an Option<T> type.
-          const field = adaptedParam.type.content.type.fields.find(f => { return f.name === adaptedParam.name; });
+          const field = adaptedParam.type.content.type.fields.find((f) => {
+            return f.name === adaptedParam.name;
+          });
           if (!field) {
             throw new AdapterError('InternalError', `didn't find spread param field ${adaptedParam.name} in type ${adaptedParam.type.content.type.name}`);
           }
@@ -1363,7 +1389,7 @@ export class Adapter {
    * adapts response headers into Rust response headers and provides
    * a mapping from the tcgc response header to the Rust equivalent.
    * if there are no headers to adapt, an empty map is returned.
-   * 
+   *
    * @param responseHeaders the response headers to adapt (can be empty)
    * @returns the map of response headers
    */
@@ -1390,7 +1416,7 @@ export class Adapter {
   /**
    * creates a Rust ResponseHeadersTrait for the specified response headers.
    * if there are no response headers, undefined is returned.
-   * 
+   *
    * @param client the client that contains the method
    * @param method the method for which to create the trait
    * @param responseHeaders the response headers array (can be empty)
@@ -1404,7 +1430,7 @@ export class Adapter {
     /**
      * recursively builds a name from the specified type.
      * e.g. Vec<FooModel> would be VecFooModel etc.
-     * 
+     *
      * @param type the type for which to build a name
      * @returns the name
      */
@@ -1462,13 +1488,17 @@ export class Adapter {
 
   /**
    * creates the pageable strategy based on the method definition
-   * 
+   *
    * @param method the pageable method for which to create a strategy
    * @param paramsMap maps tcgc method params to Rust params (needed for continuation token strategy)
    * @param respHeadersMap maps tcgc response headers to Rust response headers (needed for continuation token strategy)
    * @returns the pageable strategy
    */
-  private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | rust.QueryScalarParameter>, respHeadersMap: Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>): rust.PageableStrategyKind {
+  private adaptPageableMethodStrategy(
+    method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>,
+    paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | rust.QueryScalarParameter>,
+    respHeadersMap: Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>,
+  ): rust.PageableStrategyKind {
     if (method.pagingMetadata.nextLinkOperation) {
       // TODO: https://github.com/Azure/autorest.rust/issues/103
       throw new AdapterError('UnsupportedTsp', 'next page operation NYI', method.__raw?.node);
@@ -1549,7 +1579,7 @@ export class Adapter {
 
   /**
    * converts a tcgc operation parameter into a Rust method parameter
-   * 
+   *
    * @param param the tcgc operation parameter to convert
    * @returns a Rust method parameter
    */
@@ -1653,41 +1683,43 @@ export class Adapter {
           adaptedParam.isApiVersion = param.isApiVersionParam;
         }
         break;
-      case 'path': {
-        paramType = this.typeToWireType(paramType);
-        let style: rust.ParameterStyle = 'simple';
+      case 'path':
         {
-          const tspStyleString = (param.style as string);
-          if (!['simple', 'path', 'label', 'matrix'].includes(tspStyleString)) {
-            throw new AdapterError('InternalError', `unsupported style ${tspStyleString} for parameter ${param.serializedName}`, param.__raw?.node);
+          paramType = this.typeToWireType(paramType);
+          let style: rust.ParameterStyle = 'simple';
+          {
+            const tspStyleString = param.style as string;
+            if (!['simple', 'path', 'label', 'matrix'].includes(tspStyleString)) {
+              throw new AdapterError('InternalError', `unsupported style ${tspStyleString} for parameter ${param.serializedName}`, param.__raw?.node);
+            } else {
+              style = tspStyleString as rust.ParameterStyle;
+            }
+          }
+
+          if (isRefSlice(paramType)) {
+            adaptedParam = new rust.PathCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
+          } else if (paramType.kind === 'hashmap') {
+            adaptedParam = new rust.PathHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
           } else {
-            style = tspStyleString as rust.ParameterStyle;
+            switch (paramType.kind) {
+              case 'jsonValue':
+              case 'model':
+              case 'slice':
+              case 'str':
+              case 'Vec':
+                throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar path ${param.serializedName}`, param.__raw?.node);
+            }
+
+            adaptedParam = new rust.PathScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style);
           }
         }
-
-        if (isRefSlice(paramType)) {
-          adaptedParam = new rust.PathCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
-        } else if (paramType.kind === 'hashmap') {
-          adaptedParam = new rust.PathHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
-        } else {
-          switch (paramType.kind) {
-            case 'jsonValue':
-            case 'model':
-            case 'slice':
-            case 'str':
-            case 'Vec':
-              throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar path ${param.serializedName}`, param.__raw?.node);
-          }
-
-          adaptedParam = new rust.PathScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style);
-        }
-      } break;
+        break;
       case 'query':
         paramType = this.typeToWireType(paramType);
         if (paramType.kind === 'Vec' || isRefSlice(paramType)) {
           let format: rust.ExtendedCollectionFormat = param.explode ? 'multi' : 'csv';
           if (param.collectionFormat) {
-            format = param.collectionFormat === 'simple' ? 'csv' : (param.collectionFormat === 'form' ? 'multi' : param.collectionFormat);
+            format = param.collectionFormat === 'simple' ? 'csv' : param.collectionFormat === 'form' ? 'multi' : param.collectionFormat;
           }
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
           adaptedParam = new rust.QueryCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, format);
@@ -1723,7 +1755,7 @@ export class Adapter {
    * if no such transformation is necessary, undefined is returned.
    * e.g. a String param that doesn't need to be owned will be
    * returned as a &str.
-   * 
+   *
    * @param type the param type to be updated
    * @param kind the kind of param
    * @returns the updated param type or undefined
@@ -1775,7 +1807,7 @@ export class Adapter {
   /**
    * narrows a rust.Type to a rust.WireType.
    * if type isn't a rust.WireType, an error is thrown.
-   * 
+   *
    * @param type the type to narrow
    * @returns the narrowed type
    */
@@ -1808,7 +1840,7 @@ export class Adapter {
 
   /**
    * converts a tcgc spread parameter into a Rust partial body parameter.
-   * 
+   *
    * @param param the tcgc method parameter to convert
    * @param format the wire format for the underlying body type
    * @param opParamType the tcgc model to which the spread parameter belongs
@@ -1836,13 +1868,20 @@ export class Adapter {
 
     const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
     const paramLoc: rust.ParameterLocation = 'method';
-    const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, this.getType(param.type), new rust.RequestContent(this.crate, new rust.Payload(payloadType, format)));
+    const adaptedParam = new rust.PartialBodyParameter(
+      paramName,
+      paramLoc,
+      param.optional,
+      serializedName,
+      this.getType(param.type),
+      new rust.RequestContent(this.crate, new rust.Payload(payloadType, format)),
+    );
     return adaptedParam;
   }
 
   /**
    * converts a Content-Type header value into a payload format
-   * 
+   *
    * @param contentType the value of the Content-Type header
    * @returns a payload format
    */
@@ -1861,7 +1900,7 @@ export class Adapter {
 
   /**
    * converts an accept header value into a response format
-   * 
+   *
    * @param accept the value of the Content-Type header
    * @returns a response format
    */
@@ -1895,10 +1934,10 @@ type tcgcScalarKind = 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'i
  * transforms Etag etc to all lower case.
  * this is to prevent inadvertently snake-casing
  * Etag to e_tag.
- * 
+ *
  * if name isn't some variant of Etag the
  * original value is returned.
- * 
+ *
  * @param name the name to transform
  * @returns etag or the original value
  */
@@ -1910,7 +1949,7 @@ function fixETagName(name: string): string {
  * removes any illegal characters from the provided name.
  * note that characters _ and - are preserved so that the
  * proper snake-casing can be performed.
- * 
+ *
  * @param name the name to transform
  * @returns the transformed name or the original value
  */
@@ -1920,7 +1959,7 @@ function removeIllegalChars(name: string): string {
 
 /**
  * snake-cases the provided name
- * 
+ *
  * @param name the name to snake-case
  * @returns name in snake-case format
  */
@@ -1932,11 +1971,11 @@ function snakeCaseName(name: string): string {
  * recursively creates a map key from the specified type.
  * this is idempotent so providing the same type will create
  * the same key.
- * 
+ *
  * obj is recursively unwrapped, and each layer is used to construct
  * the key. e.g. if obj is a HashMap<String, Vec<i32>> this would
  * unwrap to hashmap-Vec-i32.
- * 
+ *
  * @param root the starting value for the key
  * @param obj the type for which to create the key
  * @returns a string containing the complete map key
@@ -1973,7 +2012,7 @@ function recursiveKeyName(root: string, type: rust.WireType): string {
 
 /**
  * returns the XML-specific name based on the provided decorators
- * 
+ *
  * @param decorators the decorators to enumerate
  * @returns the XML-specific name or undefined if there isn't one
  */
@@ -1999,7 +2038,7 @@ function getXMLName(decorators: Array<tcgc.DecoratorInfo>): string | undefined {
 
 /**
  * returns the XML-specific kind for field based on the provided decorators
- * 
+ *
  * @param decorators the decorators to enumerate
  * @param field the Rust model field to which the kind will apply
  * @returns the XML-specific field kind or undefined if there isn't one

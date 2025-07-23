@@ -2,7 +2,9 @@
 // original sources can be found at https://github.com/abrkn/semaphore.js
 'use strict';
 
-var nextTick = function (fn) { setTimeout(fn, 0); }
+var nextTick = function (fn) {
+  setTimeout(fn, 0);
+};
 if (typeof process != 'undefined' && process && typeof process.nextTick == 'function') {
   // node.js and the like
   nextTick = process.nextTick;
@@ -15,7 +17,7 @@ export function semaphore(capacity) {
     queue: [],
     firstHere: false,
 
-    take: function() {
+    take: function () {
       if (semaphore.firstHere === false) {
         semaphore.current++;
         semaphore.firstHere = true;
@@ -31,13 +33,15 @@ export function semaphore(capacity) {
         item.n = arguments[0];
       }
 
-      if (arguments.length >= 2)  {
+      if (arguments.length >= 2) {
         if (typeof arguments[1] == 'function') item.task = arguments[1];
         else item.n = arguments[1];
       }
 
       var task = item.task;
-      item.task = function() { task(semaphore.leave); };
+      item.task = function () {
+        task(semaphore.leave);
+      };
 
       if (semaphore.current + item.n - isFirst > semaphore.capacity) {
         if (isFirst === 1) {
@@ -52,7 +56,7 @@ export function semaphore(capacity) {
       if (isFirst === 1) semaphore.firstHere = false;
     },
 
-    leave: function(n) {
+    leave: function (n) {
       n = n || 1;
 
       semaphore.current -= n;
@@ -77,14 +81,14 @@ export function semaphore(capacity) {
       nextTick(item.task);
     },
 
-    available: function(n) {
+    available: function (n) {
       n = n || 1;
-      return(semaphore.current + n <= semaphore.capacity);
-    }
+      return semaphore.current + n <= semaphore.capacity;
+    },
   };
 
   return semaphore;
-};
+}
 
 if (typeof exports === 'object') {
   // node export
@@ -92,7 +96,7 @@ if (typeof exports === 'object') {
 } else if (typeof define === 'function' && define.amd) {
   // amd export
   define(function () {
-      return semaphore;
+    return semaphore;
   });
 } else {
   // browser global

@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import { Crate, CrateDependency } from './crate.js';
 
@@ -15,10 +15,44 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType =
+  | Arc
+  | Box
+  | ExternalType
+  | ImplTrait
+  | MarkerType
+  | Option
+  | PageIterator
+  | Pager
+  | RawResponse
+  | RequestContent
+  | Response
+  | Result
+  | Struct
+  | TokenCredential
+  | Unit;
 
 /** WireType defines types that go across the wire */
-export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
+export type WireType =
+  | Bytes
+  | Decimal
+  | EncodedBytes
+  | Enum
+  | EnumValue
+  | Etag
+  | HashMap
+  | JsonValue
+  | Literal
+  | Model
+  | OffsetDateTime
+  | RefBase
+  | SafeInt
+  | Scalar
+  | Slice
+  | StringSlice
+  | StringType
+  | Url
+  | Vector;
 
 /** Type defines a type within the Rust type system */
 export type Type = SdkType | WireType;
@@ -450,7 +484,7 @@ export type XMLKind = 'attribute' | 'text' | 'unwrappedList';
 
 /**
  * QualifiedType is a fully qualified type.
- * 
+ *
  * this is typically a type in the standard library that's not in the prelude set.
  */
 export interface QualifiedType {
@@ -477,13 +511,13 @@ export type Visibility = 'pub' | 'pubCrate';
 
 /**
  * External is a qualified type defined in a different crate
- * 
+ *
  * the value in path will be used to determine the crate name
  */
 interface External extends QualifiedType {}
 
 class External extends QualifiedType implements External {
-  constructor(crate: Crate, name: string, path: string, features = new Array<string>) {
+  constructor(crate: Crate, name: string, path: string, features = new Array<string>()) {
     super(name, path);
     let crateName = this.path;
     const pathSep = crateName.indexOf('::');

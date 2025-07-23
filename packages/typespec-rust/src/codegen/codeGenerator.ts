@@ -40,7 +40,7 @@ export class CodeGenerator {
 
   /**
    * generates a Cargo.toml file
-   * 
+   *
    * @returns the contents for the Cargo.toml file
    */
   emitCargoToml(): string {
@@ -49,7 +49,7 @@ export class CodeGenerator {
 
   /**
    * generates the lib.rs file for crate
-   * 
+   *
    * @returns the content for lib.rs
    */
   emitLibRs(): string {
@@ -58,7 +58,7 @@ export class CodeGenerator {
 
   /**
    * generates all clients, models, and any helper content
-   * 
+   *
    * @returns an array of files to emit
    */
   emitContent(): Array<File> {
@@ -80,7 +80,11 @@ export class CodeGenerator {
 
     const clientModules = emitClients(this.crate);
     if (clientModules) {
-      files.push(...clientModules.modules.map((module) => { return { name: `${clientsSubDir}/${module.name}.rs`, content: module.content }; }));
+      files.push(
+        ...clientModules.modules.map((module) => {
+          return { name: `${clientsSubDir}/${module.name}.rs`, content: module.content };
+        }),
+      );
       files.push({ name: `${clientsSubDir}/mod.rs`, content: emitClientsModRs(clientModules.modules.map((module) => module.name)) });
       addModelsFile(clientModules.options, 'pubUse');
     }
@@ -97,7 +101,7 @@ export class CodeGenerator {
     addModelsFile(emitHeaderTraits(this.crate), 'pubUse');
 
     if (modelsModRS.length > 0) {
-      files.push({ name: `${modelsSubDir}/mod.rs`, content: emitModelsModRs(modelsModRS) })
+      files.push({ name: `${modelsSubDir}/mod.rs`, content: emitModelsModRs(modelsModRS) });
     }
 
     // there will always be something in the generated/mod.rs file

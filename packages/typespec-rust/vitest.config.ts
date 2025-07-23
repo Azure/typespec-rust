@@ -12,7 +12,7 @@ export default defineConfig({
     isolate: false,
     coverage: {
       reporter: ['cobertura', 'json', 'text'],
-      reportsDirectory: './coverage/tmp'
+      reportsDirectory: './coverage/tmp',
     },
     outputFile: {
       junit: './test-results.xml',

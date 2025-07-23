@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import * as helpers from './helpers.js';
 import { CodegenError } from './errors.js';
@@ -14,7 +14,7 @@ export class Use {
 
   /**
    * instantiates a new instance of the Use type
-   * 
+   *
    * @param scope indicates a scope in which use statements are constructed.
    * this is only applicable when constructing the path to generated types.
    *      clients - we're in generated/clients
@@ -31,13 +31,13 @@ export class Use {
    * e.g. ('azure_core', 'Context') or ('super::models', 'FooType')
    * NOTE: the leaf value MUST be a symbol within a module and not
    * just a module.
-   * 
+   *
    * @param module a module name
    * @param type one or more functions/types within the provided module
    */
   add(module: string, ...types: Array<string>): void {
     if (types.length === 0) {
-      throw new CodegenError('InternalError', 'types can\'t be empty');
+      throw new CodegenError('InternalError', "types can't be empty");
     }
 
     for (const type of types) {
@@ -47,7 +47,7 @@ export class Use {
       chunks.push(...type.split('::'));
 
       // each tree starts at the root of the fully qualified path
-      let tree = this.trees.find(v => v.root.name === chunks[0]);
+      let tree = this.trees.find((v) => v.root.name === chunks[0]);
       if (!tree) {
         tree = new useTree(chunks[0]);
         this.trees.push(tree);
@@ -60,7 +60,7 @@ export class Use {
 
   /**
    * adds the specified type if not already in the list
-   * 
+   *
    * @param type the Rust type to add
    */
   addForType(type: rust.Client | rust.Payload | rust.ResponseHeadersTrait | rust.Type): void {
@@ -205,7 +205,7 @@ export class Use {
 
 /**
  * a tree of use statements
- * 
+ *
  * the tree starts at a root (e.g. azure_core) and
  * each node has one or more children.
  */
@@ -234,6 +234,6 @@ class useNode {
   readonly children: Array<useNode>;
   constructor(name: string) {
     this.name = name;
-    this.children = new Array<useNode>;
+    this.children = new Array<useNode>();
   }
 }

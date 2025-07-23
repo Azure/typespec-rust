@@ -11,6 +11,28 @@ steps:
     workingDirectory: $(TypeSpecRustPkgDir)
 
   - script: |
+      pnpm run format:check
+    displayName: Check Code Formatting
+    workingDirectory: $(TypeSpecRustPkgDir)
+
+  - script: |
+      prettier --check "**/*.{md,json,ts,js}" \
+        --ignore-path .gitignore \
+        --ignore-path .prettierignore
+    displayName: Check Prettier Formatting
+    workingDirectory: $(System.DefaultWorkingDirectory)
+
+  - script: |
+      ./scripts/check-typespec-format.sh
+    displayName: Validate TypeSpec Files
+    workingDirectory: $(System.DefaultWorkingDirectory)
+
+  - script: |
+      ./scripts/check-rust-format.sh
+    displayName: Check Rust Formatting
+    workingDirectory: $(System.DefaultWorkingDirectory)
+
+  - script: |
       cspell -c .vscode/cspell.json .
     displayName: Run Spell Check
     workingDirectory: $(System.DefaultWorkingDirectory)

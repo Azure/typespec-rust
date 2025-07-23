@@ -14,7 +14,7 @@ switch (process.argv[2]) {
     switches.push('serve');
     switches.push(httpSpecs);
     switches.push(azureHttpSpecs);
-    execSyncOptions = {stdio: 'inherit'};
+    execSyncOptions = { stdio: 'inherit' };
     break;
   case '--start':
     switches.push('server');
