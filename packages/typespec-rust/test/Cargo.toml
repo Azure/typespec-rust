@@ -86,3 +86,4 @@ time = { version = "0.3.36" }
 tokio = { version = "1.43.0", default-features = false, features = ["macros"] }
 typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "6bc71299bbcf28df2d432285cfe5b3f6212b9d44", features = [
     "reqwest",
+] }
