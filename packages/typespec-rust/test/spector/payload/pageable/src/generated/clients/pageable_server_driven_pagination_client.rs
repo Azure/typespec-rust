@@ -8,10 +8,12 @@ use crate::generated::{
     models::{LinkResponse, PageableServerDrivenPaginationClientListOptions},
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
-    json, Result,
+    json, tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct PageableServerDrivenPaginationClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -24,6 +26,7 @@ impl PageableServerDrivenPaginationClient {
     }
 
     /// Returns a new instance of PageableServerDrivenPaginationContinuationTokenClient.
+    #[tracing::subclient]
     pub fn get_pageable_server_driven_pagination_continuation_token_client(
         &self,
     ) -> PageableServerDrivenPaginationContinuationTokenClient {
@@ -37,6 +40,7 @@ impl PageableServerDrivenPaginationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.Pageable.ServerDrivenPagination.link")]
     pub fn list(
         &self,
         options: Option<PageableServerDrivenPaginationClientListOptions<'_>>,
@@ -56,6 +60,15 @@ impl PageableServerDrivenPaginationClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: LinkResponse = json::from_json(&bytes)?;

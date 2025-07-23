@@ -8,14 +8,16 @@ use crate::generated::models::{
     NotDiscriminatedClientPutValidOptions, Siamese,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Result,
+    tracing, Error, Result,
 };
 
 /// Illustrates not-discriminated inheritance model.
+#[tracing::client]
 pub struct NotDiscriminatedClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -35,6 +37,7 @@ impl NotDiscriminatedClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_nodisc")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NotDiscriminatedClientOptions>,
@@ -69,6 +72,7 @@ impl NotDiscriminatedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Model.Inheritance.NotDiscriminated.getValid")]
     pub async fn get_valid(
         &self,
         options: Option<NotDiscriminatedClientGetValidOptions<'_>>,
@@ -79,13 +83,24 @@ impl NotDiscriminatedClient {
         url = url.join("type/model/inheritance/not-discriminated/valid")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Model.Inheritance.NotDiscriminated.postValid")]
     pub async fn post_valid(
         &self,
         input: RequestContent<Siamese>,
@@ -98,13 +113,24 @@ impl NotDiscriminatedClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Model.Inheritance.NotDiscriminated.putValid")]
     pub async fn put_valid(
         &self,
         input: RequestContent<Siamese>,
@@ -118,6 +144,16 @@ impl NotDiscriminatedClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

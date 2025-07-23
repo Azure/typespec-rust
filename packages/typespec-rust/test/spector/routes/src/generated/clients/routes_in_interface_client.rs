@@ -5,10 +5,12 @@
 
 use crate::generated::models::RoutesInInterfaceClientFixedOptions;
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct RoutesInInterfaceClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -24,6 +26,7 @@ impl RoutesInInterfaceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.InInterface.fixed")]
     pub async fn fixed(
         &self,
         options: Option<RoutesInInterfaceClientFixedOptions<'_>>,
@@ -33,6 +36,16 @@ impl RoutesInInterfaceClient {
         let mut url = self.endpoint.clone();
         url = url.join("routes/in-interface/fixed")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

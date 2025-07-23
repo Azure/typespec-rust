@@ -9,13 +9,15 @@ use crate::generated::models::{
     SingletonTrackedResource, SingletonTrackedResourceListResult,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{
         Context, Method, Pager, PagerResult, Pipeline, RawResponse, Request, RequestContent,
         Response, Url,
     },
-    json, Result,
+    json, tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ResourcesSingletonClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -35,6 +37,7 @@ impl ResourcesSingletonClient {
     ///
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.Singleton.getByResourceGroup")]
     pub async fn get_by_resource_group(
         &self,
         resource_group_name: &str,
@@ -51,7 +54,17 @@ impl ResourcesSingletonClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// List SingletonTrackedResource resources by resource group
@@ -60,6 +73,7 @@ impl ResourcesSingletonClient {
     ///
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.Singleton.listByResourceGroup")]
     pub fn list_by_resource_group(
         &self,
         resource_group_name: &str,
@@ -98,6 +112,15 @@ impl ResourcesSingletonClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: SingletonTrackedResourceListResult = json::from_json(&bytes)?;
@@ -120,6 +143,7 @@ impl ResourcesSingletonClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.Singleton.update")]
     pub async fn update(
         &self,
         resource_group_name: &str,
@@ -139,6 +163,16 @@ impl ResourcesSingletonClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(properties);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

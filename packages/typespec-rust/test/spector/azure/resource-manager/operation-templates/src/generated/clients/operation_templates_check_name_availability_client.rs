@@ -9,10 +9,12 @@ use crate::generated::models::{
     OperationTemplatesCheckNameAvailabilityClientCheckLocalOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct OperationTemplatesCheckNameAvailabilityClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -32,6 +34,9 @@ impl OperationTemplatesCheckNameAvailabilityClient {
     ///
     /// * `body` - The CheckAvailability request
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "Azure.ResourceManager.OperationTemplates.CheckNameAvailability.checkGlobal"
+    )]
     pub async fn check_global(
         &self,
         body: RequestContent<CheckNameAvailabilityRequest>,
@@ -49,7 +54,17 @@ impl OperationTemplatesCheckNameAvailabilityClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Implements local CheckNameAvailability operations
@@ -59,6 +74,9 @@ impl OperationTemplatesCheckNameAvailabilityClient {
     /// * `location` - The name of the Azure region.
     /// * `body` - The CheckAvailability request
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "Azure.ResourceManager.OperationTemplates.CheckNameAvailability.checkLocal"
+    )]
     pub async fn check_local(
         &self,
         location: &str,
@@ -78,6 +96,16 @@ impl OperationTemplatesCheckNameAvailabilityClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

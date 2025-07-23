@@ -5,11 +5,13 @@
 
 use crate::generated::models::HeaderClientHeaderApiVersionOptions;
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct HeaderClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -31,6 +33,7 @@ impl HeaderClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_apiverheader")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<HeaderClientOptions>,
@@ -67,6 +70,7 @@ impl HeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.AlternateApiVersion.Service.Header.headerApiVersion")]
     pub async fn header_api_version(
         &self,
         options: Option<HeaderClientHeaderApiVersionOptions<'_>>,
@@ -77,7 +81,17 @@ impl HeaderClient {
         url = url.join("azure/client-generator-core/api-version/header")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("x-ms-version", &self.version);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }
 

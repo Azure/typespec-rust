@@ -7,8 +7,12 @@ use crate::generated::clients::{
     RoutesPathParametersMatrixExpansionExplodeClient,
     RoutesPathParametersMatrixExpansionStandardClient,
 };
-use azure_core::http::{Pipeline, Url};
+use azure_core::{
+    http::{Pipeline, Url},
+    tracing,
+};
 
+#[tracing::client]
 pub struct RoutesPathParametersMatrixExpansionClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -21,6 +25,7 @@ impl RoutesPathParametersMatrixExpansionClient {
     }
 
     /// Returns a new instance of RoutesPathParametersMatrixExpansionExplodeClient.
+    #[tracing::subclient]
     pub fn get_routes_path_parameters_matrix_expansion_explode_client(
         &self,
     ) -> RoutesPathParametersMatrixExpansionExplodeClient {
@@ -31,6 +36,7 @@ impl RoutesPathParametersMatrixExpansionClient {
     }
 
     /// Returns a new instance of RoutesPathParametersMatrixExpansionStandardClient.
+    #[tracing::subclient]
     pub fn get_routes_path_parameters_matrix_expansion_standard_client(
         &self,
     ) -> RoutesPathParametersMatrixExpansionStandardClient {

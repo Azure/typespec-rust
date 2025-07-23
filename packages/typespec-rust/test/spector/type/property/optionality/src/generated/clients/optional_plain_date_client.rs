@@ -9,10 +9,12 @@ use crate::generated::models::{
     PlainDateProperty,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct OptionalPlainDateClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +31,7 @@ impl OptionalPlainDateClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.PlainDate.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalPlainDateClientGetAllOptions<'_>>,
@@ -39,7 +42,17 @@ impl OptionalPlainDateClient {
         url = url.join("type/property/optional/plainDate/all")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Get models that will return the default object
@@ -47,6 +60,7 @@ impl OptionalPlainDateClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.PlainDate.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalPlainDateClientGetDefaultOptions<'_>>,
@@ -57,7 +71,17 @@ impl OptionalPlainDateClient {
         url = url.join("type/property/optional/plainDate/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Put a body with all properties present.
@@ -65,6 +89,7 @@ impl OptionalPlainDateClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.PlainDate.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<PlainDateProperty>,
@@ -77,7 +102,17 @@ impl OptionalPlainDateClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Put a body with default properties.
@@ -85,6 +120,7 @@ impl OptionalPlainDateClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.PlainDate.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<PlainDateProperty>,
@@ -97,6 +133,16 @@ impl OptionalPlainDateClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

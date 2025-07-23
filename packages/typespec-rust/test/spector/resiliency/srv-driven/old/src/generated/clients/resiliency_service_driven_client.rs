@@ -9,12 +9,14 @@ use crate::generated::models::{
     ResiliencyServiceDrivenClientFromOneRequiredOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
 /// Test that we can grow up a service spec and service deployment into a multi-versioned service with full client support.
+#[tracing::client]
 pub struct ResiliencyServiceDrivenClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -40,6 +42,7 @@ impl ResiliencyServiceDrivenClient {
     ///   'v1' is for the deployment when the service had only one api version. 'v2' is for the deployment when the service had
     ///   api-versions 'v1' and 'v2'.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_srvdrivenold")]
     pub fn with_no_credential(
         endpoint: &str,
         service_deployment_version: String,
@@ -80,6 +83,7 @@ impl ResiliencyServiceDrivenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Resiliency.ServiceDriven.AddOptionalParam.fromNone")]
     pub async fn from_none(
         &self,
         options: Option<ResiliencyServiceDrivenClientFromNoneOptions<'_>>,
@@ -89,7 +93,17 @@ impl ResiliencyServiceDrivenClient {
         let mut url = self.endpoint.clone();
         url = url.join("add-optional-param/from-none")?;
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Test that currently accepts one optional parameter, will be updated in next spec to accept a new optional parameter as
@@ -98,6 +112,7 @@ impl ResiliencyServiceDrivenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Resiliency.ServiceDriven.AddOptionalParam.fromOneOptional")]
     pub async fn from_one_optional(
         &self,
         options: Option<ResiliencyServiceDrivenClientFromOneOptionalOptions<'_>>,
@@ -110,7 +125,17 @@ impl ResiliencyServiceDrivenClient {
             url.query_pairs_mut().append_pair("parameter", &parameter);
         }
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Test that currently accepts one required parameter, will be updated in next spec to accept a new optional parameter as
@@ -120,6 +145,7 @@ impl ResiliencyServiceDrivenClient {
     ///
     /// * `parameter` - I am a required parameter
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Resiliency.ServiceDriven.AddOptionalParam.fromOneRequired")]
     pub async fn from_one_required(
         &self,
         parameter: &str,
@@ -131,7 +157,17 @@ impl ResiliencyServiceDrivenClient {
         url = url.join("add-optional-param/from-one-required")?;
         url.query_pairs_mut().append_pair("parameter", parameter);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }
 

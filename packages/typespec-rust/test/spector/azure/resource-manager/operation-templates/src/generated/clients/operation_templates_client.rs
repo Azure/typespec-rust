@@ -14,11 +14,12 @@ use azure_core::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Pipeline, Url,
     },
-    Result,
+    tracing, Result,
 };
 use std::sync::Arc;
 
 /// Arm Resource Provider management API.
+#[tracing::client]
 pub struct OperationTemplatesClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -45,6 +46,7 @@ impl OperationTemplatesClient {
     ///   Entra ID token to use when authenticating.
     /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_armoptemplates")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -84,6 +86,7 @@ impl OperationTemplatesClient {
     }
 
     /// Returns a new instance of OperationTemplatesCheckNameAvailabilityClient.
+    #[tracing::subclient]
     pub fn get_operation_templates_check_name_availability_client(
         &self,
     ) -> OperationTemplatesCheckNameAvailabilityClient {
@@ -96,6 +99,7 @@ impl OperationTemplatesClient {
     }
 
     /// Returns a new instance of OperationTemplatesLroClient.
+    #[tracing::subclient]
     pub fn get_operation_templates_lro_client(&self) -> OperationTemplatesLroClient {
         OperationTemplatesLroClient {
             api_version: self.api_version.clone(),
@@ -106,6 +110,7 @@ impl OperationTemplatesClient {
     }
 
     /// Returns a new instance of OperationTemplatesOperationsClient.
+    #[tracing::subclient]
     pub fn get_operation_templates_operations_client(&self) -> OperationTemplatesOperationsClient {
         OperationTemplatesOperationsClient {
             api_version: self.api_version.clone(),
@@ -115,6 +120,7 @@ impl OperationTemplatesClient {
     }
 
     /// Returns a new instance of OperationTemplatesOptionalBodyClient.
+    #[tracing::subclient]
     pub fn get_operation_templates_optional_body_client(
         &self,
     ) -> OperationTemplatesOptionalBodyClient {

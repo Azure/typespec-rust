@@ -14,10 +14,11 @@ use crate::generated::clients::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Illustrates models with optional properties.
+#[tracing::client]
 pub struct OptionalClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -37,6 +38,7 @@ impl OptionalClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_optionality")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<OptionalClientOptions>,
@@ -68,6 +70,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalBooleanLiteralClient.
+    #[tracing::subclient]
     pub fn get_optional_boolean_literal_client(&self) -> OptionalBooleanLiteralClient {
         OptionalBooleanLiteralClient {
             endpoint: self.endpoint.clone(),
@@ -76,6 +79,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalBytesClient.
+    #[tracing::subclient]
     pub fn get_optional_bytes_client(&self) -> OptionalBytesClient {
         OptionalBytesClient {
             endpoint: self.endpoint.clone(),
@@ -84,6 +88,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalCollectionsByteClient.
+    #[tracing::subclient]
     pub fn get_optional_collections_byte_client(&self) -> OptionalCollectionsByteClient {
         OptionalCollectionsByteClient {
             endpoint: self.endpoint.clone(),
@@ -92,6 +97,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalCollectionsModelClient.
+    #[tracing::subclient]
     pub fn get_optional_collections_model_client(&self) -> OptionalCollectionsModelClient {
         OptionalCollectionsModelClient {
             endpoint: self.endpoint.clone(),
@@ -100,6 +106,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalDatetimeClient.
+    #[tracing::subclient]
     pub fn get_optional_datetime_client(&self) -> OptionalDatetimeClient {
         OptionalDatetimeClient {
             endpoint: self.endpoint.clone(),
@@ -108,6 +115,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalDurationClient.
+    #[tracing::subclient]
     pub fn get_optional_duration_client(&self) -> OptionalDurationClient {
         OptionalDurationClient {
             endpoint: self.endpoint.clone(),
@@ -116,6 +124,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalFloatLiteralClient.
+    #[tracing::subclient]
     pub fn get_optional_float_literal_client(&self) -> OptionalFloatLiteralClient {
         OptionalFloatLiteralClient {
             endpoint: self.endpoint.clone(),
@@ -124,6 +133,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalIntLiteralClient.
+    #[tracing::subclient]
     pub fn get_optional_int_literal_client(&self) -> OptionalIntLiteralClient {
         OptionalIntLiteralClient {
             endpoint: self.endpoint.clone(),
@@ -132,6 +142,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalPlainDateClient.
+    #[tracing::subclient]
     pub fn get_optional_plain_date_client(&self) -> OptionalPlainDateClient {
         OptionalPlainDateClient {
             endpoint: self.endpoint.clone(),
@@ -140,6 +151,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalPlainTimeClient.
+    #[tracing::subclient]
     pub fn get_optional_plain_time_client(&self) -> OptionalPlainTimeClient {
         OptionalPlainTimeClient {
             endpoint: self.endpoint.clone(),
@@ -148,6 +160,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalRequiredAndOptionalClient.
+    #[tracing::subclient]
     pub fn get_optional_required_and_optional_client(&self) -> OptionalRequiredAndOptionalClient {
         OptionalRequiredAndOptionalClient {
             endpoint: self.endpoint.clone(),
@@ -156,6 +169,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalStringClient.
+    #[tracing::subclient]
     pub fn get_optional_string_client(&self) -> OptionalStringClient {
         OptionalStringClient {
             endpoint: self.endpoint.clone(),
@@ -164,6 +178,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalStringLiteralClient.
+    #[tracing::subclient]
     pub fn get_optional_string_literal_client(&self) -> OptionalStringLiteralClient {
         OptionalStringLiteralClient {
             endpoint: self.endpoint.clone(),
@@ -172,6 +187,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalUnionFloatLiteralClient.
+    #[tracing::subclient]
     pub fn get_optional_union_float_literal_client(&self) -> OptionalUnionFloatLiteralClient {
         OptionalUnionFloatLiteralClient {
             endpoint: self.endpoint.clone(),
@@ -180,6 +196,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalUnionIntLiteralClient.
+    #[tracing::subclient]
     pub fn get_optional_union_int_literal_client(&self) -> OptionalUnionIntLiteralClient {
         OptionalUnionIntLiteralClient {
             endpoint: self.endpoint.clone(),
@@ -188,6 +205,7 @@ impl OptionalClient {
     }
 
     /// Returns a new instance of OptionalUnionStringLiteralClient.
+    #[tracing::subclient]
     pub fn get_optional_union_string_literal_client(&self) -> OptionalUnionStringLiteralClient {
         OptionalUnionStringLiteralClient {
             endpoint: self.endpoint.clone(),

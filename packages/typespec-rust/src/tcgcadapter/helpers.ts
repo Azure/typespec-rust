@@ -48,7 +48,7 @@ export function fixUpEnumValueNameWorker(name: string, kind: tcgc.SdkBuiltInKind
   name = codegen.capitalize(name);
 
   // first replace any '.' chars between numbers with the word 'Dot'
-  // any '.' between a letter and a numer will be removed.
+  // any '.' between a letter and a number will be removed.
   // e.g. V7.6_preview.1 becomes V7Dot6_preview1
   const numDotNumMatch = name.match(/(\d+\.\d+)/);
   if (numDotNumMatch) {
@@ -103,7 +103,7 @@ export function sortClientParameters(params: Array<rust.ClientParameter>): void 
 }
 
 // used by formatDocs
-const tds = new turndownService({codeBlockStyle: 'fenced', fence: '```'});
+const tds = new turndownService({ codeBlockStyle: 'fenced', fence: '```' });
 
 /**
  * applies certain formatting to a doc string.

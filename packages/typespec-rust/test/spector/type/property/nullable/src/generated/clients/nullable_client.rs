@@ -11,10 +11,11 @@ use crate::generated::clients::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Illustrates models with nullable properties.
+#[tracing::client]
 pub struct NullableClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -34,6 +35,7 @@ impl NullableClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_nullable")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NullableClientOptions>,
@@ -65,6 +67,7 @@ impl NullableClient {
     }
 
     /// Returns a new instance of NullableBytesClient.
+    #[tracing::subclient]
     pub fn get_nullable_bytes_client(&self) -> NullableBytesClient {
         NullableBytesClient {
             endpoint: self.endpoint.clone(),
@@ -73,6 +76,7 @@ impl NullableClient {
     }
 
     /// Returns a new instance of NullableCollectionsByteClient.
+    #[tracing::subclient]
     pub fn get_nullable_collections_byte_client(&self) -> NullableCollectionsByteClient {
         NullableCollectionsByteClient {
             endpoint: self.endpoint.clone(),
@@ -81,6 +85,7 @@ impl NullableClient {
     }
 
     /// Returns a new instance of NullableCollectionsModelClient.
+    #[tracing::subclient]
     pub fn get_nullable_collections_model_client(&self) -> NullableCollectionsModelClient {
         NullableCollectionsModelClient {
             endpoint: self.endpoint.clone(),
@@ -89,6 +94,7 @@ impl NullableClient {
     }
 
     /// Returns a new instance of NullableCollectionsStringClient.
+    #[tracing::subclient]
     pub fn get_nullable_collections_string_client(&self) -> NullableCollectionsStringClient {
         NullableCollectionsStringClient {
             endpoint: self.endpoint.clone(),
@@ -97,6 +103,7 @@ impl NullableClient {
     }
 
     /// Returns a new instance of NullableDatetimeClient.
+    #[tracing::subclient]
     pub fn get_nullable_datetime_client(&self) -> NullableDatetimeClient {
         NullableDatetimeClient {
             endpoint: self.endpoint.clone(),
@@ -105,6 +112,7 @@ impl NullableClient {
     }
 
     /// Returns a new instance of NullableDurationClient.
+    #[tracing::subclient]
     pub fn get_nullable_duration_client(&self) -> NullableDurationClient {
         NullableDurationClient {
             endpoint: self.endpoint.clone(),
@@ -113,6 +121,7 @@ impl NullableClient {
     }
 
     /// Returns a new instance of NullableStringClient.
+    #[tracing::subclient]
     pub fn get_nullable_string_client(&self) -> NullableStringClient {
         NullableStringClient {
             endpoint: self.endpoint.clone(),

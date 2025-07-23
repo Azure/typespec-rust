@@ -9,11 +9,13 @@ use crate::generated::models::{
     RoutesPathParametersSimpleExpansionExplodeClientRecordOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 use std::collections::HashMap;
 
+#[tracing::client]
 pub struct RoutesPathParametersSimpleExpansionExplodeClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +31,7 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.PathParameters.SimpleExpansion.Explode.array")]
     pub async fn array(
         &self,
         param: &[&str],
@@ -41,13 +44,24 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
         path = path.replace("{param}", &param.join(","));
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.PathParameters.SimpleExpansion.Explode.primitive")]
     pub async fn primitive(
         &self,
         param: &str,
@@ -60,13 +74,24 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
         path = path.replace("{param}", param);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.PathParameters.SimpleExpansion.Explode.record")]
     pub async fn record(
         &self,
         param: HashMap<String, i32>,
@@ -90,6 +115,16 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
         }
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

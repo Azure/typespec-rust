@@ -7,11 +7,13 @@ use crate::generated::models::{
     ParamAliasClientWithAliasedNameOptions, ParamAliasClientWithOriginalNameOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ParamAliasClient {
     pub(crate) blob_name: String,
     pub(crate) endpoint: Url,
@@ -33,6 +35,7 @@ impl ParamAliasClient {
     /// * `endpoint` - Service host
     /// * `blob_name` - Blob name for the client.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_clientinit")]
     pub fn with_no_credential(
         endpoint: &str,
         blob_name: String,
@@ -69,6 +72,9 @@ impl ParamAliasClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParamAlias.withAliasedName"
+    )]
     pub async fn with_aliased_name(
         &self,
         options: Option<ParamAliasClientWithAliasedNameOptions<'_>>,
@@ -80,13 +86,26 @@ impl ParamAliasClient {
         path = path.replace("{blob}", &self.blob_name);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParamAlias.withOriginalName"
+    )]
     pub async fn with_original_name(
         &self,
         options: Option<ParamAliasClientWithOriginalNameOptions<'_>>,
@@ -98,6 +117,16 @@ impl ParamAliasClient {
         path = path.replace("{blobName}", &self.blob_name);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

@@ -8,10 +8,12 @@ use crate::generated::models::{
     ValueTypesUnknownArrayClientPutOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ValueTypesUnknownArrayClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +30,7 @@ impl ValueTypesUnknownArrayClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.ValueTypes.UnknownArray.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesUnknownArrayClientGetOptions<'_>>,
@@ -38,7 +41,17 @@ impl ValueTypesUnknownArrayClient {
         url = url.join("type/property/value-types/unknown/array")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Put operation
@@ -47,6 +60,7 @@ impl ValueTypesUnknownArrayClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.ValueTypes.UnknownArray.put")]
     pub async fn put(
         &self,
         body: RequestContent<UnknownArrayProperty>,
@@ -59,6 +73,16 @@ impl ValueTypesUnknownArrayClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

@@ -8,12 +8,14 @@ use crate::generated::models::{
     JsonMergePatchClientUpdateResourceOptions, Resource, ResourcePatch,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
 /// Test for merge-patch+json content-type
+#[tracing::client]
 pub struct JsonMergePatchClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -33,6 +35,7 @@ impl JsonMergePatchClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_jmergepatch")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<JsonMergePatchClientOptions>,
@@ -68,6 +71,7 @@ impl JsonMergePatchClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.JsonMergePatch.createResource")]
     pub async fn create_resource(
         &self,
         body: RequestContent<Resource>,
@@ -81,7 +85,17 @@ impl JsonMergePatchClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Test content-type: application/merge-patch+json with optional body
@@ -89,6 +103,7 @@ impl JsonMergePatchClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.JsonMergePatch.updateOptionalResource")]
     pub async fn update_optional_resource(
         &self,
         options: Option<JsonMergePatchClientUpdateOptionalResourceOptions<'_>>,
@@ -103,7 +118,17 @@ impl JsonMergePatchClient {
         if let Some(body) = options.body {
             request.set_body(body);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Test content-type: application/merge-patch+json with required body
@@ -111,6 +136,7 @@ impl JsonMergePatchClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.JsonMergePatch.updateResource")]
     pub async fn update_resource(
         &self,
         body: RequestContent<ResourcePatch>,
@@ -124,6 +150,16 @@ impl JsonMergePatchClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

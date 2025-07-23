@@ -7,11 +7,13 @@ use crate::generated::models::{
     ArrayNullableInt32ValueClientGetOptions, ArrayNullableInt32ValueClientPutOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
 /// Array of nullable int32 values
+#[tracing::client]
 pub struct ArrayNullableInt32ValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +29,7 @@ impl ArrayNullableInt32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Array.NullableInt32Value.get")]
     pub async fn get(
         &self,
         options: Option<ArrayNullableInt32ValueClientGetOptions<'_>>,
@@ -37,13 +40,24 @@ impl ArrayNullableInt32ValueClient {
         url = url.join("type/array/nullable-int32")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Array.NullableInt32Value.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<i32>>,
@@ -56,6 +70,16 @@ impl ArrayNullableInt32ValueClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

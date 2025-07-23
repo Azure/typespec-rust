@@ -14,6 +14,9 @@ steps:
       path: ${{ parameters.pnpmStorePath }}
     displayName: Cache pnpm store
 
+  - script:  npm install -g cspell
+    displayName: Install cspell
+  
   - script: |
       npm i -g corepack@latest
       corepack enable

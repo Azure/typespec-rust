@@ -7,11 +7,13 @@ use crate::generated::models::{
     MultipleClientNoOperationParamsOptions, MultipleClientWithOperationPathParamOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct MultipleClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -33,6 +35,7 @@ impl MultipleClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_multiple")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<MultipleClientOptions>,
@@ -70,6 +73,7 @@ impl MultipleClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Path.Multiple.noOperationParams")]
     pub async fn no_operation_params(
         &self,
         options: Option<MultipleClientNoOperationParamsOptions<'_>>,
@@ -78,13 +82,24 @@ impl MultipleClient {
         let ctx = Context::with_context(&options.method_options.context);
         let url = self.endpoint.clone();
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Path.Multiple.withOperationPathParam")]
     pub async fn with_operation_path_param(
         &self,
         keyword: &str,
@@ -95,7 +110,17 @@ impl MultipleClient {
         let mut url = self.endpoint.clone();
         url = url.join(keyword)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }
 

@@ -5,11 +5,13 @@
 
 use crate::generated::models::PathClientPathApiVersionOptions;
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct PathClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -31,6 +33,7 @@ impl PathClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_apiverpath")]
     pub fn with_no_credential(endpoint: &str, options: Option<PathClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -64,6 +67,7 @@ impl PathClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.AlternateApiVersion.Service.Path.pathApiVersion")]
     pub async fn path_api_version(
         &self,
         options: Option<PathClientPathApiVersionOptions<'_>>,
@@ -75,7 +79,17 @@ impl PathClient {
         path = path.replace("{version}", &self.version);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }
 

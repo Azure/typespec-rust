@@ -29,17 +29,19 @@ use crate::generated::models::{
 };
 use azure_core::{
     credentials::TokenCredential,
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Context, Method, NoFormat, PageIterator, Pager, PagerResult, Pipeline,
         RawResponse, Request, RequestContent, Response, Url,
     },
-    json, Result,
+    json, tracing, Error, Result,
 };
 use std::sync::Arc;
 
 /// Azure App Configuration REST API
+#[tracing::client]
 pub struct AzureAppConfigurationClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -64,6 +66,7 @@ impl AzureAppConfigurationClient {
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("appconfiguration")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -108,6 +111,7 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value to retrieve.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.checkKeyValue")]
     pub async fn check_key_value(
         &self,
         key: &str,
@@ -156,7 +160,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Requests the headers and status of the given resource.
@@ -166,6 +180,7 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.checkKeyValues")]
     pub async fn check_key_values(
         &self,
         options: Option<AzureAppConfigurationClientCheckKeyValuesOptions<'_>>,
@@ -220,7 +235,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Requests the headers and status of the given resource.
@@ -230,6 +255,7 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.checkKeys")]
     pub async fn check_keys(
         &self,
         options: Option<AzureAppConfigurationClientCheckKeysOptions<'_>>,
@@ -257,7 +283,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Requests the headers and status of the given resource.
@@ -267,6 +303,7 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.checkLabels")]
     pub async fn check_labels(
         &self,
         options: Option<AzureAppConfigurationClientCheckLabelsOptions<'_>>,
@@ -304,7 +341,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Requests the headers and status of the given resource.
@@ -314,6 +361,7 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.checkRevisions")]
     pub async fn check_revisions(
         &self,
         options: Option<AzureAppConfigurationClientCheckRevisionsOptions<'_>>,
@@ -359,7 +407,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Requests the headers and status of the given resource.
@@ -370,6 +428,7 @@ impl AzureAppConfigurationClient {
     ///
     /// * `name` - The name of the key-value snapshot to check.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.checkSnapshot")]
     pub async fn check_snapshot(
         &self,
         name: &str,
@@ -397,7 +456,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Requests the headers and status of the given resource.
@@ -407,6 +476,7 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.checkSnapshots")]
     pub async fn check_snapshots(
         &self,
         options: Option<AzureAppConfigurationClientCheckSnapshotsOptions<'_>>,
@@ -428,7 +498,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Deletes a key-value.
@@ -439,6 +519,7 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value to delete.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.deleteKeyValue")]
     pub async fn delete_key_value(
         &self,
         key: &str,
@@ -467,7 +548,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Unlocks a key-value.
@@ -478,6 +569,7 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value to unlock.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.deleteLock")]
     pub async fn delete_lock(
         &self,
         key: &str,
@@ -509,7 +601,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Gets a single key-value.
@@ -520,6 +622,7 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.getKeyValue")]
     pub async fn get_key_value(
         &self,
         key: &str,
@@ -569,7 +672,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Gets the state of a long running operation.
@@ -580,6 +693,7 @@ impl AzureAppConfigurationClient {
     ///
     /// * `snapshot` - Snapshot identifier for the long running operation.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.getOperationDetails")]
     pub async fn get_operation_details(
         &self,
         snapshot: &str,
@@ -597,7 +711,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Gets a single key-value snapshot.
@@ -608,6 +732,7 @@ impl AzureAppConfigurationClient {
     ///
     /// * `name` - The name of the snapshot.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.getSnapshot")]
     pub async fn get_snapshot(
         &self,
         name: &str,
@@ -646,7 +771,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Gets a list of key-values.
@@ -656,6 +791,7 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.getKeyValues")]
     pub fn list_key_values(
         &self,
         accept: String,
@@ -733,6 +869,15 @@ impl AzureAppConfigurationClient {
                 let pipeline = pipeline.clone();
                 async move {
                     let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    if !rsp.status().is_success() {
+                        let status = rsp.status();
+                        let http_error = HttpError::new(rsp).await;
+                        let error_kind = ErrorKind::http_response(
+                            status,
+                            http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                        );
+                        return Err(Error::new(error_kind, http_error));
+                    }
                     let (status, headers, body) = rsp.deconstruct();
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
@@ -756,6 +901,7 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.getKeys")]
     pub fn list_keys(
         &self,
         accept: String,
@@ -803,6 +949,15 @@ impl AzureAppConfigurationClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: KeyListResult = json::from_json(&bytes)?;
@@ -825,6 +980,7 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.getLabels")]
     pub fn list_labels(
         &self,
         accept: String,
@@ -885,6 +1041,15 @@ impl AzureAppConfigurationClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: LabelListResult = json::from_json(&bytes)?;
@@ -907,6 +1072,7 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.getRevisions")]
     pub fn list_revisions(
         &self,
         accept: String,
@@ -976,6 +1142,15 @@ impl AzureAppConfigurationClient {
                 let pipeline = pipeline.clone();
                 async move {
                     let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    if !rsp.status().is_success() {
+                        let status = rsp.status();
+                        let http_error = HttpError::new(rsp).await;
+                        let error_kind = ErrorKind::http_response(
+                            status,
+                            http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                        );
+                        return Err(Error::new(error_kind, http_error));
+                    }
                     let (status, headers, body) = rsp.deconstruct();
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
@@ -999,6 +1174,7 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.getSnapshots")]
     pub fn list_snapshots(
         &self,
         accept: String,
@@ -1063,6 +1239,15 @@ impl AzureAppConfigurationClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: SnapshotListResult = json::from_json(&bytes)?;
@@ -1087,6 +1272,7 @@ impl AzureAppConfigurationClient {
     /// * `content_type` - Content-Type header
     /// * `key` - The key of the key-value to create.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.putKeyValue")]
     pub async fn put_key_value(
         &self,
         content_type: PutKeyValueRequestContentType,
@@ -1123,7 +1309,17 @@ impl AzureAppConfigurationClient {
         if let Some(entity) = options.entity {
             request.set_body(entity);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Locks a key-value.
@@ -1134,6 +1330,7 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value to lock.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.putLock")]
     pub async fn put_lock(
         &self,
         key: &str,
@@ -1165,7 +1362,17 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Updates the state of a key-value snapshot.
@@ -1178,6 +1385,7 @@ impl AzureAppConfigurationClient {
     /// * `name` - The name of the key-value snapshot to update.
     /// * `entity` - The parameters used to update the snapshot.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("AzureAppConfiguration.updateSnapshot")]
     pub async fn update_snapshot(
         &self,
         content_type: UpdateSnapshotRequestContentType,
@@ -1210,7 +1418,17 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.set_body(entity);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }
 

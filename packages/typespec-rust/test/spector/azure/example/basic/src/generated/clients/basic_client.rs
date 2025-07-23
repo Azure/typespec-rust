@@ -7,10 +7,11 @@ use crate::generated::clients::BasicServiceOperationGroupClient;
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test for loading JSON example and generating sample code.
+#[tracing::client]
 pub struct BasicClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -33,6 +34,7 @@ impl BasicClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_azurebasic")]
     pub fn with_no_credential(endpoint: &str, options: Option<BasicClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -62,6 +64,7 @@ impl BasicClient {
     }
 
     /// Returns a new instance of BasicServiceOperationGroupClient.
+    #[tracing::subclient]
     pub fn get_basic_service_operation_group_client(&self) -> BasicServiceOperationGroupClient {
         BasicServiceOperationGroupClient {
             api_version: self.api_version.clone(),

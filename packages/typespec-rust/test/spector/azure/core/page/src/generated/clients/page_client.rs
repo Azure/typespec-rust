@@ -13,15 +13,17 @@ use crate::generated::{
     },
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, Pager, PagerResult, Pipeline, RawResponse, Request, RequestContent,
         Url,
     },
-    json, Result,
+    json, tracing, Error, Result,
 };
 
 /// Illustrates bodies templated with Azure Core with paging support
+#[tracing::client]
 pub struct PageClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -44,6 +46,7 @@ impl PageClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_corepage")]
     pub fn with_no_credential(endpoint: &str, options: Option<PageClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -73,6 +76,7 @@ impl PageClient {
     }
 
     /// Returns a new instance of PageTwoModelsAsPageItemClient.
+    #[tracing::subclient]
     pub fn get_page_two_models_as_page_item_client(&self) -> PageTwoModelsAsPageItemClient {
         PageTwoModelsAsPageItemClient {
             api_version: self.api_version.clone(),
@@ -86,6 +90,7 @@ impl PageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Page.withParameterizedNextLink")]
     pub fn list_parameterized_next_link(
         &self,
         select: &str,
@@ -112,6 +117,15 @@ impl PageClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: ParameterizedNextLinkPagingResult = json::from_json(&bytes)?;
@@ -132,6 +146,7 @@ impl PageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Page.listWithCustomPageModel")]
     pub fn list_with_custom_page_model(
         &self,
         options: Option<PageClientListWithCustomPageModelOptions<'_>>,
@@ -166,6 +181,15 @@ impl PageClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: UserListResults = json::from_json(&bytes)?;
@@ -186,6 +210,7 @@ impl PageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Page.listWithPage")]
     pub fn list_with_page(
         &self,
         options: Option<PageClientListWithPageOptions<'_>>,
@@ -220,6 +245,15 @@ impl PageClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;
@@ -241,6 +275,7 @@ impl PageClient {
     ///
     /// * `body_input` - The body of the input.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Page.listWithParameters")]
     pub fn list_with_parameters(
         &self,
         body_input: RequestContent<ListItemInputBody>,
@@ -283,6 +318,15 @@ impl PageClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;

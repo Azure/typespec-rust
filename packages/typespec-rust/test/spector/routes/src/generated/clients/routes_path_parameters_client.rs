@@ -15,10 +15,12 @@ use crate::generated::{
     },
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct RoutesPathParametersClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -34,6 +36,7 @@ impl RoutesPathParametersClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.PathParameters.annotationOnly")]
     pub async fn annotation_only(
         &self,
         param: &str,
@@ -46,13 +49,24 @@ impl RoutesPathParametersClient {
         path = path.replace("{param}", param);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.PathParameters.explicit")]
     pub async fn explicit(
         &self,
         param: &str,
@@ -65,10 +79,21 @@ impl RoutesPathParametersClient {
         path = path.replace("{param}", param);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Returns a new instance of RoutesPathParametersLabelExpansionClient.
+    #[tracing::subclient]
     pub fn get_routes_path_parameters_label_expansion_client(
         &self,
     ) -> RoutesPathParametersLabelExpansionClient {
@@ -79,6 +104,7 @@ impl RoutesPathParametersClient {
     }
 
     /// Returns a new instance of RoutesPathParametersMatrixExpansionClient.
+    #[tracing::subclient]
     pub fn get_routes_path_parameters_matrix_expansion_client(
         &self,
     ) -> RoutesPathParametersMatrixExpansionClient {
@@ -89,6 +115,7 @@ impl RoutesPathParametersClient {
     }
 
     /// Returns a new instance of RoutesPathParametersPathExpansionClient.
+    #[tracing::subclient]
     pub fn get_routes_path_parameters_path_expansion_client(
         &self,
     ) -> RoutesPathParametersPathExpansionClient {
@@ -99,6 +126,7 @@ impl RoutesPathParametersClient {
     }
 
     /// Returns a new instance of RoutesPathParametersReservedExpansionClient.
+    #[tracing::subclient]
     pub fn get_routes_path_parameters_reserved_expansion_client(
         &self,
     ) -> RoutesPathParametersReservedExpansionClient {
@@ -109,6 +137,7 @@ impl RoutesPathParametersClient {
     }
 
     /// Returns a new instance of RoutesPathParametersSimpleExpansionClient.
+    #[tracing::subclient]
     pub fn get_routes_path_parameters_simple_expansion_client(
         &self,
     ) -> RoutesPathParametersSimpleExpansionClient {
@@ -122,6 +151,7 @@ impl RoutesPathParametersClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.PathParameters.templateOnly")]
     pub async fn template_only(
         &self,
         param: &str,
@@ -134,6 +164,16 @@ impl RoutesPathParametersClient {
         path = path.replace("{param}", param);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

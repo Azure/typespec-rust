@@ -5,12 +5,14 @@
 
 use crate::generated::models::{PageableClientListOptions, PagedUser};
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
-    json, Result,
+    json, tracing, Error, Result,
 };
 
 /// Test describing pageable.
+#[tracing::client]
 pub struct PageableClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +32,7 @@ impl PageableClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_azurepageable")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<PageableClientOptions>,
@@ -65,6 +68,7 @@ impl PageableClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Payload.Pageable.list")]
     pub fn list(&self, options: Option<PageableClientListOptions<'_>>) -> Result<Pager<PagedUser>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -86,6 +90,15 @@ impl PageableClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;

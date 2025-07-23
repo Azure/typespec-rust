@@ -3,6 +3,8 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+// cspell: ignore conv
+
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
 import { CodegenError } from './errors.js';
@@ -33,7 +35,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
   }
 
   // returns true if the client options type needs to explicitly implement Default
-  const clientOptionsImplDefault = function(constructable: rust.ClientConstruction): boolean {
+  const clientOptionsImplDefault = function (constructable: rust.ClientConstruction): boolean {
     // only implement Default when there's more than one field (i.e. more than just client_options)
     // and the field(s) contain a client default value.
     return constructable.options.type.fields.length > 1 && values(constructable.options.type.fields)
@@ -49,6 +51,8 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     const indent = new helpers.indentation();
 
     let body = helpers.formatDocComment(client.docs);
+    use.add('azure_core', 'tracing');
+    body += '#[tracing::client]\n';
     body += `pub struct ${client.name} {\n`;
     for (const field of client.fields) {
       use.addForType(field.type);
@@ -92,6 +96,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         if (paramsDocs) {
           body += paramsDocs;
         }
+        body += `${indent.get()}#[tracing::new("${crate.name}")]\n`;
         body += `${indent.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.params, client.constructable.options, use)}) -> Result<Self> {\n`;
         body += `${indent.get()}let options = options.unwrap_or_default();\n`;
         // by convention, the endpoint param is always the first ctor param
@@ -196,19 +201,24 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
       // for the callee to indent right away.
       let methodBody: (indentation: helpers.indentation) => string;
       use.addForType(method.returns);
+      let isPublicApi = false;
+      let isSubclientNew = false;
       switch (method.kind) {
         case 'async':
+          isPublicApi = true;
           async = 'async ';
           methodBody = (indentation: helpers.indentation): string => {
             return getAsyncMethodBody(indentation, use, client, method);
           };
           break;
         case 'pageable':
+          isPublicApi = true;
           methodBody = (indentation: helpers.indentation): string => {
             return getPageableMethodBody(indentation, use, client, method);
           };
           break;
         case 'clientaccessor':
+          isSubclientNew = true;
           methodBody = (indentation: helpers.indentation): string => {
             return getClientAccessorMethodBody(indentation, client, method);
           };
@@ -218,6 +228,11 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
       const paramsDocs = getParamsBlockDocComment(indent, method);
       if (paramsDocs) {
         body += paramsDocs;
+      }
+      if (isPublicApi) {
+        body += `${indent.get()}#[tracing::function("${method.languageIndependentName}")]\n`;
+      } else if (isSubclientNew) {
+        body += `${indent.get()}#[tracing::subclient]\n`;
       }
       body += `${indent.get()}${helpers.emitVisibility(method.visibility)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
       body += `${indent.push().get()}${methodBody(indent)}\n`;
@@ -264,7 +279,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     content += body;
 
     const clientMod = codegen.deconstruct(client.name).join('_');
-    clientModules.push({name: clientMod, content: content});
+    clientModules.push({ name: clientMod, content: content });
   }
 
   return {
@@ -347,7 +362,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
  * @returns the parameters doc comments or undefined
  */
 function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Constructor | rust.MethodType): string | undefined {
-  const formatParamBullet = function(paramName: string): string {
+  const formatParamBullet = function (paramName: string): string {
     return `* \`${paramName}\` - `;
   };
 
@@ -372,9 +387,9 @@ function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Co
   }
 
   if (callable.kind === 'constructor') {
-    paramsContent += helpers.formatDocComment({summary: 'Optional configuration for the client.'}, false, formatParamBullet('options'), indent);
+    paramsContent += helpers.formatDocComment({ summary: 'Optional configuration for the client.' }, false, formatParamBullet('options'), indent);
   } else if (callable.kind !== 'clientaccessor') {
-    paramsContent += helpers.formatDocComment({summary: 'Optional parameters for the request.'}, false, formatParamBullet('options'), indent);
+    paramsContent += helpers.formatDocComment({ summary: 'Optional parameters for the request.' }, false, formatParamBullet('options'), indent);
   }
 
   if (paramsContent.length === 0) {
@@ -520,7 +535,7 @@ function getEndpointFieldName(client: rust.Client): string {
   // a Url. the name will be uniform across clients
   let endpointFieldName: string | undefined;
   for (const field of client.fields) {
-    if (field.type.kind === 'Url' ) {
+    if (field.type.kind === 'Url') {
       if (endpointFieldName) {
         throw new CodegenError('InternalError', `found multiple URL fields in client ${client.name} which is unexpected`);
       }
@@ -704,7 +719,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
   }
 
   /** returns & if the param needs to be borrowed (which is the majority of cases), else the empty string */
-  const borrowOrNot = function(param: rust.Parameter): string {
+  const borrowOrNot = function (param: rust.Parameter): string {
     if (param.type.kind !== 'ref' || param.type.type.kind === 'encodedBytes' || param.type.type.kind === 'slice') {
       return '&';
     }
@@ -953,6 +968,27 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
 }
 
 /**
+ * Return an error if a local RawResponse variable "rsp" has a non-success status code.
+ * @param use the use statement builder currently in scope
+ * @param indent the indentation helper currently in scope
+ * @returns code to return an error if the status code of "rsp" doesn't indicate success
+ */
+function errIfNotSuccessResponse(use: Use, indent: helpers.indentation): string {
+  use.add('azure_core', 'Error', 'Result');
+  use.add('azure_core::error', 'ErrorKind', 'HttpError');
+  return helpers.buildIfBlock(indent, {
+    condition: '!rsp.status().is_success()',
+    body: (indent) => {
+      let body = `${indent.get()}let status = rsp.status();\n`
+      body += `${indent.get()}let http_error = HttpError::new(rsp).await;\n`;
+      body += `${indent.get()}let error_kind = ErrorKind::http_response(status, http_error.error_code().map(std::borrow::ToOwned::to_owned));\n`;
+      body += `${indent.get()}return Err(Error::new(error_kind, http_error));\n`;
+      return body;
+    },
+  });
+}
+
+/**
  * Returns 'mut ' if the Url local var needs to be mutable, else the empty string.
  * @param paramGroups the param groups associated with the Url being constructed.
  * @param method the method associated with the Url being constructed.
@@ -984,9 +1020,13 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
 
   body += constructUrl(indent, use, method, paramGroups);
   body += constructRequest(indent, use, method, paramGroups, false);
-  // the mapping for raw responses is useless so omit it
-  const into = method.returns.type.kind === 'rawResponse' ? '' : '.map(Into::into)';
-  body += `${indent.get()}self.pipeline.send(&ctx, &mut request).await${into}\n`;
+  body += `${indent.get()}let rsp = self.pipeline.send(&ctx, &mut request).await?;\n`;
+  body += errIfNotSuccessResponse(use, indent);
+  let rspInto = 'rsp.into()';
+  if (method.returns.type.kind === 'rawResponse') {
+    rspInto = 'rsp';
+  }
+  body += `${indent.get()}Ok(${rspInto})\n`;
   return body;
 }
 
@@ -1026,13 +1066,13 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     case 'continuationToken': {
       const reqTokenParam = method.strategy.requestToken.name;
       body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: Option<String>| {\n`;
-      body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ': ''}url = first_url.clone();\n`;
+      body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ' : ''}url = first_url.clone();\n`;
       if (method.strategy.requestToken.kind === 'queryScalar') {
         // if the url already contains the token query param,
         // e.g. we started on some page, then we need to remove
         // it before appending the token for the next page.
         const reqTokenValue = method.strategy.requestToken.key;
-        body +=`${indent.get()}${helpers.buildIfBlock(indent, {
+        body += `${indent.get()}${helpers.buildIfBlock(indent, {
           condition: `let Some(${reqTokenParam}) = ${reqTokenParam}`,
           body: (indent) => {
             let body = indent.get() + helpers.buildIfBlock(indent, {
@@ -1089,7 +1129,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     rspType = helpers.getTypeDeclaration(method.returns.type.type);
     rspInto = '.into()';
   } else {
-    // continuatioin token comes from the response body.
+    // continuation token comes from the response body.
     // we'll deconstruct the raw response and parse it later.
     use.add('azure_core', 'http::RawResponse');
     rspType = 'RawResponse';
@@ -1101,6 +1141,9 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
   body += `${indent.push().get()}let rsp: ${rspType} = pipeline.send(&ctx, &mut request).await?${rspInto};\n`;
+  if (rspType === 'RawResponse') {
+    body += errIfNotSuccessResponse(use, indent);
+  }
 
   // check if we need to extract the next link field from the response model
   if (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'modelField') {
@@ -1214,7 +1257,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
     paramName = 'self.' + paramName;
   }
 
-  const encodeBytes = function(type: rust.EncodedBytes, param?: string): string {
+  const encodeBytes = function (type: rust.EncodedBytes, param?: string): string {
     const encoding = helpers.getBytesEncodingMethod(type.encoding, 'encode', use);
     if (param) {
       return `${encoding}(${param})`;
@@ -1222,7 +1265,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
     return encoding;
   };
 
-  const encodeDateTime = function(type: rust.OffsetDateTime, param: string): string {
+  const encodeDateTime = function (type: rust.OffsetDateTime, param: string): string {
     const encoding = helpers.getDateTimeEncodingMethod(type.encoding, 'to', use);
     switch (type.encoding) {
       case 'rfc3339':
@@ -1304,7 +1347,7 @@ function getCollectionDelimiter(format: rust.CollectionFormat): string {
   }
 }
 
-/** returns true if the type isn't copyable thus nees to be cloned */
+/** returns true if the type isn't copyable thus needs to be cloned */
 function nonCopyableType(type: rust.Type): boolean {
   const unwrappedType = shared.unwrapOption(type);
   switch (unwrappedType.kind) {

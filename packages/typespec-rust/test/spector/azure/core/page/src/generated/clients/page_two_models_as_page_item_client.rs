@@ -8,10 +8,12 @@ use crate::generated::models::{
     PageTwoModelsAsPageItemClientListSecondItemOptions, PagedFirstItem, PagedSecondItem,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
-    json, Result,
+    json, tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct PageTwoModelsAsPageItemClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -29,6 +31,7 @@ impl PageTwoModelsAsPageItemClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Page.TwoModelsAsPageItem.listFirstItem")]
     pub fn list_first_item(
         &self,
         options: Option<PageTwoModelsAsPageItemClientListFirstItemOptions<'_>>,
@@ -63,6 +66,15 @@ impl PageTwoModelsAsPageItemClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedFirstItem = json::from_json(&bytes)?;
@@ -83,6 +95,7 @@ impl PageTwoModelsAsPageItemClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Page.TwoModelsAsPageItem.listSecondItem")]
     pub fn list_second_item(
         &self,
         options: Option<PageTwoModelsAsPageItemClientListSecondItemOptions<'_>>,
@@ -117,6 +130,15 @@ impl PageTwoModelsAsPageItemClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedSecondItem = json::from_json(&bytes)?;

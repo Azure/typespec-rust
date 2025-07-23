@@ -5,14 +5,16 @@
 
 use crate::generated::models::{DurationClientDurationConstantOptions, DurationModel};
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Result,
+    tracing, Error, Result,
 };
 
 /// Test for azure related encode decorator.
+#[tracing::client]
 pub struct DurationClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +34,7 @@ impl DurationClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_azureduration")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<DurationClientOptions>,
@@ -67,6 +70,7 @@ impl DurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Encode.Duration.durationConstant")]
     pub async fn duration_constant(
         &self,
         body: RequestContent<DurationModel>,
@@ -79,6 +83,16 @@ impl DurationClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

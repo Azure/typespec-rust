@@ -10,11 +10,13 @@ use crate::generated::models::{
     UsageModelInOperationClientOutputToInputOutputOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 use serde_json::Value;
 
+#[tracing::client]
 pub struct UsageModelInOperationClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -36,6 +38,9 @@ impl UsageModelInOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGenerator.Core.Usage.ModelInOperation.inputToInputOutput"
+    )]
     pub async fn input_to_input_output(
         &self,
         body: RequestContent<InputModel>,
@@ -48,7 +53,17 @@ impl UsageModelInOperationClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// "ResultModel" should be usage=output, as it is read-only and does not exist in request body.
@@ -71,6 +86,9 @@ impl UsageModelInOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGenerator.Core.Usage.ModelInOperation.modelInReadOnlyProperty"
+    )]
     pub async fn model_in_read_only_property(
         &self,
         body: RequestContent<RoundTripModel>,
@@ -84,7 +102,17 @@ impl UsageModelInOperationClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Serialize the 'OrphanModel' as request body.
@@ -100,6 +128,9 @@ impl UsageModelInOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGenerator.Core.Usage.ModelInOperation.orphanModelSerializable"
+    )]
     pub async fn orphan_model_serializable(
         &self,
         body: RequestContent<Value>,
@@ -112,7 +143,17 @@ impl UsageModelInOperationClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Expected response body:
@@ -125,6 +166,9 @@ impl UsageModelInOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGenerator.Core.Usage.ModelInOperation.outputToInputOutput"
+    )]
     pub async fn output_to_input_output(
         &self,
         options: Option<UsageModelInOperationClientOutputToInputOutputOptions<'_>>,
@@ -135,6 +179,16 @@ impl UsageModelInOperationClient {
         url = url.join("azure/client-generator-core/usage/outputToInputOutput")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

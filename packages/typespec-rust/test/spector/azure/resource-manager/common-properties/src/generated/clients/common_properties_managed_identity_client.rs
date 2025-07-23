@@ -10,10 +10,12 @@ use crate::generated::models::{
     ManagedIdentityTrackedResource,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct CommonPropertiesManagedIdentityClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -35,6 +37,9 @@ impl CommonPropertiesManagedIdentityClient {
     /// * `managed_identity_tracked_resource_name` - arm resource name for path
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "Azure.ResourceManager.CommonProperties.ManagedIdentity.createWithSystemAssigned"
+    )]
     pub async fn create_with_system_assigned(
         &self,
         resource_group_name: &str,
@@ -59,7 +64,17 @@ impl CommonPropertiesManagedIdentityClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(resource);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Get a ManagedIdentityTrackedResource
@@ -69,6 +84,7 @@ impl CommonPropertiesManagedIdentityClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `managed_identity_tracked_resource_name` - arm resource name for path
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.CommonProperties.ManagedIdentity.get")]
     pub async fn get(
         &self,
         resource_group_name: &str,
@@ -90,7 +106,17 @@ impl CommonPropertiesManagedIdentityClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Update a ManagedIdentityTrackedResource
@@ -101,6 +127,7 @@ impl CommonPropertiesManagedIdentityClient {
     /// * `managed_identity_tracked_resource_name` - arm resource name for path
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.CommonProperties.ManagedIdentity.updateWithUserAssignedAndSystemAssigned")]
     pub async fn update_with_user_assigned_and_system_assigned(
         &self,
         resource_group_name: &str,
@@ -127,6 +154,16 @@ impl CommonPropertiesManagedIdentityClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(properties);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

@@ -15,10 +15,12 @@ use crate::generated::models::{
     SpreadAliasClientSpreadWithMultipleParametersOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct SpreadAliasClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -34,6 +36,7 @@ impl SpreadAliasClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Alias.spreadAsRequestBody")]
     pub async fn spread_as_request_body(
         &self,
         name: String,
@@ -48,13 +51,24 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadAsRequestBodyRequest> =
             SpreadAsRequestBodyRequest { name }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Alias.spreadAsRequestParameter")]
     pub async fn spread_as_request_parameter(
         &self,
         id: &str,
@@ -74,7 +88,17 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadAsRequestParameterRequest> =
             SpreadAsRequestParameterRequest { name }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// spread an alias with contains another alias property as body.
@@ -84,6 +108,7 @@ impl SpreadAliasClient {
     /// * `name` - name of the Thing
     /// * `age` - age of the Thing
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Alias.spreadParameterWithInnerAlias")]
     pub async fn spread_parameter_with_inner_alias(
         &self,
         id: &str,
@@ -104,13 +129,24 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadParameterWithInnerAliasRequest> =
             SpreadParameterWithInnerAliasRequest { name, age }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Alias.spreadParameterWithInnerModel")]
     pub async fn spread_parameter_with_inner_model(
         &self,
         id: &str,
@@ -130,7 +166,17 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadParameterWithInnerModelRequest> =
             SpreadParameterWithInnerModelRequest { name }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
@@ -139,6 +185,7 @@ impl SpreadAliasClient {
     /// * `required_string` - required string
     /// * `required_int_list` - required int
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Alias.spreadWithMultipleParameters")]
     pub async fn spread_with_multiple_parameters(
         &self,
         id: &str,
@@ -165,6 +212,16 @@ impl SpreadAliasClient {
             }
             .try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

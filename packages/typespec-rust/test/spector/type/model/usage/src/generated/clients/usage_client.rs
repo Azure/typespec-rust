@@ -8,14 +8,16 @@ use crate::generated::models::{
     UsageClientInputOptions, UsageClientOutputOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Result,
+    tracing, Error, Result,
 };
 
 /// Illustrates usage of Record in different places(Operation parameters, return type or both).
+#[tracing::client]
 pub struct UsageClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -35,6 +37,7 @@ impl UsageClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_usage")]
     pub fn with_no_credential(endpoint: &str, options: Option<UsageClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -66,6 +69,7 @@ impl UsageClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Model.Usage.input")]
     pub async fn input(
         &self,
         input: RequestContent<InputRecord>,
@@ -78,13 +82,24 @@ impl UsageClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Model.Usage.inputAndOutput")]
     pub async fn input_and_output(
         &self,
         body: RequestContent<InputOutputRecord>,
@@ -98,13 +113,24 @@ impl UsageClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Model.Usage.output")]
     pub async fn output(
         &self,
         options: Option<UsageClientOutputOptions<'_>>,
@@ -115,6 +141,16 @@ impl UsageClient {
         url = url.join("type/model/usage/output")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

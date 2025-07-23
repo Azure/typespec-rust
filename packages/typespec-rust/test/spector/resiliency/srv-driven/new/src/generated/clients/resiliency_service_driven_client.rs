@@ -9,9 +9,10 @@ use crate::generated::models::{
     ResiliencyServiceDrivenClientFromOneRequiredOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
 /// Test that we can grow up a service spec and service deployment into a multi-versioned service with full client support.
@@ -27,6 +28,7 @@ use azure_core::{
 /// We test the following configurations from this service spec:
 /// - A client generated from the second service spec can call the second deployment of a service with api version v1
 /// - A client generated from the second service spec can call the second deployment of a service with api version v2
+#[tracing::client]
 pub struct ResiliencyServiceDrivenClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -51,6 +53,7 @@ impl ResiliencyServiceDrivenClient {
     ///   'v1' is for the deployment when the service had only one api version. 'v2' is for the deployment when the service had
     ///   api-versions 'v1' and 'v2'.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_srvdrivennew")]
     pub fn with_no_credential(
         endpoint: &str,
         service_deployment_version: String,
@@ -91,6 +94,7 @@ impl ResiliencyServiceDrivenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Resiliency.ServiceDriven.addOperation")]
     pub async fn add_operation(
         &self,
         options: Option<ResiliencyServiceDrivenClientAddOperationOptions<'_>>,
@@ -100,7 +104,17 @@ impl ResiliencyServiceDrivenClient {
         let mut url = self.endpoint.clone();
         url = url.join("add-operation")?;
         let mut request = Request::new(url, Method::Delete);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Test that grew up from accepting no parameters to an optional input parameter
@@ -108,6 +122,7 @@ impl ResiliencyServiceDrivenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Resiliency.ServiceDriven.AddOptionalParam.fromNone")]
     pub async fn from_none(
         &self,
         options: Option<ResiliencyServiceDrivenClientFromNoneOptions<'_>>,
@@ -121,7 +136,17 @@ impl ResiliencyServiceDrivenClient {
                 .append_pair("new-parameter", &new_parameter);
         }
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Tests that we can grow up an operation from accepting one optional parameter to accepting two optional parameters.
@@ -129,6 +154,7 @@ impl ResiliencyServiceDrivenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Resiliency.ServiceDriven.AddOptionalParam.fromOneOptional")]
     pub async fn from_one_optional(
         &self,
         options: Option<ResiliencyServiceDrivenClientFromOneOptionalOptions<'_>>,
@@ -145,7 +171,17 @@ impl ResiliencyServiceDrivenClient {
             url.query_pairs_mut().append_pair("parameter", &parameter);
         }
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Operation that grew up from accepting one required parameter to accepting a required parameter and an optional parameter.
@@ -154,6 +190,7 @@ impl ResiliencyServiceDrivenClient {
     ///
     /// * `parameter` - I am a required parameter
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Resiliency.ServiceDriven.AddOptionalParam.fromOneRequired")]
     pub async fn from_one_required(
         &self,
         parameter: &str,
@@ -169,7 +206,17 @@ impl ResiliencyServiceDrivenClient {
         }
         url.query_pairs_mut().append_pair("parameter", parameter);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }
 

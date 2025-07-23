@@ -11,10 +11,12 @@ use crate::generated::models::{
     SpreadModelClientSpreadCompositeRequestWithoutBodyOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct SpreadModelClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +32,7 @@ impl SpreadModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Model.spreadAsRequestBody")]
     pub async fn spread_as_request_body(
         &self,
         name: String,
@@ -43,13 +46,24 @@ impl SpreadModelClient {
         request.insert_header("content-type", "application/json");
         let body: RequestContent<BodyParameter> = BodyParameter { name: Some(name) }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Model.spreadCompositeRequest")]
     pub async fn spread_composite_request(
         &self,
         name: &str,
@@ -67,13 +81,24 @@ impl SpreadModelClient {
         request.insert_header("content-type", "application/json");
         request.insert_header("test-header", test_header);
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Model.spreadCompositeRequestMix")]
     pub async fn spread_composite_request_mix(
         &self,
         name: &str,
@@ -93,13 +118,24 @@ impl SpreadModelClient {
         let body: RequestContent<SpreadCompositeRequestMixRequest> =
             SpreadCompositeRequestMixRequest { prop }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Model.spreadCompositeRequestOnlyWithBody")]
     pub async fn spread_composite_request_only_with_body(
         &self,
         body: RequestContent<BodyParameter>,
@@ -112,13 +148,24 @@ impl SpreadModelClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Model.spreadCompositeRequestWithoutBody")]
     pub async fn spread_composite_request_without_body(
         &self,
         name: &str,
@@ -134,6 +181,16 @@ impl SpreadModelClient {
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("test-header", test_header);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

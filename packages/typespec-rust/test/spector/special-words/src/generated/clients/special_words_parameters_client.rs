@@ -25,11 +25,13 @@ use crate::generated::models::{
     SpecialWordsParametersClientWithYieldOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
 /// Verify reserved words as parameter name.
+#[tracing::client]
 pub struct SpecialWordsParametersClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -45,6 +47,7 @@ impl SpecialWordsParametersClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withAnd")]
     pub async fn with_and(
         &self,
         and: &str,
@@ -56,13 +59,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/and")?;
         url.query_pairs_mut().append_pair("and", and);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withAs")]
     pub async fn with_as(
         &self,
         as_param: &str,
@@ -74,13 +88,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/as")?;
         url.query_pairs_mut().append_pair("as", as_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withAssert")]
     pub async fn with_assert(
         &self,
         assert: &str,
@@ -92,13 +117,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/assert")?;
         url.query_pairs_mut().append_pair("assert", assert);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withAsync")]
     pub async fn with_async(
         &self,
         async_param: &str,
@@ -110,13 +146,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/async")?;
         url.query_pairs_mut().append_pair("async", async_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withAwait")]
     pub async fn with_await(
         &self,
         await_param: &str,
@@ -128,13 +175,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/await")?;
         url.query_pairs_mut().append_pair("await", await_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withBreak")]
     pub async fn with_break(
         &self,
         break_param: &str,
@@ -146,13 +204,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/break")?;
         url.query_pairs_mut().append_pair("break", break_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withCancellationToken")]
     pub async fn with_cancellation_token(
         &self,
         cancellation_token: &str,
@@ -165,13 +234,24 @@ impl SpecialWordsParametersClient {
         url.query_pairs_mut()
             .append_pair("cancellationToken", cancellation_token);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withClass")]
     pub async fn with_class(
         &self,
         class: &str,
@@ -183,13 +263,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/class")?;
         url.query_pairs_mut().append_pair("class", class);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withConstructor")]
     pub async fn with_constructor(
         &self,
         constructor: &str,
@@ -202,13 +293,24 @@ impl SpecialWordsParametersClient {
         url.query_pairs_mut()
             .append_pair("constructor", constructor);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withContinue")]
     pub async fn with_continue(
         &self,
         continue_param: &str,
@@ -221,13 +323,24 @@ impl SpecialWordsParametersClient {
         url.query_pairs_mut()
             .append_pair("continue", continue_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withDef")]
     pub async fn with_def(
         &self,
         def: &str,
@@ -239,13 +352,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/def")?;
         url.query_pairs_mut().append_pair("def", def);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withDel")]
     pub async fn with_del(
         &self,
         del: &str,
@@ -257,13 +381,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/del")?;
         url.query_pairs_mut().append_pair("del", del);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withElif")]
     pub async fn with_elif(
         &self,
         elif: &str,
@@ -275,13 +410,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/elif")?;
         url.query_pairs_mut().append_pair("elif", elif);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withElse")]
     pub async fn with_else(
         &self,
         else_param: &str,
@@ -293,13 +439,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/else")?;
         url.query_pairs_mut().append_pair("else", else_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withExcept")]
     pub async fn with_except(
         &self,
         except: &str,
@@ -311,13 +468,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/except")?;
         url.query_pairs_mut().append_pair("except", except);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withExec")]
     pub async fn with_exec(
         &self,
         exec: &str,
@@ -329,13 +497,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/exec")?;
         url.query_pairs_mut().append_pair("exec", exec);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withFinally")]
     pub async fn with_finally(
         &self,
         finally: &str,
@@ -347,13 +526,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/finally")?;
         url.query_pairs_mut().append_pair("finally", finally);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withFor")]
     pub async fn with_for(
         &self,
         for_param: &str,
@@ -365,13 +555,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/for")?;
         url.query_pairs_mut().append_pair("for", for_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withFrom")]
     pub async fn with_from(
         &self,
         from: &str,
@@ -383,13 +584,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/from")?;
         url.query_pairs_mut().append_pair("from", from);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withGlobal")]
     pub async fn with_global(
         &self,
         global: &str,
@@ -401,13 +613,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/global")?;
         url.query_pairs_mut().append_pair("global", global);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withIf")]
     pub async fn with_if(
         &self,
         if_param: &str,
@@ -419,13 +642,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/if")?;
         url.query_pairs_mut().append_pair("if", if_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withImport")]
     pub async fn with_import(
         &self,
         import: &str,
@@ -437,13 +671,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/import")?;
         url.query_pairs_mut().append_pair("import", import);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withIn")]
     pub async fn with_in(
         &self,
         in_param: &str,
@@ -455,13 +700,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/in")?;
         url.query_pairs_mut().append_pair("in", in_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withIs")]
     pub async fn with_is(
         &self,
         is: &str,
@@ -473,13 +729,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/is")?;
         url.query_pairs_mut().append_pair("is", is);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withLambda")]
     pub async fn with_lambda(
         &self,
         lambda: &str,
@@ -491,13 +758,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/lambda")?;
         url.query_pairs_mut().append_pair("lambda", lambda);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withNot")]
     pub async fn with_not(
         &self,
         not: &str,
@@ -509,13 +787,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/not")?;
         url.query_pairs_mut().append_pair("not", not);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withOr")]
     pub async fn with_or(
         &self,
         or: &str,
@@ -527,13 +816,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/or")?;
         url.query_pairs_mut().append_pair("or", or);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withPass")]
     pub async fn with_pass(
         &self,
         pass: &str,
@@ -545,13 +845,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/pass")?;
         url.query_pairs_mut().append_pair("pass", pass);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withRaise")]
     pub async fn with_raise(
         &self,
         raise: &str,
@@ -563,13 +874,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/raise")?;
         url.query_pairs_mut().append_pair("raise", raise);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withReturn")]
     pub async fn with_return(
         &self,
         return_param: &str,
@@ -581,13 +903,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/return")?;
         url.query_pairs_mut().append_pair("return", return_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withTry")]
     pub async fn with_try(
         &self,
         try_param: &str,
@@ -599,13 +932,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/try")?;
         url.query_pairs_mut().append_pair("try", try_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withWhile")]
     pub async fn with_while(
         &self,
         while_param: &str,
@@ -617,13 +961,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/while")?;
         url.query_pairs_mut().append_pair("while", while_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withWith")]
     pub async fn with_with(
         &self,
         with: &str,
@@ -635,13 +990,24 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/with")?;
         url.query_pairs_mut().append_pair("with", with);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.Parameters.withYield")]
     pub async fn with_yield(
         &self,
         yield_param: &str,
@@ -653,6 +1019,16 @@ impl SpecialWordsParametersClient {
         url = url.join("special-words/parameters/yield")?;
         url.query_pairs_mut().append_pair("yield", yield_param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

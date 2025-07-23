@@ -13,11 +13,12 @@ use azure_core::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Pipeline, Url,
     },
-    Result,
+    tracing, Result,
 };
 use std::sync::Arc;
 
 /// Arm Managed Identity Provider management API.
+#[tracing::client]
 pub struct CommonPropertiesClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -44,6 +45,7 @@ impl CommonPropertiesClient {
     ///   Entra ID token to use when authenticating.
     /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_armcommon")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -83,6 +85,7 @@ impl CommonPropertiesClient {
     }
 
     /// Returns a new instance of CommonPropertiesErrorClient.
+    #[tracing::subclient]
     pub fn get_common_properties_error_client(&self) -> CommonPropertiesErrorClient {
         CommonPropertiesErrorClient {
             api_version: self.api_version.clone(),
@@ -93,6 +96,7 @@ impl CommonPropertiesClient {
     }
 
     /// Returns a new instance of CommonPropertiesManagedIdentityClient.
+    #[tracing::subclient]
     pub fn get_common_properties_managed_identity_client(
         &self,
     ) -> CommonPropertiesManagedIdentityClient {

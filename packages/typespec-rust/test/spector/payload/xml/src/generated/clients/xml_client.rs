@@ -14,10 +14,11 @@ use crate::generated::clients::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Sends and receives bodies in XML format.
+#[tracing::client]
 pub struct XmlClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -37,6 +38,7 @@ impl XmlClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_xml")]
     pub fn with_no_credential(endpoint: &str, options: Option<XmlClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -65,6 +67,7 @@ impl XmlClient {
     }
 
     /// Returns a new instance of XmlModelWithArrayOfModelValueClient.
+    #[tracing::subclient]
     pub fn get_xml_model_with_array_of_model_value_client(
         &self,
     ) -> XmlModelWithArrayOfModelValueClient {
@@ -75,6 +78,7 @@ impl XmlClient {
     }
 
     /// Returns a new instance of XmlModelWithAttributesValueClient.
+    #[tracing::subclient]
     pub fn get_xml_model_with_attributes_value_client(&self) -> XmlModelWithAttributesValueClient {
         XmlModelWithAttributesValueClient {
             endpoint: self.endpoint.clone(),
@@ -83,6 +87,7 @@ impl XmlClient {
     }
 
     /// Returns a new instance of XmlModelWithDictionaryValueClient.
+    #[tracing::subclient]
     pub fn get_xml_model_with_dictionary_value_client(&self) -> XmlModelWithDictionaryValueClient {
         XmlModelWithDictionaryValueClient {
             endpoint: self.endpoint.clone(),
@@ -91,6 +96,7 @@ impl XmlClient {
     }
 
     /// Returns a new instance of XmlModelWithEmptyArrayValueClient.
+    #[tracing::subclient]
     pub fn get_xml_model_with_empty_array_value_client(&self) -> XmlModelWithEmptyArrayValueClient {
         XmlModelWithEmptyArrayValueClient {
             endpoint: self.endpoint.clone(),
@@ -99,6 +105,7 @@ impl XmlClient {
     }
 
     /// Returns a new instance of XmlModelWithEncodedNamesValueClient.
+    #[tracing::subclient]
     pub fn get_xml_model_with_encoded_names_value_client(
         &self,
     ) -> XmlModelWithEncodedNamesValueClient {
@@ -109,6 +116,7 @@ impl XmlClient {
     }
 
     /// Returns a new instance of XmlModelWithOptionalFieldValueClient.
+    #[tracing::subclient]
     pub fn get_xml_model_with_optional_field_value_client(
         &self,
     ) -> XmlModelWithOptionalFieldValueClient {
@@ -119,6 +127,7 @@ impl XmlClient {
     }
 
     /// Returns a new instance of XmlModelWithRenamedArraysValueClient.
+    #[tracing::subclient]
     pub fn get_xml_model_with_renamed_arrays_value_client(
         &self,
     ) -> XmlModelWithRenamedArraysValueClient {
@@ -129,6 +138,7 @@ impl XmlClient {
     }
 
     /// Returns a new instance of XmlModelWithRenamedFieldsValueClient.
+    #[tracing::subclient]
     pub fn get_xml_model_with_renamed_fields_value_client(
         &self,
     ) -> XmlModelWithRenamedFieldsValueClient {
@@ -139,6 +149,7 @@ impl XmlClient {
     }
 
     /// Returns a new instance of XmlModelWithSimpleArraysValueClient.
+    #[tracing::subclient]
     pub fn get_xml_model_with_simple_arrays_value_client(
         &self,
     ) -> XmlModelWithSimpleArraysValueClient {
@@ -149,6 +160,7 @@ impl XmlClient {
     }
 
     /// Returns a new instance of XmlModelWithTextValueClient.
+    #[tracing::subclient]
     pub fn get_xml_model_with_text_value_client(&self) -> XmlModelWithTextValueClient {
         XmlModelWithTextValueClient {
             endpoint: self.endpoint.clone(),
@@ -157,6 +169,7 @@ impl XmlClient {
     }
 
     /// Returns a new instance of XmlModelWithUnwrappedArrayValueClient.
+    #[tracing::subclient]
     pub fn get_xml_model_with_unwrapped_array_value_client(
         &self,
     ) -> XmlModelWithUnwrappedArrayValueClient {
@@ -167,6 +180,7 @@ impl XmlClient {
     }
 
     /// Returns a new instance of XmlSimpleModelValueClient.
+    #[tracing::subclient]
     pub fn get_xml_simple_model_value_client(&self) -> XmlSimpleModelValueClient {
         XmlSimpleModelValueClient {
             endpoint: self.endpoint.clone(),

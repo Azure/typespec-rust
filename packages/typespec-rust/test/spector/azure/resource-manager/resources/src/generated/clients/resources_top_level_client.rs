@@ -10,13 +10,15 @@ use crate::generated::models::{
     TopLevelTrackedResourceListResult,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{
         Context, Method, NoFormat, Pager, PagerResult, Pipeline, RawResponse, Request,
         RequestContent, Response, Url,
     },
-    json, Result,
+    json, tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ResourcesTopLevelClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -38,6 +40,7 @@ impl ResourcesTopLevelClient {
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `body` - The content of the action request
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.actionSync")]
     pub async fn action_sync(
         &self,
         resource_group_name: &str,
@@ -62,7 +65,17 @@ impl ResourcesTopLevelClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Get a TopLevelTrackedResource
@@ -72,6 +85,7 @@ impl ResourcesTopLevelClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.get")]
     pub async fn get(
         &self,
         resource_group_name: &str,
@@ -93,7 +107,17 @@ impl ResourcesTopLevelClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// List TopLevelTrackedResource resources by resource group
@@ -102,6 +126,7 @@ impl ResourcesTopLevelClient {
     ///
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.listByResourceGroup")]
     pub fn list_by_resource_group(
         &self,
         resource_group_name: &str,
@@ -140,6 +165,15 @@ impl ResourcesTopLevelClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: TopLevelTrackedResourceListResult = json::from_json(&bytes)?;
@@ -160,6 +194,7 @@ impl ResourcesTopLevelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.listBySubscription")]
     pub fn list_by_subscription(
         &self,
         options: Option<ResourcesTopLevelClientListBySubscriptionOptions<'_>>,
@@ -196,6 +231,15 @@ impl ResourcesTopLevelClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: TopLevelTrackedResourceListResult = json::from_json(&bytes)?;

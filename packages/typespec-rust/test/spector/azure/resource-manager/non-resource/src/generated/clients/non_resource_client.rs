@@ -11,11 +11,12 @@ use azure_core::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Pipeline, Url,
     },
-    Result,
+    tracing, Result,
 };
 use std::sync::Arc;
 
 /// Arm Resource Provider management API.
+#[tracing::client]
 pub struct NonResourceClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -42,6 +43,7 @@ impl NonResourceClient {
     ///   Entra ID token to use when authenticating.
     /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_armnonresource")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -81,6 +83,7 @@ impl NonResourceClient {
     }
 
     /// Returns a new instance of NonResourceNonResourceOperationsClient.
+    #[tracing::subclient]
     pub fn get_non_resource_non_resource_operations_client(
         &self,
     ) -> NonResourceNonResourceOperationsClient {

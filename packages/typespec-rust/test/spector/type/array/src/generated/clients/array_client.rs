@@ -13,10 +13,11 @@ use crate::generated::clients::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Illustrates various types of arrays.
+#[tracing::client]
 pub struct ArrayClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -36,6 +37,7 @@ impl ArrayClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_array")]
     pub fn with_no_credential(endpoint: &str, options: Option<ArrayClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -64,6 +66,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayBooleanValueClient.
+    #[tracing::subclient]
     pub fn get_array_boolean_value_client(&self) -> ArrayBooleanValueClient {
         ArrayBooleanValueClient {
             endpoint: self.endpoint.clone(),
@@ -72,6 +75,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayDatetimeValueClient.
+    #[tracing::subclient]
     pub fn get_array_datetime_value_client(&self) -> ArrayDatetimeValueClient {
         ArrayDatetimeValueClient {
             endpoint: self.endpoint.clone(),
@@ -80,6 +84,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayDurationValueClient.
+    #[tracing::subclient]
     pub fn get_array_duration_value_client(&self) -> ArrayDurationValueClient {
         ArrayDurationValueClient {
             endpoint: self.endpoint.clone(),
@@ -88,6 +93,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayFloat32ValueClient.
+    #[tracing::subclient]
     pub fn get_array_float32_value_client(&self) -> ArrayFloat32ValueClient {
         ArrayFloat32ValueClient {
             endpoint: self.endpoint.clone(),
@@ -96,6 +102,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayInt32ValueClient.
+    #[tracing::subclient]
     pub fn get_array_int32_value_client(&self) -> ArrayInt32ValueClient {
         ArrayInt32ValueClient {
             endpoint: self.endpoint.clone(),
@@ -104,6 +111,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayInt64ValueClient.
+    #[tracing::subclient]
     pub fn get_array_int64_value_client(&self) -> ArrayInt64ValueClient {
         ArrayInt64ValueClient {
             endpoint: self.endpoint.clone(),
@@ -112,6 +120,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayModelValueClient.
+    #[tracing::subclient]
     pub fn get_array_model_value_client(&self) -> ArrayModelValueClient {
         ArrayModelValueClient {
             endpoint: self.endpoint.clone(),
@@ -120,6 +129,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayNullableBooleanValueClient.
+    #[tracing::subclient]
     pub fn get_array_nullable_boolean_value_client(&self) -> ArrayNullableBooleanValueClient {
         ArrayNullableBooleanValueClient {
             endpoint: self.endpoint.clone(),
@@ -128,6 +138,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayNullableFloatValueClient.
+    #[tracing::subclient]
     pub fn get_array_nullable_float_value_client(&self) -> ArrayNullableFloatValueClient {
         ArrayNullableFloatValueClient {
             endpoint: self.endpoint.clone(),
@@ -136,6 +147,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayNullableInt32ValueClient.
+    #[tracing::subclient]
     pub fn get_array_nullable_int32_value_client(&self) -> ArrayNullableInt32ValueClient {
         ArrayNullableInt32ValueClient {
             endpoint: self.endpoint.clone(),
@@ -144,6 +156,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayNullableModelValueClient.
+    #[tracing::subclient]
     pub fn get_array_nullable_model_value_client(&self) -> ArrayNullableModelValueClient {
         ArrayNullableModelValueClient {
             endpoint: self.endpoint.clone(),
@@ -152,6 +165,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayNullableStringValueClient.
+    #[tracing::subclient]
     pub fn get_array_nullable_string_value_client(&self) -> ArrayNullableStringValueClient {
         ArrayNullableStringValueClient {
             endpoint: self.endpoint.clone(),
@@ -160,6 +174,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayStringValueClient.
+    #[tracing::subclient]
     pub fn get_array_string_value_client(&self) -> ArrayStringValueClient {
         ArrayStringValueClient {
             endpoint: self.endpoint.clone(),
@@ -168,6 +183,7 @@ impl ArrayClient {
     }
 
     /// Returns a new instance of ArrayUnknownValueClient.
+    #[tracing::subclient]
     pub fn get_array_unknown_value_client(&self) -> ArrayUnknownValueClient {
         ArrayUnknownValueClient {
             endpoint: self.endpoint.clone(),

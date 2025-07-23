@@ -19,10 +19,11 @@ use crate::generated::clients::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Illustrates various property types for models
+#[tracing::client]
 pub struct ValueTypesClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -42,6 +43,7 @@ impl ValueTypesClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_valuetypes")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<ValueTypesClientOptions>,
@@ -73,6 +75,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesBooleanClient.
+    #[tracing::subclient]
     pub fn get_value_types_boolean_client(&self) -> ValueTypesBooleanClient {
         ValueTypesBooleanClient {
             endpoint: self.endpoint.clone(),
@@ -81,6 +84,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesBooleanLiteralClient.
+    #[tracing::subclient]
     pub fn get_value_types_boolean_literal_client(&self) -> ValueTypesBooleanLiteralClient {
         ValueTypesBooleanLiteralClient {
             endpoint: self.endpoint.clone(),
@@ -89,6 +93,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesBytesClient.
+    #[tracing::subclient]
     pub fn get_value_types_bytes_client(&self) -> ValueTypesBytesClient {
         ValueTypesBytesClient {
             endpoint: self.endpoint.clone(),
@@ -97,6 +102,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesCollectionsIntClient.
+    #[tracing::subclient]
     pub fn get_value_types_collections_int_client(&self) -> ValueTypesCollectionsIntClient {
         ValueTypesCollectionsIntClient {
             endpoint: self.endpoint.clone(),
@@ -105,6 +111,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesCollectionsModelClient.
+    #[tracing::subclient]
     pub fn get_value_types_collections_model_client(&self) -> ValueTypesCollectionsModelClient {
         ValueTypesCollectionsModelClient {
             endpoint: self.endpoint.clone(),
@@ -113,6 +120,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesCollectionsStringClient.
+    #[tracing::subclient]
     pub fn get_value_types_collections_string_client(&self) -> ValueTypesCollectionsStringClient {
         ValueTypesCollectionsStringClient {
             endpoint: self.endpoint.clone(),
@@ -121,6 +129,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesDatetimeClient.
+    #[tracing::subclient]
     pub fn get_value_types_datetime_client(&self) -> ValueTypesDatetimeClient {
         ValueTypesDatetimeClient {
             endpoint: self.endpoint.clone(),
@@ -129,6 +138,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesDecimal128Client.
+    #[tracing::subclient]
     pub fn get_value_types_decimal128_client(&self) -> ValueTypesDecimal128Client {
         ValueTypesDecimal128Client {
             endpoint: self.endpoint.clone(),
@@ -137,6 +147,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesDecimalClient.
+    #[tracing::subclient]
     pub fn get_value_types_decimal_client(&self) -> ValueTypesDecimalClient {
         ValueTypesDecimalClient {
             endpoint: self.endpoint.clone(),
@@ -145,6 +156,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesDictionaryStringClient.
+    #[tracing::subclient]
     pub fn get_value_types_dictionary_string_client(&self) -> ValueTypesDictionaryStringClient {
         ValueTypesDictionaryStringClient {
             endpoint: self.endpoint.clone(),
@@ -153,6 +165,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesDurationClient.
+    #[tracing::subclient]
     pub fn get_value_types_duration_client(&self) -> ValueTypesDurationClient {
         ValueTypesDurationClient {
             endpoint: self.endpoint.clone(),
@@ -161,6 +174,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesEnumClient.
+    #[tracing::subclient]
     pub fn get_value_types_enum_client(&self) -> ValueTypesEnumClient {
         ValueTypesEnumClient {
             endpoint: self.endpoint.clone(),
@@ -169,6 +183,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesExtensibleEnumClient.
+    #[tracing::subclient]
     pub fn get_value_types_extensible_enum_client(&self) -> ValueTypesExtensibleEnumClient {
         ValueTypesExtensibleEnumClient {
             endpoint: self.endpoint.clone(),
@@ -177,6 +192,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesFloatClient.
+    #[tracing::subclient]
     pub fn get_value_types_float_client(&self) -> ValueTypesFloatClient {
         ValueTypesFloatClient {
             endpoint: self.endpoint.clone(),
@@ -185,6 +201,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesFloatLiteralClient.
+    #[tracing::subclient]
     pub fn get_value_types_float_literal_client(&self) -> ValueTypesFloatLiteralClient {
         ValueTypesFloatLiteralClient {
             endpoint: self.endpoint.clone(),
@@ -193,6 +210,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesIntClient.
+    #[tracing::subclient]
     pub fn get_value_types_int_client(&self) -> ValueTypesIntClient {
         ValueTypesIntClient {
             endpoint: self.endpoint.clone(),
@@ -201,6 +219,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesIntLiteralClient.
+    #[tracing::subclient]
     pub fn get_value_types_int_literal_client(&self) -> ValueTypesIntLiteralClient {
         ValueTypesIntLiteralClient {
             endpoint: self.endpoint.clone(),
@@ -209,6 +228,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesModelClient.
+    #[tracing::subclient]
     pub fn get_value_types_model_client(&self) -> ValueTypesModelClient {
         ValueTypesModelClient {
             endpoint: self.endpoint.clone(),
@@ -217,6 +237,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesNeverClient.
+    #[tracing::subclient]
     pub fn get_value_types_never_client(&self) -> ValueTypesNeverClient {
         ValueTypesNeverClient {
             endpoint: self.endpoint.clone(),
@@ -225,6 +246,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesStringClient.
+    #[tracing::subclient]
     pub fn get_value_types_string_client(&self) -> ValueTypesStringClient {
         ValueTypesStringClient {
             endpoint: self.endpoint.clone(),
@@ -233,6 +255,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesStringLiteralClient.
+    #[tracing::subclient]
     pub fn get_value_types_string_literal_client(&self) -> ValueTypesStringLiteralClient {
         ValueTypesStringLiteralClient {
             endpoint: self.endpoint.clone(),
@@ -241,6 +264,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesUnionEnumValueClient.
+    #[tracing::subclient]
     pub fn get_value_types_union_enum_value_client(&self) -> ValueTypesUnionEnumValueClient {
         ValueTypesUnionEnumValueClient {
             endpoint: self.endpoint.clone(),
@@ -249,6 +273,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesUnionFloatLiteralClient.
+    #[tracing::subclient]
     pub fn get_value_types_union_float_literal_client(&self) -> ValueTypesUnionFloatLiteralClient {
         ValueTypesUnionFloatLiteralClient {
             endpoint: self.endpoint.clone(),
@@ -257,6 +282,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesUnionIntLiteralClient.
+    #[tracing::subclient]
     pub fn get_value_types_union_int_literal_client(&self) -> ValueTypesUnionIntLiteralClient {
         ValueTypesUnionIntLiteralClient {
             endpoint: self.endpoint.clone(),
@@ -265,6 +291,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesUnionStringLiteralClient.
+    #[tracing::subclient]
     pub fn get_value_types_union_string_literal_client(
         &self,
     ) -> ValueTypesUnionStringLiteralClient {
@@ -275,6 +302,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesUnknownArrayClient.
+    #[tracing::subclient]
     pub fn get_value_types_unknown_array_client(&self) -> ValueTypesUnknownArrayClient {
         ValueTypesUnknownArrayClient {
             endpoint: self.endpoint.clone(),
@@ -283,6 +311,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesUnknownDictClient.
+    #[tracing::subclient]
     pub fn get_value_types_unknown_dict_client(&self) -> ValueTypesUnknownDictClient {
         ValueTypesUnknownDictClient {
             endpoint: self.endpoint.clone(),
@@ -291,6 +320,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesUnknownIntClient.
+    #[tracing::subclient]
     pub fn get_value_types_unknown_int_client(&self) -> ValueTypesUnknownIntClient {
         ValueTypesUnknownIntClient {
             endpoint: self.endpoint.clone(),
@@ -299,6 +329,7 @@ impl ValueTypesClient {
     }
 
     /// Returns a new instance of ValueTypesUnknownStringClient.
+    #[tracing::subclient]
     pub fn get_value_types_unknown_string_client(&self) -> ValueTypesUnknownStringClient {
         ValueTypesUnknownStringClient {
             endpoint: self.endpoint.clone(),

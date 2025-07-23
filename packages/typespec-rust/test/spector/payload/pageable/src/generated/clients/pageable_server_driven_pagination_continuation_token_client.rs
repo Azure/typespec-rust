@@ -13,10 +13,12 @@ use crate::generated::models::{
     RequestQueryResponseHeaderResponse, RequestQueryResponseHeaderResponseHeaders,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Response, Url},
-    json, Result,
+    json, tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct PageableServerDrivenPaginationContinuationTokenClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +34,9 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "Payload.Pageable.ServerDrivenPagination.ContinuationToken.requestHeaderResponseBody"
+    )]
     pub fn list_header_response_body(
         &self,
         options: Option<
@@ -59,6 +64,15 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: RequestHeaderResponseBodyResponse = json::from_json(&bytes)?;
@@ -78,6 +92,9 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "Payload.Pageable.ServerDrivenPagination.ContinuationToken.requestHeaderResponseHeader"
+    )]
     pub fn list_header_response_header(
         &self,
         options: Option<
@@ -123,6 +140,9 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "Payload.Pageable.ServerDrivenPagination.ContinuationToken.requestQueryResponseBody"
+    )]
     pub fn list_query_response_body(
         &self,
         options: Option<
@@ -161,6 +181,15 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: RequestQueryResponseBodyResponse = json::from_json(&bytes)?;
@@ -180,6 +209,9 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "Payload.Pageable.ServerDrivenPagination.ContinuationToken.requestQueryResponseHeader"
+    )]
     pub fn list_query_response_header(
         &self,
         options: Option<

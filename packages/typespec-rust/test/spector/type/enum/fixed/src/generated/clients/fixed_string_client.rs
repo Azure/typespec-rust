@@ -8,10 +8,12 @@ use crate::generated::models::{
     FixedStringClientPutUnknownValueOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct FixedStringClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +30,7 @@ impl FixedStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Enum.Fixed.String.getKnownValue")]
     pub async fn get_known_value(
         &self,
         options: Option<FixedStringClientGetKnownValueOptions<'_>>,
@@ -38,7 +41,17 @@ impl FixedStringClient {
         url = url.join("type/enum/fixed/string/known-value")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// putKnownValue
@@ -47,6 +60,7 @@ impl FixedStringClient {
     ///
     /// * `body` - _
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Enum.Fixed.String.putKnownValue")]
     pub async fn put_known_value(
         &self,
         body: RequestContent<DaysOfWeekEnum>,
@@ -59,7 +73,17 @@ impl FixedStringClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// putUnknownValue
@@ -68,6 +92,7 @@ impl FixedStringClient {
     ///
     /// * `body` - _
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Enum.Fixed.String.putUnknownValue")]
     pub async fn put_unknown_value(
         &self,
         body: RequestContent<DaysOfWeekEnum>,
@@ -80,6 +105,16 @@ impl FixedStringClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

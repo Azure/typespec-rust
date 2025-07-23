@@ -11,11 +11,13 @@ use crate::generated::{
     },
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct RenamedOperationClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -36,6 +38,7 @@ impl RenamedOperationClient {
     /// * `endpoint` - Service host
     /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_renamedop")]
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -71,6 +74,7 @@ impl RenamedOperationClient {
     }
 
     /// Returns a new instance of RenamedOperationGroupClient.
+    #[tracing::subclient]
     pub fn get_renamed_operation_group_client(&self) -> RenamedOperationGroupClient {
         RenamedOperationGroupClient {
             endpoint: self.endpoint.clone(),
@@ -82,6 +86,7 @@ impl RenamedOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.RenamedOperation.renamedFive")]
     pub async fn renamed_five(
         &self,
         options: Option<RenamedOperationClientRenamedFiveOptions<'_>>,
@@ -91,13 +96,24 @@ impl RenamedOperationClient {
         let mut url = self.endpoint.clone();
         url = url.join("five")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.RenamedOperation.renamedOne")]
     pub async fn renamed_one(
         &self,
         options: Option<RenamedOperationClientRenamedOneOptions<'_>>,
@@ -107,13 +123,24 @@ impl RenamedOperationClient {
         let mut url = self.endpoint.clone();
         url = url.join("one")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.RenamedOperation.renamedThree")]
     pub async fn renamed_three(
         &self,
         options: Option<RenamedOperationClientRenamedThreeOptions<'_>>,
@@ -123,6 +150,16 @@ impl RenamedOperationClient {
         let mut url = self.endpoint.clone();
         url = url.join("three")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

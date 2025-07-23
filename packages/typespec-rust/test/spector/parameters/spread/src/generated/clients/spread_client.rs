@@ -7,10 +7,11 @@ use crate::generated::clients::{SpreadAliasClient, SpreadModelClient};
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test for the spread operator.
+#[tracing::client]
 pub struct SpreadClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl SpreadClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_spread")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<SpreadClientOptions>,
@@ -61,6 +63,7 @@ impl SpreadClient {
     }
 
     /// Returns a new instance of SpreadAliasClient.
+    #[tracing::subclient]
     pub fn get_spread_alias_client(&self) -> SpreadAliasClient {
         SpreadAliasClient {
             endpoint: self.endpoint.clone(),
@@ -69,6 +72,7 @@ impl SpreadClient {
     }
 
     /// Returns a new instance of SpreadModelClient.
+    #[tracing::subclient]
     pub fn get_spread_model_client(&self) -> SpreadModelClient {
         SpreadModelClient {
             endpoint: self.endpoint.clone(),

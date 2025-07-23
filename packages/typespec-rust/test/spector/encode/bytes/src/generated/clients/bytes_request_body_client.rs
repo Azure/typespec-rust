@@ -9,10 +9,12 @@ use crate::generated::models::{
     BytesRequestBodyClientOctetStreamOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Bytes, Result,
+    tracing, Bytes, Error, Result,
 };
 
+#[tracing::client]
 pub struct BytesRequestBodyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +30,7 @@ impl BytesRequestBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.RequestBody.base64")]
     pub async fn base64(
         &self,
         value: RequestContent<Vec<u8>>,
@@ -40,13 +43,24 @@ impl BytesRequestBodyClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(value);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.RequestBody.base64url")]
     pub async fn base64_url(
         &self,
         value: RequestContent<Vec<u8>>,
@@ -59,13 +73,24 @@ impl BytesRequestBodyClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(value);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.RequestBody.customContentType")]
     pub async fn custom_content_type(
         &self,
         value: RequestContent<Bytes>,
@@ -78,13 +103,24 @@ impl BytesRequestBodyClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "image/png");
         request.set_body(value);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.RequestBody.default")]
     pub async fn default(
         &self,
         value: RequestContent<Bytes>,
@@ -97,13 +133,24 @@ impl BytesRequestBodyClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/octet-stream");
         request.set_body(value);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.RequestBody.octetStream")]
     pub async fn octet_stream(
         &self,
         value: RequestContent<Bytes>,
@@ -116,6 +163,16 @@ impl BytesRequestBodyClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/octet-stream");
         request.set_body(value);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

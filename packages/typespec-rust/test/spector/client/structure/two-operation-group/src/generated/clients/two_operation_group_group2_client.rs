@@ -8,10 +8,12 @@ use crate::generated::models::{
     TwoOperationGroupGroup2ClientTwoOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct TwoOperationGroupGroup2Client {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +29,7 @@ impl TwoOperationGroupGroup2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.TwoOperationGroup.Group2.five")]
     pub async fn five(
         &self,
         options: Option<TwoOperationGroupGroup2ClientFiveOptions<'_>>,
@@ -36,13 +39,24 @@ impl TwoOperationGroupGroup2Client {
         let mut url = self.endpoint.clone();
         url = url.join("five")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.TwoOperationGroup.Group2.six")]
     pub async fn six(
         &self,
         options: Option<TwoOperationGroupGroup2ClientSixOptions<'_>>,
@@ -52,13 +66,24 @@ impl TwoOperationGroupGroup2Client {
         let mut url = self.endpoint.clone();
         url = url.join("six")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.TwoOperationGroup.Group2.two")]
     pub async fn two(
         &self,
         options: Option<TwoOperationGroupGroup2ClientTwoOptions<'_>>,
@@ -68,6 +93,16 @@ impl TwoOperationGroupGroup2Client {
         let mut url = self.endpoint.clone();
         url = url.join("two")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

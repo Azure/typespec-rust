@@ -5,12 +5,17 @@
 
 import { createTypeSpecLibrary, JSONSchemaType, paramMessage } from '@typespec/compiler';
 
-/** the public Rust emitter options */
+/** The public Rust emitter options */
 export interface RustEmitterOptions {
+  /** The name of the generated Rust crate */
   'crate-name': string;
+  /** The version of the generated Rust crate */
   'crate-version': string;
+  /** Whether to overwrite an existing Cargo.toml file. Defaults to false */
   'overwrite-cargo-toml': boolean;
+  /** Whether to overwrite an existing lib.rs file. Defaults to false */
   'overwrite-lib-rs': boolean;
+  /** Whether to omit documentation links in generated code. Defaults to false */
   'temp-omit-doc-links': boolean;
 }
 
@@ -18,11 +23,34 @@ const EmitterOptionsSchema: JSONSchemaType<RustEmitterOptions> = {
   type: 'object',
   additionalProperties: true,
   properties: {
-    'crate-name': { type: 'string', nullable: false },
-    'crate-version': { type: 'string', nullable: false },
-    'overwrite-cargo-toml': { type: 'boolean', nullable: false, default: false},
-    'overwrite-lib-rs': { type: 'boolean', nullable: false, default: false },
-    'temp-omit-doc-links': { type: 'boolean', nullable: false, default: false },
+    'crate-name': { 
+      type: 'string', 
+      nullable: false,
+      description: 'The name of the generated Rust crate'
+    },
+    'crate-version': { 
+      type: 'string', 
+      nullable: false,
+      description: 'The version of the generated Rust crate'
+    },
+    'overwrite-cargo-toml': { 
+      type: 'boolean', 
+      nullable: false, 
+      default: false,
+      description: 'Whether to overwrite an existing Cargo.toml file. Defaults to false'
+    },
+    'overwrite-lib-rs': { 
+      type: 'boolean', 
+      nullable: false, 
+      default: false,
+      description: 'Whether to overwrite an existing lib.rs file. Defaults to false'
+    },
+    'temp-omit-doc-links': { 
+      type: 'boolean', 
+      nullable: false, 
+      default: false,
+      description: 'Whether to omit documentation links in generated code. Defaults to false'
+    },
   },
   required: [
     'crate-name',
