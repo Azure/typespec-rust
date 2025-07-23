@@ -1312,7 +1312,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
           break;
       }
       break;
-    case 'nextLink':
+    case 'nextLink': {
       // Build the field path accessor string (e.g., "nested_next.next" for nested fields)
       const nextLinkFieldPath = method.strategy.nextLinkPath.map(field => field.name).join('.');
       const lastFieldName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
@@ -1320,6 +1320,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       srcNextPage = `res.${nextLinkFieldPath}`;
       continuation = `${lastFieldName}.parse()?`;
       break;
+    }
   }
 
   // we need to handle the case where the next page value is the empty string,

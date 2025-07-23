@@ -5,7 +5,7 @@ import * as types from '../src/codemodel/types.js';
 
 describe('PageableStrategyNextLink', () => {
   it('should handle single field path', () => {
-    const field = new types.ModelField('nextLink', 'pub', 'next_link', new types.StringType(), false, {});
+    const field = new types.ModelField('nextLink', 'next_link', 'pub', new types.StringType(), false);
     const strategy = new rust.PageableStrategyNextLink([field]);
     
     assert.equal(strategy.kind, 'nextLink');
@@ -14,8 +14,9 @@ describe('PageableStrategyNextLink', () => {
   });
 
   it('should handle nested field path', () => {
-    const nestedField = new types.ModelField('nestedNext', 'pub', 'nested_next', new types.Model('NestedNext', 'pub', [], 'model', {}), false, {});
-    const nextField = new types.ModelField('next', 'pub', 'next', new types.StringType(), false, {});
+    const nestedModel = new types.Model('NestedNext', 'pub', types.ModelFlags.Unspecified);
+    const nestedField = new types.ModelField('nestedNext', 'nested_next', 'pub', nestedModel, false);
+    const nextField = new types.ModelField('next', 'next', 'pub', new types.StringType(), false);
     const strategy = new rust.PageableStrategyNextLink([nestedField, nextField]);
     
     assert.equal(strategy.kind, 'nextLink');
