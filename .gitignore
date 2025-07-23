@@ -411,5 +411,6 @@ package-lock.json
 spec-coverage.json
 
 packages/typespec-rust/test/target/
+packages/typespec-rust/pnpm-store/
 
 Cargo.lock
