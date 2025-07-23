@@ -762,7 +762,7 @@ export class Adapter {
       // bit flags for auth types
       enum AuthTypes {
         Default = 0, // unspecified
-        NoAuth  = 1, // explicit NoAuth
+        NoAuth = 1, // explicit NoAuth
         WithAut = 2, // explicit credential
       }
 
@@ -861,7 +861,7 @@ export class Adapter {
                 // NOTE: the behavior of Url::join requires that the path ends with a forward slash.
                 // if there are any query params, splice it in as required else just append it.
                 if (serverUrl.includes('?')) {
-                  if (serverUrl[serverUrl.indexOf('?')-1] !== '/') {
+                  if (serverUrl[serverUrl.indexOf('?') - 1] !== '/') {
                     serverUrl = serverUrl.replace('?', '/?');
                   }
                 } else if (serverUrl[serverUrl.length - 1] !== '/') {
@@ -1066,6 +1066,7 @@ export class Adapter {
    */
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
     let srcMethodName = method.name;
+    let languageIndependentName = method.crossLanguageDefinitionId;
     if (method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
       const chunks = codegen.deconstruct(srcMethodName);
       chunks[0] = 'list';
@@ -1112,10 +1113,10 @@ export class Adapter {
     let rustMethod: MethodType;
     switch (method.kind) {
       case 'basic':
-        rustMethod = new rust.AsyncMethod(methodName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.AsyncMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
         break;
       case 'paging':
-        rustMethod = new rust.PageableMethod(methodName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
         break;
       default:
         throw new AdapterError('UnsupportedTsp', `method kind ${method.kind} NYI`, method.__raw?.node);
@@ -1406,7 +1407,7 @@ export class Adapter {
      * @param type the type for which to build a name
      * @returns the name
      */
-    const recursiveTypeName = function(type: rust.MarkerType | rust.WireType): string {
+    const recursiveTypeName = function (type: rust.MarkerType | rust.WireType): string {
       switch (type.kind) {
         case 'enum':
         case 'marker':
@@ -1574,7 +1575,7 @@ export class Adapter {
     }
 
     /** returns the corresponding client param field name for a client parameter */
-    const getCorrespondingClientParamName = function(param: tcgc.SdkHttpParameter): string {
+    const getCorrespondingClientParamName = function (param: tcgc.SdkHttpParameter): string {
       if (param.onClient && param.correspondingMethodParams.length === 1) {
         // we get here if the param was aliased via the @paramAlias decorator.
         // this gives us the name of the client param's backing field which has
@@ -1742,7 +1743,7 @@ export class Adapter {
       }
     };
 
-    const recursiveUnwrapVec = function(type: rust.Type): rust.Type {
+    const recursiveUnwrapVec = function (type: rust.Type): rust.Type {
       if (type.kind === 'Vec') {
         return recursiveUnwrapVec(type.type);
       }

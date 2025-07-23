@@ -228,7 +228,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         body += paramsDocs;
       }
       if (isPublicApi) {
-        body += `${indent.get()}#[tracing::function("${client.name}.${method.name}")]\n`;
+        body += `${indent.get()}#[tracing::function("${method.languageIndependentName}")]\n`;
       } else if (isSubclientNew) {
         body += `${indent.get()}#[tracing::subclient]\n`;
       }
