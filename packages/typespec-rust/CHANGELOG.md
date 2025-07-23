@@ -1,5 +1,13 @@
 # Release History
 
+## 0.19.0 (2025-07-23)
+
+### Other Changes
+
+* Client methods return an error on non-2xx response codes.
+* SDK clients are now generated with distributed tracing support using the `#[tracing::function]` and related attribute macros.
+* Added support for the `decimal` type.
+
 ## 0.18.0 (2025-07-09)
 
 ### Breaking Changes
@@ -400,9 +408,6 @@
   * Headers, query parameters, and struct fields work. The exception for struct fields is nested arrays (e.g. `Vec<Vec<u8>>`).
   * Requests and responses of base64 encoded values do not work due to the orphan problem.
 * Added support for `x-ms-meta-*` headers in blob storage.
-* Client methods return an error on non-200 related response codes.
-* SDK clients are now generated with distributed tracing support using the `#[tracing::function]` and related attribute macros.
-* Added support for the `decimal` type.
 
 ### Other Changes
 
