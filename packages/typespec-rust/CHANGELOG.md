@@ -366,7 +366,7 @@
 
 * Don't overwrite an existing `Cargo.toml` file by default.
   * Specify `overwrite-cargo-toml=true` to force overwriting the file.
-* Emitter args `crate-name` and `crate-version` have been marked as requried.
+* Emitter args `crate-name` and `crate-version` have been marked as required.
 * Updated minimum tcgc to `v0.48.4`.
 
 ### Features Added
@@ -397,7 +397,7 @@
 * Added support for pageable methods.
 * Added support for XML payloads.
 * Added partial support for base64 encoded values.
-  * Headers, query parameters, and struct fiels work. The exception for struct fields is nested arrays (e.g. `Vec<Vec<u8>>`).
+  * Headers, query parameters, and struct fields work. The exception for struct fields is nested arrays (e.g. `Vec<Vec<u8>>`).
   * Requests and responses of base64 encoded values do not work due to the orphan problem.
 * Added support for `x-ms-meta-*` headers in blob storage.
 

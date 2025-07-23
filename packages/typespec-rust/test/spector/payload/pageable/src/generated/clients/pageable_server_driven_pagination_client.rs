@@ -8,8 +8,13 @@ use crate::generated::{
     models::{LinkResponse, PageableServerDrivenPaginationClientListOptions},
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
+<<<<<<< HEAD
     json, tracing, Result,
+=======
+    json, Error, Result,
+>>>>>>> main
 };
 
 #[tracing::client]
@@ -59,6 +64,15 @@ impl PageableServerDrivenPaginationClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: LinkResponse = json::from_json(&bytes)?;

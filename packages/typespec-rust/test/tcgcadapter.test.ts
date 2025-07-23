@@ -3,6 +3,8 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+// cspell: ignore tcgcadapter
+
 import * as rust from '../src/codemodel/index.js';
 import * as helpers from '../src/tcgcadapter/helpers.js';
 import { deepEqual, strictEqual } from 'assert';
