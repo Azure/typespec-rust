@@ -10,11 +10,7 @@ use crate::generated::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
-<<<<<<< HEAD
-    json, tracing, Result,
-=======
-    json, Error, Result,
->>>>>>> main
+    json, tracing, Error, Result,
 };
 
 #[tracing::client]
