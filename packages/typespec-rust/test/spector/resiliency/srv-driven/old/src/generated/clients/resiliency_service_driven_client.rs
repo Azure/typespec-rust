@@ -9,9 +9,10 @@ use crate::generated::models::{
     ResiliencyServiceDrivenClientFromOneRequiredOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    Error, Result,
 };
 
 /// Test that we can grow up a service spec and service deployment into a multi-versioned service with full client support.
@@ -89,7 +90,17 @@ impl ResiliencyServiceDrivenClient {
         let mut url = self.endpoint.clone();
         url = url.join("add-optional-param/from-none")?;
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Test that currently accepts one optional parameter, will be updated in next spec to accept a new optional parameter as
@@ -110,7 +121,17 @@ impl ResiliencyServiceDrivenClient {
             url.query_pairs_mut().append_pair("parameter", &parameter);
         }
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Test that currently accepts one required parameter, will be updated in next spec to accept a new optional parameter as
@@ -131,7 +152,17 @@ impl ResiliencyServiceDrivenClient {
         url = url.join("add-optional-param/from-one-required")?;
         url.query_pairs_mut().append_pair("parameter", parameter);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }
 

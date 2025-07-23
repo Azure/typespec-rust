@@ -955,6 +955,27 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
 }
 
 /**
+ * Return an error if a local RawResponse variable "rsp" has a non-success status code.
+ * @param use the use statement builder currently in scope
+ * @param indent the indentation helper currently in scope
+ * @returns code to return an error if the status code of "rsp" doesn't indicate success
+ */
+function errIfNotSuccessResponse(use: Use, indent: helpers.indentation): string {
+  use.add('azure_core', 'Error', 'Result');
+  use.add('azure_core::error', 'ErrorKind', 'HttpError');
+  return helpers.buildIfBlock(indent, {
+    condition: '!rsp.status().is_success()',
+    body: (indent) => {
+      let body = `${indent.get()}let status = rsp.status();\n`
+      body += `${indent.get()}let http_error = HttpError::new(rsp).await;\n`;
+      body += `${indent.get()}let error_kind = ErrorKind::http_response(status, http_error.error_code().map(std::borrow::ToOwned::to_owned));\n`;
+      body += `${indent.get()}return Err(Error::new(error_kind, http_error));\n`;
+      return body;
+    },
+  });
+}
+
+/**
  * Returns 'mut ' if the Url local var needs to be mutable, else the empty string.
  * @param paramGroups the param groups associated with the Url being constructed.
  * @param method the method associated with the Url being constructed.
@@ -986,9 +1007,13 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
 
   body += constructUrl(indent, use, method, paramGroups);
   body += constructRequest(indent, use, method, paramGroups, false);
-  // the mapping for raw responses is useless so omit it
-  const into = method.returns.type.kind === 'rawResponse' ? '' : '.map(Into::into)';
-  body += `${indent.get()}self.pipeline.send(&ctx, &mut request).await${into}\n`;
+  body += `${indent.get()}let rsp = self.pipeline.send(&ctx, &mut request).await?;\n`;
+  body += errIfNotSuccessResponse(use, indent);
+  let rspInto = 'rsp.into()';
+  if (method.returns.type.kind === 'rawResponse') {
+    rspInto = 'rsp';
+  }
+  body += `${indent.get()}Ok(${rspInto})\n`;
   return body;
 }
 
@@ -1103,6 +1128,9 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
   body += `${indent.push().get()}let rsp: ${rspType} = pipeline.send(&ctx, &mut request).await?${rspInto};\n`;
+  if (rspType === 'RawResponse') {
+    body += errIfNotSuccessResponse(use, indent);
+  }
 
   // check if we need to extract the next link field from the response model
   if (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'modelField') {

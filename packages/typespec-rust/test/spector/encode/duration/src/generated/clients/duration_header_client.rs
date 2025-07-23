@@ -9,8 +9,9 @@ use crate::generated::models::{
     DurationHeaderClientIso8601ArrayOptions, DurationHeaderClientIso8601Options,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    Error, Result,
 };
 
 pub struct DurationHeaderClient {
@@ -39,7 +40,17 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
@@ -57,7 +68,17 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/float64-seconds")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
@@ -75,7 +96,17 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/float-seconds")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
@@ -93,7 +124,17 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/int32-seconds")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
@@ -111,7 +152,17 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/iso8601")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
@@ -129,6 +180,16 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/iso8601-array")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.join(","));
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

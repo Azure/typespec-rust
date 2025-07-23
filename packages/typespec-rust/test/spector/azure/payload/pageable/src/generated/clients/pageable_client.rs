@@ -5,9 +5,10 @@
 
 use crate::generated::models::{PageableClientListOptions, PagedUser};
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
-    json, Result,
+    json, Error, Result,
 };
 
 /// Test describing pageable.
@@ -86,6 +87,15 @@ impl PageableClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;
