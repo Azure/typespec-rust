@@ -6,12 +6,12 @@
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
-* Added support for the `decimal` type.
 * SDK clients are now generated with distributed tracing support using the `#[tracing::function]` and related attribute macros.
 
 ### Other Changes
 
 * Client methods return an error on non-2xx response codes.
+* Added support for the `decimal` type.
 
 ## 0.18.0 (2025-07-09)
 
