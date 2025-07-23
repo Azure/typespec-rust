@@ -195,8 +195,8 @@ export interface PageableStrategyContinuationToken {
 export interface PageableStrategyNextLink {
   kind: 'nextLink';
 
-  /** the field in the response that contains the next link URL */
-  nextLink: types.ModelField;
+  /** the field path in the response that contains the next link URL */
+  nextLinkPath: types.ModelField[];
 }
 
 /** PageableStrategyKind contains different strategies for fetching subsequent pages */
@@ -733,9 +733,9 @@ export class PageableStrategyContinuationToken implements PageableStrategyContin
 }
 
 export class PageableStrategyNextLink implements PageableStrategyNextLink {
-  constructor(nextLink: types.ModelField) {
+  constructor(nextLinkPath: types.ModelField[]) {
     this.kind = 'nextLink';
-    this.nextLink = nextLink;
+    this.nextLinkPath = nextLinkPath;
   }
 }
 

@@ -1232,7 +1232,8 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       break;
     }
     case 'nextLink': {
-      const nextLinkName = method.strategy.nextLink.name;
+      // Build the field path accessor string (e.g., "nestedNext.next" for nested fields)
+      const nextLinkName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
       body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>| {\n`;
       body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
         pattern: `PagerState::More(${nextLinkName})`,
@@ -1312,9 +1313,12 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       }
       break;
     case 'nextLink':
-      nextPageValue = method.strategy.nextLink.name;
-      srcNextPage = `res.${nextPageValue}`;
-      continuation = `${nextPageValue}.parse()?`;
+      // Build the field path accessor string (e.g., "nested_next.next" for nested fields)
+      const nextLinkFieldPath = method.strategy.nextLinkPath.map(field => field.name).join('.');
+      const lastFieldName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
+      nextPageValue = lastFieldName;
+      srcNextPage = `res.${nextLinkFieldPath}`;
+      continuation = `${lastFieldName}.parse()?`;
       break;
   }
 

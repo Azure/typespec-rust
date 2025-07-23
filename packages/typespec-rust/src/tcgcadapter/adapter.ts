@@ -1573,23 +1573,23 @@ export class Adapter {
       // TODO: https://github.com/Azure/autorest.rust/issues/103
       throw new AdapterError('UnsupportedTsp', 'next page operation NYI', method.__raw?.node);
     } else if (method.pagingMetadata.nextLinkSegments) {
-      if (method.pagingMetadata.nextLinkSegments.length > 1) {
-        // TODO: https://github.com/Azure/autorest.rust/issues/102
-        throw new AdapterError('UnsupportedTsp', 'nested next link path NYI', method.__raw?.node);
-      }
+      // Build the field path for the next link segments
+      const nextLinkPath: rust.ModelField[] = [];
+      
+      for (const segment of method.pagingMetadata.nextLinkSegments) {
+        if (segment.kind !== 'property') {
+          throw new AdapterError('InternalError', `unexpected kind ${segment.kind} for next link segment in operation ${method.name}`, method.__raw?.node);
+        }
 
-      // this is the field in the response type that contains the next link URL
-      const nextLinkSegment = method.pagingMetadata.nextLinkSegments[0];
-      if (nextLinkSegment.kind !== 'property') {
-        throw new AdapterError('InternalError', `unexpected kind ${nextLinkSegment.kind} for next link segment in operation ${method.name}`, method.__raw?.node);
+        const field = this.fieldsMap.get(segment);
+        if (!field) {
+          // the most likely explanation for this is lack of reference equality
+          throw new AdapterError('InternalError', `missing next link field name ${segment.name} for operation ${method.name}`, method.__raw?.node);
+        }
+        nextLinkPath.push(field);
       }
-
-      const nextLinkField = this.fieldsMap.get(nextLinkSegment);
-      if (!nextLinkField) {
-        // the most likely explanation for this is lack of reference equality
-        throw new AdapterError('InternalError', `missing next link field name ${nextLinkSegment.name} for operation ${method.name}`, method.__raw?.node);
-      }
-      return new rust.PageableStrategyNextLink(nextLinkField);
+      
+      return new rust.PageableStrategyNextLink(nextLinkPath);
     } else if (method.pagingMetadata.continuationTokenParameterSegments && method.pagingMetadata.continuationTokenResponseSegments) {
       if (method.pagingMetadata.continuationTokenParameterSegments.length > 1) {
         throw new AdapterError('UnsupportedTsp', `nested continuationTokenParameterSegments NYI`, method.__raw?.node);
