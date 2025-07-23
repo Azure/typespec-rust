@@ -10,9 +10,10 @@ use crate::generated::clients::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ScalarClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +33,7 @@ impl ScalarClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_scalar")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<ScalarClientOptions>,
@@ -63,6 +65,7 @@ impl ScalarClient {
     }
 
     /// Returns a new instance of ScalarBooleanClient.
+    #[tracing::subclient]
     pub fn get_scalar_boolean_client(&self) -> ScalarBooleanClient {
         ScalarBooleanClient {
             endpoint: self.endpoint.clone(),
@@ -71,6 +74,7 @@ impl ScalarClient {
     }
 
     /// Returns a new instance of ScalarDecimal128TypeClient.
+    #[tracing::subclient]
     pub fn get_scalar_decimal128_type_client(&self) -> ScalarDecimal128TypeClient {
         ScalarDecimal128TypeClient {
             endpoint: self.endpoint.clone(),
@@ -79,6 +83,7 @@ impl ScalarClient {
     }
 
     /// Returns a new instance of ScalarDecimal128VerifyClient.
+    #[tracing::subclient]
     pub fn get_scalar_decimal128_verify_client(&self) -> ScalarDecimal128VerifyClient {
         ScalarDecimal128VerifyClient {
             endpoint: self.endpoint.clone(),
@@ -87,6 +92,7 @@ impl ScalarClient {
     }
 
     /// Returns a new instance of ScalarDecimalTypeClient.
+    #[tracing::subclient]
     pub fn get_scalar_decimal_type_client(&self) -> ScalarDecimalTypeClient {
         ScalarDecimalTypeClient {
             endpoint: self.endpoint.clone(),
@@ -95,6 +101,7 @@ impl ScalarClient {
     }
 
     /// Returns a new instance of ScalarDecimalVerifyClient.
+    #[tracing::subclient]
     pub fn get_scalar_decimal_verify_client(&self) -> ScalarDecimalVerifyClient {
         ScalarDecimalVerifyClient {
             endpoint: self.endpoint.clone(),
@@ -103,6 +110,7 @@ impl ScalarClient {
     }
 
     /// Returns a new instance of ScalarStringClient.
+    #[tracing::subclient]
     pub fn get_scalar_string_client(&self) -> ScalarStringClient {
         ScalarStringClient {
             endpoint: self.endpoint.clone(),
@@ -111,6 +119,7 @@ impl ScalarClient {
     }
 
     /// Returns a new instance of ScalarUnknownClient.
+    #[tracing::subclient]
     pub fn get_scalar_unknown_client(&self) -> ScalarUnknownClient {
         ScalarUnknownClient {
             endpoint: self.endpoint.clone(),

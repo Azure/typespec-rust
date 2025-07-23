@@ -36,10 +36,11 @@ use azure_core::{
         XmlFormat,
     },
     time::to_rfc7231,
-    Error, Result,
+    tracing, Error, Result,
 };
 use std::sync::Arc;
 
+#[tracing::client]
 pub struct BlobClient {
     pub(crate) blob_name: String,
     pub(crate) container_name: String,
@@ -68,6 +69,7 @@ impl BlobClient {
     /// * `container_name` - The name of the container.
     /// * `blob_name` - The name of the blob.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("blob_storage")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -115,6 +117,7 @@ impl BlobClient {
     ///
     /// * `copy_id` - The copy identifier provided in the x-ms-copy-id header of the original Copy Blob operation.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.abortCopyFromUrl")]
     pub async fn abort_copy_from_url(
         &self,
         copy_id: &str,
@@ -164,6 +167,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.acquireLease")]
     pub async fn acquire_lease(
         &self,
         options: Option<BlobClientAcquireLeaseOptions<'_>>,
@@ -229,6 +233,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.breakLease")]
     pub async fn break_lease(
         &self,
         options: Option<BlobClientBreakLeaseOptions<'_>>,
@@ -293,6 +298,7 @@ impl BlobClient {
     ///   lease ID must match.
     /// * `proposed_lease_id` - Required. The proposed lease ID for the container.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.changeLease")]
     pub async fn change_lease(
         &self,
         lease_id: String,
@@ -359,6 +365,7 @@ impl BlobClient {
     ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
     ///   either be public or must be authenticated via a shared access signature.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.copyFromUrl")]
     pub async fn copy_from_url(
         &self,
         copy_source: String,
@@ -478,6 +485,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.createSnapshot")]
     pub async fn create_snapshot(
         &self,
         options: Option<BlobClientCreateSnapshotOptions<'_>>,
@@ -565,6 +573,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.delete")]
     pub async fn delete(
         &self,
         options: Option<BlobClientDeleteOptions<'_>>,
@@ -636,6 +645,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.deleteImmutabilityPolicy")]
     pub async fn delete_immutability_policy(
         &self,
         options: Option<BlobClientDeleteImmutabilityPolicyOptions<'_>>,
@@ -685,6 +695,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.download")]
     pub async fn download(
         &self,
         options: Option<BlobClientDownloadOptions<'_>>,
@@ -778,6 +789,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.getAccountInfo")]
     pub async fn get_account_info(
         &self,
         options: Option<BlobClientGetAccountInfoOptions<'_>>,
@@ -818,6 +830,7 @@ impl BlobClient {
     }
 
     /// Returns a new instance of AppendBlobClient.
+    #[tracing::subclient]
     pub fn get_append_blob_client(&self) -> AppendBlobClient {
         AppendBlobClient {
             blob_name: self.blob_name.clone(),
@@ -829,6 +842,7 @@ impl BlobClient {
     }
 
     /// Returns a new instance of BlockBlobClient.
+    #[tracing::subclient]
     pub fn get_block_blob_client(&self) -> BlockBlobClient {
         BlockBlobClient {
             blob_name: self.blob_name.clone(),
@@ -840,6 +854,7 @@ impl BlobClient {
     }
 
     /// Returns a new instance of PageBlobClient.
+    #[tracing::subclient]
     pub fn get_page_blob_client(&self) -> PageBlobClient {
         PageBlobClient {
             blob_name: self.blob_name.clone(),
@@ -856,6 +871,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.getProperties")]
     pub async fn get_properties(
         &self,
         options: Option<BlobClientGetPropertiesOptions<'_>>,
@@ -931,6 +947,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.getTags")]
     pub async fn get_tags(
         &self,
         options: Option<BlobClientGetTagsOptions<'_>>,
@@ -987,6 +1004,7 @@ impl BlobClient {
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.releaseLease")]
     pub async fn release_lease(
         &self,
         lease_id: String,
@@ -1049,6 +1067,7 @@ impl BlobClient {
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.renewLease")]
     pub async fn renew_lease(
         &self,
         lease_id: String,
@@ -1110,6 +1129,7 @@ impl BlobClient {
     ///
     /// * `expiry_options` - Required. Indicates mode of the expiry time
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.setExpiry")]
     pub async fn set_expiry(
         &self,
         expiry_options: BlobExpiryOptions,
@@ -1156,6 +1176,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.setImmutabilityPolicy")]
     pub async fn set_immutability_policy(
         &self,
         options: Option<BlobClientSetImmutabilityPolicyOptions<'_>>,
@@ -1220,6 +1241,7 @@ impl BlobClient {
     ///
     /// * `legal_hold` - Required. Specifies the legal hold status to set on the blob.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.setLegalHold")]
     pub async fn set_legal_hold(
         &self,
         legal_hold: bool,
@@ -1269,6 +1291,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.setMetadata")]
     pub async fn set_metadata(
         &self,
         options: Option<BlobClientSetMetadataOptions<'_>>,
@@ -1348,6 +1371,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.setHttpHeaders")]
     pub async fn set_properties(
         &self,
         options: Option<BlobClientSetPropertiesOptions<'_>>,
@@ -1428,6 +1452,7 @@ impl BlobClient {
     ///
     /// * `tags` - The blob tags.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.setTags")]
     pub async fn set_tags(
         &self,
         tags: RequestContent<BlobTags>,
@@ -1489,6 +1514,7 @@ impl BlobClient {
     ///
     /// * `tier` - Indicates the tier to be set on the blob.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.setTier")]
     pub async fn set_tier(
         &self,
         tier: AccessTier,
@@ -1550,6 +1576,7 @@ impl BlobClient {
     ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
     ///   either be public or must be authenticated via a shared access signature.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.startCopyFromUrl")]
     pub async fn start_copy_from_url(
         &self,
         copy_source: String,
@@ -1663,6 +1690,7 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.Container.Blob.undelete")]
     pub async fn undelete(
         &self,
         options: Option<BlobClientUndeleteOptions<'_>>,

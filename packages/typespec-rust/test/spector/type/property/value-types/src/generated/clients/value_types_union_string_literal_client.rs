@@ -10,9 +10,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ValueTypesUnionStringLiteralClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl ValueTypesUnionStringLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.ValueTypes.UnionStringLiteral.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesUnionStringLiteralClientGetOptions<'_>>,
@@ -58,6 +60,7 @@ impl ValueTypesUnionStringLiteralClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.ValueTypes.UnionStringLiteral.put")]
     pub async fn put(
         &self,
         body: RequestContent<UnionStringLiteralProperty>,

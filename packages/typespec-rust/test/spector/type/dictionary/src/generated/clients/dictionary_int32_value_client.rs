@@ -9,11 +9,12 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 use std::collections::HashMap;
 
 /// Dictionary of int32 values
+#[tracing::client]
 pub struct DictionaryInt32ValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl DictionaryInt32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Dictionary.Int32Value.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryInt32ValueClientGetOptions<'_>>,
@@ -56,6 +58,7 @@ impl DictionaryInt32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Dictionary.Int32Value.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, i32>>,

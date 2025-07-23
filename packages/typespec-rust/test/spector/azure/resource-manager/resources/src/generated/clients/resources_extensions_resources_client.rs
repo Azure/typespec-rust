@@ -15,11 +15,12 @@ use azure_core::{
         Context, Method, NoFormat, Pager, PagerResult, Pipeline, RawResponse, Request,
         RequestContent, Response, Url,
     },
-    json, Error, Result,
+    json, tracing, Error, Result,
 };
 
 /// The interface of extensions resources,
 /// it contains 4 kinds of scopes (resource, resource group, subscription and tenant)
+#[tracing::client]
 pub struct ResourcesExtensionsResourcesClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -39,6 +40,7 @@ impl ResourcesExtensionsResourcesClient {
     /// * `resource_uri` - The fully qualified Azure Resource manager identifier of the resource.
     /// * `extensions_resource_name` - The name of the ExtensionsResource
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.delete")]
     pub async fn delete(
         &self,
         resource_uri: &str,
@@ -76,6 +78,7 @@ impl ResourcesExtensionsResourcesClient {
     /// * `resource_uri` - The fully qualified Azure Resource manager identifier of the resource.
     /// * `extensions_resource_name` - The name of the ExtensionsResource
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.get")]
     pub async fn get(
         &self,
         resource_uri: &str,
@@ -112,6 +115,7 @@ impl ResourcesExtensionsResourcesClient {
     ///
     /// * `resource_uri` - The fully qualified Azure Resource manager identifier of the resource.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.listByScope")]
     pub fn list_by_scope(
         &self,
         resource_uri: &str,
@@ -183,6 +187,7 @@ impl ResourcesExtensionsResourcesClient {
     /// * `extensions_resource_name` - The name of the ExtensionsResource
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.update")]
     pub async fn update(
         &self,
         resource_uri: &str,

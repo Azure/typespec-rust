@@ -9,11 +9,12 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 use rust_decimal::Decimal;
 
 /// Decimal type verification
+#[tracing::client]
 pub struct ScalarDecimalVerifyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl ScalarDecimalVerifyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Scalar.DecimalVerify.prepareVerify")]
     pub async fn prepare_verify(
         &self,
         options: Option<ScalarDecimalVerifyClientPrepareVerifyOptions<'_>>,
@@ -56,6 +58,7 @@ impl ScalarDecimalVerifyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Scalar.DecimalVerify.verify")]
     pub async fn verify(
         &self,
         body: RequestContent<Decimal>,

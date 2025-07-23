@@ -9,11 +9,12 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 use std::collections::HashMap;
 
 /// Dictionary of boolean values
+#[tracing::client]
 pub struct DictionaryBooleanValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl DictionaryBooleanValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Dictionary.BooleanValue.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryBooleanValueClientGetOptions<'_>>,
@@ -56,6 +58,7 @@ impl DictionaryBooleanValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Dictionary.BooleanValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, bool>>,

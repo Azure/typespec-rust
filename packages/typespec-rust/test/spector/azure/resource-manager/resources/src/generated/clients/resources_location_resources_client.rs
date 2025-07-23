@@ -16,9 +16,10 @@ use azure_core::{
         Context, Method, NoFormat, Pager, PagerResult, Pipeline, RawResponse, Request,
         RequestContent, Response, Url,
     },
-    json, Error, Result,
+    json, tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ResourcesLocationResourcesClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -40,6 +41,7 @@ impl ResourcesLocationResourcesClient {
     /// * `location_resource_name` - The name of the LocationResource
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.createOrUpdate")]
     pub async fn create_or_update(
         &self,
         location: &str,
@@ -81,6 +83,7 @@ impl ResourcesLocationResourcesClient {
     /// * `location` - The name of the Azure region.
     /// * `location_resource_name` - The name of the LocationResource
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.delete")]
     pub async fn delete(
         &self,
         location: &str,
@@ -119,6 +122,7 @@ impl ResourcesLocationResourcesClient {
     /// * `location` - The name of the Azure region.
     /// * `location_resource_name` - The name of the LocationResource
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.get")]
     pub async fn get(
         &self,
         location: &str,
@@ -156,6 +160,7 @@ impl ResourcesLocationResourcesClient {
     ///
     /// * `location` - The name of the Azure region.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.listByLocation")]
     pub fn list_by_location(
         &self,
         location: &str,
@@ -226,6 +231,7 @@ impl ResourcesLocationResourcesClient {
     /// * `location_resource_name` - The name of the LocationResource
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.update")]
     pub async fn update(
         &self,
         location: &str,

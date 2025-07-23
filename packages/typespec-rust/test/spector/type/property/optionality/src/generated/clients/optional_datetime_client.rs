@@ -10,9 +10,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct OptionalDatetimeClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl OptionalDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.Datetime.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalDatetimeClientGetAllOptions<'_>>,
@@ -57,6 +59,7 @@ impl OptionalDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.Datetime.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalDatetimeClientGetDefaultOptions<'_>>,
@@ -85,6 +88,7 @@ impl OptionalDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.Datetime.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<DatetimeProperty>,
@@ -115,6 +119,7 @@ impl OptionalDatetimeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.Datetime.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<DatetimeProperty>,

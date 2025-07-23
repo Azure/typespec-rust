@@ -7,9 +7,10 @@ use crate::generated::models::{FirstGroup3ClientThreeOptions, FirstGroup3ClientT
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct FirstGroup3Client {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -25,6 +26,7 @@ impl FirstGroup3Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.ClientOperationGroup.Group3.three")]
     pub async fn three(
         &self,
         options: Option<FirstGroup3ClientThreeOptions<'_>>,
@@ -51,6 +53,7 @@ impl FirstGroup3Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.ClientOperationGroup.Group3.two")]
     pub async fn two(
         &self,
         options: Option<FirstGroup3ClientTwoOptions<'_>>,

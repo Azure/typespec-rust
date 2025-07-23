@@ -1083,6 +1083,7 @@ export class Adapter {
       throw new AdapterError('NameCollision', `method name ${srcMethodName} collides with a renamed method`, method.__raw?.node);
     }
 
+    const languageIndependentName = method.crossLanguageDefinitionId;
     const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
     const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName)}Options`, 'pub');
@@ -1114,10 +1115,10 @@ export class Adapter {
     let rustMethod: MethodType;
     switch (method.kind) {
       case 'basic':
-        rustMethod = new rust.AsyncMethod(methodName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.AsyncMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
         break;
       case 'paging':
-        rustMethod = new rust.PageableMethod(methodName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
         break;
       default:
         throw new AdapterError('UnsupportedTsp', `method kind ${method.kind} NYI`, method.__raw?.node);

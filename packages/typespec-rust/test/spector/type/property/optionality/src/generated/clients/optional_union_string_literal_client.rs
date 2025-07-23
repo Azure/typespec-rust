@@ -12,9 +12,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct OptionalUnionStringLiteralClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -31,6 +32,7 @@ impl OptionalUnionStringLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.UnionStringLiteral.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalUnionStringLiteralClientGetAllOptions<'_>>,
@@ -59,6 +61,7 @@ impl OptionalUnionStringLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.UnionStringLiteral.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalUnionStringLiteralClientGetDefaultOptions<'_>>,
@@ -87,6 +90,7 @@ impl OptionalUnionStringLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.UnionStringLiteral.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<UnionStringLiteralProperty>,
@@ -117,6 +121,7 @@ impl OptionalUnionStringLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.UnionStringLiteral.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<UnionStringLiteralProperty>,

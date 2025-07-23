@@ -9,9 +9,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
-    json, Error, Result,
+    json, tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct OperationTemplatesOperationsClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -29,6 +30,7 @@ impl OperationTemplatesOperationsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Operations.list")]
     pub fn list(
         &self,
         options: Option<OperationTemplatesOperationsClientListOptions<'_>>,

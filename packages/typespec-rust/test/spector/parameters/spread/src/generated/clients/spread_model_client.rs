@@ -13,9 +13,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct SpreadModelClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -31,6 +32,7 @@ impl SpreadModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Model.spreadAsRequestBody")]
     pub async fn spread_as_request_body(
         &self,
         name: String,
@@ -61,6 +63,7 @@ impl SpreadModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Model.spreadCompositeRequest")]
     pub async fn spread_composite_request(
         &self,
         name: &str,
@@ -95,6 +98,7 @@ impl SpreadModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Model.spreadCompositeRequestMix")]
     pub async fn spread_composite_request_mix(
         &self,
         name: &str,
@@ -131,6 +135,7 @@ impl SpreadModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Model.spreadCompositeRequestOnlyWithBody")]
     pub async fn spread_composite_request_only_with_body(
         &self,
         body: RequestContent<BodyParameter>,
@@ -160,6 +165,7 @@ impl SpreadModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.Spread.Model.spreadCompositeRequestWithoutBody")]
     pub async fn spread_composite_request_without_body(
         &self,
         name: &str,

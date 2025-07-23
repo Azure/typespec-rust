@@ -7,10 +7,11 @@ use crate::generated::clients::NumericPropertyClient;
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test for encode decorator on integer.
+#[tracing::client]
 pub struct NumericClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl NumericClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_numeric")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NumericClientOptions>,
@@ -61,6 +63,7 @@ impl NumericClient {
     }
 
     /// Returns a new instance of NumericPropertyClient.
+    #[tracing::subclient]
     pub fn get_numeric_property_client(&self) -> NumericPropertyClient {
         NumericPropertyClient {
             endpoint: self.endpoint.clone(),

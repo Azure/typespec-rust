@@ -7,9 +7,10 @@ use crate::generated::models::RoutesInInterfaceClientFixedOptions;
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct RoutesInInterfaceClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -25,6 +26,7 @@ impl RoutesInInterfaceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.InInterface.fixed")]
     pub async fn fixed(
         &self,
         options: Option<RoutesInInterfaceClientFixedOptions<'_>>,

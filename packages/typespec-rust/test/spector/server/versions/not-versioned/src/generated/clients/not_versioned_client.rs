@@ -11,10 +11,11 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Illustrates not-versioned server.
+#[tracing::client]
 pub struct NotVersionedClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -34,6 +35,7 @@ impl NotVersionedClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_unversioned")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NotVersionedClientOptions>,
@@ -68,6 +70,7 @@ impl NotVersionedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Versions.NotVersioned.withPathApiVersion")]
     pub async fn with_path_api_version(
         &self,
         api_version: &str,
@@ -98,6 +101,7 @@ impl NotVersionedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Versions.NotVersioned.withQueryApiVersion")]
     pub async fn with_query_api_version(
         &self,
         api_version: &str,
@@ -127,6 +131,7 @@ impl NotVersionedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Versions.NotVersioned.withoutApiVersion")]
     pub async fn without_api_version(
         &self,
         options: Option<NotVersionedClientWithoutApiVersionOptions<'_>>,

@@ -9,10 +9,11 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Array of duration values
+#[tracing::client]
 pub struct ArrayDurationValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl ArrayDurationValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Array.DurationValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayDurationValueClientGetOptions<'_>>,
@@ -55,6 +57,7 @@ impl ArrayDurationValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Array.DurationValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<String>>,

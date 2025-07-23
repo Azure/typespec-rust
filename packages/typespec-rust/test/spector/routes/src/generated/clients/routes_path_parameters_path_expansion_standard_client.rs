@@ -11,10 +11,11 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 use std::collections::HashMap;
 
+#[tracing::client]
 pub struct RoutesPathParametersPathExpansionStandardClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl RoutesPathParametersPathExpansionStandardClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.PathParameters.PathExpansion.Standard.array")]
     pub async fn array(
         &self,
         param: &[&str],
@@ -59,6 +61,7 @@ impl RoutesPathParametersPathExpansionStandardClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.PathParameters.PathExpansion.Standard.primitive")]
     pub async fn primitive(
         &self,
         param: &str,
@@ -88,6 +91,7 @@ impl RoutesPathParametersPathExpansionStandardClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.PathParameters.PathExpansion.Standard.record")]
     pub async fn record(
         &self,
         param: HashMap<String, i32>,

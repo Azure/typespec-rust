@@ -10,6 +10,9 @@ export interface Method<T> {
   /** the name of the method */
   name: string;
 
+  /** the method's language-independent name */
+  languageIndependentName: string;
+
   /** any docs for the method */
   docs: types.Docs;
 
@@ -59,8 +62,9 @@ export interface Self {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class Method<T> implements Method<T> {
-  constructor(name: string, visibility: types.Visibility, impl: string, self: Self) {
+  constructor(name: string, languageIndependentName: string, visibility: types.Visibility, impl: string, self: Self) {
     this.name = name;
+    this.languageIndependentName = languageIndependentName;
     this.visibility = visibility;
     this.impl = impl;
     this.self = self;

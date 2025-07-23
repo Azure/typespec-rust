@@ -9,10 +9,11 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Array of boolean values
+#[tracing::client]
 pub struct ArrayBooleanValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl ArrayBooleanValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Array.BooleanValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayBooleanValueClientGetOptions<'_>>,
@@ -55,6 +57,7 @@ impl ArrayBooleanValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Array.BooleanValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<bool>>,

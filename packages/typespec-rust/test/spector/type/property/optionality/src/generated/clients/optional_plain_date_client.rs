@@ -11,9 +11,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct OptionalPlainDateClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl OptionalPlainDateClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.PlainDate.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalPlainDateClientGetAllOptions<'_>>,
@@ -58,6 +60,7 @@ impl OptionalPlainDateClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.PlainDate.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalPlainDateClientGetDefaultOptions<'_>>,
@@ -86,6 +89,7 @@ impl OptionalPlainDateClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.PlainDate.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<PlainDateProperty>,
@@ -116,6 +120,7 @@ impl OptionalPlainDateClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.PlainDate.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<PlainDateProperty>,

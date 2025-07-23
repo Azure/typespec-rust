@@ -10,9 +10,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct TwoOperationGroupGroup2Client {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl TwoOperationGroupGroup2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.TwoOperationGroup.Group2.five")]
     pub async fn five(
         &self,
         options: Option<TwoOperationGroupGroup2ClientFiveOptions<'_>>,
@@ -54,6 +56,7 @@ impl TwoOperationGroupGroup2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.TwoOperationGroup.Group2.six")]
     pub async fn six(
         &self,
         options: Option<TwoOperationGroupGroup2ClientSixOptions<'_>>,
@@ -80,6 +83,7 @@ impl TwoOperationGroupGroup2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.TwoOperationGroup.Group2.two")]
     pub async fn two(
         &self,
         options: Option<TwoOperationGroupGroup2ClientTwoOptions<'_>>,

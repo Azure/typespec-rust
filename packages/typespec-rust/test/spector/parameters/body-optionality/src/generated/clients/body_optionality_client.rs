@@ -16,10 +16,11 @@ use azure_core::{
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Test describing optionality of the request body.
+#[tracing::client]
 pub struct BodyOptionalityClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -39,6 +40,7 @@ impl BodyOptionalityClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_bodyoptional")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<BodyOptionalityClientOptions>,
@@ -70,6 +72,7 @@ impl BodyOptionalityClient {
     }
 
     /// Returns a new instance of BodyOptionalityOptionalExplicitClient.
+    #[tracing::subclient]
     pub fn get_body_optionality_optional_explicit_client(
         &self,
     ) -> BodyOptionalityOptionalExplicitClient {
@@ -83,6 +86,7 @@ impl BodyOptionalityClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.BodyOptionality.requiredExplicit")]
     pub async fn required_explicit(
         &self,
         body: RequestContent<BodyModel>,
@@ -112,6 +116,7 @@ impl BodyOptionalityClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.BodyOptionality.requiredImplicit")]
     pub async fn required_implicit(
         &self,
         name: String,

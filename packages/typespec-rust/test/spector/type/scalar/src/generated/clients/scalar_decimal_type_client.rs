@@ -10,11 +10,12 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 use rust_decimal::Decimal;
 
 /// Decimal type
+#[tracing::client]
 pub struct ScalarDecimalTypeClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl ScalarDecimalTypeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Scalar.DecimalType.requestBody")]
     pub async fn request_body(
         &self,
         body: RequestContent<Decimal>,
@@ -59,6 +61,7 @@ impl ScalarDecimalTypeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Scalar.DecimalType.requestParameter")]
     pub async fn request_parameter(
         &self,
         value: Decimal,
@@ -88,6 +91,7 @@ impl ScalarDecimalTypeClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Scalar.DecimalType.responseBody")]
     pub async fn response_body(
         &self,
         options: Option<ScalarDecimalTypeClientResponseBodyOptions<'_>>,

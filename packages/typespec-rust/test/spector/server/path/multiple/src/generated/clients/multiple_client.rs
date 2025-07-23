@@ -10,9 +10,10 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct MultipleClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -34,6 +35,7 @@ impl MultipleClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_multiple")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<MultipleClientOptions>,
@@ -71,6 +73,7 @@ impl MultipleClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Path.Multiple.noOperationParams")]
     pub async fn no_operation_params(
         &self,
         options: Option<MultipleClientNoOperationParamsOptions<'_>>,
@@ -96,6 +99,7 @@ impl MultipleClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Path.Multiple.withOperationPathParam")]
     pub async fn with_operation_path_param(
         &self,
         keyword: &str,

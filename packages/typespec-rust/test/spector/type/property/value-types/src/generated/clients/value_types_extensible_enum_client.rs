@@ -10,9 +10,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ValueTypesExtensibleEnumClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl ValueTypesExtensibleEnumClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.ValueTypes.ExtensibleEnum.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesExtensibleEnumClientGetOptions<'_>>,
@@ -58,6 +60,7 @@ impl ValueTypesExtensibleEnumClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.ValueTypes.ExtensibleEnum.put")]
     pub async fn put(
         &self,
         body: RequestContent<ExtensibleEnumProperty>,

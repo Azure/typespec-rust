@@ -15,9 +15,10 @@ use azure_core::{
         Context, Method, NoFormat, Pager, PagerResult, Pipeline, RawResponse, Request,
         RequestContent, Response, Url,
     },
-    json, Error, Result,
+    json, tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ResourcesTopLevelClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -39,6 +40,7 @@ impl ResourcesTopLevelClient {
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `body` - The content of the action request
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.actionSync")]
     pub async fn action_sync(
         &self,
         resource_group_name: &str,
@@ -83,6 +85,7 @@ impl ResourcesTopLevelClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.get")]
     pub async fn get(
         &self,
         resource_group_name: &str,
@@ -123,6 +126,7 @@ impl ResourcesTopLevelClient {
     ///
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.listByResourceGroup")]
     pub fn list_by_resource_group(
         &self,
         resource_group_name: &str,
@@ -190,6 +194,7 @@ impl ResourcesTopLevelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.listBySubscription")]
     pub fn list_by_subscription(
         &self,
         options: Option<ResourcesTopLevelClientListBySubscriptionOptions<'_>>,

@@ -11,9 +11,10 @@ use azure_core::{
     base64::{encode, encode_url_safe},
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct BytesHeaderClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl BytesHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.Header.base64")]
     pub async fn base64(
         &self,
         value: &[u8],
@@ -57,6 +59,7 @@ impl BytesHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.Header.base64url")]
     pub async fn base64_url(
         &self,
         value: &[u8],
@@ -85,6 +88,7 @@ impl BytesHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.Header.base64urlArray")]
     pub async fn base64_url_array(
         &self,
         value: &[&[u8]],
@@ -120,6 +124,7 @@ impl BytesHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.Header.default")]
     pub async fn default(
         &self,
         value: &[u8],

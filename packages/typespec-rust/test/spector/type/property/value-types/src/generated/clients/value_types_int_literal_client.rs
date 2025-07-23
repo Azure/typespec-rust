@@ -9,9 +9,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ValueTypesIntLiteralClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl ValueTypesIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.ValueTypes.IntLiteral.get")]
     pub async fn get(
         &self,
         options: Option<ValueTypesIntLiteralClientGetOptions<'_>>,
@@ -57,6 +59,7 @@ impl ValueTypesIntLiteralClient {
     ///
     /// * `body` - body
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.ValueTypes.IntLiteral.put")]
     pub async fn put(
         &self,
         body: RequestContent<IntLiteralProperty>,

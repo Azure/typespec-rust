@@ -13,10 +13,11 @@ use azure_core::{
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Illustrates not-discriminated inheritance model.
+#[tracing::client]
 pub struct NotDiscriminatedClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -36,6 +37,7 @@ impl NotDiscriminatedClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_nodisc")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NotDiscriminatedClientOptions>,
@@ -70,6 +72,7 @@ impl NotDiscriminatedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Model.Inheritance.NotDiscriminated.getValid")]
     pub async fn get_valid(
         &self,
         options: Option<NotDiscriminatedClientGetValidOptions<'_>>,
@@ -97,6 +100,7 @@ impl NotDiscriminatedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Model.Inheritance.NotDiscriminated.postValid")]
     pub async fn post_valid(
         &self,
         input: RequestContent<Siamese>,
@@ -126,6 +130,7 @@ impl NotDiscriminatedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Model.Inheritance.NotDiscriminated.putValid")]
     pub async fn put_valid(
         &self,
         input: RequestContent<Siamese>,

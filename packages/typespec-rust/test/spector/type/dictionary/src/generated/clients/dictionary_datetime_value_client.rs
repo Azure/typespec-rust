@@ -10,11 +10,12 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     time::OffsetDateTime,
-    Error, Result,
+    tracing, Error, Result,
 };
 use std::collections::HashMap;
 
 /// Dictionary of datetime values
+#[tracing::client]
 pub struct DictionaryDatetimeValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl DictionaryDatetimeValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Dictionary.DatetimeValue.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryDatetimeValueClientGetOptions<'_>>,
@@ -57,6 +59,7 @@ impl DictionaryDatetimeValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Dictionary.DatetimeValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, OffsetDateTime>>,

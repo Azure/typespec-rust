@@ -7,9 +7,10 @@ use crate::generated::models::{ServiceBarClientFiveOptions, ServiceBarClientSixO
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ServiceBarClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -25,6 +26,7 @@ impl ServiceBarClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.Service.Bar.five")]
     pub async fn five(
         &self,
         options: Option<ServiceBarClientFiveOptions<'_>>,
@@ -51,6 +53,7 @@ impl ServiceBarClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.Service.Bar.six")]
     pub async fn six(
         &self,
         options: Option<ServiceBarClientSixOptions<'_>>,

@@ -12,9 +12,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct DatetimePropertyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl DatetimePropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Property.default")]
     pub async fn default(
         &self,
         body: RequestContent<DefaultDatetimeProperty>,
@@ -60,6 +62,7 @@ impl DatetimePropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Property.rfc3339")]
     pub async fn rfc3339(
         &self,
         body: RequestContent<Rfc3339DatetimeProperty>,
@@ -90,6 +93,7 @@ impl DatetimePropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Property.rfc7231")]
     pub async fn rfc7231(
         &self,
         body: RequestContent<Rfc7231DatetimeProperty>,
@@ -120,6 +124,7 @@ impl DatetimePropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Property.unixTimestamp")]
     pub async fn unix_timestamp(
         &self,
         body: RequestContent<UnixTimestampDatetimeProperty>,
@@ -150,6 +155,7 @@ impl DatetimePropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Property.unixTimestampArray")]
     pub async fn unix_timestamp_array(
         &self,
         body: RequestContent<UnixTimestampArrayDatetimeProperty>,

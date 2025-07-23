@@ -8,9 +8,10 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct QueryClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +33,7 @@ impl QueryClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_apiverquery")]
     pub fn with_no_credential(endpoint: &str, options: Option<QueryClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -65,6 +67,7 @@ impl QueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.AlternateApiVersion.Service.Query.queryApiVersion")]
     pub async fn query_api_version(
         &self,
         options: Option<QueryClientQueryApiVersionOptions<'_>>,

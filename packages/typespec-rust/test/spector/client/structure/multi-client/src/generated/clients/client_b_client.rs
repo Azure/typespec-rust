@@ -11,9 +11,10 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ClientBClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -34,6 +35,7 @@ impl ClientBClient {
     /// * `endpoint` - Service host
     /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_multiclient")]
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -72,6 +74,7 @@ impl ClientBClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.MultiClient.ClientB.renamedFour")]
     pub async fn renamed_four(
         &self,
         options: Option<ClientBClientRenamedFourOptions<'_>>,
@@ -98,6 +101,7 @@ impl ClientBClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.MultiClient.ClientB.renamedSix")]
     pub async fn renamed_six(
         &self,
         options: Option<ClientBClientRenamedSixOptions<'_>>,
@@ -124,6 +128,7 @@ impl ClientBClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.MultiClient.ClientB.renamedTwo")]
     pub async fn renamed_two(
         &self,
         options: Option<ClientBClientRenamedTwoOptions<'_>>,

@@ -11,9 +11,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, RawResponse, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct BytesResponseBodyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl BytesResponseBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.ResponseBody.base64")]
     pub async fn base64(
         &self,
         options: Option<BytesResponseBodyClientBase64Options<'_>>,
@@ -56,6 +58,7 @@ impl BytesResponseBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.ResponseBody.base64url")]
     pub async fn base64_url(
         &self,
         options: Option<BytesResponseBodyClientBase64UrlOptions<'_>>,
@@ -83,6 +86,7 @@ impl BytesResponseBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.ResponseBody.customContentType")]
     pub async fn custom_content_type(
         &self,
         options: Option<BytesResponseBodyClientCustomContentTypeOptions<'_>>,
@@ -110,6 +114,7 @@ impl BytesResponseBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.ResponseBody.default")]
     pub async fn default(
         &self,
         options: Option<BytesResponseBodyClientDefaultOptions<'_>>,
@@ -137,6 +142,7 @@ impl BytesResponseBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.ResponseBody.octetStream")]
     pub async fn octet_stream(
         &self,
         options: Option<BytesResponseBodyClientOctetStreamOptions<'_>>,

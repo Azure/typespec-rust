@@ -51,6 +51,8 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     const indent = new helpers.indentation();
 
     let body = helpers.formatDocComment(client.docs);
+    use.add('azure_core', 'tracing');
+    body += '#[tracing::client]\n';
     body += `pub struct ${client.name} {\n`;
     for (const field of client.fields) {
       use.addForType(field.type);
@@ -94,6 +96,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         if (paramsDocs) {
           body += paramsDocs;
         }
+        body += `${indent.get()}#[tracing::new("${crate.name}")]\n`;
         body += `${indent.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.params, client.constructable.options, use)}) -> Result<Self> {\n`;
         body += `${indent.get()}let options = options.unwrap_or_default();\n`;
         // by convention, the endpoint param is always the first ctor param
@@ -198,19 +201,24 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
       // for the callee to indent right away.
       let methodBody: (indentation: helpers.indentation) => string;
       use.addForType(method.returns);
+      let isPublicApi = false;
+      let isSubclientNew = false;
       switch (method.kind) {
         case 'async':
+          isPublicApi = true;
           async = 'async ';
           methodBody = (indentation: helpers.indentation): string => {
             return getAsyncMethodBody(indentation, use, client, method);
           };
           break;
         case 'pageable':
+          isPublicApi = true;
           methodBody = (indentation: helpers.indentation): string => {
             return getPageableMethodBody(indentation, use, client, method);
           };
           break;
         case 'clientaccessor':
+          isSubclientNew = true;
           methodBody = (indentation: helpers.indentation): string => {
             return getClientAccessorMethodBody(indentation, client, method);
           };
@@ -220,6 +228,11 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
       const paramsDocs = getParamsBlockDocComment(indent, method);
       if (paramsDocs) {
         body += paramsDocs;
+      }
+      if (isPublicApi) {
+        body += `${indent.get()}#[tracing::function("${method.languageIndependentName}")]\n`;
+      } else if (isSubclientNew) {
+        body += `${indent.get()}#[tracing::subclient]\n`;
       }
       body += `${indent.get()}${helpers.emitVisibility(method.visibility)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
       body += `${indent.push().get()}${methodBody(indent)}\n`;

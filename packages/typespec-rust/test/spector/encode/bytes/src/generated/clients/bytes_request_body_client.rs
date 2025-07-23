@@ -11,9 +11,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Bytes, Error, Result,
+    tracing, Bytes, Error, Result,
 };
 
+#[tracing::client]
 pub struct BytesRequestBodyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl BytesRequestBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.RequestBody.base64")]
     pub async fn base64(
         &self,
         value: RequestContent<Vec<u8>>,
@@ -58,6 +60,7 @@ impl BytesRequestBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.RequestBody.base64url")]
     pub async fn base64_url(
         &self,
         value: RequestContent<Vec<u8>>,
@@ -87,6 +90,7 @@ impl BytesRequestBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.RequestBody.customContentType")]
     pub async fn custom_content_type(
         &self,
         value: RequestContent<Bytes>,
@@ -116,6 +120,7 @@ impl BytesRequestBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.RequestBody.default")]
     pub async fn default(
         &self,
         value: RequestContent<Bytes>,
@@ -145,6 +150,7 @@ impl BytesRequestBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.RequestBody.octetStream")]
     pub async fn octet_stream(
         &self,
         value: RequestContent<Bytes>,

@@ -12,9 +12,10 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     time::{to_rfc3339, to_rfc7231, OffsetDateTime},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct DatetimeQueryClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl DatetimeQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Query.default")]
     pub async fn default(
         &self,
         value: OffsetDateTime,
@@ -59,6 +61,7 @@ impl DatetimeQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Query.rfc3339")]
     pub async fn rfc3339(
         &self,
         value: OffsetDateTime,
@@ -88,6 +91,7 @@ impl DatetimeQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Query.rfc7231")]
     pub async fn rfc7231(
         &self,
         value: OffsetDateTime,
@@ -117,6 +121,7 @@ impl DatetimeQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Query.unixTimestamp")]
     pub async fn unix_timestamp(
         &self,
         value: OffsetDateTime,
@@ -146,6 +151,7 @@ impl DatetimeQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Query.unixTimestampArray")]
     pub async fn unix_timestamp_array(
         &self,
         value: &[OffsetDateTime],

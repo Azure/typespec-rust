@@ -7,10 +7,11 @@ use crate::generated::clients::{CollectionFormatHeaderClient, CollectionFormatQu
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test for collectionFormat.
+#[tracing::client]
 pub struct CollectionFormatClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl CollectionFormatClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_collectionfmt")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<CollectionFormatClientOptions>,
@@ -61,6 +63,7 @@ impl CollectionFormatClient {
     }
 
     /// Returns a new instance of CollectionFormatHeaderClient.
+    #[tracing::subclient]
     pub fn get_collection_format_header_client(&self) -> CollectionFormatHeaderClient {
         CollectionFormatHeaderClient {
             endpoint: self.endpoint.clone(),
@@ -69,6 +72,7 @@ impl CollectionFormatClient {
     }
 
     /// Returns a new instance of CollectionFormatQueryClient.
+    #[tracing::subclient]
     pub fn get_collection_format_query_client(&self) -> CollectionFormatQueryClient {
         CollectionFormatQueryClient {
             endpoint: self.endpoint.clone(),

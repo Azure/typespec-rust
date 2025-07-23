@@ -10,9 +10,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct FixedStringClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl FixedStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Enum.Fixed.String.getKnownValue")]
     pub async fn get_known_value(
         &self,
         options: Option<FixedStringClientGetKnownValueOptions<'_>>,
@@ -58,6 +60,7 @@ impl FixedStringClient {
     ///
     /// * `body` - _
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Enum.Fixed.String.putKnownValue")]
     pub async fn put_known_value(
         &self,
         body: RequestContent<DaysOfWeekEnum>,
@@ -89,6 +92,7 @@ impl FixedStringClient {
     ///
     /// * `body` - _
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Enum.Fixed.String.putUnknownValue")]
     pub async fn put_unknown_value(
         &self,
         body: RequestContent<DaysOfWeekEnum>,

@@ -9,9 +9,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ClientModelClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl ClientModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Naming.Model.client")]
     pub async fn client(
         &self,
         body: RequestContent<ClientModel>,
@@ -56,6 +58,7 @@ impl ClientModelClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Naming.Model.language")]
     pub async fn language(
         &self,
         body: RequestContent<RustName>,

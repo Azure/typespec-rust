@@ -23,10 +23,11 @@ use azure_core::{
         ClientOptions, Context, Method, NoFormat, PageIterator, PagerResult, Pipeline, RawResponse,
         Request, RequestContent, Response, Url, XmlFormat,
     },
-    xml, Error, Result,
+    tracing, xml, Error, Result,
 };
 use std::sync::Arc;
 
+#[tracing::client]
 pub struct BlobServiceClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -51,6 +52,7 @@ impl BlobServiceClient {
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("blob_storage")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -92,6 +94,7 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.filterBlobs")]
     pub async fn filter_blobs(
         &self,
         options: Option<BlobServiceClientFilterBlobsOptions<'_>>,
@@ -149,6 +152,7 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.getAccountInfo")]
     pub async fn get_account_info(
         &self,
         options: Option<BlobServiceClientGetAccountInfoOptions<'_>>,
@@ -188,6 +192,7 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `container_name` - The name of the container.
+    #[tracing::subclient]
     pub fn get_blob_container_client(&self, container_name: String) -> BlobContainerClient {
         BlobContainerClient {
             container_name,
@@ -203,6 +208,7 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.getProperties")]
     pub async fn get_properties(
         &self,
         options: Option<BlobServiceClientGetPropertiesOptions<'_>>,
@@ -243,6 +249,7 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.getStatistics")]
     pub async fn get_statistics(
         &self,
         options: Option<BlobServiceClientGetStatisticsOptions<'_>>,
@@ -283,6 +290,7 @@ impl BlobServiceClient {
     ///
     /// * `key_info` - Key information provided in the request
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.getUserDelegationKey")]
     pub async fn get_user_delegation_key(
         &self,
         key_info: RequestContent<KeyInfo>,
@@ -324,6 +332,7 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.listContainersSegment")]
     pub fn list_containers_segment(
         &self,
         options: Option<BlobServiceClientListContainersSegmentOptions<'_>>,
@@ -416,6 +425,7 @@ impl BlobServiceClient {
     ///
     /// * `storage_service_properties` - The storage service properties to set.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Storage.Blob.setProperties")]
     pub async fn set_properties(
         &self,
         storage_service_properties: RequestContent<StorageServiceProperties>,

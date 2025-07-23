@@ -11,9 +11,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct OptionalIntLiteralClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl OptionalIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.IntLiteral.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalIntLiteralClientGetAllOptions<'_>>,
@@ -58,6 +60,7 @@ impl OptionalIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.IntLiteral.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalIntLiteralClientGetDefaultOptions<'_>>,
@@ -86,6 +89,7 @@ impl OptionalIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.IntLiteral.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<IntLiteralProperty>,
@@ -116,6 +120,7 @@ impl OptionalIntLiteralClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.IntLiteral.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<IntLiteralProperty>,

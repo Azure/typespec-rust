@@ -10,9 +10,10 @@ use crate::generated::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct TwoOperationGroupClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -33,6 +34,7 @@ impl TwoOperationGroupClient {
     /// * `endpoint` - Service host
     /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_twoop")]
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -68,6 +70,7 @@ impl TwoOperationGroupClient {
     }
 
     /// Returns a new instance of TwoOperationGroupGroup1Client.
+    #[tracing::subclient]
     pub fn get_two_operation_group_group1_client(&self) -> TwoOperationGroupGroup1Client {
         TwoOperationGroupGroup1Client {
             endpoint: self.endpoint.clone(),
@@ -76,6 +79,7 @@ impl TwoOperationGroupClient {
     }
 
     /// Returns a new instance of TwoOperationGroupGroup2Client.
+    #[tracing::subclient]
     pub fn get_two_operation_group_group2_client(&self) -> TwoOperationGroupGroup2Client {
         TwoOperationGroupGroup2Client {
             endpoint: self.endpoint.clone(),

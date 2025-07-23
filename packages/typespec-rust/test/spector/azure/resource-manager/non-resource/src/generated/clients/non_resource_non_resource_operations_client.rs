@@ -10,10 +10,11 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Operations on non resource model should not be marked as `@armResourceOperations`.
+#[tracing::client]
 pub struct NonResourceNonResourceOperationsClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -34,6 +35,7 @@ impl NonResourceNonResourceOperationsClient {
     /// * `parameter` - Another parameter.
     /// * `body` - The request body.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.NonResource.NonResourceOperations.create")]
     pub async fn create(
         &self,
         location: &str,
@@ -74,6 +76,7 @@ impl NonResourceNonResourceOperationsClient {
     /// * `location` - The location parameter.
     /// * `parameter` - Another parameter.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.NonResource.NonResourceOperations.get")]
     pub async fn get(
         &self,
         location: &str,

@@ -10,9 +10,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct NamingUnionEnumClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl NamingUnionEnumClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Naming.UnionEnum.unionEnumMemberName")]
     pub async fn union_enum_member_name(
         &self,
         body: RequestContent<ExtensibleEnum>,
@@ -57,6 +59,7 @@ impl NamingUnionEnumClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Naming.UnionEnum.unionEnumName")]
     pub async fn union_enum_name(
         &self,
         body: RequestContent<ClientExtensibleEnum>,

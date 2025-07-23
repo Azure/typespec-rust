@@ -10,10 +10,11 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     time::OffsetDateTime,
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Array of datetime values
+#[tracing::client]
 pub struct ArrayDatetimeValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl ArrayDatetimeValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Array.DatetimeValue.get")]
     pub async fn get(
         &self,
         options: Option<ArrayDatetimeValueClientGetOptions<'_>>,
@@ -56,6 +58,7 @@ impl ArrayDatetimeValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Array.DatetimeValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<OffsetDateTime>>,

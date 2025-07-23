@@ -11,9 +11,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct BytesPropertyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl BytesPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.Property.base64")]
     pub async fn base64(
         &self,
         body: RequestContent<Base64BytesProperty>,
@@ -59,6 +61,7 @@ impl BytesPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.Property.base64url")]
     pub async fn base64_url(
         &self,
         body: RequestContent<Base64urlBytesProperty>,
@@ -89,6 +92,7 @@ impl BytesPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.Property.base64urlArray")]
     pub async fn base64_url_array(
         &self,
         body: RequestContent<Base64urlArrayBytesProperty>,
@@ -119,6 +123,7 @@ impl BytesPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Bytes.Property.default")]
     pub async fn default(
         &self,
         body: RequestContent<DefaultBytesProperty>,

@@ -10,9 +10,10 @@ use crate::generated::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
-    json, Error, Result,
+    json, tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct PageableServerDrivenPaginationClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -25,6 +26,7 @@ impl PageableServerDrivenPaginationClient {
     }
 
     /// Returns a new instance of PageableServerDrivenPaginationContinuationTokenClient.
+    #[tracing::subclient]
     pub fn get_pageable_server_driven_pagination_continuation_token_client(
         &self,
     ) -> PageableServerDrivenPaginationContinuationTokenClient {
@@ -38,6 +40,7 @@ impl PageableServerDrivenPaginationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.Pageable.ServerDrivenPagination.link")]
     pub fn list(
         &self,
         options: Option<PageableServerDrivenPaginationClientListOptions<'_>>,

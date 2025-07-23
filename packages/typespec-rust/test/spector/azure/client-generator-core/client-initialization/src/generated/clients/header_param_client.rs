@@ -12,10 +12,11 @@ use azure_core::{
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Client for testing header parameter moved to client level.
+#[tracing::client]
 pub struct HeaderParamClient {
     pub(crate) endpoint: Url,
     pub(crate) name: String,
@@ -37,6 +38,7 @@ impl HeaderParamClient {
     /// * `endpoint` - Service host
     /// * `name` - The name of the client. This parameter is used as a header in all operations.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_clientinit")]
     pub fn with_no_credential(
         endpoint: &str,
         name: String,
@@ -73,6 +75,9 @@ impl HeaderParamClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.HeaderParam.withBody"
+    )]
     pub async fn with_body(
         &self,
         body: RequestContent<Input>,
@@ -104,6 +109,9 @@ impl HeaderParamClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.HeaderParam.withQuery"
+    )]
     pub async fn with_query(
         &self,
         id: &str,

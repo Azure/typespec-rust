@@ -11,9 +11,10 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct PathParamClient {
     pub(crate) blob_name: String,
     pub(crate) endpoint: Url,
@@ -35,6 +36,7 @@ impl PathParamClient {
     /// * `endpoint` - Service host
     /// * `blob_name` - The name of the blob. This parameter is used as a path parameter in all operations.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_clientinit")]
     pub fn with_no_credential(
         endpoint: &str,
         blob_name: String,
@@ -71,6 +73,9 @@ impl PathParamClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.PathParam.deleteStandalone"
+    )]
     pub async fn delete_standalone(
         &self,
         options: Option<PathParamClientDeleteStandaloneOptions<'_>>,
@@ -100,6 +105,9 @@ impl PathParamClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.PathParam.getStandalone"
+    )]
     pub async fn get_standalone(
         &self,
         options: Option<PathParamClientGetStandaloneOptions<'_>>,
@@ -131,6 +139,9 @@ impl PathParamClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.PathParam.withQuery"
+    )]
     pub async fn with_query(
         &self,
         options: Option<PathParamClientWithQueryOptions<'_>>,

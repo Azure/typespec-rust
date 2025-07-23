@@ -7,9 +7,10 @@ use crate::generated::models::ServiceBazFooClientSevenOptions;
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ServiceBazFooClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -25,6 +26,7 @@ impl ServiceBazFooClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.Service.Baz.Foo.seven")]
     pub async fn seven(
         &self,
         options: Option<ServiceBazFooClientSevenOptions<'_>>,

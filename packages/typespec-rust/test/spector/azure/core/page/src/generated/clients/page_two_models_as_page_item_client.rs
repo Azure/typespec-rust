@@ -10,9 +10,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
-    json, Error, Result,
+    json, tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct PageTwoModelsAsPageItemClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -30,6 +31,7 @@ impl PageTwoModelsAsPageItemClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Page.TwoModelsAsPageItem.listFirstItem")]
     pub fn list_first_item(
         &self,
         options: Option<PageTwoModelsAsPageItemClientListFirstItemOptions<'_>>,
@@ -93,6 +95,7 @@ impl PageTwoModelsAsPageItemClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Page.TwoModelsAsPageItem.listSecondItem")]
     pub fn list_second_item(
         &self,
         options: Option<PageTwoModelsAsPageItemClientListSecondItemOptions<'_>>,

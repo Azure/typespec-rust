@@ -11,10 +11,11 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Test for merge-patch+json content-type
+#[tracing::client]
 pub struct JsonMergePatchClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -34,6 +35,7 @@ impl JsonMergePatchClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_jmergepatch")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<JsonMergePatchClientOptions>,
@@ -69,6 +71,7 @@ impl JsonMergePatchClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.JsonMergePatch.createResource")]
     pub async fn create_resource(
         &self,
         body: RequestContent<Resource>,
@@ -100,6 +103,7 @@ impl JsonMergePatchClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.JsonMergePatch.updateOptionalResource")]
     pub async fn update_optional_resource(
         &self,
         options: Option<JsonMergePatchClientUpdateOptionalResourceOptions<'_>>,
@@ -132,6 +136,7 @@ impl JsonMergePatchClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.JsonMergePatch.updateResource")]
     pub async fn update_resource(
         &self,
         body: RequestContent<ResourcePatch>,

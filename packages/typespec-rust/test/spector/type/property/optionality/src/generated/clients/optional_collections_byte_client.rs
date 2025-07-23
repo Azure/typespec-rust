@@ -11,9 +11,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct OptionalCollectionsByteClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl OptionalCollectionsByteClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.CollectionsByte.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalCollectionsByteClientGetAllOptions<'_>>,
@@ -58,6 +60,7 @@ impl OptionalCollectionsByteClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.CollectionsByte.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalCollectionsByteClientGetDefaultOptions<'_>>,
@@ -86,6 +89,7 @@ impl OptionalCollectionsByteClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.CollectionsByte.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<CollectionsByteProperty>,
@@ -116,6 +120,7 @@ impl OptionalCollectionsByteClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.CollectionsByte.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<CollectionsByteProperty>,

@@ -11,9 +11,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct NumericPropertyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl NumericPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Numeric.Property.safeintAsString")]
     pub async fn safeint_as_string(
         &self,
         value: RequestContent<SafeintAsStringProperty>,
@@ -59,6 +61,7 @@ impl NumericPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Numeric.Property.uint32AsStringOptional")]
     pub async fn uint32_as_string_optional(
         &self,
         value: RequestContent<Uint32AsStringProperty>,
@@ -89,6 +92,7 @@ impl NumericPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Numeric.Property.uint8AsString")]
     pub async fn uint8_as_string(
         &self,
         value: RequestContent<Uint8AsStringProperty>,

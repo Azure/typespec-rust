@@ -9,9 +9,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct JsonPropertyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +28,7 @@ impl JsonPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Serialization.EncodedName.Json.Property.get")]
     pub async fn get(
         &self,
         options: Option<JsonPropertyClientGetOptions<'_>>,
@@ -54,6 +56,7 @@ impl JsonPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Serialization.EncodedName.Json.Property.send")]
     pub async fn send(
         &self,
         body: RequestContent<JsonEncodedNameModel>,

@@ -10,9 +10,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct OptionalDurationClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl OptionalDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.Duration.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalDurationClientGetAllOptions<'_>>,
@@ -57,6 +59,7 @@ impl OptionalDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.Duration.getDefault")]
     pub async fn get_default(
         &self,
         options: Option<OptionalDurationClientGetDefaultOptions<'_>>,
@@ -85,6 +88,7 @@ impl OptionalDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.Duration.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<DurationProperty>,
@@ -115,6 +119,7 @@ impl OptionalDurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.Duration.putDefault")]
     pub async fn put_default(
         &self,
         body: RequestContent<DurationProperty>,

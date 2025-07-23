@@ -12,10 +12,11 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Test that we can grow up a service spec and service deployment into a multi-versioned service with full client support.
+#[tracing::client]
 pub struct ResiliencyServiceDrivenClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -41,6 +42,7 @@ impl ResiliencyServiceDrivenClient {
     ///   'v1' is for the deployment when the service had only one api version. 'v2' is for the deployment when the service had
     ///   api-versions 'v1' and 'v2'.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_srvdrivenold")]
     pub fn with_no_credential(
         endpoint: &str,
         service_deployment_version: String,
@@ -81,6 +83,7 @@ impl ResiliencyServiceDrivenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Resiliency.ServiceDriven.AddOptionalParam.fromNone")]
     pub async fn from_none(
         &self,
         options: Option<ResiliencyServiceDrivenClientFromNoneOptions<'_>>,
@@ -109,6 +112,7 @@ impl ResiliencyServiceDrivenClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Resiliency.ServiceDriven.AddOptionalParam.fromOneOptional")]
     pub async fn from_one_optional(
         &self,
         options: Option<ResiliencyServiceDrivenClientFromOneOptionalOptions<'_>>,
@@ -141,6 +145,7 @@ impl ResiliencyServiceDrivenClient {
     ///
     /// * `parameter` - I am a required parameter
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Resiliency.ServiceDriven.AddOptionalParam.fromOneRequired")]
     pub async fn from_one_required(
         &self,
         parameter: &str,

@@ -12,10 +12,11 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 use serde_json::Value;
 
+#[tracing::client]
 pub struct UsageModelInOperationClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -37,6 +38,9 @@ impl UsageModelInOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGenerator.Core.Usage.ModelInOperation.inputToInputOutput"
+    )]
     pub async fn input_to_input_output(
         &self,
         body: RequestContent<InputModel>,
@@ -82,6 +86,9 @@ impl UsageModelInOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGenerator.Core.Usage.ModelInOperation.modelInReadOnlyProperty"
+    )]
     pub async fn model_in_read_only_property(
         &self,
         body: RequestContent<RoundTripModel>,
@@ -121,6 +128,9 @@ impl UsageModelInOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGenerator.Core.Usage.ModelInOperation.orphanModelSerializable"
+    )]
     pub async fn orphan_model_serializable(
         &self,
         body: RequestContent<Value>,
@@ -156,6 +166,9 @@ impl UsageModelInOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGenerator.Core.Usage.ModelInOperation.outputToInputOutput"
+    )]
     pub async fn output_to_input_output(
         &self,
         options: Option<UsageModelInOperationClientOutputToInputOutputOptions<'_>>,

@@ -8,10 +8,11 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Illustrates server doesn't define endpoint. Client should automatically add an endpoint to let user pass in.
+#[tracing::client]
 pub struct NotDefinedClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -31,6 +32,7 @@ impl NotDefinedClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_noendpoint")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NotDefinedClientOptions>,
@@ -65,6 +67,7 @@ impl NotDefinedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Endpoint.NotDefined.valid")]
     pub async fn valid(
         &self,
         options: Option<NotDefinedClientValidOptions<'_>>,

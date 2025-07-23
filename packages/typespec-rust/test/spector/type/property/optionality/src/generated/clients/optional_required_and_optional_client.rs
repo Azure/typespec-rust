@@ -12,10 +12,11 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Test optional and required properties
+#[tracing::client]
 pub struct OptionalRequiredAndOptionalClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +33,7 @@ impl OptionalRequiredAndOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.RequiredAndOptional.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalRequiredAndOptionalClientGetAllOptions<'_>>,
@@ -60,6 +62,7 @@ impl OptionalRequiredAndOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.RequiredAndOptional.getRequiredOnly")]
     pub async fn get_required_only(
         &self,
         options: Option<OptionalRequiredAndOptionalClientGetRequiredOnlyOptions<'_>>,
@@ -88,6 +91,7 @@ impl OptionalRequiredAndOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.RequiredAndOptional.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<RequiredAndOptionalProperty>,
@@ -118,6 +122,7 @@ impl OptionalRequiredAndOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.RequiredAndOptional.putRequiredOnly")]
     pub async fn put_required_only(
         &self,
         body: RequestContent<RequiredAndOptionalProperty>,

@@ -8,10 +8,11 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Illustrates server with a single path parameter @server
+#[tracing::client]
 pub struct SingleClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -31,6 +32,7 @@ impl SingleClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_single")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<SingleClientOptions>,
@@ -65,6 +67,7 @@ impl SingleClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Path.Single.myOp")]
     pub async fn my_op(
         &self,
         options: Option<SingleClientMyOpOptions<'_>>,

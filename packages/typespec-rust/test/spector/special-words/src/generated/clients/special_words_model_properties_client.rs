@@ -7,10 +7,11 @@ use crate::generated::models::{SameAsModel, SpecialWordsModelPropertiesClientSam
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Verify model names
+#[tracing::client]
 pub struct SpecialWordsModelPropertiesClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -26,6 +27,7 @@ impl SpecialWordsModelPropertiesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("SpecialWords.ModelProperties.sameAsModel")]
     pub async fn same_as_model(
         &self,
         body: RequestContent<SameAsModel>,

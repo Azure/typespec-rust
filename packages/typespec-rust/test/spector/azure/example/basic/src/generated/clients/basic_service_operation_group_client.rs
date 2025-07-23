@@ -9,9 +9,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct BasicServiceOperationGroupClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -28,6 +29,7 @@ impl BasicServiceOperationGroupClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Example.Basic.ServiceOperationGroup.basic")]
     pub async fn basic(
         &self,
         query_param: &str,

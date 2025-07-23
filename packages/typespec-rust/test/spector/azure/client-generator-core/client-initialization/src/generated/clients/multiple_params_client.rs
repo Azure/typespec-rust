@@ -12,9 +12,10 @@ use azure_core::{
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct MultipleParamsClient {
     pub(crate) endpoint: Url,
     pub(crate) name: String,
@@ -38,6 +39,7 @@ impl MultipleParamsClient {
     /// * `name` - The name of the client. This parameter is used as a header in all operations.
     /// * `region` - The region to use for all operations. This parameter is used as a query parameter.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_clientinit")]
     pub fn with_no_credential(
         endpoint: &str,
         name: String,
@@ -76,6 +78,9 @@ impl MultipleParamsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MultipleParams.withBody"
+    )]
     pub async fn with_body(
         &self,
         body: RequestContent<Input>,
@@ -108,6 +113,9 @@ impl MultipleParamsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MultipleParams.withQuery"
+    )]
     pub async fn with_query(
         &self,
         id: &str,

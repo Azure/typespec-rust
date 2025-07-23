@@ -12,11 +12,12 @@ use azure_core::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url,
     },
-    Error, Result,
+    tracing, Error, Result,
 };
 use std::sync::Arc;
 
 /// Illustrates clients generated with ApiKey and OAuth2 authentication.
+#[tracing::client]
 pub struct UnionClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -38,6 +39,7 @@ impl UnionClient {
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_unionauth")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -78,6 +80,7 @@ impl UnionClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Authentication.Union.validKey")]
     pub async fn valid_key(
         &self,
         options: Option<UnionClientValidKeyOptions<'_>>,
@@ -105,6 +108,7 @@ impl UnionClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Authentication.Union.validToken")]
     pub async fn valid_token(
         &self,
         options: Option<UnionClientValidTokenOptions<'_>>,

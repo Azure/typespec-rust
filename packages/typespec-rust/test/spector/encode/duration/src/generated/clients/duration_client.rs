@@ -9,10 +9,11 @@ use crate::generated::clients::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test for encode decorator on duration.
+#[tracing::client]
 pub struct DurationClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +33,7 @@ impl DurationClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_duration")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<DurationClientOptions>,
@@ -63,6 +65,7 @@ impl DurationClient {
     }
 
     /// Returns a new instance of DurationHeaderClient.
+    #[tracing::subclient]
     pub fn get_duration_header_client(&self) -> DurationHeaderClient {
         DurationHeaderClient {
             endpoint: self.endpoint.clone(),
@@ -71,6 +74,7 @@ impl DurationClient {
     }
 
     /// Returns a new instance of DurationPropertyClient.
+    #[tracing::subclient]
     pub fn get_duration_property_client(&self) -> DurationPropertyClient {
         DurationPropertyClient {
             endpoint: self.endpoint.clone(),
@@ -79,6 +83,7 @@ impl DurationClient {
     }
 
     /// Returns a new instance of DurationQueryClient.
+    #[tracing::subclient]
     pub fn get_duration_query_client(&self) -> DurationQueryClient {
         DurationQueryClient {
             endpoint: self.endpoint.clone(),

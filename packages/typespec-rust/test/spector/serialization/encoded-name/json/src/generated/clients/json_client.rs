@@ -7,10 +7,11 @@ use crate::generated::clients::JsonPropertyClient;
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Encoded names
+#[tracing::client]
 pub struct JsonClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl JsonClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_jsonencodedname")]
     pub fn with_no_credential(endpoint: &str, options: Option<JsonClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -58,6 +60,7 @@ impl JsonClient {
     }
 
     /// Returns a new instance of JsonPropertyClient.
+    #[tracing::subclient]
     pub fn get_json_property_client(&self) -> JsonPropertyClient {
         JsonPropertyClient {
             endpoint: self.endpoint.clone(),

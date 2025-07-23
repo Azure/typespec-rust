@@ -9,11 +9,12 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 use std::collections::HashMap;
 
 /// Dictionary of duration values
+#[tracing::client]
 pub struct DictionaryDurationValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl DictionaryDurationValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Dictionary.DurationValue.get")]
     pub async fn get(
         &self,
         options: Option<DictionaryDurationValueClientGetOptions<'_>>,
@@ -56,6 +58,7 @@ impl DictionaryDurationValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Dictionary.DurationValue.put")]
     pub async fn put(
         &self,
         body: RequestContent<HashMap<String, String>>,

@@ -10,9 +10,10 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ParamAliasClient {
     pub(crate) blob_name: String,
     pub(crate) endpoint: Url,
@@ -34,6 +35,7 @@ impl ParamAliasClient {
     /// * `endpoint` - Service host
     /// * `blob_name` - Blob name for the client.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_clientinit")]
     pub fn with_no_credential(
         endpoint: &str,
         blob_name: String,
@@ -70,6 +72,9 @@ impl ParamAliasClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParamAlias.withAliasedName"
+    )]
     pub async fn with_aliased_name(
         &self,
         options: Option<ParamAliasClientWithAliasedNameOptions<'_>>,
@@ -98,6 +103,9 @@ impl ParamAliasClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParamAlias.withOriginalName"
+    )]
     pub async fn with_original_name(
         &self,
         options: Option<ParamAliasClientWithOriginalNameOptions<'_>>,

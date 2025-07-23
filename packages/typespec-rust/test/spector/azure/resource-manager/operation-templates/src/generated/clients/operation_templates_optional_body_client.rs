@@ -12,9 +12,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct OperationTemplatesOptionalBodyClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -35,6 +36,7 @@ impl OperationTemplatesOptionalBodyClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `widget_name` - The name of the Widget
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.OperationTemplates.OptionalBody.get")]
     pub async fn get(
         &self,
         resource_group_name: &str,
@@ -73,6 +75,7 @@ impl OperationTemplatesOptionalBodyClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `widget_name` - The name of the Widget
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.OperationTemplates.OptionalBody.patch")]
     pub async fn patch(
         &self,
         resource_group_name: &str,
@@ -115,6 +118,7 @@ impl OperationTemplatesOptionalBodyClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `widget_name` - The name of the Widget
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.OperationTemplates.OptionalBody.post")]
     pub async fn post(
         &self,
         resource_group_name: &str,
@@ -154,6 +158,7 @@ impl OperationTemplatesOptionalBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.OperationTemplates.OptionalBody.providerPost")]
     pub async fn provider_post(
         &self,
         options: Option<OperationTemplatesOptionalBodyClientProviderPostOptions<'_>>,

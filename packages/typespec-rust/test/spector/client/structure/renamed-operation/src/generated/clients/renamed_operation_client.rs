@@ -14,9 +14,10 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct RenamedOperationClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -37,6 +38,7 @@ impl RenamedOperationClient {
     /// * `endpoint` - Service host
     /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_renamedop")]
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -72,6 +74,7 @@ impl RenamedOperationClient {
     }
 
     /// Returns a new instance of RenamedOperationGroupClient.
+    #[tracing::subclient]
     pub fn get_renamed_operation_group_client(&self) -> RenamedOperationGroupClient {
         RenamedOperationGroupClient {
             endpoint: self.endpoint.clone(),
@@ -83,6 +86,7 @@ impl RenamedOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.RenamedOperation.renamedFive")]
     pub async fn renamed_five(
         &self,
         options: Option<RenamedOperationClientRenamedFiveOptions<'_>>,
@@ -109,6 +113,7 @@ impl RenamedOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.RenamedOperation.renamedOne")]
     pub async fn renamed_one(
         &self,
         options: Option<RenamedOperationClientRenamedOneOptions<'_>>,
@@ -135,6 +140,7 @@ impl RenamedOperationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.RenamedOperation.renamedThree")]
     pub async fn renamed_three(
         &self,
         options: Option<RenamedOperationClientRenamedThreeOptions<'_>>,

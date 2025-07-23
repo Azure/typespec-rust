@@ -7,9 +7,10 @@ use crate::generated::models::CollectionFormatHeaderClientCsvOptions;
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct CollectionFormatHeaderClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -26,6 +27,7 @@ impl CollectionFormatHeaderClient {
     ///
     /// * `colors` - Possible values for colors are [blue,red,green]
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.CollectionFormat.Header.csv")]
     pub async fn csv(
         &self,
         colors: &[&str],

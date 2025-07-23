@@ -10,9 +10,10 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct BodyOptionalityOptionalExplicitClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +29,7 @@ impl BodyOptionalityOptionalExplicitClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.BodyOptionality.OptionalExplicit.omit")]
     pub async fn omit(
         &self,
         options: Option<BodyOptionalityOptionalExplicitClientOmitOptions<'_>>,
@@ -58,6 +60,7 @@ impl BodyOptionalityOptionalExplicitClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.BodyOptionality.OptionalExplicit.set")]
     pub async fn set(
         &self,
         options: Option<BodyOptionalityOptionalExplicitClientSetOptions<'_>>,

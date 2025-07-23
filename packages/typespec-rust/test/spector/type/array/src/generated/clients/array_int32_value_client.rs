@@ -7,10 +7,11 @@ use crate::generated::models::{ArrayInt32ValueClientGetOptions, ArrayInt32ValueC
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
 /// Array of int32 values
+#[tracing::client]
 pub struct ArrayInt32ValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -26,6 +27,7 @@ impl ArrayInt32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Array.Int32Value.get")]
     pub async fn get(
         &self,
         options: Option<ArrayInt32ValueClientGetOptions<'_>>,
@@ -53,6 +55,7 @@ impl ArrayInt32ValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Array.Int32Value.put")]
     pub async fn put(
         &self,
         body: RequestContent<Vec<i32>>,

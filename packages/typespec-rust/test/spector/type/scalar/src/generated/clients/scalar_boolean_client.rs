@@ -7,9 +7,10 @@ use crate::generated::models::{ScalarBooleanClientGetOptions, ScalarBooleanClien
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Error, Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ScalarBooleanClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -26,6 +27,7 @@ impl ScalarBooleanClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Scalar.Boolean.get")]
     pub async fn get(
         &self,
         options: Option<ScalarBooleanClientGetOptions<'_>>,
@@ -55,6 +57,7 @@ impl ScalarBooleanClient {
     ///
     /// * `body` - _
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Scalar.Boolean.put")]
     pub async fn put(
         &self,
         body: RequestContent<bool>,
