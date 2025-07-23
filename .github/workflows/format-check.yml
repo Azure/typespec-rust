@@ -1,0 +1,58 @@
+name: Code Formatting Check
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    name: Verify Code Formatting
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install pnpm package manager
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10
+
+    - name: Setup Rust toolchain with rustfmt
+      uses: actions-rust-lang/setup-rust-toolchain@v1
+      with:
+        toolchain: stable
+        components: rustfmt
+
+    - name: Install project dependencies
+      run: |
+        cd packages/typespec-rust
+        pnpm install
+
+    - name: Install prettier globally
+      run: npm install -g prettier
+
+    - name: Check TypeScript/JavaScript formatting (ESLint)
+      run: |
+        cd packages/typespec-rust
+        npx eslint src test --max-warnings=0
+
+    - name: Check Prettier formatting (Markdown, JSON, TypeScript)
+      run: |
+        prettier --check "**/*.{md,json,ts,js}" \
+          --ignore-path .gitignore \
+          --ignore-path .prettierignore
+
+    - name: Validate TypeSpec files
+      run: ./scripts/check-typespec-format.sh
+
+    - name: Check Rust formatting (rustfmt)
+      run: ./scripts/check-rust-format.sh

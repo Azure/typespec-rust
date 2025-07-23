@@ -1,0 +1,19 @@
+# Build artifacts
+dist/
+node_modules/
+*.log
+
+# Generated code
+packages/typespec-rust/test/spector/*/src/generated/
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# TypeSpec files (no parser available for prettier)
+*.tsp
+
+# Temporary files
+*.tmp
+*.temp
