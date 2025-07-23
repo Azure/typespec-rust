@@ -1002,6 +1002,27 @@ function urlVarNeedsMut(paramGroups: MethodParamGroups, method: ClientMethod): s
 }
 
 /**
+ * Return an error if a local RawResponse variable "rsp" has a non-success status code.
+ * @param use the use statement builder currently in scope
+ * @param indent the indentation helper currently in scope
+ * @returns code to return an error if the status code of "rsp" doesn't indicate success
+ */
+function errIfNotSuccessResponse(use: Use, indent: helpers.indentation): string {
+  use.add('azure_core', 'Error', 'Result');
+  use.add('azure_core::error', 'ErrorKind', 'HttpError');
+  return helpers.buildIfBlock(indent, {
+    condition: '!rsp.status().is_success()',
+    body: (indent) => {
+      let body = `${indent.get()}let status = rsp.status();\n`
+      body += `${indent.get()}let http_error = HttpError::new(rsp).await;\n`;
+      body += `${indent.get()}let error_kind = ErrorKind::http_response(status, http_error.error_code().map(std::borrow::ToOwned::to_owned));\n`;
+      body += `${indent.get()}return Err(Error::new(error_kind, http_error));\n`;
+      return body;
+    },
+  });
+}
+
+/**
  * constructs the body for an async client method
  * 
  * @param indent the indentation helper currently in scope
