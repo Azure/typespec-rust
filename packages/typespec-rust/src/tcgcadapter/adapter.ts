@@ -1068,7 +1068,6 @@ export class Adapter {
    */
   private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
     let srcMethodName = method.name;
-    let languageIndependentName = method.crossLanguageDefinitionId;
     if (method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
       const chunks = codegen.deconstruct(srcMethodName);
       chunks[0] = 'list';
@@ -1084,6 +1083,7 @@ export class Adapter {
       throw new AdapterError('NameCollision', `method name ${srcMethodName} collides with a renamed method`, method.__raw?.node);
     }
 
+    const languageIndependentName = method.crossLanguageDefinitionId;
     const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
     const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName)}Options`, 'pub');
