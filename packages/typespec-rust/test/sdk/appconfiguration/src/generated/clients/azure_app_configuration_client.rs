@@ -36,11 +36,7 @@ use azure_core::{
         ClientOptions, Context, Method, NoFormat, PageIterator, Pager, PagerResult, Pipeline,
         RawResponse, Request, RequestContent, Response, Url,
     },
-<<<<<<< HEAD
-    json, tracing, Result,
-=======
-    json, Error, Result,
->>>>>>> main
+    json, tracing, Error, Result,
 };
 use std::sync::Arc;
 

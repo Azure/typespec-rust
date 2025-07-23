@@ -22,7 +22,7 @@ use azure_core::{
         ClientOptions, Context, Method, NoFormat, Pager, PagerResult, Pipeline, RawResponse,
         Request, RequestContent, Response, Url,
     },
-    json, Result,
+    json, tracing, Error, Result,
 };
 use std::sync::Arc;
 

@@ -19,7 +19,7 @@ use azure_core::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
     time::to_rfc7231,
-    Bytes, Result,
+    tracing, Bytes, Error, Result,
 };
 use std::sync::Arc;
 

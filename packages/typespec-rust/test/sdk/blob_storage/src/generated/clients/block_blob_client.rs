@@ -23,7 +23,7 @@ use azure_core::{
         XmlFormat,
     },
     time::to_rfc7231,
-    Bytes, Result,
+    tracing, Bytes, Error, Result,
 };
 use std::sync::Arc;
 

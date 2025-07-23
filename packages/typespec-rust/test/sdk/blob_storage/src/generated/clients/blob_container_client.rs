@@ -34,7 +34,7 @@ use azure_core::{
         Request, RequestContent, Response, Url, XmlFormat,
     },
     time::to_rfc7231,
-    xml, Result,
+    tracing, xml, Error, Result,
 };
 use std::sync::Arc;
 

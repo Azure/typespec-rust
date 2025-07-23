@@ -23,7 +23,7 @@ use azure_core::{
         ClientOptions, Context, Method, NoFormat, PageIterator, PagerResult, Pipeline, RawResponse,
         Request, RequestContent, Response, Url, XmlFormat,
     },
-    xml, Result,
+    tracing, xml, Error, Result,
 };
 use std::sync::Arc;
 

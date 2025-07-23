@@ -36,7 +36,7 @@ use azure_core::{
         XmlFormat,
     },
     time::to_rfc7231,
-    Result,
+    tracing, Error, Result,
 };
 use std::sync::Arc;
 

@@ -61,7 +61,7 @@ pub struct Error {
     pub target: Option<String>,
 }
 
-/// An object containing more specific information about the error. As per Azure REST API guidelines - <https://aka.ms/AzureRestApiGuidelines#handling-errors>.
+/// An object containing more specific information about the error. As per Microsoft One API guidelines - <https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md#handling-errors>.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
 pub struct InnerError {
