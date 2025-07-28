@@ -16,7 +16,10 @@ indent_size = 2
 [*.{yaml,yml}]
 indent_size = 2
 
-[*.{md,tsp}]
+[*.md]
+indent_size = 2
+
+[*.tsp]
 indent_size = 2
 
 [*.toml]
