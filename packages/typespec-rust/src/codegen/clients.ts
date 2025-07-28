@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 // cspell: ignore conv
 
@@ -25,7 +25,7 @@ export interface ClientModules {
 
 /**
  * emits the content for all client files
- * 
+ *
  * @param crate the crate for which to emit clients
  * @returns client content or undefined if the crate contains no clients
  */
@@ -38,9 +38,13 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
   const clientOptionsImplDefault = function (constructable: rust.ClientConstruction): boolean {
     // only implement Default when there's more than one field (i.e. more than just client_options)
     // and the field(s) contain a client default value.
-    return constructable.options.type.fields.length > 1 && values(constructable.options.type.fields)
-      .where((field) => field.name !== 'client_options')
-      .where((field) => field.defaultValue !== undefined).any();
+    return (
+      constructable.options.type.fields.length > 1 &&
+      values(constructable.options.type.fields)
+        .where((field) => field.name !== 'client_options')
+        .where((field) => field.defaultValue !== undefined)
+        .any()
+    );
   };
 
   const clientModules = new Array<helpers.Module>();
@@ -105,7 +109,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         body += `${indent.get()}${helpers.buildIfBlock(indent, {
           condition: `!${endpointParamName}.scheme().starts_with("http")`,
           body: (indent) => `${indent.get()}return Err(azure_core::Error::message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
-        })}`
+        })}`;
         body += `${indent.get()}${endpointParamName}.set_query(None);\n`;
 
         // construct the supplemental path and join it to the endpoint
@@ -130,9 +134,13 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         // propagate the required client params to the initializer
         // NOTE: we do this on a sorted copy of the client params as we must preserve their order.
         // exclude endpoint params as they aren't propagated to clients (they're consumed when creating the complete endpoint)
-        const sortedParams = values([...constructor.params]
-          .sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); }))
-          .where((each) => each.kind !== 'clientEndpoint').toArray();
+        const sortedParams = values(
+          [...constructor.params].sort((a: rust.ClientParameter, b: rust.ClientParameter) => {
+            return helpers.sortAscending(a.name, b.name);
+          }),
+        )
+          .where((each) => each.kind !== 'clientEndpoint')
+          .toArray();
 
         for (const param of sortedParams) {
           if (param.optional) {
@@ -142,7 +150,11 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
             continue;
           }
 
-          if (!client.fields.find((v: rust.StructField) => { return v.name === param.name; })) {
+          if (
+            !client.fields.find((v: rust.StructField) => {
+              return v.name === param.name;
+            })
+          ) {
             throw new CodegenError('InternalError', `didn't find field in client ${client.name} for param ${param.name}`);
           }
 
@@ -157,11 +169,19 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
             continue;
           }
 
-          if (!client.fields.find((v: rust.StructField) => { return v.name === param.name; })) {
+          if (
+            !client.fields.find((v: rust.StructField) => {
+              return v.name === param.name;
+            })
+          ) {
             throw new CodegenError('InternalError', `didn't find field in client ${client.name} for param ${param.name}`);
           }
 
-          if (!client.constructable.options.type.fields.find((v: rust.StructField) => { return v.name === param.name; })) {
+          if (
+            !client.constructable.options.type.fields.find((v: rust.StructField) => {
+              return v.name === param.name;
+            })
+          ) {
             throw new CodegenError('InternalError', `didn't find field in client options ${client.constructable.options.type.name} for optional param ${param.name}`);
           }
 
@@ -356,7 +376,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
 /**
  * builds the block of doc comments for a callable's parameters.
  * if the callable has no parameters, undefined is returned.
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param callable the callable containing parameters to document
  * @returns the parameters doc comments or undefined
@@ -407,7 +427,7 @@ function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Co
 /**
  * creates the parameter signature for a client constructor
  * e.g. "foo: i32, bar: String, options: ClientOptions"
- * 
+ *
  * @param params the params to include in the signature. can be empty
  * @param options the client options type. will always be the last parameter
  * @param use the use statement builder currently in scope
@@ -431,7 +451,7 @@ function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: r
 /**
  * creates the parameter signature for a client method
  * e.g. "foo: i32, bar: String, options: MethodOptions"
- * 
+ *
  * @param method the Rust method for which to create the param sig
  * @param use the use statement builder currently in scope
  * @returns the method params sig
@@ -475,7 +495,7 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
 /**
  * returns the auth policy instantiation code if the ctor contains a credential param.
  * the policy will be a local var named auth_policy.
- * 
+ *
  * @param ctor the constructor for which to instantiate an auth policy
  * @param use the use statement builder currently in scope
  * @returns the auth policy instantiation code or undefined if not required
@@ -498,7 +518,7 @@ function getAuthPolicy(ctor: rust.Constructor, use: Use): string | undefined {
 /**
  * returns the complete text for the provided parameter's type
  * e.g. self, &String, mut SomeStruct
- * 
+ *
  * @param param the parameter for which to create the
  * @returns the parameter's type declaration
  */
@@ -526,7 +546,7 @@ function formatParamTypeName(param: rust.MethodParameter | rust.Parameter | rust
 
 /**
  * returns the name of the endpoint field within the client
- * 
+ *
  * @param client the client in which to find the endpoint field
  * @returns the name of the endpoint field
  */
@@ -550,7 +570,7 @@ function getEndpointFieldName(client: rust.Client): string {
 
 /**
  * constructs the body for a client accessor method
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param clientAccessor the client accessor for which to construct the body
  * @returns the contents of the method body
@@ -613,7 +633,7 @@ interface MethodParamGroups {
 
 /**
  * enumerates method parameters and returns them based on groups
- * 
+ *
  * @param method the method containing the parameters to group
  * @returns the groups parameters
  */
@@ -651,9 +671,15 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
     }
   }
 
-  headerParams.sort((a: HeaderParamType, b: HeaderParamType) => { return helpers.sortAscending(a.header, b.header); });
-  pathParams.sort((a: PathParamType, b: PathParamType) => { return helpers.sortAscending(a.segment, b.segment); });
-  queryParams.sort((a: QueryParamType, b: QueryParamType) => { return helpers.sortAscending(a.key, b.key); });
+  headerParams.sort((a: HeaderParamType, b: HeaderParamType) => {
+    return helpers.sortAscending(a.header, b.header);
+  });
+  pathParams.sort((a: PathParamType, b: PathParamType) => {
+    return helpers.sortAscending(a.segment, b.segment);
+  });
+  queryParams.sort((a: QueryParamType, b: QueryParamType) => {
+    return helpers.sortAscending(a.key, b.key);
+  });
 
   let bodyParam: rust.BodyParameter | undefined;
   for (const param of method.params) {
@@ -678,23 +704,25 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
 /**
  * wraps the emitted code emitted by setter in a "let Some" block
  * if the parameter is optional, else the value of setter is returned.
- * 
+ *
  * NOTE: for optional params, by convention, we'll create a local named param.name.
  * setter MUST reference by param.name so it works for optional and required params.
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param param the parameter to which the contents of setter apply
  * @param setter the callback that emits the code to read from a param var
  * @param inClosure indicates if the value is being read from within a closure (e.g. pageable methods)
- * @returns 
+ * @returns
  */
 function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, inClosure: boolean, setter: () => string): string {
   if (param.optional) {
     // optional params are in the unwrapped options local var
-    const op = indent.get() + helpers.buildIfBlock(indent, {
-      condition: `let Some(${param.name}) = ${inClosure ? '&' : ''}options.${param.name}`,
-      body: setter,
-    });
+    const op =
+      indent.get() +
+      helpers.buildIfBlock(indent, {
+        condition: `let Some(${param.name}) = ${inClosure ? '&' : ''}options.${param.name}`,
+        body: setter,
+      });
     return op + '\n';
   }
   return setter();
@@ -702,7 +730,7 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
 
 /**
  * emits the code for building the request URL.
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param use the use statement builder currently in scope
  * @param method the method for which we're building the body
@@ -746,39 +774,35 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         let wrapSortedVec: (s: string) => string = (s) => s;
         let paramExpression = `${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)}`;
         if (pathParam.kind === 'pathHashMap') {
-          wrapSortedVec = (s) => `${indent.get()}{`
-            + `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParam.name}.iter().collect::<Vec<_>>();\n`
-            + `${indent.get()}${pathParam.name}_vec.sort_by_key(|p| p.0);\n`
-            + `${s}`
-            + `${indent.pop().get()}}`;
+          wrapSortedVec = (s) =>
+            `${indent.get()}{` +
+            `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParam.name}.iter().collect::<Vec<_>>();\n` +
+            `${indent.get()}${pathParam.name}_vec.sort_by_key(|p| p.0);\n` +
+            `${s}` +
+            `${indent.pop().get()}}`;
 
           const kEqualsV = '"{k}={v}"';
           const kCommaV = '"{k},{v}"';
 
-          paramExpression = `&${pathParam.name}_vec.iter().map(|(k,v)| `
-            + (pathParam.explode
-              ? `format!(${kEqualsV})).collect::<Vec<_>>().join(",")`
-              : `format!(${kCommaV})).collect::<Vec<_>>().join(",")`);
+          paramExpression =
+            `&${pathParam.name}_vec.iter().map(|(k,v)| ` +
+            (pathParam.explode ? `format!(${kEqualsV})).collect::<Vec<_>>().join(",")` : `format!(${kCommaV})).collect::<Vec<_>>().join(",")`);
 
           switch (pathParam.style) {
             case 'path':
-              paramExpression = `&format!("/{}", ${pathParam.name}_vec.iter().map(|(k,v)| `
-                + (pathParam.explode
-                  ? `format!(${kEqualsV})).collect::<Vec<_>>().join("/"))`
-                  : `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
+              paramExpression =
+                `&format!("/{}", ${pathParam.name}_vec.iter().map(|(k,v)| ` +
+                (pathParam.explode ? `format!(${kEqualsV})).collect::<Vec<_>>().join("/"))` : `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
               break;
             case 'label':
-              paramExpression = `&format!(".{}", ${pathParam.name}_vec.iter().map(|(k,v)| `
-                + (pathParam.explode
-                  ? `format!(${kEqualsV})).collect::<Vec<_>>().join("."))`
-                  : `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
+              paramExpression =
+                `&format!(".{}", ${pathParam.name}_vec.iter().map(|(k,v)| ` +
+                (pathParam.explode ? `format!(${kEqualsV})).collect::<Vec<_>>().join("."))` : `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
               break;
             case 'matrix':
               paramExpression = pathParam.explode
-                ? (`&format!(";{}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
-                  + `format!(${kEqualsV})).collect::<Vec<_>>().join(";"))`)
-                : (`&format!(";${pathParam.name}={}", ${pathParam.name}_vec.into_iter().map(|(k,v)| `
-                  + `format!(${kCommaV})).collect::<Vec<_>>().join(","))`);
+                ? `&format!(";{}", ${pathParam.name}_vec.into_iter().map(|(k,v)| ` + `format!(${kEqualsV})).collect::<Vec<_>>().join(";"))`
+                : `&format!(";${pathParam.name}={}", ${pathParam.name}_vec.into_iter().map(|(k,v)| ` + `format!(${kCommaV})).collect::<Vec<_>>().join(","))`;
               break;
           }
         } else if (pathParam.kind === 'pathCollection') {
@@ -791,8 +815,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
               paramExpression = `&format!(".{}", ${pathParam.name}.join("${pathParam.explode ? '.' : ','}"))`;
               break;
             case 'matrix':
-              paramExpression = `&format!(";${pathParam.name}={}", ${pathParam.name}.join(`
-                + `"${pathParam.explode ? `;${pathParam.name}=` : ','}"))`;
+              paramExpression = `&format!(";${pathParam.name}={}", ${pathParam.name}.join(` + `"${pathParam.explode ? `;${pathParam.name}=` : ','}"))`;
               break;
           }
         } else {
@@ -877,7 +900,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
  * emits the code for building the HTTP request.
  * assumes that there's a local var 'url' which is the Url.
  * creates a mutable local 'request' which is the Request instance.
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param use the use statement builder currently in scope
  * @param method the method for which we're building the body
@@ -896,14 +919,21 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       continue;
     }
 
-    if (method.kind === 'pageable' && method.strategy?.kind === 'continuationToken' && method.strategy?.requestToken.kind === 'headerScalar' && method.strategy?.requestToken === headerParam) {
+    if (
+      method.kind === 'pageable' &&
+      method.strategy?.kind === 'continuationToken' &&
+      method.strategy?.requestToken.kind === 'headerScalar' &&
+      method.strategy?.requestToken === headerParam
+    ) {
       // we have some special handling for the header continuation token.
       // if we have a token value, i.e. from the next page, then use that value.
       // if not, then check if an optional token value was provided.
-      body += indent.get() + helpers.buildIfBlock(indent, {
-        condition: `let Some(${headerParam.name}) = ${headerParam.name}.or_else(|| options.${headerParam.name}.clone())`,
-        body: (indent) => `${indent.get()}request.insert_header("${headerParam.header}", ${headerParam.name});\n`,
-      })
+      body +=
+        indent.get() +
+        helpers.buildIfBlock(indent, {
+          condition: `let Some(${headerParam.name}) = ${headerParam.name}.or_else(|| options.${headerParam.name}.clone())`,
+          body: (indent) => `${indent.get()}request.insert_header("${headerParam.header}", ${headerParam.name});\n`,
+        });
       continue;
     }
 
@@ -939,7 +969,10 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
     indent.push();
     for (const partialBodyParam of paramGroups.partialBody) {
       if (partialBodyParam.type.content.type !== requestContentType.content.type) {
-        throw new CodegenError('InternalError', `spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.content.type.name}, expected model type ${requestContentType.content.type.name}`);
+        throw new CodegenError(
+          'InternalError',
+          `spread param ${partialBodyParam.name} has conflicting model type ${partialBodyParam.type.content.type.name}, expected model type ${requestContentType.content.type.name}`,
+        );
       }
 
       if (partialBodyParam.optional) {
@@ -979,7 +1012,7 @@ function errIfNotSuccessResponse(use: Use, indent: helpers.indentation): string 
   return helpers.buildIfBlock(indent, {
     condition: '!rsp.status().is_success()',
     body: (indent) => {
-      let body = `${indent.get()}let status = rsp.status();\n`
+      let body = `${indent.get()}let status = rsp.status();\n`;
       body += `${indent.get()}let http_error = HttpError::new(rsp).await;\n`;
       body += `${indent.get()}let error_kind = ErrorKind::http_response(status, http_error.error_code().map(std::borrow::ToOwned::to_owned));\n`;
       body += `${indent.get()}return Err(Error::new(error_kind, http_error));\n`;
@@ -1003,7 +1036,7 @@ function urlVarNeedsMut(paramGroups: MethodParamGroups, method: ClientMethod): s
 
 /**
  * constructs the body for an async client method
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param use the use statement builder currently in scope
  * @param client the client to which the method belongs
@@ -1032,7 +1065,7 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
 
 /**
  * constructs the body for a pageable client method
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param use the use statement builder currently in scope
  * @param client the client to which the method belongs
@@ -1075,46 +1108,53 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
         body += `${indent.get()}${helpers.buildIfBlock(indent, {
           condition: `let Some(${reqTokenParam}) = ${reqTokenParam}`,
           body: (indent) => {
-            let body = indent.get() + helpers.buildIfBlock(indent, {
-              condition: `url.query_pairs().any(|(name, _)| name.eq("${reqTokenValue}"))`,
-              body: (indent) => {
-                let body = `${indent.get()}let mut new_url = url.clone();\n`;
-                body += `${indent.get()}new_url.query_pairs_mut().clear().extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("${reqTokenValue}")));\n`;
-                body += `${indent.get()}url = new_url;\n`;
-                return body;
-              },
-            });
+            let body =
+              indent.get() +
+              helpers.buildIfBlock(indent, {
+                condition: `url.query_pairs().any(|(name, _)| name.eq("${reqTokenValue}"))`,
+                body: (indent) => {
+                  let body = `${indent.get()}let mut new_url = url.clone();\n`;
+                  body += `${indent.get()}new_url.query_pairs_mut().clear().extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("${reqTokenValue}")));\n`;
+                  body += `${indent.get()}url = new_url;\n`;
+                  return body;
+                },
+              });
             body += `${indent.get()}url.query_pairs_mut().append_pair("${reqTokenValue}", &${reqTokenParam});\n`;
             return body;
-          }
-        })}`
+          },
+        })}`;
       }
       break;
     }
     case 'nextLink': {
       const nextLinkName = method.strategy.nextLink.name;
       body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: Option<Url>| {\n`;
-      body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
-        pattern: `Some(${nextLinkName})`,
-        body: (indent) => {
-          if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'queryScalar') {
-            const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
-            // there are no APIs to set/update an existing query parameter.
-            // so, we filter the existing query params to remove the api-version
-            // query param. we then add back the filtered set and then add the
-            // api-version as specified on the client.
-            let setApiVerBody = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
-            setApiVerBody += `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
-            setApiVerBody += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
-            setApiVerBody += `${indent.get()}${nextLinkName}\n`;
-            return setApiVerBody;
-          }
-          return `${indent.get()} ${nextLinkName}\n`;
-        }
-      }, {
-        pattern: 'None',
-        body: (indent) => `${indent.get()}${urlVar}.clone()\n`
-      }]);
+      body +=
+        `${indent.push().get()}let url = ` +
+        helpers.buildMatch(indent, nextLinkName, [
+          {
+            pattern: `Some(${nextLinkName})`,
+            body: (indent) => {
+              if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'queryScalar') {
+                const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
+                // there are no APIs to set/update an existing query parameter.
+                // so, we filter the existing query params to remove the api-version
+                // query param. we then add back the filtered set and then add the
+                // api-version as specified on the client.
+                let setApiVerBody = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
+                setApiVerBody += `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
+                setApiVerBody += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
+                setApiVerBody += `${indent.get()}${nextLinkName}\n`;
+                return setApiVerBody;
+              }
+              return `${indent.get()} ${nextLinkName}\n`;
+            },
+          },
+          {
+            pattern: 'None',
+            body: (indent) => `${indent.get()}${urlVar}.clone()\n`,
+          },
+        ]);
       body += ';\n';
       break;
     }
@@ -1185,19 +1225,22 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   // we need to handle the case where the next page value is the empty string,
   // so checking strictly for None(theNextLink) is insufficient.
   // the most common case for this is XML, e.g. an empty tag like <NextLink />
-  body += `${indent.get()}Ok(${helpers.buildMatch(indent, srcNextPage, [{
-    pattern: `Some(${nextPageValue}) if !${nextPageValue}.is_empty()`,
-    body: (indent) => {
-      return `${indent.get()}response: rsp, continuation: ${continuation}`;
+  body += `${indent.get()}Ok(${helpers.buildMatch(indent, srcNextPage, [
+    {
+      pattern: `Some(${nextPageValue}) if !${nextPageValue}.is_empty()`,
+      body: (indent) => {
+        return `${indent.get()}response: rsp, continuation: ${continuation}`;
+      },
+      returns: 'PagerResult::More',
     },
-    returns: 'PagerResult::More',
-  }, {
-    pattern: '_',
-    body: (indent) => {
-      return `${indent.get()}response: rsp`;
+    {
+      pattern: '_',
+      body: (indent) => {
+        return `${indent.get()}response: rsp`;
+      },
+      returns: 'PagerResult::Done',
     },
-    returns: 'PagerResult::Done',
-  }])}`;
+  ])}`;
   body += ')\n'; // end Ok
   body += `${indent.pop().get()}}\n`; // end async move
   body += `${indent.pop().get()}}))`; // end Ok/Pager::from_callback
@@ -1237,12 +1280,12 @@ function getClientEndpointParamValue(param: rust.ClientEndpointParameter): strin
 /**
  * contains the code to use when populating a header/path/query value
  * from a parameter of that type.
- * 
+ *
  * if the param's type is a String, then the return value is simply the
  * param's name. the non-String cases require some kind of conversion.
  * this could simply be a to_string() call, e.g. "paramName.to_string()".
  * other cases might be more complex.
- * 
+ *
  * @param use the use statement builder currently in scope
  * @param param the param for which to get the value
  * @param fromSelf applicable for client params. when true, the prefix "self." is included
@@ -1330,7 +1373,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
 
 /**
  * returns the delimiter character for the provided format type
- * 
+ *
  * @param format the format collection type
  * @returns the delimiter character
  */

@@ -17,6 +17,9 @@ steps:
   - script:  npm install -g cspell
     displayName: Install cspell
   
+  - script: npm install -g prettier
+    displayName: Install prettier
+  
   - script: |
       npm i -g corepack@latest
       corepack enable

@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
@@ -11,7 +11,7 @@ import * as rust from '../codemodel/index.js';
 
 /**
  * fixes up enum names to follow Rust conventions
- * 
+ *
  * @param enumValue the enum value type to fix up
  * @returns the fixed up name. can be the original value if no fix-up was required
  */
@@ -22,7 +22,7 @@ export function fixUpEnumValueName(enumValue: tcgc.SdkEnumValueType): string {
 /**
  * split out from fixUpEnumValueName for testing purposes.
  * don't call this directly, call fixUpEnumValueName instead.
- * 
+ *
  * @param name the enum value name
  * @param kind the enum value's underlying kind
  * @returns the fixed up name. can be the original value if no fix-up was required
@@ -89,7 +89,7 @@ export function fixUpEnumValueNameWorker(name: string, kind: tcgc.SdkBuiltInKind
 
 /**
  * sorts client params in place so they're in the order, endpoint, [credential], other
- * 
+ *
  * @param params the client parameters to sort
  */
 export function sortClientParameters(params: Array<rust.ClientParameter>): void {
@@ -109,7 +109,7 @@ const tds = new turndownService({ codeBlockStyle: 'fenced', fence: '```' });
  * applies certain formatting to a doc string.
  * if the doc string doesn't require formatting
  * the original doc string is returned.
- * 
+ *
  * @param docs the doc string to format
  * @returns the original or formatted doc string
  */

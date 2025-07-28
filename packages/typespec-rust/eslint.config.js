@@ -19,13 +19,8 @@ export default tseslint.config([
       },
     ],
     rules: {
-      indent: [
-        'warn',
-        2,
-        {
-          SwitchCase: 1,
-        },
-      ],
+      // Disable indent rule to avoid conflicts with Prettier
+      indent: 'off',
       '@typescript-eslint/no-empty-object-type': [
         'error',
         {

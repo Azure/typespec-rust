@@ -20,7 +20,7 @@ export class Context {
 
   /**
    * instantiates a new Context for the provided crate
-   * 
+   *
    * @param crate the crate for which the context will be constructed
    */
   constructor(crate: rust.Crate) {
@@ -93,7 +93,7 @@ export class Context {
   /**
    * returns the impl TryFrom<T> for RequestContent<T> where T is type.
    * if no impl is required, it returns undefined.
-   * 
+   *
    * @param model the model for which to implement TryFrom
    * @param use the use statement builder currently in scope
    * @returns the impl TryFrom<T> block for type or undefined
@@ -120,7 +120,7 @@ export class Context {
 
   /**
    * returns the body format for the provided model
-   * 
+   *
    * @param model the model for which to determine the format
    * @returns the body format
    */
@@ -139,7 +139,7 @@ export class Context {
   /**
    * returns an azure_core::http::Page impl for the provided model
    * or undefined if the model isn't a paged response type.
-   * 
+   *
    * @param model the model for which to create the Page impl
    * @param use the use statement builder currently in scope
    * @returns the Page impl or undefined

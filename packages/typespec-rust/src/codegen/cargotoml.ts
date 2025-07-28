@@ -1,13 +1,13 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import * as rust from '../codemodel/index.js';
 
 /**
  * emits the Cargo.toml file for the provided crate
- * 
+ *
  * @param crate the crate for which to emit a Cargo.toml file
  * @returns the contents of the Cargo.toml file
  */
@@ -22,7 +22,13 @@ export function emitCargoToml(crate: rust.Crate): string {
     content += '\n[dependencies]\n';
     for (const dependency of crate.dependencies) {
       // dependency versions are managed by the workspace's Cargo.toml file
-      const features = dependency.features.length > 0 ? `, features = [${dependency.features.sort().map(f => `"${f}"`).join(', ')}]` : '';
+      const features =
+        dependency.features.length > 0
+          ? `, features = [${dependency.features
+              .sort()
+              .map((f) => `"${f}"`)
+              .join(', ')}]`
+          : '';
       content += `${dependency.name} = { workspace = true${features} }\n`;
     }
   }

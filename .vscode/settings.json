@@ -1,15 +1,12 @@
 {
-    "cSpell.enabled": true,
-    "editor.formatOnSave": true,
-    "markdownlint.config": {
-        "MD024": false,
-    },
-    "markdownlint.ignore": [
-        "**/SECURITY.md",
-        "LICENSE"
-    ],
-    "yaml.format.printWidth": 240,
-    "[powershell]": {
-        "editor.defaultFormatter": "ms-vscode.powershell",
-    },
+  "cSpell.enabled": true,
+  "editor.formatOnSave": true,
+  "markdownlint.config": {
+    "MD024": false
+  },
+  "markdownlint.ignore": ["**/SECURITY.md", "LICENSE"],
+  "yaml.format.printWidth": 240,
+  "[powershell]": {
+    "editor.defaultFormatter": "ms-vscode.powershell"
+  }
 }

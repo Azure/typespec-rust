@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 // cspell: ignore ifblock
 
@@ -14,7 +14,8 @@ import { describe, it } from 'vitest';
 describe('typespec-rust: codegen', () => {
   describe('generateCargoTomlFile', () => {
     it('default Cargo.toml file', () => {
-      const expected = '[package]\n' +
+      const expected =
+        '[package]\n' +
         'name = "test_crate"\n' +
         'version = "1.2.3"\n' +
         'authors.workspace = true\n' +
@@ -29,7 +30,8 @@ describe('typespec-rust: codegen', () => {
     });
 
     it('default Cargo.toml file with dependencies', () => {
-      const expected = '[package]\n' +
+      const expected =
+        '[package]\n' +
         'name = "test_crate"\n' +
         'version = "1.2.3"\n' +
         'authors.workspace = true\n' +
@@ -75,12 +77,11 @@ describe('typespec-rust: codegen', () => {
       const indent = new helpers.indentation(0);
       const ifblock = helpers.buildIfBlock(indent, {
         condition: 'foo == bar',
-        body: (indent) => { return `${indent.get()}bing = bong;\n`; }
+        body: (indent) => {
+          return `${indent.get()}bing = bong;\n`;
+        },
       });
-      const expected =
-        'if foo == bar {\n' +
-        '    bing = bong;\n' +
-        '}';
+      const expected = 'if foo == bar {\n' + '    bing = bong;\n' + '}';
       strictEqual(ifblock, expected);
     });
 
@@ -92,14 +93,16 @@ describe('typespec-rust: codegen', () => {
           body: (ind) => {
             return `${ind.get()}${helpers.buildIfBlock(ind, {
               condition: 'foo == bar',
-              body: (ind) => `${ind.get()}bing = bong;\n`
+              body: (ind) => `${ind.get()}bing = bong;\n`,
             })}\n`;
-          }
+          },
         },
         {
           pattern: 'None',
-          body: (ind) => { return `${ind.get()}the none branch;\n`; }
-        }
+          body: (ind) => {
+            return `${ind.get()}the none branch;\n`;
+          },
+        },
       ]);
       const expected =
         'match cond {\n' +
@@ -124,15 +127,17 @@ describe('typespec-rust: codegen', () => {
           body: (ind) => {
             return `${ind.get()}${helpers.buildIfBlock(ind, {
               condition: 'foo == bar',
-              body: (ind) => `${ind.get()}bing = bong;\n`
+              body: (ind) => `${ind.get()}bing = bong;\n`,
             })}\n`;
-          }
+          },
         },
         {
           pattern: 'None',
           returns: 'Returns2',
-          body: (ind) => { return `${ind.get()}the none branch;\n`; }
-        }
+          body: (ind) => {
+            return `${ind.get()}the none branch;\n`;
+          },
+        },
       ]);
       const expected =
         'match cond {\n' +

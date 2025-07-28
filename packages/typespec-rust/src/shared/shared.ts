@@ -1,13 +1,13 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import * as rust from '../codemodel/index.js';
 
 /**
  * if type is an Option<T>, returns the T, else returns type
- * 
+ *
  * @param type is the type to unwrap
  * @returns the wrapped type or the original type if it wasn't wrapped
  */
@@ -22,10 +22,10 @@ export function unwrapOption(type: rust.Type): rust.Type {
  * returns the object of type targetKind extracted from type or undefined.
  * if targetKind is wrapped within one or more types, their kind(s) must be specified in wrappedIn.
  * if the specified sequence of types (wrappedIn + targetKind) don't match, undefined is returned.
- * 
+ *
  * e.g. to obtain the underlying 'str' from a &str, the call would be made as follows.
  * const asStr = asTypeOf<rust.StringSlice>(objInstance, 'str', 'ref');
- * 
+ *
  * @param type the object instance from which to extract targetKind
  * @param targetKind the target type's kind when performing the conversion. note that this value MUST match the kind for the specified generic type parameter
  * @param wrappedIn the kinds of any wrapper types that contain targetKind. can be empty if targetKind isn't wrapped.
@@ -55,7 +55,7 @@ export function asTypeOf<T extends rust.Type>(type: rust.Type, targetKind: rust.
  * returns a wrapper type's inner type.
  * e.g. for a rust.Vector, return's the value of Vector.type.
  * if the type doesn't wrap another type, undefined is returned.
- * 
+ *
  * @param type the type to unwrap
  * @returns the inner type or undefined
  */

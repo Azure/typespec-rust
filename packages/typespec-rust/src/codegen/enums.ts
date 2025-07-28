@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import { Context } from './context.js';
 import * as helpers from './helpers.js';
@@ -11,7 +11,7 @@ import * as rust from '../codemodel/index.js';
 /**
  * returns the emitted enum types, or undefined if the
  * crate contains no enum types.
- * 
+ *
  * @param crate the crate for which to emit enums
  * @param context the context for the provided crate
  * @returns the enum content or undefined

@@ -1,5 +1,5 @@
-
 <!-- cspell: ignore nocapture RUSTFLAGS Dwarnings -->
+
 # Contributing Guide
 
 This guide explains how to contribute to the TypeSpec Rust emitter project, including how to build, test, and develop the codebase.
@@ -7,7 +7,7 @@ This guide explains how to contribute to the TypeSpec Rust emitter project, incl
 ## Prerequisites
 
 - **Node.js** (>=20.0.0) - Required for the TypeScript emitter
-- **pnpm** (10.10.0) - Package manager for Node.js dependencies  
+- **pnpm** (10.10.0) - Package manager for Node.js dependencies
 - **Rust** (1.80+) - Required for building and testing generated Rust code
 - **Git** - Version control
 
@@ -154,7 +154,7 @@ cargo test --no-fail-fast
 Stop the spector server when done:
 
 ```bash
-cd packages/typespec-rust  
+cd packages/typespec-rust
 pnpm spector --stop
 ```
 
@@ -198,7 +198,7 @@ cd packages/typespec-rust
 pnpm eslint
 ```
 
-#### Linting Rust Code  
+#### Linting Rust Code
 
 ```bash
 cd packages/typespec-rust/test
@@ -254,8 +254,8 @@ cargo fmt --all
    # TypeScript tests
    cd packages/typespec-rust
    pnpm test
-   
-   # Rust integration tests  
+
+   # Rust integration tests
    pnpm spector --start
    cd test/spector
    cargo test
@@ -269,7 +269,7 @@ cargo fmt --all
    # TypeScript linting
    cd packages/typespec-rust
    pnpm eslint
-   
+
    # Rust linting
    cd test
    cargo clippy --workspace --all-features --all-targets
@@ -315,7 +315,7 @@ Update the version in `packages/typespec-rust/package.json` and document changes
 The CI pipeline runs the following checks on every pull request:
 
 1. **Build** - Compiles TypeScript emitter
-2. **Lint** - Runs ESLint on TypeScript code  
+2. **Lint** - Runs ESLint on TypeScript code
 3. **Test** - Runs TypeScript unit tests with coverage
 4. **Regenerate** - Regenerates all test crates and verifies no changes
 5. **Compile** - Builds all generated Rust crates

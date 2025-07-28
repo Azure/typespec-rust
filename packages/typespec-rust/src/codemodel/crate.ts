@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import * as client from './client.js';
 import * as types from './types.js';
@@ -71,7 +71,7 @@ export class Crate implements Crate {
     for (const dep of this.dependencies) {
       if (dep.name === dependency.name) {
         // merge in any features
-        dep.features = dep.features.concat(dependency.features.filter(item => !dep.features.includes(item)));
+        dep.features = dep.features.concat(dependency.features.filter((item) => !dep.features.includes(item)));
         return;
       }
     }
@@ -80,34 +80,54 @@ export class Crate implements Crate {
 
   /** lexicographically sorts all content */
   sortContent(): void {
-    const sortAscending = function(a: string, b: string): number {
+    const sortAscending = function (a: string, b: string): number {
       return a < b ? -1 : a > b ? 1 : 0;
     };
 
-    this.dependencies.sort((a: CrateDependency, b: CrateDependency) => { return sortAscending(a.name, b.name); });
-    this.enums.sort((a: types.Enum, b: types.Enum) => { return sortAscending(a.name, b.name); });
+    this.dependencies.sort((a: CrateDependency, b: CrateDependency) => {
+      return sortAscending(a.name, b.name);
+    });
+    this.enums.sort((a: types.Enum, b: types.Enum) => {
+      return sortAscending(a.name, b.name);
+    });
     for (const rustEnum of this.enums) {
-      rustEnum.values.sort((a: types.EnumValue, b: types.EnumValue) => { return sortAscending(a.name, b.name); });
+      rustEnum.values.sort((a: types.EnumValue, b: types.EnumValue) => {
+        return sortAscending(a.name, b.name);
+      });
     }
-    this.models.sort((a: types.MarkerType | types.Model, b: types.MarkerType | types.Model) => { return sortAscending(a.name, b.name); });
+    this.models.sort((a: types.MarkerType | types.Model, b: types.MarkerType | types.Model) => {
+      return sortAscending(a.name, b.name);
+    });
     for (const model of this.models) {
       if (model.kind === 'marker') {
         continue;
       }
-      model.fields.sort((a: types.ModelField, b: types.ModelField) => { return sortAscending(a.name, b.name); });
+      model.fields.sort((a: types.ModelField, b: types.ModelField) => {
+        return sortAscending(a.name, b.name);
+      });
     }
-    this.clients.sort((a: client.Client, b: client.Client) => { return sortAscending(a.name, b.name); });
+    this.clients.sort((a: client.Client, b: client.Client) => {
+      return sortAscending(a.name, b.name);
+    });
     for (const client of this.clients) {
-      client.fields.sort((a: types.StructField, b: types.StructField) => { return sortAscending(a.name, b.name); });
-      client.methods.sort((a: client.MethodType, b: client.MethodType) => { return sortAscending(a.name, b.name); });
+      client.fields.sort((a: types.StructField, b: types.StructField) => {
+        return sortAscending(a.name, b.name);
+      });
+      client.methods.sort((a: client.MethodType, b: client.MethodType) => {
+        return sortAscending(a.name, b.name);
+      });
       if (client.constructable) {
-        client.constructable.options.type.fields.sort((a: types.StructField, b: types.StructField) => { return sortAscending(a.name, b.name); });
+        client.constructable.options.type.fields.sort((a: types.StructField, b: types.StructField) => {
+          return sortAscending(a.name, b.name);
+        });
       }
       for (const method of client.methods) {
         if (method.kind === 'clientaccessor') {
           continue;
         }
-        method.options.type.fields.sort((a: types.StructField, b: types.StructField) => { return sortAscending(a.name, b.name); });
+        method.options.type.fields.sort((a: types.StructField, b: types.StructField) => {
+          return sortAscending(a.name, b.name);
+        });
         method.responseHeaders?.headers.sort((a: client.ResponseHeader, b: client.ResponseHeader) => sortAscending(a.header, b.header));
       }
     }

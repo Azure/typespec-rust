@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
 import { Context } from './context.js';
@@ -32,7 +32,7 @@ export interface Models {
 /**
  * returns the emitted model types, or empty if the
  * crate contains no model types.
- * 
+ *
  * @param crate the crate for which to emit models
  * @param context the context for the provided crate
  * @returns the model content or empty
@@ -53,7 +53,7 @@ export function emitModels(crate: rust.Crate, context: Context): Models {
 
 /**
  * the implementation of emitModels
- * 
+ *
  * @param crate the crate for which to emit models
  * @param context the context for the provided crate
  * @param visibility the visibility of the models to emit
@@ -182,7 +182,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
 /**
  * returns serde helpers for public models.
  * if no helpers are required, undefined is returned.
- * 
+ *
  * @returns the model serde helpers content or undefined
  */
 function emitModelsSerde(): helpers.Module | undefined {
@@ -207,7 +207,7 @@ function emitModelsSerde(): helpers.Module | undefined {
 /**
  * returns any trait impls for public models.
  * if no helpers are required, undefined is returned.
- * 
+ *
  * @param crate the crate for which to emit model serde helpers
  * @param context the context for the provided crate
  * @returns the model serde helpers content or undefined
@@ -257,7 +257,7 @@ function emitModelImpls(crate: rust.Crate, context: Context): helpers.Module | u
 /**
  * returns the value for the rename option in a serde derive macro
  * or undefined if no rename is required.
- * 
+ *
  * @param field the field for which to emit a rename
  * @returns the value for the rename option or undefined
  */
@@ -315,7 +315,7 @@ const xmlListWrappers = new Map<string, XMLListWrapper>();
 /**
  * gets or creates an XMLListWrapper for the specified model field.
  * assumes that it's been determined that the wrapper is required.
- * 
+ *
  * @param field the field for which to create an XMLWrapper
  * @returns the XMLListWrapper for the provided field
  */
@@ -392,7 +392,7 @@ function getXMLListWrapper(field: rust.ModelField): XMLListWrapper {
 /**
  * emits helper types for XML lists or returns undefined
  * if no XMLListWrappers are required.
- * 
+ *
  * @returns the helper models for wrapped XML lists or undefined
  */
 function emitXMLListWrappers(): helpers.Module | undefined {
@@ -401,7 +401,9 @@ function emitXMLListWrappers(): helpers.Module | undefined {
   }
 
   const wrapperTypes = Array.from(xmlListWrappers.values());
-  wrapperTypes.sort((a, b) => { return helpers.sortAscending(a.name, b.name); });
+  wrapperTypes.sort((a, b) => {
+    return helpers.sortAscending(a.name, b.name);
+  });
 
   const indent = new helpers.indentation();
   const use = new Use('modelsOther');
@@ -463,7 +465,7 @@ const serdeHelpers = new Map<string, rust.ModelField>();
 /**
  * defines serde helpers for encodedBytes and offsetDateTime types.
  * any other type will cause this function to throw.
- * 
+ *
  * @param field the model field for which to build serde helpers
  * @param serdeParams the params that will be passed to the serde annotation
  * @param use the use statement builder currently in scope
@@ -588,7 +590,7 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
 /**
  * emits serde helper modules or returns undefined
  * if no serde helpers are required.
- * 
+ *
  * @param use the use statement builder at the file scope
  * @returns the helper modules or undefined
  */
@@ -627,7 +629,7 @@ function emitSerDeHelpers(use: Use): string | undefined {
 
 /**
  * constructs a serde serializer function for a literal value
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param name the name of the serialization function
  * @param field the model field containing a literal to serialize
@@ -658,13 +660,16 @@ function buildLiteralSerialize(indent: helpers.indentation, name: string, field:
 
   const toSerialize = `serializer.serialize_${serializeMethod}(${serializeValue})\n`;
   if (field.optional) {
-    content += `${indent.get()}${helpers.buildMatch(indent, `${fieldVar}.is_some()`, [{
-      pattern: 'true',
-      body: (indent) => `${indent.get()}${toSerialize}`,
-    }, {
-      pattern: 'false',
-      body: (indent) => `${indent.get()}serializer.serialize_none()\n`,
-    }])}`
+    content += `${indent.get()}${helpers.buildMatch(indent, `${fieldVar}.is_some()`, [
+      {
+        pattern: 'true',
+        body: (indent) => `${indent.get()}${toSerialize}`,
+      },
+      {
+        pattern: 'false',
+        body: (indent) => `${indent.get()}serializer.serialize_none()\n`,
+      },
+    ])}`;
   } else {
     content += `${indent.get()}${toSerialize}`;
   }
@@ -675,7 +680,7 @@ function buildLiteralSerialize(indent: helpers.indentation, name: string, field:
 
 /**
  * constructs a serde deserialize function
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param type the type for which to build the helper
  * @param use the use statement builder currently in scope
@@ -691,17 +696,18 @@ function buildDeserialize(indent: helpers.indentation, type: rust.Type, use: Use
   content += `${indent.get()}${helpers.buildMatch(indent, 'to_deserialize', [
     {
       pattern: 'Some(to_deserialize)',
-      body: (indent) => recursiveBuildDeserializeBody(indent, use, {
-        caller: 'start',
-        type: type,
-        srcVar: 'to_deserialize',
-        destVar: new VarStack('decoded'),
-      }),
+      body: (indent) =>
+        recursiveBuildDeserializeBody(indent, use, {
+          caller: 'start',
+          type: type,
+          srcVar: 'to_deserialize',
+          destVar: new VarStack('decoded'),
+        }),
     },
     {
       pattern: 'None',
       body: (indent) => `${indent.get()}Ok(${type.kind === 'option' ? 'None' : `<${getSerDeTypeDeclaration(type, 'result')}>::default()`})\n`,
-    }
+    },
   ])}\n`;
   content += `${indent.pop().get()}}\n`;
   return content;
@@ -709,7 +715,7 @@ function buildDeserialize(indent: helpers.indentation, type: rust.Type, use: Use
 
 /**
  * constructs a serde serialize function
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param type the type for which to build the helper
  * @param use the use statement builder currently in scope
@@ -752,7 +758,7 @@ class VarStack {
 
   /**
    * returns the var name at the top of the stack
-   * 
+   *
    * @returns the var name
    */
   get(): string {
@@ -762,7 +768,7 @@ class VarStack {
   /**
    * returns the previous var name on the stack.
    * if push() has not been called, an error is thrown.
-   * 
+   *
    * @returns the previous var name
    */
   prev(): string {
@@ -774,7 +780,7 @@ class VarStack {
 
   /**
    * adds the next var to the top of the stack
-   * 
+   *
    * @returns this with updated stack state
    */
   push(): VarStack {
@@ -809,7 +815,7 @@ interface stateCtx {
   type: rust.Type;
 
   /** the var name of the content currently being processed */
-  srcVar: string
+  srcVar: string;
 
   /** the stack of destination var names */
   destVar: VarStack;
@@ -817,7 +823,7 @@ interface stateCtx {
 
 /**
  * recursive state machine to construct the body of the deserialize function.
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param use the use statement builder currently in scope
  * @param ctx the current context of the state machine
@@ -827,7 +833,7 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
   /**
    * adds the var in val to the collection, or does nothing
    * depending on the value of caller.
-   * 
+   *
    * when valAsDefault is true, the value in val is returned.
    * else the empty string is returned.
    */
@@ -910,7 +916,7 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
 
 /**
  * recursive state machine to construct the body of the serialize function.
- * 
+ *
  * @param indent the indentation helper currently in scope
  * @param use the use statement builder currently in scope
  * @param ctx the current context of the state machine
@@ -919,7 +925,7 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
 function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx: stateCtx): string {
   /** inserts the var in val into the current HashMap<T, U> */
   const hashMapInsert = function (val: string): string {
-    return `${indent.get()}${ctx.destVar.prev()}.insert(kv.0, ${val});\n`
+    return `${indent.get()}${ctx.destVar.prev()}.insert(kv.0, ${val});\n`;
   };
 
   let content = '';
@@ -983,19 +989,21 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
       break;
     }
     case 'option': {
-      content = indent.get() + helpers.buildIfBlock(indent, {
-        condition: `let Some(${ctx.srcVar}) = ${ctx.srcVar}`,
-        body: (indent) => {
-          let body = recursiveBuildSerializeBody(indent, use, {
-            caller: 'option',
-            type: (<rust.Option>ctx.type).type,
-            srcVar: ctx.srcVar,
-            destVar: ctx.destVar,
-          });
-          body += `${indent.get()}<${getSerDeTypeDeclaration(ctx.type, 'serialize')}>::serialize(&Some(${ctx.destVar.get()}), serializer)\n`;
-          return body;
-        }
-      });
+      content =
+        indent.get() +
+        helpers.buildIfBlock(indent, {
+          condition: `let Some(${ctx.srcVar}) = ${ctx.srcVar}`,
+          body: (indent) => {
+            let body = recursiveBuildSerializeBody(indent, use, {
+              caller: 'option',
+              type: (<rust.Option>ctx.type).type,
+              srcVar: ctx.srcVar,
+              destVar: ctx.destVar,
+            });
+            body += `${indent.get()}<${getSerDeTypeDeclaration(ctx.type, 'serialize')}>::serialize(&Some(${ctx.destVar.get()}), serializer)\n`;
+            return body;
+          },
+        });
       content += ` else {\n${indent.push().get()}serializer.serialize_none()\n${indent.pop().get()}}\n`;
       break;
     }
@@ -1040,13 +1048,13 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
  * the target type declarations in the serde helpers.
  * the type declarations are slightly different depending on the usage
  * context and the underlying generic type.
- * 
+ *
  * @param type is the Rust type for which to emit the declaration
  * @param usage defines the context in which the type is being used.
  *              serialize - type is used in the serialize function
  *            deserialize - type is used in the deserialize function
  *                 result - type is used as the result type in the deserialize function
- * @returns 
+ * @returns
  */
 function getSerDeTypeDeclaration(type: rust.Type, usage: 'serialize' | 'deserialize' | 'result'): string {
   switch (type.kind) {
@@ -1067,7 +1075,7 @@ function getSerDeTypeDeclaration(type: rust.Type, usage: 'serialize' | 'deserial
 
 /**
  * returns true if the provided type should be encoded as a string.
- * 
+ *
  * @param type the type for which to check the encoding
  * @returns true if string encoding is required
  */

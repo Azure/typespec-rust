@@ -21,51 +21,51 @@ const compiler = pkgRoot + 'node_modules/@typespec/compiler/cmd/tsp.js';
 const httpSpecsGroup = {
   //'spector_apikey': {input: 'authentication/api-key'},
   //'spector_custom': {input: 'authentication/http/custom'},
-  'spector_oauth2': {input: 'authentication/oauth2'},
-  'spector_unionauth': {input: 'authentication/union'},
-  'spector_bytes': {input: 'encode/bytes'}, // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
-  'spector_datetime': {input: 'encode/datetime'},
-  'spector_duration': {input: 'encode/duration'},
-  'spector_numeric': {input: 'encode/numeric'},
-  'spector_bodyoptional': {input: 'parameters/body-optionality'},
-  'spector_basicparams': {input: 'parameters/basic'},
-  'spector_collectionfmt': {input: 'parameters/collection-format'},
-  'spector_spread': {input: 'parameters/spread'},
-  'spector_contentneg': {input: 'payload/content-negotiation'},
-  'spector_jmergepatch': {input: 'payload/json-merge-patch'},
+  spector_oauth2: { input: 'authentication/oauth2' },
+  spector_unionauth: { input: 'authentication/union' },
+  spector_bytes: { input: 'encode/bytes' }, // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
+  spector_datetime: { input: 'encode/datetime' },
+  spector_duration: { input: 'encode/duration' },
+  spector_numeric: { input: 'encode/numeric' },
+  spector_bodyoptional: { input: 'parameters/body-optionality' },
+  spector_basicparams: { input: 'parameters/basic' },
+  spector_collectionfmt: { input: 'parameters/collection-format' },
+  spector_spread: { input: 'parameters/spread' },
+  spector_contentneg: { input: 'payload/content-negotiation' },
+  spector_jmergepatch: { input: 'payload/json-merge-patch' },
   //'spector_corepageable': {input: 'payload/pageable'}, // TODO: https://github.com/Azure/typespec-rust/issues/508
   //'spector_mediatype': {input: 'payload/media-type'},
   //'spector_multipart': {input: 'payload/multipart'},
-  'spector_xml': {input: 'payload/xml'},
-  'spector_routes': {input: 'routes'},
-  'spector_jsonencodedname': {input: 'serialization/encoded-name/json'},
-  'spector_noendpoint': {input: 'server/endpoint/not-defined'},
-  'spector_multiple': {input: 'server/path/multiple'},
-  'spector_single': {input: 'server/path/single'},
-  'spector_unversioned': {input: 'server/versions/not-versioned'},
-  'spector_versioned': {input: 'server/versions/versioned'},
+  spector_xml: { input: 'payload/xml' },
+  spector_routes: { input: 'routes' },
+  spector_jsonencodedname: { input: 'serialization/encoded-name/json' },
+  spector_noendpoint: { input: 'server/endpoint/not-defined' },
+  spector_multiple: { input: 'server/path/multiple' },
+  spector_single: { input: 'server/path/single' },
+  spector_unversioned: { input: 'server/versions/not-versioned' },
+  spector_versioned: { input: 'server/versions/versioned' },
   //'spector_condreq': {input: 'special-headers/conditional-request'},
   //'spector_repeatability': {input: 'special-headers/repeatability'},
-  'spector_specialwords': {input: 'special-words'},
-  'spector_array': {input: 'type/array'},           // needs additional codegen work before we can add tests
-  'spector_dictionary': {input: 'type/dictionary'}, // needs additional codegen work before we can add tests
-  'spector_extensible': {input: 'type/enum/extensible'},
-  'spector_fixed': {input: 'type/enum/fixed'},
-  'spector_empty': {input: 'type/model/empty'},
+  spector_specialwords: { input: 'special-words' },
+  spector_array: { input: 'type/array' }, // needs additional codegen work before we can add tests
+  spector_dictionary: { input: 'type/dictionary' }, // needs additional codegen work before we can add tests
+  spector_extensible: { input: 'type/enum/extensible' },
+  spector_fixed: { input: 'type/enum/fixed' },
+  spector_empty: { input: 'type/model/empty' },
   //'spector_enumdisc': {input: 'type/model/inheritance/enum-discriminator'},
-  'spector_nodisc': {input: 'type/model/inheritance/not-discriminated'},
+  spector_nodisc: { input: 'type/model/inheritance/not-discriminated' },
   //'spector_recursive': {input: 'type/model/inheritance/recursive'},
   //'spector_singledisc': {input: 'type/model/inheritance/single-discriminator'},
-  'spector_usage': {input: 'type/model/usage'},
+  spector_usage: { input: 'type/model/usage' },
   //'spector_visibility': {input: 'type/model/visibility'},
   //'spector_addlprops': {input: 'type/property/additional-properties'},
-  'spector_nullable': {input: 'type/property/nullable'},
-  'spector_optionality': {input: 'type/property/optionality'},
-  'spector_valuetypes': {input: 'type/property/value-types'},
-  'spector_scalar': {input: 'type/scalar'},
+  spector_nullable: { input: 'type/property/nullable' },
+  spector_optionality: { input: 'type/property/optionality' },
+  spector_valuetypes: { input: 'type/property/value-types' },
+  spector_scalar: { input: 'type/scalar' },
   //'spector_union': {input: 'type/union'},
   //'spector_veradded': {input: 'versioning/added'},
-  'spector_madeoptional': {input: 'versioning/madeOptional'},
+  spector_madeoptional: { input: 'versioning/madeOptional' },
   //'spector_verremoved': {input: 'versioning/removed'},
   //'spector_renamedfrom': {input: 'versioning/renamedFrom'},
   //'spector_returntypechanged': {input: 'versioning/returnTypeChangedFrom'},
@@ -74,40 +74,40 @@ const httpSpecsGroup = {
 
 const azureHttpSpecsGroup = {
   //'spector_access': {input: 'azure/client-generator-core/access'},
-  'spector_apiverheader': {input: 'azure/client-generator-core/api-version/header/client.tsp'},
-  'spector_apiverpath': {input: 'azure/client-generator-core/api-version/path/client.tsp'},
-  'spector_apiverquery': {input: 'azure/client-generator-core/api-version/query/client.tsp'},
-  'spector_clientinit': {input: 'azure/client-generator-core/client-initialization/client.tsp'},
-  'spector_flattenproperty': {input: 'azure/client-generator-core/flatten-property'},
-  'spector_coreusage': {input: 'azure/client-generator-core/usage'},
-  'spector_basic': {input: 'azure/core/basic'},
+  spector_apiverheader: { input: 'azure/client-generator-core/api-version/header/client.tsp' },
+  spector_apiverpath: { input: 'azure/client-generator-core/api-version/path/client.tsp' },
+  spector_apiverquery: { input: 'azure/client-generator-core/api-version/query/client.tsp' },
+  spector_clientinit: { input: 'azure/client-generator-core/client-initialization/client.tsp' },
+  spector_flattenproperty: { input: 'azure/client-generator-core/flatten-property' },
+  spector_coreusage: { input: 'azure/client-generator-core/usage' },
+  spector_basic: { input: 'azure/core/basic' },
   //'spector_lrorpc': {input: 'azure/core/lro/rpc'},
-  'spector_lrostd': {input: 'azure/core/lro/standard'},
+  spector_lrostd: { input: 'azure/core/lro/standard' },
   //'spector_coremodel': {input: 'azure/core/model'},
-  'spector_corepage': {input: 'azure/core/page'},
+  spector_corepage: { input: 'azure/core/page' },
   //'spector_corescalar': {input: 'azure/core/scalar'},
   //'spector_traits': {input: 'azure/core/traits'},
-  'spector_azureduration': {input: 'azure/encode/duration'},
-  'spector_azurepageable': {input: 'azure/payload/pageable'},
-  'spector_azurebasic': {input: 'azure/example/basic'},
-  'spector_armcommon': {input: 'azure/resource-manager/common-properties'},
-  'spector_armnonresource': {input: 'azure/resource-manager/non-resource'},
-  'spector_armoptemplates': {input: 'azure/resource-manager/operation-templates'},
-  'spector_armresources': {input: 'azure/resource-manager/resources'},
-  'spector_naming': {input: 'client/naming'},
-  'spector_clientopgroup': {input: 'client/structure/client-operation-group/client.tsp'},
-  'spector_default': {input: 'client/structure/default/client.tsp'},
-  'spector_multiclient': {input: 'client/structure/multi-client/client.tsp'},
-  'spector_renamedop': {input: 'client/structure/renamed-operation/client.tsp'},
-  'spector_twoop': {input: 'client/structure/two-operation-group/client.tsp'},
-  'spector_srvdrivenold': {input: 'resiliency/srv-driven/old.tsp', output: 'resiliency/srv-driven/old'},
-  'spector_srvdrivennew': {input: 'resiliency/srv-driven', output: 'resiliency/srv-driven/new'},
+  spector_azureduration: { input: 'azure/encode/duration' },
+  spector_azurepageable: { input: 'azure/payload/pageable' },
+  spector_azurebasic: { input: 'azure/example/basic' },
+  spector_armcommon: { input: 'azure/resource-manager/common-properties' },
+  spector_armnonresource: { input: 'azure/resource-manager/non-resource' },
+  spector_armoptemplates: { input: 'azure/resource-manager/operation-templates' },
+  spector_armresources: { input: 'azure/resource-manager/resources' },
+  spector_naming: { input: 'client/naming' },
+  spector_clientopgroup: { input: 'client/structure/client-operation-group/client.tsp' },
+  spector_default: { input: 'client/structure/default/client.tsp' },
+  spector_multiclient: { input: 'client/structure/multi-client/client.tsp' },
+  spector_renamedop: { input: 'client/structure/renamed-operation/client.tsp' },
+  spector_twoop: { input: 'client/structure/two-operation-group/client.tsp' },
+  spector_srvdrivenold: { input: 'resiliency/srv-driven/old.tsp', output: 'resiliency/srv-driven/old' },
+  spector_srvdrivennew: { input: 'resiliency/srv-driven', output: 'resiliency/srv-driven/new' },
 };
 
 const args = process.argv.slice(2);
 var filter = undefined;
 const switches = [];
-for (var i = 0 ; i < args.length; i += 1) {
+for (var i = 0; i < args.length; i += 1) {
   const filterArg = args[i].match(/--filter=(?<filter>\w+)/);
   if (filterArg) {
     filter = filterArg.groups['filter'];
@@ -123,15 +123,15 @@ for (var i = 0 ; i < args.length; i += 1) {
 }
 
 if (filter !== undefined) {
-  console.log("Using filter: " + filter)
+  console.log('Using filter: ' + filter);
 }
 
 function should_generate(name) {
   if (filter !== undefined) {
     const re = new RegExp(filter);
-    return re.test(name)
+    return re.test(name);
   }
-  return true
+  return true;
 }
 
 const appconfiguration = pkgRoot + 'test/tsp/AppConfiguration';
@@ -146,8 +146,8 @@ generate('blob_storage', blob_storage, 'test/sdk/blob_storage', ['temp-omit-doc-
 const serde_tests = pkgRoot + 'test/tsp/SerdeTests';
 generate('serde_tests', serde_tests, 'test/other/serde_tests');
 
-loopSpec(httpSpecsGroup, httpSpecs)
-loopSpec(azureHttpSpecsGroup, azureHttpSpecs)
+loopSpec(httpSpecsGroup, httpSpecs);
+loopSpec(azureHttpSpecsGroup, azureHttpSpecs);
 
 function loopSpec(group, root) {
   for (const crate in group) {
@@ -173,7 +173,7 @@ function loopSpec(group, root) {
 
 function generate(crate, input, outputDir, additionalArgs) {
   if (!should_generate(crate)) {
-    return
+    return;
   }
   if (additionalArgs === undefined) {
     additionalArgs = [];
@@ -182,7 +182,7 @@ function generate(crate, input, outputDir, additionalArgs) {
       additionalArgs[i] = `--option="@azure-tools/typespec-rust.${additionalArgs[i]}"`;
     }
   }
-  sem.take(function() {
+  sem.take(function () {
     // default to main.tsp if a .tsp file isn't specified in the input
     if (input.lastIndexOf('.tsp') === -1) {
       input += '/main.tsp';
@@ -201,7 +201,7 @@ function generate(crate, input, outputDir, additionalArgs) {
       // delete all content before regenerating as it makes it
       // really easy to determine if something failed to generated
       fs.rmSync(path.join(fullOutputDir, 'src', 'generated'), { force: true, recursive: true });
-      exec(command, function(error, stdout, stderr) {
+      exec(command, function (error, stdout, stderr) {
         // print any output or error from the tsp compile command
         logResult(error, stdout, stderr);
       });

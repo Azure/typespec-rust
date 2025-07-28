@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-*  Copyright (c) Microsoft Corporation. All rights reserved.
-*  Licensed under the MIT License. See License.txt in the project root for license information.
-*--------------------------------------------------------------------------------------------*/
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 import { $lib } from '../src/lib.js';
 import { describe, expect, it } from 'vitest';
@@ -22,12 +22,14 @@ interface EmitterOptionsSchema {
 
 // Type guard to check if schema is properly structured
 function isEmitterOptionsSchema(schema: unknown): schema is EmitterOptionsSchema {
-  return typeof schema === 'object' && 
-         schema !== null && 
-         'properties' in schema && 
-         typeof (schema as Record<string, unknown>).properties === 'object' &&
-         'required' in schema &&
-         Array.isArray((schema as Record<string, unknown>).required);
+  return (
+    typeof schema === 'object' &&
+    schema !== null &&
+    'properties' in schema &&
+    typeof (schema as Record<string, unknown>).properties === 'object' &&
+    'required' in schema &&
+    Array.isArray((schema as Record<string, unknown>).required)
+  );
 }
 
 // Type guard to check if property has description
@@ -39,7 +41,7 @@ describe('typespec-rust: lib', () => {
   it('should have documentation for all emitter options', () => {
     const schema = $lib.emitter?.options;
     expect(schema).toBeDefined();
-    
+
     if (!isEmitterOptionsSchema(schema)) {
       throw new Error('Emitter options schema is not properly structured');
     }
@@ -59,7 +61,7 @@ describe('typespec-rust: lib', () => {
       const property = properties[optionName];
       expect(property).toBeDefined();
       expect(typeof property).toBe('object');
-      
+
       // Each property should have a description
       if (property) {
         expect(hasDescription(property)).toBe(true);
@@ -73,7 +75,7 @@ describe('typespec-rust: lib', () => {
   it('should have required options marked correctly', () => {
     const schema = $lib.emitter?.options;
     expect(schema).toBeDefined();
-    
+
     if (!isEmitterOptionsSchema(schema)) {
       throw new Error('Emitter options schema is not properly structured');
     }
@@ -85,13 +87,13 @@ describe('typespec-rust: lib', () => {
   it('should have appropriate default values for optional options', () => {
     const schema = $lib.emitter?.options;
     expect(schema).toBeDefined();
-    
+
     if (!isEmitterOptionsSchema(schema)) {
       throw new Error('Emitter options schema is not properly structured');
     }
 
     const properties = schema.properties;
-    
+
     // Check that boolean options have default values
     expect(properties['overwrite-cargo-toml']).toHaveProperty('default', false);
     expect(properties['overwrite-lib-rs']).toHaveProperty('default', false);
