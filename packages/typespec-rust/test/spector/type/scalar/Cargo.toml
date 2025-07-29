@@ -15,4 +15,4 @@ typespec_client_core = { workspace = true, features = ["derive"] }
 
 [dev-dependencies]
 tokio = { workspace = true }
-typespec_client_core = { workspace = true, features = ["decimal"] }
+typespec_client_core = { workspace = true, features = ["decimal", "json"] }
