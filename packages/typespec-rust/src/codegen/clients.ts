@@ -901,7 +901,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       // if we have a token value, i.e. from the next page, then use that value.
       // if not, then check if an optional token value was provided.
       body += indent.get() + helpers.buildIfBlock(indent, {
-        condition: `let PagerState::More(${headerParam.name}) = ${headerParam.name}.or_else(|| options.${headerParam.name}.clone())`,
+        condition: `let Some(${headerParam.name}) = ${headerParam.name}.or_else(|| options.${headerParam.name}.clone())`,
         body: (indent) => `${indent.get()}request.insert_header("${headerParam.header}", ${headerParam.name});\n`,
       })
       continue;
