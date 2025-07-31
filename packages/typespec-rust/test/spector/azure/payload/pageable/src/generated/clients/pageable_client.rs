@@ -7,7 +7,9 @@ use crate::generated::models::{PageableClientListOptions, PagedUser};
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{ClientOptions, Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
+    http::{
+        ClientOptions, Method, Pager, PagerResult, PagerState, Pipeline, RawResponse, Request, Url,
+    },
     json, tracing, Error, Result,
 };
 
@@ -79,10 +81,10 @@ impl PageableClient {
                 .query_pairs_mut()
                 .append_pair("maxpagesize", &maxpagesize.to_string());
         }
-        Ok(Pager::from_callback(move |next_link: Option<Url>| {
+        Ok(Pager::from_callback(move |next_link: PagerState<Url>| {
             let url = match next_link {
-                Some(next_link) => next_link,
-                None => first_url.clone(),
+                PagerState::More(next_link) => next_link,
+                PagerState::Initial => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);
             request.insert_header("accept", "application/json");

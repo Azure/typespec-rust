@@ -12,8 +12,8 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
-        ClientOptions, Context, Method, NoFormat, Pager, PagerResult, Pipeline, RawResponse,
-        Request, RequestContent, Response, Url,
+        ClientOptions, Context, Method, NoFormat, Pager, PagerResult, PagerState, Pipeline,
+        RawResponse, Request, RequestContent, Response, Url,
     },
     json, tracing, Error, Result,
 };
@@ -353,9 +353,9 @@ impl BasicClient {
                 .append_pair("top", &top.to_string());
         }
         let api_version = self.api_version.clone();
-        Ok(Pager::from_callback(move |next_link: Option<Url>| {
+        Ok(Pager::from_callback(move |next_link: PagerState<Url>| {
             let url = match next_link {
-                Some(next_link) => {
+                PagerState::More(next_link) => {
                     let qp = next_link
                         .query_pairs()
                         .filter(|(name, _)| name.ne("api-version"));
@@ -367,7 +367,7 @@ impl BasicClient {
                         .append_pair("api-version", &api_version);
                     next_link
                 }
-                None => first_url.clone(),
+                PagerState::Initial => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);
             request.insert_header("accept", "application/json");

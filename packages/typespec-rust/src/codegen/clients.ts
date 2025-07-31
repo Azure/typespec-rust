@@ -901,7 +901,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       // if we have a token value, i.e. from the next page, then use that value.
       // if not, then check if an optional token value was provided.
       body += indent.get() + helpers.buildIfBlock(indent, {
-        condition: `let Some(${headerParam.name}) = ${headerParam.name}.or_else(|| options.${headerParam.name}.clone())`,
+        condition: `let PagerState:More(${headerParam.name}) = ${headerParam.name}.or_else(|| options.${headerParam.name}.clone())`,
         body: (indent) => `${indent.get()}request.insert_header("${headerParam.header}", ${headerParam.name});\n`,
       })
       continue;
@@ -1046,7 +1046,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
-  use.add('azure_core::http', 'Method', 'PagerResult', 'Request', 'Url');
+  use.add('azure_core::http', 'Method', 'PagerResult', 'PagerState', 'Request', 'Url');
   use.add('azure_core', bodyFormat, 'Result');
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));
@@ -1065,7 +1065,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   switch (method.strategy.kind) {
     case 'continuationToken': {
       const reqTokenParam = method.strategy.requestToken.name;
-      body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: Option<String>| {\n`;
+      body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: PagerState<String>| {\n`;
       body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ' : ''}url = first_url.clone();\n`;
       if (method.strategy.requestToken.kind === 'queryScalar') {
         // if the url already contains the token query param,
@@ -1073,7 +1073,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
         // it before appending the token for the next page.
         const reqTokenValue = method.strategy.requestToken.key;
         body += `${indent.get()}${helpers.buildIfBlock(indent, {
-          condition: `let Some(${reqTokenParam}) = ${reqTokenParam}`,
+          condition: `let PagerState::More(${reqTokenParam}) = ${reqTokenParam}`,
           body: (indent) => {
             let body = indent.get() + helpers.buildIfBlock(indent, {
               condition: `url.query_pairs().any(|(name, _)| name.eq("${reqTokenValue}"))`,
@@ -1093,9 +1093,9 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     }
     case 'nextLink': {
       const nextLinkName = method.strategy.nextLink.name;
-      body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: Option<Url>| {\n`;
+      body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>| {\n`;
       body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
-        pattern: `Some(${nextLinkName})`,
+        pattern: `PagerState::More(${nextLinkName})`,
         body: (indent) => {
           if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'queryScalar') {
             const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
@@ -1112,7 +1112,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
           return `${indent.get()} ${nextLinkName}\n`;
         }
       }, {
-        pattern: 'None',
+        pattern: 'PagerState::Initial',
         body: (indent) => `${indent.get()}${urlVar}.clone()\n`
       }]);
       body += ';\n';
