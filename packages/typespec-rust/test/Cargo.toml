@@ -18,6 +18,7 @@ members = [
     "spector/parameters/spread",
     "spector/payload/content-negotiation",
     "spector/payload/json-merge-patch",
+    #"spector/payload/pageable", # TODO: https://github.com/Azure/typespec-rust/issues/508
     "spector/payload/xml",
     "spector/type/array",
     "spector/type/dictionary",
@@ -73,7 +74,7 @@ rust-version = "1.80"
 
 [workspace.dependencies]
 async-trait = "0.1"
-azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "2f19ab6a018a034baaf390c90dd17d46874070e6", features = [
+azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "4bccdbd6f1ac657cfe80c45fcf9f422e5ff2135b", features = [
     "reqwest",
 ] }
 bytes = { version = "1.5.0" }
@@ -83,6 +84,6 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0.118" }
 time = { version = "0.3.36" }
 tokio = { version = "1.43.0", default-features = false, features = ["macros"] }
-typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "2f19ab6a018a034baaf390c90dd17d46874070e6", features = [
+typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "4bccdbd6f1ac657cfe80c45fcf9f422e5ff2135b", features = [
     "reqwest",
 ] }
