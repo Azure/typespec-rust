@@ -1,5 +1,11 @@
 # Release History
 
+## 0.20.0 (2025-01-13)
+
+### Features Added
+
+* Added support for parameter reinjection in pageable operations, allowing certain parameters from the original request to be automatically carried forward to subsequent page requests.
+
 ## 0.18.0 (2025-07-09)
 
 ### Breaking Changes
