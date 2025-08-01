@@ -19,11 +19,13 @@ describe('typespec-rust: tcgcadapter', () => {
       strictEqual(helpers.fixUpEnumValueNameWorker('V7.6_preview.1', 'string'), 'V7Dot6Preview1');
       strictEqual(helpers.fixUpEnumValueNameWorker('RSA_AES_KEY_WRAP_256', 'string'), 'RsaAesKeyWrap256');
       strictEqual(helpers.fixUpEnumValueNameWorker('CKM_AES_KEY_WRAP', 'string'), 'CkmAesKeyWrap');
-      strictEqual(helpers.fixUpEnumValueNameWorker('RSA1_5', 'string'), 'RSA1_5');
+      strictEqual(helpers.fixUpEnumValueNameWorker('RSA1_5', 'string'), 'Rsa1_5');
       strictEqual(helpers.fixUpEnumValueNameWorker('RSA-OAEP', 'string'), 'RsaOaep');
       strictEqual(helpers.fixUpEnumValueNameWorker('RSA-OAEP-256', 'string'), 'RsaOaep256');
       strictEqual(helpers.fixUpEnumValueNameWorker('RSA_OAEP256', 'string'), 'RsaOaep256');
       strictEqual(helpers.fixUpEnumValueNameWorker('P-256K', 'string'), 'P256K');
+      // Test variant names (TypeSpec enum variant names, not values)
+      strictEqual(helpers.fixUpEnumValueNameWorker('RSA', 'string'), 'Rsa');
       strictEqual(helpers.fixUpEnumValueNameWorker('42', 'integer'), 'IntegerValue42');
       strictEqual(helpers.fixUpEnumValueNameWorker('3.14', 'float'), 'FloatValue3Point14');
       strictEqual(helpers.fixUpEnumValueNameWorker('42', 'int32'), 'Int32Value42');
@@ -55,7 +57,7 @@ describe('typespec-rust: tcgcadapter', () => {
       strictEqual(helpers.fixUpEnumValueNameWorker('CKM_AES256_WRAP', 'string'), 'CkmAes256Wrap');
       
       // Edge cases
-      strictEqual(helpers.fixUpEnumValueNameWorker('ABCD', 'string'), 'ABCD'); // No clear boundaries
+      strictEqual(helpers.fixUpEnumValueNameWorker('ABCD', 'string'), 'Abcd'); // All caps should be lowercased
       strictEqual(helpers.fixUpEnumValueNameWorker('abcd', 'string'), 'Abcd'); // All lowercase
       strictEqual(helpers.fixUpEnumValueNameWorker('A', 'string'), 'A'); // Single character
       strictEqual(helpers.fixUpEnumValueNameWorker('123', 'string'), 'StringValue123'); // Numbers only

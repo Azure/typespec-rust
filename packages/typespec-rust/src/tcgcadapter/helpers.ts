@@ -114,6 +114,12 @@ export function fixUpEnumValueNameWorker(name: string, kind: tcgc.SdkBuiltInKind
         }
         name += wordBoundaryParts[i];
       }
+    } else {
+      // Single word with no detected boundaries - apply PascalCase if all letters
+      if (name.match(/^[A-Z]{2,}$/)) {
+        // All caps word like "RSA" or "ABCD" - apply PascalCase
+        name = codegen.pascalCase(name);
+      }
     }
   }
 
