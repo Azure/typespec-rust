@@ -74,6 +74,23 @@ export function fixUpEnumValueNameWorker(name: string, kind: tcgc.SdkBuiltInKind
     for (let i = 0; i < parts.length; ++i) {
       if (parts[i].match(/^[a-zA-Z]{2,}$/)) {
         parts[i] = codegen.pascalCase(parts[i]);
+      } else if (parts[i].length > 1 && parts[i].match(/[a-zA-Z]/) && parts[i].match(/\d/)) {
+        // For mixed alphanumeric parts like "OAEP256", apply word boundary detection
+        const wordBoundaryParts = parts[i].split(/(?<=\d)(?=[A-Za-z])|(?<=[a-zA-Z])(?=\d)|(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/);
+        if (wordBoundaryParts.length > 1) {
+          let transformedPart = '';
+          for (let j = 0; j < wordBoundaryParts.length; ++j) {
+            const subPart = wordBoundaryParts[j];
+            if (subPart.match(/^[a-zA-Z]{2,}$/)) {
+              transformedPart += codegen.pascalCase(subPart);
+            } else {
+              transformedPart += codegen.capitalize(subPart);
+            }
+          }
+          parts[i] = transformedPart;
+        } else {
+          parts[i] = codegen.capitalize(parts[i]);
+        }
       } else {
         parts[i] = codegen.capitalize(parts[i]);
       }

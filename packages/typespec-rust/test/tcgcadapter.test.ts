@@ -22,6 +22,7 @@ describe('typespec-rust: tcgcadapter', () => {
       strictEqual(helpers.fixUpEnumValueNameWorker('RSA1_5', 'string'), 'RSA1_5');
       strictEqual(helpers.fixUpEnumValueNameWorker('RSA-OAEP', 'string'), 'RsaOaep');
       strictEqual(helpers.fixUpEnumValueNameWorker('RSA-OAEP-256', 'string'), 'RsaOaep256');
+      strictEqual(helpers.fixUpEnumValueNameWorker('RSA_OAEP256', 'string'), 'RsaOaep256');
       strictEqual(helpers.fixUpEnumValueNameWorker('P-256K', 'string'), 'P256K');
       strictEqual(helpers.fixUpEnumValueNameWorker('42', 'integer'), 'IntegerValue42');
       strictEqual(helpers.fixUpEnumValueNameWorker('3.14', 'float'), 'FloatValue3Point14');
@@ -49,6 +50,9 @@ describe('typespec-rust: tcgcadapter', () => {
       strictEqual(helpers.fixUpEnumValueNameWorker('a-1-bb-BB', 'string'), 'A1BbBb');
       strictEqual(helpers.fixUpEnumValueNameWorker('test_123_ABC', 'string'), 'Test123Abc');
       strictEqual(helpers.fixUpEnumValueNameWorker('my-var-NAME', 'string'), 'MyVarName');
+      strictEqual(helpers.fixUpEnumValueNameWorker('RSA_OAEP256', 'string'), 'RsaOaep256');
+      strictEqual(helpers.fixUpEnumValueNameWorker('A256_CBCPAD', 'string'), 'A256Cbcpad');
+      strictEqual(helpers.fixUpEnumValueNameWorker('CKM_AES256_WRAP', 'string'), 'CkmAes256Wrap');
       
       // Edge cases
       strictEqual(helpers.fixUpEnumValueNameWorker('ABCD', 'string'), 'ABCD'); // No clear boundaries
