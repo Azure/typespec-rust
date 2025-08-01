@@ -330,7 +330,7 @@ export interface RequestContent<T extends RequestContentTypes = RequestContentTy
   /** the type of content sent in the request */
   content: T;
 
-  /** the wire format of the response body */
+  /** the wire format of the request body */
   format: Format;
 }
 
