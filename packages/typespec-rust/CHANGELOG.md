@@ -1,11 +1,12 @@
 # Release History
 
-## 0.20.0 (Unreleased)
+## 0.20.0 (2025-08-01)
 
 ### Breaking Changes
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
+* Adds `PagerState` support to pagers.
 * Adds a `Format` to `RequestContent<T, F>` when the request body is not JSON.
 
 ## 0.19.0 (2025-07-23)
