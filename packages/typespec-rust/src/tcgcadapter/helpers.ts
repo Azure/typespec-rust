@@ -66,60 +66,20 @@ export function fixUpEnumValueNameWorker(name: string, kind: tcgc.SdkBuiltInKind
   // application/*+json becomes ApplicationAllJson
   name = name.replace(/\/\*\+/, 'All');
 
-  // if we have a name like V2022_12_01_preview, we want to
-  // turn this into V2022_12_01Preview to make the linter happy
-  const parts = name.split(/(?:_|-|\/|\+|\.)/);
-  if (parts.length > 1) {
-    name = '';
-    for (let i = 0; i < parts.length; ++i) {
-      if (parts[i].match(/^[a-zA-Z]{2,}$/)) {
-        parts[i] = codegen.pascalCase(parts[i]);
-      } else if (parts[i].length > 1 && parts[i].match(/[a-zA-Z]/) && parts[i].match(/\d/)) {
-        // For mixed alphanumeric parts like "OAEP256", apply word boundary detection
-        const wordBoundaryParts = parts[i].split(/(?<=\d)(?=[A-Za-z])|(?<=[a-zA-Z])(?=\d)|(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/);
-        if (wordBoundaryParts.length > 1) {
-          let transformedPart = '';
-          for (let j = 0; j < wordBoundaryParts.length; ++j) {
-            const subPart = wordBoundaryParts[j];
-            if (subPart.match(/^[a-zA-Z]{2,}$/)) {
-              transformedPart += codegen.pascalCase(subPart);
-            } else {
-              transformedPart += codegen.capitalize(subPart);
-            }
-          }
-          parts[i] = transformedPart;
-        } else {
-          parts[i] = codegen.capitalize(parts[i]);
-        }
-      } else {
-        parts[i] = codegen.capitalize(parts[i]);
-      }
-      name += parts[i];
-      if (i + 1 < parts.length && parts[i].match(/\d+$/) && parts[i + 1].match(/^\d/)) {
-        name += '_';
-      }
-    }
-  } else {
-    // For strings without explicit separators, detect word boundaries and apply PascalCase
-    // Split on transitions: number-to-letter, letter-to-number, uppercase-to-number, or lowercase-to-uppercase
-    const wordBoundaryParts = name.split(/(?<=\d)(?=[A-Za-z])|(?<=[a-zA-Z])(?=\d)|(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/);
-    if (wordBoundaryParts.length > 1) {
-      name = '';
-      for (let i = 0; i < wordBoundaryParts.length; ++i) {
-        const part = wordBoundaryParts[i];
-        if (part.match(/^[a-zA-Z]{2,}$/)) {
-          wordBoundaryParts[i] = codegen.pascalCase(part);
-        } else {
-          wordBoundaryParts[i] = codegen.capitalize(part);
-        }
-        name += wordBoundaryParts[i];
-      }
-    } else {
-      // Single word with no detected boundaries - apply PascalCase if all letters
-      if (name.match(/^[A-Z]{2,}$/)) {
-        // All caps word like "RSA" or "ABCD" - apply PascalCase
-        name = codegen.pascalCase(name);
-      }
+  // Split the name into tokens based on separators and word boundaries
+  const tokens = splitIntoTokens(name);
+  
+  // Transform each token to PascalCase and join them back
+  name = '';
+  for (let i = 0; i < tokens.length; ++i) {
+    const transformedToken = transformToken(tokens[i]);
+    name += transformedToken;
+    
+    // Add underscore between adjacent numeric tokens to maintain readability
+    if (i + 1 < tokens.length && 
+        tokens[i].match(/\d+$/) && 
+        tokens[i + 1].match(/^\d/)) {
+      name += '_';
     }
   }
 
@@ -170,4 +130,58 @@ export function formatDocs(docs: string): string {
   }
 
   return docs;
+}
+
+/**
+ * Splits a string into tokens based on explicit separators and implicit word boundaries
+ * 
+ * @param name the string to tokenize
+ * @returns array of tokens
+ */
+function splitIntoTokens(name: string): string[] {
+  // First check if we have explicit separators
+  const separatorPattern = /(?:_|-|\/|\+|\.)/;
+  if (separatorPattern.test(name)) {
+    // Split on explicit separators and further split each part on word boundaries
+    const parts = name.split(separatorPattern);
+    const tokens: string[] = [];
+    for (const part of parts) {
+      if (part) { // Skip empty parts
+        tokens.push(...splitOnWordBoundaries(part));
+      }
+    }
+    return tokens;
+  } else {
+    // No explicit separators, split only on word boundaries
+    return splitOnWordBoundaries(name);
+  }
+}
+
+/**
+ * Splits a string on word boundaries (number-letter, letter-number, case transitions)
+ * 
+ * @param str the string to split
+ * @returns array of tokens
+ */
+function splitOnWordBoundaries(str: string): string[] {
+  // Split on transitions: number-to-letter, letter-to-number, lowercase-to-uppercase, 
+  // or uppercase-to-uppercase followed by lowercase (e.g. XMLHttp -> XML, Http)
+  const tokens = str.split(/(?<=\d)(?=[A-Za-z])|(?<=[a-zA-Z])(?=\d)|(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/);
+  return tokens.filter(token => token.length > 0);
+}
+
+/**
+ * Transforms a single token to PascalCase
+ * 
+ * @param token the token to transform
+ * @returns the transformed token
+ */
+function transformToken(token: string): string {
+  // For tokens with 2+ letters, use pascalCase to handle all-caps correctly
+  if (token.match(/^[a-zA-Z]{2,}$/)) {
+    return codegen.pascalCase(token);
+  } else {
+    // For single letters, numbers, or mixed content, use capitalize
+    return codegen.capitalize(token);
+  }
 }
