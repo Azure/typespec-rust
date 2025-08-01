@@ -42,6 +42,8 @@
         "linq",
         "msrc",
         "pageable",
+        "reinjected",
+        "reinjection",
         "reqwest",
         "safeint",
         "serde",
