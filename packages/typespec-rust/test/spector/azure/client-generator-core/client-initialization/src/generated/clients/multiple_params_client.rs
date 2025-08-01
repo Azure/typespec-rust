@@ -7,13 +7,15 @@ use crate::generated::models::{
     Input, MultipleParamsClientWithBodyOptions, MultipleParamsClientWithQueryOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct MultipleParamsClient {
     pub(crate) endpoint: Url,
     pub(crate) name: String,
@@ -37,6 +39,7 @@ impl MultipleParamsClient {
     /// * `name` - The name of the client. This parameter is used as a header in all operations.
     /// * `region` - The region to use for all operations. This parameter is used as a query parameter.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_clientinit")]
     pub fn with_no_credential(
         endpoint: &str,
         name: String,
@@ -75,6 +78,9 @@ impl MultipleParamsClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MultipleParams.withBody"
+    )]
     pub async fn with_body(
         &self,
         body: RequestContent<Input>,
@@ -90,13 +96,26 @@ impl MultipleParamsClient {
         request.insert_header("content-type", "application/json");
         request.insert_header("name", &self.name);
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MultipleParams.withQuery"
+    )]
     pub async fn with_query(
         &self,
         id: &str,
@@ -111,6 +130,16 @@ impl MultipleParamsClient {
         url.query_pairs_mut().append_pair("region", &self.region);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("name", &self.name);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

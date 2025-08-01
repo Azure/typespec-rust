@@ -1,10 +1,30 @@
 # Release History
 
-## 0.20.0 (2025-01-13)
+## 0.20.0 (2025-08-01)
 
 ### Features Added
 
 * Added support for parameter reinjection in pageable operations, allowing certain parameters from the original request to be automatically carried forward to subsequent page requests.
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Adds `PagerState` support to pagers.
+* Adds a `Format` to `RequestContent<T, F>` when the request body is not JSON.
+
+## 0.19.0 (2025-07-23)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* SDK clients are now generated with distributed tracing support using the `#[tracing::function]` and related attribute macros.
+
+### Other Changes
+
+* Client methods return an error on non-2xx response codes.
+* Added support for the `decimal` type.
 
 ## 0.18.0 (2025-07-09)
 
@@ -372,7 +392,7 @@
 
 * Don't overwrite an existing `Cargo.toml` file by default.
   * Specify `overwrite-cargo-toml=true` to force overwriting the file.
-* Emitter args `crate-name` and `crate-version` have been marked as requried.
+* Emitter args `crate-name` and `crate-version` have been marked as required.
 * Updated minimum tcgc to `v0.48.4`.
 
 ### Features Added
@@ -403,7 +423,7 @@
 * Added support for pageable methods.
 * Added support for XML payloads.
 * Added partial support for base64 encoded values.
-  * Headers, query parameters, and struct fiels work. The exception for struct fields is nested arrays (e.g. `Vec<Vec<u8>>`).
+  * Headers, query parameters, and struct fields work. The exception for struct fields is nested arrays (e.g. `Vec<Vec<u8>>`).
   * Requests and responses of base64 encoded values do not work due to the orphan problem.
 * Added support for `x-ms-meta-*` headers in blob storage.
 

@@ -384,6 +384,7 @@ FodyWeavers.xsd
 
 # VS Code files for those working on multiple tools
 .vscode/*
+!.vscode/cspell.json
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -410,5 +411,6 @@ package-lock.json
 spec-coverage.json
 
 packages/typespec-rust/test/target/
+packages/typespec-rust/pnpm-store/
 
 Cargo.lock

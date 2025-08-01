@@ -23,15 +23,12 @@ async fn prepare_verify() {
     assert_eq!(vec[2], Decimal::from_f32(0.1).unwrap());
 }
 
-// This test is ignored because it uses #r syntax which technically allows user to pass the value, but this is
-// not the experience we want users to have. Once we enable better syntax, we whould update it and then enable.
 #[tokio::test]
-#[ignore]
 async fn verify() {
     let client = ScalarClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_scalar_decimal128_verify_client()
-        .verify(r#"0.3"#.try_into().unwrap(), None)
+        .verify(Decimal::from_f32(0.3).try_into().unwrap(), None)
         .await
         .unwrap();
 

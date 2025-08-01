@@ -8,11 +8,13 @@ use crate::generated::models::{
     NonResourceNonResourceOperationsClientGetOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
 /// Operations on non resource model should not be marked as `@armResourceOperations`.
+#[tracing::client]
 pub struct NonResourceNonResourceOperationsClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -33,6 +35,7 @@ impl NonResourceNonResourceOperationsClient {
     /// * `parameter` - Another parameter.
     /// * `body` - The request body.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.NonResource.NonResourceOperations.create")]
     pub async fn create(
         &self,
         location: &str,
@@ -54,7 +57,17 @@ impl NonResourceNonResourceOperationsClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
@@ -63,6 +76,7 @@ impl NonResourceNonResourceOperationsClient {
     /// * `location` - The location parameter.
     /// * `parameter` - Another parameter.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.NonResource.NonResourceOperations.get")]
     pub async fn get(
         &self,
         location: &str,
@@ -81,6 +95,16 @@ impl NonResourceNonResourceOperationsClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

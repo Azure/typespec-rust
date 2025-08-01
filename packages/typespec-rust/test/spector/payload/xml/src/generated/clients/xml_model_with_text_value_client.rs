@@ -7,13 +7,15 @@ use crate::generated::models::{
     ModelWithText, XmlModelWithTextValueClientGetOptions, XmlModelWithTextValueClientPutOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{
         Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url, XmlFormat,
     },
-    Result,
+    tracing, Error, Result,
 };
 
 /// Operations for the ModelWithText type.
+#[tracing::client]
 pub struct XmlModelWithTextValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +31,7 @@ impl XmlModelWithTextValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.Xml.ModelWithTextValue.get")]
     pub async fn get(
         &self,
         options: Option<XmlModelWithTextValueClientGetOptions<'_>>,
@@ -39,16 +42,27 @@ impl XmlModelWithTextValueClient {
         url = url.join("payload/xml/modelWithText")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.Xml.ModelWithTextValue.put")]
     pub async fn put(
         &self,
-        input: RequestContent<ModelWithText>,
+        input: RequestContent<ModelWithText, XmlFormat>,
         options: Option<XmlModelWithTextValueClientPutOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
@@ -58,6 +72,16 @@ impl XmlModelWithTextValueClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.set_body(input);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

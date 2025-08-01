@@ -8,12 +8,14 @@ use crate::generated::models::{
     VersionedClientWithQueryOldApiVersionOptions, VersionedClientWithoutApiVersionOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
 /// Illustrates versioned server.
+#[tracing::client]
 pub struct VersionedClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -35,6 +37,7 @@ impl VersionedClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_versioned")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<VersionedClientOptions>,
@@ -70,6 +73,7 @@ impl VersionedClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Versions.Versioned.withPathApiVersion")]
     pub async fn with_path_api_version(
         &self,
         options: Option<VersionedClientWithPathApiVersionOptions<'_>>,
@@ -81,13 +85,24 @@ impl VersionedClient {
         path = path.replace("{apiVersion}", &self.api_version);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Versions.Versioned.withQueryApiVersion")]
     pub async fn with_query_api_version(
         &self,
         options: Option<VersionedClientWithQueryApiVersionOptions<'_>>,
@@ -99,13 +114,24 @@ impl VersionedClient {
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Versions.Versioned.withQueryOldApiVersion")]
     pub async fn with_query_old_api_version(
         &self,
         options: Option<VersionedClientWithQueryOldApiVersionOptions<'_>>,
@@ -117,13 +143,24 @@ impl VersionedClient {
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Server.Versions.Versioned.withoutApiVersion")]
     pub async fn without_api_version(
         &self,
         options: Option<VersionedClientWithoutApiVersionOptions<'_>>,
@@ -133,7 +170,17 @@ impl VersionedClient {
         let mut url = self.endpoint.clone();
         url = url.join("server/versions/versioned/without-api-version")?;
         let mut request = Request::new(url, Method::Head);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }
 

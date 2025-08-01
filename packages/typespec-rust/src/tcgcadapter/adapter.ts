@@ -3,6 +3,8 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+// cspell: ignore responseheader subclients lropaging
+
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
 import { DateTimeKnownEncoding, DiagnosticTarget, EmitContext, NoTarget } from '@typespec/compiler';
@@ -16,7 +18,7 @@ import * as rust from '../codemodel/index.js';
 
 /** ErrorCode defines the types of adapter errors */
 export type ErrorCode =
-  /** the emitter encounted an internal error. this is always a bug in the emitter */
+  /** the emitter encountered an internal error. this is always a bug in the emitter */
   'InternalError' |
 
   /** invalid arguments were passed to the emitter */
@@ -762,15 +764,15 @@ export class Adapter {
       // bit flags for auth types
       enum AuthTypes {
         Default = 0, // unspecified
-        NoAuth  = 1, // explicit NoAuth
+        NoAuth = 1, // explicit NoAuth
         WithAut = 2, // explicit credential
       }
 
       let authType = AuthTypes.Default;
 
       /**
-       * processes a credendial, potentially adding its supporting client constructor
-       * 
+       * processes a credential, potentially adding its supporting client constructor
+       *
        * @param cred the credential type to process
        * @param constructable the constructable for the current Rust client
        * @param throwOnDefault when true, throws an error on unsupported credential types
@@ -861,7 +863,7 @@ export class Adapter {
                 // NOTE: the behavior of Url::join requires that the path ends with a forward slash.
                 // if there are any query params, splice it in as required else just append it.
                 if (serverUrl.includes('?')) {
-                  if (serverUrl[serverUrl.indexOf('?')-1] !== '/') {
+                  if (serverUrl[serverUrl.indexOf('?') - 1] !== '/') {
                     serverUrl = serverUrl.replace('?', '/?');
                   }
                 } else if (serverUrl[serverUrl.length - 1] !== '/') {
@@ -904,7 +906,7 @@ export class Adapter {
       }
     } else if (parent) {
       // this is a sub-client. it will share some/all the fields of the parent.
-      // NOTE: we must propagate parant params before a potential recursive call
+      // NOTE: we must propagate parent params before a potential recursive call
       // to create a child client that will need to inherit our client params.
       for (const prop of client.clientInitialization.parameters) {
         const name = snakeCaseName(prop.name);
@@ -922,7 +924,7 @@ export class Adapter {
         rustClient.fields.push(new rust.StructField(name, 'pubCrate', this.getType(prop.type)));
       }
     } else {
-      throw new AdapterError('InternalError', `uninstantiable client ${client.name} has no parent`);
+      throw new AdapterError('InternalError', `uninstantiatable client ${client.name} has no parent`);
     }
 
     for (const child of values(client.children)) {
@@ -1081,6 +1083,7 @@ export class Adapter {
       throw new AdapterError('NameCollision', `method name ${srcMethodName} collides with a renamed method`, method.__raw?.node);
     }
 
+    const languageIndependentName = method.crossLanguageDefinitionId;
     const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
     const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName)}Options`, 'pub');
@@ -1112,10 +1115,10 @@ export class Adapter {
     let rustMethod: MethodType;
     switch (method.kind) {
       case 'basic':
-        rustMethod = new rust.AsyncMethod(methodName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.AsyncMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
         break;
       case 'paging':
-        rustMethod = new rust.PageableMethod(methodName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
         break;
       default:
         throw new AdapterError('UnsupportedTsp', `method kind ${method.kind} NYI`, method.__raw?.node);
@@ -1203,7 +1206,7 @@ export class Adapter {
       }
     }
 
-    const getResponseFormat = (): rust.ResponseFormat => {
+    const getResponseFormat = (): rust.PayloadFormatType => {
       // fetch the body format from the HTTP responses.
       // they should all have the same type so no need to match responses to type.
       let defaultContentType: string | undefined;
@@ -1222,7 +1225,7 @@ export class Adapter {
         return 'NoFormat';
       }
 
-      return this.adaptResponseFormat(defaultContentType);
+      return this.adaptPayloadFormatType(defaultContentType);
     };
 
     // add any response headers
@@ -1236,7 +1239,7 @@ export class Adapter {
           // which is typically the content-type header. modeling
           // it isn't very useful by itself, plus it has the
           // side-effect of adding marker types and/or header
-          // traits to all non application/json method repsonses.
+          // traits to all non application/json method responses.
           // callers can still retrieve the value from the raw
           // response headers if they need it.
           continue;
@@ -1348,7 +1351,7 @@ export class Adapter {
       rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, this.getUnitType(), responseFormat));
     }
 
-    const responseHeadersMap = this.adaptResposeHeaders(responseHeaders);
+    const responseHeadersMap = this.adaptResponseHeaders(responseHeaders);
     rustMethod.responseHeaders = this.adaptResponseHeadersTrait(rustClient, rustMethod, Array.from(responseHeadersMap.values()));
 
     if (method.kind === 'paging') {
@@ -1365,7 +1368,7 @@ export class Adapter {
    * @param responseHeaders the response headers to adapt (can be empty)
    * @returns the map of response headers
    */
-  private adaptResposeHeaders(responseHeaders: Array<tcgc.SdkServiceResponseHeader>): Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader> {
+  private adaptResponseHeaders(responseHeaders: Array<tcgc.SdkServiceResponseHeader>): Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader> {
     const responseHeadersMap = new Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>();
     // adapt the response headers and add them to the trait
     for (const header of responseHeaders) {
@@ -1406,7 +1409,7 @@ export class Adapter {
      * @param type the type for which to build a name
      * @returns the name
      */
-    const recursiveTypeName = function(type: rust.MarkerType | rust.WireType): string {
+    const recursiveTypeName = function (type: rust.MarkerType | rust.WireType): string {
       switch (type.kind) {
         case 'enum':
         case 'marker':
@@ -1600,7 +1603,7 @@ export class Adapter {
     }
 
     /** returns the corresponding client param field name for a client parameter */
-    const getCorrespondingClientParamName = function(param: tcgc.SdkHttpParameter): string {
+    const getCorrespondingClientParamName = function (param: tcgc.SdkHttpParameter): string {
       if (param.onClient && param.correspondingMethodParams.length === 1) {
         // we get here if the param was aliased via the @paramAlias decorator.
         // this gives us the name of the client param's backing field which has
@@ -1631,7 +1634,8 @@ export class Adapter {
         } else {
           requestType = new rust.Payload(this.typeToWireType(paramType), this.adaptPayloadFormat(param.defaultContentType));
         }
-        adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, requestType));
+        const requestFormatType = this.adaptPayloadFormatType(param.defaultContentType);
+        adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, requestType, requestFormatType));
         break;
       }
       case 'cookie':
@@ -1768,7 +1772,7 @@ export class Adapter {
       }
     };
 
-    const recursiveUnwrapVec = function(type: rust.Type): rust.Type {
+    const recursiveUnwrapVec = function (type: rust.Type): rust.Type {
       if (type.kind === 'Vec') {
         return recursiveUnwrapVec(type.type);
       }
@@ -1860,7 +1864,8 @@ export class Adapter {
 
     const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
     const paramLoc: rust.ParameterLocation = 'method';
-    const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, this.getType(param.type), new rust.RequestContent(this.crate, new rust.Payload(payloadType, format)));
+    const formatType = shared.getPayloadFormatType(format);
+    const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, this.getType(param.type), new rust.RequestContent(this.crate, new rust.Payload(payloadType, format), formatType));
     return adaptedParam;
   }
 
@@ -1884,17 +1889,17 @@ export class Adapter {
   }
 
   /**
-   * converts an accept header value into a response format
+   * converts an accept or content-type header value into a payload format type
    * 
-   * @param accept the value of the Content-Type header
+   * @param contentType the value of the Accept or Content-Type header
    * @returns a response format
    */
-  private adaptResponseFormat(accept: string): rust.ResponseFormat {
+  private adaptPayloadFormatType(contentType: string): rust.PayloadFormatType {
     // we only recognize/support JSON and XML content types.
     // anything else is NoFormat
-    if (accept.match(/json/i)) {
+    if (contentType.match(/json/i)) {
       return 'JsonFormat';
-    } else if (accept.match(/xml/i)) {
+    } else if (contentType.match(/xml/i)) {
       // XML support is disabled by default
       this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
       return 'XmlFormat';
@@ -1904,7 +1909,7 @@ export class Adapter {
   }
 }
 
-/** typeguard to determine if type is a Ref<Slice> */
+/** type guard to determine if type is a Ref<Slice> */
 function isRefSlice(type: rust.Type): type is rust.Ref<rust.Slice> {
   return shared.asTypeOf<rust.Ref<rust.Slice>>(type, 'slice', 'ref') !== undefined;
 }

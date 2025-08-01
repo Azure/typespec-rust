@@ -9,10 +9,12 @@ use crate::generated::models::{
     DurationHeaderClientIso8601ArrayOptions, DurationHeaderClientIso8601Options,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct DurationHeaderClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +30,7 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Header.default")]
     pub async fn default(
         &self,
         duration: String,
@@ -39,13 +42,24 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Header.float64Seconds")]
     pub async fn float64_seconds(
         &self,
         duration: f64,
@@ -57,13 +71,24 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/float64-seconds")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Header.floatSeconds")]
     pub async fn float_seconds(
         &self,
         duration: f32,
@@ -75,13 +100,24 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/float-seconds")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Header.int32Seconds")]
     pub async fn int32_seconds(
         &self,
         duration: i32,
@@ -93,13 +129,24 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/int32-seconds")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Header.iso8601")]
     pub async fn iso8601(
         &self,
         duration: String,
@@ -111,13 +158,24 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/iso8601")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Header.iso8601Array")]
     pub async fn iso8601_array(
         &self,
         duration: &[&str],
@@ -129,6 +187,16 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/iso8601-array")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.join(","));
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

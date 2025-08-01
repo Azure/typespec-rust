@@ -10,7 +10,7 @@ use crate::generated::clients::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Scenarios to verify that reserved words can be used in service and generators will handle it appropriately.
@@ -51,6 +51,7 @@ use azure_core::{
 /// with
 /// yield
 /// ```
+#[tracing::client]
 pub struct SpecialWordsClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -70,6 +71,7 @@ impl SpecialWordsClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_specialwords")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<SpecialWordsClientOptions>,
@@ -101,6 +103,7 @@ impl SpecialWordsClient {
     }
 
     /// Returns a new instance of SpecialWordsModelPropertiesClient.
+    #[tracing::subclient]
     pub fn get_special_words_model_properties_client(&self) -> SpecialWordsModelPropertiesClient {
         SpecialWordsModelPropertiesClient {
             endpoint: self.endpoint.clone(),
@@ -109,6 +112,7 @@ impl SpecialWordsClient {
     }
 
     /// Returns a new instance of SpecialWordsModelsClient.
+    #[tracing::subclient]
     pub fn get_special_words_models_client(&self) -> SpecialWordsModelsClient {
         SpecialWordsModelsClient {
             endpoint: self.endpoint.clone(),
@@ -117,6 +121,7 @@ impl SpecialWordsClient {
     }
 
     /// Returns a new instance of SpecialWordsOperationsClient.
+    #[tracing::subclient]
     pub fn get_special_words_operations_client(&self) -> SpecialWordsOperationsClient {
         SpecialWordsOperationsClient {
             endpoint: self.endpoint.clone(),
@@ -125,6 +130,7 @@ impl SpecialWordsClient {
     }
 
     /// Returns a new instance of SpecialWordsParametersClient.
+    #[tracing::subclient]
     pub fn get_special_words_parameters_client(&self) -> SpecialWordsParametersClient {
         SpecialWordsParametersClient {
             endpoint: self.endpoint.clone(),

@@ -10,11 +10,13 @@ use crate::generated::models::{
     OptionalRequiredAndOptionalClientPutRequiredOnlyOptions, RequiredAndOptionalProperty,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
 /// Test optional and required properties
+#[tracing::client]
 pub struct OptionalRequiredAndOptionalClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -31,6 +33,7 @@ impl OptionalRequiredAndOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.RequiredAndOptional.getAll")]
     pub async fn get_all(
         &self,
         options: Option<OptionalRequiredAndOptionalClientGetAllOptions<'_>>,
@@ -41,7 +44,17 @@ impl OptionalRequiredAndOptionalClient {
         url = url.join("type/property/optional/requiredAndOptional/all")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Get models that will return only the required properties
@@ -49,6 +62,7 @@ impl OptionalRequiredAndOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.RequiredAndOptional.getRequiredOnly")]
     pub async fn get_required_only(
         &self,
         options: Option<OptionalRequiredAndOptionalClientGetRequiredOnlyOptions<'_>>,
@@ -59,7 +73,17 @@ impl OptionalRequiredAndOptionalClient {
         url = url.join("type/property/optional/requiredAndOptional/requiredOnly")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Put a body with all properties present.
@@ -67,6 +91,7 @@ impl OptionalRequiredAndOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.RequiredAndOptional.putAll")]
     pub async fn put_all(
         &self,
         body: RequestContent<RequiredAndOptionalProperty>,
@@ -79,7 +104,17 @@ impl OptionalRequiredAndOptionalClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Put a body with only required properties.
@@ -87,6 +122,7 @@ impl OptionalRequiredAndOptionalClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Optional.RequiredAndOptional.putRequiredOnly")]
     pub async fn put_required_only(
         &self,
         body: RequestContent<RequiredAndOptionalProperty>,
@@ -99,6 +135,16 @@ impl OptionalRequiredAndOptionalClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

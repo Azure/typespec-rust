@@ -6,10 +6,11 @@
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Illustrates bodies templated with Azure Core with long-running operation
+#[tracing::client]
 pub struct StandardClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -32,6 +33,7 @@ impl StandardClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_lrostd")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<StandardClientOptions>,

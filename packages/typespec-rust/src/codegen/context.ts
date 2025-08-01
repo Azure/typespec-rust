@@ -7,6 +7,7 @@ import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
+import { getPayloadFormatType } from '../shared/shared.js';
 
 /**
  * Context contains contextual information about how types are used.
@@ -103,13 +104,18 @@ export class Context {
     if (!format) {
       return undefined;
     }
-
+    
+    const formatType = getPayloadFormatType(format);
+    if (formatType != 'JsonFormat') {
+      use.add('azure_core::http', formatType);
+    }
     use.add('azure_core', 'Result');
     use.add('azure_core::http', 'RequestContent');
     use.add('azure_core', `${format}::to_${format}`);
 
     const indent = new helpers.indentation();
-    let content = `impl TryFrom<${helpers.getTypeDeclaration(model)}> for RequestContent<${helpers.getTypeDeclaration(model)}> {\n`;
+    const formatTypeDeclaration = `${formatType !== 'JsonFormat' ? `, ${formatType}` : ''}`;
+    let content = `impl TryFrom<${helpers.getTypeDeclaration(model)}> for RequestContent<${helpers.getTypeDeclaration(model)}${formatTypeDeclaration}> {\n`;
     content += `${indent.get()}type Error = azure_core::Error;\n`;
     content += `${indent.get()}fn try_from(value: ${helpers.getTypeDeclaration(model)}) -> Result<Self> {\n`;
     content += `${indent.push().get()}RequestContent::try_from(to_${format}(&value)?)\n`;

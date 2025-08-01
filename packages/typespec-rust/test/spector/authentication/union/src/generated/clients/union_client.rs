@@ -6,16 +6,18 @@
 use crate::generated::models::{UnionClientValidKeyOptions, UnionClientValidTokenOptions};
 use azure_core::{
     credentials::TokenCredential,
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url,
     },
-    Result,
+    tracing, Error, Result,
 };
 use std::sync::Arc;
 
 /// Illustrates clients generated with ApiKey and OAuth2 authentication.
+#[tracing::client]
 pub struct UnionClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -37,6 +39,7 @@ impl UnionClient {
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_unionauth")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -77,6 +80,7 @@ impl UnionClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Authentication.Union.validKey")]
     pub async fn valid_key(
         &self,
         options: Option<UnionClientValidKeyOptions<'_>>,
@@ -86,7 +90,17 @@ impl UnionClient {
         let mut url = self.endpoint.clone();
         url = url.join("authentication/union/validkey")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Check whether client is authenticated
@@ -94,6 +108,7 @@ impl UnionClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Authentication.Union.validToken")]
     pub async fn valid_token(
         &self,
         options: Option<UnionClientValidTokenOptions<'_>>,
@@ -103,6 +118,16 @@ impl UnionClient {
         let mut url = self.endpoint.clone();
         url = url.join("authentication/union/validtoken")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

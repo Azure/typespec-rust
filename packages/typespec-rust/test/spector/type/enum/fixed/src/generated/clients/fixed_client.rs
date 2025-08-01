@@ -7,9 +7,10 @@ use crate::generated::clients::FixedStringClient;
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct FixedClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl FixedClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_fixed")]
     pub fn with_no_credential(endpoint: &str, options: Option<FixedClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -57,6 +59,7 @@ impl FixedClient {
     }
 
     /// Returns a new instance of FixedStringClient.
+    #[tracing::subclient]
     pub fn get_fixed_string_client(&self) -> FixedStringClient {
         FixedStringClient {
             endpoint: self.endpoint.clone(),

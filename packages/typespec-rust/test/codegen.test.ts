@@ -3,6 +3,8 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+// cspell: ignore ifblock
+
 import * as rust from '../src/codemodel/index.js';
 import { CodeGenerator } from '../src/codegen/codeGenerator.js';
 import * as helpers from '../src/codegen/helpers.js';
@@ -27,7 +29,7 @@ describe('typespec-rust: codegen', () => {
     });
 
     it('default Cargo.toml file with dependencies', () => {
-      const expected =   '[package]\n' +
+      const expected = '[package]\n' +
         'name = "test_crate"\n' +
         'version = "1.2.3"\n' +
         'authors.workspace = true\n' +
@@ -76,9 +78,9 @@ describe('typespec-rust: codegen', () => {
         body: (indent) => { return `${indent.get()}bing = bong;\n`; }
       });
       const expected =
-      'if foo == bar {\n' +
-      '    bing = bong;\n' +
-      '}';
+        'if foo == bar {\n' +
+        '    bing = bong;\n' +
+        '}';
       strictEqual(ifblock, expected);
     });
 
@@ -100,16 +102,16 @@ describe('typespec-rust: codegen', () => {
         }
       ]);
       const expected =
-      'match cond {\n' +
-      '    Some(foo) => {\n' +
-      '        if foo == bar {\n' +
-      '            bing = bong;\n' +
-      '        }\n' +
-      '    },\n' +
-      '    None => {\n' +
-      '        the none branch;\n' +
-      '    },\n' +
-      '}';
+        'match cond {\n' +
+        '    Some(foo) => {\n' +
+        '        if foo == bar {\n' +
+        '            bing = bong;\n' +
+        '        }\n' +
+        '    },\n' +
+        '    None => {\n' +
+        '        the none branch;\n' +
+        '    },\n' +
+        '}';
       strictEqual(match, expected);
     });
 
@@ -133,16 +135,16 @@ describe('typespec-rust: codegen', () => {
         }
       ]);
       const expected =
-      'match cond {\n' +
-      '    Some(foo) => Returns1 {\n' +
-      '        if foo == bar {\n' +
-      '            bing = bong;\n' +
-      '        }\n' +
-      '    },\n' +
-      '    None => Returns2 {\n' +
-      '        the none branch;\n' +
-      '    },\n' +
-      '}';
+        'match cond {\n' +
+        '    Some(foo) => Returns1 {\n' +
+        '        if foo == bar {\n' +
+        '            bing = bong;\n' +
+        '        }\n' +
+        '    },\n' +
+        '    None => Returns2 {\n' +
+        '        the none branch;\n' +
+        '    },\n' +
+        '}';
       strictEqual(match, expected);
     });
   });

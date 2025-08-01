@@ -8,10 +8,12 @@ use crate::generated::models::{
     CommonPropertiesErrorClientGetForPredefinedErrorOptions, ConfidentialResource,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct CommonPropertiesErrorClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -33,6 +35,7 @@ impl CommonPropertiesErrorClient {
     /// * `confidential_resource_name` - The name of the ConfidentialResource
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.CommonProperties.Error.createForUserDefinedError")]
     pub async fn create_for_user_defined_error(
         &self,
         resource_group_name: &str,
@@ -54,7 +57,17 @@ impl CommonPropertiesErrorClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(resource);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Get a ConfidentialResource
@@ -64,6 +77,7 @@ impl CommonPropertiesErrorClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `confidential_resource_name` - The name of the ConfidentialResource
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.CommonProperties.Error.getForPredefinedError")]
     pub async fn get_for_predefined_error(
         &self,
         resource_group_name: &str,
@@ -82,6 +96,16 @@ impl CommonPropertiesErrorClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

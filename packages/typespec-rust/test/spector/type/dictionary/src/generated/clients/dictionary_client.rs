@@ -12,10 +12,11 @@ use crate::generated::clients::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Illustrates various of dictionaries.
+#[tracing::client]
 pub struct DictionaryClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -35,6 +36,7 @@ impl DictionaryClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_dictionary")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<DictionaryClientOptions>,
@@ -66,6 +68,7 @@ impl DictionaryClient {
     }
 
     /// Returns a new instance of DictionaryBooleanValueClient.
+    #[tracing::subclient]
     pub fn get_dictionary_boolean_value_client(&self) -> DictionaryBooleanValueClient {
         DictionaryBooleanValueClient {
             endpoint: self.endpoint.clone(),
@@ -74,6 +77,7 @@ impl DictionaryClient {
     }
 
     /// Returns a new instance of DictionaryDatetimeValueClient.
+    #[tracing::subclient]
     pub fn get_dictionary_datetime_value_client(&self) -> DictionaryDatetimeValueClient {
         DictionaryDatetimeValueClient {
             endpoint: self.endpoint.clone(),
@@ -82,6 +86,7 @@ impl DictionaryClient {
     }
 
     /// Returns a new instance of DictionaryDurationValueClient.
+    #[tracing::subclient]
     pub fn get_dictionary_duration_value_client(&self) -> DictionaryDurationValueClient {
         DictionaryDurationValueClient {
             endpoint: self.endpoint.clone(),
@@ -90,6 +95,7 @@ impl DictionaryClient {
     }
 
     /// Returns a new instance of DictionaryFloat32ValueClient.
+    #[tracing::subclient]
     pub fn get_dictionary_float32_value_client(&self) -> DictionaryFloat32ValueClient {
         DictionaryFloat32ValueClient {
             endpoint: self.endpoint.clone(),
@@ -98,6 +104,7 @@ impl DictionaryClient {
     }
 
     /// Returns a new instance of DictionaryInt32ValueClient.
+    #[tracing::subclient]
     pub fn get_dictionary_int32_value_client(&self) -> DictionaryInt32ValueClient {
         DictionaryInt32ValueClient {
             endpoint: self.endpoint.clone(),
@@ -106,6 +113,7 @@ impl DictionaryClient {
     }
 
     /// Returns a new instance of DictionaryInt64ValueClient.
+    #[tracing::subclient]
     pub fn get_dictionary_int64_value_client(&self) -> DictionaryInt64ValueClient {
         DictionaryInt64ValueClient {
             endpoint: self.endpoint.clone(),
@@ -114,6 +122,7 @@ impl DictionaryClient {
     }
 
     /// Returns a new instance of DictionaryModelValueClient.
+    #[tracing::subclient]
     pub fn get_dictionary_model_value_client(&self) -> DictionaryModelValueClient {
         DictionaryModelValueClient {
             endpoint: self.endpoint.clone(),
@@ -122,6 +131,7 @@ impl DictionaryClient {
     }
 
     /// Returns a new instance of DictionaryNullableFloatValueClient.
+    #[tracing::subclient]
     pub fn get_dictionary_nullable_float_value_client(&self) -> DictionaryNullableFloatValueClient {
         DictionaryNullableFloatValueClient {
             endpoint: self.endpoint.clone(),
@@ -130,6 +140,7 @@ impl DictionaryClient {
     }
 
     /// Returns a new instance of DictionaryRecursiveModelValueClient.
+    #[tracing::subclient]
     pub fn get_dictionary_recursive_model_value_client(
         &self,
     ) -> DictionaryRecursiveModelValueClient {
@@ -140,6 +151,7 @@ impl DictionaryClient {
     }
 
     /// Returns a new instance of DictionaryStringValueClient.
+    #[tracing::subclient]
     pub fn get_dictionary_string_value_client(&self) -> DictionaryStringValueClient {
         DictionaryStringValueClient {
             endpoint: self.endpoint.clone(),
@@ -148,6 +160,7 @@ impl DictionaryClient {
     }
 
     /// Returns a new instance of DictionaryUnknownValueClient.
+    #[tracing::subclient]
     pub fn get_dictionary_unknown_value_client(&self) -> DictionaryUnknownValueClient {
         DictionaryUnknownValueClient {
             endpoint: self.endpoint.clone(),

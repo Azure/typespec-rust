@@ -10,10 +10,12 @@ use crate::generated::models::{
     OperationTemplatesOptionalBodyClientProviderPostOptions, Widget,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct OperationTemplatesOptionalBodyClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -34,6 +36,7 @@ impl OperationTemplatesOptionalBodyClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `widget_name` - The name of the Widget
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.OperationTemplates.OptionalBody.get")]
     pub async fn get(
         &self,
         resource_group_name: &str,
@@ -52,7 +55,17 @@ impl OperationTemplatesOptionalBodyClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Update a Widget
@@ -62,6 +75,7 @@ impl OperationTemplatesOptionalBodyClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `widget_name` - The name of the Widget
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.OperationTemplates.OptionalBody.patch")]
     pub async fn patch(
         &self,
         resource_group_name: &str,
@@ -84,7 +98,17 @@ impl OperationTemplatesOptionalBodyClient {
             request.insert_header("content-type", "application/json");
             request.set_body(properties);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// A synchronous resource action.
@@ -94,6 +118,7 @@ impl OperationTemplatesOptionalBodyClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `widget_name` - The name of the Widget
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.OperationTemplates.OptionalBody.post")]
     pub async fn post(
         &self,
         resource_group_name: &str,
@@ -116,13 +141,24 @@ impl OperationTemplatesOptionalBodyClient {
             request.insert_header("content-type", "application/json");
             request.set_body(body);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.OperationTemplates.OptionalBody.providerPost")]
     pub async fn provider_post(
         &self,
         options: Option<OperationTemplatesOptionalBodyClientProviderPostOptions<'_>>,
@@ -141,6 +177,16 @@ impl OperationTemplatesOptionalBodyClient {
             request.insert_header("content-type", "application/json");
             request.set_body(body);
         }
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

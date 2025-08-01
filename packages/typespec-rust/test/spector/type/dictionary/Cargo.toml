@@ -14,4 +14,6 @@ serde_json = { workspace = true }
 typespec_client_core = { workspace = true, features = ["derive"] }
 
 [dev-dependencies]
+time = { workspace = true }
 tokio = { workspace = true }
+typespec_client_core = { workspace = true, features = ["decimal", "derive"] }

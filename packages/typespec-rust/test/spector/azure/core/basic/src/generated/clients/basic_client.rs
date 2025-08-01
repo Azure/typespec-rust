@@ -9,15 +9,17 @@ use crate::generated::models::{
     BasicClientListOptions, PagedUser, User, UserList,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
-        ClientOptions, Context, Method, NoFormat, Pager, PagerResult, Pipeline, RawResponse,
-        Request, RequestContent, Response, Url,
+        ClientOptions, Context, Method, NoFormat, Pager, PagerResult, PagerState, Pipeline,
+        RawResponse, Request, RequestContent, Response, Url,
     },
-    json, Result,
+    json, tracing, Error, Result,
 };
 
 /// Illustrates bodies templated with Azure Core
+#[tracing::client]
 pub struct BasicClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -40,6 +42,7 @@ impl BasicClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_basic")]
     pub fn with_no_credential(endpoint: &str, options: Option<BasicClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -77,6 +80,7 @@ impl BasicClient {
     /// * `id` - The user's id.
     /// * `resource` - The resource instance.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Basic.createOrReplace")]
     pub async fn create_or_replace(
         &self,
         id: i32,
@@ -95,7 +99,17 @@ impl BasicClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(resource);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Adds a user or updates a user's fields.
@@ -107,6 +121,7 @@ impl BasicClient {
     /// * `id` - The user's id.
     /// * `resource` - The resource instance.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Basic.createOrUpdate")]
     pub async fn create_or_update(
         &self,
         id: i32,
@@ -125,7 +140,17 @@ impl BasicClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(resource);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Deletes a user.
@@ -136,6 +161,7 @@ impl BasicClient {
     ///
     /// * `id` - The user's id.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Basic.delete")]
     pub async fn delete(
         &self,
         id: i32,
@@ -151,7 +177,17 @@ impl BasicClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Exports a user.
@@ -163,6 +199,7 @@ impl BasicClient {
     /// * `id` - The user's id.
     /// * `format` - The format of the data.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Basic.export")]
     pub async fn export(
         &self,
         id: i32,
@@ -180,7 +217,17 @@ impl BasicClient {
         url.query_pairs_mut().append_pair("format", format);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Exports all users.
@@ -191,6 +238,7 @@ impl BasicClient {
     ///
     /// * `format` - The format of the data.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Basic.exportAllUsers")]
     pub async fn export_all_users(
         &self,
         format: &str,
@@ -205,7 +253,17 @@ impl BasicClient {
         url.query_pairs_mut().append_pair("format", format);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Gets a user.
@@ -216,6 +274,7 @@ impl BasicClient {
     ///
     /// * `id` - The user's id.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Basic.get")]
     pub async fn get(
         &self,
         id: i32,
@@ -231,7 +290,17 @@ impl BasicClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Lists all users.
@@ -241,6 +310,7 @@ impl BasicClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Basic.list")]
     pub fn list(&self, options: Option<BasicClientListOptions<'_>>) -> Result<Pager<PagedUser>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -283,9 +353,9 @@ impl BasicClient {
                 .append_pair("top", &top.to_string());
         }
         let api_version = self.api_version.clone();
-        Ok(Pager::from_callback(move |next_link: Option<Url>| {
+        Ok(Pager::from_callback(move |next_link: PagerState<Url>| {
             let url = match next_link {
-                Some(next_link) => {
+                PagerState::More(next_link) => {
                     let qp = next_link
                         .query_pairs()
                         .filter(|(name, _)| name.ne("api-version"));
@@ -297,7 +367,7 @@ impl BasicClient {
                         .append_pair("api-version", &api_version);
                     next_link
                 }
-                None => first_url.clone(),
+                PagerState::Initial => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);
             request.insert_header("accept", "application/json");
@@ -305,6 +375,15 @@ impl BasicClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;

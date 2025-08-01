@@ -538,8 +538,8 @@ class ClientParameterBase implements ClientParameterBase {
 }
 
 class HTTPMethodBase extends method.Method<types.Type> implements HTTPMethodBase {
-  constructor(name: string, httpMethod: HTTPMethod, httpPath: string, visibility: types.Visibility, impl: string, self: method.Self) {
-    super(name, visibility, impl, self);
+  constructor(name: string, languageIndependentName: string, httpMethod: HTTPMethod, httpPath: string, visibility: types.Visibility, impl: string, self: method.Self) {
+    super(name, languageIndependentName, visibility, impl, self);
     this.httpMethod = httpMethod;
     this.httpPath = httpPath;
     this.docs = {};
@@ -559,8 +559,8 @@ class HTTPParameterBase extends method.Parameter {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class AsyncMethod extends HTTPMethodBase implements AsyncMethod {
-  constructor(name: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
-    super(name, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
+  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+    super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'async';
     this.params = new Array<MethodParameter>();
     this.options = options;
@@ -586,7 +586,7 @@ export class Client implements Client {
 
 export class ClientAccessor extends method.Method<Client> implements ClientAccessor {
   constructor(name: string, client: Client, returns: Client) {
-    super(name, 'pub', client.name, new method.Self(false, true));
+    super(name, name, 'pub', client.name, new method.Self(false, true));
     this.kind = 'clientaccessor';
     this.params = new Array<MethodParameter>();
     this.returns = returns;
@@ -622,7 +622,7 @@ export class Constructor implements Constructor {
   }
 }
 
-export class ClientEndpointParameter extends ClientParameterBase implements ClientEndpointParameter{
+export class ClientEndpointParameter extends ClientParameterBase implements ClientEndpointParameter {
   constructor(name: string, type: types.Type, optional: boolean, segment: string) {
     super(name, type, optional);
     this.kind = 'clientEndpoint';
@@ -663,8 +663,8 @@ export class MethodOptions extends types.Option implements MethodOptions {
 }
 
 export class PageableMethod extends HTTPMethodBase implements PageableMethod {
-  constructor(name: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
-    super(name, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
+  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+    super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'pageable';
     this.params = new Array<MethodParameter>();
     this.options = options;
@@ -788,7 +788,7 @@ export class ResponseHeadersTrait implements ResponseHeadersTrait {
   }
 }
 
-export class SupplementalEndpoint implements SupplementalEndpoint{
+export class SupplementalEndpoint implements SupplementalEndpoint {
   constructor(path: string) {
     this.path = path;
     this.parameters = new Array<ClientEndpointParameter>();

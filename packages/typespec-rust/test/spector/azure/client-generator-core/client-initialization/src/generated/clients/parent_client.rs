@@ -7,9 +7,10 @@ use crate::generated::clients::ParentChildClient;
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
+#[tracing::client]
 pub struct ParentClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +30,7 @@ impl ParentClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_clientinit")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<ParentClientOptions>,
@@ -64,6 +66,7 @@ impl ParentClient {
     /// # Arguments
     ///
     /// * `blob_name` - The name of the blob. This parameter is used as a path parameter in all operations.
+    #[tracing::subclient]
     pub fn get_parent_child_client(&self, blob_name: String) -> ParentChildClient {
         ParentChildClient {
             blob_name,

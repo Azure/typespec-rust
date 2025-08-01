@@ -8,10 +8,12 @@ use crate::generated::models::{
     CollectionFormatQueryClientPipesOptions, CollectionFormatQueryClientSsvOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct CollectionFormatQueryClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +30,7 @@ impl CollectionFormatQueryClient {
     ///
     /// * `colors` - Possible values for colors are [blue,red,green]
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.CollectionFormat.Query.csv")]
     pub async fn csv(
         &self,
         colors: &[&str],
@@ -40,7 +43,17 @@ impl CollectionFormatQueryClient {
         url.query_pairs_mut()
             .append_pair("colors", &colors.join(","));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
@@ -48,6 +61,7 @@ impl CollectionFormatQueryClient {
     ///
     /// * `colors` - Possible values for colors are [blue,red,green]
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.CollectionFormat.Query.multi")]
     pub async fn multi(
         &self,
         colors: &[&str],
@@ -61,7 +75,17 @@ impl CollectionFormatQueryClient {
             url.query_pairs_mut().append_pair("colors", c);
         }
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
@@ -69,6 +93,7 @@ impl CollectionFormatQueryClient {
     ///
     /// * `colors` - Possible values for colors are [blue,red,green]
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.CollectionFormat.Query.pipes")]
     pub async fn pipes(
         &self,
         colors: &[&str],
@@ -81,7 +106,17 @@ impl CollectionFormatQueryClient {
         url.query_pairs_mut()
             .append_pair("colors", &colors.join("|"));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
@@ -89,6 +124,7 @@ impl CollectionFormatQueryClient {
     ///
     /// * `colors` - Possible values for colors are [blue,red,green]
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.CollectionFormat.Query.ssv")]
     pub async fn ssv(
         &self,
         colors: &[&str],
@@ -101,6 +137,16 @@ impl CollectionFormatQueryClient {
         url.query_pairs_mut()
             .append_pair("colors", &colors.join(" "));
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

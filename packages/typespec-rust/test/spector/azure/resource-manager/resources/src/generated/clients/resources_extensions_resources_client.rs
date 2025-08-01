@@ -10,15 +10,17 @@ use crate::generated::models::{
     ResourcesExtensionsResourcesClientUpdateOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{
-        Context, Method, NoFormat, Pager, PagerResult, Pipeline, RawResponse, Request,
+        Context, Method, NoFormat, Pager, PagerResult, PagerState, Pipeline, RawResponse, Request,
         RequestContent, Response, Url,
     },
-    json, Result,
+    json, tracing, Error, Result,
 };
 
 /// The interface of extensions resources,
 /// it contains 4 kinds of scopes (resource, resource group, subscription and tenant)
+#[tracing::client]
 pub struct ResourcesExtensionsResourcesClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -38,6 +40,7 @@ impl ResourcesExtensionsResourcesClient {
     /// * `resource_uri` - The fully qualified Azure Resource manager identifier of the resource.
     /// * `extensions_resource_name` - The name of the ExtensionsResource
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.delete")]
     pub async fn delete(
         &self,
         resource_uri: &str,
@@ -55,7 +58,17 @@ impl ResourcesExtensionsResourcesClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Get a ExtensionsResource
@@ -65,6 +78,7 @@ impl ResourcesExtensionsResourcesClient {
     /// * `resource_uri` - The fully qualified Azure Resource manager identifier of the resource.
     /// * `extensions_resource_name` - The name of the ExtensionsResource
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.get")]
     pub async fn get(
         &self,
         resource_uri: &str,
@@ -82,7 +96,17 @@ impl ResourcesExtensionsResourcesClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// List ExtensionsResource resources by parent
@@ -91,6 +115,7 @@ impl ResourcesExtensionsResourcesClient {
     ///
     /// * `resource_uri` - The fully qualified Azure Resource manager identifier of the resource.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.listByScope")]
     pub fn list_by_scope(
         &self,
         resource_uri: &str,
@@ -108,9 +133,9 @@ impl ResourcesExtensionsResourcesClient {
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
-        Ok(Pager::from_callback(move |next_link: Option<Url>| {
+        Ok(Pager::from_callback(move |next_link: PagerState<Url>| {
             let url = match next_link {
-                Some(next_link) => {
+                PagerState::More(next_link) => {
                     let qp = next_link
                         .query_pairs()
                         .filter(|(name, _)| name.ne("api-version"));
@@ -122,7 +147,7 @@ impl ResourcesExtensionsResourcesClient {
                         .append_pair("api-version", &api_version);
                     next_link
                 }
-                None => first_url.clone(),
+                PagerState::Initial => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);
             request.insert_header("accept", "application/json");
@@ -130,6 +155,15 @@ impl ResourcesExtensionsResourcesClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: ExtensionsResourceListResult = json::from_json(&bytes)?;
@@ -153,6 +187,7 @@ impl ResourcesExtensionsResourcesClient {
     /// * `extensions_resource_name` - The name of the ExtensionsResource
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.update")]
     pub async fn update(
         &self,
         resource_uri: &str,
@@ -173,6 +208,16 @@ impl ResourcesExtensionsResourcesClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(properties);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

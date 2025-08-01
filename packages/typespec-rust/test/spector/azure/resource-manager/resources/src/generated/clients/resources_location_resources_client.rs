@@ -11,13 +11,15 @@ use crate::generated::models::{
     ResourcesLocationResourcesClientUpdateOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{
-        Context, Method, NoFormat, Pager, PagerResult, Pipeline, RawResponse, Request,
+        Context, Method, NoFormat, Pager, PagerResult, PagerState, Pipeline, RawResponse, Request,
         RequestContent, Response, Url,
     },
-    json, Result,
+    json, tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ResourcesLocationResourcesClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -39,6 +41,7 @@ impl ResourcesLocationResourcesClient {
     /// * `location_resource_name` - The name of the LocationResource
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.createOrUpdate")]
     pub async fn create_or_update(
         &self,
         location: &str,
@@ -60,7 +63,17 @@ impl ResourcesLocationResourcesClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(resource);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Delete a LocationResource
@@ -70,6 +83,7 @@ impl ResourcesLocationResourcesClient {
     /// * `location` - The name of the Azure region.
     /// * `location_resource_name` - The name of the LocationResource
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.delete")]
     pub async fn delete(
         &self,
         location: &str,
@@ -88,7 +102,17 @@ impl ResourcesLocationResourcesClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Get a LocationResource
@@ -98,6 +122,7 @@ impl ResourcesLocationResourcesClient {
     /// * `location` - The name of the Azure region.
     /// * `location_resource_name` - The name of the LocationResource
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.get")]
     pub async fn get(
         &self,
         location: &str,
@@ -116,7 +141,17 @@ impl ResourcesLocationResourcesClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// List LocationResource resources by SubscriptionLocationResource
@@ -125,6 +160,7 @@ impl ResourcesLocationResourcesClient {
     ///
     /// * `location` - The name of the Azure region.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.listByLocation")]
     pub fn list_by_location(
         &self,
         location: &str,
@@ -141,9 +177,9 @@ impl ResourcesLocationResourcesClient {
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
-        Ok(Pager::from_callback(move |next_link: Option<Url>| {
+        Ok(Pager::from_callback(move |next_link: PagerState<Url>| {
             let url = match next_link {
-                Some(next_link) => {
+                PagerState::More(next_link) => {
                     let qp = next_link
                         .query_pairs()
                         .filter(|(name, _)| name.ne("api-version"));
@@ -155,7 +191,7 @@ impl ResourcesLocationResourcesClient {
                         .append_pair("api-version", &api_version);
                     next_link
                 }
-                None => first_url.clone(),
+                PagerState::Initial => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);
             request.insert_header("accept", "application/json");
@@ -163,6 +199,15 @@ impl ResourcesLocationResourcesClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: LocationResourceListResult = json::from_json(&bytes)?;
@@ -186,6 +231,7 @@ impl ResourcesLocationResourcesClient {
     /// * `location_resource_name` - The name of the LocationResource
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.LocationResources.update")]
     pub async fn update(
         &self,
         location: &str,
@@ -207,6 +253,16 @@ impl ResourcesLocationResourcesClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(properties);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

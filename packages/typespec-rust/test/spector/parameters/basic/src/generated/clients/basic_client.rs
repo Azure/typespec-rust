@@ -7,10 +7,11 @@ use crate::generated::clients::{BasicExplicitBodyClient, BasicImplicitBodyClient
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test for basic parameters cases.
+#[tracing::client]
 pub struct BasicClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl BasicClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_basicparams")]
     pub fn with_no_credential(endpoint: &str, options: Option<BasicClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -58,6 +60,7 @@ impl BasicClient {
     }
 
     /// Returns a new instance of BasicExplicitBodyClient.
+    #[tracing::subclient]
     pub fn get_basic_explicit_body_client(&self) -> BasicExplicitBodyClient {
         BasicExplicitBodyClient {
             endpoint: self.endpoint.clone(),
@@ -66,6 +69,7 @@ impl BasicClient {
     }
 
     /// Returns a new instance of BasicImplicitBodyClient.
+    #[tracing::subclient]
     pub fn get_basic_implicit_body_client(&self) -> BasicImplicitBodyClient {
         BasicImplicitBodyClient {
             endpoint: self.endpoint.clone(),

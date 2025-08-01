@@ -8,10 +8,12 @@ use crate::generated::models::{
     NullableStringClientPatchNonNullOptions, NullableStringClientPatchNullOptions, StringProperty,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct NullableStringClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +30,7 @@ impl NullableStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Nullable.String.getNonNull")]
     pub async fn get_non_null(
         &self,
         options: Option<NullableStringClientGetNonNullOptions<'_>>,
@@ -38,7 +41,17 @@ impl NullableStringClient {
         url = url.join("type/property/nullable/string/non-null")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Get models that will return the default object
@@ -46,6 +59,7 @@ impl NullableStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Nullable.String.getNull")]
     pub async fn get_null(
         &self,
         options: Option<NullableStringClientGetNullOptions<'_>>,
@@ -56,7 +70,17 @@ impl NullableStringClient {
         url = url.join("type/property/nullable/string/null")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Put a body with all properties present.
@@ -64,6 +88,7 @@ impl NullableStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Nullable.String.patchNonNull")]
     pub async fn patch_non_null(
         &self,
         body: RequestContent<StringProperty>,
@@ -76,7 +101,17 @@ impl NullableStringClient {
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Put a body with default properties.
@@ -84,6 +119,7 @@ impl NullableStringClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Nullable.String.patchNull")]
     pub async fn patch_null(
         &self,
         body: RequestContent<StringProperty>,
@@ -96,6 +132,16 @@ impl NullableStringClient {
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

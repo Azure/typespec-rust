@@ -9,10 +9,11 @@ use crate::generated::clients::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test for encode decorator on datetime.
+#[tracing::client]
 pub struct DatetimeClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +33,7 @@ impl DatetimeClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_datetime")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<DatetimeClientOptions>,
@@ -63,6 +65,7 @@ impl DatetimeClient {
     }
 
     /// Returns a new instance of DatetimeHeaderClient.
+    #[tracing::subclient]
     pub fn get_datetime_header_client(&self) -> DatetimeHeaderClient {
         DatetimeHeaderClient {
             endpoint: self.endpoint.clone(),
@@ -71,6 +74,7 @@ impl DatetimeClient {
     }
 
     /// Returns a new instance of DatetimePropertyClient.
+    #[tracing::subclient]
     pub fn get_datetime_property_client(&self) -> DatetimePropertyClient {
         DatetimePropertyClient {
             endpoint: self.endpoint.clone(),
@@ -79,6 +83,7 @@ impl DatetimeClient {
     }
 
     /// Returns a new instance of DatetimeQueryClient.
+    #[tracing::subclient]
     pub fn get_datetime_query_client(&self) -> DatetimeQueryClient {
         DatetimeQueryClient {
             endpoint: self.endpoint.clone(),
@@ -87,6 +92,7 @@ impl DatetimeClient {
     }
 
     /// Returns a new instance of DatetimeResponseHeaderClient.
+    #[tracing::subclient]
     pub fn get_datetime_response_header_client(&self) -> DatetimeResponseHeaderClient {
         DatetimeResponseHeaderClient {
             endpoint: self.endpoint.clone(),

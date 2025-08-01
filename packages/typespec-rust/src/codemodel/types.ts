@@ -261,7 +261,7 @@ export interface PageIterator extends External {
   kind: 'pageIterator';
 
   /** the model containing the page of items */
-  type: Response<Model, Exclude<ResponseFormat, 'NoFormat'>>;
+  type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
 }
 
 /** Pager is a Pager<T> from azure_core */
@@ -269,7 +269,7 @@ export interface Pager extends External {
   kind: 'pager';
 
   /** the model containing the page of items */
-  type: Response<Model, Exclude<ResponseFormat, 'NoFormat'>>;
+  type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
 }
 
 /** PayloadFormat indicates the wire format for request bodies */
@@ -324,21 +324,24 @@ export interface Ref<T extends RefType = RefType> extends RefBase {
 type RequestContentTypes = Bytes | Payload;
 
 /** RequestContent is a Rust RequestContent<T> from azure_core */
-export interface RequestContent<T extends RequestContentTypes = RequestContentTypes> extends External {
+export interface RequestContent<T extends RequestContentTypes = RequestContentTypes, Format extends PayloadFormatType = PayloadFormatType> extends External {
   kind: 'requestContent';
 
   /** the type of content sent in the request */
   content: T;
+
+  /** the wire format of the request body */
+  format: Format;
 }
 
 /** ResponseFormat is the format of the response body */
-export type ResponseFormat = 'JsonFormat' | 'NoFormat' | 'XmlFormat';
+export type PayloadFormatType = 'JsonFormat' | 'NoFormat' | 'XmlFormat';
 
 /** ResponseTypes defines the type constraint when creating a Response<T> */
 export type ResponseTypes = MarkerType | Unit | WireType;
 
 /** Response is a Rust Response<T, Format> from azure_core */
-export interface Response<T extends ResponseTypes = ResponseTypes, Format extends ResponseFormat = ResponseFormat> extends External {
+export interface Response<T extends ResponseTypes = ResponseTypes, Format extends PayloadFormatType = PayloadFormatType> extends External {
   kind: 'response';
 
   /** the type of content sent in the response */
@@ -706,7 +709,7 @@ export class Option implements Option {
 }
 
 export class PageIterator extends External implements PageIterator {
-  constructor(crate: Crate, type: Response<Model, Exclude<ResponseFormat, 'NoFormat'>>) {
+  constructor(crate: Crate, type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
     super(crate, 'PageIterator', 'azure_core::http');
     this.kind = 'pageIterator';
     this.type = type;
@@ -714,7 +717,7 @@ export class PageIterator extends External implements PageIterator {
 }
 
 export class Pager extends External implements Pager {
-  constructor(crate: Crate, type: Response<Model, Exclude<ResponseFormat, 'NoFormat'>>) {
+  constructor(crate: Crate, type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
     super(crate, 'Pager', 'azure_core::http');
     this.kind = 'pager';
     this.type = type;
@@ -743,11 +746,12 @@ export class Ref<T> implements Ref<T> {
   }
 }
 
-export class RequestContent<T> extends External implements RequestContent<T> {
-  constructor(crate: Crate, content: T) {
+export class RequestContent<T, Format> extends External implements RequestContent<T, Format> {
+  constructor(crate: Crate, content: T, format: Format) {
     super(crate, 'RequestContent', 'azure_core::http');
     this.kind = 'requestContent';
     this.content = content;
+    this.format = format;
   }
 }
 

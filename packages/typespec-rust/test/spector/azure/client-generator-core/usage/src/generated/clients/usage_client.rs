@@ -7,10 +7,11 @@ use crate::generated::clients::UsageModelInOperationClient;
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test for internal decorator.
+#[tracing::client]
 pub struct UsageClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +31,7 @@ impl UsageClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_coreusage")]
     pub fn with_no_credential(endpoint: &str, options: Option<UsageClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
@@ -58,6 +60,7 @@ impl UsageClient {
     }
 
     /// Returns a new instance of UsageModelInOperationClient.
+    #[tracing::subclient]
     pub fn get_usage_model_in_operation_client(&self) -> UsageModelInOperationClient {
         UsageModelInOperationClient {
             endpoint: self.endpoint.clone(),

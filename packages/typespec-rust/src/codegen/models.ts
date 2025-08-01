@@ -495,7 +495,7 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
    * the module names are a concatenation of the type names.
    * e.g. vec_offset_date_time, hashmap_vec_encoded_bytes_std etc
    */
-  const buildSerDeModName = function(type: rust.Type): string {
+  const buildSerDeModName = function (type: rust.Type): string {
     let name = codegen.deconstruct(type.kind).join('_');
     let unwrapped = type;
     while (unwrapped.kind === 'hashmap' || unwrapped.kind === 'option' || unwrapped.kind === 'Vec') {
@@ -520,7 +520,7 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
   };
 
   /** non-collection based impl */
-  const serdeEncodedBytes = function(encoding: rust.BytesEncoding): void {
+  const serdeEncodedBytes = function (encoding: rust.BytesEncoding): void {
     const format = encoding === 'url' ? '_url_safe' : '';
     const deserializer = `deserialize${format}`;
     const serializer = `serialize${format}`;
@@ -531,13 +531,13 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
   };
 
   /** non-collection based impl */
-  const serdeOffsetDateTime = function(encoding: rust.DateTimeEncoding, optional: boolean): void {
+  const serdeOffsetDateTime = function (encoding: rust.DateTimeEncoding, optional: boolean): void {
     serdeParams.add('default');
     serdeParams.add(`with = "azure_core::time::${encoding}${optional ? '::option' : ''}"`);
   };
 
   /** serializing literal values */
-  const serdeLiteral = function(literal: rust.Literal): void {
+  const serdeLiteral = function (literal: rust.Literal): void {
     let literalValueName = literal.value.toString();
     if (literal.valueKind.kind === 'scalar') {
       // if the scalar is a float, replace the . as it's illegal in an identifier
@@ -637,7 +637,7 @@ function emitSerDeHelpers(use: Use): string | undefined {
 function buildLiteralSerialize(indent: helpers.indentation, name: string, field: rust.ModelField, use: Use): string {
   const literal = shared.unwrapOption(field.type);
   if (literal.kind !== 'literal') {
-    throw new CodegenError('InternalError', `unexpected kind ${literal.kind}`); 
+    throw new CodegenError('InternalError', `unexpected kind ${literal.kind}`);
   }
 
   use.add('serde', 'Serializer');
@@ -721,7 +721,7 @@ function buildSerialize(indent: helpers.indentation, type: rust.Type, use: Use):
   use.addForType(type);
 
   // clippy wants the outer-most Vec<T> to be a [] instead
-  const getTypeDeclaration = function(type: rust.Type): string {
+  const getTypeDeclaration = function (type: rust.Type): string {
     if (type.kind === 'Vec') {
       return `[${helpers.getTypeDeclaration(type.type)}]`;
     }
@@ -831,7 +831,7 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
    * when valAsDefault is true, the value in val is returned.
    * else the empty string is returned.
    */
-  const insertOrPush = function(val: string, valAsDefault: boolean): string {
+  const insertOrPush = function (val: string, valAsDefault: boolean): string {
     switch (ctx.caller) {
       case 'hashmap':
         return `${indent.get()}${ctx.destVar.prev()}.insert(kv.0, ${val});\n`;
@@ -918,7 +918,7 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
  */
 function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx: stateCtx): string {
   /** inserts the var in val into the current HashMap<T, U> */
-  const hashMapInsert = function(val: string): string {
+  const hashMapInsert = function (val: string): string {
     return `${indent.get()}${ctx.destVar.prev()}.insert(kv.0, ${val});\n`
   };
 

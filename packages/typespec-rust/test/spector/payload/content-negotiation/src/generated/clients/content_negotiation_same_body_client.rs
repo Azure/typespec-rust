@@ -8,10 +8,12 @@ use crate::generated::models::{
     ContentNegotiationSameBodyClientGetAvatarAsPngOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, Pipeline, RawResponse, Request, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ContentNegotiationSameBodyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -27,6 +29,7 @@ impl ContentNegotiationSameBodyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.ContentNegotiation.SameBody.getAvatarAsJpeg")]
     pub async fn get_avatar_as_jpeg(
         &self,
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsJpegOptions<'_>>,
@@ -37,13 +40,24 @@ impl ContentNegotiationSameBodyClient {
         url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/jpeg");
-        self.pipeline.send(&ctx, &mut request).await
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp)
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.ContentNegotiation.SameBody.getAvatarAsPng")]
     pub async fn get_avatar_as_png(
         &self,
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsPngOptions<'_>>,
@@ -54,6 +68,16 @@ impl ContentNegotiationSameBodyClient {
         url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
-        self.pipeline.send(&ctx, &mut request).await
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp)
     }
 }

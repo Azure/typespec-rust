@@ -2,7 +2,7 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
+// cspell: ignore cargotoml
 import { emitCargoToml } from './cargotoml.js';
 import { emitClients } from './clients.js';
 import { Context } from './context.js';
@@ -67,11 +67,11 @@ export class CodeGenerator {
     const clientsSubDir = 'clients';
     const modelsSubDir = 'models';
 
-    const addModelsFile = function(module: Module | undefined, visibility: 'internal' | 'pubUse' | 'pubCrate'): void {
+    const addModelsFile = function (module: Module | undefined, visibility: 'internal' | 'pubUse' | 'pubCrate'): void {
       if (!module) {
         return;
       }
-      files.push({name: `${modelsSubDir}/${module.name}.rs`, content: module.content});
+      files.push({ name: `${modelsSubDir}/${module.name}.rs`, content: module.content });
       modelsModRS.push(`${visibility === 'pubCrate' ? 'pub(crate) ' : ''}mod ${module.name}`);
       if (visibility === 'pubUse') {
         modelsModRS.push(`pub use ${module.name}::*`);
@@ -80,8 +80,8 @@ export class CodeGenerator {
 
     const clientModules = emitClients(this.crate);
     if (clientModules) {
-      files.push(...clientModules.modules.map((module) => { return {name: `${clientsSubDir}/${module.name}.rs`, content: module.content}; }));
-      files.push({name: `${clientsSubDir}/mod.rs`, content: emitClientsModRs(clientModules.modules.map((module) => module.name))});
+      files.push(...clientModules.modules.map((module) => { return { name: `${clientsSubDir}/${module.name}.rs`, content: module.content }; }));
+      files.push({ name: `${clientsSubDir}/mod.rs`, content: emitClientsModRs(clientModules.modules.map((module) => module.name)) });
       addModelsFile(clientModules.options, 'pubUse');
     }
 
@@ -97,11 +97,11 @@ export class CodeGenerator {
     addModelsFile(emitHeaderTraits(this.crate), 'pubUse');
 
     if (modelsModRS.length > 0) {
-      files.push({name: `${modelsSubDir}/mod.rs`, content: emitModelsModRs(modelsModRS)})
+      files.push({ name: `${modelsSubDir}/mod.rs`, content: emitModelsModRs(modelsModRS) })
     }
 
     // there will always be something in the generated/mod.rs file
-    files.push({name: 'mod.rs', content: emitGeneratedModRs(this.crate)});
+    files.push({ name: 'mod.rs', content: emitGeneratedModRs(this.crate) });
 
     return files;
   }

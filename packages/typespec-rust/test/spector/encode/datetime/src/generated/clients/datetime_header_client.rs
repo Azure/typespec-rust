@@ -9,11 +9,13 @@ use crate::generated::models::{
     DatetimeHeaderClientUnixTimestampOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
     time::{to_rfc3339, to_rfc7231, OffsetDateTime},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct DatetimeHeaderClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -29,6 +31,7 @@ impl DatetimeHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Header.default")]
     pub async fn default(
         &self,
         value: OffsetDateTime,
@@ -40,13 +43,24 @@ impl DatetimeHeaderClient {
         url = url.join("encode/datetime/header/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", to_rfc7231(&value));
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Header.rfc3339")]
     pub async fn rfc3339(
         &self,
         value: OffsetDateTime,
@@ -58,13 +72,24 @@ impl DatetimeHeaderClient {
         url = url.join("encode/datetime/header/rfc3339")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", to_rfc3339(&value));
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Header.rfc7231")]
     pub async fn rfc7231(
         &self,
         value: OffsetDateTime,
@@ -76,13 +101,24 @@ impl DatetimeHeaderClient {
         url = url.join("encode/datetime/header/rfc7231")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", to_rfc7231(&value));
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Header.unixTimestamp")]
     pub async fn unix_timestamp(
         &self,
         value: OffsetDateTime,
@@ -94,13 +130,24 @@ impl DatetimeHeaderClient {
         url = url.join("encode/datetime/header/unix-timestamp")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", value.unix_timestamp().to_string());
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Datetime.Header.unixTimestampArray")]
     pub async fn unix_timestamp_array(
         &self,
         value: &[OffsetDateTime],
@@ -119,6 +166,16 @@ impl DatetimeHeaderClient {
                 .collect::<Vec<String>>()
                 .join(","),
         );
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

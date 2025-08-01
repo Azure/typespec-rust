@@ -8,12 +8,14 @@ use crate::generated::models::{
     FlattenPropertyClientPutNestedFlattenModelOptions, NestedFlattenModel,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
 /// Illustrates the model flatten cases.
+#[tracing::client]
 pub struct FlattenPropertyClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -33,6 +35,7 @@ impl FlattenPropertyClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_flattenproperty")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<FlattenPropertyClientOptions>,
@@ -67,6 +70,7 @@ impl FlattenPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.ClientGenerator.Core.FlattenProperty.putFlattenModel")]
     pub async fn put_flatten_model(
         &self,
         input: RequestContent<FlattenModel>,
@@ -80,13 +84,24 @@ impl FlattenPropertyClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.ClientGenerator.Core.FlattenProperty.putNestedFlattenModel")]
     pub async fn put_nested_flatten_model(
         &self,
         input: RequestContent<NestedFlattenModel>,
@@ -100,6 +115,16 @@ impl FlattenPropertyClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

@@ -180,14 +180,16 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return type.name;
     case 'ref':
       return `&${getTypeDeclaration(type.type)}`;
-    case 'requestContent':
+    case 'requestContent': {
+      const formatType = `${type.format !== 'JsonFormat' ? `, ${type.format}` : ''}`;
       switch (type.content.kind) {
         case 'bytes':
-          return `${type.name}<${getTypeDeclaration(type.content)}>`;
+          return `${type.name}<${getTypeDeclaration(type.content)}${formatType}>`;
         case 'payload':
-          return `${type.name}<${getTypeDeclaration(type.content.type, withAnonymousLifetime)}>`;
+          return `${type.name}<${getTypeDeclaration(type.content.type, withAnonymousLifetime)}${formatType}>`;
       }
       break;
+    }
     case 'result':
       return `${type.name}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
     case 'response':
@@ -430,7 +432,7 @@ export type ModelFormat = 'json' | 'xml';
  * @param format is the format to convert
  * @returns json or xml
  */
-export function convertResponseFormat(format: Exclude<rust.ResponseFormat, 'NoFormat'>): ModelFormat {
+export function convertResponseFormat(format: Exclude<rust.PayloadFormatType, 'NoFormat'>): ModelFormat {
   switch (format) {
     case 'JsonFormat':
       return 'json';

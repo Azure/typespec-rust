@@ -8,13 +8,15 @@ use crate::generated::models::{
     XmlModelWithSimpleArraysValueClientPutOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{
         Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url, XmlFormat,
     },
-    Result,
+    tracing, Error, Result,
 };
 
 /// Operations for the ModelWithSimpleArrays type.
+#[tracing::client]
 pub struct XmlModelWithSimpleArraysValueClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +32,7 @@ impl XmlModelWithSimpleArraysValueClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.Xml.ModelWithSimpleArraysValue.get")]
     pub async fn get(
         &self,
         options: Option<XmlModelWithSimpleArraysValueClientGetOptions<'_>>,
@@ -40,16 +43,27 @@ impl XmlModelWithSimpleArraysValueClient {
         url = url.join("payload/xml/modelWithSimpleArrays")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Payload.Xml.ModelWithSimpleArraysValue.put")]
     pub async fn put(
         &self,
-        input: RequestContent<ModelWithSimpleArrays>,
+        input: RequestContent<ModelWithSimpleArrays, XmlFormat>,
         options: Option<XmlModelWithSimpleArraysValueClientPutOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
@@ -59,6 +73,16 @@ impl XmlModelWithSimpleArraysValueClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.set_body(input);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

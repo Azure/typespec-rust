@@ -8,10 +8,12 @@ use crate::generated::models::{
     NullableBytesClientPatchNonNullOptions, NullableBytesClientPatchNullOptions,
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct NullableBytesClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -28,6 +30,7 @@ impl NullableBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Nullable.Bytes.getNonNull")]
     pub async fn get_non_null(
         &self,
         options: Option<NullableBytesClientGetNonNullOptions<'_>>,
@@ -38,7 +41,17 @@ impl NullableBytesClient {
         url = url.join("type/property/nullable/bytes/non-null")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Get models that will return the default object
@@ -46,6 +59,7 @@ impl NullableBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Nullable.Bytes.getNull")]
     pub async fn get_null(
         &self,
         options: Option<NullableBytesClientGetNullOptions<'_>>,
@@ -56,7 +70,17 @@ impl NullableBytesClient {
         url = url.join("type/property/nullable/bytes/null")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Put a body with all properties present.
@@ -64,6 +88,7 @@ impl NullableBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Nullable.Bytes.patchNonNull")]
     pub async fn patch_non_null(
         &self,
         body: RequestContent<BytesProperty>,
@@ -76,7 +101,17 @@ impl NullableBytesClient {
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Put a body with default properties.
@@ -84,6 +119,7 @@ impl NullableBytesClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Type.Property.Nullable.Bytes.patchNull")]
     pub async fn patch_null(
         &self,
         body: RequestContent<BytesProperty>,
@@ -96,6 +132,16 @@ impl NullableBytesClient {
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

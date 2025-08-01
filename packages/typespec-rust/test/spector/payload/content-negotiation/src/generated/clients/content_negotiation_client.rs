@@ -9,10 +9,11 @@ use crate::generated::clients::{
 use azure_core::{
     fmt::SafeDebug,
     http::{ClientOptions, Pipeline, Url},
-    Result,
+    tracing, Result,
 };
 
 /// Test describing optionality of the request body.
+#[tracing::client]
 pub struct ContentNegotiationClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +33,7 @@ impl ContentNegotiationClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_contentneg")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<ContentNegotiationClientOptions>,
@@ -63,6 +65,7 @@ impl ContentNegotiationClient {
     }
 
     /// Returns a new instance of ContentNegotiationDifferentBodyClient.
+    #[tracing::subclient]
     pub fn get_content_negotiation_different_body_client(
         &self,
     ) -> ContentNegotiationDifferentBodyClient {
@@ -73,6 +76,7 @@ impl ContentNegotiationClient {
     }
 
     /// Returns a new instance of ContentNegotiationSameBodyClient.
+    #[tracing::subclient]
     pub fn get_content_negotiation_same_body_client(&self) -> ContentNegotiationSameBodyClient {
         ContentNegotiationSameBodyClient {
             endpoint: self.endpoint.clone(),

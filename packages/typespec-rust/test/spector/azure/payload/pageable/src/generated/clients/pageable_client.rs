@@ -5,12 +5,16 @@
 
 use crate::generated::models::{PageableClientListOptions, PagedUser};
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{ClientOptions, Method, Pager, PagerResult, Pipeline, RawResponse, Request, Url},
-    json, Result,
+    http::{
+        ClientOptions, Method, Pager, PagerResult, PagerState, Pipeline, RawResponse, Request, Url,
+    },
+    json, tracing, Error, Result,
 };
 
 /// Test describing pageable.
+#[tracing::client]
 pub struct PageableClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -30,6 +34,7 @@ impl PageableClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_azurepageable")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<PageableClientOptions>,
@@ -65,6 +70,7 @@ impl PageableClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Payload.Pageable.list")]
     pub fn list(&self, options: Option<PageableClientListOptions<'_>>) -> Result<Pager<PagedUser>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -75,10 +81,10 @@ impl PageableClient {
                 .query_pairs_mut()
                 .append_pair("maxpagesize", &maxpagesize.to_string());
         }
-        Ok(Pager::from_callback(move |next_link: Option<Url>| {
+        Ok(Pager::from_callback(move |next_link: PagerState<Url>| {
             let url = match next_link {
-                Some(next_link) => next_link,
-                None => first_url.clone(),
+                PagerState::More(next_link) => next_link,
+                PagerState::Initial => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);
             request.insert_header("accept", "application/json");
@@ -86,6 +92,15 @@ impl PageableClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;

@@ -8,10 +8,15 @@ use crate::generated::models::{
     ResourcesNestedClientListByTopLevelTrackedResourceOptions,
 };
 use azure_core::{
-    http::{Context, Method, Pager, PagerResult, Pipeline, RawResponse, Request, Response, Url},
-    json, Result,
+    error::{ErrorKind, HttpError},
+    http::{
+        Context, Method, Pager, PagerResult, PagerState, Pipeline, RawResponse, Request, Response,
+        Url,
+    },
+    json, tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct ResourcesNestedClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -33,6 +38,7 @@ impl ResourcesNestedClient {
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `nexted_proxy_resource_name` - Name of the nested resource.
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.Nested.get")]
     pub async fn get(
         &self,
         resource_group_name: &str,
@@ -56,7 +62,17 @@ impl ResourcesNestedClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// List NestedProxyResource resources by TopLevelTrackedResource
@@ -66,6 +82,7 @@ impl ResourcesNestedClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Azure.ResourceManager.Resources.Nested.listByTopLevelTrackedResource")]
     pub fn list_by_top_level_tracked_resource(
         &self,
         resource_group_name: &str,
@@ -87,9 +104,9 @@ impl ResourcesNestedClient {
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
-        Ok(Pager::from_callback(move |next_link: Option<Url>| {
+        Ok(Pager::from_callback(move |next_link: PagerState<Url>| {
             let url = match next_link {
-                Some(next_link) => {
+                PagerState::More(next_link) => {
                     let qp = next_link
                         .query_pairs()
                         .filter(|(name, _)| name.ne("api-version"));
@@ -101,7 +118,7 @@ impl ResourcesNestedClient {
                         .append_pair("api-version", &api_version);
                     next_link
                 }
-                None => first_url.clone(),
+                PagerState::Initial => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);
             request.insert_header("accept", "application/json");
@@ -109,6 +126,15 @@ impl ResourcesNestedClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                if !rsp.status().is_success() {
+                    let status = rsp.status();
+                    let http_error = HttpError::new(rsp).await;
+                    let error_kind = ErrorKind::http_response(
+                        status,
+                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
+                    );
+                    return Err(Error::new(error_kind, http_error));
+                }
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: NestedProxyResourceListResult = json::from_json(&bytes)?;

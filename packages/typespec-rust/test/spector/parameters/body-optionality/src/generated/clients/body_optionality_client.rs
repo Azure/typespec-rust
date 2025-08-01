@@ -11,14 +11,16 @@ use crate::generated::{
     },
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Result,
+    tracing, Error, Result,
 };
 
 /// Test describing optionality of the request body.
+#[tracing::client]
 pub struct BodyOptionalityClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -38,6 +40,7 @@ impl BodyOptionalityClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_bodyoptional")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<BodyOptionalityClientOptions>,
@@ -69,6 +72,7 @@ impl BodyOptionalityClient {
     }
 
     /// Returns a new instance of BodyOptionalityOptionalExplicitClient.
+    #[tracing::subclient]
     pub fn get_body_optionality_optional_explicit_client(
         &self,
     ) -> BodyOptionalityOptionalExplicitClient {
@@ -82,6 +86,7 @@ impl BodyOptionalityClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.BodyOptionality.requiredExplicit")]
     pub async fn required_explicit(
         &self,
         body: RequestContent<BodyModel>,
@@ -94,13 +99,24 @@ impl BodyOptionalityClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Parameters.BodyOptionality.requiredImplicit")]
     pub async fn required_implicit(
         &self,
         name: String,
@@ -114,6 +130,16 @@ impl BodyOptionalityClient {
         request.insert_header("content-type", "application/json");
         let body: RequestContent<BodyModel> = BodyModel { name: Some(name) }.try_into()?;
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

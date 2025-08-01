@@ -14,14 +14,16 @@ use crate::generated::{
     },
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
-    Result,
+    tracing, Error, Result,
 };
 
 /// Describe changing names of types in a client with `@clientName`
+#[tracing::client]
 pub struct NamingClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -41,6 +43,7 @@ impl NamingClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_naming")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NamingClientOptions>,
@@ -75,6 +78,7 @@ impl NamingClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Naming.Property.client")]
     pub async fn client(
         &self,
         body: RequestContent<ClientNameModel>,
@@ -87,13 +91,24 @@ impl NamingClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Naming.operation")]
     pub async fn client_name(
         &self,
         options: Option<NamingClientClientNameOptions<'_>>,
@@ -103,13 +118,24 @@ impl NamingClient {
         let mut url = self.endpoint.clone();
         url = url.join("client/naming/operation")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Naming.Property.compatibleWithEncodedName")]
     pub async fn compatible_with_encoded_name(
         &self,
         body: RequestContent<ClientNameAndJsonEncodedNameModel>,
@@ -122,10 +148,21 @@ impl NamingClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Returns a new instance of ClientModelClient.
+    #[tracing::subclient]
     pub fn get_client_model_client(&self) -> ClientModelClient {
         ClientModelClient {
             endpoint: self.endpoint.clone(),
@@ -134,6 +171,7 @@ impl NamingClient {
     }
 
     /// Returns a new instance of NamingUnionEnumClient.
+    #[tracing::subclient]
     pub fn get_naming_union_enum_client(&self) -> NamingUnionEnumClient {
         NamingUnionEnumClient {
             endpoint: self.endpoint.clone(),
@@ -145,6 +183,7 @@ impl NamingClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Naming.Property.language")]
     pub async fn language(
         &self,
         body: RequestContent<LanguageClientNameModel>,
@@ -157,13 +196,24 @@ impl NamingClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Naming.parameter")]
     pub async fn parameter(
         &self,
         client_name: &str,
@@ -176,13 +226,24 @@ impl NamingClient {
         url.query_pairs_mut()
             .append_pair("defaultName", client_name);
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Naming.Header.request")]
     pub async fn request(
         &self,
         client_name: String,
@@ -194,13 +255,24 @@ impl NamingClient {
         url = url.join("client/naming/header")?;
         let mut request = Request::new(url, Method::Post);
         request.insert_header("default-name", client_name);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Naming.Header.response")]
     pub async fn response(
         &self,
         options: Option<NamingClientResponseOptions<'_>>,
@@ -210,6 +282,16 @@ impl NamingClient {
         let mut url = self.endpoint.clone();
         url = url.join("client/naming/header")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

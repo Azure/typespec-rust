@@ -8,11 +8,13 @@ use crate::generated::{
     models::{ClientType, FirstClientOneOptions},
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct FirstClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -33,6 +35,7 @@ impl FirstClient {
     /// * `endpoint` - Service host
     /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_clientopgroup")]
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -68,6 +71,7 @@ impl FirstClient {
     }
 
     /// Returns a new instance of FirstGroup3Client.
+    #[tracing::subclient]
     pub fn get_first_group3_client(&self) -> FirstGroup3Client {
         FirstGroup3Client {
             endpoint: self.endpoint.clone(),
@@ -76,6 +80,7 @@ impl FirstClient {
     }
 
     /// Returns a new instance of FirstGroup4Client.
+    #[tracing::subclient]
     pub fn get_first_group4_client(&self) -> FirstGroup4Client {
         FirstGroup4Client {
             endpoint: self.endpoint.clone(),
@@ -87,6 +92,7 @@ impl FirstClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Client.Structure.ClientOperationGroup.one")]
     pub async fn one(
         &self,
         options: Option<FirstClientOneOptions<'_>>,
@@ -96,6 +102,16 @@ impl FirstClient {
         let mut url = self.endpoint.clone();
         url = url.join("one")?;
         let mut request = Request::new(url, Method::Post);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

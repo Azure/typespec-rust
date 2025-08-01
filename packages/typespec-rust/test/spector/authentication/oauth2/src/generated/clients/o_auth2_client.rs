@@ -6,16 +6,18 @@
 use crate::generated::models::{OAuth2ClientInvalidOptions, OAuth2ClientValidOptions};
 use azure_core::{
     credentials::TokenCredential,
+    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url,
     },
-    Result,
+    tracing, Error, Result,
 };
 use std::sync::Arc;
 
 /// Illustrates clients generated with OAuth2 authentication.
+#[tracing::client]
 pub struct OAuth2Client {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -37,6 +39,7 @@ impl OAuth2Client {
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_oauth2")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -77,6 +80,7 @@ impl OAuth2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Authentication.OAuth2.invalid")]
     pub async fn invalid(
         &self,
         options: Option<OAuth2ClientInvalidOptions<'_>>,
@@ -87,7 +91,17 @@ impl OAuth2Client {
         url = url.join("authentication/oauth2/invalid")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Check whether client is authenticated
@@ -95,6 +109,7 @@ impl OAuth2Client {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Authentication.OAuth2.valid")]
     pub async fn valid(
         &self,
         options: Option<OAuth2ClientValidOptions<'_>>,
@@ -104,6 +119,16 @@ impl OAuth2Client {
         let mut url = self.endpoint.clone();
         url = url.join("authentication/oauth2/valid")?;
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

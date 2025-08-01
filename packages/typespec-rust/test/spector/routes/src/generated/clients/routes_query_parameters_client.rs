@@ -13,10 +13,12 @@ use crate::generated::{
     },
 };
 use azure_core::{
+    error::{ErrorKind, HttpError},
     http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
-    Result,
+    tracing, Error, Result,
 };
 
+#[tracing::client]
 pub struct RoutesQueryParametersClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
@@ -32,6 +34,7 @@ impl RoutesQueryParametersClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.QueryParameters.annotationOnly")]
     pub async fn annotation_only(
         &self,
         param: &str,
@@ -43,13 +46,24 @@ impl RoutesQueryParametersClient {
         url = url.join("routes/query/annotation-only")?;
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     ///
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.QueryParameters.explicit")]
     pub async fn explicit(
         &self,
         param: &str,
@@ -61,10 +75,21 @@ impl RoutesQueryParametersClient {
         url = url.join("routes/query/explicit")?;
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 
     /// Returns a new instance of RoutesQueryParametersQueryContinuationClient.
+    #[tracing::subclient]
     pub fn get_routes_query_parameters_query_continuation_client(
         &self,
     ) -> RoutesQueryParametersQueryContinuationClient {
@@ -75,6 +100,7 @@ impl RoutesQueryParametersClient {
     }
 
     /// Returns a new instance of RoutesQueryParametersQueryExpansionClient.
+    #[tracing::subclient]
     pub fn get_routes_query_parameters_query_expansion_client(
         &self,
     ) -> RoutesQueryParametersQueryExpansionClient {
@@ -88,6 +114,7 @@ impl RoutesQueryParametersClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Routes.QueryParameters.templateOnly")]
     pub async fn template_only(
         &self,
         param: &str,
@@ -99,6 +126,16 @@ impl RoutesQueryParametersClient {
         url = url.join("routes/query/template-only")?;
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
-        self.pipeline.send(&ctx, &mut request).await.map(Into::into)
+        let rsp = self.pipeline.send(&ctx, &mut request).await?;
+        if !rsp.status().is_success() {
+            let status = rsp.status();
+            let http_error = HttpError::new(rsp).await;
+            let error_kind = ErrorKind::http_response(
+                status,
+                http_error.error_code().map(std::borrow::ToOwned::to_owned),
+            );
+            return Err(Error::new(error_kind, http_error));
+        }
+        Ok(rsp.into())
     }
 }

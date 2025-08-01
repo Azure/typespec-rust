@@ -14,11 +14,12 @@ use azure_core::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Pipeline, Url,
     },
-    Result,
+    tracing, Result,
 };
 use std::sync::Arc;
 
 /// Arm Resource Provider management API.
+#[tracing::client]
 pub struct ResourcesClient {
     pub(crate) api_version: String,
     pub(crate) endpoint: Url,
@@ -45,6 +46,7 @@ impl ResourcesClient {
     ///   Entra ID token to use when authenticating.
     /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
     /// * `options` - Optional configuration for the client.
+    #[tracing::new("spector_armresources")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -84,6 +86,7 @@ impl ResourcesClient {
     }
 
     /// Returns a new instance of ResourcesExtensionsResourcesClient.
+    #[tracing::subclient]
     pub fn get_resources_extensions_resources_client(&self) -> ResourcesExtensionsResourcesClient {
         ResourcesExtensionsResourcesClient {
             api_version: self.api_version.clone(),
@@ -93,6 +96,7 @@ impl ResourcesClient {
     }
 
     /// Returns a new instance of ResourcesLocationResourcesClient.
+    #[tracing::subclient]
     pub fn get_resources_location_resources_client(&self) -> ResourcesLocationResourcesClient {
         ResourcesLocationResourcesClient {
             api_version: self.api_version.clone(),
@@ -103,6 +107,7 @@ impl ResourcesClient {
     }
 
     /// Returns a new instance of ResourcesNestedClient.
+    #[tracing::subclient]
     pub fn get_resources_nested_client(&self) -> ResourcesNestedClient {
         ResourcesNestedClient {
             api_version: self.api_version.clone(),
@@ -113,6 +118,7 @@ impl ResourcesClient {
     }
 
     /// Returns a new instance of ResourcesSingletonClient.
+    #[tracing::subclient]
     pub fn get_resources_singleton_client(&self) -> ResourcesSingletonClient {
         ResourcesSingletonClient {
             api_version: self.api_version.clone(),
@@ -123,6 +129,7 @@ impl ResourcesClient {
     }
 
     /// Returns a new instance of ResourcesTopLevelClient.
+    #[tracing::subclient]
     pub fn get_resources_top_level_client(&self) -> ResourcesTopLevelClient {
         ResourcesTopLevelClient {
             api_version: self.api_version.clone(),
