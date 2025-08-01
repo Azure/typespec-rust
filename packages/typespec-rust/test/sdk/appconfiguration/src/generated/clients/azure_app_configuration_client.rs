@@ -144,7 +144,6 @@ impl AzureAppConfigurationClient {
             }
         }
         let mut request = Request::new(url, Method::Head);
-        request.insert_header("accept", "application/json");
         if let Some(accept_datetime) = options.accept_datetime {
             request.insert_header("accept-datetime", accept_datetime);
         }
@@ -219,7 +218,6 @@ impl AzureAppConfigurationClient {
             }
         }
         let mut request = Request::new(url, Method::Head);
-        request.insert_header("accept", "application/json");
         if let Some(accept_datetime) = options.accept_datetime {
             request.insert_header("accept-datetime", accept_datetime);
         }
@@ -273,7 +271,6 @@ impl AzureAppConfigurationClient {
             url.query_pairs_mut().append_pair("name", &name);
         }
         let mut request = Request::new(url, Method::Head);
-        request.insert_header("accept", "application/json");
         if let Some(accept_datetime) = options.accept_datetime {
             request.insert_header("accept-datetime", accept_datetime);
         }
@@ -331,7 +328,6 @@ impl AzureAppConfigurationClient {
             url.query_pairs_mut().append_pair("name", &name);
         }
         let mut request = Request::new(url, Method::Head);
-        request.insert_header("accept", "application/json");
         if let Some(accept_datetime) = options.accept_datetime {
             request.insert_header("accept-datetime", accept_datetime);
         }
@@ -397,7 +393,6 @@ impl AzureAppConfigurationClient {
             }
         }
         let mut request = Request::new(url, Method::Head);
-        request.insert_header("accept", "application/json");
         if let Some(accept_datetime) = options.accept_datetime {
             request.insert_header("accept-datetime", accept_datetime);
         }
@@ -443,7 +438,6 @@ impl AzureAppConfigurationClient {
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Head);
-        request.insert_header("accept", "application/json");
         if let Some(if_match) = options.if_match {
             request.insert_header("if-match", if_match);
         }
@@ -491,7 +485,6 @@ impl AzureAppConfigurationClient {
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Head);
-        request.insert_header("accept", "application/json");
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
         }
