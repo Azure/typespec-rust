@@ -720,7 +720,7 @@ impl PageBlobClient {
     #[tracing::function("Storage.Blob.Container.Blob.PageBlob.uploadPages")]
     pub async fn upload_pages(
         &self,
-        body: RequestContent<Bytes>,
+        body: RequestContent<Bytes, NoFormat>,
         content_length: u64,
         options: Option<PageBlobClientUploadPagesOptions<'_>>,
     ) -> Result<Response<PageBlobClientUploadPagesResult, NoFormat>> {

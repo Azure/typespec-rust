@@ -63,7 +63,7 @@ impl XmlModelWithOptionalFieldValueClient {
     #[tracing::function("Payload.Xml.ModelWithOptionalFieldValue.put")]
     pub async fn put(
         &self,
-        input: RequestContent<ModelWithOptionalField>,
+        input: RequestContent<ModelWithOptionalField, XmlFormat>,
         options: Option<XmlModelWithOptionalFieldValueClientPutOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();

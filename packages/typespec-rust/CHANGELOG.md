@@ -1,5 +1,13 @@
 # Release History
 
+## 0.20.0 (Unreleased)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Adds a `Format` to `RequestContent<T, F>` when the request body is not JSON.
+
 ## 0.19.0 (2025-07-23)
 
 ### Breaking Changes

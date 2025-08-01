@@ -117,6 +117,10 @@ export class Use {
         this.addForType(type.type);
         break;
       case 'requestContent':
+        if (type.format !== 'JsonFormat') {
+          // JsonFormat is the default so no need to bring it into scope
+          this.add('azure_core::http', type.format);
+        }
         switch (type.content.kind) {
           case 'bytes':
             this.addForType(type.content);

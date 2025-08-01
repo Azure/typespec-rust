@@ -93,7 +93,7 @@ impl BytesRequestBodyClient {
     #[tracing::function("Encode.Bytes.RequestBody.customContentType")]
     pub async fn custom_content_type(
         &self,
-        value: RequestContent<Bytes>,
+        value: RequestContent<Bytes, NoFormat>,
         options: Option<BytesRequestBodyClientCustomContentTypeOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
@@ -123,7 +123,7 @@ impl BytesRequestBodyClient {
     #[tracing::function("Encode.Bytes.RequestBody.default")]
     pub async fn default(
         &self,
-        value: RequestContent<Bytes>,
+        value: RequestContent<Bytes, NoFormat>,
         options: Option<BytesRequestBodyClientDefaultOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
@@ -153,7 +153,7 @@ impl BytesRequestBodyClient {
     #[tracing::function("Encode.Bytes.RequestBody.octetStream")]
     pub async fn octet_stream(
         &self,
-        value: RequestContent<Bytes>,
+        value: RequestContent<Bytes, NoFormat>,
         options: Option<BytesRequestBodyClientOctetStreamOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();

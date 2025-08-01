@@ -52,6 +52,22 @@ export function asTypeOf<T extends rust.Type>(type: rust.Type, targetKind: rust.
 }
 
 /**
+ * gets the PayloadFormatType for a PayloadFormat
+ * @param format the PayloadFormat to convert
+ * @returns the PayloadFormatType appropriate for the format
+ */
+export function getPayloadFormatType(format: rust.PayloadFormat): rust.PayloadFormatType {
+  switch (format) {
+    case 'json':
+      return 'JsonFormat';
+    case 'xml':
+      return 'XmlFormat';
+    default:
+      return 'NoFormat';
+  }
+}
+
+/**
  * returns a wrapper type's inner type.
  * e.g. for a rust.Vector, return's the value of Vector.type.
  * if the type doesn't wrap another type, undefined is returned.

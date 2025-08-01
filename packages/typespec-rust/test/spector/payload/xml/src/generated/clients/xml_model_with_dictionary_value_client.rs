@@ -63,7 +63,7 @@ impl XmlModelWithDictionaryValueClient {
     #[tracing::function("Payload.Xml.ModelWithDictionaryValue.put")]
     pub async fn put(
         &self,
-        input: RequestContent<ModelWithDictionary>,
+        input: RequestContent<ModelWithDictionary, XmlFormat>,
         options: Option<XmlModelWithDictionaryValueClientPutOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();

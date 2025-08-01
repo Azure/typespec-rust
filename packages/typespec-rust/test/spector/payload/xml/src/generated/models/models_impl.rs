@@ -8,86 +8,90 @@ use super::{
     ModelWithEncodedNames, ModelWithOptionalField, ModelWithRenamedArrays, ModelWithRenamedFields,
     ModelWithSimpleArrays, ModelWithText, ModelWithUnwrappedArray, SimpleModel,
 };
-use azure_core::{http::RequestContent, xml::to_xml, Result};
+use azure_core::{
+    http::{RequestContent, XmlFormat},
+    xml::to_xml,
+    Result,
+};
 
-impl TryFrom<ModelWithArrayOfModel> for RequestContent<ModelWithArrayOfModel> {
+impl TryFrom<ModelWithArrayOfModel> for RequestContent<ModelWithArrayOfModel, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithArrayOfModel) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
     }
 }
 
-impl TryFrom<ModelWithAttributes> for RequestContent<ModelWithAttributes> {
+impl TryFrom<ModelWithAttributes> for RequestContent<ModelWithAttributes, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithAttributes) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
     }
 }
 
-impl TryFrom<ModelWithDictionary> for RequestContent<ModelWithDictionary> {
+impl TryFrom<ModelWithDictionary> for RequestContent<ModelWithDictionary, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithDictionary) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
     }
 }
 
-impl TryFrom<ModelWithEmptyArray> for RequestContent<ModelWithEmptyArray> {
+impl TryFrom<ModelWithEmptyArray> for RequestContent<ModelWithEmptyArray, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithEmptyArray) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
     }
 }
 
-impl TryFrom<ModelWithEncodedNames> for RequestContent<ModelWithEncodedNames> {
+impl TryFrom<ModelWithEncodedNames> for RequestContent<ModelWithEncodedNames, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithEncodedNames) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
     }
 }
 
-impl TryFrom<ModelWithOptionalField> for RequestContent<ModelWithOptionalField> {
+impl TryFrom<ModelWithOptionalField> for RequestContent<ModelWithOptionalField, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithOptionalField) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
     }
 }
 
-impl TryFrom<ModelWithRenamedArrays> for RequestContent<ModelWithRenamedArrays> {
+impl TryFrom<ModelWithRenamedArrays> for RequestContent<ModelWithRenamedArrays, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithRenamedArrays) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
     }
 }
 
-impl TryFrom<ModelWithRenamedFields> for RequestContent<ModelWithRenamedFields> {
+impl TryFrom<ModelWithRenamedFields> for RequestContent<ModelWithRenamedFields, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithRenamedFields) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
     }
 }
 
-impl TryFrom<ModelWithSimpleArrays> for RequestContent<ModelWithSimpleArrays> {
+impl TryFrom<ModelWithSimpleArrays> for RequestContent<ModelWithSimpleArrays, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithSimpleArrays) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
     }
 }
 
-impl TryFrom<ModelWithText> for RequestContent<ModelWithText> {
+impl TryFrom<ModelWithText> for RequestContent<ModelWithText, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithText) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
     }
 }
 
-impl TryFrom<ModelWithUnwrappedArray> for RequestContent<ModelWithUnwrappedArray> {
+impl TryFrom<ModelWithUnwrappedArray> for RequestContent<ModelWithUnwrappedArray, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: ModelWithUnwrappedArray) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)
     }
 }
 
-impl TryFrom<SimpleModel> for RequestContent<SimpleModel> {
+impl TryFrom<SimpleModel> for RequestContent<SimpleModel, XmlFormat> {
     type Error = azure_core::Error;
     fn try_from(value: SimpleModel) -> Result<Self> {
         RequestContent::try_from(to_xml(&value)?)

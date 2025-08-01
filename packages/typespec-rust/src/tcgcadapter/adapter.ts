@@ -1206,7 +1206,7 @@ export class Adapter {
       }
     }
 
-    const getResponseFormat = (): rust.ResponseFormat => {
+    const getResponseFormat = (): rust.PayloadFormatType => {
       // fetch the body format from the HTTP responses.
       // they should all have the same type so no need to match responses to type.
       let defaultContentType: string | undefined;
@@ -1225,7 +1225,7 @@ export class Adapter {
         return 'NoFormat';
       }
 
-      return this.adaptResponseFormat(defaultContentType);
+      return this.adaptPayloadFormatType(defaultContentType);
     };
 
     // add any response headers
@@ -1608,7 +1608,8 @@ export class Adapter {
         } else {
           requestType = new rust.Payload(this.typeToWireType(paramType), this.adaptPayloadFormat(param.defaultContentType));
         }
-        adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, requestType));
+        const requestFormatType = this.adaptPayloadFormatType(param.defaultContentType);
+        adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, requestType, requestFormatType));
         break;
       }
       case 'cookie':
@@ -1837,7 +1838,8 @@ export class Adapter {
 
     const paramName = naming.getEscapedReservedName(snakeCaseName(param.name), 'param');
     const paramLoc: rust.ParameterLocation = 'method';
-    const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, this.getType(param.type), new rust.RequestContent(this.crate, new rust.Payload(payloadType, format)));
+    const formatType = shared.getPayloadFormatType(format);
+    const adaptedParam = new rust.PartialBodyParameter(paramName, paramLoc, param.optional, serializedName, this.getType(param.type), new rust.RequestContent(this.crate, new rust.Payload(payloadType, format), formatType));
     return adaptedParam;
   }
 
@@ -1861,17 +1863,17 @@ export class Adapter {
   }
 
   /**
-   * converts an accept header value into a response format
+   * converts an accept or content-type header value into a payload format type
    * 
-   * @param accept the value of the Content-Type header
+   * @param contentType the value of the Accept or Content-Type header
    * @returns a response format
    */
-  private adaptResponseFormat(accept: string): rust.ResponseFormat {
+  private adaptPayloadFormatType(contentType: string): rust.PayloadFormatType {
     // we only recognize/support JSON and XML content types.
     // anything else is NoFormat
-    if (accept.match(/json/i)) {
+    if (contentType.match(/json/i)) {
       return 'JsonFormat';
-    } else if (accept.match(/xml/i)) {
+    } else if (contentType.match(/xml/i)) {
       // XML support is disabled by default
       this.crate.addDependency(new rust.CrateDependency('azure_core', ['xml']));
       return 'XmlFormat';

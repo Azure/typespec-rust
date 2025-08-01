@@ -63,7 +63,7 @@ impl XmlModelWithAttributesValueClient {
     #[tracing::function("Payload.Xml.ModelWithAttributesValue.put")]
     pub async fn put(
         &self,
-        input: RequestContent<ModelWithAttributes>,
+        input: RequestContent<ModelWithAttributes, XmlFormat>,
         options: Option<XmlModelWithAttributesValueClientPutOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();

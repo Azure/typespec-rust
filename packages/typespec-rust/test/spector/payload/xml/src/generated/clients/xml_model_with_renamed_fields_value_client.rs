@@ -63,7 +63,7 @@ impl XmlModelWithRenamedFieldsValueClient {
     #[tracing::function("Payload.Xml.ModelWithRenamedFieldsValue.put")]
     pub async fn put(
         &self,
-        input: RequestContent<ModelWithRenamedFields>,
+        input: RequestContent<ModelWithRenamedFields, XmlFormat>,
         options: Option<XmlModelWithRenamedFieldsValueClientPutOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();

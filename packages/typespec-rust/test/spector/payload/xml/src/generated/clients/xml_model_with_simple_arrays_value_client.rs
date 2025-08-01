@@ -63,7 +63,7 @@ impl XmlModelWithSimpleArraysValueClient {
     #[tracing::function("Payload.Xml.ModelWithSimpleArraysValue.put")]
     pub async fn put(
         &self,
-        input: RequestContent<ModelWithSimpleArrays>,
+        input: RequestContent<ModelWithSimpleArrays, XmlFormat>,
         options: Option<XmlModelWithSimpleArraysValueClientPutOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
