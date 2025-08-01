@@ -3,6 +3,7 @@ members = [
     "other/serde_tests",
     "sdk/appconfiguration",
     "sdk/blob_storage",
+    "sdk/keyvault_keys",
     "sdk/keyvault_secrets",
     "spector/special-words",
     "spector/authentication/oauth2",

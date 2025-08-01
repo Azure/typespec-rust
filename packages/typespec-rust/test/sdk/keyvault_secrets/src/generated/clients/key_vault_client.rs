@@ -670,7 +670,7 @@ impl KeyVaultClient {
 impl Default for KeyVaultClientOptions {
     fn default() -> Self {
         Self {
-            api_version: String::from("7.6-preview.1"),
+            api_version: String::from("7.6"),
             client_options: ClientOptions::default(),
         }
     }

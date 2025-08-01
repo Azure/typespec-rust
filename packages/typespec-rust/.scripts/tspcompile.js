@@ -137,7 +137,10 @@ function should_generate(name) {
 const appconfiguration = pkgRoot + 'test/tsp/AppConfiguration';
 generate('appconfiguration', appconfiguration, 'test/sdk/appconfiguration');
 
-const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrests';
+const keyvault_keys = pkgRoot + 'test/tsp/Security.KeyVault.Keys';
+generate('keyvault_keys', keyvault_keys, 'test/sdk/keyvault_keys');
+
+const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrets';
 generate('keyvault_secrets', keyvault_secrets, 'test/sdk/keyvault_secrets');
 
 const blob_storage = pkgRoot + 'test/tsp/Microsoft.BlobStorage/client.tsp';
