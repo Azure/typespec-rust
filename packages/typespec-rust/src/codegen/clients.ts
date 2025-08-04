@@ -235,6 +235,10 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
       if (paramsDocs) {
         body += paramsDocs;
       }
+      // Add header trait documentation if method has response headers
+      if ((method.kind === 'async' || method.kind === 'pageable') && method.responseHeaders) {
+        body += getHeaderTraitDocComment(indent, method);
+      }
       if (isPublicApi) {
         body += `${indent.get()}#[tracing::function("${method.languageIndependentName}")]\n`;
       } else if (isSubclientNew) {
@@ -476,6 +480,57 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
   }
 
   return paramsSig.join(', ');
+}
+
+/**
+ * returns documentation for header trait access if the method has response headers.
+ * 
+ * @param indent the current indentation level
+ * @param method the method for which to generate header trait documentation
+ * @returns the header trait documentation or empty string if not applicable
+ */
+function getHeaderTraitDocComment(indent: helpers.indentation, method: rust.AsyncMethod | rust.PageableMethod): string {
+  if (!method.responseHeaders) {
+    return '';
+  }
+
+  const traitName = method.responseHeaders.name;
+  let headerDocs = `${indent.get()}///\n`;
+  headerDocs += `${indent.get()}/// ## Accessing Response Headers\n`;
+  headerDocs += `${indent.get()}///\n`;
+  headerDocs += `${indent.get()}/// The returned \`Response\` implements the [\`${traitName}\`] trait, which provides\n`;
+  headerDocs += `${indent.get()}/// access to response headers. For example:\n`;
+  headerDocs += `${indent.get()}///\n`;
+  headerDocs += `${indent.get()}/// \`\`\`no_run\n`;
+  headerDocs += `${indent.get()}/// # use azure_core::Result;\n`;
+  headerDocs += `${indent.get()}/// # async fn example() -> Result<()> {\n`;
+  headerDocs += `${indent.get()}/// let response = client.${method.name}(/* parameters */).await?;\n`;
+  headerDocs += `${indent.get()}/// \n`;
+  headerDocs += `${indent.get()}/// // Access response headers:\n`;
+  
+  // Add examples for a few key headers
+  const exampleHeaders = method.responseHeaders.headers.slice(0, 3); // Show first 3 headers as examples
+  for (const header of exampleHeaders) {
+    headerDocs += `${indent.get()}/// if let Some(value) = response.${header.name}()? {\n`;
+    headerDocs += `${indent.get()}///     println!("${header.header}: {{:?}}", value);\n`;
+    headerDocs += `${indent.get()}/// }\n`;
+  }
+  
+  headerDocs += `${indent.get()}/// # Ok(())\n`;
+  headerDocs += `${indent.get()}/// # }\n`;
+  headerDocs += `${indent.get()}/// \`\`\`\n`;
+  headerDocs += `${indent.get()}///\n`;
+  headerDocs += `${indent.get()}/// Available headers:\n`;
+  
+  // List all available headers
+  for (const header of method.responseHeaders.headers) {
+    headerDocs += `${indent.get()}/// * [\`${header.name}()\`](${traitName}::${header.name}) - ${header.header}\n`;
+  }
+  
+  headerDocs += `${indent.get()}///\n`;
+  headerDocs += `${indent.get()}/// [\`${traitName}\`]: crate::generated::models::${traitName}\n`;
+  
+  return headerDocs;
 }
 
 /**

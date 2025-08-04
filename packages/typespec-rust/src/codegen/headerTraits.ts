@@ -143,6 +143,27 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       body += trait.docs;
     } else {
       body += `\n/// Provides access to typed response headers for ${trait.docs}\n`;
+      body += `///\n`;
+      body += `/// # Example\n`;
+      body += `///\n`;
+      body += `/// \`\`\`no_run\n`;
+      body += `/// # use azure_core::Result;\n`;
+      body += `/// # async fn example() -> Result<()> {\n`;
+      body += `/// let response = client.some_method(/* parameters */).await?;\n`;
+      body += `///\n`;
+      body += `/// // Access response headers:\n`;
+      
+      // Add examples for the first few headers
+      const exampleHeaders = trait.headers.slice(0, 2);
+      for (const header of exampleHeaders) {
+        body += `/// if let Some(value) = response.${header.name}()? {\n`;
+        body += `///     println!("${header.header}: {{:?}}", value);\n`;
+        body += `/// }\n`;
+      }
+      
+      body += `/// # Ok(())\n`;
+      body += `/// # }\n`;
+      body += `/// \`\`\`\n`;
     }
     body += `pub trait ${trait.name}: private::Sealed {\n`;
     for (const header of trait.headers) {
