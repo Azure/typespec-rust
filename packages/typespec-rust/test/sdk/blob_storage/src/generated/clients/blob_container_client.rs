@@ -128,7 +128,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Put);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
@@ -183,7 +182,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Put);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
@@ -239,7 +237,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Put);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
@@ -287,7 +284,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Put);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(access) = options.access {
             request.insert_header("x-ms-blob-public-access", access.to_string());
@@ -344,7 +340,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Delete);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
@@ -500,7 +495,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Get);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
@@ -556,7 +550,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Get);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
@@ -805,7 +798,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Put);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
@@ -855,7 +847,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Put);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
@@ -904,7 +895,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Put);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
@@ -952,7 +942,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Put);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
@@ -1002,7 +991,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Put);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
@@ -1056,7 +1044,6 @@ impl BlobContainerClient {
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Put);
-        request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));

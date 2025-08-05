@@ -83,13 +83,13 @@ export class Adapter {
   private readonly renamedMethods: Set<string>;
 
   // maps a tcgc model field to the adapted struct field
-  private readonly fieldsMap: Map<tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>;
+  private readonly fieldsMap: Map<tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>;
 
   private constructor(ctx: tcgc.SdkContext, options: RustEmitterOptions) {
     this.types = new Map<string, rust.Type>();
     this.clientMethodParams = new Map<string, rust.MethodParameter>();
     this.renamedMethods = new Set<string>();
-    this.fieldsMap = new Map<tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>();
+    this.fieldsMap = new Map<tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>();
     this.ctx = ctx;
     this.options = options;
 
@@ -293,7 +293,7 @@ export class Adapter {
           // will be exposed as a discrete method parameter.
           // we just adapt it here as a regular model field.
         } else {
-          throw new AdapterError('UnsupportedTsp', `model property kind ${property.kind} NYI`, property.__raw?.node);
+          throw new AdapterError('UnsupportedTsp', `model property kind ${property.__raw?.kind} NYI`, property.__raw?.node);
         }
       }
       const structField = this.getModelField(property, rustModel.visibility, stack);
@@ -313,7 +313,7 @@ export class Adapter {
    * @param stack is a stack of model type names used to detect recursive type definitions
    * @returns a Rust model field
    */
-  private getModelField(property: tcgc.SdkBodyModelPropertyType | tcgc.SdkPathParameter, modelVisibility: rust.Visibility, stack: Array<string>): rust.ModelField {
+  private getModelField(property: tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, modelVisibility: rust.Visibility, stack: Array<string>): rust.ModelField {
     let fieldType = this.getType(property.type, stack);
 
     // if the field's type is a model and it's in the type stack then
@@ -1143,7 +1143,7 @@ export class Adapter {
       // be a many-to-one mapping. i.e. multiple params will map to the same underlying
       // operation param. each param corresponds to a field within the operation param.
       const opParam = values(allOpParams).where((opParam: tcgc.SdkHttpParameter) => {
-        return values(opParam.correspondingMethodParams).where((methodParam: tcgc.SdkModelPropertyType) => {
+        return values(opParam.correspondingMethodParams).where((methodParam: tcgc.SdkMethodParameter | tcgc.SdkModelPropertyType) => {
           return methodParam.name === param.name;
         }).any();
       }).first();
@@ -1288,7 +1288,7 @@ export class Adapter {
       let unwrappedCount = 0;
       let typeToUnwrap = synthesizedModel;
       for (const pageItemsSegment of method.pagingMetadata.pageItemsSegments) {
-        const segment = <tcgc.SdkBodyModelPropertyType>pageItemsSegment;
+        const segment = pageItemsSegment;
         let serde: string;
         switch (responseFormat) {
           case 'JsonFormat':
@@ -1539,8 +1539,6 @@ export class Adapter {
           responseToken = tokenHeader;
           break;
         }
-        default:
-          throw new AdapterError('InternalError', `unhandled continuationTokenResponseSegment kind ${tokenResp.kind}`);
       }
       return new rust.PageableStrategyContinuationToken(requestToken, responseToken);
     } else {
@@ -1821,7 +1819,7 @@ export class Adapter {
     let serializedName: string | undefined;
     for (const property of opParamType.properties) {
       if (property.name === param.name) {
-        serializedName = (<tcgc.SdkBodyModelPropertyType>property).serializedName;
+        serializedName = property.serializedName;
         break;
       }
     }
