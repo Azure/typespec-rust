@@ -62,6 +62,7 @@ impl ResourcesTopLevelClient {
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Post);
+        request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;

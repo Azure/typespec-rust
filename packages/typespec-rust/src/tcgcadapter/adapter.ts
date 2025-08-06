@@ -327,7 +327,9 @@ export class Adapter {
       fieldType = new rust.Option(fieldType.kind === 'box' ? fieldType : this.typeToWireType(fieldType));
     }
 
-    const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), property.serializedName, modelVisibility, fieldType, property.optional);
+    const serializedName = property.kind === 'property' ? property.serializationOptions.json?.name ?? property.serializationOptions.xml?.name ?? property.serializationOptions.multipart?.name ?? property.name : property.name;
+
+    const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), serializedName, modelVisibility, fieldType, property.optional);
     modelField.docs = this.adaptDocs(property.summary, property.doc);
 
     // if this is a literal, add a doc comment explaining its behavior
@@ -1292,13 +1294,13 @@ export class Adapter {
         let serde: string;
         switch (responseFormat) {
           case 'JsonFormat':
-            if (!segment.serializationOptions.json) {
+            if (segment.kind !== 'property' || !segment.serializationOptions.json) {
               throw new AdapterError('InternalError', `paged method ${method.name} is missing JSON serialization data`, method.__raw?.node);
             }
             serde = segment.serializationOptions.json.name;
             break;
           case 'XmlFormat':
-            if (!segment.serializationOptions.xml) {
+            if (segment.kind !== 'property' || !segment.serializationOptions.xml) {
               throw new AdapterError('InternalError', `paged method ${method.name} is missing XML serialization data`, method.__raw?.node);
             }
             serde = segment.serializationOptions.xml.name;
@@ -1539,6 +1541,8 @@ export class Adapter {
           responseToken = tokenHeader;
           break;
         }
+        default:
+          throw new AdapterError('InternalError', `missing continuation token ${tokenResp.name} for operation ${method.name}`, method.__raw?.node);
       }
       return new rust.PageableStrategyContinuationToken(requestToken, responseToken);
     } else {
@@ -1818,8 +1822,8 @@ export class Adapter {
     // find the corresponding field within the model so we can get its index
     let serializedName: string | undefined;
     for (const property of opParamType.properties) {
-      if (property.name === param.name) {
-        serializedName = property.serializedName;
+      if (property.kind === 'property' && property.name === param.name) {
+        serializedName = property.serializationOptions.json?.name || property.serializationOptions.xml?.name || property.serializationOptions.multipart?.name;
         break;
       }
     }
