@@ -1542,7 +1542,7 @@ export class Adapter {
           break;
         }
         default:
-          throw new AdapterError('InternalError', `missing continuation token ${tokenResp.name} for operation ${method.name}`, method.__raw?.node);
+          throw new AdapterError('InternalError', `missing continuation token`, method.__raw?.node);
       }
       return new rust.PageableStrategyContinuationToken(requestToken, responseToken);
     } else {
