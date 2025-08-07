@@ -305,6 +305,10 @@ export class Adapter {
     return rustModel;
   }
 
+  private getSerializedPropertyName(property: tcgc.SdkModelPropertyType | tcgc.SdkPathParameter): string | undefined {
+    return property.kind === 'property' ? property.serializationOptions.json?.name ?? property.serializationOptions.xml?.name ?? property.serializationOptions.multipart?.name : undefined;
+  }
+
   /**
    * converts a tcgc model property to a model field
    * 
@@ -327,7 +331,7 @@ export class Adapter {
       fieldType = new rust.Option(fieldType.kind === 'box' ? fieldType : this.typeToWireType(fieldType));
     }
 
-    const serializedName = property.kind === 'property' ? property.serializationOptions.json?.name ?? property.serializationOptions.xml?.name ?? property.serializationOptions.multipart?.name ?? property.name : property.name;
+    const serializedName = this.getSerializedPropertyName(property) ?? property.name;
 
     const modelField = new rust.ModelField(naming.getEscapedReservedName(snakeCaseName(property.name), 'prop'), serializedName, modelVisibility, fieldType, property.optional);
     modelField.docs = this.adaptDocs(property.summary, property.doc);
@@ -1823,7 +1827,7 @@ export class Adapter {
     let serializedName: string | undefined;
     for (const property of opParamType.properties) {
       if (property.kind === 'property' && property.name === param.name) {
-        serializedName = property.serializationOptions.json?.name || property.serializationOptions.xml?.name || property.serializationOptions.multipart?.name;
+        serializedName = this.getSerializedPropertyName(property);
         break;
       }
     }
