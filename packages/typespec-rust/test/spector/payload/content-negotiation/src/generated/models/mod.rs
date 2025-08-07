@@ -7,3 +7,4 @@ mod method_options;
 mod pub_models;
 pub use method_options::*;
 pub use pub_models::*;
+pub(crate) mod models_serde;
