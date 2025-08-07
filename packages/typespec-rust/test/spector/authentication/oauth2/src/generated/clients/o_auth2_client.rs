@@ -90,7 +90,6 @@ impl OAuth2Client {
         let mut url = self.endpoint.clone();
         url = url.join("authentication/oauth2/invalid")?;
         let mut request = Request::new(url, Method::Get);
-        request.insert_header("accept", "application/json");
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
         if !rsp.status().is_success() {
             let status = rsp.status();
