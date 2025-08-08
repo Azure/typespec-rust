@@ -711,8 +711,8 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
 function wrapWithUrlEncodingIfNeeded(use: Use, pathParam: PathParamType, valueExpression: string): string {
   if (pathParam.encoded) {
     // When encoded=true, we need to apply URL encoding (allowReserved=false)
-    use.add('url::percent_encoding', 'percent_encode', 'PATH_SEGMENT_ENCODE_SET');
-    return `&percent_encode(${valueExpression}.as_bytes(), PATH_SEGMENT_ENCODE_SET).to_string()`;
+    use.add('url::percent_encoding', 'percent_encode', 'CONTROLS');
+    return `&percent_encode(${valueExpression}.as_bytes(), CONTROLS).to_string()`;
   }
   // When encoded=false, skip URL encoding (allowReserved=true)
   return valueExpression;
@@ -729,8 +729,8 @@ function wrapWithUrlEncodingIfNeeded(use: Use, pathParam: PathParamType, valueEx
 function getUrlEncodingForValue(use: Use, pathParam: PathParamType, valueRef: string): string {
   if (pathParam.encoded) {
     // When encoded=true, we need to apply URL encoding (allowReserved=false)
-    use.add('url::percent_encoding', 'percent_encode', 'PATH_SEGMENT_ENCODE_SET');
-    return `percent_encode(${valueRef}.to_string().as_bytes(), PATH_SEGMENT_ENCODE_SET).to_string()`;
+    use.add('url::percent_encoding', 'percent_encode', 'CONTROLS');
+    return `percent_encode(${valueRef}.to_string().as_bytes(), CONTROLS).to_string()`;
   }
   // When encoded=false, skip URL encoding (allowReserved=true)
   return `${valueRef}.to_string()`;
@@ -824,8 +824,8 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         } else if (pathParam.kind === 'pathCollection') {
           // For collections, we need to encode individual items
           if (pathParam.encoded) {
-            use.add('url::percent_encoding', 'percent_encode', 'PATH_SEGMENT_ENCODE_SET');
-            paramExpression = `&${pathParam.name}.iter().map(|item| percent_encode(item.to_string().as_bytes(), PATH_SEGMENT_ENCODE_SET).to_string()).collect::<Vec<_>>().join(",")`;
+            use.add('url::percent_encoding', 'percent_encode', 'CONTROLS');
+            paramExpression = `&${pathParam.name}.iter().map(|item| percent_encode(item.to_string().as_bytes(), CONTROLS).to_string()).collect::<Vec<_>>().join(",")`;
           } else {
             paramExpression = `&${pathParam.name}.join(",")`;
           }
@@ -833,7 +833,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
             case 'path':
               if (pathParam.encoded) {
                 const separator = pathParam.explode ? '/' : ',';
-                paramExpression = `&format!("/{}", ${pathParam.name}.iter().map(|item| percent_encode(item.to_string().as_bytes(), PATH_SEGMENT_ENCODE_SET).to_string()).collect::<Vec<_>>().join("${separator}"))`;
+                paramExpression = `&format!("/{}", ${pathParam.name}.iter().map(|item| percent_encode(item.to_string().as_bytes(), CONTROLS).to_string()).collect::<Vec<_>>().join("${separator}"))`;
               } else {
                 paramExpression = `&format!("/{}", ${pathParam.name}.join("${pathParam.explode ? '/' : ','}"))`;
               }
@@ -841,7 +841,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
             case 'label':
               if (pathParam.encoded) {
                 const separator = pathParam.explode ? '.' : ',';
-                paramExpression = `&format!(".{}", ${pathParam.name}.iter().map(|item| percent_encode(item.to_string().as_bytes(), PATH_SEGMENT_ENCODE_SET).to_string()).collect::<Vec<_>>().join("${separator}"))`;
+                paramExpression = `&format!(".{}", ${pathParam.name}.iter().map(|item| percent_encode(item.to_string().as_bytes(), CONTROLS).to_string()).collect::<Vec<_>>().join("${separator}"))`;
               } else {
                 paramExpression = `&format!(".{}", ${pathParam.name}.join("${pathParam.explode ? '.' : ','}"))`;
               }
@@ -849,7 +849,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
             case 'matrix':
               if (pathParam.encoded) {
                 const separator = pathParam.explode ? `;${pathParam.name}=` : ',';
-                paramExpression = `&format!(";${pathParam.name}={}", ${pathParam.name}.iter().map(|item| percent_encode(item.to_string().as_bytes(), PATH_SEGMENT_ENCODE_SET).to_string()).collect::<Vec<_>>().join("${separator}"))`;
+                paramExpression = `&format!(";${pathParam.name}={}", ${pathParam.name}.iter().map(|item| percent_encode(item.to_string().as_bytes(), CONTROLS).to_string()).collect::<Vec<_>>().join("${separator}"))`;
               } else {
                 paramExpression = `&format!(";${pathParam.name}={}", ${pathParam.name}.join(`
                   + `"${pathParam.explode ? `;${pathParam.name}=` : ','}"))`;

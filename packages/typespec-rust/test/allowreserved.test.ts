@@ -50,7 +50,7 @@ describe('AllowReserved path parameter tests', () => {
     // The import helper functions should be called when encoding is needed
     // This is testing internal implementation but validates the encoding logic
     if (pathParam.encoded) {
-      use.add('url::percent_encoding', 'percent_encode', 'PATH_SEGMENT_ENCODE_SET');
+      use.add('url::percent_encoding', 'percent_encode', 'CONTROLS');
     }
 
     expect(pathParam.encoded).toBe(true);
@@ -58,6 +58,6 @@ describe('AllowReserved path parameter tests', () => {
     const useText = use.text();
     expect(useText).toContain('url::percent_encoding');
     expect(useText).toContain('percent_encode');
-    expect(useText).toContain('PATH_SEGMENT_ENCODE_SET');
+    expect(useText).toContain('CONTROLS');
   });
 });
