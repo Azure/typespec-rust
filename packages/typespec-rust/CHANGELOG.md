@@ -1,5 +1,11 @@
 # Release History
 
+## Next Release
+
+### Features Added
+
+* Added support for `allowReserved` in path parameters. When `allowReserved=false` (default), path parameter values are URL-encoded to escape reserved characters. When `allowReserved=true`, path parameter values are not URL-encoded, allowing reserved characters to be passed through as-is.
+
 ## 0.20.0 (2025-08-01)
 
 ### Breaking Changes
