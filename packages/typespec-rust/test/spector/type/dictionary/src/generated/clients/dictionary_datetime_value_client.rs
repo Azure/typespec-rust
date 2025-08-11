@@ -8,7 +8,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     time::OffsetDateTime,
     tracing, Error, Result,
 };
@@ -37,7 +37,7 @@ impl DictionaryDatetimeValueClient {
         options: Option<DictionaryDatetimeValueClientGetOptions<'_>>,
     ) -> Result<Response<HashMap<String, OffsetDateTime>>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/dictionary/datetime")?;
         let mut request = Request::new(url, Method::Get);
@@ -66,7 +66,7 @@ impl DictionaryDatetimeValueClient {
         options: Option<DictionaryDatetimeValueClientPutOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/dictionary/datetime")?;
         let mut request = Request::new(url, Method::Put);

@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -56,7 +56,7 @@ impl NonResourceNonResourceOperationsClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/providers/Microsoft.NonResource/locations/{location}/otherParameters/{parameter}");
         path = path.replace("{location}", location);
@@ -108,7 +108,7 @@ impl NonResourceNonResourceOperationsClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/providers/Microsoft.NonResource/locations/{location}/otherParameters/{parameter}");
         path = path.replace("{location}", location);

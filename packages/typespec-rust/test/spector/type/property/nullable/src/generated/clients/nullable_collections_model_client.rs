@@ -11,7 +11,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -38,7 +38,7 @@ impl NullableCollectionsModelClient {
         options: Option<NullableCollectionsModelClientGetNonNullOptions<'_>>,
     ) -> Result<Response<CollectionsModelProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/nullable/collections/model/non-null")?;
         let mut request = Request::new(url, Method::Get);
@@ -67,7 +67,7 @@ impl NullableCollectionsModelClient {
         options: Option<NullableCollectionsModelClientGetNullOptions<'_>>,
     ) -> Result<Response<CollectionsModelProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/nullable/collections/model/null")?;
         let mut request = Request::new(url, Method::Get);
@@ -97,7 +97,7 @@ impl NullableCollectionsModelClient {
         options: Option<NullableCollectionsModelClientPatchNonNullOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/nullable/collections/model/non-null")?;
         let mut request = Request::new(url, Method::Patch);
@@ -128,7 +128,7 @@ impl NullableCollectionsModelClient {
         options: Option<NullableCollectionsModelClientPatchNullOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/nullable/collections/model/null")?;
         let mut request = Request::new(url, Method::Patch);

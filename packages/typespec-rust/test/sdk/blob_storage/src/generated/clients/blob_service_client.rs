@@ -20,7 +20,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, NoFormat, PageIterator, PagerResult, PagerState, Pipeline,
+        ClientOptions, Method, NoFormat, PageIterator, PagerResult, PagerState, Pipeline,
         RawResponse, Request, RequestContent, Response, Url, XmlFormat,
     },
     tracing, xml, Error, Result,
@@ -100,7 +100,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientFilterBlobsOptions<'_>>,
     ) -> Result<Response<FilterBlobSegment, XmlFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.query_pairs_mut().append_pair("comp", "blobs");
         if let Some(include) = options.include {
@@ -158,7 +158,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<BlobServiceClientGetAccountInfoResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.query_pairs_mut()
             .append_pair("comp", "properties")
@@ -213,7 +213,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<StorageServiceProperties, XmlFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.query_pairs_mut()
             .append_pair("comp", "properties")
@@ -254,7 +254,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientGetStatisticsOptions<'_>>,
     ) -> Result<Response<StorageServiceStats, XmlFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.query_pairs_mut()
             .append_pair("comp", "stats")
@@ -296,7 +296,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientGetUserDelegationKeyOptions<'_>>,
     ) -> Result<Response<UserDelegationKey, XmlFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.query_pairs_mut()
             .append_pair("comp", "userdelegationkey")
@@ -431,7 +431,7 @@ impl BlobServiceClient {
         options: Option<BlobServiceClientSetPropertiesOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.query_pairs_mut()
             .append_pair("comp", "properties")

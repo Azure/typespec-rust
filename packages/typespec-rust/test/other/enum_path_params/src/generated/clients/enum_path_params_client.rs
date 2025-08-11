@@ -10,7 +10,7 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -82,7 +82,7 @@ impl EnumPathParamsClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("optional/{shape}/{value}");
         path = path.replace("{shape}", shape.as_ref());
@@ -116,7 +116,7 @@ impl EnumPathParamsClient {
         options: Option<EnumPathParamsClientOptionalFixedOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("fixed/{shape}/{value}");
         path = path.replace("{shape}", shape.as_ref());

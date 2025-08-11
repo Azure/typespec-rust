@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 use std::collections::HashMap;
@@ -38,7 +38,7 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
         options: Option<RoutesPathParametersSimpleExpansionExplodeClientArrayOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/simple/explode/array{param}");
         path = path.replace("{param}", &param.join(","));
@@ -74,7 +74,7 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/simple/explode/primitive{param}");
         path = path.replace("{param}", param);
@@ -104,7 +104,7 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
         options: Option<RoutesPathParametersSimpleExpansionExplodeClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/simple/explode/record{param}");
         {

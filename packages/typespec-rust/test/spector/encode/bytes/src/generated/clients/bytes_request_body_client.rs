@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Bytes, Error, Result,
 };
 
@@ -37,7 +37,7 @@ impl BytesRequestBodyClient {
         options: Option<BytesRequestBodyClientBase64Options<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/request/base64")?;
         let mut request = Request::new(url, Method::Post);
@@ -67,7 +67,7 @@ impl BytesRequestBodyClient {
         options: Option<BytesRequestBodyClientBase64UrlOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/request/base64url")?;
         let mut request = Request::new(url, Method::Post);
@@ -97,7 +97,7 @@ impl BytesRequestBodyClient {
         options: Option<BytesRequestBodyClientCustomContentTypeOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/request/custom-content-type")?;
         let mut request = Request::new(url, Method::Post);
@@ -127,7 +127,7 @@ impl BytesRequestBodyClient {
         options: Option<BytesRequestBodyClientDefaultOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/request/default")?;
         let mut request = Request::new(url, Method::Post);
@@ -157,7 +157,7 @@ impl BytesRequestBodyClient {
         options: Option<BytesRequestBodyClientOctetStreamOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/request/octet-stream")?;
         let mut request = Request::new(url, Method::Post);

@@ -6,7 +6,7 @@
 use crate::generated::models::CollectionFormatHeaderClientCsvOptions;
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -34,7 +34,7 @@ impl CollectionFormatHeaderClient {
         options: Option<CollectionFormatHeaderClientCsvOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("parameters/collection-format/header/csv")?;
         let mut request = Request::new(url, Method::Get);

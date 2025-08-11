@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -37,7 +37,7 @@ impl BytesPropertyClient {
         options: Option<BytesPropertyClientBase64Options<'_>>,
     ) -> Result<Response<Base64BytesProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/property/base64")?;
         let mut request = Request::new(url, Method::Post);
@@ -68,7 +68,7 @@ impl BytesPropertyClient {
         options: Option<BytesPropertyClientBase64UrlOptions<'_>>,
     ) -> Result<Response<Base64urlBytesProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/property/base64url")?;
         let mut request = Request::new(url, Method::Post);
@@ -99,7 +99,7 @@ impl BytesPropertyClient {
         options: Option<BytesPropertyClientBase64UrlArrayOptions<'_>>,
     ) -> Result<Response<Base64urlArrayBytesProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/property/base64url-array")?;
         let mut request = Request::new(url, Method::Post);
@@ -130,7 +130,7 @@ impl BytesPropertyClient {
         options: Option<BytesPropertyClientDefaultOptions<'_>>,
     ) -> Result<Response<DefaultBytesProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/property/default")?;
         let mut request = Request::new(url, Method::Post);

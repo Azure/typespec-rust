@@ -11,7 +11,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, Pipeline, Request, Response, Url},
+    http::{Method, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -56,7 +56,7 @@ impl OperationTemplatesOptionalBodyClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/widgets/{widgetName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
@@ -107,7 +107,7 @@ impl OperationTemplatesOptionalBodyClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/widgets/{widgetName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
@@ -162,7 +162,7 @@ impl OperationTemplatesOptionalBodyClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/widgets/{widgetName}/post");
         path = path.replace("{resourceGroupName}", resource_group_name);
@@ -200,7 +200,7 @@ impl OperationTemplatesOptionalBodyClient {
         options: Option<OperationTemplatesOptionalBodyClientProviderPostOptions<'_>>,
     ) -> Result<Response<ChangeAllowanceResult>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/providerPost");
         path = path.replace("{subscriptionId}", &self.subscription_id);

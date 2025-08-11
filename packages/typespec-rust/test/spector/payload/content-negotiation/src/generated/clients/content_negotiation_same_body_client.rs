@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, Pipeline, RawResponse, Request, Url},
+    http::{Method, Pipeline, RawResponse, Request, Url},
     tracing, Error, Result,
 };
 
@@ -35,7 +35,7 @@ impl ContentNegotiationSameBodyClient {
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsJpegOptions<'_>>,
     ) -> Result<RawResponse> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
@@ -63,7 +63,7 @@ impl ContentNegotiationSameBodyClient {
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsPngOptions<'_>>,
     ) -> Result<RawResponse> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);

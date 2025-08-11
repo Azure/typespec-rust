@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 use rust_decimal::Decimal;
@@ -38,7 +38,7 @@ impl ScalarDecimalTypeClient {
         options: Option<ScalarDecimalTypeClientRequestBodyOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/scalar/decimal/resquest_body")?;
         let mut request = Request::new(url, Method::Put);
@@ -68,7 +68,7 @@ impl ScalarDecimalTypeClient {
         options: Option<ScalarDecimalTypeClientRequestParameterOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/scalar/decimal/request_parameter")?;
         url.query_pairs_mut()
@@ -97,7 +97,7 @@ impl ScalarDecimalTypeClient {
         options: Option<ScalarDecimalTypeClientResponseBodyOptions<'_>>,
     ) -> Result<Response<Decimal>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/scalar/decimal/response_body")?;
         let mut request = Request::new(url, Method::Get);

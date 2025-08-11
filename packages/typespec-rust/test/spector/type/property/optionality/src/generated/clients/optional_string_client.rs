@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -36,7 +36,7 @@ impl OptionalStringClient {
         options: Option<OptionalStringClientGetAllOptions<'_>>,
     ) -> Result<Response<StringProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/optional/string/all")?;
         let mut request = Request::new(url, Method::Get);
@@ -65,7 +65,7 @@ impl OptionalStringClient {
         options: Option<OptionalStringClientGetDefaultOptions<'_>>,
     ) -> Result<Response<StringProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/optional/string/default")?;
         let mut request = Request::new(url, Method::Get);
@@ -95,7 +95,7 @@ impl OptionalStringClient {
         options: Option<OptionalStringClientPutAllOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/optional/string/all")?;
         let mut request = Request::new(url, Method::Put);
@@ -126,7 +126,7 @@ impl OptionalStringClient {
         options: Option<OptionalStringClientPutDefaultOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/optional/string/default")?;
         let mut request = Request::new(url, Method::Put);

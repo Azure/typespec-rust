@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 use std::collections::HashMap;
@@ -38,7 +38,7 @@ impl RoutesQueryParametersQueryContinuationStandardClient {
         options: Option<RoutesQueryParametersQueryContinuationStandardClientArrayOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("routes/query/query-continuation/standard/array")?;
         url.query_pairs_mut().append_pair("fixed", "true");
@@ -68,7 +68,7 @@ impl RoutesQueryParametersQueryContinuationStandardClient {
         options: Option<RoutesQueryParametersQueryContinuationStandardClientPrimitiveOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("routes/query/query-continuation/standard/primitive")?;
         url.query_pairs_mut().append_pair("fixed", "true");
@@ -98,7 +98,7 @@ impl RoutesQueryParametersQueryContinuationStandardClient {
         options: Option<RoutesQueryParametersQueryContinuationStandardClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("routes/query/query-continuation/standard/record")?;
         url.query_pairs_mut().append_pair("fixed", "true");

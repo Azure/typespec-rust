@@ -7,9 +7,7 @@ use crate::generated::models::{DurationClientDurationConstantOptions, DurationMo
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{
-        ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
-    },
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -77,7 +75,7 @@ impl DurationClient {
         options: Option<DurationClientDurationConstantOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("azure/encode/duration/duration-constant")?;
         let mut request = Request::new(url, Method::Put);

@@ -24,7 +24,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -51,7 +51,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientAndOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/and")?;
         let mut request = Request::new(url, Method::Get);
@@ -78,7 +78,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientAsOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/as")?;
         let mut request = Request::new(url, Method::Get);
@@ -105,7 +105,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientAssertOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/assert")?;
         let mut request = Request::new(url, Method::Get);
@@ -132,7 +132,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientAsyncOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/async")?;
         let mut request = Request::new(url, Method::Get);
@@ -159,7 +159,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientAwaitOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/await")?;
         let mut request = Request::new(url, Method::Get);
@@ -186,7 +186,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientBreakOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/break")?;
         let mut request = Request::new(url, Method::Get);
@@ -213,7 +213,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientClassOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/class")?;
         let mut request = Request::new(url, Method::Get);
@@ -240,7 +240,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientConstructorOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/constructor")?;
         let mut request = Request::new(url, Method::Get);
@@ -267,7 +267,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientContinueOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/continue")?;
         let mut request = Request::new(url, Method::Get);
@@ -294,7 +294,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientDefOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/def")?;
         let mut request = Request::new(url, Method::Get);
@@ -321,7 +321,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientDelOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/del")?;
         let mut request = Request::new(url, Method::Get);
@@ -348,7 +348,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientElifOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/elif")?;
         let mut request = Request::new(url, Method::Get);
@@ -375,7 +375,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientElseOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/else")?;
         let mut request = Request::new(url, Method::Get);
@@ -402,7 +402,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientExceptOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/except")?;
         let mut request = Request::new(url, Method::Get);
@@ -429,7 +429,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientExecOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/exec")?;
         let mut request = Request::new(url, Method::Get);
@@ -456,7 +456,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientFinallyOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/finally")?;
         let mut request = Request::new(url, Method::Get);
@@ -483,7 +483,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientForOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/for")?;
         let mut request = Request::new(url, Method::Get);
@@ -510,7 +510,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientFromOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/from")?;
         let mut request = Request::new(url, Method::Get);
@@ -537,7 +537,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientGlobalOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/global")?;
         let mut request = Request::new(url, Method::Get);
@@ -564,7 +564,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientIfOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/if")?;
         let mut request = Request::new(url, Method::Get);
@@ -591,7 +591,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientImportOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/import")?;
         let mut request = Request::new(url, Method::Get);
@@ -618,7 +618,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientInOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/in")?;
         let mut request = Request::new(url, Method::Get);
@@ -645,7 +645,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientIsOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/is")?;
         let mut request = Request::new(url, Method::Get);
@@ -672,7 +672,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientLambdaOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/lambda")?;
         let mut request = Request::new(url, Method::Get);
@@ -699,7 +699,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientNotOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/not")?;
         let mut request = Request::new(url, Method::Get);
@@ -726,7 +726,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientOrOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/or")?;
         let mut request = Request::new(url, Method::Get);
@@ -753,7 +753,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientPassOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/pass")?;
         let mut request = Request::new(url, Method::Get);
@@ -780,7 +780,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientRaiseOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/raise")?;
         let mut request = Request::new(url, Method::Get);
@@ -807,7 +807,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientReturnOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/return")?;
         let mut request = Request::new(url, Method::Get);
@@ -834,7 +834,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientTryOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/try")?;
         let mut request = Request::new(url, Method::Get);
@@ -861,7 +861,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientWhileOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/while")?;
         let mut request = Request::new(url, Method::Get);
@@ -888,7 +888,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientWithOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/with")?;
         let mut request = Request::new(url, Method::Get);
@@ -915,7 +915,7 @@ impl SpecialWordsOperationsClient {
         options: Option<SpecialWordsOperationsClientYieldOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/operations/yield")?;
         let mut request = Request::new(url, Method::Get);

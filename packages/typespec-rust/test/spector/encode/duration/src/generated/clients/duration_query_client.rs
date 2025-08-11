@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -37,7 +37,7 @@ impl DurationQueryClient {
         options: Option<DurationQueryClientDefaultOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/query/default")?;
         url.query_pairs_mut().append_pair("input", input);
@@ -66,7 +66,7 @@ impl DurationQueryClient {
         options: Option<DurationQueryClientFloat64SecondsOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/query/float64-seconds")?;
         url.query_pairs_mut()
@@ -96,7 +96,7 @@ impl DurationQueryClient {
         options: Option<DurationQueryClientFloatSecondsOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/query/float-seconds")?;
         url.query_pairs_mut()
@@ -126,7 +126,7 @@ impl DurationQueryClient {
         options: Option<DurationQueryClientInt32SecondsOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/query/int32-seconds")?;
         url.query_pairs_mut()
@@ -156,7 +156,7 @@ impl DurationQueryClient {
         options: Option<DurationQueryClientInt32SecondsArrayOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/query/int32-seconds-array")?;
         url.query_pairs_mut().append_pair(
@@ -192,7 +192,7 @@ impl DurationQueryClient {
         options: Option<DurationQueryClientIso8601Options<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/query/iso8601")?;
         url.query_pairs_mut().append_pair("input", input);

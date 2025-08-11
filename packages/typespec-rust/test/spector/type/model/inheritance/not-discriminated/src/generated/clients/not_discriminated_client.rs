@@ -10,9 +10,7 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{
-        ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
-    },
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -78,7 +76,7 @@ impl NotDiscriminatedClient {
         options: Option<NotDiscriminatedClientGetValidOptions<'_>>,
     ) -> Result<Response<Siamese>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/model/inheritance/not-discriminated/valid")?;
         let mut request = Request::new(url, Method::Get);
@@ -107,7 +105,7 @@ impl NotDiscriminatedClient {
         options: Option<NotDiscriminatedClientPostValidOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/model/inheritance/not-discriminated/valid")?;
         let mut request = Request::new(url, Method::Post);
@@ -137,7 +135,7 @@ impl NotDiscriminatedClient {
         options: Option<NotDiscriminatedClientPutValidOptions<'_>>,
     ) -> Result<Response<Siamese>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/model/inheritance/not-discriminated/valid")?;
         let mut request = Request::new(url, Method::Put);

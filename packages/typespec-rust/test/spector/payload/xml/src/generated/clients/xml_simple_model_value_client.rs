@@ -8,9 +8,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{
-        Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url, XmlFormat,
-    },
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url, XmlFormat},
     tracing, Error, Result,
 };
 
@@ -37,7 +35,7 @@ impl XmlSimpleModelValueClient {
         options: Option<XmlSimpleModelValueClientGetOptions<'_>>,
     ) -> Result<Response<SimpleModel, XmlFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("payload/xml/simpleModel")?;
         let mut request = Request::new(url, Method::Get);
@@ -66,7 +64,7 @@ impl XmlSimpleModelValueClient {
         options: Option<XmlSimpleModelValueClientPutOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("payload/xml/simpleModel")?;
         let mut request = Request::new(url, Method::Put);

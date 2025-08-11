@@ -10,7 +10,7 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{ClientOptions, Method, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -77,7 +77,7 @@ impl FlattenPropertyClient {
         options: Option<FlattenPropertyClientPutFlattenModelOptions<'_>>,
     ) -> Result<Response<FlattenModel>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("azure/client-generator-core/flatten-property/flattenModel")?;
         let mut request = Request::new(url, Method::Put);
@@ -108,7 +108,7 @@ impl FlattenPropertyClient {
         options: Option<FlattenPropertyClientPutNestedFlattenModelOptions<'_>>,
     ) -> Result<Response<NestedFlattenModel>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("azure/client-generator-core/flatten-property/nestedFlattenModel")?;
         let mut request = Request::new(url, Method::Put);
