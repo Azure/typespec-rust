@@ -914,7 +914,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
  * @param inClosure indicates if the request is being constructed within a closure (e.g. pageable methods)
  * @returns the code which sets HTTP headers for the request
  */
- function applyHeaderParams(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean): string {
+function applyHeaderParams(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean): string {
 
   let body = '';
 
