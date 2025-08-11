@@ -85,9 +85,9 @@ impl EnumPathParamsClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("optional/{shape}/{value}");
-        path = path.replace("{shape}", &shape.to_string());
+        path = path.replace("{shape}", shape.as_ref());
         path = match options.value {
-            Some(value) => path.replace("{value}", &value.to_string()),
+            Some(value) => path.replace("{value}", value.as_ref()),
             None => path.replace("{value}", ""),
         };
         url = url.join(&path)?;
@@ -119,9 +119,9 @@ impl EnumPathParamsClient {
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("fixed/{shape}/{value}");
-        path = path.replace("{shape}", &shape.to_string());
+        path = path.replace("{shape}", shape.as_ref());
         path = match options.value {
-            Some(value) => path.replace("{value}", &value.to_string()),
+            Some(value) => path.replace("{value}", value.as_ref()),
             None => path.replace("{value}", ""),
         };
         url = url.join(&path)?;

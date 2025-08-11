@@ -720,7 +720,10 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
   /** returns & if the param needs to be borrowed (which is the majority of cases), else the empty string */
   const borrowOrNot = function (param: rust.Parameter): string {
-    if (param.type.kind !== 'ref' || param.type.type.kind === 'encodedBytes' || param.type.type.kind === 'slice') {
+    // for string-based enums we call .as_ref() which elides the need to borrow.
+    // for numeric-based enums the borrow will be necessary.
+    // TODO: https://github.com/Azure/typespec-rust/issues/25
+    if (param.type.kind !== 'enum' && (param.type.kind !== 'ref' || param.type.type.kind === 'encodedBytes' || param.type.type.kind === 'slice')) {
       return '&';
     }
     return '';
@@ -1379,9 +1382,8 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
       return encodeBytes(paramType, paramName);
     case 'enum':
     case 'scalar':
-      // TODO: enums that are strings should use .as_ref() https://github.com/Azure/typespec-rust/issues/554
-      if (paramType.kind === 'enum' && param.kind === 'queryScalar') {
-        // append_pair wants a reference to the string
+      if (paramType.kind === 'enum' && (param.kind === 'pathScalar' || param.kind === 'queryScalar')) {
+        // append_pair and path.replace() want a reference to the string
         // TODO: https://github.com/Azure/typespec-rust/issues/25
         return `${paramName}.as_ref()`;
       }
