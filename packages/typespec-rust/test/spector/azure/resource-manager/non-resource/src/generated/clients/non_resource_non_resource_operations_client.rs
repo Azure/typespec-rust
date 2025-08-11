@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -43,8 +43,20 @@ impl NonResourceNonResourceOperationsClient {
         body: RequestContent<NonResource>,
         options: Option<NonResourceNonResourceOperationsClientCreateOptions<'_>>,
     ) -> Result<Response<NonResource>> {
+        if location.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter location cannot be empty",
+            ));
+        }
+        if parameter.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter parameter cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/providers/Microsoft.NonResource/locations/{location}/otherParameters/{parameter}");
         path = path.replace("{location}", location);
@@ -83,8 +95,20 @@ impl NonResourceNonResourceOperationsClient {
         parameter: &str,
         options: Option<NonResourceNonResourceOperationsClientGetOptions<'_>>,
     ) -> Result<Response<NonResource>> {
+        if location.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter location cannot be empty",
+            ));
+        }
+        if parameter.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter parameter cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/providers/Microsoft.NonResource/locations/{location}/otherParameters/{parameter}");
         path = path.replace("{location}", location);

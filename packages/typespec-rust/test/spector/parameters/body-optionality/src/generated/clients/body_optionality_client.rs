@@ -13,9 +13,7 @@ use crate::generated::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{
-        ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
-    },
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -93,7 +91,7 @@ impl BodyOptionalityClient {
         options: Option<BodyOptionalityClientRequiredExplicitOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("parameters/body-optionality/required-explicit")?;
         let mut request = Request::new(url, Method::Post);
@@ -123,7 +121,7 @@ impl BodyOptionalityClient {
         options: Option<BodyOptionalityClientRequiredImplicitOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("parameters/body-optionality/required-implicit")?;
         let mut request = Request::new(url, Method::Post);

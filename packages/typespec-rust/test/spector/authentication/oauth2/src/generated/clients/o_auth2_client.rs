@@ -10,7 +10,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url,
+        ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url,
     },
     tracing, Error, Result,
 };
@@ -86,7 +86,7 @@ impl OAuth2Client {
         options: Option<OAuth2ClientInvalidOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("authentication/oauth2/invalid")?;
         let mut request = Request::new(url, Method::Get);
@@ -114,7 +114,7 @@ impl OAuth2Client {
         options: Option<OAuth2ClientValidOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("authentication/oauth2/valid")?;
         let mut request = Request::new(url, Method::Get);

@@ -10,7 +10,7 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -80,7 +80,7 @@ impl ClientBClient {
         options: Option<ClientBClientRenamedFourOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("four")?;
         let mut request = Request::new(url, Method::Post);
@@ -107,7 +107,7 @@ impl ClientBClient {
         options: Option<ClientBClientRenamedSixOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("six")?;
         let mut request = Request::new(url, Method::Post);
@@ -134,7 +134,7 @@ impl ClientBClient {
         options: Option<ClientBClientRenamedTwoOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("two")?;
         let mut request = Request::new(url, Method::Post);

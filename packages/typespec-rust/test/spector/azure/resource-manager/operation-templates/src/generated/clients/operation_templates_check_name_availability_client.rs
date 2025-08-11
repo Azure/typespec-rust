@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -43,7 +43,7 @@ impl OperationTemplatesCheckNameAvailabilityClient {
         options: Option<OperationTemplatesCheckNameAvailabilityClientCheckGlobalOptions<'_>>,
     ) -> Result<Response<CheckNameAvailabilityResponse>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/checkNameAvailability");
         path = path.replace("{subscriptionId}", &self.subscription_id);
@@ -83,8 +83,14 @@ impl OperationTemplatesCheckNameAvailabilityClient {
         body: RequestContent<CheckNameAvailabilityRequest>,
         options: Option<OperationTemplatesCheckNameAvailabilityClientCheckLocalOptions<'_>>,
     ) -> Result<Response<CheckNameAvailabilityResponse>> {
+        if location.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter location cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/locations/{location}/checkNameAvailability");
         path = path.replace("{location}", location);

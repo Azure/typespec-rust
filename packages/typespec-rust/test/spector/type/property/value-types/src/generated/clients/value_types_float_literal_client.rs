@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -36,7 +36,7 @@ impl ValueTypesFloatLiteralClient {
         options: Option<ValueTypesFloatLiteralClientGetOptions<'_>>,
     ) -> Result<Response<FloatLiteralProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/value-types/float/literal")?;
         let mut request = Request::new(url, Method::Get);
@@ -67,7 +67,7 @@ impl ValueTypesFloatLiteralClient {
         options: Option<ValueTypesFloatLiteralClientPutOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/value-types/float/literal")?;
         let mut request = Request::new(url, Method::Put);

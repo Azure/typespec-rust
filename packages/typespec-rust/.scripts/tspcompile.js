@@ -30,6 +30,7 @@ const httpSpecsGroup = {
   'spector_bodyoptional': {input: 'parameters/body-optionality'},
   'spector_basicparams': {input: 'parameters/basic'},
   'spector_collectionfmt': {input: 'parameters/collection-format'},
+  'spector_path': {input: 'parameters/path'},
   'spector_spread': {input: 'parameters/spread'},
   'spector_contentneg': {input: 'payload/content-negotiation'},
   'spector_jmergepatch': {input: 'payload/json-merge-patch'},
@@ -137,7 +138,7 @@ function should_generate(name) {
 const appconfiguration = pkgRoot + 'test/tsp/AppConfiguration';
 generate('appconfiguration', appconfiguration, 'test/sdk/appconfiguration');
 
-const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrests';
+const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrests/client.tsp';
 generate('keyvault_secrets', keyvault_secrets, 'test/sdk/keyvault_secrets');
 
 const blob_storage = pkgRoot + 'test/tsp/Microsoft.BlobStorage/client.tsp';
@@ -145,6 +146,9 @@ generate('blob_storage', blob_storage, 'test/sdk/blob_storage', ['temp-omit-doc-
 
 const serde_tests = pkgRoot + 'test/tsp/SerdeTests';
 generate('serde_tests', serde_tests, 'test/other/serde_tests');
+
+const enum_path_params = pkgRoot + 'test/tsp/EnumPathParams';
+generate('enum_path_params', enum_path_params, 'test/other/enum_path_params');
 
 loopSpec(httpSpecsGroup, httpSpecs)
 loopSpec(azureHttpSpecsGroup, azureHttpSpecs)

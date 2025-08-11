@@ -9,7 +9,7 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -80,7 +80,7 @@ impl ParamAliasClient {
         options: Option<ParamAliasClientWithAliasedNameOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/client-generator-core/client-initialization/param-alias/{blob}/with-aliased-name");
         path = path.replace("{blob}", &self.blob_name);
@@ -111,7 +111,7 @@ impl ParamAliasClient {
         options: Option<ParamAliasClientWithOriginalNameOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/client-generator-core/client-initialization/param-alias/{blobName}/with-original-name");
         path = path.replace("{blobName}", &self.blob_name);

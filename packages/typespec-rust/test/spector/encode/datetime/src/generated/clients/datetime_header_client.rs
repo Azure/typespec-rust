@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     time::{to_rfc3339, to_rfc7231, OffsetDateTime},
     tracing, Error, Result,
 };
@@ -38,7 +38,7 @@ impl DatetimeHeaderClient {
         options: Option<DatetimeHeaderClientDefaultOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/header/default")?;
         let mut request = Request::new(url, Method::Get);
@@ -67,7 +67,7 @@ impl DatetimeHeaderClient {
         options: Option<DatetimeHeaderClientRfc3339Options<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/header/rfc3339")?;
         let mut request = Request::new(url, Method::Get);
@@ -96,7 +96,7 @@ impl DatetimeHeaderClient {
         options: Option<DatetimeHeaderClientRfc7231Options<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/header/rfc7231")?;
         let mut request = Request::new(url, Method::Get);
@@ -125,7 +125,7 @@ impl DatetimeHeaderClient {
         options: Option<DatetimeHeaderClientUnixTimestampOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/header/unix-timestamp")?;
         let mut request = Request::new(url, Method::Get);
@@ -154,7 +154,7 @@ impl DatetimeHeaderClient {
         options: Option<DatetimeHeaderClientUnixTimestampArrayOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/header/unix-timestamp-array")?;
         let mut request = Request::new(url, Method::Get);

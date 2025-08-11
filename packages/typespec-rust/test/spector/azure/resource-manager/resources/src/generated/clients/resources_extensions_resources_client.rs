@@ -15,7 +15,7 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     http::{
         poller::{get_retry_after, PollerResult, PollerState, StatusMonitor as _},
-        Context, Method, NoFormat, Pager, PagerResult, PagerState, Pipeline, Poller, PollerStatus,
+        Method, NoFormat, Pager, PagerResult, PagerState, Pipeline, Poller, PollerStatus,
         RawResponse, Request, RequestContent, Response, Url,
     },
     json, tracing, Error, Result,
@@ -131,8 +131,20 @@ impl ResourcesExtensionsResourcesClient {
         extensions_resource_name: &str,
         options: Option<ResourcesExtensionsResourcesClientDeleteOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
+        if extensions_resource_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter extensions_resource_name cannot be empty",
+            ));
+        }
+        if resource_uri.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_uri cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
@@ -168,8 +180,20 @@ impl ResourcesExtensionsResourcesClient {
         extensions_resource_name: &str,
         options: Option<ResourcesExtensionsResourcesClientGetOptions<'_>>,
     ) -> Result<Response<ExtensionsResource>> {
+        if extensions_resource_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter extensions_resource_name cannot be empty",
+            ));
+        }
+        if resource_uri.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_uri cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
@@ -204,6 +228,12 @@ impl ResourcesExtensionsResourcesClient {
         resource_uri: &str,
         options: Option<ResourcesExtensionsResourcesClientListByScopeOptions<'_>>,
     ) -> Result<Pager<ExtensionsResourceListResult>> {
+        if resource_uri.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_uri cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
@@ -334,8 +364,20 @@ impl ResourcesExtensionsResourcesClient {
         properties: RequestContent<ExtensionsResource>,
         options: Option<ResourcesExtensionsResourcesClientUpdateOptions<'_>>,
     ) -> Result<Response<ExtensionsResource>> {
+        if extensions_resource_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter extensions_resource_name cannot be empty",
+            ));
+        }
+        if resource_uri.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_uri cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);

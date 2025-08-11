@@ -736,7 +736,10 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
   /** returns & if the param needs to be borrowed (which is the majority of cases), else the empty string */
   const borrowOrNot = function (param: rust.Parameter): string {
-    if (param.type.kind !== 'ref' || param.type.type.kind === 'encodedBytes' || param.type.type.kind === 'slice') {
+    // for string-based enums we call .as_ref() which elides the need to borrow.
+    // for numeric-based enums the borrow will be necessary.
+    // TODO: https://github.com/Azure/typespec-rust/issues/25
+    if (param.type.kind !== 'enum' && (param.type.kind !== 'ref' || param.type.type.kind === 'encodedBytes' || param.type.type.kind === 'slice')) {
       return '&';
     }
     return '';
@@ -760,7 +763,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
       for (const pathParam of paramGroups.path) {
         let wrapSortedVec: (s: string) => string = (s) => s;
-        let paramExpression = `${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)}`;
+        let paramExpression = getHeaderPathQueryParamValue(use, pathParam, true);
         if (pathParam.kind === 'pathHashMap') {
           wrapSortedVec = (s) => `${indent.get()}{`
             + `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParam.name}.iter().collect::<Vec<_>>();\n`
@@ -822,10 +825,22 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
             case 'matrix':
               paramExpression = `&format!(";${pathParam.name}={${paramExpression}}")`;
               break;
+            default:
+              paramExpression = `${borrowOrNot(pathParam)}${paramExpression}`;
           }
         }
 
-        body += wrapSortedVec(`${indent.get()}path = path.replace("{${pathParam.segment}}", ${paramExpression});\n`);
+        if (pathParam.optional) {
+          body += `${indent.get()}path = ${helpers.buildMatch(indent, `options.${pathParam.name}`, [{
+            pattern: `Some(${pathParam.name})`,
+            body: (indent) => wrapSortedVec(`${indent.get()}path.replace("{${pathParam.segment}}", ${paramExpression})\n`),
+          }, {
+            pattern: `None`,
+            body: (indent) => `${indent.get()}path.replace("{${pathParam.segment}}", "")\n`,
+          }])};\n`;
+        } else {
+          body += wrapSortedVec(`${indent.get()}path = path.replace("{${pathParam.segment}}", ${paramExpression});\n`);
+        }
       }
       path = '&path';
       body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
@@ -1040,6 +1055,60 @@ function urlVarNeedsMut(paramGroups: MethodParamGroups, method: ClientMethod): s
 }
 
 /**
+ * emits "if path_param is empty then error" checks for string method path parameters
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param params the path params to enumerate, can be empty
+ * @returns the empty path param checks or the empty string if there are no checks
+ */
+function checkEmptyRequiredPathParams(indent: helpers.indentation, params: Array<PathParamType>): string {
+  let checks = '';
+  for (const param of params) {
+    if (param.optional || param.location === 'client') {
+      continue;
+    }
+    checks += emitEmptyPathParamCheck(indent, param);
+  }
+  return checks;
+}
+
+/**
+ * emits the "if path_param is empty then error" check.
+ * this is only applicable when the path param's type can
+ * be empty (e.g. a string). for types that can't be empty
+ * the empty string is returned.
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param param the path param for which to emit the check
+ * @returns the check or the empty string
+ */
+function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamType): string {
+  let toString = '';
+  const paramType = param.type.kind === 'ref' ? param.type.type : param.type;
+  switch (paramType.kind) {
+    case 'String':
+    case 'str':
+      // need to check these for zero length
+      break;
+    case 'enum':
+      if (!paramType.extensible) {
+        // fixed enums will always have a value
+        return '';
+      }
+      // need to get the underlying string value
+      toString = '.as_ref()';
+      break;
+    default:
+      // no length to check so bail
+      return '';
+  }
+  return helpers.buildIfBlock(indent, {
+    condition: `${param.name}${toString}.is_empty()`,
+    body: (indent) => `${indent.get()}return Err(azure_core::Error::message(azure_core::error::ErrorKind::Other, "parameter ${param.name} cannot be empty"));`,
+  });
+}
+
+/**
  * constructs the body for an async client method
  * 
  * @param indent the indentation helper currently in scope
@@ -1049,11 +1118,12 @@ function urlVarNeedsMut(paramGroups: MethodParamGroups, method: ClientMethod): s
  * @returns the contents of the method body
  */
 function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
-  use.add('azure_core::http', 'Context', 'Method', 'Request');
+  use.add('azure_core::http', 'Method', 'Request');
 
   const paramGroups = getMethodParamGroup(method);
-  let body = 'let options = options.unwrap_or_default();\n';
-  body += `${indent.get()}let ctx = Context::with_context(&options.method_options.context);\n`;
+  let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
+  body += 'let options = options.unwrap_or_default();\n';
+  body += `${indent.get()}let ctx = options.method_options.context.to_borrowed();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}url = self.${getEndpointFieldName(client)}.clone();\n`;
 
   body += constructUrl(indent, use, method, paramGroups);
@@ -1092,7 +1162,8 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   const paramGroups = getMethodParamGroup(method);
   const urlVar = 'first_url';
 
-  let body = 'let options = options.unwrap_or_default().into_owned();\n';
+  let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
+  body += 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
@@ -1508,8 +1579,8 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
       return encodeBytes(paramType, paramName);
     case 'enum':
     case 'scalar':
-      if (paramType.kind === 'enum' && param.kind === 'queryScalar') {
-        // append_pair wants a reference to the string
+      if (paramType.kind === 'enum' && (param.kind === 'pathScalar' || param.kind === 'queryScalar')) {
+        // append_pair and path.replace() want a reference to the string
         // TODO: https://github.com/Azure/typespec-rust/issues/25
         return `${paramName}.as_ref()`;
       }

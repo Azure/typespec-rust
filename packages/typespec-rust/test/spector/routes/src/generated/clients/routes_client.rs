@@ -10,7 +10,7 @@ use crate::generated::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -76,7 +76,7 @@ impl RoutesClient {
         options: Option<RoutesClientFixedOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("routes/fixed")?;
         let mut request = Request::new(url, Method::Get);

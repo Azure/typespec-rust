@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 use std::collections::HashMap;
@@ -38,7 +38,7 @@ impl RoutesPathParametersPathExpansionStandardClient {
         options: Option<RoutesPathParametersPathExpansionStandardClientArrayOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/path/standard/array{param}");
         path = path.replace("{param}", &format!("/{}", param.join(",")));
@@ -67,8 +67,14 @@ impl RoutesPathParametersPathExpansionStandardClient {
         param: &str,
         options: Option<RoutesPathParametersPathExpansionStandardClientPrimitiveOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
+        if param.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter param cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/path/standard/primitive{param}");
         path = path.replace("{param}", &format!("/{param}"));
@@ -98,7 +104,7 @@ impl RoutesPathParametersPathExpansionStandardClient {
         options: Option<RoutesPathParametersPathExpansionStandardClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/path/standard/record{param}");
         {

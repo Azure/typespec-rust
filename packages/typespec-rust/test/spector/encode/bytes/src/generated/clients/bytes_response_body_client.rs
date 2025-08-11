@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, Pipeline, RawResponse, Request, Response, Url},
+    http::{Method, Pipeline, RawResponse, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -36,7 +36,7 @@ impl BytesResponseBodyClient {
         options: Option<BytesResponseBodyClientBase64Options<'_>>,
     ) -> Result<Response<Vec<u8>>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/response/base64")?;
         let mut request = Request::new(url, Method::Get);
@@ -64,7 +64,7 @@ impl BytesResponseBodyClient {
         options: Option<BytesResponseBodyClientBase64UrlOptions<'_>>,
     ) -> Result<Response<Vec<u8>>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/response/base64url")?;
         let mut request = Request::new(url, Method::Get);
@@ -92,7 +92,7 @@ impl BytesResponseBodyClient {
         options: Option<BytesResponseBodyClientCustomContentTypeOptions<'_>>,
     ) -> Result<RawResponse> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/response/custom-content-type")?;
         let mut request = Request::new(url, Method::Get);
@@ -120,7 +120,7 @@ impl BytesResponseBodyClient {
         options: Option<BytesResponseBodyClientDefaultOptions<'_>>,
     ) -> Result<RawResponse> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/response/default")?;
         let mut request = Request::new(url, Method::Get);
@@ -148,7 +148,7 @@ impl BytesResponseBodyClient {
         options: Option<BytesResponseBodyClientOctetStreamOptions<'_>>,
     ) -> Result<RawResponse> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/body/response/octet-stream")?;
         let mut request = Request::new(url, Method::Get);

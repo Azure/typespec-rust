@@ -1209,8 +1209,11 @@ export class Adapter {
         adaptedParam = this.adaptMethodParameter(opParam);
       }
 
-      if (adaptedParam.kind === 'headerScalar' || adaptedParam.kind === 'queryScalar') {
-        paramsMap.set(param, adaptedParam);
+      switch (adaptedParam.kind) {
+        case 'headerScalar':
+        case 'queryScalar':
+          paramsMap.set(param, adaptedParam);
+          break;
       }
 
       adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
@@ -1729,13 +1732,11 @@ export class Adapter {
       case 'path': {
         paramType = this.typeToWireType(paramType);
         let style: rust.ParameterStyle = 'simple';
-        {
-          const tspStyleString = (param.style as string);
-          if (!['simple', 'path', 'label', 'matrix'].includes(tspStyleString)) {
-            throw new AdapterError('InternalError', `unsupported style ${tspStyleString} for parameter ${param.serializedName}`, param.__raw?.node);
-          } else {
-            style = tspStyleString as rust.ParameterStyle;
-          }
+        const tspStyleString = (param.style as string);
+        if (!['simple', 'path', 'label', 'matrix'].includes(tspStyleString)) {
+          throw new AdapterError('InternalError', `unsupported style ${tspStyleString} for parameter ${param.serializedName}`, param.__raw?.node);
+        } else {
+          style = tspStyleString as rust.ParameterStyle;
         }
 
         if (isRefSlice(paramType)) {

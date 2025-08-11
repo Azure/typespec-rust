@@ -115,11 +115,11 @@ op getSecret is Azure.Core.Foundations.Operation<
     secretName: string;
 
     /**
-     * The version of the secret. This URI fragment is optional. If not specified, the latest version of the secret is returned.
+     * The version of the secret. This value is optional. If not specified, the latest version of the secret is returned.
      */
     @path("secret-version")
     @clientName("version", "go")
-    secretVersion: string;
+    secretVersion?: string;
   },
   SecretBundle,
   {},

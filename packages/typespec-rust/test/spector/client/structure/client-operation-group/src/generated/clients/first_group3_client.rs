@@ -6,7 +6,7 @@
 use crate::generated::models::{FirstGroup3ClientThreeOptions, FirstGroup3ClientTwoOptions};
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -32,7 +32,7 @@ impl FirstGroup3Client {
         options: Option<FirstGroup3ClientThreeOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("three")?;
         let mut request = Request::new(url, Method::Post);
@@ -59,7 +59,7 @@ impl FirstGroup3Client {
         options: Option<FirstGroup3ClientTwoOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("two")?;
         let mut request = Request::new(url, Method::Post);

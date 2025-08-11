@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -35,7 +35,7 @@ impl TwoOperationGroupGroup2Client {
         options: Option<TwoOperationGroupGroup2ClientFiveOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("five")?;
         let mut request = Request::new(url, Method::Post);
@@ -62,7 +62,7 @@ impl TwoOperationGroupGroup2Client {
         options: Option<TwoOperationGroupGroup2ClientSixOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("six")?;
         let mut request = Request::new(url, Method::Post);
@@ -89,7 +89,7 @@ impl TwoOperationGroupGroup2Client {
         options: Option<TwoOperationGroupGroup2ClientTwoOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("two")?;
         let mut request = Request::new(url, Method::Post);

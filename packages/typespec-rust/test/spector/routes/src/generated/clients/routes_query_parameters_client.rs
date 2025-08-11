@@ -14,7 +14,7 @@ use crate::generated::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -41,7 +41,7 @@ impl RoutesQueryParametersClient {
         options: Option<RoutesQueryParametersClientAnnotationOnlyOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("routes/query/annotation-only")?;
         url.query_pairs_mut().append_pair("param", param);
@@ -70,7 +70,7 @@ impl RoutesQueryParametersClient {
         options: Option<RoutesQueryParametersClientExplicitOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("routes/query/explicit")?;
         url.query_pairs_mut().append_pair("param", param);
@@ -121,7 +121,7 @@ impl RoutesQueryParametersClient {
         options: Option<RoutesQueryParametersClientTemplateOnlyOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("routes/query/template-only")?;
         url.query_pairs_mut().append_pair("param", param);

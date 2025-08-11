@@ -13,7 +13,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -40,7 +40,7 @@ impl DurationPropertyClient {
         options: Option<DurationPropertyClientDefaultOptions<'_>>,
     ) -> Result<Response<DefaultDurationProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/property/default")?;
         let mut request = Request::new(url, Method::Post);
@@ -71,7 +71,7 @@ impl DurationPropertyClient {
         options: Option<DurationPropertyClientFloat64SecondsOptions<'_>>,
     ) -> Result<Response<Float64SecondsDurationProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/property/float64-seconds")?;
         let mut request = Request::new(url, Method::Post);
@@ -102,7 +102,7 @@ impl DurationPropertyClient {
         options: Option<DurationPropertyClientFloatSecondsOptions<'_>>,
     ) -> Result<Response<FloatSecondsDurationProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/property/float-seconds")?;
         let mut request = Request::new(url, Method::Post);
@@ -133,7 +133,7 @@ impl DurationPropertyClient {
         options: Option<DurationPropertyClientFloatSecondsArrayOptions<'_>>,
     ) -> Result<Response<FloatSecondsDurationArrayProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/property/float-seconds-array")?;
         let mut request = Request::new(url, Method::Post);
@@ -164,7 +164,7 @@ impl DurationPropertyClient {
         options: Option<DurationPropertyClientInt32SecondsOptions<'_>>,
     ) -> Result<Response<Int32SecondsDurationProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/property/int32-seconds")?;
         let mut request = Request::new(url, Method::Post);
@@ -195,7 +195,7 @@ impl DurationPropertyClient {
         options: Option<DurationPropertyClientIso8601Options<'_>>,
     ) -> Result<Response<ISO8601DurationProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/property/iso8601")?;
         let mut request = Request::new(url, Method::Post);

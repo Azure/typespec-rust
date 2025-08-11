@@ -26,7 +26,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -54,7 +54,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithAndOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/and")?;
         url.query_pairs_mut().append_pair("and", and);
@@ -83,7 +83,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithAsOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/as")?;
         url.query_pairs_mut().append_pair("as", as_param);
@@ -112,7 +112,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithAssertOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/assert")?;
         url.query_pairs_mut().append_pair("assert", assert);
@@ -141,7 +141,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithAsyncOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/async")?;
         url.query_pairs_mut().append_pair("async", async_param);
@@ -170,7 +170,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithAwaitOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/await")?;
         url.query_pairs_mut().append_pair("await", await_param);
@@ -199,7 +199,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithBreakOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/break")?;
         url.query_pairs_mut().append_pair("break", break_param);
@@ -228,7 +228,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithCancellationTokenOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/cancellationToken")?;
         url.query_pairs_mut()
@@ -258,7 +258,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithClassOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/class")?;
         url.query_pairs_mut().append_pair("class", class);
@@ -287,7 +287,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithConstructorOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/constructor")?;
         url.query_pairs_mut()
@@ -317,7 +317,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithContinueOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/continue")?;
         url.query_pairs_mut()
@@ -347,7 +347,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithDefOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/def")?;
         url.query_pairs_mut().append_pair("def", def);
@@ -376,7 +376,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithDelOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/del")?;
         url.query_pairs_mut().append_pair("del", del);
@@ -405,7 +405,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithElifOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/elif")?;
         url.query_pairs_mut().append_pair("elif", elif);
@@ -434,7 +434,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithElseOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/else")?;
         url.query_pairs_mut().append_pair("else", else_param);
@@ -463,7 +463,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithExceptOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/except")?;
         url.query_pairs_mut().append_pair("except", except);
@@ -492,7 +492,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithExecOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/exec")?;
         url.query_pairs_mut().append_pair("exec", exec);
@@ -521,7 +521,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithFinallyOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/finally")?;
         url.query_pairs_mut().append_pair("finally", finally);
@@ -550,7 +550,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithForOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/for")?;
         url.query_pairs_mut().append_pair("for", for_param);
@@ -579,7 +579,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithFromOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/from")?;
         url.query_pairs_mut().append_pair("from", from);
@@ -608,7 +608,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithGlobalOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/global")?;
         url.query_pairs_mut().append_pair("global", global);
@@ -637,7 +637,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithIfOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/if")?;
         url.query_pairs_mut().append_pair("if", if_param);
@@ -666,7 +666,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithImportOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/import")?;
         url.query_pairs_mut().append_pair("import", import);
@@ -695,7 +695,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithInOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/in")?;
         url.query_pairs_mut().append_pair("in", in_param);
@@ -724,7 +724,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithIsOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/is")?;
         url.query_pairs_mut().append_pair("is", is);
@@ -753,7 +753,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithLambdaOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/lambda")?;
         url.query_pairs_mut().append_pair("lambda", lambda);
@@ -782,7 +782,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithNotOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/not")?;
         url.query_pairs_mut().append_pair("not", not);
@@ -811,7 +811,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithOrOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/or")?;
         url.query_pairs_mut().append_pair("or", or);
@@ -840,7 +840,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithPassOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/pass")?;
         url.query_pairs_mut().append_pair("pass", pass);
@@ -869,7 +869,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithRaiseOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/raise")?;
         url.query_pairs_mut().append_pair("raise", raise);
@@ -898,7 +898,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithReturnOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/return")?;
         url.query_pairs_mut().append_pair("return", return_param);
@@ -927,7 +927,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithTryOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/try")?;
         url.query_pairs_mut().append_pair("try", try_param);
@@ -956,7 +956,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithWhileOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/while")?;
         url.query_pairs_mut().append_pair("while", while_param);
@@ -985,7 +985,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/with")?;
         url.query_pairs_mut().append_pair("with", with);
@@ -1014,7 +1014,7 @@ impl SpecialWordsParametersClient {
         options: Option<SpecialWordsParametersClientWithYieldOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("special-words/parameters/yield")?;
         url.query_pairs_mut().append_pair("yield", yield_param);

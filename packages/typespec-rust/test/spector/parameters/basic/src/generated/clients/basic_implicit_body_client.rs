@@ -6,7 +6,7 @@
 use crate::generated::models::{crate_models::SimpleRequest, BasicImplicitBodyClientSimpleOptions};
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -33,7 +33,7 @@ impl BasicImplicitBodyClient {
         options: Option<BasicImplicitBodyClientSimpleOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("parameters/basic/implicit-body/simple")?;
         let mut request = Request::new(url, Method::Put);

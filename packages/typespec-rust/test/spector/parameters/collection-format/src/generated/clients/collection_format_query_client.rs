@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -37,7 +37,7 @@ impl CollectionFormatQueryClient {
         options: Option<CollectionFormatQueryClientCsvOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("parameters/collection-format/query/csv")?;
         url.query_pairs_mut()
@@ -68,7 +68,7 @@ impl CollectionFormatQueryClient {
         options: Option<CollectionFormatQueryClientMultiOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("parameters/collection-format/query/multi")?;
         for c in colors.iter() {
@@ -100,7 +100,7 @@ impl CollectionFormatQueryClient {
         options: Option<CollectionFormatQueryClientPipesOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("parameters/collection-format/query/pipes")?;
         url.query_pairs_mut()
@@ -131,7 +131,7 @@ impl CollectionFormatQueryClient {
         options: Option<CollectionFormatQueryClientSsvOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("parameters/collection-format/query/ssv")?;
         url.query_pairs_mut()

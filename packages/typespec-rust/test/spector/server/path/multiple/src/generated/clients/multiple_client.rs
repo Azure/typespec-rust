@@ -9,7 +9,7 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -79,7 +79,7 @@ impl MultipleClient {
         options: Option<MultipleClientNoOperationParamsOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let url = self.endpoint.clone();
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
@@ -105,8 +105,14 @@ impl MultipleClient {
         keyword: &str,
         options: Option<MultipleClientWithOperationPathParamOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
+        if keyword.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter keyword cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(keyword)?;
         let mut request = Request::new(url, Method::Get);

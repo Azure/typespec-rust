@@ -16,7 +16,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -43,7 +43,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadAsRequestBodyOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("parameters/spread/alias/request-body")?;
         let mut request = Request::new(url, Method::Put);
@@ -76,8 +76,14 @@ impl SpreadAliasClient {
         name: String,
         options: Option<SpreadAliasClientSpreadAsRequestParameterOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
+        if id.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter id cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/alias/request-parameter/{id}");
         path = path.replace("{id}", id);
@@ -117,8 +123,14 @@ impl SpreadAliasClient {
         x_ms_test_header: String,
         options: Option<SpreadAliasClientSpreadParameterWithInnerAliasOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
+        if id.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter id cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/alias/inner-alias-parameter/{id}");
         path = path.replace("{id}", id);
@@ -154,8 +166,14 @@ impl SpreadAliasClient {
         x_ms_test_header: String,
         options: Option<SpreadAliasClientSpreadParameterWithInnerModelOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
+        if id.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter id cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/alias/inner-model-parameter/{id}");
         path = path.replace("{id}", id);
@@ -194,8 +212,14 @@ impl SpreadAliasClient {
         required_int_list: Vec<i32>,
         options: Option<SpreadAliasClientSpreadWithMultipleParametersOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
+        if id.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter id cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/alias/multiple-parameters/{id}");
         path = path.replace("{id}", id);

@@ -10,7 +10,7 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -76,8 +76,14 @@ impl NotVersionedClient {
         api_version: &str,
         options: Option<NotVersionedClientWithPathApiVersionOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
+        if api_version.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter api_version cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path =
             String::from("server/versions/not-versioned/with-path-api-version/{apiVersion}");
@@ -108,7 +114,7 @@ impl NotVersionedClient {
         options: Option<NotVersionedClientWithQueryApiVersionOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("server/versions/not-versioned/with-query-api-version")?;
         url.query_pairs_mut()
@@ -137,7 +143,7 @@ impl NotVersionedClient {
         options: Option<NotVersionedClientWithoutApiVersionOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("server/versions/not-versioned/without-api-version")?;
         let mut request = Request::new(url, Method::Head);

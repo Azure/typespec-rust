@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -43,8 +43,20 @@ impl CommonPropertiesErrorClient {
         resource: RequestContent<ConfidentialResource>,
         options: Option<CommonPropertiesErrorClientCreateForUserDefinedErrorOptions<'_>>,
     ) -> Result<Response<ConfidentialResource>> {
+        if confidential_resource_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter confidential_resource_name cannot be empty",
+            ));
+        }
+        if resource_group_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/confidentialResources/{confidentialResourceName}");
         path = path.replace("{confidentialResourceName}", confidential_resource_name);
@@ -84,8 +96,20 @@ impl CommonPropertiesErrorClient {
         confidential_resource_name: &str,
         options: Option<CommonPropertiesErrorClientGetForPredefinedErrorOptions<'_>>,
     ) -> Result<Response<ConfidentialResource>> {
+        if confidential_resource_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter confidential_resource_name cannot be empty",
+            ));
+        }
+        if resource_group_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/confidentialResources/{confidentialResourceName}");
         path = path.replace("{confidentialResourceName}", confidential_resource_name);

@@ -8,7 +8,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 use std::collections::HashMap;
@@ -36,7 +36,7 @@ impl DictionaryNullableFloatValueClient {
         options: Option<DictionaryNullableFloatValueClientGetOptions<'_>>,
     ) -> Result<Response<HashMap<String, f32>>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/dictionary/nullable-float")?;
         let mut request = Request::new(url, Method::Get);
@@ -65,7 +65,7 @@ impl DictionaryNullableFloatValueClient {
         options: Option<DictionaryNullableFloatValueClientPutOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/dictionary/nullable-float")?;
         let mut request = Request::new(url, Method::Put);

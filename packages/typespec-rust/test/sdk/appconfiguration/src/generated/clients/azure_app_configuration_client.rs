@@ -37,8 +37,8 @@ use azure_core::{
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
         poller::{get_retry_after, PollerResult, PollerState, StatusMonitor as _},
-        ClientOptions, Context, Method, NoFormat, PageIterator, Pager, PagerResult, PagerState,
-        Pipeline, Poller, PollerStatus, RawResponse, Request, RequestContent, Response, Url,
+        ClientOptions, Method, NoFormat, PageIterator, Pager, PagerResult, PagerState, Pipeline,
+        Poller, PollerStatus, RawResponse, Request, RequestContent, Response, Url,
     },
     json, tracing, Error, Result,
 };
@@ -210,8 +210,14 @@ impl AzureAppConfigurationClient {
         key: &str,
         options: Option<AzureAppConfigurationClientCheckKeyValueOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat>> {
+        if key.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter key cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("kv/{key}");
         path = path.replace("{key}", key);
@@ -278,7 +284,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckKeyValuesOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("kv")?;
         if let Some(select) = options.select {
@@ -352,7 +358,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckKeysOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckKeysResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("keys")?;
         if let Some(after) = options.after {
@@ -399,7 +405,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckLabelsOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckLabelsResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("labels")?;
         if let Some(select) = options.select {
@@ -456,7 +462,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckRevisionsOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("revisions")?;
         if let Some(select) = options.select {
@@ -522,8 +528,14 @@ impl AzureAppConfigurationClient {
         name: &str,
         options: Option<AzureAppConfigurationClientCheckSnapshotOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat>> {
+        if name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("snapshots/{name}");
         path = path.replace("{name}", name);
@@ -569,7 +581,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckSnapshotsOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("snapshots")?;
         if let Some(after) = options.after {
@@ -612,8 +624,14 @@ impl AzureAppConfigurationClient {
         accept: String,
         options: Option<AzureAppConfigurationClientDeleteKeyValueOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
+        if key.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter key cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("kv/{key}");
         path = path.replace("{key}", key);
@@ -662,8 +680,14 @@ impl AzureAppConfigurationClient {
         accept: String,
         options: Option<AzureAppConfigurationClientDeleteLockOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
+        if key.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter key cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("locks/{key}");
         path = path.replace("{key}", key);
@@ -715,8 +739,14 @@ impl AzureAppConfigurationClient {
         accept: String,
         options: Option<AzureAppConfigurationClientGetKeyValueOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
+        if key.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter key cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("kv/{key}");
         path = path.replace("{key}", key);
@@ -786,7 +816,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientGetOperationDetailsOptions<'_>>,
     ) -> Result<Response<OperationDetails>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("operations")?;
         url.query_pairs_mut()
@@ -825,8 +855,14 @@ impl AzureAppConfigurationClient {
         accept: String,
         options: Option<AzureAppConfigurationClientGetSnapshotOptions<'_>>,
     ) -> Result<Response<Snapshot>> {
+        if name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("snapshots/{name}");
         path = path.replace("{name}", name);
@@ -1366,8 +1402,14 @@ impl AzureAppConfigurationClient {
         accept: String,
         options: Option<AzureAppConfigurationClientPutKeyValueOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
+        if key.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter key cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("kv/{key}");
         path = path.replace("{key}", key);
@@ -1423,8 +1465,14 @@ impl AzureAppConfigurationClient {
         accept: String,
         options: Option<AzureAppConfigurationClientPutLockOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
+        if key.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter key cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("locks/{key}");
         path = path.replace("{key}", key);
@@ -1539,8 +1587,14 @@ impl AzureAppConfigurationClient {
         accept: String,
         options: Option<AzureAppConfigurationClientUpdateSnapshotOptions<'_>>,
     ) -> Result<Response<Snapshot>> {
+        if name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("snapshots/{name}");
         path = path.replace("{name}", name);

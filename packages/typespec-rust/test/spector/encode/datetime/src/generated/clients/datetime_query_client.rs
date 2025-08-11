@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     time::{to_rfc3339, to_rfc7231, OffsetDateTime},
     tracing, Error, Result,
 };
@@ -38,7 +38,7 @@ impl DatetimeQueryClient {
         options: Option<DatetimeQueryClientDefaultOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/query/default")?;
         url.query_pairs_mut()
@@ -68,7 +68,7 @@ impl DatetimeQueryClient {
         options: Option<DatetimeQueryClientRfc3339Options<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/query/rfc3339")?;
         url.query_pairs_mut()
@@ -98,7 +98,7 @@ impl DatetimeQueryClient {
         options: Option<DatetimeQueryClientRfc7231Options<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/query/rfc7231")?;
         url.query_pairs_mut()
@@ -128,7 +128,7 @@ impl DatetimeQueryClient {
         options: Option<DatetimeQueryClientUnixTimestampOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/query/unix-timestamp")?;
         url.query_pairs_mut()
@@ -158,7 +158,7 @@ impl DatetimeQueryClient {
         options: Option<DatetimeQueryClientUnixTimestampArrayOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/query/unix-timestamp-array")?;
         url.query_pairs_mut().append_pair(

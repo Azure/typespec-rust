@@ -10,7 +10,7 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -79,7 +79,7 @@ impl VersionedClient {
         options: Option<VersionedClientWithPathApiVersionOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("server/versions/versioned/with-path-api-version/{apiVersion}");
         path = path.replace("{apiVersion}", &self.api_version);
@@ -108,7 +108,7 @@ impl VersionedClient {
         options: Option<VersionedClientWithQueryApiVersionOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("server/versions/versioned/with-query-api-version")?;
         url.query_pairs_mut()
@@ -137,7 +137,7 @@ impl VersionedClient {
         options: Option<VersionedClientWithQueryOldApiVersionOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("server/versions/versioned/with-query-old-api-version")?;
         url.query_pairs_mut()
@@ -166,7 +166,7 @@ impl VersionedClient {
         options: Option<VersionedClientWithoutApiVersionOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("server/versions/versioned/without-api-version")?;
         let mut request = Request::new(url, Method::Head);
