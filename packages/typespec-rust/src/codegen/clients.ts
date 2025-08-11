@@ -1014,7 +1014,7 @@ function urlVarNeedsMut(paramGroups: MethodParamGroups, method: ClientMethod): s
 }
 
 /**
- * emits "if path_param.len() == 0 then error" checks for string method path parameters
+ * emits "if path_param is empty then error" checks for string method path parameters
  * 
  * @param indent the indentation helper currently in scope
  * @param params the path params to enumerate, can be empty
@@ -1032,7 +1032,7 @@ function checkEmptyRequiredPathParams(indent: helpers.indentation, params: Array
 }
 
 /**
- * emits the "if path_param.len() == 0 then error" check.
+ * emits the "if path_param is empty then error" check.
  * this is only applicable when the path param's type can
  * be empty (e.g. a string). for types that can't be empty
  * the empty string is returned.
