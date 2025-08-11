@@ -40,6 +40,8 @@
         "enumvalue",
         "impls",
         "linq",
+        "lro",
+        "lros",
         "msrc",
         "pageable",
         "reqwest",
