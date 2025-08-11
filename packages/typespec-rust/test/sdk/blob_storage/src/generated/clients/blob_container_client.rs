@@ -30,7 +30,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, NoFormat, PageIterator, PagerResult, PagerState, Pipeline,
+        ClientOptions, Method, NoFormat, PageIterator, PagerResult, PagerState, Pipeline,
         RawResponse, Request, RequestContent, Response, Url, XmlFormat,
     },
     time::to_rfc7231,
@@ -116,7 +116,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientAcquireLeaseOptions<'_>>,
     ) -> Result<Response<BlobContainerClientAcquireLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
@@ -170,7 +170,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientBreakLeaseOptions<'_>>,
     ) -> Result<Response<BlobContainerClientBreakLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
@@ -225,7 +225,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientChangeLeaseOptions<'_>>,
     ) -> Result<Response<BlobContainerClientChangeLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
@@ -275,7 +275,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientCreateOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
@@ -331,7 +331,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientDeleteOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
@@ -379,7 +379,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientFilterBlobsOptions<'_>>,
     ) -> Result<Response<FilterBlobSegment, XmlFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
@@ -440,7 +440,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientGetAccessPolicyOptions<'_>>,
     ) -> Result<Response<Vec<SignedIdentifier>, XmlFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
@@ -484,7 +484,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientGetAccountInfoOptions<'_>>,
     ) -> Result<Response<BlobContainerClientGetAccountInfoResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
@@ -541,7 +541,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientGetPropertiesOptions<'_>>,
     ) -> Result<Response<BlobContainerClientGetPropertiesResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
@@ -786,7 +786,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientReleaseLeaseOptions<'_>>,
     ) -> Result<Response<BlobContainerClientReleaseLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
@@ -836,7 +836,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientRenameOptions<'_>>,
     ) -> Result<Response<BlobContainerClientRenameResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
@@ -883,7 +883,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientRenewLeaseOptions<'_>>,
     ) -> Result<Response<BlobContainerClientRenewLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
@@ -931,7 +931,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientRestoreOptions<'_>>,
     ) -> Result<Response<BlobContainerClientRestoreResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
@@ -980,7 +980,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientSetAccessPolicyOptions<'_>>,
     ) -> Result<Response<BlobContainerClientSetAccessPolicyResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
@@ -1033,7 +1033,7 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientSetMetadataOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()

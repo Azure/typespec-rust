@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -37,7 +37,7 @@ impl OptionalPlainTimeClient {
         options: Option<OptionalPlainTimeClientGetAllOptions<'_>>,
     ) -> Result<Response<PlainTimeProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/optional/plainTime/all")?;
         let mut request = Request::new(url, Method::Get);
@@ -66,7 +66,7 @@ impl OptionalPlainTimeClient {
         options: Option<OptionalPlainTimeClientGetDefaultOptions<'_>>,
     ) -> Result<Response<PlainTimeProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/optional/plainTime/default")?;
         let mut request = Request::new(url, Method::Get);
@@ -96,7 +96,7 @@ impl OptionalPlainTimeClient {
         options: Option<OptionalPlainTimeClientPutAllOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/optional/plainTime/all")?;
         let mut request = Request::new(url, Method::Put);
@@ -127,7 +127,7 @@ impl OptionalPlainTimeClient {
         options: Option<OptionalPlainTimeClientPutDefaultOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/optional/plainTime/default")?;
         let mut request = Request::new(url, Method::Put);

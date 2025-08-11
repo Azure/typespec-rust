@@ -6,6 +6,10 @@
 
 * Added support for optional path parameters.
 
+### Breaking Changes
+
+* Calls `Context::to_borrowed` instead of `Context::with_context`.
+
 ### Other Changes
 
 * Required path parameters that are empty will return an error.

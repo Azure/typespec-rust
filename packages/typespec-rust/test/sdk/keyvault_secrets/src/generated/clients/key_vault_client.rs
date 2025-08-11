@@ -19,8 +19,8 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, NoFormat, Pager, PagerResult, PagerState, Pipeline,
-        RawResponse, Request, RequestContent, Response, Url,
+        ClientOptions, Method, NoFormat, Pager, PagerResult, PagerState, Pipeline, RawResponse,
+        Request, RequestContent, Response, Url,
     },
     json, tracing, Error, Result,
 };
@@ -111,7 +111,7 @@ impl KeyVaultClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}/backup");
         path = path.replace("{secret-name}", secret_name);
@@ -155,7 +155,7 @@ impl KeyVaultClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}");
         path = path.replace("{secret-name}", secret_name);
@@ -199,7 +199,7 @@ impl KeyVaultClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("deletedsecrets/{secret-name}");
         path = path.replace("{secret-name}", secret_name);
@@ -242,7 +242,7 @@ impl KeyVaultClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", secret_name);
@@ -517,7 +517,7 @@ impl KeyVaultClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("deletedsecrets/{secret-name}");
         path = path.replace("{secret-name}", secret_name);
@@ -560,7 +560,7 @@ impl KeyVaultClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("deletedsecrets/{secret-name}/recover");
         path = path.replace("{secret-name}", secret_name);
@@ -597,7 +597,7 @@ impl KeyVaultClient {
         options: Option<KeyVaultClientRestoreSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("secrets/restore")?;
         url.query_pairs_mut()
@@ -644,7 +644,7 @@ impl KeyVaultClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}");
         path = path.replace("{secret-name}", secret_name);
@@ -700,7 +700,7 @@ impl KeyVaultClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", secret_name);

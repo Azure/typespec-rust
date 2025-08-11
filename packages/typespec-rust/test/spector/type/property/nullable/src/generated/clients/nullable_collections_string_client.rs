@@ -11,7 +11,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -38,7 +38,7 @@ impl NullableCollectionsStringClient {
         options: Option<NullableCollectionsStringClientGetNonNullOptions<'_>>,
     ) -> Result<Response<CollectionsStringProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/nullable/collections/string/non-null")?;
         let mut request = Request::new(url, Method::Get);
@@ -67,7 +67,7 @@ impl NullableCollectionsStringClient {
         options: Option<NullableCollectionsStringClientGetNullOptions<'_>>,
     ) -> Result<Response<CollectionsStringProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/nullable/collections/string/null")?;
         let mut request = Request::new(url, Method::Get);
@@ -97,7 +97,7 @@ impl NullableCollectionsStringClient {
         options: Option<NullableCollectionsStringClientPatchNonNullOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/nullable/collections/string/non-null")?;
         let mut request = Request::new(url, Method::Patch);
@@ -128,7 +128,7 @@ impl NullableCollectionsStringClient {
         options: Option<NullableCollectionsStringClientPatchNullOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/property/nullable/collections/string/null")?;
         let mut request = Request::new(url, Method::Patch);

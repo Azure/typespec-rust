@@ -16,7 +16,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
+        ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
     },
     time::to_rfc7231,
     tracing, Bytes, Error, Result,
@@ -108,7 +108,7 @@ impl AppendBlobClient {
         options: Option<AppendBlobClientAppendBlockOptions<'_>>,
     ) -> Result<Response<AppendBlobClientAppendBlockResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -210,7 +210,7 @@ impl AppendBlobClient {
         options: Option<AppendBlobClientAppendBlockFromUrlOptions<'_>>,
     ) -> Result<Response<AppendBlobClientAppendBlockFromUrlResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -329,7 +329,7 @@ impl AppendBlobClient {
         options: Option<AppendBlobClientCreateOptions<'_>>,
     ) -> Result<Response<AppendBlobClientCreateResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -446,7 +446,7 @@ impl AppendBlobClient {
         options: Option<AppendBlobClientSealOptions<'_>>,
     ) -> Result<Response<AppendBlobClientSealResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);

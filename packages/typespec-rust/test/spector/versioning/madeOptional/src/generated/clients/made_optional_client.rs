@@ -7,7 +7,7 @@ use crate::generated::models::{MadeOptionalClientTestOptions, TestModel};
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{ClientOptions, Method, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -79,7 +79,7 @@ impl MadeOptionalClient {
         options: Option<MadeOptionalClientTestOptions<'_>>,
     ) -> Result<Response<TestModel>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("test")?;
         if let Some(param) = options.param {

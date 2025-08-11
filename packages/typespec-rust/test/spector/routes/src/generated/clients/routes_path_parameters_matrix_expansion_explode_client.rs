@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 use std::collections::HashMap;
@@ -38,7 +38,7 @@ impl RoutesPathParametersMatrixExpansionExplodeClient {
         options: Option<RoutesPathParametersMatrixExpansionExplodeClientArrayOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/matrix/explode/array{param}");
         path = path.replace("{param}", &format!(";param={}", param.join(";param=")));
@@ -74,7 +74,7 @@ impl RoutesPathParametersMatrixExpansionExplodeClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/matrix/explode/primitive{param}");
         path = path.replace("{param}", &format!(";param={param}"));
@@ -104,7 +104,7 @@ impl RoutesPathParametersMatrixExpansionExplodeClient {
         options: Option<RoutesPathParametersMatrixExpansionExplodeClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/matrix/explode/record{param}");
         {

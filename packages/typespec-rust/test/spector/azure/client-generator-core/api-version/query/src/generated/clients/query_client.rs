@@ -7,7 +7,7 @@ use crate::generated::models::QueryClientQueryApiVersionOptions;
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{ClientOptions, Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -73,7 +73,7 @@ impl QueryClient {
         options: Option<QueryClientQueryApiVersionOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("azure/client-generator-core/api-version/query")?;
         url.query_pairs_mut().append_pair("version", &self.version);

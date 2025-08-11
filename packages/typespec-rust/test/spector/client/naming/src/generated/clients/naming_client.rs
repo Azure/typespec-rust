@@ -16,9 +16,7 @@ use crate::generated::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{
-        ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
-    },
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -85,7 +83,7 @@ impl NamingClient {
         options: Option<NamingClientClientOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("client/naming/property/client")?;
         let mut request = Request::new(url, Method::Post);
@@ -114,7 +112,7 @@ impl NamingClient {
         options: Option<NamingClientClientNameOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("client/naming/operation")?;
         let mut request = Request::new(url, Method::Post);
@@ -142,7 +140,7 @@ impl NamingClient {
         options: Option<NamingClientCompatibleWithEncodedNameOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("client/naming/property/compatible-with-encoded-name")?;
         let mut request = Request::new(url, Method::Post);
@@ -190,7 +188,7 @@ impl NamingClient {
         options: Option<NamingClientLanguageOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("client/naming/property/language")?;
         let mut request = Request::new(url, Method::Post);
@@ -220,7 +218,7 @@ impl NamingClient {
         options: Option<NamingClientParameterOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("client/naming/parameter")?;
         url.query_pairs_mut()
@@ -250,7 +248,7 @@ impl NamingClient {
         options: Option<NamingClientRequestOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("client/naming/header")?;
         let mut request = Request::new(url, Method::Post);
@@ -278,7 +276,7 @@ impl NamingClient {
         options: Option<NamingClientResponseOptions<'_>>,
     ) -> Result<Response<NamingClientResponseResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("client/naming/header")?;
         let mut request = Request::new(url, Method::Get);

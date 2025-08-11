@@ -11,7 +11,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -38,7 +38,7 @@ impl DatetimePropertyClient {
         options: Option<DatetimePropertyClientDefaultOptions<'_>>,
     ) -> Result<Response<DefaultDatetimeProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/property/default")?;
         let mut request = Request::new(url, Method::Post);
@@ -69,7 +69,7 @@ impl DatetimePropertyClient {
         options: Option<DatetimePropertyClientRfc3339Options<'_>>,
     ) -> Result<Response<Rfc3339DatetimeProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/property/rfc3339")?;
         let mut request = Request::new(url, Method::Post);
@@ -100,7 +100,7 @@ impl DatetimePropertyClient {
         options: Option<DatetimePropertyClientRfc7231Options<'_>>,
     ) -> Result<Response<Rfc7231DatetimeProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/property/rfc7231")?;
         let mut request = Request::new(url, Method::Post);
@@ -131,7 +131,7 @@ impl DatetimePropertyClient {
         options: Option<DatetimePropertyClientUnixTimestampOptions<'_>>,
     ) -> Result<Response<UnixTimestampDatetimeProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/property/unix-timestamp")?;
         let mut request = Request::new(url, Method::Post);
@@ -162,7 +162,7 @@ impl DatetimePropertyClient {
         options: Option<DatetimePropertyClientUnixTimestampArrayOptions<'_>>,
     ) -> Result<Response<UnixTimestampArrayDatetimeProperty>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/property/unix-timestamp-array")?;
         let mut request = Request::new(url, Method::Post);

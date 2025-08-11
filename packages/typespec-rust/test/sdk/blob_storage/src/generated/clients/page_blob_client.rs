@@ -21,7 +21,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
+        ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
         XmlFormat,
     },
     time::to_rfc7231,
@@ -112,7 +112,7 @@ impl PageBlobClient {
         options: Option<PageBlobClientClearPagesOptions<'_>>,
     ) -> Result<Response<PageBlobClientClearPagesResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -218,7 +218,7 @@ impl PageBlobClient {
         options: Option<PageBlobClientCopyIncrementalOptions<'_>>,
     ) -> Result<Response<PageBlobClientCopyIncrementalResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -280,7 +280,7 @@ impl PageBlobClient {
         options: Option<PageBlobClientCreateOptions<'_>>,
     ) -> Result<Response<PageBlobClientCreateResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -406,7 +406,7 @@ impl PageBlobClient {
         options: Option<PageBlobClientGetPageRangesOptions<'_>>,
     ) -> Result<Response<PageList, XmlFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -479,7 +479,7 @@ impl PageBlobClient {
         options: Option<PageBlobClientGetPageRangesDiffOptions<'_>>,
     ) -> Result<Response<PageList, XmlFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -564,7 +564,7 @@ impl PageBlobClient {
         options: Option<PageBlobClientResizeOptions<'_>>,
     ) -> Result<Response<PageBlobClientResizeResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -645,7 +645,7 @@ impl PageBlobClient {
         options: Option<PageBlobClientUpdateSequenceNumberOptions<'_>>,
     ) -> Result<Response<PageBlobClientUpdateSequenceNumberResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -720,7 +720,7 @@ impl PageBlobClient {
         options: Option<PageBlobClientUploadPagesOptions<'_>>,
     ) -> Result<Response<PageBlobClientUploadPagesResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -846,7 +846,7 @@ impl PageBlobClient {
         options: Option<PageBlobClientUploadPagesFromUrlOptions<'_>>,
     ) -> Result<Response<PageBlobClientUploadPagesFromUrlResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);

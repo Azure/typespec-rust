@@ -10,9 +10,7 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{
-        ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
-    },
+    http::{ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -76,7 +74,7 @@ impl UsageClient {
         options: Option<UsageClientInputOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/model/usage/input")?;
         let mut request = Request::new(url, Method::Post);
@@ -106,7 +104,7 @@ impl UsageClient {
         options: Option<UsageClientInputAndOutputOptions<'_>>,
     ) -> Result<Response<InputOutputRecord>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/model/usage/input-output")?;
         let mut request = Request::new(url, Method::Post);
@@ -136,7 +134,7 @@ impl UsageClient {
         options: Option<UsageClientOutputOptions<'_>>,
     ) -> Result<Response<OutputRecord>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/model/usage/output")?;
         let mut request = Request::new(url, Method::Get);

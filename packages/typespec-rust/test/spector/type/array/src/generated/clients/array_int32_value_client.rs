@@ -6,7 +6,7 @@
 use crate::generated::models::{ArrayInt32ValueClientGetOptions, ArrayInt32ValueClientPutOptions};
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
     tracing, Error, Result,
 };
 
@@ -33,7 +33,7 @@ impl ArrayInt32ValueClient {
         options: Option<ArrayInt32ValueClientGetOptions<'_>>,
     ) -> Result<Response<Vec<i32>>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/array/int32")?;
         let mut request = Request::new(url, Method::Get);
@@ -62,7 +62,7 @@ impl ArrayInt32ValueClient {
         options: Option<ArrayInt32ValueClientPutOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("type/array/int32")?;
         let mut request = Request::new(url, Method::Put);

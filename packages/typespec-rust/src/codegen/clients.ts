@@ -1080,12 +1080,12 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
  * @returns the contents of the method body
  */
 function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
-  use.add('azure_core::http', 'Context', 'Method', 'Request');
+  use.add('azure_core::http', 'Method', 'Request');
 
   const paramGroups = getMethodParamGroup(method);
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default();\n';
-  body += `${indent.get()}let ctx = Context::with_context(&options.method_options.context);\n`;
+  body += `${indent.get()}let ctx = options.method_options.context.to_borrowed();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}url = self.${getEndpointFieldName(client)}.clone();\n`;
 
   body += constructUrl(indent, use, method, paramGroups);

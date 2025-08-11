@@ -9,10 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{
-        Context, Method, Pager, PagerResult, PagerState, Pipeline, RawResponse, Request, Response,
-        Url,
-    },
+    http::{Method, Pager, PagerResult, PagerState, Pipeline, RawResponse, Request, Response, Url},
     json, tracing, Error, Result,
 };
 
@@ -65,7 +62,7 @@ impl ResourcesNestedClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
         path = path.replace("{nextedProxyResourceName}", nexted_proxy_resource_name);

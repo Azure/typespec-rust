@@ -33,8 +33,8 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, NoFormat, PageIterator, Pager, PagerResult, PagerState,
-        Pipeline, RawResponse, Request, RequestContent, Response, Url,
+        ClientOptions, Method, NoFormat, PageIterator, Pager, PagerResult, PagerState, Pipeline,
+        RawResponse, Request, RequestContent, Response, Url,
     },
     json, tracing, Error, Result,
 };
@@ -124,7 +124,7 @@ impl AzureAppConfigurationClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("kv/{key}");
         path = path.replace("{key}", key);
@@ -191,7 +191,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckKeyValuesOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("kv")?;
         if let Some(select) = options.select {
@@ -265,7 +265,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckKeysOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckKeysResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("keys")?;
         if let Some(after) = options.after {
@@ -312,7 +312,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckLabelsOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckLabelsResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("labels")?;
         if let Some(select) = options.select {
@@ -369,7 +369,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckRevisionsOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("revisions")?;
         if let Some(select) = options.select {
@@ -442,7 +442,7 @@ impl AzureAppConfigurationClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("snapshots/{name}");
         path = path.replace("{name}", name);
@@ -488,7 +488,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckSnapshotsOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("snapshots")?;
         if let Some(after) = options.after {
@@ -538,7 +538,7 @@ impl AzureAppConfigurationClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("kv/{key}");
         path = path.replace("{key}", key);
@@ -594,7 +594,7 @@ impl AzureAppConfigurationClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("locks/{key}");
         path = path.replace("{key}", key);
@@ -653,7 +653,7 @@ impl AzureAppConfigurationClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("kv/{key}");
         path = path.replace("{key}", key);
@@ -723,7 +723,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientGetOperationDetailsOptions<'_>>,
     ) -> Result<Response<OperationDetails>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("operations")?;
         url.query_pairs_mut()
@@ -769,7 +769,7 @@ impl AzureAppConfigurationClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("snapshots/{name}");
         path = path.replace("{name}", name);
@@ -1316,7 +1316,7 @@ impl AzureAppConfigurationClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("kv/{key}");
         path = path.replace("{key}", key);
@@ -1379,7 +1379,7 @@ impl AzureAppConfigurationClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("locks/{key}");
         path = path.replace("{key}", key);
@@ -1442,7 +1442,7 @@ impl AzureAppConfigurationClient {
             ));
         }
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("snapshots/{name}");
         path = path.replace("{name}", name);

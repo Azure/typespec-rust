@@ -19,7 +19,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Context, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
+        ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
         XmlFormat,
     },
     time::to_rfc7231,
@@ -115,7 +115,7 @@ impl BlockBlobClient {
         options: Option<BlockBlobClientCommitBlockListOptions<'_>>,
     ) -> Result<Response<BlockBlobClientCommitBlockListResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -243,7 +243,7 @@ impl BlockBlobClient {
         options: Option<BlockBlobClientGetBlockListOptions<'_>>,
     ) -> Result<Response<BlockList, XmlFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -305,7 +305,7 @@ impl BlockBlobClient {
         options: Option<BlockBlobClientPutBlobFromUrlOptions<'_>>,
     ) -> Result<Response<BlockBlobClientPutBlobFromUrlResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -453,7 +453,7 @@ impl BlockBlobClient {
         options: Option<BlockBlobClientQueryOptions<'_>>,
     ) -> Result<Response<BlockBlobClientQueryResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -537,7 +537,7 @@ impl BlockBlobClient {
         options: Option<BlockBlobClientStageBlockOptions<'_>>,
     ) -> Result<Response<BlockBlobClientStageBlockResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -615,7 +615,7 @@ impl BlockBlobClient {
         options: Option<BlockBlobClientStageBlockFromUrlOptions<'_>>,
     ) -> Result<Response<BlockBlobClientStageBlockFromUrlResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
@@ -717,7 +717,7 @@ impl BlockBlobClient {
         options: Option<BlockBlobClientUploadOptions<'_>>,
     ) -> Result<Response<BlockBlobClientUploadResult, NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);

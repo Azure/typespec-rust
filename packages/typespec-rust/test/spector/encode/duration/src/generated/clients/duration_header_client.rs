@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Context, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, Request, Response, Url},
     tracing, Error, Result,
 };
 
@@ -37,7 +37,7 @@ impl DurationHeaderClient {
         options: Option<DurationHeaderClientDefaultOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/header/default")?;
         let mut request = Request::new(url, Method::Get);
@@ -66,7 +66,7 @@ impl DurationHeaderClient {
         options: Option<DurationHeaderClientFloat64SecondsOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/header/float64-seconds")?;
         let mut request = Request::new(url, Method::Get);
@@ -95,7 +95,7 @@ impl DurationHeaderClient {
         options: Option<DurationHeaderClientFloatSecondsOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/header/float-seconds")?;
         let mut request = Request::new(url, Method::Get);
@@ -124,7 +124,7 @@ impl DurationHeaderClient {
         options: Option<DurationHeaderClientInt32SecondsOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/header/int32-seconds")?;
         let mut request = Request::new(url, Method::Get);
@@ -153,7 +153,7 @@ impl DurationHeaderClient {
         options: Option<DurationHeaderClientIso8601Options<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/header/iso8601")?;
         let mut request = Request::new(url, Method::Get);
@@ -182,7 +182,7 @@ impl DurationHeaderClient {
         options: Option<DurationHeaderClientIso8601ArrayOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
-        let ctx = Context::with_context(&options.method_options.context);
+        let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/duration/header/iso8601-array")?;
         let mut request = Request::new(url, Method::Get);
