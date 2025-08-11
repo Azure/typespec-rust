@@ -104,6 +104,12 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientBackupSecretOptions<'_>>,
     ) -> Result<Response<BackupSecretResult>> {
+        if secret_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter secret_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -142,6 +148,12 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientDeleteSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecretBundle>> {
+        if secret_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter secret_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -180,6 +192,12 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientGetDeletedSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecretBundle>> {
+        if secret_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter secret_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -210,22 +228,28 @@ impl KeyVaultClient {
     /// # Arguments
     ///
     /// * `secret_name` - The name of the secret.
-    /// * `secret_version` - The version of the secret. This URI fragment is optional. If not specified, the latest version of
-    ///   the secret is returned.
     /// * `options` - Optional parameters for the request.
     #[tracing::function("KeyVault.getSecret")]
     pub async fn get_secret(
         &self,
         secret_name: &str,
-        secret_version: &str,
         options: Option<KeyVaultClientGetSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
+        if secret_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter secret_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", secret_name);
-        path = path.replace("{secret-version}", secret_version);
+        path = match options.secret_version {
+            Some(secret_version) => path.replace("{secret-version}", &secret_version),
+            None => path.replace("{secret-version}", ""),
+        };
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -331,6 +355,12 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientListSecretVersionsOptions<'_>>,
     ) -> Result<Pager<SecretListResult>> {
+        if secret_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter secret_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
@@ -480,6 +510,12 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientPurgeDeletedSecretOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
+        if secret_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter secret_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -517,6 +553,12 @@ impl KeyVaultClient {
         secret_name: &str,
         options: Option<KeyVaultClientRecoverDeletedSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
+        if secret_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter secret_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -595,6 +637,12 @@ impl KeyVaultClient {
         parameters: RequestContent<SecretSetParameters>,
         options: Option<KeyVaultClientSetSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
+        if secret_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter secret_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -639,6 +687,18 @@ impl KeyVaultClient {
         parameters: RequestContent<SecretUpdateParameters>,
         options: Option<KeyVaultClientUpdateSecretOptions<'_>>,
     ) -> Result<Response<SecretBundle>> {
+        if secret_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter secret_name cannot be empty",
+            ));
+        }
+        if secret_version.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter secret_version cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

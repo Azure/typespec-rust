@@ -1,5 +1,15 @@
 # Release History
 
+## 0.20.1 (unreleased)
+
+### Features Added
+
+* Added support for optional path parameters.
+
+### Other Changes
+
+* Required path parameters that are empty will return an error.
+
 ## 0.20.0 (2025-08-01)
 
 ### Breaking Changes

@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "other/enum_path_params",
     "other/serde_tests",
     "sdk/appconfiguration",
     "sdk/blob_storage",
@@ -15,6 +16,7 @@ members = [
     "spector/parameters/basic",
     "spector/parameters/body-optionality",
     "spector/parameters/collection-format",
+    "spector/parameters/path",
     "spector/parameters/spread",
     "spector/payload/content-negotiation",
     "spector/payload/json-merge-patch",

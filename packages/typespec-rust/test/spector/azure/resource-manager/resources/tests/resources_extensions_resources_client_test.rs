@@ -15,6 +15,8 @@ const RESOURCE_GROUP: &str =
     "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg";
 const RESOURCE: &str = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/top";
 
+// TODO: https://github.com/Azure/typespec-azure/issues/2764
+#[should_panic = "parameter resource_uri cannot be empty"]
 #[tokio::test]
 async fn delete_by_tenant() {
     let client = common::create_client();
@@ -67,6 +69,8 @@ async fn delete_by_resource() {
     assert!(resp.status().is_success());
 }
 
+// TODO: https://github.com/Azure/typespec-azure/issues/2764
+#[should_panic = "parameter resource_uri cannot be empty"]
 #[tokio::test]
 async fn get_by_tenant() {
     let client = common::create_client();
@@ -235,6 +239,8 @@ async fn get_by_resource() {
     );
 }
 
+// TODO: https://github.com/Azure/typespec-azure/issues/2764
+#[should_panic = "parameter resource_uri cannot be empty"]
 #[tokio::test]
 async fn list_by_scope_tenant() {
     let client = common::create_client();
@@ -284,6 +290,8 @@ async fn list_by_scope_tenant() {
     }
 }
 
+// TODO: https://github.com/Azure/typespec-azure/issues/2764
+#[should_panic = "parameter resource_uri cannot be empty"]
 #[tokio::test]
 async fn list_by_scope_tenant_pages() {
     let client = common::create_client();
@@ -643,6 +651,8 @@ async fn list_by_scope_resource_pages() {
     }
 }
 
+// TODO: https://github.com/Azure/typespec-azure/issues/2764
+#[should_panic = "parameter resource_uri cannot be empty"]
 #[tokio::test]
 async fn update_by_tenant() {
     let resource = ExtensionsResource {

@@ -31,6 +31,9 @@ pub struct KeyVaultClientGetDeletedSecretOptions<'a> {
 pub struct KeyVaultClientGetSecretOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The version of the secret. This value is optional. If not specified, the latest version of the secret is returned.
+    pub secret_version: Option<String>,
 }
 
 /// Options to be passed to [`KeyVaultClient::list_deleted_secrets()`](crate::generated::clients::KeyVaultClient::list_deleted_secrets())

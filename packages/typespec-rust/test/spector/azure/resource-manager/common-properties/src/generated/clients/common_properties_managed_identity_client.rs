@@ -47,6 +47,18 @@ impl CommonPropertiesManagedIdentityClient {
         resource: RequestContent<ManagedIdentityTrackedResource>,
         options: Option<CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions<'_>>,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
+        if managed_identity_tracked_resource_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter managed_identity_tracked_resource_name cannot be empty",
+            ));
+        }
+        if resource_group_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -91,6 +103,18 @@ impl CommonPropertiesManagedIdentityClient {
         managed_identity_tracked_resource_name: &str,
         options: Option<CommonPropertiesManagedIdentityClientGetOptions<'_>>,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
+        if managed_identity_tracked_resource_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter managed_identity_tracked_resource_name cannot be empty",
+            ));
+        }
+        if resource_group_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -137,6 +161,18 @@ impl CommonPropertiesManagedIdentityClient {
             CommonPropertiesManagedIdentityClientUpdateWithUserAssignedAndSystemAssignedOptions<'_>,
         >,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
+        if managed_identity_tracked_resource_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter managed_identity_tracked_resource_name cannot be empty",
+            ));
+        }
+        if resource_group_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

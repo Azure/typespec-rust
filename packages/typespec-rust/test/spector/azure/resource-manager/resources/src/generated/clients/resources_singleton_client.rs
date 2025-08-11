@@ -43,6 +43,12 @@ impl ResourcesSingletonClient {
         resource_group_name: &str,
         options: Option<ResourcesSingletonClientGetByResourceGroupOptions<'_>>,
     ) -> Result<Response<SingletonTrackedResource>> {
+        if resource_group_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -79,6 +85,12 @@ impl ResourcesSingletonClient {
         resource_group_name: &str,
         options: Option<ResourcesSingletonClientListByResourceGroupOptions<'_>>,
     ) -> Result<Pager<SingletonTrackedResourceListResult>> {
+        if resource_group_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
@@ -150,6 +162,12 @@ impl ResourcesSingletonClient {
         properties: RequestContent<SingletonTrackedResource>,
         options: Option<ResourcesSingletonClientUpdateOptions<'_>>,
     ) -> Result<Response<SingletonTrackedResource>> {
+        if resource_group_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

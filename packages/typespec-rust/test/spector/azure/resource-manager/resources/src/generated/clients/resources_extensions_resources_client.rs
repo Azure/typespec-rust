@@ -47,6 +47,18 @@ impl ResourcesExtensionsResourcesClient {
         extensions_resource_name: &str,
         options: Option<ResourcesExtensionsResourcesClientDeleteOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
+        if extensions_resource_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter extensions_resource_name cannot be empty",
+            ));
+        }
+        if resource_uri.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_uri cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -84,6 +96,18 @@ impl ResourcesExtensionsResourcesClient {
         extensions_resource_name: &str,
         options: Option<ResourcesExtensionsResourcesClientGetOptions<'_>>,
     ) -> Result<Response<ExtensionsResource>> {
+        if extensions_resource_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter extensions_resource_name cannot be empty",
+            ));
+        }
+        if resource_uri.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_uri cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -120,6 +144,12 @@ impl ResourcesExtensionsResourcesClient {
         resource_uri: &str,
         options: Option<ResourcesExtensionsResourcesClientListByScopeOptions<'_>>,
     ) -> Result<Pager<ExtensionsResourceListResult>> {
+        if resource_uri.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_uri cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
@@ -194,6 +224,18 @@ impl ResourcesExtensionsResourcesClient {
         properties: RequestContent<ExtensionsResource>,
         options: Option<ResourcesExtensionsResourcesClientUpdateOptions<'_>>,
     ) -> Result<Response<ExtensionsResource>> {
+        if extensions_resource_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter extensions_resource_name cannot be empty",
+            ));
+        }
+        if resource_uri.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_uri cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

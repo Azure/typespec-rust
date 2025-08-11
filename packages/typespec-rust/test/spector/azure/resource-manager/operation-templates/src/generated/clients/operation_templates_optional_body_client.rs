@@ -43,6 +43,18 @@ impl OperationTemplatesOptionalBodyClient {
         widget_name: &str,
         options: Option<OperationTemplatesOptionalBodyClientGetOptions<'_>>,
     ) -> Result<Response<Widget>> {
+        if resource_group_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
+        if widget_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter widget_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -82,6 +94,18 @@ impl OperationTemplatesOptionalBodyClient {
         widget_name: &str,
         options: Option<OperationTemplatesOptionalBodyClientPatchOptions<'_>>,
     ) -> Result<Response<Widget>> {
+        if resource_group_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
+        if widget_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter widget_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
@@ -125,6 +149,18 @@ impl OperationTemplatesOptionalBodyClient {
         widget_name: &str,
         options: Option<OperationTemplatesOptionalBodyClientPostOptions<'_>>,
     ) -> Result<Response<ActionResult>> {
+        if resource_group_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter resource_group_name cannot be empty",
+            ));
+        }
+        if widget_name.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter widget_name cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();

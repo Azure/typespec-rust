@@ -83,6 +83,12 @@ impl OperationTemplatesCheckNameAvailabilityClient {
         body: RequestContent<CheckNameAvailabilityRequest>,
         options: Option<OperationTemplatesCheckNameAvailabilityClientCheckLocalOptions<'_>>,
     ) -> Result<Response<CheckNameAvailabilityResponse>> {
+        if location.is_empty() {
+            return Err(azure_core::Error::message(
+                azure_core::error::ErrorKind::Other,
+                "parameter location cannot be empty",
+            ));
+        }
         let options = options.unwrap_or_default();
         let ctx = Context::with_context(&options.method_options.context);
         let mut url = self.endpoint.clone();
