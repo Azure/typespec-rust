@@ -1055,7 +1055,7 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
         return '';
       }
       // need to get the underlying string value
-      toString = 'to_string()';
+      toString = '.as_ref()';
       break;
     default:
       // no length to check so bail
@@ -1379,6 +1379,7 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
       return encodeBytes(paramType, paramName);
     case 'enum':
     case 'scalar':
+      // TODO: enums that are strings should use .as_ref() https://github.com/Azure/typespec-rust/issues/554
       if (paramType.kind === 'enum' && param.kind === 'queryScalar') {
         // append_pair wants a reference to the string
         // TODO: https://github.com/Azure/typespec-rust/issues/25
