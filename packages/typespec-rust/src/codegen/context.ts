@@ -18,6 +18,7 @@ export class Context {
   private readonly bodyFormatForModels = new Map<rust.Model, helpers.ModelFormat>();
   private readonly tryFromForRequestTypes = new Map<string, rust.PayloadFormat>();
   private readonly pagedResponseTypes = new Set<rust.Model>();
+  private readonly lroTypes = new Set<rust.Model>();
 
   /**
    * instantiates a new Context for the provided crate
@@ -55,6 +56,8 @@ export class Context {
         } else if (method.kind === 'pageable' && method.returns.type.kind === 'pager') {
           // impls are for pagers only (not page iterators)
           this.pagedResponseTypes.add(method.returns.type.type.content);
+        } else if ((method.kind === 'lro_begin' || method.kind === 'lro_resume') && method.returns.type.kind === 'poller') {
+          this.lroTypes.add(method.returns.type.type.content);
         }
 
         // TODO: this doesn't handle the case where a method sends/receives a HashMap<T>
@@ -187,4 +190,38 @@ export class Context {
 
     return content;
   }
+
+  /**
+   * returns an azure_core::http::poller::StatusMonitor impl for the provided model
+   * or undefined if the model isn't an LRO type.
+   *
+   * @param model the model for which to create the Page impl
+   * @param use the use statement builder currently in scope
+   * @returns the StatusMonitor impl or undefined
+   */
+  getStatusMonitorImplForType(model: rust.Model, use: Use): string | undefined {
+    if (!this.lroTypes.has(model)) {
+      return undefined;
+    }
+
+    use.addForType(model);
+    use.add('azure_core::http::poller', 'StatusMonitor', 'PollerStatus');
+
+    const indent = new helpers.indentation();
+
+    let content = `impl StatusMonitor for ${model.name} {\n`;
+    content += `${indent.get()}type Output = ${helpers.getTypeDeclaration(helpers.unwrapType(model))};\n`;
+    content += `${indent.get()}fn status(&self) -> PollerStatus {\n`;
+    if (model.fields.some(f => f.name.toLowerCase() === 'status') && false) {
+      content += `${indent.push().get()}self.status.as_deref().map(Into::into).unwrap_or(PollerStatus::InProgress)\n`;
+    } else {
+      content += `${indent.push().get()}PollerStatus::Succeeded\n`;
+    }
+    content += `${indent.pop().get()}}\n`; // end fn
+    content += '}\n\n'; // end impl
+
+    return content;
+  }
 }
+
+

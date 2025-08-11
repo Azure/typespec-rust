@@ -174,6 +174,9 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'pager':
       // we explicitly omit the Response<T> from the type decl
       return `Pager<${getTypeDeclaration(type.type.content, withAnonymousLifetime)}>`;
+    case 'poller':
+      // we explicitly omit the Response<T> from the type decl
+      return `Poller<${getTypeDeclaration(type.type.content, withAnonymousLifetime)}>`;
     case 'payload':
       return getTypeDeclaration(type.type, withAnonymousLifetime);
     case 'rawResponse':
@@ -415,6 +418,8 @@ export function unwrapType(type: rust.Payload | rust.Type): rust.Type {
       return unwrapType(type.type);
     case 'pageIterator':
     case 'pager':
+      return unwrapType(type.type.content);
+    case 'poller':
       return unwrapType(type.type.content);
     case 'payload':
       return unwrapType(type.type);

@@ -938,19 +938,25 @@ export class Adapter {
       this.adaptClientAccessor(client, child, rustClient, subClient);
     }
 
+    const resumeLros = new Set<string>();
     for (const method of client.methods) {
-      if (method.kind === 'lro' || method.kind === 'lropaging') {
-        // skip LROs for now so that codegen is unblocked
+      if (method.kind === 'lropaging') {
+        // skip Paging LROs for now so that codegen is unblocked
         // TODO: https://github.com/Azure/typespec-rust/issues/188
         this.ctx.program.reportDiagnostic({
-          code: 'LroNotSupported',
+          code: 'LroPagingNotSupported',
           severity: 'warning',
-          message: `skip emitting LRO ${method.name}`,
+          message: `skip emitting Paging LRO ${method.name}`,
           target: method.__raw?.node ?? NoTarget,
         });
         continue;
       }
       this.adaptMethod(method, rustClient);
+
+      if (method.kind === 'lro' && !resumeLros.has(method.lroMetadata.logicalResult.name)) {
+        resumeLros.add(method.lroMetadata.logicalResult.name);
+        this.adaptMethod(method, rustClient, true);
+      }
     }
 
     this.crate.clients.push(rustClient);
@@ -1072,7 +1078,7 @@ export class Adapter {
    * @param method the tcgc method to convert
    * @param rustClient the client to which the method belongs
    */
-  private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
+  private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client, lroResume: boolean = false): void {
     let srcMethodName = method.name;
     if (method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
       const chunks = codegen.deconstruct(srcMethodName);
@@ -1085,8 +1091,26 @@ export class Adapter {
         message: `renamed paging method from ${method.name} to ${srcMethodName}`,
         target: method.__raw?.node ?? NoTarget,
       });
+    } else if (method.kind === 'lro' && !lroResume && !srcMethodName.match(/^begin/i)) {
+      const chunks = codegen.deconstruct(srcMethodName);
+      chunks.unshift('begin');
+      srcMethodName = codegen.camelCase(chunks);
+      this.renamedMethods.add(srcMethodName);
+      this.ctx.program.reportDiagnostic({
+        code: 'LroMethodRename',
+        severity: 'warning',
+        message: `renamed LRO method from ${method.name} to ${srcMethodName}`,
+        target: method.__raw?.node ?? NoTarget,
+      });
     } else if (this.renamedMethods.has(srcMethodName)) {
       throw new AdapterError('NameCollision', `method name ${srcMethodName} collides with a renamed method`, method.__raw?.node);
+    }
+
+    if (method.kind === 'lro' && lroResume) {
+      srcMethodName = `resume_${codegen.camelCase(codegen.deconstruct(method.lroMetadata.logicalResult.name))}`;
+      if (!srcMethodName.endsWith('_operation')) {
+        srcMethodName += '_operation';
+      }
     }
 
     const languageIndependentName = method.crossLanguageDefinitionId;
@@ -1101,6 +1125,13 @@ export class Adapter {
     const methodOptionsField = new rust.StructField('method_options', 'pub', clientMethodOptions);
     methodOptionsField.docs.summary = 'Allows customization of the method call.';
     methodOptionsStruct.fields.push(methodOptionsField);
+
+    if (method.kind === 'lro') {
+      const pollerOptions = new rust.ExternalType(this.crate, 'PollerOptions', 'azure_core::http::poller');
+      const pollerOptionsField = new rust.StructField('poller_options', 'pub', pollerOptions);
+      pollerOptionsField.docs.summary = 'Allows customization of the [`Poller`](azure_core::http::poller::Poller).';
+      methodOptionsStruct.fields.push(pollerOptionsField);
+    }
 
     const pub: rust.Visibility = method.access === 'public' ? 'pub' : 'pubCrate';
     const methodOptions = new rust.MethodOptions(methodOptionsStruct);
@@ -1126,6 +1157,11 @@ export class Adapter {
       case 'paging':
         rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
         break;
+      case 'lro':
+        rustMethod = !lroResume
+          ? new rust.LroBeginMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath)
+          : new rust.LroResumeMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        break;
       default:
         throw new AdapterError('UnsupportedTsp', `method kind ${method.kind} NYI`, method.__raw?.node);
     }
@@ -1136,7 +1172,7 @@ export class Adapter {
     // stuff all of the operation parameters into one array for easy traversal
     const allOpParams = new Array<tcgc.SdkHttpParameter>();
     allOpParams.push(...method.operation.parameters);
-    if (method.operation.bodyParam) {
+    if (method.operation.bodyParam && !lroResume) {
       allOpParams.push(method.operation.bodyParam);
     }
 
@@ -1155,6 +1191,9 @@ export class Adapter {
       }).first();
 
       if (!opParam) {
+        if (lroResume) {
+          continue;
+        }
         throw new AdapterError('InternalError', `didn't find operation parameter for method ${method.name} parameter ${param.name}`, param.__raw?.node);
       }
 
@@ -1340,6 +1379,34 @@ export class Adapter {
       } else {
         rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
       }
+    } else if (method.kind === 'lro') {
+      const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
+      const responseType = this.typeToWireType(this.getType(method.lroMetadata.logicalResult));
+      if (responseType.kind !== 'model') {
+        throw new AdapterError('InternalError', `envelope result for ${method.name} is not a model`, method.__raw?.node);
+      }
+
+      const addCrateModels = (model: rust.Model, crate: rust.Crate, breakRecursion: boolean = false): void => {
+        if (!crate.models.includes(model)) {
+          crate.models.push(model);
+        } else if (breakRecursion) {
+          return;
+        }
+
+        for (const field of model.fields) {
+          let fieldType = field.type.kind === 'option' ? field.type.type : field.type;
+          fieldType = fieldType.kind === 'Vec' ? fieldType.type : fieldType;
+          if (fieldType.kind === 'model' && !crate.models.includes(fieldType)) {
+            addCrateModels(model, crate, true);
+          } else if (fieldType.kind === 'enum' && !crate.enums.includes(fieldType)) {
+            crate.enums.push(fieldType);
+          }
+        }
+      }
+
+      addCrateModels(responseType, this.crate);
+
+      rustMethod.returns = new rust.Result(this.crate, new rust.Poller(this.crate, new rust.Response(this.crate, responseType, format)));
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
       const response = new rust.Response(this.crate, this.typeToWireType(this.getType(method.response.type)), responseFormat);
       rustMethod.returns = new rust.Result(this.crate, response);
@@ -1439,6 +1506,7 @@ export class Adapter {
     // response header traits are only ever for marker types and payloads
     let implFor: rust.Response<rust.MarkerType | rust.WireType>;
     switch (method.returns.type.kind) {
+      case 'poller':
       case 'pageIterator':
       case 'pager':
         implFor = method.returns.type.type;
@@ -1895,7 +1963,7 @@ function isRefSlice(type: rust.Type): type is rust.Ref<rust.Slice> {
 }
 
 /** method types that send/receive data */
-type MethodType = rust.AsyncMethod | rust.PageableMethod;
+type MethodType = rust.AsyncMethod | rust.PageableMethod | rust.LroBeginMethod | rust.LroResumeMethod;
 
 /** supported kinds of tcgc scalars */
 type tcgcScalarKind = 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8' | 'uint16' | 'uint32' | 'uint64' | 'uint8';

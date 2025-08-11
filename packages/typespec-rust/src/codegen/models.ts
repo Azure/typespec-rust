@@ -237,6 +237,12 @@ function emitModelImpls(crate: rust.Crate, context: Context): helpers.Module | u
       use.addForType(model);
       entries.push(pageImpl);
     }
+
+    const statusMonitorImpl = context.getStatusMonitorImplForType(model, use);
+    if (statusMonitorImpl) {
+      use.addForType(model);
+      entries.push(statusMonitorImpl);
+    }
   }
 
   if (entries.length === 0) {

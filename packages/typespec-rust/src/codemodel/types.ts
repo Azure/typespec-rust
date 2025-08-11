@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | Poller | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
 export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
@@ -272,6 +272,14 @@ export interface Pager extends External {
   type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
 }
 
+/** Pager is a Poller<T> from azure_core */
+export interface Poller extends External {
+  kind: 'poller';
+
+  /** the model containing the page of items */
+  type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
+}
+
 /** PayloadFormat indicates the wire format for request bodies */
 export type PayloadFormat = 'json' | 'xml';
 
@@ -352,7 +360,7 @@ export interface Response<T extends ResponseTypes = ResponseTypes, Format extend
 }
 
 /** ResultTypes defines the type constraint when creating a Result<T> */
-type ResultTypes = PageIterator | Pager | RawResponse | Response;
+type ResultTypes = PageIterator | Pager | Poller | RawResponse | Response;
 
 /** Result is a Rust Result<T> from azure_core */
 export interface Result<T extends ResultTypes = ResultTypes> extends External {
@@ -720,6 +728,14 @@ export class Pager extends External implements Pager {
   constructor(crate: Crate, type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
     super(crate, 'Pager', 'azure_core::http');
     this.kind = 'pager';
+    this.type = type;
+  }
+}
+
+export class Poller extends External implements Poller {
+  constructor(crate: Crate, type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
+    super(crate, 'Poller', 'azure_core::http');
+    this.kind = 'poller';
     this.type = type;
   }
 }

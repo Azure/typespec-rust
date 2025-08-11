@@ -24,6 +24,7 @@ use azure_core::{
 const CONTENT_TYPE: HeaderName = HeaderName::from_static("content-type");
 const ETAG: HeaderName = HeaderName::from_static("etag");
 const LINK: HeaderName = HeaderName::from_static("link");
+const OPERATION_LOCATION: HeaderName = HeaderName::from_static("operation-location");
 const REQUEST_ID: HeaderName = HeaderName::from_static("x-ms-request-id");
 const SYNC_TOKEN: HeaderName = HeaderName::from_static("sync-token");
 
@@ -253,11 +254,14 @@ impl LabelListResultHeaders for Response<LabelListResult> {
 }
 
 /// Provides access to typed response headers for the following methods:
+/// * [`AzureAppConfigurationClient::begin_create_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::begin_create_snapshot())
 /// * [`AzureAppConfigurationClient::get_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::get_snapshot())
+/// * [`AzureAppConfigurationClient::resume_snapshot_operation()`](crate::generated::clients::AzureAppConfigurationClient::resume_snapshot_operation())
 /// * [`AzureAppConfigurationClient::update_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::update_snapshot())
 pub trait SnapshotHeaders: private::Sealed {
     fn content_type(&self) -> Result<Option<GetSnapshotResponseContentType>>;
     fn link(&self) -> Result<Option<String>>;
+    fn operation_location(&self) -> Result<Option<String>>;
     fn sync_token(&self) -> Result<Option<String>>;
     fn etag_header(&self) -> Result<Option<String>>;
     fn request_id(&self) -> Result<Option<String>>;
@@ -272,6 +276,11 @@ impl SnapshotHeaders for Response<Snapshot> {
     /// Includes links to related resources.
     fn link(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &LINK)
+    }
+
+    /// The location for monitoring the operation state.
+    fn operation_location(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &OPERATION_LOCATION)
     }
 
     /// Used to guarantee real-time consistency between requests.

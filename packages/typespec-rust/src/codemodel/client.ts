@@ -105,7 +105,7 @@ export interface SupplementalEndpoint {
 export type HTTPMethod = 'delete' | 'get' | 'head' | 'patch' | 'post' | 'put';
 
 /** Method defines the possible method types */
-export type MethodType = AsyncMethod | ClientAccessor | PageableMethod;
+export type MethodType = AsyncMethod | ClientAccessor | PageableMethod | LroBeginMethod | LroResumeMethod;
 
 /** AsyncMethod is an async Rust method */
 export interface AsyncMethod extends HTTPMethodBase {
@@ -142,6 +142,28 @@ export interface PageableMethod extends HTTPMethodBase {
    * but doesn't (yet) support fetching subsequent pages.
    */
   strategy?: PageableStrategyKind;
+}
+
+/** LroBeginMethod is a method that starts a long-running operation. */
+export interface LroBeginMethod extends HTTPMethodBase {
+  kind: 'lro_begin';
+
+  /** the params passed to the method (excluding self). can be empty */
+  params: Array<MethodParameter>;
+
+  /** the lro result */
+  returns: types.Result<types.Poller>;
+}
+
+/** LroResumeMethod is a method that resumes a long-running operation. */
+export interface LroResumeMethod extends HTTPMethodBase {
+  kind: 'lro_resume';
+
+  /** the params passed to the method (excluding self). can be empty */
+  params: Array<MethodParameter>;
+
+  /** the lro result */
+  returns: types.Result<types.Poller>;
 }
 
 /** PageableStrategyContinuationToken indicates a pageable method uses the continuation token strategy */
@@ -663,6 +685,24 @@ export class PageableMethod extends HTTPMethodBase implements PageableMethod {
   constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
     super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'pageable';
+    this.params = new Array<MethodParameter>();
+    this.options = options;
+  }
+}
+
+export class LroBeginMethod extends HTTPMethodBase implements LroBeginMethod {
+  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+    super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
+    this.kind = 'lro_begin';
+    this.params = new Array<MethodParameter>();
+    this.options = options;
+  }
+}
+
+export class LroResumeMethod extends HTTPMethodBase implements LroResumeMethod {
+  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+    super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
+    this.kind = 'lro_resume';
     this.params = new Array<MethodParameter>();
     this.options = options;
   }
