@@ -6,6 +6,10 @@
 
 * Added support for optional path parameters.
 
+### Breaking Changes
+
+* Calls `Context::to_borrowed` instead of `Context::with_context`.
+
 ### Other Changes
 
 * Required path parameters that are empty will return an error.
@@ -18,7 +22,6 @@
 
 * Adds `PagerState` support to pagers.
 * Adds a `Format` to `RequestContent<T, F>` when the request body is not JSON.
-* Calls `Context::to_borrowed` instead of `Context::with_context`.
 
 ## 0.19.0 (2025-07-23)
 
