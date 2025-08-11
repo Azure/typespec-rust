@@ -943,10 +943,11 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
  * @param paramGroups the param groups for the provided method
  * @param inClosure indicates if the request is being constructed within a closure (e.g. pageable methods)
  * @param cloneUrl indicates if url should be cloned wneh it is passed to initialize request
+ * @param forceMut indicates whether request should get declared as 'mut' regardless of whether there are any headers to set
  * @returns the request construction code
  */
-function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, cloneUrl: boolean = false): string {
-  let body = `${indent.get()}let mut request = Request::new(url${cloneUrl ? '.clone()' : ''}, Method::${codegen.capitalize(method.httpMethod)});\n`;
+function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, cloneUrl: boolean = false, forceMut: boolean = true): string {
+  let body = `${indent.get()}let ${(forceMut || paramGroups.header.length > 0) ? 'mut ' : ''}request = Request::new(url${cloneUrl ? '.clone()' : ''}, Method::${codegen.capitalize(method.httpMethod)});\n`;
 
   body += applyHeaderParams(indent, use, method, paramGroups, inClosure);
 
@@ -1294,7 +1295,7 @@ function getLroBeginMethodBody(indent: helpers.indentation, use: Use, client: ru
   }, {
     pattern: 'PollerState::Initial',
     body: (indent) => {
-      let body = `${constructRequest(indent, use, method, paramGroups, true, true)}\n`;
+      let body = `${constructRequest(indent, use, method, paramGroups, true, true, false)}\n`;
       body += `${indent.get()}(request, url.clone())\n`;
 
       return body;

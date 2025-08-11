@@ -1381,30 +1381,27 @@ export class Adapter {
       }
     } else if (method.kind === 'lro') {
       const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
-      const responseType = this.typeToWireType(this.getType(method.lroMetadata.logicalResult));
+      const responseType = this.typeToWireType(this.getModel(method.lroMetadata.logicalResult));
       if (responseType.kind !== 'model') {
         throw new AdapterError('InternalError', `envelope result for ${method.name} is not a model`, method.__raw?.node);
       }
 
-      const addCrateModels = (model: rust.Model, crate: rust.Crate, breakRecursion: boolean = false): void => {
-        if (!crate.models.includes(model)) {
-          crate.models.push(model);
-        } else if (breakRecursion) {
+      const pushModels = (model: rust.Model, crate: rust.Crate): void => {
+        if (crate.models.some(m => m === model)) {
           return;
         }
 
+        crate.models.push(model);
         for (const field of model.fields) {
-          let fieldType = field.type.kind === 'option' ? field.type.type : field.type;
+          let fieldType = field.type;
+          fieldType = fieldType.kind === 'option' ? fieldType.type : fieldType;
           fieldType = fieldType.kind === 'Vec' ? fieldType.type : fieldType;
-          if (fieldType.kind === 'model' && !crate.models.includes(fieldType)) {
-            addCrateModels(model, crate, true);
-          } else if (fieldType.kind === 'enum' && !crate.enums.includes(fieldType)) {
-            crate.enums.push(fieldType);
+          if (fieldType.kind === 'model') {
+            pushModels(fieldType, crate);
           }
         }
       }
-
-      addCrateModels(responseType, this.crate);
+      pushModels(responseType, this.crate);
 
       rustMethod.returns = new rust.Result(this.crate, new rust.Poller(this.crate, new rust.Response(this.crate, responseType, format)));
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {

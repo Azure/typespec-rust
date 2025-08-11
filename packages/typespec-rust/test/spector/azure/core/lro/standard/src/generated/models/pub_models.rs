@@ -7,6 +7,30 @@ use super::OperationState;
 use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
+/// The error object.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct Error {
+    /// One of a server-defined set of error codes.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub code: Option<String>,
+
+    /// An array of details about specific errors that led to this reported error.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub details: Option<Vec<Error>>,
+
+    /// An object containing more specific information than the current object about the error.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub innererror: Option<InnerError>,
+
+    /// A human-readable representation of the error.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub message: Option<String>,
+
+    /// The target of the error.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub target: Option<String>,
+}
+
 /// The exported user data.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
@@ -18,6 +42,18 @@ pub struct ExportedUser {
     /// The exported URI.
     #[serde(rename = "resourceUri", skip_serializing_if = "Option::is_none")]
     pub resource_uri: Option<String>,
+}
+
+/// An object containing more specific information about the error. As per Azure REST API guidelines - <https://aka.ms/AzureRestApiGuidelines#handling-errors>.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct InnerError {
+    /// One of a server-defined set of error codes.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub code: Option<String>,
+
+    /// Inner error.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub innererror: Option<Box<InnerError>>,
 }
 
 /// Provides status details for long running operations.
