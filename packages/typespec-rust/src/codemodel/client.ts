@@ -211,7 +211,7 @@ export type ExtendedCollectionFormat = CollectionFormat | 'multi';
 export type ParameterLocation = 'client' | 'method';
 
 /** MethodParameter defines the possible method parameter types */
-export type MethodParameter = BodyParameter | HeaderCollectionParameter | HeaderHashMapParameter | HeaderScalarParameter | PartialBodyParameter | PathCollectionParameter | PathHashMapParameter | PathScalarParameter | QueryCollectionParameter | QueryHashMapParameter | QueryScalarParameter;
+export type MethodParameter = BodyParameter | CookieScalarParameter | HeaderCollectionParameter | HeaderHashMapParameter | HeaderScalarParameter | PartialBodyParameter | PathCollectionParameter | PathHashMapParameter | PathScalarParameter | QueryCollectionParameter | QueryHashMapParameter | QueryScalarParameter;
 
 /** BodyParameter is a param that's passed via the HTTP request body */
 export interface BodyParameter extends HTTPParameterBase {
@@ -219,6 +219,20 @@ export interface BodyParameter extends HTTPParameterBase {
 
   /** the type of the body param */
   type: types.RequestContent;
+}
+
+/** CookieScalarParameterType defines the possible types for a CookieScalarParameter */
+export type CookieScalarParameterType = Exclude<types.WireType, types.HashMap | types.JsonValue | types.Model | types.Slice | types.StringSlice | types.Vector>;
+
+/** CookieScalarParameter is a scalar param that goes in a HTTP cookie */
+export interface CookieScalarParameter extends HTTPParameterBase {
+  kind: 'cookieScalar';
+
+  /** the cookie name in the HTTP request */
+  cookie: string;
+
+  /** the type of the param */
+  type: CookieScalarParameterType;
 }
 
 /** HeaderCollectionParameterType defines the possible types for a HeaderCollectionParameter */
@@ -568,6 +582,14 @@ export class BodyParameter extends HTTPParameterBase implements BodyParameter {
   constructor(name: string, location: ParameterLocation, optional: boolean, type: types.RequestContent) {
     super(name, location, optional, type);
     this.kind = 'body';
+  }
+}
+
+export class CookieScalarParameter extends HTTPParameterBase implements CookieScalarParameter {
+  constructor(name: string, cookie: string, location: ParameterLocation, optional: boolean, type: CookieScalarParameterType) {
+    super(name, location, optional, type);
+    this.kind = 'cookieScalar';
+    this.cookie = cookie;
   }
 }
 

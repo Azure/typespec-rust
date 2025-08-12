@@ -1621,9 +1621,20 @@ export class Adapter {
         adaptedParam = new rust.BodyParameter(paramName, paramLoc, param.optional, new rust.RequestContent(this.crate, requestType, requestFormatType));
         break;
       }
-      case 'cookie':
-        // TODO: https://github.com/Azure/typespec-rust/issues/192
-        throw new AdapterError('UnsupportedTsp', 'cookie parameters are not supported', param.__raw?.node);
+      case 'cookie': {
+        paramType = this.typeToWireType(paramType);
+        switch (paramType.kind) {
+          case 'hashmap':
+          case 'jsonValue':
+          case 'model':
+          case 'slice':
+          case 'str':
+          case 'Vec':
+            throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for scalar cookie ${param.serializedName}`, param.__raw?.node);
+        }
+        adaptedParam = new rust.CookieScalarParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
+        break;
+      }
       case 'header':
         if (param.collectionFormat) {
           if (paramType.kind !== 'Vec' && !isRefSlice(paramType)) {

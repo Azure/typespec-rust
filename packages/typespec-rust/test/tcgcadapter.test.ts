@@ -11,6 +11,19 @@ import { deepEqual, strictEqual } from 'assert';
 import { describe, it } from 'vitest';
 
 describe('typespec-rust: tcgcadapter', () => {
+  describe('CookieScalarParameter', () => {
+    it('should create CookieScalarParameter correctly', () => {
+      const param = new rust.CookieScalarParameter('sessionId', 'session-id', 'method', false, new rust.StringType());
+      
+      strictEqual(param.kind, 'cookieScalar');
+      strictEqual(param.name, 'sessionId');
+      strictEqual(param.cookie, 'session-id');
+      strictEqual(param.location, 'method');
+      strictEqual(param.optional, false);
+      strictEqual(param.type.kind, 'String');
+    });
+  });
+
   describe('helpers', () => {
     it('fixUpEnumValueName', () => {
       strictEqual(helpers.fixUpEnumValueNameWorker('fooBar', 'string'), 'FooBar');
