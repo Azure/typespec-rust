@@ -31,7 +31,10 @@ impl Page for OperationListResult {
 impl StatusMonitor for ArmOperationStatusResourceProvisioningState {
     type Output = ArmOperationStatusResourceProvisioningState;
     fn status(&self) -> PollerStatus {
-        PollerStatus::Succeeded
+        match &self.status {
+            Some(v) => PollerStatus::from(v.as_ref()),
+            None => PollerStatus::InProgress,
+        }
     }
 }
 

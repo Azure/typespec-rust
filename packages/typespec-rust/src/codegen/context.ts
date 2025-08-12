@@ -212,12 +212,17 @@ export class Context {
     let content = `impl StatusMonitor for ${model.name} {\n`;
     content += `${indent.get()}type Output = ${helpers.getTypeDeclaration(helpers.unwrapType(model))};\n`;
     content += `${indent.get()}fn status(&self) -> PollerStatus {\n`;
-    //if (model.fields.some(f => f.name.toLowerCase() === 'status')) {
-    //  content += `${indent.push().get()}self.status.as_deref().map(Into::into).unwrap_or(PollerStatus::InProgress)\n`;
-    //} else {
-    //  content += `${indent.push().get()}PollerStatus::Succeeded\n`;
-    //}
-    content += `${indent.push().get()}PollerStatus::Succeeded\n`;
+
+    const statusField = model.fields.find(f => f.name.toLowerCase() === 'status');
+    if (statusField) {
+      if (statusField.type.kind === 'option') {
+        content += `${indent.push().get()}match &self.status { Some(v) => PollerStatus::from(v.as_ref()), None => PollerStatus::InProgress }\n`;
+      } else {
+        content += `${indent.push().get()}self.status.as_deref().map(Into::into).unwrap_or(PollerStatus::InProgress)\n`;
+      }
+    } else {
+      content += `${indent.push().get()}PollerStatus::Succeeded\n`;
+    }
 
     content += `${indent.pop().get()}}\n`; // end fn
     content += '}\n\n'; // end impl

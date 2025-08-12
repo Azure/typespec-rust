@@ -50,7 +50,10 @@ impl Page for SnapshotListResult {
 impl StatusMonitor for Snapshot {
     type Output = Snapshot;
     fn status(&self) -> PollerStatus {
-        PollerStatus::Succeeded
+        match &self.status {
+            Some(v) => PollerStatus::from(v.as_ref()),
+            None => PollerStatus::InProgress,
+        }
     }
 }
 
