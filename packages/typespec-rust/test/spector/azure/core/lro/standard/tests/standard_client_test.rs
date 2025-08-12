@@ -12,8 +12,11 @@ use spector_lrostd::{models::User, StandardClient};
 #[tokio::test]
 async fn create_or_replace() {
     let client = StandardClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut user = User::default();
-    user.role = Some("contributor".to_string());
+    let user = User {
+        role: Some("contributor".to_string()),
+        ..Default::default()
+    };
+
     let mut poller = client
         .begin_create_or_replace("madge", user.try_into().unwrap(), None)
         .unwrap();
