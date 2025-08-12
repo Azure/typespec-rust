@@ -22,6 +22,17 @@ describe('typespec-rust: tcgcadapter', () => {
       strictEqual(param.optional, false);
       strictEqual(param.type.kind, 'String');
     });
+
+    it('should create optional CookieScalarParameter correctly', () => {
+      const param = new rust.CookieScalarParameter('preferences', 'user-preferences', 'client', true, new rust.StringType());
+      
+      strictEqual(param.kind, 'cookieScalar');
+      strictEqual(param.name, 'preferences');
+      strictEqual(param.cookie, 'user-preferences');
+      strictEqual(param.location, 'client');
+      strictEqual(param.optional, true);
+      strictEqual(param.type.kind, 'String');
+    });
   });
 
   describe('helpers', () => {
