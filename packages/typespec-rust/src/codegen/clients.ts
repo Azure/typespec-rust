@@ -905,7 +905,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 }
 
 /**
- * emits the code for setting HTTP headres in a request.
+ * emits the code for setting HTTP headers in a request.
  *
  * @param indent the indentation helper currently in scope
  * @param use the use statement builder currently in scope
@@ -957,7 +957,7 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
  * @param method the method for which we're building the body
  * @param paramGroups the param groups for the provided method
  * @param inClosure indicates if the request is being constructed within a closure (e.g. pageable methods)
- * @param cloneUrl indicates if url should be cloned wneh it is passed to initialize request
+ * @param cloneUrl indicates if url should be cloned when it is passed to initialize request
  * @param forceMut indicates whether request should get declared as 'mut' regardless of whether there are any headers to set
  * @returns the request construction code
  */
