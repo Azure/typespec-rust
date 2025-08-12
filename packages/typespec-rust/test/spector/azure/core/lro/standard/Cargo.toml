@@ -11,3 +11,7 @@ rust-version.workspace = true
 azure_core = { workspace = true }
 serde = { workspace = true }
 typespec_client_core = { workspace = true, features = ["derive"] }
+
+[dev-dependencies]
+futures = { workspace = true }
+tokio = { workspace = true }

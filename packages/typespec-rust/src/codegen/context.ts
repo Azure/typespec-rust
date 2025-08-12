@@ -230,5 +230,3 @@ export class Context {
     return content;
   }
 }
-
-
