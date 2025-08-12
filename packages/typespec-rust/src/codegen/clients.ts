@@ -585,6 +585,7 @@ function getClientAccessorMethodBody(indent: helpers.indentation, client: rust.C
 }
 
 type ClientMethod = rust.AsyncMethod | rust.PageableMethod;
+type CookieParamType = rust.CookieScalarParameter;
 type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderHashMapParameter | rust.HeaderScalarParameter;
 type PathParamType = rust.PathCollectionParameter | rust.PathHashMapParameter | rust.PathScalarParameter;
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter;
@@ -597,6 +598,9 @@ interface MethodParamGroups {
 
   /** the body parameter if applicable */
   body?: rust.BodyParameter;
+
+  /** cookie parameters. can be empty */
+  cookie: Array<CookieParamType>;
 
   /** header parameters. can be empty */
   header: Array<HeaderParamType>;
@@ -620,6 +624,7 @@ interface MethodParamGroups {
 function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
   // collect and sort all the header/path/query params
   let apiVersionParam: ApiVersionParamType | undefined;
+  const cookieParams = new Array<CookieParamType>();
   const headerParams = new Array<HeaderParamType>();
   const pathParams = new Array<PathParamType>();
   const queryParams = new Array<QueryParamType>();
@@ -627,6 +632,9 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
 
   for (const param of method.params) {
     switch (param.kind) {
+      case 'cookieScalar':
+        cookieParams.push(param);
+        break;
       case 'headerScalar':
       case 'headerCollection':
       case 'headerHashMap':
@@ -651,6 +659,7 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
     }
   }
 
+  cookieParams.sort((a: CookieParamType, b: CookieParamType) => { return helpers.sortAscending(a.cookie, b.cookie); });
   headerParams.sort((a: HeaderParamType, b: HeaderParamType) => { return helpers.sortAscending(a.header, b.header); });
   pathParams.sort((a: PathParamType, b: PathParamType) => { return helpers.sortAscending(a.segment, b.segment); });
   queryParams.sort((a: QueryParamType, b: QueryParamType) => { return helpers.sortAscending(a.key, b.key); });
@@ -668,6 +677,7 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
   return {
     apiVersion: apiVersionParam,
     body: bodyParam,
+    cookie: cookieParams,
     header: headerParams,
     partialBody: partialBodyParams,
     path: pathParams,
@@ -933,6 +943,16 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       // client or we're in a closure and the param is required (header params are always owned)
       const borrow = nonCopyableType(headerParam.type) && (headerParam.location === 'client' || (inClosure && !headerParam.optional)) ? '&' : '';
       return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, !inClosure)});\n`;
+    });
+  }
+
+  // Add cookie parameters to the request
+  for (const cookieParam of paramGroups.cookie) {
+    body += getParamValueHelper(indent, cookieParam, inClosure, () => {
+      // for non-copyable params (e.g. String), we need to borrow them if they're on the
+      // client or we're in a closure and the param is required (cookie params are always owned)
+      const borrow = nonCopyableType(cookieParam.type) && (cookieParam.location === 'client' || (inClosure && !cookieParam.optional)) ? '&' : '';
+      return `${indent.get()}request.insert_header("cookie", format!("{}={}", "${cookieParam.cookie}", ${borrow}${getHeaderPathQueryParamValue(use, cookieParam, !inClosure)}));\n`;
     });
   }
 
@@ -1319,7 +1339,7 @@ function getClientEndpointParamValue(param: rust.ClientEndpointParameter): strin
  * @param fromSelf applicable for client params. when true, the prefix "self." is included
  * @returns the code to use for the param's value
  */
-function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathParamType | QueryParamType, fromSelf: boolean): string {
+function getHeaderPathQueryParamValue(use: Use, param: CookieParamType | HeaderParamType | PathParamType | QueryParamType, fromSelf: boolean): string {
   let paramName = param.name;
   // when fromSelf is false we assume that there's a local with the same name.
   // e.g. in pageable methods where we need to clone the params so they can be
