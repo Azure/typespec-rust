@@ -5,10 +5,9 @@
 
 use crate::generated::models::{
     ExtensionsResource, ExtensionsResourceListResult,
-    ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions,
+    ResourcesExtensionsResourcesClientCreateOrUpdateOptions,
     ResourcesExtensionsResourcesClientDeleteOptions, ResourcesExtensionsResourcesClientGetOptions,
     ResourcesExtensionsResourcesClientListByScopeOptions,
-    ResourcesExtensionsResourcesClientResumeExtensionsResourceOperationOptions,
     ResourcesExtensionsResourcesClientUpdateOptions,
 };
 use azure_core::{
@@ -45,12 +44,12 @@ impl ResourcesExtensionsResourcesClient {
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
     #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.createOrUpdate")]
-    pub fn begin_create_or_update(
+    pub fn create_or_update(
         &self,
         resource_uri: &str,
         extensions_resource_name: &str,
         resource: RequestContent<ExtensionsResource>,
-        options: Option<ResourcesExtensionsResourcesClientBeginCreateOrUpdateOptions<'_>>,
+        options: Option<ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'_>>,
     ) -> Result<Poller<ExtensionsResource>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -290,62 +289,6 @@ impl ResourcesExtensionsResourcesClient {
                 })
             }
         }))
-    }
-
-    /// Create a ExtensionsResource
-    ///
-    /// # Arguments
-    ///
-    /// * `resource_uri` - The fully qualified Azure Resource manager identifier of the resource.
-    /// * `extensions_resource_name` - The name of the ExtensionsResource
-    /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesExtensionsResources.ExtensionsResource.resume")]
-    pub fn resume_extensions_resource_operation(
-        &self,
-        resource_uri: &str,
-        extensions_resource_name: &str,
-        options: Option<
-            ResourcesExtensionsResourcesClientResumeExtensionsResourceOperationOptions<'_>,
-        >,
-    ) -> Result<Poller<ExtensionsResource>> {
-        let options = options.unwrap_or_default().into_owned();
-        let pipeline = self.pipeline.clone();
-        let mut url = self.endpoint.clone();
-        let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
-        path = path.replace("{extensionsResourceName}", extensions_resource_name);
-        path = path.replace("{resourceUri}", resource_uri);
-        url = url.join(&path)?;
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
-        Ok(Poller::from_callback(
-            move |_| {
-                let url = url.clone();
-                let mut request = Request::new(url.clone(), Method::Get);
-                request.insert_header("accept", "application/json");
-                request.insert_header("content-type", "application/json");
-
-                let ctx = options.method_options.context.clone();
-                let pipeline = pipeline.clone();
-                async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: ExtensionsResource = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            next: url,
-                        },
-                        _ => PollerResult::Done { response: rsp },
-                    })
-                }
-            },
-            None,
-        ))
     }
 
     /// Update a ExtensionsResource

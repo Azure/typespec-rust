@@ -217,16 +217,10 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
             return getPageableMethodBody(indentation, use, client, method);
           };
           break;
-        case 'lro_begin':
+        case 'lro':
           isPublicApi = true;
           methodBody = (indentation: helpers.indentation): string => {
-            return getLroBeginMethodBody(indentation, use, client, method);
-          };
-          break;
-        case 'lro_resume':
-          isPublicApi = true;
-          methodBody = (indentation: helpers.indentation): string => {
-            return getLroResumeMethodBody(indentation, use, client, method);
+            return getLroMethodBody(indentation, use, client, method);
           };
           break;
         case 'clientaccessor':
@@ -242,11 +236,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         body += paramsDocs;
       }
       if (isPublicApi) {
-        if (method.kind === 'lro_resume') {
-          body += `${indent.get()}#[tracing::function("${client.name.replace("Client", "")}.${method.returns.type.type.content.name}.resume")]\n`;
-        } else {
-          body += `${indent.get()}#[tracing::function("${method.languageIndependentName}")]\n`;
-        }
+        body += `${indent.get()}#[tracing::function("${method.languageIndependentName}")]\n`;
       } else if (isSubclientNew) {
         body += `${indent.get()}#[tracing::subclient]\n`;
       }
@@ -334,7 +324,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
       }
       body += '}\n\n'; // end options
 
-      if (method.kind === 'pageable' || method.kind === 'lro_begin' || method.kind === 'lro_resume') {
+      if (method.kind === 'pageable' || method.kind === 'lro') {
         body += `impl ${helpers.getTypeDeclaration(method.options.type, true)} {\n`;
         body += `${indent.get()}pub fn into_owned(self) -> ${method.options.type.name}<'static> {\n`;
         body += `${indent.push().get()}${method.options.type.name} {\n`;
@@ -600,7 +590,7 @@ function getClientAccessorMethodBody(indent: helpers.indentation, client: rust.C
   return body;
 }
 
-type ClientMethod = rust.AsyncMethod | rust.PageableMethod | rust.LroBeginMethod | rust.LroResumeMethod;
+type ClientMethod = rust.AsyncMethod | rust.PageableMethod | rust.LroMethod;
 type HeaderParamType = rust.HeaderCollectionParameter | rust.HeaderHashMapParameter | rust.HeaderScalarParameter;
 type PathParamType = rust.PathCollectionParameter | rust.PathHashMapParameter | rust.PathScalarParameter;
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter;
@@ -1315,7 +1305,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 }
 
 /**
- * constructs the body for an LRO begin client method
+ * constructs the body for an LRO client method
  *
  * @param indent the indentation helper currently in scope
  * @param use the use statement builder currently in scope
@@ -1323,7 +1313,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
  * @param method the method for the body to build
  * @returns the contents of the method body
  */
-function getLroBeginMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroBeginMethod): string {
+function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroMethod): string {
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
   use.add('azure_core::http', 'Method', 'PollerStatus', 'RawResponse', 'Request', 'Url');
@@ -1379,7 +1369,14 @@ function getLroBeginMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
   body += `${indent.get()}let retry_after = get_retry_after(&headers, &options.poller_options);\n`
   body += `${indent.get()}let bytes = body.collect().await?;\n`
-  const deserialize = bodyFormat === 'json' ? 'json::from_json' : 'xml::read_xml';
+
+  let deserialize = '';
+  if (bodyFormat === 'json') {
+    use.add('azure_core', 'json');
+    deserialize = 'json::from_json';
+  } else {
+    deserialize = 'xml::read_xml';
+  }
   body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&bytes)?;\n`
   body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, bytes).into();\n`
 
@@ -1396,75 +1393,6 @@ function getLroBeginMethodBody(indent: helpers.indentation, use: Use, client: ru
     },
     returns: 'PollerResult::Done'
   }])})\n`;
-  body += `${indent.pop().get()}}\n`; // end async move
-  body += `${indent.pop().get()}},\n`; // end move
-  body += `${indent.get()}None,\n`;
-  body += `${indent.pop().get()}))`; // end Ok/Poller::from_callback
-
-  return body;
-}
-
-/**
- * constructs the body for an LRO resume client method
- *
- * @param indent the indentation helper currently in scope
- * @param use the use statement builder currently in scope
- * @param client the client to which the method belongs
- * @param method the method for the body to build
- * @returns the contents of the method body
- */
-function getLroResumeMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroResumeMethod): string {
-  const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
-
-  use.add('azure_core::http', 'Method', 'PollerStatus', 'RawResponse', 'Request', 'Url');
-  use.add('azure_core::http::poller', 'get_retry_after', 'PollerResult', 'PollerState', 'StatusMonitor as _');
-  use.addForType(method.returns.type);
-  use.addForType(helpers.unwrapType(method.returns.type));
-
-  const paramGroups = getMethodParamGroup(method);
-  const urlVar = 'url';
-
-  let body = 'let options = options.unwrap_or_default().into_owned();\n';
-  body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
-  body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
-  body += `${constructUrl(indent, use, method, paramGroups, urlVar)}`;
-
-  body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(\n`
-  body += `${indent.push().get()}move |_| {\n`;
-  body += `${indent.push().get()}let url = url.clone();\n`;
-  body += `${indent.get()}let mut request = Request::new(url.clone(), Method::Get);\n`;
-  body += `${applyHeaderParams(indent, use, method, paramGroups, true)}\n`
-  body += `${indent.get()}let ctx = options.method_options.context.clone();\n`
-  body += `${indent.get()}let pipeline = pipeline.clone();\n`
-  body += `${indent.get()}async move {\n`
-  body += `${indent.push().get()}let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;\n`
-  body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
-  body += `${indent.get()}let retry_after = get_retry_after(&headers, &options.poller_options);\n`
-  body += `${indent.get()}let bytes = body.collect().await?;\n`
-
-  let deserialize = '';
-  if (bodyFormat === 'json') {
-    use.add('azure_core', 'json');
-    deserialize = 'json::from_json';
-  } else {
-    deserialize = 'xml::read_xml';
-  }
-  body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&bytes)?;\n`
-  body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, bytes).into();\n\n`
-
-  body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', [{
-    pattern: `PollerStatus::InProgress`,
-    body: (indent) => {
-      return `${indent.get()}response: rsp, retry_after, next: url\n`;
-    },
-    returns: 'PollerResult::InProgress'
-  }, {
-    pattern: '_',
-    body: (indent) => {
-      return `${indent.get()}response: rsp`;
-    },
-    returns: 'PollerResult::Done'
-  }])})`;
   body += `${indent.pop().get()}}\n`; // end async move
   body += `${indent.pop().get()}},\n`; // end move
   body += `${indent.get()}None,\n`;

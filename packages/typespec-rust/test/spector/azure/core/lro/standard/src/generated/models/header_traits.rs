@@ -13,9 +13,8 @@ use azure_core::{
 };
 
 const OPERATION_LOCATION: HeaderName = HeaderName::from_static("operation-location");
-/// Provides access to typed response headers for the following methods:
-/// * [`StandardClient::begin_export()`](crate::generated::clients::StandardClient::begin_export())
-/// * [`StandardClient::resume_exported_user_operation()`](crate::generated::clients::StandardClient::resume_exported_user_operation())
+
+/// Provides access to typed response headers for [`StandardClient::export()`](crate::generated::clients::StandardClient::export())
 pub trait ExportedUserHeaders: private::Sealed {
     fn operation_location(&self) -> Result<Option<String>>;
 }
@@ -27,9 +26,7 @@ impl ExportedUserHeaders for Response<ExportedUser> {
     }
 }
 
-/// Provides access to typed response headers for the following methods:
-/// * [`StandardClient::begin_delete()`](crate::generated::clients::StandardClient::begin_delete())
-/// * [`StandardClient::resume_operation_status_error_operation()`](crate::generated::clients::StandardClient::resume_operation_status_error_operation())
+/// Provides access to typed response headers for [`StandardClient::delete()`](crate::generated::clients::StandardClient::delete())
 pub trait OperationStatusErrorHeaders: private::Sealed {
     fn operation_location(&self) -> Result<Option<String>>;
 }
@@ -41,9 +38,7 @@ impl OperationStatusErrorHeaders for Response<OperationStatusError> {
     }
 }
 
-/// Provides access to typed response headers for the following methods:
-/// * [`StandardClient::begin_create_or_replace()`](crate::generated::clients::StandardClient::begin_create_or_replace())
-/// * [`StandardClient::resume_user_operation()`](crate::generated::clients::StandardClient::resume_user_operation())
+/// Provides access to typed response headers for [`StandardClient::create_or_replace()`](crate::generated::clients::StandardClient::create_or_replace())
 pub trait UserHeaders: private::Sealed {
     fn operation_location(&self) -> Result<Option<String>>;
 }

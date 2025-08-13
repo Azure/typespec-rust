@@ -5,13 +5,11 @@
 
 use crate::generated::models::{
     ArmOperationStatusResourceProvisioningState, NotificationDetails,
-    ResourcesTopLevelClientActionSyncOptions, ResourcesTopLevelClientBeginCreateOrReplaceOptions,
-    ResourcesTopLevelClientBeginDeleteOptions, ResourcesTopLevelClientBeginUpdateOptions,
-    ResourcesTopLevelClientGetOptions, ResourcesTopLevelClientListByResourceGroupOptions,
-    ResourcesTopLevelClientListBySubscriptionOptions,
-    ResourcesTopLevelClientResumeArmOperationStatusResourceProvisioningStateOperationOptions,
-    ResourcesTopLevelClientResumeTopLevelTrackedResourceOperationOptions, TopLevelTrackedResource,
-    TopLevelTrackedResourceListResult,
+    ResourcesTopLevelClientActionSyncOptions, ResourcesTopLevelClientCreateOrReplaceOptions,
+    ResourcesTopLevelClientDeleteOptions, ResourcesTopLevelClientGetOptions,
+    ResourcesTopLevelClientListByResourceGroupOptions,
+    ResourcesTopLevelClientListBySubscriptionOptions, ResourcesTopLevelClientUpdateOptions,
+    TopLevelTrackedResource, TopLevelTrackedResourceListResult,
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
@@ -103,12 +101,12 @@ impl ResourcesTopLevelClient {
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.createOrReplace")]
-    pub fn begin_create_or_replace(
+    pub fn create_or_replace(
         &self,
         resource_group_name: &str,
         top_level_tracked_resource_name: &str,
         resource: RequestContent<TopLevelTrackedResource>,
-        options: Option<ResourcesTopLevelClientBeginCreateOrReplaceOptions<'_>>,
+        options: Option<ResourcesTopLevelClientCreateOrReplaceOptions<'_>>,
     ) -> Result<Poller<TopLevelTrackedResource>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -187,11 +185,11 @@ impl ResourcesTopLevelClient {
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `options` - Optional parameters for the request.
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.delete")]
-    pub fn begin_delete(
+    pub fn delete(
         &self,
         resource_group_name: &str,
         top_level_tracked_resource_name: &str,
-        options: Option<ResourcesTopLevelClientBeginDeleteOptions<'_>>,
+        options: Option<ResourcesTopLevelClientDeleteOptions<'_>>,
     ) -> Result<Poller<ArmOperationStatusResourceProvisioningState>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -242,91 +240,6 @@ impl ResourcesTopLevelClient {
                     let retry_after = get_retry_after(&headers, &options.poller_options);
                     let bytes = body.collect().await?;
                     let res: ArmOperationStatusResourceProvisioningState = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            next: next_link,
-                        },
-                        _ => PollerResult::Done { response: rsp },
-                    })
-                }
-            },
-            None,
-        ))
-    }
-
-    /// Update a TopLevelTrackedResource
-    ///
-    /// # Arguments
-    ///
-    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
-    /// * `top_level_tracked_resource_name` - arm resource name for path
-    /// * `properties` - The resource properties to be updated.
-    /// * `options` - Optional parameters for the request.
-    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.update")]
-    pub fn begin_update(
-        &self,
-        resource_group_name: &str,
-        top_level_tracked_resource_name: &str,
-        properties: RequestContent<TopLevelTrackedResource>,
-        options: Option<ResourcesTopLevelClientBeginUpdateOptions<'_>>,
-    ) -> Result<Poller<TopLevelTrackedResource>> {
-        let options = options.unwrap_or_default().into_owned();
-        let pipeline = self.pipeline.clone();
-        let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
-        path = path.replace("{resourceGroupName}", resource_group_name);
-        path = path.replace("{subscriptionId}", &self.subscription_id);
-        path = path.replace(
-            "{topLevelTrackedResourceName}",
-            top_level_tracked_resource_name,
-        );
-        url = url.join(&path)?;
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
-
-        let api_version = self.api_version.clone();
-
-        Ok(Poller::from_callback(
-            move |next_link: PollerState<Url>| {
-                let (mut request, next_link) = match next_link {
-                    PollerState::More(next_link) => {
-                        let qp = next_link
-                            .query_pairs()
-                            .filter(|(name, _)| name.ne("api-version"));
-                        let mut next_link = next_link.clone();
-                        next_link
-                            .query_pairs_mut()
-                            .clear()
-                            .extend_pairs(qp)
-                            .append_pair("api-version", &api_version);
-
-                        let mut request = Request::new(next_link.clone(), Method::Get);
-                        request.insert_header("accept", "application/json");
-                        request.insert_header("content-type", "application/json");
-
-                        (request, next_link)
-                    }
-                    PollerState::Initial => {
-                        let mut request = Request::new(url.clone(), Method::Patch);
-                        request.insert_header("accept", "application/json");
-                        request.insert_header("content-type", "application/json");
-                        request.set_body(properties.clone());
-
-                        (request, url.clone())
-                    }
-                };
-
-                let ctx = options.method_options.context.clone();
-                let pipeline = pipeline.clone();
-                async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: TopLevelTrackedResource = json::from_json(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
@@ -537,75 +450,21 @@ impl ResourcesTopLevelClient {
         }))
     }
 
-    /// Delete a TopLevelTrackedResource
+    /// Update a TopLevelTrackedResource
     ///
     /// # Arguments
     ///
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `top_level_tracked_resource_name` - arm resource name for path
+    /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesTopLevel.ArmOperationStatusResourceProvisioningState.resume")]
-    pub fn resume_arm_operation_status_resource_provisioning_state_operation(
+    #[tracing::function("Azure.ResourceManager.Resources.TopLevel.update")]
+    pub fn update(
         &self,
         resource_group_name: &str,
         top_level_tracked_resource_name: &str,
-        options: Option<ResourcesTopLevelClientResumeArmOperationStatusResourceProvisioningStateOperationOptions<'_>>,
-    ) -> Result<Poller<ArmOperationStatusResourceProvisioningState>> {
-        let options = options.unwrap_or_default().into_owned();
-        let pipeline = self.pipeline.clone();
-        let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
-        path = path.replace("{resourceGroupName}", resource_group_name);
-        path = path.replace("{subscriptionId}", &self.subscription_id);
-        path = path.replace(
-            "{topLevelTrackedResourceName}",
-            top_level_tracked_resource_name,
-        );
-        url = url.join(&path)?;
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
-        Ok(Poller::from_callback(
-            move |_| {
-                let url = url.clone();
-                let mut request = Request::new(url.clone(), Method::Get);
-
-                let ctx = options.method_options.context.clone();
-                let pipeline = pipeline.clone();
-                async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: ArmOperationStatusResourceProvisioningState = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            next: url,
-                        },
-                        _ => PollerResult::Done { response: rsp },
-                    })
-                }
-            },
-            None,
-        ))
-    }
-
-    /// Create a TopLevelTrackedResource
-    ///
-    /// # Arguments
-    ///
-    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
-    /// * `top_level_tracked_resource_name` - arm resource name for path
-    /// * `options` - Optional parameters for the request.
-    #[tracing::function("ResourcesTopLevel.TopLevelTrackedResource.resume")]
-    pub fn resume_top_level_tracked_resource_operation(
-        &self,
-        resource_group_name: &str,
-        top_level_tracked_resource_name: &str,
-        options: Option<ResourcesTopLevelClientResumeTopLevelTrackedResourceOperationOptions<'_>>,
+        properties: RequestContent<TopLevelTrackedResource>,
+        options: Option<ResourcesTopLevelClientUpdateOptions<'_>>,
     ) -> Result<Poller<TopLevelTrackedResource>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -620,12 +479,38 @@ impl ResourcesTopLevelClient {
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
+
+        let api_version = self.api_version.clone();
+
         Ok(Poller::from_callback(
-            move |_| {
-                let url = url.clone();
-                let mut request = Request::new(url.clone(), Method::Get);
-                request.insert_header("accept", "application/json");
-                request.insert_header("content-type", "application/json");
+            move |next_link: PollerState<Url>| {
+                let (mut request, next_link) = match next_link {
+                    PollerState::More(next_link) => {
+                        let qp = next_link
+                            .query_pairs()
+                            .filter(|(name, _)| name.ne("api-version"));
+                        let mut next_link = next_link.clone();
+                        next_link
+                            .query_pairs_mut()
+                            .clear()
+                            .extend_pairs(qp)
+                            .append_pair("api-version", &api_version);
+
+                        let mut request = Request::new(next_link.clone(), Method::Get);
+                        request.insert_header("accept", "application/json");
+                        request.insert_header("content-type", "application/json");
+
+                        (request, next_link)
+                    }
+                    PollerState::Initial => {
+                        let mut request = Request::new(url.clone(), Method::Patch);
+                        request.insert_header("accept", "application/json");
+                        request.insert_header("content-type", "application/json");
+                        request.set_body(properties.clone());
+
+                        (request, url.clone())
+                    }
+                };
 
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
@@ -636,12 +521,11 @@ impl ResourcesTopLevelClient {
                     let bytes = body.collect().await?;
                     let res: TopLevelTrackedResource = json::from_json(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            next: url,
+                            next: next_link,
                         },
                         _ => PollerResult::Done { response: rsp },
                     })

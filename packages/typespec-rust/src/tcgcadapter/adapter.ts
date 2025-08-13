@@ -938,7 +938,6 @@ export class Adapter {
       this.adaptClientAccessor(client, child, rustClient, subClient);
     }
 
-    const resumeLros = new Set<string>();
     for (const method of client.methods) {
       if (method.kind === 'lropaging') {
         // skip Paging LROs for now so that codegen is unblocked
@@ -952,11 +951,6 @@ export class Adapter {
         continue;
       }
       this.adaptMethod(method, rustClient);
-
-      if (method.kind === 'lro' && !resumeLros.has(method.lroMetadata.logicalResult.name)) {
-        resumeLros.add(method.lroMetadata.logicalResult.name);
-        this.adaptMethod(method, rustClient, true);
-      }
     }
 
     this.crate.clients.push(rustClient);
@@ -1078,7 +1072,7 @@ export class Adapter {
    * @param method the tcgc method to convert
    * @param rustClient the client to which the method belongs
    */
-  private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client, lroResume: boolean = false): void {
+  private adaptMethod(method: tcgc.SdkServiceMethod<tcgc.SdkHttpOperation>, rustClient: rust.Client): void {
     let srcMethodName = method.name;
     if (method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
       const chunks = codegen.deconstruct(srcMethodName);
@@ -1091,26 +1085,8 @@ export class Adapter {
         message: `renamed paging method from ${method.name} to ${srcMethodName}`,
         target: method.__raw?.node ?? NoTarget,
       });
-    } else if (method.kind === 'lro' && !lroResume && !srcMethodName.match(/^begin/i)) {
-      const chunks = codegen.deconstruct(srcMethodName);
-      chunks.unshift('begin');
-      srcMethodName = codegen.camelCase(chunks);
-      this.renamedMethods.add(srcMethodName);
-      this.ctx.program.reportDiagnostic({
-        code: 'LroMethodRename',
-        severity: 'warning',
-        message: `renamed LRO method from ${method.name} to ${srcMethodName}`,
-        target: method.__raw?.node ?? NoTarget,
-      });
     } else if (this.renamedMethods.has(srcMethodName)) {
       throw new AdapterError('NameCollision', `method name ${srcMethodName} collides with a renamed method`, method.__raw?.node);
-    }
-
-    if (method.kind === 'lro' && lroResume) {
-      srcMethodName = `resume_${codegen.camelCase(codegen.deconstruct(method.lroMetadata.logicalResult.name))}`;
-      if (!srcMethodName.endsWith('_operation')) {
-        srcMethodName += '_operation';
-      }
     }
 
     const languageIndependentName = method.crossLanguageDefinitionId;
@@ -1158,9 +1134,7 @@ export class Adapter {
         rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
         break;
       case 'lro':
-        rustMethod = !lroResume
-          ? new rust.LroBeginMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath)
-          : new rust.LroResumeMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.LroMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
         break;
       default:
         throw new AdapterError('UnsupportedTsp', `method kind ${method.kind} NYI`, method.__raw?.node);
@@ -1172,7 +1146,7 @@ export class Adapter {
     // stuff all of the operation parameters into one array for easy traversal
     const allOpParams = new Array<tcgc.SdkHttpParameter>();
     allOpParams.push(...method.operation.parameters);
-    if (method.operation.bodyParam && !lroResume) {
+    if (method.operation.bodyParam) {
       allOpParams.push(method.operation.bodyParam);
     }
 
@@ -1191,9 +1165,6 @@ export class Adapter {
       }).first();
 
       if (!opParam) {
-        if (lroResume) {
-          continue;
-        }
         throw new AdapterError('InternalError', `didn't find operation parameter for method ${method.name} parameter ${param.name}`, param.__raw?.node);
       }
 
@@ -1506,9 +1477,9 @@ export class Adapter {
     // response header traits are only ever for marker types and payloads
     let implFor: rust.Response<rust.MarkerType | rust.WireType>;
     switch (method.returns.type.kind) {
-      case 'poller':
       case 'pageIterator':
       case 'pager':
+      case 'poller':
         implFor = method.returns.type.type;
         break;
       case 'response':
@@ -1961,7 +1932,7 @@ function isRefSlice(type: rust.Type): type is rust.Ref<rust.Slice> {
 }
 
 /** method types that send/receive data */
-type MethodType = rust.AsyncMethod | rust.PageableMethod | rust.LroBeginMethod | rust.LroResumeMethod;
+type MethodType = rust.AsyncMethod | rust.PageableMethod | rust.LroMethod;
 
 /** supported kinds of tcgc scalars */
 type tcgcScalarKind = 'boolean' | 'float' | 'float32' | 'float64' | 'int16' | 'int32' | 'int64' | 'int8' | 'uint16' | 'uint32' | 'uint64' | 'uint8';

@@ -9,31 +9,6 @@ use azure_core::{
     http::{poller::PollerOptions, ClientMethodOptions, RequestContent},
 };
 
-/// Options to be passed to [`AzureAppConfigurationClient::begin_create_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::begin_create_snapshot())
-#[derive(Clone, Default, SafeDebug)]
-pub struct AzureAppConfigurationClientBeginCreateSnapshotOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
-
-    /// Used to guarantee real-time consistency between requests.
-    pub sync_token: Option<String>,
-}
-
-impl AzureAppConfigurationClientBeginCreateSnapshotOptions<'_> {
-    pub fn into_owned(self) -> AzureAppConfigurationClientBeginCreateSnapshotOptions<'static> {
-        AzureAppConfigurationClientBeginCreateSnapshotOptions {
-            method_options: ClientMethodOptions {
-                context: self.method_options.context.into_owned(),
-            },
-            poller_options: self.poller_options,
-            sync_token: self.sync_token,
-        }
-    }
-}
-
 /// Options to be passed to [`AzureAppConfigurationClient::check_key_value()`](crate::generated::clients::AzureAppConfigurationClient::check_key_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct AzureAppConfigurationClientCheckKeyValueOptions<'a> {
@@ -240,6 +215,31 @@ pub struct AzureAppConfigurationClientCheckSnapshotsOptions<'a> {
 
     /// Used to guarantee real-time consistency between requests.
     pub sync_token: Option<String>,
+}
+
+/// Options to be passed to [`AzureAppConfigurationClient::create_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::create_snapshot())
+#[derive(Clone, Default, SafeDebug)]
+pub struct AzureAppConfigurationClientCreateSnapshotOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
+    pub poller_options: PollerOptions,
+
+    /// Used to guarantee real-time consistency between requests.
+    pub sync_token: Option<String>,
+}
+
+impl AzureAppConfigurationClientCreateSnapshotOptions<'_> {
+    pub fn into_owned(self) -> AzureAppConfigurationClientCreateSnapshotOptions<'static> {
+        AzureAppConfigurationClientCreateSnapshotOptions {
+            method_options: ClientMethodOptions {
+                context: self.method_options.context.into_owned(),
+            },
+            poller_options: self.poller_options,
+            sync_token: self.sync_token,
+        }
+    }
 }
 
 /// Options to be passed to [`AzureAppConfigurationClient::delete_key_value()`](crate::generated::clients::AzureAppConfigurationClient::delete_key_value())
@@ -639,31 +639,6 @@ pub struct AzureAppConfigurationClientPutLockOptions<'a> {
 
     /// Used to guarantee real-time consistency between requests.
     pub sync_token: Option<String>,
-}
-
-/// Options to be passed to [`AzureAppConfigurationClient::resume_snapshot_operation()`](crate::generated::clients::AzureAppConfigurationClient::resume_snapshot_operation())
-#[derive(Clone, Default, SafeDebug)]
-pub struct AzureAppConfigurationClientResumeSnapshotOperationOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
-
-    /// Used to guarantee real-time consistency between requests.
-    pub sync_token: Option<String>,
-}
-
-impl AzureAppConfigurationClientResumeSnapshotOperationOptions<'_> {
-    pub fn into_owned(self) -> AzureAppConfigurationClientResumeSnapshotOperationOptions<'static> {
-        AzureAppConfigurationClientResumeSnapshotOperationOptions {
-            method_options: ClientMethodOptions {
-                context: self.method_options.context.into_owned(),
-            },
-            poller_options: self.poller_options,
-            sync_token: self.sync_token,
-        }
-    }
 }
 
 /// Options to be passed to [`AzureAppConfigurationClient::update_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::update_snapshot())

@@ -254,9 +254,8 @@ impl LabelListResultHeaders for Response<LabelListResult> {
 }
 
 /// Provides access to typed response headers for the following methods:
-/// * [`AzureAppConfigurationClient::begin_create_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::begin_create_snapshot())
+/// * [`AzureAppConfigurationClient::create_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::create_snapshot())
 /// * [`AzureAppConfigurationClient::get_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::get_snapshot())
-/// * [`AzureAppConfigurationClient::resume_snapshot_operation()`](crate::generated::clients::AzureAppConfigurationClient::resume_snapshot_operation())
 /// * [`AzureAppConfigurationClient::update_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::update_snapshot())
 pub trait SnapshotHeaders: private::Sealed {
     fn content_type(&self) -> Result<Option<GetSnapshotResponseContentType>>;

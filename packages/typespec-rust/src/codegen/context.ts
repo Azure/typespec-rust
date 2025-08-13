@@ -56,7 +56,7 @@ export class Context {
         } else if (method.kind === 'pageable' && method.returns.type.kind === 'pager') {
           // impls are for pagers only (not page iterators)
           this.pagedResponseTypes.add(method.returns.type.type.content);
-        } else if ((method.kind === 'lro_begin' || method.kind === 'lro_resume') && method.returns.type.kind === 'poller') {
+        } else if (method.kind === 'lro' && method.returns.type.kind === 'poller') {
           this.lroTypes.add(method.returns.type.type.content);
         }
 

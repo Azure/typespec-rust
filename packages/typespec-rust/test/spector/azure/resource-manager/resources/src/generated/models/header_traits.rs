@@ -19,10 +19,8 @@ const AZURE_ASYNC_OPERATION: HeaderName = HeaderName::from_static("azure-asyncop
 const LOCATION: HeaderName = HeaderName::from_static("location");
 const RETRY_AFTER: HeaderName = HeaderName::from_static("retry-after");
 /// Provides access to typed response headers for the following methods:
-/// * [`ResourcesNestedClient::begin_delete()`](crate::generated::clients::ResourcesNestedClient::begin_delete())
-/// * [`ResourcesNestedClient::resume_arm_operation_status_resource_provisioning_state_operation()`](crate::generated::clients::ResourcesNestedClient::resume_arm_operation_status_resource_provisioning_state_operation())
-/// * [`ResourcesTopLevelClient::begin_delete()`](crate::generated::clients::ResourcesTopLevelClient::begin_delete())
-/// * [`ResourcesTopLevelClient::resume_arm_operation_status_resource_provisioning_state_operation()`](crate::generated::clients::ResourcesTopLevelClient::resume_arm_operation_status_resource_provisioning_state_operation())
+/// * [`ResourcesNestedClient::delete()`](crate::generated::clients::ResourcesNestedClient::delete())
+/// * [`ResourcesTopLevelClient::delete()`](crate::generated::clients::ResourcesTopLevelClient::delete())
 pub trait ArmOperationStatusResourceProvisioningStateHeaders: private::Sealed {
     fn location(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;
@@ -42,9 +40,7 @@ impl ArmOperationStatusResourceProvisioningStateHeaders
     }
 }
 
-/// Provides access to typed response headers for the following methods:
-/// * [`ResourcesExtensionsResourcesClient::begin_create_or_update()`](crate::generated::clients::ResourcesExtensionsResourcesClient::begin_create_or_update())
-/// * [`ResourcesExtensionsResourcesClient::resume_extensions_resource_operation()`](crate::generated::clients::ResourcesExtensionsResourcesClient::resume_extensions_resource_operation())
+/// Provides access to typed response headers for [`ResourcesExtensionsResourcesClient::create_or_update()`](crate::generated::clients::ResourcesExtensionsResourcesClient::create_or_update())
 pub trait ExtensionsResourceHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;
@@ -63,9 +59,8 @@ impl ExtensionsResourceHeaders for Response<ExtensionsResource> {
 }
 
 /// Provides access to typed response headers for the following methods:
-/// * [`ResourcesNestedClient::begin_create_or_replace()`](crate::generated::clients::ResourcesNestedClient::begin_create_or_replace())
-/// * [`ResourcesNestedClient::begin_update()`](crate::generated::clients::ResourcesNestedClient::begin_update())
-/// * [`ResourcesNestedClient::resume_nested_proxy_resource_operation()`](crate::generated::clients::ResourcesNestedClient::resume_nested_proxy_resource_operation())
+/// * [`ResourcesNestedClient::create_or_replace()`](crate::generated::clients::ResourcesNestedClient::create_or_replace())
+/// * [`ResourcesNestedClient::update()`](crate::generated::clients::ResourcesNestedClient::update())
 pub trait NestedProxyResourceHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;
@@ -89,9 +84,7 @@ impl NestedProxyResourceHeaders for Response<NestedProxyResource> {
     }
 }
 
-/// Provides access to typed response headers for the following methods:
-/// * [`ResourcesSingletonClient::begin_create_or_update()`](crate::generated::clients::ResourcesSingletonClient::begin_create_or_update())
-/// * [`ResourcesSingletonClient::resume_singleton_tracked_resource_operation()`](crate::generated::clients::ResourcesSingletonClient::resume_singleton_tracked_resource_operation())
+/// Provides access to typed response headers for [`ResourcesSingletonClient::create_or_update()`](crate::generated::clients::ResourcesSingletonClient::create_or_update())
 pub trait SingletonTrackedResourceHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;
@@ -110,9 +103,8 @@ impl SingletonTrackedResourceHeaders for Response<SingletonTrackedResource> {
 }
 
 /// Provides access to typed response headers for the following methods:
-/// * [`ResourcesTopLevelClient::begin_create_or_replace()`](crate::generated::clients::ResourcesTopLevelClient::begin_create_or_replace())
-/// * [`ResourcesTopLevelClient::begin_update()`](crate::generated::clients::ResourcesTopLevelClient::begin_update())
-/// * [`ResourcesTopLevelClient::resume_top_level_tracked_resource_operation()`](crate::generated::clients::ResourcesTopLevelClient::resume_top_level_tracked_resource_operation())
+/// * [`ResourcesTopLevelClient::create_or_replace()`](crate::generated::clients::ResourcesTopLevelClient::create_or_replace())
+/// * [`ResourcesTopLevelClient::update()`](crate::generated::clients::ResourcesTopLevelClient::update())
 pub trait TopLevelTrackedResourceHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;

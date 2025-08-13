@@ -23,9 +23,9 @@ pub struct OperationTemplatesCheckNameAvailabilityClientCheckLocalOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`OperationTemplatesLroClient::begin_create_or_replace()`](crate::generated::clients::OperationTemplatesLroClient::begin_create_or_replace())
+/// Options to be passed to [`OperationTemplatesLroClient::create_or_replace()`](crate::generated::clients::OperationTemplatesLroClient::create_or_replace())
 #[derive(Clone, Default, SafeDebug)]
-pub struct OperationTemplatesLroClientBeginCreateOrReplaceOptions<'a> {
+pub struct OperationTemplatesLroClientCreateOrReplaceOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
@@ -33,9 +33,9 @@ pub struct OperationTemplatesLroClientBeginCreateOrReplaceOptions<'a> {
     pub poller_options: PollerOptions,
 }
 
-impl OperationTemplatesLroClientBeginCreateOrReplaceOptions<'_> {
-    pub fn into_owned(self) -> OperationTemplatesLroClientBeginCreateOrReplaceOptions<'static> {
-        OperationTemplatesLroClientBeginCreateOrReplaceOptions {
+impl OperationTemplatesLroClientCreateOrReplaceOptions<'_> {
+    pub fn into_owned(self) -> OperationTemplatesLroClientCreateOrReplaceOptions<'static> {
+        OperationTemplatesLroClientCreateOrReplaceOptions {
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
             },
@@ -44,9 +44,9 @@ impl OperationTemplatesLroClientBeginCreateOrReplaceOptions<'_> {
     }
 }
 
-/// Options to be passed to [`OperationTemplatesLroClient::begin_delete()`](crate::generated::clients::OperationTemplatesLroClient::begin_delete())
+/// Options to be passed to [`OperationTemplatesLroClient::delete()`](crate::generated::clients::OperationTemplatesLroClient::delete())
 #[derive(Clone, Default, SafeDebug)]
-pub struct OperationTemplatesLroClientBeginDeleteOptions<'a> {
+pub struct OperationTemplatesLroClientDeleteOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
@@ -54,9 +54,9 @@ pub struct OperationTemplatesLroClientBeginDeleteOptions<'a> {
     pub poller_options: PollerOptions,
 }
 
-impl OperationTemplatesLroClientBeginDeleteOptions<'_> {
-    pub fn into_owned(self) -> OperationTemplatesLroClientBeginDeleteOptions<'static> {
-        OperationTemplatesLroClientBeginDeleteOptions {
+impl OperationTemplatesLroClientDeleteOptions<'_> {
+    pub fn into_owned(self) -> OperationTemplatesLroClientDeleteOptions<'static> {
+        OperationTemplatesLroClientDeleteOptions {
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
             },
@@ -65,9 +65,9 @@ impl OperationTemplatesLroClientBeginDeleteOptions<'_> {
     }
 }
 
-/// Options to be passed to [`OperationTemplatesLroClient::begin_export()`](crate::generated::clients::OperationTemplatesLroClient::begin_export())
+/// Options to be passed to [`OperationTemplatesLroClient::export()`](crate::generated::clients::OperationTemplatesLroClient::export())
 #[derive(Clone, Default, SafeDebug)]
-pub struct OperationTemplatesLroClientBeginExportOptions<'a> {
+pub struct OperationTemplatesLroClientExportOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
@@ -75,78 +75,9 @@ pub struct OperationTemplatesLroClientBeginExportOptions<'a> {
     pub poller_options: PollerOptions,
 }
 
-impl OperationTemplatesLroClientBeginExportOptions<'_> {
-    pub fn into_owned(self) -> OperationTemplatesLroClientBeginExportOptions<'static> {
-        OperationTemplatesLroClientBeginExportOptions {
-            method_options: ClientMethodOptions {
-                context: self.method_options.context.into_owned(),
-            },
-            poller_options: self.poller_options,
-        }
-    }
-}
-
-/// Options to be passed to [`OperationTemplatesLroClient::resume_arm_operation_status_resource_provisioning_state_operation()`](crate::generated::clients::OperationTemplatesLroClient::resume_arm_operation_status_resource_provisioning_state_operation())
-#[derive(Clone, Default, SafeDebug)]
-pub struct OperationTemplatesLroClientResumeArmOperationStatusResourceProvisioningStateOperationOptions<
-    'a,
-> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
-}
-
-impl
-    OperationTemplatesLroClientResumeArmOperationStatusResourceProvisioningStateOperationOptions<'_>
-{
-    pub fn into_owned(self) -> OperationTemplatesLroClientResumeArmOperationStatusResourceProvisioningStateOperationOptions<'static>{
-        OperationTemplatesLroClientResumeArmOperationStatusResourceProvisioningStateOperationOptions {
-            method_options: ClientMethodOptions {
-                context: self.method_options.context.into_owned(),
-            },
-            poller_options: self.poller_options,
-        }
-    }
-}
-
-/// Options to be passed to [`OperationTemplatesLroClient::resume_export_result_operation()`](crate::generated::clients::OperationTemplatesLroClient::resume_export_result_operation())
-#[derive(Clone, Default, SafeDebug)]
-pub struct OperationTemplatesLroClientResumeExportResultOperationOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
-}
-
-impl OperationTemplatesLroClientResumeExportResultOperationOptions<'_> {
-    pub fn into_owned(
-        self,
-    ) -> OperationTemplatesLroClientResumeExportResultOperationOptions<'static> {
-        OperationTemplatesLroClientResumeExportResultOperationOptions {
-            method_options: ClientMethodOptions {
-                context: self.method_options.context.into_owned(),
-            },
-            poller_options: self.poller_options,
-        }
-    }
-}
-
-/// Options to be passed to [`OperationTemplatesLroClient::resume_order_operation()`](crate::generated::clients::OperationTemplatesLroClient::resume_order_operation())
-#[derive(Clone, Default, SafeDebug)]
-pub struct OperationTemplatesLroClientResumeOrderOperationOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
-}
-
-impl OperationTemplatesLroClientResumeOrderOperationOptions<'_> {
-    pub fn into_owned(self) -> OperationTemplatesLroClientResumeOrderOperationOptions<'static> {
-        OperationTemplatesLroClientResumeOrderOperationOptions {
+impl OperationTemplatesLroClientExportOptions<'_> {
+    pub fn into_owned(self) -> OperationTemplatesLroClientExportOptions<'static> {
+        OperationTemplatesLroClientExportOptions {
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
             },

@@ -5,11 +5,8 @@
 
 use crate::generated::models::{
     ArmOperationStatusResourceProvisioningState, ExportRequest, ExportResult,
-    OperationTemplatesLroClientBeginCreateOrReplaceOptions,
-    OperationTemplatesLroClientBeginDeleteOptions, OperationTemplatesLroClientBeginExportOptions,
-    OperationTemplatesLroClientResumeArmOperationStatusResourceProvisioningStateOperationOptions,
-    OperationTemplatesLroClientResumeExportResultOperationOptions,
-    OperationTemplatesLroClientResumeOrderOperationOptions, Order,
+    OperationTemplatesLroClientCreateOrReplaceOptions, OperationTemplatesLroClientDeleteOptions,
+    OperationTemplatesLroClientExportOptions, Order,
 };
 use azure_core::{
     http::{
@@ -42,12 +39,12 @@ impl OperationTemplatesLroClient {
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.createOrReplace")]
-    pub fn begin_create_or_replace(
+    pub fn create_or_replace(
         &self,
         resource_group_name: &str,
         order_name: &str,
         resource: RequestContent<Order>,
-        options: Option<OperationTemplatesLroClientBeginCreateOrReplaceOptions<'_>>,
+        options: Option<OperationTemplatesLroClientCreateOrReplaceOptions<'_>>,
     ) -> Result<Poller<Order>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -123,11 +120,11 @@ impl OperationTemplatesLroClient {
     /// * `order_name` - The name of the Order
     /// * `options` - Optional parameters for the request.
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.delete")]
-    pub fn begin_delete(
+    pub fn delete(
         &self,
         resource_group_name: &str,
         order_name: &str,
-        options: Option<OperationTemplatesLroClientBeginDeleteOptions<'_>>,
+        options: Option<OperationTemplatesLroClientDeleteOptions<'_>>,
     ) -> Result<Poller<ArmOperationStatusResourceProvisioningState>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -199,12 +196,12 @@ impl OperationTemplatesLroClient {
     /// * `body` - The content of the action request
     /// * `options` - Optional parameters for the request.
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.export")]
-    pub fn begin_export(
+    pub fn export(
         &self,
         resource_group_name: &str,
         order_name: &str,
         body: RequestContent<ExportRequest>,
-        options: Option<OperationTemplatesLroClientBeginExportOptions<'_>>,
+        options: Option<OperationTemplatesLroClientExportOptions<'_>>,
     ) -> Result<Poller<ExportResult>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
@@ -263,169 +260,6 @@ impl OperationTemplatesLroClient {
                             response: rsp,
                             retry_after,
                             next: next_link,
-                        },
-                        _ => PollerResult::Done { response: rsp },
-                    })
-                }
-            },
-            None,
-        ))
-    }
-
-    /// Delete a Order
-    ///
-    /// # Arguments
-    ///
-    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
-    /// * `order_name` - The name of the Order
-    /// * `options` - Optional parameters for the request.
-    #[tracing::function("OperationTemplatesLro.ArmOperationStatusResourceProvisioningState.resume")]
-    pub fn resume_arm_operation_status_resource_provisioning_state_operation(
-        &self,
-        resource_group_name: &str,
-        order_name: &str,
-        options: Option<OperationTemplatesLroClientResumeArmOperationStatusResourceProvisioningStateOperationOptions<'_>>,
-    ) -> Result<Poller<ArmOperationStatusResourceProvisioningState>> {
-        let options = options.unwrap_or_default().into_owned();
-        let pipeline = self.pipeline.clone();
-        let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}");
-        path = path.replace("{orderName}", order_name);
-        path = path.replace("{resourceGroupName}", resource_group_name);
-        path = path.replace("{subscriptionId}", &self.subscription_id);
-        url = url.join(&path)?;
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
-        Ok(Poller::from_callback(
-            move |_| {
-                let url = url.clone();
-                let mut request = Request::new(url.clone(), Method::Get);
-
-                let ctx = options.method_options.context.clone();
-                let pipeline = pipeline.clone();
-                async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: ArmOperationStatusResourceProvisioningState = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            next: url,
-                        },
-                        _ => PollerResult::Done { response: rsp },
-                    })
-                }
-            },
-            None,
-        ))
-    }
-
-    /// A long-running resource action.
-    ///
-    /// # Arguments
-    ///
-    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
-    /// * `order_name` - The name of the Order
-    /// * `options` - Optional parameters for the request.
-    #[tracing::function("OperationTemplatesLro.ExportResult.resume")]
-    pub fn resume_export_result_operation(
-        &self,
-        resource_group_name: &str,
-        order_name: &str,
-        options: Option<OperationTemplatesLroClientResumeExportResultOperationOptions<'_>>,
-    ) -> Result<Poller<ExportResult>> {
-        let options = options.unwrap_or_default().into_owned();
-        let pipeline = self.pipeline.clone();
-        let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}/export");
-        path = path.replace("{orderName}", order_name);
-        path = path.replace("{resourceGroupName}", resource_group_name);
-        path = path.replace("{subscriptionId}", &self.subscription_id);
-        url = url.join(&path)?;
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
-        Ok(Poller::from_callback(
-            move |_| {
-                let url = url.clone();
-                let mut request = Request::new(url.clone(), Method::Get);
-                request.insert_header("accept", "application/json");
-                request.insert_header("content-type", "application/json");
-
-                let ctx = options.method_options.context.clone();
-                let pipeline = pipeline.clone();
-                async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: ExportResult = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            next: url,
-                        },
-                        _ => PollerResult::Done { response: rsp },
-                    })
-                }
-            },
-            None,
-        ))
-    }
-
-    /// Create a Order
-    ///
-    /// # Arguments
-    ///
-    /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
-    /// * `order_name` - The name of the Order
-    /// * `options` - Optional parameters for the request.
-    #[tracing::function("OperationTemplatesLro.Order.resume")]
-    pub fn resume_order_operation(
-        &self,
-        resource_group_name: &str,
-        order_name: &str,
-        options: Option<OperationTemplatesLroClientResumeOrderOperationOptions<'_>>,
-    ) -> Result<Poller<Order>> {
-        let options = options.unwrap_or_default().into_owned();
-        let pipeline = self.pipeline.clone();
-        let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}");
-        path = path.replace("{orderName}", order_name);
-        path = path.replace("{resourceGroupName}", resource_group_name);
-        path = path.replace("{subscriptionId}", &self.subscription_id);
-        url = url.join(&path)?;
-        url.query_pairs_mut()
-            .append_pair("api-version", &self.api_version);
-        Ok(Poller::from_callback(
-            move |_| {
-                let url = url.clone();
-                let mut request = Request::new(url.clone(), Method::Get);
-                request.insert_header("accept", "application/json");
-                request.insert_header("content-type", "application/json");
-
-                let ctx = options.method_options.context.clone();
-                let pipeline = pipeline.clone();
-                async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                    let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: Order = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
-
-                    Ok(match res.status() {
-                        PollerStatus::InProgress => PollerResult::InProgress {
-                            response: rsp,
-                            retry_after,
-                            next: url,
                         },
                         _ => PollerResult::Done { response: rsp },
                     })

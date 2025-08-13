@@ -18,7 +18,7 @@ async fn create_or_replace() {
     };
 
     let mut poller = client
-        .begin_create_or_replace("madge", user.try_into().unwrap(), None)
+        .create_or_replace("madge", user.try_into().unwrap(), None)
         .unwrap();
 
     let first_result = poller.next().await;
@@ -42,7 +42,7 @@ async fn create_or_replace() {
 #[tokio::test]
 async fn delete() {
     let client = StandardClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut poller = client.begin_delete("madge", None).unwrap();
+    let mut poller = client.delete("madge", None).unwrap();
 
     let first_result = poller.next().await;
     assert!(first_result.is_some());

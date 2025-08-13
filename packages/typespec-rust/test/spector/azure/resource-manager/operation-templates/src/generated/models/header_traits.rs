@@ -15,9 +15,8 @@ use azure_core::{
 const AZURE_ASYNC_OPERATION: HeaderName = HeaderName::from_static("azure-asyncoperation");
 const LOCATION: HeaderName = HeaderName::from_static("location");
 const RETRY_AFTER: HeaderName = HeaderName::from_static("retry-after");
-/// Provides access to typed response headers for the following methods:
-/// * [`OperationTemplatesLroClient::begin_delete()`](crate::generated::clients::OperationTemplatesLroClient::begin_delete())
-/// * [`OperationTemplatesLroClient::resume_arm_operation_status_resource_provisioning_state_operation()`](crate::generated::clients::OperationTemplatesLroClient::resume_arm_operation_status_resource_provisioning_state_operation())
+
+/// Provides access to typed response headers for [`OperationTemplatesLroClient::delete()`](crate::generated::clients::OperationTemplatesLroClient::delete())
 pub trait ArmOperationStatusResourceProvisioningStateHeaders: private::Sealed {
     fn location(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;
@@ -37,9 +36,7 @@ impl ArmOperationStatusResourceProvisioningStateHeaders
     }
 }
 
-/// Provides access to typed response headers for the following methods:
-/// * [`OperationTemplatesLroClient::begin_export()`](crate::generated::clients::OperationTemplatesLroClient::begin_export())
-/// * [`OperationTemplatesLroClient::resume_export_result_operation()`](crate::generated::clients::OperationTemplatesLroClient::resume_export_result_operation())
+/// Provides access to typed response headers for [`OperationTemplatesLroClient::export()`](crate::generated::clients::OperationTemplatesLroClient::export())
 pub trait ExportResultHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
     fn location(&self) -> Result<Option<String>>;
@@ -63,9 +60,7 @@ impl ExportResultHeaders for Response<ExportResult> {
     }
 }
 
-/// Provides access to typed response headers for the following methods:
-/// * [`OperationTemplatesLroClient::begin_create_or_replace()`](crate::generated::clients::OperationTemplatesLroClient::begin_create_or_replace())
-/// * [`OperationTemplatesLroClient::resume_order_operation()`](crate::generated::clients::OperationTemplatesLroClient::resume_order_operation())
+/// Provides access to typed response headers for [`OperationTemplatesLroClient::create_or_replace()`](crate::generated::clients::OperationTemplatesLroClient::create_or_replace())
 pub trait OrderHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;

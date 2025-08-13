@@ -8,9 +8,9 @@ use azure_core::{
     http::{poller::PollerOptions, ClientMethodOptions},
 };
 
-/// Options to be passed to [`StandardClient::begin_create_or_replace()`](crate::generated::clients::StandardClient::begin_create_or_replace())
+/// Options to be passed to [`StandardClient::create_or_replace()`](crate::generated::clients::StandardClient::create_or_replace())
 #[derive(Clone, Default, SafeDebug)]
-pub struct StandardClientBeginCreateOrReplaceOptions<'a> {
+pub struct StandardClientCreateOrReplaceOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
@@ -18,9 +18,9 @@ pub struct StandardClientBeginCreateOrReplaceOptions<'a> {
     pub poller_options: PollerOptions,
 }
 
-impl StandardClientBeginCreateOrReplaceOptions<'_> {
-    pub fn into_owned(self) -> StandardClientBeginCreateOrReplaceOptions<'static> {
-        StandardClientBeginCreateOrReplaceOptions {
+impl StandardClientCreateOrReplaceOptions<'_> {
+    pub fn into_owned(self) -> StandardClientCreateOrReplaceOptions<'static> {
+        StandardClientCreateOrReplaceOptions {
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
             },
@@ -29,9 +29,9 @@ impl StandardClientBeginCreateOrReplaceOptions<'_> {
     }
 }
 
-/// Options to be passed to [`StandardClient::begin_delete()`](crate::generated::clients::StandardClient::begin_delete())
+/// Options to be passed to [`StandardClient::delete()`](crate::generated::clients::StandardClient::delete())
 #[derive(Clone, Default, SafeDebug)]
-pub struct StandardClientBeginDeleteOptions<'a> {
+pub struct StandardClientDeleteOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
@@ -39,9 +39,9 @@ pub struct StandardClientBeginDeleteOptions<'a> {
     pub poller_options: PollerOptions,
 }
 
-impl StandardClientBeginDeleteOptions<'_> {
-    pub fn into_owned(self) -> StandardClientBeginDeleteOptions<'static> {
-        StandardClientBeginDeleteOptions {
+impl StandardClientDeleteOptions<'_> {
+    pub fn into_owned(self) -> StandardClientDeleteOptions<'static> {
+        StandardClientDeleteOptions {
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
             },
@@ -50,9 +50,9 @@ impl StandardClientBeginDeleteOptions<'_> {
     }
 }
 
-/// Options to be passed to [`StandardClient::begin_export()`](crate::generated::clients::StandardClient::begin_export())
+/// Options to be passed to [`StandardClient::export()`](crate::generated::clients::StandardClient::export())
 #[derive(Clone, Default, SafeDebug)]
-pub struct StandardClientBeginExportOptions<'a> {
+pub struct StandardClientExportOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
@@ -60,72 +60,9 @@ pub struct StandardClientBeginExportOptions<'a> {
     pub poller_options: PollerOptions,
 }
 
-impl StandardClientBeginExportOptions<'_> {
-    pub fn into_owned(self) -> StandardClientBeginExportOptions<'static> {
-        StandardClientBeginExportOptions {
-            method_options: ClientMethodOptions {
-                context: self.method_options.context.into_owned(),
-            },
-            poller_options: self.poller_options,
-        }
-    }
-}
-
-/// Options to be passed to [`StandardClient::resume_exported_user_operation()`](crate::generated::clients::StandardClient::resume_exported_user_operation())
-#[derive(Clone, Default, SafeDebug)]
-pub struct StandardClientResumeExportedUserOperationOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
-}
-
-impl StandardClientResumeExportedUserOperationOptions<'_> {
-    pub fn into_owned(self) -> StandardClientResumeExportedUserOperationOptions<'static> {
-        StandardClientResumeExportedUserOperationOptions {
-            method_options: ClientMethodOptions {
-                context: self.method_options.context.into_owned(),
-            },
-            poller_options: self.poller_options,
-        }
-    }
-}
-
-/// Options to be passed to [`StandardClient::resume_operation_status_error_operation()`](crate::generated::clients::StandardClient::resume_operation_status_error_operation())
-#[derive(Clone, Default, SafeDebug)]
-pub struct StandardClientResumeOperationStatusErrorOperationOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
-}
-
-impl StandardClientResumeOperationStatusErrorOperationOptions<'_> {
-    pub fn into_owned(self) -> StandardClientResumeOperationStatusErrorOperationOptions<'static> {
-        StandardClientResumeOperationStatusErrorOperationOptions {
-            method_options: ClientMethodOptions {
-                context: self.method_options.context.into_owned(),
-            },
-            poller_options: self.poller_options,
-        }
-    }
-}
-
-/// Options to be passed to [`StandardClient::resume_user_operation()`](crate::generated::clients::StandardClient::resume_user_operation())
-#[derive(Clone, Default, SafeDebug)]
-pub struct StandardClientResumeUserOperationOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
-}
-
-impl StandardClientResumeUserOperationOptions<'_> {
-    pub fn into_owned(self) -> StandardClientResumeUserOperationOptions<'static> {
-        StandardClientResumeUserOperationOptions {
+impl StandardClientExportOptions<'_> {
+    pub fn into_owned(self) -> StandardClientExportOptions<'static> {
+        StandardClientExportOptions {
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
             },
