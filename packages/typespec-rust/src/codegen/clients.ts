@@ -1316,7 +1316,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroMethod): string {
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
-  use.add('azure_core::http', 'Method', 'PollerStatus', 'RawResponse', 'Request', 'Url');
+  use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
   use.add('azure_core::http::poller', 'get_retry_after', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor as _');
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));

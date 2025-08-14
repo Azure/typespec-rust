@@ -36,7 +36,7 @@ use azure_core::{
         policies::{BearerTokenCredentialPolicy, Policy},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         ClientOptions, Method, NoFormat, PageIterator, Pager, PagerResult, PagerState, Pipeline,
-        Poller, PollerStatus, RawResponse, Request, RequestContent, Response, Url,
+        Poller, RawResponse, Request, RequestContent, Response, Url,
     },
     json, tracing, Error, Result,
 };

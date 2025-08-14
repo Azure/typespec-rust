@@ -11,8 +11,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        ClientOptions, Method, Pipeline, Poller, PollerStatus, RawResponse, Request,
-        RequestContent, Url,
+        ClientOptions, Method, Pipeline, Poller, RawResponse, Request, RequestContent, Url,
     },
     json, tracing, Result,
 };
