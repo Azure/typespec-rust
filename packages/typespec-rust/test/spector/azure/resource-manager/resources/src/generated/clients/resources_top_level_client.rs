@@ -14,7 +14,7 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{
-        poller::{get_retry_after, PollerResult, PollerState, StatusMonitor as _},
+        poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         Method, NoFormat, Pager, PagerResult, PagerState, Pipeline, Poller, PollerStatus,
         RawResponse, Request, RequestContent, Response, Url,
     },

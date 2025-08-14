@@ -10,7 +10,7 @@ use crate::generated::models::{
 use azure_core::{
     fmt::SafeDebug,
     http::{
-        poller::{get_retry_after, PollerResult, PollerState, StatusMonitor as _},
+        poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         ClientOptions, Method, Pipeline, Poller, PollerStatus, RawResponse, Request,
         RequestContent, Url,
     },

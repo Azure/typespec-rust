@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{
-        poller::{get_retry_after, PollerResult, PollerState, StatusMonitor as _},
+        poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         Method, Pipeline, Poller, PollerStatus, RawResponse, Request, RequestContent, Url,
     },
     json, tracing, Result,

@@ -34,7 +34,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        poller::{get_retry_after, PollerResult, PollerState, StatusMonitor as _},
+        poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         ClientOptions, Method, NoFormat, PageIterator, Pager, PagerResult, PagerState, Pipeline,
         Poller, PollerStatus, RawResponse, Request, RequestContent, Response, Url,
     },

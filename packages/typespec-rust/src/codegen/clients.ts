@@ -1317,7 +1317,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
   use.add('azure_core::http', 'Method', 'PollerStatus', 'RawResponse', 'Request', 'Url');
-  use.add('azure_core::http::poller', 'get_retry_after', 'PollerResult', 'PollerState', 'StatusMonitor as _');
+  use.add('azure_core::http::poller', 'get_retry_after', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor as _');
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));
 
