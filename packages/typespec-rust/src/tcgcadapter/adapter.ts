@@ -323,12 +323,12 @@ export class Adapter {
     // if the field's type is a model and it's in the type stack then
     // box it. this is to avoid infinitely recursive type definitions.
     if (fieldType.kind === 'model' && stack.includes(fieldType.name)) {
-      fieldType = new rust.Box(fieldType);
+      fieldType = this.getBoxType(fieldType);
     }
 
     // for public models each field is always an Option<T>.
     if (modelVisibility === 'pub' || property.optional) {
-      fieldType = new rust.Option(fieldType.kind === 'box' ? fieldType : this.typeToWireType(fieldType));
+      fieldType = this.getOptionType(fieldType.kind === 'box' ? fieldType : this.typeToWireType(fieldType));
     }
 
     const serializedName = this.getSerializedPropertyName(property) ?? property.name;
@@ -502,6 +502,17 @@ export class Adapter {
     }
   }
 
+  /** returns a Box type */
+  private getBoxType(type: rust.WireType): rust.Box {
+    const typeKey = recursiveKeyName('box', type);
+    let boxType = this.types.get(typeKey);
+    if (!boxType) {
+      boxType = new rust.Box(type);
+      this.types.set(typeKey, boxType);
+    }
+    return <rust.Box>boxType;
+  }
+
   /** returns an EncodedBytes type with the specified encoding */
   private getEncodedBytes(encoding: rust.BytesEncoding, asSlice: boolean): rust.EncodedBytes {
     const keyName = `encodedBytes-${encoding}${asSlice ? '-slice' : ''}`;
@@ -524,6 +535,17 @@ export class Adapter {
     hashmapType = new rust.HashMap(type);
     this.types.set(keyName, hashmapType);
     return hashmapType;
+  }
+
+  /** returns an Option<T> where T is specified in type */
+  private getOptionType<T extends rust.OptionType = rust.OptionType>(type: T): rust.Option<T> {
+    const typeKey = recursiveKeyName('option', type);
+    let optionType = this.types.get(typeKey);
+    if (!optionType) {
+      optionType = new rust.Option(type);
+      this.types.set(typeKey, optionType);
+    }
+    return <rust.Option<T>>optionType;
   }
 
   /** returns the specified type wrapped in a Ref */
@@ -1206,7 +1228,7 @@ export class Adapter {
           }
           fieldType = field.type;
         } else {
-          fieldType = new rust.Option(adaptedParam.type);
+          fieldType = this.getOptionType(adaptedParam.type);
         }
 
         const optionsField = new rust.StructField(adaptedParam.name, 'pub', fieldType);
@@ -1979,17 +2001,18 @@ function snakeCaseName(name: string): string {
  * this is idempotent so providing the same type will create
  * the same key.
  * 
- * obj is recursively unwrapped, and each layer is used to construct
+ * type is recursively unwrapped, and each layer is used to construct
  * the key. e.g. if obj is a HashMap<String, Vec<i32>> this would
  * unwrap to hashmap-Vec-i32.
  * 
  * @param root the starting value for the key
- * @param obj the type for which to create the key
+ * @param type the type for which to create the key
  * @returns a string containing the complete map key
  */
-function recursiveKeyName(root: string, type: rust.WireType): string {
+function recursiveKeyName(root: string, type: rust.Box | rust.Payload | rust.RequestContent | rust.Struct | rust.WireType): string {
   switch (type.kind) {
     case 'Vec':
+    case 'box':
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
     case 'encodedBytes':
       return `${root}-${type.kind}-${type.encoding}${type.slice ? '-slice' : ''}`;
@@ -2002,9 +2025,16 @@ function recursiveKeyName(root: string, type: rust.WireType): string {
     case 'offsetDateTime':
       return `${root}-${type.kind}-${type.encoding}${type.utc ? '-utc' : ''}`;
     case 'model':
+    case 'struct':
       return `${root}-${type.kind}-${type.name}`;
+    case 'literal':
+      return `${recursiveKeyName(`${root}-${type.kind}`, type.valueKind)}-${type.value}`;
+    case 'payload':
+      return recursiveKeyName(`${root}-${type.kind}-${type.format}`, type.type);
     case 'ref':
       return recursiveKeyName(`${root}-${type.kind}`, type.type);
+    case 'requestContent':
+      return recursiveKeyName(`${root}-${type.kind}`, type.content);
     case 'safeint':
     case 'decimal':
       return `${root}-${type.kind}${type.stringEncoding ? '-string' : ''}`;
