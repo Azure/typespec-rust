@@ -2,8 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use azure_core::http::poller::StatusMonitor;
-use azure_core::http::PollerStatus;
+use azure_core::http::poller::{PollerStatus, StatusMonitor};
 use azure_core::http::StatusCode;
 use futures::StreamExt;
 

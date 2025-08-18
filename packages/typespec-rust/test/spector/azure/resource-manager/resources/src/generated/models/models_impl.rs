@@ -12,8 +12,9 @@ use super::{
 use async_trait::async_trait;
 use azure_core::{
     http::{
+        pager::Page,
         poller::{PollerStatus, StatusMonitor},
-        Page, RequestContent,
+        RequestContent,
     },
     json::to_json,
     Result,

@@ -174,7 +174,8 @@ export class Context {
     use.addForType(model);
     use.addForType(pageItemsField.type);
     use.add('async_trait', 'async_trait');
-    use.add('azure_core', 'http::Page', 'Result');
+    use.add('azure_core', 'Result');
+    use.add('azure_core::http::pager', 'Page');
 
     const indent = new helpers.indentation();
 

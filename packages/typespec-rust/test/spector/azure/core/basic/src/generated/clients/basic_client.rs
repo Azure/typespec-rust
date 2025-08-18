@@ -12,8 +12,9 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
-        ClientOptions, Method, NoFormat, Pager, PagerResult, PagerState, Pipeline, RawResponse,
-        Request, RequestContent, Response, Url,
+        pager::{PagerResult, PagerState},
+        ClientOptions, Method, NoFormat, Pager, Pipeline, RawResponse, Request, RequestContent,
+        Response, Url,
     },
     json, tracing, Error, Result,
 };

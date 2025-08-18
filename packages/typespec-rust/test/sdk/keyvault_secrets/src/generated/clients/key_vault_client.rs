@@ -18,9 +18,10 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
+        pager::{PagerResult, PagerState},
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Method, NoFormat, Pager, PagerResult, PagerState, Pipeline, RawResponse,
-        Request, RequestContent, Response, Url,
+        ClientOptions, Method, NoFormat, Pager, Pipeline, RawResponse, Request, RequestContent,
+        Response, Url,
     },
     json, tracing, Error, Result,
 };

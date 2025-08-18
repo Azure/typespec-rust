@@ -1144,7 +1144,8 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
-  use.add('azure_core::http', 'Method', 'PagerResult', 'PagerState', 'Request', 'Url');
+  use.add('azure_core::http', 'Method', 'Request', 'Url');
+  use.add('azure_core::http::pager', 'PagerResult', 'PagerState');
   use.add('azure_core', bodyFormat, 'Result');
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));

@@ -9,7 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::{ErrorKind, HttpError},
-    http::{Method, Pager, PagerResult, PagerState, Pipeline, RawResponse, Request, Url},
+    http::{
+        pager::{PagerResult, PagerState},
+        Method, Pager, Pipeline, RawResponse, Request, Url,
+    },
     json, tracing, Error, Result,
 };
 

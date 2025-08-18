@@ -12,9 +12,9 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{
+        pager::{PagerResult, PagerState},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        Method, Pager, PagerResult, PagerState, Pipeline, Poller, RawResponse, Request,
-        RequestContent, Response, Url,
+        Method, Pager, Pipeline, Poller, RawResponse, Request, RequestContent, Response, Url,
     },
     json, tracing, Error, Result,
 };

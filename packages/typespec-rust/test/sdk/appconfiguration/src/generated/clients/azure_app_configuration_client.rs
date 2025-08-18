@@ -33,10 +33,11 @@ use azure_core::{
     error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
+        pager::{PagerResult, PagerState},
         policies::{BearerTokenCredentialPolicy, Policy},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        ClientOptions, Method, NoFormat, PageIterator, Pager, PagerResult, PagerState, Pipeline,
-        Poller, RawResponse, Request, RequestContent, Response, Url,
+        ClientOptions, Method, NoFormat, PageIterator, Pager, Pipeline, Poller, RawResponse,
+        Request, RequestContent, Response, Url,
     },
     json, tracing, Error, Result,
 };

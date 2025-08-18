@@ -1,6 +1,6 @@
 # Release History
 
-## 0.20.1 (unreleased)
+## 0.21.0 (Unreleased)
 
 ### Features Added
 
@@ -8,7 +8,10 @@
 
 ### Breaking Changes
 
+**Note this version is incompatible with earlier versions of `azure_core`**
+
 * Calls `Context::to_borrowed` instead of `Context::with_context`.
+* Imports types moved from `azure_core::http` to `azure_core::http::{pager, poller}` modules.
 
 ### Other Changes
 
