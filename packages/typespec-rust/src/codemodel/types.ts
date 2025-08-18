@@ -246,14 +246,17 @@ export interface OffsetDateTime extends External {
   utc: boolean;
 }
 
+/** OptionType defines the possible types for the generic type param in an Option<T> */
+export type OptionType = Box | RequestContent | Struct | WireType;
+
 /** Option is a Rust Option<T> */
-export interface Option {
+export interface Option<T extends OptionType = OptionType> {
   kind: 'option';
 
   /**
    * the generic type param
    */
-  type: Box | RequestContent | Struct | WireType;
+  type: T;
 }
 
 /** PageIterator is a PageIterator<T> from azure_core */
@@ -709,8 +712,8 @@ export class OffsetDateTime extends External implements OffsetDateTime {
   }
 }
 
-export class Option implements Option {
-  constructor(type: Box | WireType | RequestContent | Struct) {
+export class Option<T> implements Option<T> {
+  constructor(type: T) {
     this.kind = 'option';
     this.type = type;
   }
