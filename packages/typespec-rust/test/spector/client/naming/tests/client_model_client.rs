@@ -14,7 +14,7 @@ async fn client() {
         default_name: Some(true),
     };
     client
-        .get_client_model_client()
+        .get_model_client()
         .client(body.try_into().unwrap(), None)
         .await
         .unwrap();
@@ -27,7 +27,7 @@ async fn language() {
         default_name: Some(true),
     };
     client
-        .get_client_model_client()
+        .get_model_client()
         .language(body.try_into().unwrap(), None)
         .await
         .unwrap();
