@@ -161,6 +161,9 @@ export class Context {
     // find the page items field in the model
     let pageItemsField: rust.ModelField | undefined;
     for (const field of model.fields) {
+      if (field.kind === 'additionalProperties') {
+        continue;
+      }
       if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.PageItems) === rust.ModelFieldFlags.PageItems) {
         pageItemsField = field;
         break;

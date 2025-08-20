@@ -5,6 +5,7 @@
 ### Features Added
 
 * Added support for optional path parameters.
+* Added support for TypeSpec models that extend a `Record<T>` (the "additional properties" pattern).
 
 ### Breaking Changes
 

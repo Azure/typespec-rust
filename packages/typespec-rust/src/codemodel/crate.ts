@@ -94,7 +94,7 @@ export class Crate implements Crate {
       if (model.kind === 'marker') {
         continue;
       }
-      model.fields.sort((a: types.ModelField, b: types.ModelField) => { return sortAscending(a.name, b.name); });
+      model.fields.sort((a: types.ModelFieldType, b: types.ModelFieldType) => { return sortAscending(a.name, b.name); });
     }
     this.clients.sort((a: client.Client, b: client.Client) => { return sortAscending(a.name, b.name); });
     for (const client of this.clients) {

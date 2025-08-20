@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
+import { values } from '@azure-tools/linq';
 import { Context } from './context.js';
 import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
@@ -89,20 +90,41 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
 
     const bodyFormat = context.getModelBodyFormat(model);
 
+    // if the model is XML and contains additional properties,
+    // it will need a full custom serde implemenation. so, we
+    // need to omit any serde derive annotations.
+    const hasXmlAddlProps = bodyFormat === 'xml' ? values(model.fields).where((each) => each.kind === 'additionalProperties').any() : false;
+
     body += helpers.formatDocComment(model.docs);
-    body += helpers.annotationDerive('Default');
+    body += helpers.annotationDerive(!hasXmlAddlProps, 'Default');
     if (<rust.ModelFlags>(model.flags & rust.ModelFlags.Output) === rust.ModelFlags.Output && (model.flags & rust.ModelFlags.Input) === 0) {
       // output-only models get the non_exhaustive annotation
       body += helpers.AnnotationNonExhaustive;
     }
-    if (model.xmlName) {
+
+    if (!hasXmlAddlProps && model.xmlName) {
       body += `#[serde(rename = "${model.xmlName}")]\n`;
     }
     body += `${helpers.emitVisibility(model.visibility)}struct ${model.name} {\n`;
 
     for (const field of model.fields) {
+      if (bodyFormat === 'xml' && field.kind === 'additionalProperties') {
+        // will need to emit some serde helpers for this type.
+        // JSON doesn't need a helper, we can use serde's flatten.
+        serdeHelpersForXmlAddlProps.set(model, field);
+      }
+
       use.addForType(field.type);
       body += helpers.formatDocComment(field.docs);
+
+      if (field.kind === 'additionalProperties') {
+        if (bodyFormat === 'json') {
+          body += `#[serde(flatten)]\n`;
+        }
+        body += `${indent.get()}${helpers.emitVisibility(field.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
+        continue;
+      }
+
       const serdeParams = new Set<string>();
       const fieldRename = getSerDeRename(field);
       if (fieldRename) {
@@ -143,7 +165,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
         serdeParams.add(`with = "rust_decimal::serde::float${field.type.kind === 'option' ? '_option' : ''}"`);
       }
 
-      if (serdeParams.size > 0) {
+      if (!hasXmlAddlProps && serdeParams.size > 0) {
         body += `${indent.get()}#[serde(${Array.from(serdeParams).sort().join(', ')})]\n`;
       }
       body += `${indent.get()}${helpers.emitVisibility(field.visibility)}${field.name}: ${helpers.getTypeDeclaration(field.type)},\n\n`;
@@ -261,6 +283,15 @@ function emitModelImpls(crate: rust.Crate, context: Context): helpers.Module | u
 }
 
 /**
+ * returns a @ if the field is an XML attribute or the empty string
+ * @param field the field for which to emit the symbol
+ * @returns the symbol or the empty string
+ */
+function xmlAttr(field: rust.ModelField): string {
+  return field.xmlKind === 'attribute' ? '@' : '';
+}
+
+/**
  * returns the value for the rename option in a serde derive macro
  * or undefined if no rename is required.
  * 
@@ -275,11 +306,8 @@ function getSerDeRename(field: rust.ModelField): string | undefined {
   }
 
   // build the potential attribute and renamed field
-  let fieldName = field.name === field.serde ? field.name : field.serde;
-  if (field.xmlKind === 'attribute') {
-    fieldName = '@' + fieldName;
-  }
-  return fieldName;
+  const fieldName = field.name === field.serde ? field.name : field.serde;
+  return `${xmlAttr(field)}${fieldName}`;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -465,6 +493,7 @@ function emitXMLListWrappers(): helpers.Module | undefined {
 
 // used by getSerDeHelper and emitSerDeHelpers
 const serdeHelpers = new Map<string, rust.ModelField>();
+const serdeHelpersForXmlAddlProps = new Map<rust.Model, rust.ModelAdditionalProperties>();
 
 /**
  * defines serde helpers for encodedBytes and offsetDateTime types.
@@ -601,11 +630,25 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
  * @returns the helper modules or undefined
  */
 function emitSerDeHelpers(use: Use): string | undefined {
-  if (serdeHelpers.size === 0) {
+  if (serdeHelpers.size === 0 && serdeHelpersForXmlAddlProps.size === 0) {
     return undefined;
   }
 
   let content = '';
+
+  // emit any serde impls for models with additional properties
+  if (serdeHelpersForXmlAddlProps.size > 0) {
+    use.add('serde', 'Deserialize', 'Serialize');
+    use.add('std::collections', 'HashMap');
+
+    const addlPropModels = Array.from(serdeHelpersForXmlAddlProps.keys()).sort();
+    for (const addlPropModel of addlPropModels) {
+      const addlPropsField = serdeHelpersForXmlAddlProps.get(addlPropModel)!;
+      use.addForType(addlPropModel);
+      content += buildXmlAddlPropsDeserializeForModel(use, addlPropModel, addlPropsField);
+      content += buildXmlAddlPropsSerializeForModel(addlPropModel, addlPropsField);
+    }
+  }
 
   const helperKeys = Array.from(serdeHelpers.keys()).sort();
   for (const helperKey of helperKeys) {
@@ -631,6 +674,129 @@ function emitSerDeHelpers(use: Use): string | undefined {
   }
 
   return content;
+}
+
+/**
+ * constructs the XML Deserialize implementation for a
+ * model that contains additional properties
+ * @param use the use statement builder at the file scope
+ * @param model the model for which to emit Deserialize impl
+ * @param addlProps the additional properties field in the model
+ * @returns the text for the Deserialize impl
+ */
+function buildXmlAddlPropsDeserializeForModel(use: Use, model: rust.Model, addlProps: rust.ModelAdditionalProperties): string {
+  let body = `impl<'de> Deserialize<'de> for ${model.name} {\n`;
+  const indent = new helpers.indentation();
+  body += `${indent.get()}fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: serde::Deserializer<'de> {\n`;
+
+  const visitorTypeName = `${codegen.pascalCase(addlProps.name)}Visitor`;
+  body += `${indent.push().get()}struct ${visitorTypeName};\n`;
+  body += `${indent.get()}impl<'de> serde::de::Visitor<'de> for ${visitorTypeName} {\n`;
+  body += `${indent.push().get()}type Value = ${model.name};\n`;
+
+  body += `${indent.get()}fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {\n`;
+  body += `${indent.push().get()}formatter.write_str("a ${model.name} struct definition")\n`;
+  body += `${indent.pop().get()}}\n`; // end fn expecting
+
+  body += `${indent.get()}fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error> where A: serde::de::MapAccess<'de> {\n`;
+  indent.push();
+  for (const field of model.fields) {
+    const defaultValue = field === addlProps ? 'HashMap::new()' : 'None';
+    body += `${indent.get()}let mut ${field.name} = ${defaultValue};\n`;
+  }
+  body += `${indent.get()}${helpers.buildWhile(indent, 'let Some(key) = map.next_key::<String>()?', (indent): string => {
+    const optionHashMapValueType = addlProps.type.type.type;
+    use.addForType(optionHashMapValueType);
+    const addlPropsHandler = (indent: helpers.indentation) => `${indent.get()}let value: ${helpers.getTypeDeclaration(optionHashMapValueType)} = map.next_value()?;\n${indent.get()}${addlProps.name}.insert(key, value);\n`;
+    if (model.fields.length === 1) {
+      // only has the addlProps field so we can elide the match definition
+      return addlPropsHandler(indent);
+    } else {
+      const arms = new Array<helpers.matchArm>();
+      for (const field of model.fields) {
+        if (field.kind === 'additionalProperties') {
+          // the _ match arm will handle additional property key/values
+          continue;
+        }
+        arms.push({
+          pattern: `"${xmlAttr(field)}${field.serde}"`,
+          body: (indent): string => `${indent.get()}${field.name} = Some(map.next_value()?)\n`,
+        })
+      }
+      arms.push({
+        pattern: '_',
+        body: (indent): string => addlPropsHandler(indent),
+      })
+      return `${indent.get()}${helpers.buildMatch(indent, 'key.as_ref()', arms)}\n`;
+    }
+  })}`;
+  body += `${indent.get()}let ${addlProps.name} = ${helpers.buildMatch(indent, `${addlProps.name}.len()`, [
+    {
+      pattern: '0',
+      body: (indent) => `${indent.get()}None\n`,
+    },
+    {
+      pattern: '_',
+      body: (indent) => `${indent.get()}Some(${addlProps.name})\n`,
+    }
+  ])};\n`;
+  body += `${indent.get()}Ok(${model.name} {\n`;
+  indent.push();
+  for (const field of model.fields) {
+    body += `${indent.get()}${field.name},\n`;
+  }
+  body += `${indent.pop().get()}})\n`;
+  body += `${indent.pop().get()}}\n`; // end fn visit_map
+
+  body += `${indent.pop().get()}}\n`; // end impl Visitor
+  body += `${indent.get()}deserializer.deserialize_map(${visitorTypeName})\n`;
+  body += `${indent.pop().get()}}\n`; // end fn deserialize
+  body += '}\n\n'; // end impl Deserialize
+  return body;
+}
+
+/**
+ * constructs the XML Serialize implementation for a
+ * model that contains additional properties
+ * 
+ * @param model the model for which to emit Serialize impl
+ * @param addlProps the additional properties field in the model
+ * @returns the text for the Serialize impl
+ */
+function buildXmlAddlPropsSerializeForModel(model: rust.Model, addlProps: rust.ModelAdditionalProperties): string {
+  let body = `impl Serialize for ${model.name} {\n`;
+  const indent = new helpers.indentation();
+  body += `${indent.get()}fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: serde::Serializer {\n`;
+  body += `${indent.push().get()}use serde::ser::SerializeMap;\n`;
+  // don't count the addlProps field in the count,
+  // and if the adjusted count is zero, omit it entirely
+  const fieldsLen = model.fields.length > 1 ? `${model.fields.length - 1} + ` : '';
+  body += `${indent.get()}let mut map = serializer.serialize_map(Some(${fieldsLen}${helpers.buildMatch(indent, `&self.${addlProps.name}`, [
+    {
+      pattern: `Some(${addlProps.name})`,
+      body: (indent) => `${indent.get()}${addlProps.name}.len()\n`,
+    },
+    {
+      pattern: 'None',
+      body: (indent) => `${indent.get()}0\n`,
+    }
+  ])}))?;\n`;
+  for (const field of model.fields) {
+    body += `${indent.get()}${helpers.buildIfBlock(indent, {
+      condition: `let Some(${field.name}) = &self.${field.name}`,
+      body: (indent) => {
+        if (field.kind === 'additionalProperties') {
+          return `${indent.get()}${helpers.buildForIn(indent, '(k, v)', field.name, (indent) => `${indent.get()}map.serialize_entry(k, v)?;\n`)}`;
+        } else {
+          return `${indent.get()}map.serialize_entry("${xmlAttr(field)}${field.serde}", ${field.name})?;\n`;
+        }
+      }
+    })}\n`;
+  }
+  body += `${indent.get()}map.end()\n`;
+  body += `${indent.pop().get()}}\n`; // end fn serialize
+  body += '}\n\n'; // end impl Serialize
+  return body;
 }
 
 /**
