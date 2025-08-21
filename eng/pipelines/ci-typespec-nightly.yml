@@ -1,0 +1,44 @@
+schedules:
+- cron: '0 0 * * *'
+  displayName: Daily midnight build
+  branches:
+    include:
+    - main
+  always: true
+
+trigger: none
+pr: none
+
+jobs:
+- job: Rust_Nightly_Build
+  displayName: "Run TypeSpec Rust CI Checks - "
+
+  variables:
+    - template: /eng/pipelines/templates/variables/globals.yml
+    - template: /eng/pipelines/templates/variables/image.yml
+
+  pool:
+    name: "$(LINUXNEXTPOOL)"
+    image: "$(LINUXNEXTVMIMAGE)"
+    os: linux
+
+  strategy:
+    matrix:
+      RustVersionLatest:
+        RustVersion: $(RustVersionLatest)
+      RustVersionPrevious:
+        RustVersion: $(RustVersionPrevious)
+
+  timeoutInMinutes: 120
+
+  steps:
+    - template: /eng/pipelines/templates/steps/set-env.yaml
+    - script: |
+          npm install -g @typespec/compiler@next
+          npx @azure-tools/typespec-bump-deps packages/typespec-rust/package.json --add-npm-overrides
+          echo "typespec-rust/package.json"
+          cat packages/typespec-rust/package.json
+      displayName: 'Bump TypeSpec Dependencies to dev'
+    - template: /eng/pipelines/templates/steps/build-test-typespec.yaml
+      parameters:
+        Nightly: true
