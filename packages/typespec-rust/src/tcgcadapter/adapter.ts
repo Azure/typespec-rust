@@ -280,7 +280,7 @@ export class Adapter {
         allProps.push(parentProp);
       }
 
-      // propagate paren't additional properties if we don't yet have any.
+      // propagate parent's additional properties if we don't yet have any.
       // if we do, ensure that their kinds match.
       if (!addlProps) {
         addlProps = parent.additionalProperties;

@@ -3,6 +3,8 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+//cspell: ignore addl
+
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
 import { Context } from './context.js';
@@ -91,7 +93,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
     const bodyFormat = context.getModelBodyFormat(model);
 
     // if the model is XML and contains additional properties,
-    // it will need a full custom serde implemenation. so, we
+    // it will need a full custom serde implementation. so, we
     // need to omit any serde derive annotations.
     const hasXmlAddlProps = bodyFormat === 'xml' ? values(model.fields).where((each) => each.kind === 'additionalProperties').any() : false;
 
