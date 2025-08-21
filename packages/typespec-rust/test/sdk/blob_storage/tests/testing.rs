@@ -2,8 +2,13 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use azure_core::{http::{headers::Headers, RawResponse, Response, StatusCode, XmlFormat}, xml::to_xml};
-use blob_storage::models::{BlobItemInternal, BlobMetadata, ListBlobsFlatSegmentResponse, ObjectReplicationMetadata};
+use azure_core::{
+    http::{headers::Headers, RawResponse, Response, StatusCode, XmlFormat},
+    xml::to_xml,
+};
+use blob_storage::models::{
+    BlobItemInternal, BlobMetadata, ListBlobsFlatSegmentResponse, ObjectReplicationMetadata,
+};
 use std::collections::HashMap;
 
 #[tokio::test]
@@ -109,20 +114,21 @@ async fn additional_properties_de() {
 #[tokio::test]
 async fn additional_properties_se() {
     let mut blob_metadata = BlobMetadata::default();
-    blob_metadata.additional_properties = Some(HashMap::from([
-        ("foo".to_string(), "bar".to_string()),
-    ]));
+    blob_metadata.additional_properties =
+        Some(HashMap::from([("foo".to_string(), "bar".to_string())]));
     blob_metadata.encrypted = Some("abc123".to_string());
 
     let mut or_metadata = ObjectReplicationMetadata::default();
-    or_metadata.additional_properties = Some(HashMap::from([
-        ("ding".to_string(), "Dong".to_string()),
-    ]));
+    or_metadata.additional_properties =
+        Some(HashMap::from([("ding".to_string(), "Dong".to_string())]));
 
     let mut blob_item_internal = BlobItemInternal::default();
     blob_item_internal.metadata = Some(blob_metadata);
     blob_item_internal.object_replication_metadata = Some(or_metadata);
 
     let xml_body = to_xml(&blob_item_internal).unwrap();
-    assert_eq!(xml_body, r#"<?xml version="1.0" encoding="utf-8"?><Blob><Metadata Encrypted="abc123"><foo>bar</foo></Metadata><OrMetadata><ding>Dong</ding></OrMetadata></Blob>"#);
+    assert_eq!(
+        xml_body,
+        r#"<?xml version="1.0" encoding="utf-8"?><Blob><Metadata Encrypted="abc123"><foo>bar</foo></Metadata><OrMetadata><ding>Dong</ding></OrMetadata></Blob>"#
+    );
 }

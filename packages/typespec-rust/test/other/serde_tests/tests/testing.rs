@@ -2,7 +2,10 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use azure_core::{http::{headers::Headers, RawResponse, Response, StatusCode}, json::to_json};
+use azure_core::{
+    http::{headers::Headers, RawResponse, Response, StatusCode},
+    json::to_json,
+};
 use serde_tests::models::{AddlPropsInt, AddlPropsString, AddlPropsUnknown};
 use std::collections::HashMap;
 
@@ -22,9 +25,7 @@ async fn test_addl_props_int_de() {
 #[tokio::test]
 async fn test_addl_props_int_se() {
     let mut addl_props_int = AddlPropsInt::default();
-    addl_props_int.additional_properties = Some(HashMap::from([
-        ("other1".to_string(), 456),
-    ]));
+    addl_props_int.additional_properties = Some(HashMap::from([("other1".to_string(), 456)]));
     addl_props_int.count = Some(123);
     let json_body = to_json(&addl_props_int).unwrap();
     assert_eq!(json_body, r#"{"other1":456,"count":123}"#);
@@ -46,9 +47,8 @@ async fn test_addl_props_string_de() {
 #[tokio::test]
 async fn test_addl_props_string_se() {
     let mut addl_props_string = AddlPropsString::default();
-    addl_props_string.additional_properties = Some(HashMap::from([
-        ("other1".to_string(), "bar".to_string()),
-    ]));
+    addl_props_string.additional_properties =
+        Some(HashMap::from([("other1".to_string(), "bar".to_string())]));
     addl_props_string.name = Some("foo".to_string());
     let json_body = to_json(&addl_props_string).unwrap();
     assert_eq!(json_body, r#"{"other1":"bar","name":"foo"}"#);
@@ -71,9 +71,10 @@ async fn test_addl_props_unknown_de() {
 #[tokio::test]
 async fn test_addl_props_unknown_se() {
     let mut addl_props_unknown = AddlPropsUnknown::default();
-    addl_props_unknown.additional_properties = Some(HashMap::from([
-        ("other1".to_string(), serde_json::Value::Bool(false)),
-    ]));
+    addl_props_unknown.additional_properties = Some(HashMap::from([(
+        "other1".to_string(),
+        serde_json::Value::Bool(false),
+    )]));
     addl_props_unknown.count = Some(123);
     addl_props_unknown.name = Some("foo".to_string());
     let json_body = to_json(&addl_props_unknown).unwrap();
