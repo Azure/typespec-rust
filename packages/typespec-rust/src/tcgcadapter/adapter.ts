@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-// cspell: ignore responseheader subclients lropaging
+// cspell: ignore addl responseheader subclients lropaging
 
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
