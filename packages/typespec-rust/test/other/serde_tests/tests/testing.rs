@@ -56,7 +56,7 @@ async fn test_addl_props_string_se() {
 
 #[tokio::test]
 async fn test_addl_props_unknown_de() {
-    let json_data = r#"{"count":123,"name":"foo","other1":false,"other2":3.14}"#;
+    let json_data = r#"{"count":123,"name":"foo","other1":false,"other2":7.89}"#;
     let resp: Response<AddlPropsUnknown> =
         RawResponse::from_bytes(StatusCode::Ok, Headers::new(), json_data).into();
     let addl_props_unknown = resp.into_body().await.unwrap();
@@ -65,7 +65,7 @@ async fn test_addl_props_unknown_de() {
     assert_eq!(addl_props_unknown.name, Some("foo".to_string()));
     assert_eq!(hm_value.len(), 2);
     assert_eq!(hm_value["other1"], false);
-    assert_eq!(hm_value["other2"], 3.14);
+    assert_eq!(hm_value["other2"], 7.89);
 }
 
 #[tokio::test]
