@@ -1,6 +1,13 @@
+parameters:
+  Nightly: false
+
 steps:
   - script: |
-      pnpm install
+      if [ "${{ parameters.Nightly }}" = "true" ]; then
+        pnpm install --no-frozen-lockfile
+      else
+        pnpm install
+      fi
       pnpm build
     displayName: Build Emitter Sources
     workingDirectory: $(TypeSpecRustPkgDir)
@@ -29,13 +36,18 @@ steps:
     inputs:
       summaryFileLocation: $(TypeSpecRustPkgDir)/coverage/tmp/cobertura-coverage.xml
     displayName: Publish code coverage
+    condition: ne('${{ parameters.Nightly }}', true)
 
   - pwsh: |
       pnpm run tspcompile --verbose
-      git add -A .
-      git diff --staged --exit-code
+      pnpm -w modtidy $pwd 2>&1
+      if [ "${{ parameters.Nightly }}" = "false" ]; then
+        git add -A .
+        git diff --staged --exit-code
+      fi
     displayName: Regenerate Spector Tests
     workingDirectory: $(TypeSpecRustPkgDir)/test
+    failOnStderr: true
 
   - pwsh: |
       cargo build
@@ -55,6 +67,6 @@ steps:
       $code = $LASTEXITCODE
       pnpm spector --stop
       exit $code
-    displayName: "Run Spector Tests"
+    displayName: 'Run Spector Tests'
     timeoutInMinutes: 10
     workingDirectory: $(TypeSpecRustPkgDir)/test/spector
