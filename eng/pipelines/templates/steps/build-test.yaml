@@ -3,11 +3,11 @@ parameters:
 
 steps:
   - script: |
-      if [ "${{ parameters.Nightly }}" = "true" ]; then
+      if ("${{ parameters.Nightly }}" -eq "true") {
         pnpm install --no-frozen-lockfile
-      else
+      } else {
         pnpm install
-      fi
+      }
       pnpm build
     displayName: Build Emitter Sources
     workingDirectory: $(TypeSpecRustPkgDir)
