@@ -36,6 +36,7 @@
         "clippy",
         "codegen",
         "codemodel",
+        "docsrs",
         "entra",
         "enumvalue",
         "impls",
