@@ -144,7 +144,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
     } else {
       body += `\n/// Provides access to typed response headers for ${trait.docs}\n`;
       body += `///\n`;
-      body += `/// # Example\n`;
+      body += `/// # Examples\n`;
       body += `///\n`;
       body += `/// \`\`\`no_run\n`;
       body += `/// # use azure_core::Result;\n`;
