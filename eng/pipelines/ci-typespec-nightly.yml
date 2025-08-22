@@ -14,7 +14,6 @@ jobs:
   displayName: "Run TypeSpec Rust CI Checks - "
 
   variables:
-    - template: /eng/pipelines/templates/variables/globals.yml
     - template: /eng/pipelines/templates/variables/image.yml
 
   pool:
@@ -39,6 +38,6 @@ jobs:
           echo "typespec-rust/package.json"
           cat packages/typespec-rust/package.json
       displayName: 'Bump TypeSpec Dependencies to dev'
-    - template: /eng/pipelines/templates/steps/build-test-typespec.yaml
+    - template: /eng/pipelines/templates/steps/build-test.yaml
       parameters:
         Nightly: true
