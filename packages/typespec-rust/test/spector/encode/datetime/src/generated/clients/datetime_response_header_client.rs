@@ -32,6 +32,29 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`DatetimeResponseHeaderClientDefaultResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.default(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.value()? {
+    ///     println!("value: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`value`()](DatetimeResponseHeaderClientDefaultResultHeaders::value) - value
+    ///
+    /// [`DatetimeResponseHeaderClientDefaultResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientDefaultResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.default")]
     pub async fn default(
         &self,
@@ -59,6 +82,29 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`DatetimeResponseHeaderClientRfc3339ResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.rfc3339(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.value()? {
+    ///     println!("value: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`value`()](DatetimeResponseHeaderClientRfc3339ResultHeaders::value) - value
+    ///
+    /// [`DatetimeResponseHeaderClientRfc3339ResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientRfc3339ResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.rfc3339")]
     pub async fn rfc3339(
         &self,
@@ -86,6 +132,29 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`DatetimeResponseHeaderClientRfc7231ResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.rfc7231(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.value()? {
+    ///     println!("value: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`value`()](DatetimeResponseHeaderClientRfc7231ResultHeaders::value) - value
+    ///
+    /// [`DatetimeResponseHeaderClientRfc7231ResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientRfc7231ResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.rfc7231")]
     pub async fn rfc7231(
         &self,
@@ -113,6 +182,29 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`DatetimeResponseHeaderClientUnixTimestampResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.unix_timestamp(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.value()? {
+    ///     println!("value: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`value`()](DatetimeResponseHeaderClientUnixTimestampResultHeaders::value) - value
+    ///
+    /// [`DatetimeResponseHeaderClientUnixTimestampResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientUnixTimestampResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.unixTimestamp")]
     pub async fn unix_timestamp(
         &self,

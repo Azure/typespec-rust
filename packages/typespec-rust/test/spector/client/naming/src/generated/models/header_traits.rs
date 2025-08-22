@@ -15,6 +15,21 @@ use azure_core::{
 const DEFAULT_NAME: HeaderName = HeaderName::from_static("default-name");
 
 /// Provides access to typed response headers for [`NamingClient::response()`](crate::generated::clients::NamingClient::response())
+///
+/// # Examples
+///
+/// ```no_run
+/// # use azure_core::Result;
+/// # async fn example() -> Result<()> {
+/// let response = client.some_method(/* parameters */).await?;
+///
+/// // Access response headers:
+/// if let Some(value) = response.client_name()? {
+///     println!("default-name: {{:?}}", value);
+/// }
+/// # Ok(())
+/// # }
+/// ```
 pub trait NamingClientResponseResultHeaders: private::Sealed {
     fn client_name(&self) -> Result<Option<String>>;
 }

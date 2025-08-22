@@ -117,6 +117,29 @@ impl BlobClient {
     ///
     /// * `copy_id` - The copy identifier provided in the x-ms-copy-id header of the original Copy Blob operation.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientAbortCopyFromUrlResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.abort_copy_from_url(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientAbortCopyFromUrlResultHeaders::date) - Date
+    ///
+    /// [`BlobClientAbortCopyFromUrlResultHeaders`]: crate::generated::models::BlobClientAbortCopyFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.abortCopyFromUrl")]
     pub async fn abort_copy_from_url(
         &self,
@@ -166,6 +189,38 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientAcquireLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.acquire_lease(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientAcquireLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobClientAcquireLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobClientAcquireLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](BlobClientAcquireLeaseResultHeaders::lease_id) - x-ms-lease-id
+    ///
+    /// [`BlobClientAcquireLeaseResultHeaders`]: crate::generated::models::BlobClientAcquireLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.acquireLease")]
     pub async fn acquire_lease(
         &self,
@@ -231,6 +286,38 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientBreakLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.break_lease(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientBreakLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobClientBreakLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobClientBreakLeaseResultHeaders::etag) - etag
+    /// * [`lease_time`()](BlobClientBreakLeaseResultHeaders::lease_time) - x-ms-lease-time
+    ///
+    /// [`BlobClientBreakLeaseResultHeaders`]: crate::generated::models::BlobClientBreakLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.breakLease")]
     pub async fn break_lease(
         &self,
@@ -295,6 +382,38 @@ impl BlobClient {
     ///   lease ID must match.
     /// * `proposed_lease_id` - Required. The proposed lease ID for the container.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientChangeLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.change_lease(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientChangeLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobClientChangeLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobClientChangeLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](BlobClientChangeLeaseResultHeaders::lease_id) - x-ms-lease-id
+    ///
+    /// [`BlobClientChangeLeaseResultHeaders`]: crate::generated::models::BlobClientChangeLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.changeLease")]
     pub async fn change_lease(
         &self,
@@ -361,6 +480,43 @@ impl BlobClient {
     ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
     ///   either be public or must be authenticated via a shared access signature.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientCopyFromUrlResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.copy_from_url(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](BlobClientCopyFromUrlResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](BlobClientCopyFromUrlResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobClientCopyFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobClientCopyFromUrlResultHeaders::etag) - etag
+    /// * [`content_crc64`()](BlobClientCopyFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`copy_id`()](BlobClientCopyFromUrlResultHeaders::copy_id) - x-ms-copy-id
+    /// * [`copy_status`()](BlobClientCopyFromUrlResultHeaders::copy_status) - x-ms-copy-status
+    /// * [`encryption_scope`()](BlobClientCopyFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`version_id`()](BlobClientCopyFromUrlResultHeaders::version_id) - x-ms-version-id
+    ///
+    /// [`BlobClientCopyFromUrlResultHeaders`]: crate::generated::models::BlobClientCopyFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.copyFromUrl")]
     pub async fn copy_from_url(
         &self,
@@ -480,6 +636,40 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientCreateSnapshotResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.create_snapshot(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientCreateSnapshotResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobClientCreateSnapshotResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobClientCreateSnapshotResultHeaders::etag) - etag
+    /// * [`is_server_encrypted`()](BlobClientCreateSnapshotResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`snapshot`()](BlobClientCreateSnapshotResultHeaders::snapshot) - x-ms-snapshot
+    /// * [`version_id`()](BlobClientCreateSnapshotResultHeaders::version_id) - x-ms-version-id
+    ///
+    /// [`BlobClientCreateSnapshotResultHeaders`]: crate::generated::models::BlobClientCreateSnapshotResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.createSnapshot")]
     pub async fn create_snapshot(
         &self,
@@ -638,6 +828,29 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientDeleteImmutabilityPolicyResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.delete_immutability_policy(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientDeleteImmutabilityPolicyResultHeaders::date) - Date
+    ///
+    /// [`BlobClientDeleteImmutabilityPolicyResultHeaders`]: crate::generated::models::BlobClientDeleteImmutabilityPolicyResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.deleteImmutabilityPolicy")]
     pub async fn delete_immutability_policy(
         &self,
@@ -687,6 +900,73 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientDownloadResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.download(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.accept_ranges()? {
+    ///     println!("Accept-Ranges: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.cache_control()? {
+    ///     println!("Cache-Control: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.content_disposition()? {
+    ///     println!("Content-Disposition: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`accept_ranges`()](BlobClientDownloadResultHeaders::accept_ranges) - Accept-Ranges
+    /// * [`cache_control`()](BlobClientDownloadResultHeaders::cache_control) - Cache-Control
+    /// * [`content_disposition`()](BlobClientDownloadResultHeaders::content_disposition) - Content-Disposition
+    /// * [`content_encoding`()](BlobClientDownloadResultHeaders::content_encoding) - Content-Encoding
+    /// * [`content_language`()](BlobClientDownloadResultHeaders::content_language) - Content-Language
+    /// * [`content_length`()](BlobClientDownloadResultHeaders::content_length) - Content-Length
+    /// * [`content_md5`()](BlobClientDownloadResultHeaders::content_md5) - Content-MD5
+    /// * [`content_range`()](BlobClientDownloadResultHeaders::content_range) - Content-Range
+    /// * [`last_modified`()](BlobClientDownloadResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobClientDownloadResultHeaders::etag) - etag
+    /// * [`blob_committed_block_count`()](BlobClientDownloadResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
+    /// * [`blob_content_md5`()](BlobClientDownloadResultHeaders::blob_content_md5) - x-ms-blob-content-md5
+    /// * [`is_sealed`()](BlobClientDownloadResultHeaders::is_sealed) - x-ms-blob-sealed
+    /// * [`blob_sequence_number`()](BlobClientDownloadResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
+    /// * [`blob_type`()](BlobClientDownloadResultHeaders::blob_type) - x-ms-blob-type
+    /// * [`content_crc64`()](BlobClientDownloadResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`copy_completion_time`()](BlobClientDownloadResultHeaders::copy_completion_time) - x-ms-copy-completion-time
+    /// * [`copy_id`()](BlobClientDownloadResultHeaders::copy_id) - x-ms-copy-id
+    /// * [`copy_progress`()](BlobClientDownloadResultHeaders::copy_progress) - x-ms-copy-progress
+    /// * [`copy_source`()](BlobClientDownloadResultHeaders::copy_source) - x-ms-copy-source
+    /// * [`copy_status`()](BlobClientDownloadResultHeaders::copy_status) - x-ms-copy-status
+    /// * [`copy_status_description`()](BlobClientDownloadResultHeaders::copy_status_description) - x-ms-copy-status-description
+    /// * [`creation_time`()](BlobClientDownloadResultHeaders::creation_time) - x-ms-creation-time
+    /// * [`encryption_key_sha256`()](BlobClientDownloadResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](BlobClientDownloadResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`immutability_policy_mode`()](BlobClientDownloadResultHeaders::immutability_policy_mode) - x-ms-immutability-policy-mode
+    /// * [`immutability_policy_expires_on`()](BlobClientDownloadResultHeaders::immutability_policy_expires_on) - x-ms-immutability-policy-until-date
+    /// * [`is_current_version`()](BlobClientDownloadResultHeaders::is_current_version) - x-ms-is-current-version
+    /// * [`last_accessed`()](BlobClientDownloadResultHeaders::last_accessed) - x-ms-last-access-time
+    /// * [`duration`()](BlobClientDownloadResultHeaders::duration) - x-ms-lease-duration
+    /// * [`lease_state`()](BlobClientDownloadResultHeaders::lease_state) - x-ms-lease-state
+    /// * [`lease_status`()](BlobClientDownloadResultHeaders::lease_status) - x-ms-lease-status
+    /// * [`legal_hold`()](BlobClientDownloadResultHeaders::legal_hold) - x-ms-legal-hold
+    /// * [`metadata`()](BlobClientDownloadResultHeaders::metadata) - x-ms-meta
+    /// * [`object_replication_rules`()](BlobClientDownloadResultHeaders::object_replication_rules) - x-ms-or
+    /// * [`object_replication_policy_id`()](BlobClientDownloadResultHeaders::object_replication_policy_id) - x-ms-or-policy-id
+    /// * [`is_server_encrypted`()](BlobClientDownloadResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`tag_count`()](BlobClientDownloadResultHeaders::tag_count) - x-ms-tag-count
+    /// * [`version_id`()](BlobClientDownloadResultHeaders::version_id) - x-ms-version-id
+    ///
+    /// [`BlobClientDownloadResultHeaders`]: crate::generated::models::BlobClientDownloadResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.download")]
     pub async fn download(
         &self,
@@ -781,6 +1061,38 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientGetAccountInfoResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.get_account_info(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.account_kind()? {
+    ///     println!("x-ms-account-kind: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.is_hierarchical_namespace_enabled()? {
+    ///     println!("x-ms-is-hns-enabled: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientGetAccountInfoResultHeaders::date) - Date
+    /// * [`account_kind`()](BlobClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
+    /// * [`is_hierarchical_namespace_enabled`()](BlobClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
+    /// * [`sku_name`()](BlobClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
+    ///
+    /// [`BlobClientGetAccountInfoResultHeaders`]: crate::generated::models::BlobClientGetAccountInfoResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.getAccountInfo")]
     pub async fn get_account_info(
         &self,
@@ -862,6 +1174,77 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientGetPropertiesResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.get_properties(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.cache_control()? {
+    ///     println!("Cache-Control: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.content_disposition()? {
+    ///     println!("Content-Disposition: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.content_encoding()? {
+    ///     println!("Content-Encoding: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`cache_control`()](BlobClientGetPropertiesResultHeaders::cache_control) - Cache-Control
+    /// * [`content_disposition`()](BlobClientGetPropertiesResultHeaders::content_disposition) - Content-Disposition
+    /// * [`content_encoding`()](BlobClientGetPropertiesResultHeaders::content_encoding) - Content-Encoding
+    /// * [`content_language`()](BlobClientGetPropertiesResultHeaders::content_language) - Content-Language
+    /// * [`content_length`()](BlobClientGetPropertiesResultHeaders::content_length) - Content-Length
+    /// * [`content_md5`()](BlobClientGetPropertiesResultHeaders::content_md5) - Content-MD5
+    /// * [`last_modified`()](BlobClientGetPropertiesResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobClientGetPropertiesResultHeaders::etag) - etag
+    /// * [`tier`()](BlobClientGetPropertiesResultHeaders::tier) - x-ms-access-tier
+    /// * [`access_tier_change_time`()](BlobClientGetPropertiesResultHeaders::access_tier_change_time) - x-ms-access-tier-change-time
+    /// * [`access_tier_inferred`()](BlobClientGetPropertiesResultHeaders::access_tier_inferred) - x-ms-access-tier-inferred
+    /// * [`archive_status`()](BlobClientGetPropertiesResultHeaders::archive_status) - x-ms-archive-status
+    /// * [`blob_committed_block_count`()](BlobClientGetPropertiesResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
+    /// * [`is_sealed`()](BlobClientGetPropertiesResultHeaders::is_sealed) - x-ms-blob-sealed
+    /// * [`blob_sequence_number`()](BlobClientGetPropertiesResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
+    /// * [`blob_type`()](BlobClientGetPropertiesResultHeaders::blob_type) - x-ms-blob-type
+    /// * [`copy_completion_time`()](BlobClientGetPropertiesResultHeaders::copy_completion_time) - x-ms-copy-completion-time
+    /// * [`destination_snapshot`()](BlobClientGetPropertiesResultHeaders::destination_snapshot) - x-ms-copy-destination-snapshot
+    /// * [`copy_id`()](BlobClientGetPropertiesResultHeaders::copy_id) - x-ms-copy-id
+    /// * [`copy_progress`()](BlobClientGetPropertiesResultHeaders::copy_progress) - x-ms-copy-progress
+    /// * [`copy_source`()](BlobClientGetPropertiesResultHeaders::copy_source) - x-ms-copy-source
+    /// * [`copy_status`()](BlobClientGetPropertiesResultHeaders::copy_status) - x-ms-copy-status
+    /// * [`copy_status_description`()](BlobClientGetPropertiesResultHeaders::copy_status_description) - x-ms-copy-status-description
+    /// * [`creation_time`()](BlobClientGetPropertiesResultHeaders::creation_time) - x-ms-creation-time
+    /// * [`encryption_key_sha256`()](BlobClientGetPropertiesResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](BlobClientGetPropertiesResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`expires_on`()](BlobClientGetPropertiesResultHeaders::expires_on) - x-ms-expiry-time
+    /// * [`immutability_policy_mode`()](BlobClientGetPropertiesResultHeaders::immutability_policy_mode) - x-ms-immutability-policy-mode
+    /// * [`immutability_policy_expires_on`()](BlobClientGetPropertiesResultHeaders::immutability_policy_expires_on) - x-ms-immutability-policy-until-date
+    /// * [`is_incremental_copy`()](BlobClientGetPropertiesResultHeaders::is_incremental_copy) - x-ms-incremental-copy
+    /// * [`is_current_version`()](BlobClientGetPropertiesResultHeaders::is_current_version) - x-ms-is-current-version
+    /// * [`last_accessed`()](BlobClientGetPropertiesResultHeaders::last_accessed) - x-ms-last-access-time
+    /// * [`duration`()](BlobClientGetPropertiesResultHeaders::duration) - x-ms-lease-duration
+    /// * [`lease_state`()](BlobClientGetPropertiesResultHeaders::lease_state) - x-ms-lease-state
+    /// * [`lease_status`()](BlobClientGetPropertiesResultHeaders::lease_status) - x-ms-lease-status
+    /// * [`legal_hold`()](BlobClientGetPropertiesResultHeaders::legal_hold) - x-ms-legal-hold
+    /// * [`metadata`()](BlobClientGetPropertiesResultHeaders::metadata) - x-ms-meta
+    /// * [`object_replication_rules`()](BlobClientGetPropertiesResultHeaders::object_replication_rules) - x-ms-or
+    /// * [`object_replication_policy_id`()](BlobClientGetPropertiesResultHeaders::object_replication_policy_id) - x-ms-or-policy-id
+    /// * [`rehydrate_priority`()](BlobClientGetPropertiesResultHeaders::rehydrate_priority) - x-ms-rehydrate-priority
+    /// * [`is_server_encrypted`()](BlobClientGetPropertiesResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`tag_count`()](BlobClientGetPropertiesResultHeaders::tag_count) - x-ms-tag-count
+    /// * [`version_id`()](BlobClientGetPropertiesResultHeaders::version_id) - x-ms-version-id
+    ///
+    /// [`BlobClientGetPropertiesResultHeaders`]: crate::generated::models::BlobClientGetPropertiesResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.getProperties")]
     pub async fn get_properties(
         &self,
@@ -937,6 +1320,29 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobTagsHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.get_tags(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobTagsHeaders::date) - Date
+    ///
+    /// [`BlobTagsHeaders`]: crate::generated::models::BlobTagsHeaders
     #[tracing::function("Storage.Blob.Container.Blob.getTags")]
     pub async fn get_tags(
         &self,
@@ -994,6 +1400,37 @@ impl BlobClient {
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientReleaseLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.release_lease(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientReleaseLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobClientReleaseLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobClientReleaseLeaseResultHeaders::etag) - etag
+    ///
+    /// [`BlobClientReleaseLeaseResultHeaders`]: crate::generated::models::BlobClientReleaseLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.releaseLease")]
     pub async fn release_lease(
         &self,
@@ -1056,6 +1493,38 @@ impl BlobClient {
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientRenewLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.renew_lease(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientRenewLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobClientRenewLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobClientRenewLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](BlobClientRenewLeaseResultHeaders::lease_id) - x-ms-lease-id
+    ///
+    /// [`BlobClientRenewLeaseResultHeaders`]: crate::generated::models::BlobClientRenewLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.renewLease")]
     pub async fn renew_lease(
         &self,
@@ -1117,6 +1586,37 @@ impl BlobClient {
     ///
     /// * `expiry_options` - Required. Indicates mode of the expiry time
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientSetExpiryResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.set_expiry(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientSetExpiryResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobClientSetExpiryResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobClientSetExpiryResultHeaders::etag) - etag
+    ///
+    /// [`BlobClientSetExpiryResultHeaders`]: crate::generated::models::BlobClientSetExpiryResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.setExpiry")]
     pub async fn set_expiry(
         &self,
@@ -1163,6 +1663,37 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientSetImmutabilityPolicyResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.set_immutability_policy(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.immutability_policy_mode()? {
+    ///     println!("x-ms-immutability-policy-mode: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.immutability_policy_expires_on()? {
+    ///     println!("x-ms-immutability-policy-until-date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientSetImmutabilityPolicyResultHeaders::date) - Date
+    /// * [`immutability_policy_mode`()](BlobClientSetImmutabilityPolicyResultHeaders::immutability_policy_mode) - x-ms-immutability-policy-mode
+    /// * [`immutability_policy_expires_on`()](BlobClientSetImmutabilityPolicyResultHeaders::immutability_policy_expires_on) - x-ms-immutability-policy-until-date
+    ///
+    /// [`BlobClientSetImmutabilityPolicyResultHeaders`]: crate::generated::models::BlobClientSetImmutabilityPolicyResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.setImmutabilityPolicy")]
     pub async fn set_immutability_policy(
         &self,
@@ -1227,6 +1758,33 @@ impl BlobClient {
     ///
     /// * `legal_hold` - Required. Specifies the legal hold status to set on the blob.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientSetLegalHoldResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.set_legal_hold(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.legal_hold()? {
+    ///     println!("x-ms-legal-hold: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientSetLegalHoldResultHeaders::date) - Date
+    /// * [`legal_hold`()](BlobClientSetLegalHoldResultHeaders::legal_hold) - x-ms-legal-hold
+    ///
+    /// [`BlobClientSetLegalHoldResultHeaders`]: crate::generated::models::BlobClientSetLegalHoldResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.setLegalHold")]
     pub async fn set_legal_hold(
         &self,
@@ -1435,6 +1993,29 @@ impl BlobClient {
     ///
     /// * `tags` - The blob tags.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientSetTagsResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.set_tags(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientSetTagsResultHeaders::date) - Date
+    ///
+    /// [`BlobClientSetTagsResultHeaders`]: crate::generated::models::BlobClientSetTagsResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.setTags")]
     pub async fn set_tags(
         &self,
@@ -1557,6 +2138,40 @@ impl BlobClient {
     ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
     ///   either be public or must be authenticated via a shared access signature.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientStartCopyFromUrlResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.start_copy_from_url(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientStartCopyFromUrlResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobClientStartCopyFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobClientStartCopyFromUrlResultHeaders::etag) - etag
+    /// * [`copy_id`()](BlobClientStartCopyFromUrlResultHeaders::copy_id) - x-ms-copy-id
+    /// * [`copy_status`()](BlobClientStartCopyFromUrlResultHeaders::copy_status) - x-ms-copy-status
+    /// * [`version_id`()](BlobClientStartCopyFromUrlResultHeaders::version_id) - x-ms-version-id
+    ///
+    /// [`BlobClientStartCopyFromUrlResultHeaders`]: crate::generated::models::BlobClientStartCopyFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.startCopyFromUrl")]
     pub async fn start_copy_from_url(
         &self,
@@ -1670,6 +2285,29 @@ impl BlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientUndeleteResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.undelete(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobClientUndeleteResultHeaders::date) - Date
+    ///
+    /// [`BlobClientUndeleteResultHeaders`]: crate::generated::models::BlobClientUndeleteResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.undelete")]
     pub async fn undelete(
         &self,

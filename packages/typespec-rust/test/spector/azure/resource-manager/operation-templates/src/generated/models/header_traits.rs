@@ -17,6 +17,24 @@ const LOCATION: HeaderName = HeaderName::from_static("location");
 const RETRY_AFTER: HeaderName = HeaderName::from_static("retry-after");
 
 /// Provides access to typed response headers for [`OperationTemplatesLroClient::delete()`](crate::generated::clients::OperationTemplatesLroClient::delete())
+///
+/// # Examples
+///
+/// ```no_run
+/// # use azure_core::Result;
+/// # async fn example() -> Result<()> {
+/// let response = client.some_method(/* parameters */).await?;
+///
+/// // Access response headers:
+/// if let Some(value) = response.location()? {
+///     println!("Location: {{:?}}", value);
+/// }
+/// if let Some(value) = response.retry_after()? {
+///     println!("Retry-After: {{:?}}", value);
+/// }
+/// # Ok(())
+/// # }
+/// ```
 pub trait ArmOperationStatusResourceProvisioningStateHeaders: private::Sealed {
     fn location(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;
@@ -37,6 +55,24 @@ impl ArmOperationStatusResourceProvisioningStateHeaders
 }
 
 /// Provides access to typed response headers for [`OperationTemplatesLroClient::export()`](crate::generated::clients::OperationTemplatesLroClient::export())
+///
+/// # Examples
+///
+/// ```no_run
+/// # use azure_core::Result;
+/// # async fn example() -> Result<()> {
+/// let response = client.some_method(/* parameters */).await?;
+///
+/// // Access response headers:
+/// if let Some(value) = response.azure_async_operation()? {
+///     println!("Azure-AsyncOperation: {{:?}}", value);
+/// }
+/// if let Some(value) = response.location()? {
+///     println!("Location: {{:?}}", value);
+/// }
+/// # Ok(())
+/// # }
+/// ```
 pub trait ExportResultHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
     fn location(&self) -> Result<Option<String>>;
@@ -61,6 +97,24 @@ impl ExportResultHeaders for Response<ExportResult> {
 }
 
 /// Provides access to typed response headers for [`OperationTemplatesLroClient::create_or_replace()`](crate::generated::clients::OperationTemplatesLroClient::create_or_replace())
+///
+/// # Examples
+///
+/// ```no_run
+/// # use azure_core::Result;
+/// # async fn example() -> Result<()> {
+/// let response = client.some_method(/* parameters */).await?;
+///
+/// // Access response headers:
+/// if let Some(value) = response.azure_async_operation()? {
+///     println!("Azure-AsyncOperation: {{:?}}", value);
+/// }
+/// if let Some(value) = response.retry_after()? {
+///     println!("Retry-After: {{:?}}", value);
+/// }
+/// # Ok(())
+/// # }
+/// ```
 pub trait OrderHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;

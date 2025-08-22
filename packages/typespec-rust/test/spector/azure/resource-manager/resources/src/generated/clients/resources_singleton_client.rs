@@ -40,6 +40,33 @@ impl ResourcesSingletonClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`SingletonTrackedResourceHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.create_or_update(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.azure_async_operation()? {
+    ///     println!("Azure-AsyncOperation: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.retry_after()? {
+    ///     println!("Retry-After: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`azure_async_operation`()](SingletonTrackedResourceHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](SingletonTrackedResourceHeaders::retry_after) - Retry-After
+    ///
+    /// [`SingletonTrackedResourceHeaders`]: crate::generated::models::SingletonTrackedResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Singleton.createOrUpdate")]
     pub fn create_or_update(
         &self,

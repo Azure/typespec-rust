@@ -44,6 +44,33 @@ impl ResourcesExtensionsResourcesClient {
     /// * `extensions_resource_name` - The name of the ExtensionsResource
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ExtensionsResourceHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.create_or_update(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.azure_async_operation()? {
+    ///     println!("Azure-AsyncOperation: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.retry_after()? {
+    ///     println!("Retry-After: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`azure_async_operation`()](ExtensionsResourceHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](ExtensionsResourceHeaders::retry_after) - Retry-After
+    ///
+    /// [`ExtensionsResourceHeaders`]: crate::generated::models::ExtensionsResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.createOrUpdate")]
     pub fn create_or_update(
         &self,

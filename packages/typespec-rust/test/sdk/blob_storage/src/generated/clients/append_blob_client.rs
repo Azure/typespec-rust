@@ -100,6 +100,45 @@ impl AppendBlobClient {
     /// * `body` - The body of the request.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AppendBlobClientAppendBlockResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.append_block(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](AppendBlobClientAppendBlockResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](AppendBlobClientAppendBlockResultHeaders::date) - Date
+    /// * [`last_modified`()](AppendBlobClientAppendBlockResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](AppendBlobClientAppendBlockResultHeaders::etag) - etag
+    /// * [`blob_append_offset`()](AppendBlobClientAppendBlockResultHeaders::blob_append_offset) - x-ms-blob-append-offset
+    /// * [`blob_committed_block_count`()](AppendBlobClientAppendBlockResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
+    /// * [`content_crc64`()](AppendBlobClientAppendBlockResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](AppendBlobClientAppendBlockResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](AppendBlobClientAppendBlockResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](AppendBlobClientAppendBlockResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`structured_body_type`()](AppendBlobClientAppendBlockResultHeaders::structured_body_type) - x-ms-structured-body
+    ///
+    /// [`AppendBlobClientAppendBlockResultHeaders`]: crate::generated::models::AppendBlobClientAppendBlockResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.appendBlock")]
     pub async fn append_block(
         &self,
@@ -202,6 +241,44 @@ impl AppendBlobClient {
     /// * `source_url` - Specify a URL to the copy source.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AppendBlobClientAppendBlockFromUrlResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.append_block_from_url(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](AppendBlobClientAppendBlockFromUrlResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](AppendBlobClientAppendBlockFromUrlResultHeaders::date) - Date
+    /// * [`last_modified`()](AppendBlobClientAppendBlockFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](AppendBlobClientAppendBlockFromUrlResultHeaders::etag) - etag
+    /// * [`blob_append_offset`()](AppendBlobClientAppendBlockFromUrlResultHeaders::blob_append_offset) - x-ms-blob-append-offset
+    /// * [`blob_committed_block_count`()](AppendBlobClientAppendBlockFromUrlResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
+    /// * [`content_crc64`()](AppendBlobClientAppendBlockFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](AppendBlobClientAppendBlockFromUrlResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](AppendBlobClientAppendBlockFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](AppendBlobClientAppendBlockFromUrlResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    ///
+    /// [`AppendBlobClientAppendBlockFromUrlResultHeaders`]: crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.appendBlockFromUrl")]
     pub async fn append_block_from_url(
         &self,
@@ -322,6 +399,42 @@ impl AppendBlobClient {
     ///
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AppendBlobClientCreateResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.create(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](AppendBlobClientCreateResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](AppendBlobClientCreateResultHeaders::date) - Date
+    /// * [`last_modified`()](AppendBlobClientCreateResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](AppendBlobClientCreateResultHeaders::etag) - etag
+    /// * [`encryption_key_sha256`()](AppendBlobClientCreateResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](AppendBlobClientCreateResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](AppendBlobClientCreateResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`version_id`()](AppendBlobClientCreateResultHeaders::version_id) - x-ms-version-id
+    ///
+    /// [`AppendBlobClientCreateResultHeaders`]: crate::generated::models::AppendBlobClientCreateResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.create")]
     pub async fn create(
         &self,
@@ -440,6 +553,38 @@ impl AppendBlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AppendBlobClientSealResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.seal(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](AppendBlobClientSealResultHeaders::date) - Date
+    /// * [`last_modified`()](AppendBlobClientSealResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](AppendBlobClientSealResultHeaders::etag) - etag
+    /// * [`is_sealed`()](AppendBlobClientSealResultHeaders::is_sealed) - x-ms-blob-sealed
+    ///
+    /// [`AppendBlobClientSealResultHeaders`]: crate::generated::models::AppendBlobClientSealResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.seal")]
     pub async fn seal(
         &self,

@@ -95,6 +95,29 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`FilterBlobSegmentHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.filter_blobs(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](FilterBlobSegmentHeaders::date) - Date
+    ///
+    /// [`FilterBlobSegmentHeaders`]: crate::generated::models::FilterBlobSegmentHeaders
     #[tracing::function("Storage.Blob.filterBlobs")]
     pub async fn filter_blobs(
         &self,
@@ -153,6 +176,38 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobServiceClientGetAccountInfoResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.get_account_info(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.account_kind()? {
+    ///     println!("x-ms-account-kind: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.is_hierarchical_namespace_enabled()? {
+    ///     println!("x-ms-is-hns-enabled: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobServiceClientGetAccountInfoResultHeaders::date) - Date
+    /// * [`account_kind`()](BlobServiceClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
+    /// * [`is_hierarchical_namespace_enabled`()](BlobServiceClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
+    /// * [`sku_name`()](BlobServiceClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
+    ///
+    /// [`BlobServiceClientGetAccountInfoResultHeaders`]: crate::generated::models::BlobServiceClientGetAccountInfoResultHeaders
     #[tracing::function("Storage.Blob.getAccountInfo")]
     pub async fn get_account_info(
         &self,
@@ -249,6 +304,29 @@ impl BlobServiceClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`StorageServiceStatsHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.get_statistics(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](StorageServiceStatsHeaders::date) - Date
+    ///
+    /// [`StorageServiceStatsHeaders`]: crate::generated::models::StorageServiceStatsHeaders
     #[tracing::function("Storage.Blob.getStatistics")]
     pub async fn get_statistics(
         &self,
@@ -290,6 +368,29 @@ impl BlobServiceClient {
     ///
     /// * `key_info` - Key information provided in the request
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`UserDelegationKeyHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.get_user_delegation_key(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](UserDelegationKeyHeaders::date) - Date
+    ///
+    /// [`UserDelegationKeyHeaders`]: crate::generated::models::UserDelegationKeyHeaders
     #[tracing::function("Storage.Blob.getUserDelegationKey")]
     pub async fn get_user_delegation_key(
         &self,

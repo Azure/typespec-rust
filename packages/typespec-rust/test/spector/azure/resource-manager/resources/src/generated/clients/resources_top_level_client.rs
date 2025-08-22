@@ -101,6 +101,33 @@ impl ResourcesTopLevelClient {
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`TopLevelTrackedResourceHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.create_or_replace(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.azure_async_operation()? {
+    ///     println!("Azure-AsyncOperation: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.retry_after()? {
+    ///     println!("Retry-After: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`azure_async_operation`()](TopLevelTrackedResourceHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](TopLevelTrackedResourceHeaders::retry_after) - Retry-After
+    ///
+    /// [`TopLevelTrackedResourceHeaders`]: crate::generated::models::TopLevelTrackedResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.createOrReplace")]
     pub fn create_or_replace(
         &self,
@@ -185,6 +212,33 @@ impl ResourcesTopLevelClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ArmOperationStatusResourceProvisioningStateHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.delete(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.location()? {
+    ///     println!("Location: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.retry_after()? {
+    ///     println!("Retry-After: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`location`()](ArmOperationStatusResourceProvisioningStateHeaders::location) - Location
+    /// * [`retry_after`()](ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
+    ///
+    /// [`ArmOperationStatusResourceProvisioningStateHeaders`]: crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.delete")]
     pub fn delete(
         &self,
@@ -459,6 +513,33 @@ impl ResourcesTopLevelClient {
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`TopLevelTrackedResourceHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.update(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.location()? {
+    ///     println!("Location: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.retry_after()? {
+    ///     println!("Retry-After: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`location`()](TopLevelTrackedResourceHeaders::location) - Location
+    /// * [`retry_after`()](TopLevelTrackedResourceHeaders::retry_after) - Retry-After
+    ///
+    /// [`TopLevelTrackedResourceHeaders`]: crate::generated::models::TopLevelTrackedResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.update")]
     pub fn update(
         &self,

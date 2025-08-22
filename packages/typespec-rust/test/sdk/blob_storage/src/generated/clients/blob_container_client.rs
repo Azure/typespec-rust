@@ -111,6 +111,38 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientAcquireLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.acquire_lease(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobContainerClientAcquireLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobContainerClientAcquireLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobContainerClientAcquireLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](BlobContainerClientAcquireLeaseResultHeaders::lease_id) - x-ms-lease-id
+    ///
+    /// [`BlobContainerClientAcquireLeaseResultHeaders`]: crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.acquireLease")]
     pub async fn acquire_lease(
         &self,
@@ -165,6 +197,39 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientBreakLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.break_lease(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobContainerClientBreakLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobContainerClientBreakLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobContainerClientBreakLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](BlobContainerClientBreakLeaseResultHeaders::lease_id) - x-ms-lease-id
+    /// * [`lease_time`()](BlobContainerClientBreakLeaseResultHeaders::lease_time) - x-ms-lease-time
+    ///
+    /// [`BlobContainerClientBreakLeaseResultHeaders`]: crate::generated::models::BlobContainerClientBreakLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.breakLease")]
     pub async fn break_lease(
         &self,
@@ -218,6 +283,38 @@ impl BlobContainerClient {
     ///   lease ID must match.
     /// * `proposed_lease_id` - Required. The proposed lease ID for the container.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientChangeLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.change_lease(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobContainerClientChangeLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobContainerClientChangeLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobContainerClientChangeLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](BlobContainerClientChangeLeaseResultHeaders::lease_id) - x-ms-lease-id
+    ///
+    /// [`BlobContainerClientChangeLeaseResultHeaders`]: crate::generated::models::BlobContainerClientChangeLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.changeLease")]
     pub async fn change_lease(
         &self,
@@ -374,6 +471,29 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`FilterBlobSegmentHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.filter_blobs(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](FilterBlobSegmentHeaders::date) - Date
+    ///
+    /// [`FilterBlobSegmentHeaders`]: crate::generated::models::FilterBlobSegmentHeaders
     #[tracing::function("Storage.Blob.Container.filterBlobs")]
     pub async fn filter_blobs(
         &self,
@@ -435,6 +555,38 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`VecSignedIdentifierHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.get_access_policy(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](VecSignedIdentifierHeaders::date) - Date
+    /// * [`last_modified`()](VecSignedIdentifierHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](VecSignedIdentifierHeaders::etag) - etag
+    /// * [`access`()](VecSignedIdentifierHeaders::access) - x-ms-blob-public-access
+    ///
+    /// [`VecSignedIdentifierHeaders`]: crate::generated::models::VecSignedIdentifierHeaders
     #[tracing::function("Storage.Blob.Container.getAccessPolicy")]
     pub async fn get_access_policy(
         &self,
@@ -479,6 +631,38 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientGetAccountInfoResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.get_account_info(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.account_kind()? {
+    ///     println!("x-ms-account-kind: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.is_hierarchical_namespace_enabled()? {
+    ///     println!("x-ms-is-hns-enabled: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobContainerClientGetAccountInfoResultHeaders::date) - Date
+    /// * [`account_kind`()](BlobContainerClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
+    /// * [`is_hierarchical_namespace_enabled`()](BlobContainerClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
+    /// * [`sku_name`()](BlobContainerClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
+    ///
+    /// [`BlobContainerClientGetAccountInfoResultHeaders`]: crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders
     #[tracing::function("Storage.Blob.Container.getAccountInfo")]
     pub async fn get_account_info(
         &self,
@@ -536,6 +720,46 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientGetPropertiesResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.get_properties(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.access()? {
+    ///     println!("x-ms-blob-public-access: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`last_modified`()](BlobContainerClientGetPropertiesResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobContainerClientGetPropertiesResultHeaders::etag) - etag
+    /// * [`access`()](BlobContainerClientGetPropertiesResultHeaders::access) - x-ms-blob-public-access
+    /// * [`default_encryption_scope`()](BlobContainerClientGetPropertiesResultHeaders::default_encryption_scope) - x-ms-default-encryption-scope
+    /// * [`prevent_encryption_scope_override`()](BlobContainerClientGetPropertiesResultHeaders::prevent_encryption_scope_override) - x-ms-deny-encryption-scope-override
+    /// * [`has_immutability_policy`()](BlobContainerClientGetPropertiesResultHeaders::has_immutability_policy) - x-ms-has-immutability-policy
+    /// * [`has_legal_hold`()](BlobContainerClientGetPropertiesResultHeaders::has_legal_hold) - x-ms-has-legal-hold
+    /// * [`is_immutable_storage_with_versioning_enabled`()](BlobContainerClientGetPropertiesResultHeaders::is_immutable_storage_with_versioning_enabled) - x-ms-immutable-storage-with-versioning-enabled
+    /// * [`duration`()](BlobContainerClientGetPropertiesResultHeaders::duration) - x-ms-lease-duration
+    /// * [`lease_state`()](BlobContainerClientGetPropertiesResultHeaders::lease_state) - x-ms-lease-state
+    /// * [`lease_status`()](BlobContainerClientGetPropertiesResultHeaders::lease_status) - x-ms-lease-status
+    /// * [`metadata`()](BlobContainerClientGetPropertiesResultHeaders::metadata) - x-ms-meta
+    ///
+    /// [`BlobContainerClientGetPropertiesResultHeaders`]: crate::generated::models::BlobContainerClientGetPropertiesResultHeaders
     #[tracing::function("Storage.Blob.Container.getProperties")]
     pub async fn get_properties(
         &self,
@@ -577,6 +801,29 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ListBlobsFlatSegmentResponseHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.list_blob_flat_segment(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](ListBlobsFlatSegmentResponseHeaders::date) - Date
+    ///
+    /// [`ListBlobsFlatSegmentResponseHeaders`]: crate::generated::models::ListBlobsFlatSegmentResponseHeaders
     #[tracing::function("Storage.Blob.Container.listBlobFlatSegment")]
     pub fn list_blob_flat_segment(
         &self,
@@ -677,6 +924,29 @@ impl BlobContainerClient {
     ///   that acts as a placeholder for all blobs whose names begin with the same substring up to the appearance of the delimiter
     ///   character. The delimiter may be a single character or a string.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ListBlobsHierarchySegmentResponseHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.list_blob_hierarchy_segment(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](ListBlobsHierarchySegmentResponseHeaders::date) - Date
+    ///
+    /// [`ListBlobsHierarchySegmentResponseHeaders`]: crate::generated::models::ListBlobsHierarchySegmentResponseHeaders
     #[tracing::function("Storage.Blob.Container.listBlobHierarchySegment")]
     pub fn list_blob_hierarchy_segment(
         &self,
@@ -780,6 +1050,37 @@ impl BlobContainerClient {
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientReleaseLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.release_lease(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobContainerClientReleaseLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobContainerClientReleaseLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobContainerClientReleaseLeaseResultHeaders::etag) - etag
+    ///
+    /// [`BlobContainerClientReleaseLeaseResultHeaders`]: crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.releaseLease")]
     pub async fn release_lease(
         &self,
@@ -830,6 +1131,29 @@ impl BlobContainerClient {
     ///
     /// * `source_container_name` - Required. Specifies the name of the container to rename.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientRenameResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.rename(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobContainerClientRenameResultHeaders::date) - Date
+    ///
+    /// [`BlobContainerClientRenameResultHeaders`]: crate::generated::models::BlobContainerClientRenameResultHeaders
     #[tracing::function("Storage.Blob.Container.rename")]
     pub async fn rename(
         &self,
@@ -877,6 +1201,38 @@ impl BlobContainerClient {
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientRenewLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.renew_lease(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobContainerClientRenewLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobContainerClientRenewLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobContainerClientRenewLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](BlobContainerClientRenewLeaseResultHeaders::lease_id) - x-ms-lease-id
+    ///
+    /// [`BlobContainerClientRenewLeaseResultHeaders`]: crate::generated::models::BlobContainerClientRenewLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.renewLease")]
     pub async fn renew_lease(
         &self,
@@ -926,6 +1282,29 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientRestoreResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.restore(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobContainerClientRestoreResultHeaders::date) - Date
+    ///
+    /// [`BlobContainerClientRestoreResultHeaders`]: crate::generated::models::BlobContainerClientRestoreResultHeaders
     #[tracing::function("Storage.Blob.Container.restore")]
     pub async fn restore(
         &self,
@@ -974,6 +1353,37 @@ impl BlobContainerClient {
     ///
     /// * `container_acl` - The access control list for the container.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientSetAccessPolicyResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.set_access_policy(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](BlobContainerClientSetAccessPolicyResultHeaders::date) - Date
+    /// * [`last_modified`()](BlobContainerClientSetAccessPolicyResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlobContainerClientSetAccessPolicyResultHeaders::etag) - etag
+    ///
+    /// [`BlobContainerClientSetAccessPolicyResultHeaders`]: crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders
     #[tracing::function("Storage.Blob.Container.setAccessPolicy")]
     pub async fn set_access_policy(
         &self,

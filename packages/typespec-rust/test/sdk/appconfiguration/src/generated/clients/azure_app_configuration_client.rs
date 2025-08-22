@@ -114,6 +114,33 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value to retrieve.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckKeyValueResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.check_key_value(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`sync_token`()](AzureAppConfigurationClientCheckKeyValueResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](AzureAppConfigurationClientCheckKeyValueResultHeaders::etag_header) - etag
+    ///
+    /// [`AzureAppConfigurationClientCheckKeyValueResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckKeyValueResultHeaders
     #[tracing::function("AzureAppConfiguration.checkKeyValue")]
     pub async fn check_key_value(
         &self,
@@ -188,6 +215,33 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckKeyValuesResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.check_key_values(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`sync_token`()](AzureAppConfigurationClientCheckKeyValuesResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](AzureAppConfigurationClientCheckKeyValuesResultHeaders::etag_header) - etag
+    ///
+    /// [`AzureAppConfigurationClientCheckKeyValuesResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckKeyValuesResultHeaders
     #[tracing::function("AzureAppConfiguration.checkKeyValues")]
     pub async fn check_key_values(
         &self,
@@ -262,6 +316,29 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckKeysResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.check_keys(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`sync_token`()](AzureAppConfigurationClientCheckKeysResultHeaders::sync_token) - Sync-Token
+    ///
+    /// [`AzureAppConfigurationClientCheckKeysResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckKeysResultHeaders
     #[tracing::function("AzureAppConfiguration.checkKeys")]
     pub async fn check_keys(
         &self,
@@ -309,6 +386,29 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckLabelsResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.check_labels(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`sync_token`()](AzureAppConfigurationClientCheckLabelsResultHeaders::sync_token) - Sync-Token
+    ///
+    /// [`AzureAppConfigurationClientCheckLabelsResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckLabelsResultHeaders
     #[tracing::function("AzureAppConfiguration.checkLabels")]
     pub async fn check_labels(
         &self,
@@ -366,6 +466,33 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckRevisionsResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.check_revisions(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`sync_token`()](AzureAppConfigurationClientCheckRevisionsResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](AzureAppConfigurationClientCheckRevisionsResultHeaders::etag_header) - etag
+    ///
+    /// [`AzureAppConfigurationClientCheckRevisionsResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckRevisionsResultHeaders
     #[tracing::function("AzureAppConfiguration.checkRevisions")]
     pub async fn check_revisions(
         &self,
@@ -432,6 +559,37 @@ impl AzureAppConfigurationClient {
     ///
     /// * `name` - The name of the key-value snapshot to check.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckSnapshotResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.check_snapshot(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.link()? {
+    ///     println!("Link: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`link`()](AzureAppConfigurationClientCheckSnapshotResultHeaders::link) - Link
+    /// * [`sync_token`()](AzureAppConfigurationClientCheckSnapshotResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](AzureAppConfigurationClientCheckSnapshotResultHeaders::etag_header) - etag
+    ///
+    /// [`AzureAppConfigurationClientCheckSnapshotResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders
     #[tracing::function("AzureAppConfiguration.checkSnapshot")]
     pub async fn check_snapshot(
         &self,
@@ -485,6 +643,29 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckSnapshotsResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.check_snapshots(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`sync_token`()](AzureAppConfigurationClientCheckSnapshotsResultHeaders::sync_token) - Sync-Token
+    ///
+    /// [`AzureAppConfigurationClientCheckSnapshotsResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckSnapshotsResultHeaders
     #[tracing::function("AzureAppConfiguration.checkSnapshots")]
     pub async fn check_snapshots(
         &self,
@@ -529,6 +710,39 @@ impl AzureAppConfigurationClient {
     /// * `name` - The name of the key-value snapshot to create.
     /// * `entity` - The key-value snapshot to create.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`SnapshotHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.create_snapshot(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.link()? {
+    ///     println!("Link: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.operation_location()? {
+    ///     println!("Operation-Location: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](SnapshotHeaders::content_type) - Content-Type
+    /// * [`link`()](SnapshotHeaders::link) - Link
+    /// * [`operation_location`()](SnapshotHeaders::operation_location) - Operation-Location
+    /// * [`sync_token`()](SnapshotHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](SnapshotHeaders::etag_header) - etag
+    ///
+    /// [`SnapshotHeaders`]: crate::generated::models::SnapshotHeaders
     #[tracing::function("AzureAppConfiguration.createSnapshot")]
     pub fn create_snapshot(
         &self,
@@ -616,6 +830,37 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value to delete.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.delete_key_value(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](KeyValueHeaders::etag_header) - etag
+    ///
+    /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.deleteKeyValue")]
     pub async fn delete_key_value(
         &self,
@@ -672,6 +917,37 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value to unlock.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.delete_lock(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](KeyValueHeaders::etag_header) - etag
+    ///
+    /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.deleteLock")]
     pub async fn delete_lock(
         &self,
@@ -731,6 +1007,38 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.get_key_value(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](KeyValueHeaders::etag_header) - etag
+    /// * [`request_id`()](KeyValueHeaders::request_id) - x-ms-request-id
+    ///
+    /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.getKeyValue")]
     pub async fn get_key_value(
         &self,
@@ -847,6 +1155,39 @@ impl AzureAppConfigurationClient {
     ///
     /// * `name` - The name of the snapshot.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`SnapshotHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.get_snapshot(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.link()? {
+    ///     println!("Link: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](SnapshotHeaders::content_type) - Content-Type
+    /// * [`link`()](SnapshotHeaders::link) - Link
+    /// * [`sync_token`()](SnapshotHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](SnapshotHeaders::etag_header) - etag
+    /// * [`request_id`()](SnapshotHeaders::request_id) - x-ms-request-id
+    ///
+    /// [`SnapshotHeaders`]: crate::generated::models::SnapshotHeaders
     #[tracing::function("AzureAppConfiguration.getSnapshot")]
     pub async fn get_snapshot(
         &self,
@@ -912,6 +1253,37 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueListResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.list_key_values(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](KeyValueListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](KeyValueListResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](KeyValueListResultHeaders::etag_header) - etag
+    ///
+    /// [`KeyValueListResultHeaders`]: crate::generated::models::KeyValueListResultHeaders
     #[tracing::function("AzureAppConfiguration.getKeyValues")]
     pub fn list_key_values(
         &self,
@@ -1022,6 +1394,33 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyListResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.list_keys(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](KeyListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](KeyListResultHeaders::sync_token) - Sync-Token
+    ///
+    /// [`KeyListResultHeaders`]: crate::generated::models::KeyListResultHeaders
     #[tracing::function("AzureAppConfiguration.getKeys")]
     pub fn list_keys(
         &self,
@@ -1101,6 +1500,33 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`LabelListResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.list_labels(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](LabelListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](LabelListResultHeaders::sync_token) - Sync-Token
+    ///
+    /// [`LabelListResultHeaders`]: crate::generated::models::LabelListResultHeaders
     #[tracing::function("AzureAppConfiguration.getLabels")]
     pub fn list_labels(
         &self,
@@ -1193,6 +1619,37 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueListResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.list_revisions(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](KeyValueListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](KeyValueListResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](KeyValueListResultHeaders::etag_header) - etag
+    ///
+    /// [`KeyValueListResultHeaders`]: crate::generated::models::KeyValueListResultHeaders
     #[tracing::function("AzureAppConfiguration.getRevisions")]
     pub fn list_revisions(
         &self,
@@ -1295,6 +1752,33 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`SnapshotListResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.list_snapshots(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](SnapshotListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](SnapshotListResultHeaders::sync_token) - Sync-Token
+    ///
+    /// [`SnapshotListResultHeaders`]: crate::generated::models::SnapshotListResultHeaders
     #[tracing::function("AzureAppConfiguration.getSnapshots")]
     pub fn list_snapshots(
         &self,
@@ -1393,6 +1877,37 @@ impl AzureAppConfigurationClient {
     /// * `content_type` - Content-Type header
     /// * `key` - The key of the key-value to create.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.put_key_value(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](KeyValueHeaders::etag_header) - etag
+    ///
+    /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.putKeyValue")]
     pub async fn put_key_value(
         &self,
@@ -1457,6 +1972,37 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value to lock.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.put_lock(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](KeyValueHeaders::etag_header) - etag
+    ///
+    /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.putLock")]
     pub async fn put_lock(
         &self,
@@ -1518,6 +2064,38 @@ impl AzureAppConfigurationClient {
     /// * `name` - The name of the key-value snapshot to update.
     /// * `entity` - The parameters used to update the snapshot.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`SnapshotHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.update_snapshot(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.link()? {
+    ///     println!("Link: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](SnapshotHeaders::content_type) - Content-Type
+    /// * [`link`()](SnapshotHeaders::link) - Link
+    /// * [`sync_token`()](SnapshotHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](SnapshotHeaders::etag_header) - etag
+    ///
+    /// [`SnapshotHeaders`]: crate::generated::models::SnapshotHeaders
     #[tracing::function("AzureAppConfiguration.updateSnapshot")]
     pub async fn update_snapshot(
         &self,

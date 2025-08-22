@@ -81,6 +81,29 @@ impl StandardClient {
     /// * `name` - The name of user.
     /// * `resource` - The resource instance.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`UserHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.create_or_replace(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.operation_location()? {
+    ///     println!("Operation-Location: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`operation_location`()](UserHeaders::operation_location) - Operation-Location
+    ///
+    /// [`UserHeaders`]: crate::generated::models::UserHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.createOrReplace")]
     pub fn create_or_replace(
         &self,
@@ -160,6 +183,29 @@ impl StandardClient {
     ///
     /// * `name` - The name of user.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`OperationStatusErrorHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.delete(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.operation_location()? {
+    ///     println!("Operation-Location: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`operation_location`()](OperationStatusErrorHeaders::operation_location) - Operation-Location
+    ///
+    /// [`OperationStatusErrorHeaders`]: crate::generated::models::OperationStatusErrorHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.delete")]
     pub fn delete(
         &self,
@@ -236,6 +282,29 @@ impl StandardClient {
     /// * `name` - The name of user.
     /// * `format` - The format of the data.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ExportedUserHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.export(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.operation_location()? {
+    ///     println!("Operation-Location: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`operation_location`()](ExportedUserHeaders::operation_location) - Operation-Location
+    ///
+    /// [`ExportedUserHeaders`]: crate::generated::models::ExportedUserHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.export")]
     pub fn export(
         &self,

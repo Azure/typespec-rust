@@ -19,6 +19,21 @@ use azure_core::{
 const VALUE: HeaderName = HeaderName::from_static("value");
 
 /// Provides access to typed response headers for [`DatetimeResponseHeaderClient::default()`](crate::generated::clients::DatetimeResponseHeaderClient::default())
+///
+/// # Examples
+///
+/// ```no_run
+/// # use azure_core::Result;
+/// # async fn example() -> Result<()> {
+/// let response = client.some_method(/* parameters */).await?;
+///
+/// // Access response headers:
+/// if let Some(value) = response.value()? {
+///     println!("value: {{:?}}", value);
+/// }
+/// # Ok(())
+/// # }
+/// ```
 pub trait DatetimeResponseHeaderClientDefaultResultHeaders: private::Sealed {
     fn value(&self) -> Result<Option<OffsetDateTime>>;
 }
@@ -32,6 +47,21 @@ impl DatetimeResponseHeaderClientDefaultResultHeaders
 }
 
 /// Provides access to typed response headers for [`DatetimeResponseHeaderClient::rfc3339()`](crate::generated::clients::DatetimeResponseHeaderClient::rfc3339())
+///
+/// # Examples
+///
+/// ```no_run
+/// # use azure_core::Result;
+/// # async fn example() -> Result<()> {
+/// let response = client.some_method(/* parameters */).await?;
+///
+/// // Access response headers:
+/// if let Some(value) = response.value()? {
+///     println!("value: {{:?}}", value);
+/// }
+/// # Ok(())
+/// # }
+/// ```
 pub trait DatetimeResponseHeaderClientRfc3339ResultHeaders: private::Sealed {
     fn value(&self) -> Result<Option<OffsetDateTime>>;
 }
@@ -45,6 +75,21 @@ impl DatetimeResponseHeaderClientRfc3339ResultHeaders
 }
 
 /// Provides access to typed response headers for [`DatetimeResponseHeaderClient::rfc7231()`](crate::generated::clients::DatetimeResponseHeaderClient::rfc7231())
+///
+/// # Examples
+///
+/// ```no_run
+/// # use azure_core::Result;
+/// # async fn example() -> Result<()> {
+/// let response = client.some_method(/* parameters */).await?;
+///
+/// // Access response headers:
+/// if let Some(value) = response.value()? {
+///     println!("value: {{:?}}", value);
+/// }
+/// # Ok(())
+/// # }
+/// ```
 pub trait DatetimeResponseHeaderClientRfc7231ResultHeaders: private::Sealed {
     fn value(&self) -> Result<Option<OffsetDateTime>>;
 }
@@ -58,6 +103,21 @@ impl DatetimeResponseHeaderClientRfc7231ResultHeaders
 }
 
 /// Provides access to typed response headers for [`DatetimeResponseHeaderClient::unix_timestamp()`](crate::generated::clients::DatetimeResponseHeaderClient::unix_timestamp())
+///
+/// # Examples
+///
+/// ```no_run
+/// # use azure_core::Result;
+/// # async fn example() -> Result<()> {
+/// let response = client.some_method(/* parameters */).await?;
+///
+/// // Access response headers:
+/// if let Some(value) = response.value()? {
+///     println!("value: {{:?}}", value);
+/// }
+/// # Ok(())
+/// # }
+/// ```
 pub trait DatetimeResponseHeaderClientUnixTimestampResultHeaders: private::Sealed {
     fn value(&self) -> Result<Option<OffsetDateTime>>;
 }

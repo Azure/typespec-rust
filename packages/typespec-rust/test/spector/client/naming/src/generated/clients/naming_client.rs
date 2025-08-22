@@ -270,6 +270,29 @@ impl NamingClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`NamingClientResponseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.response(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.client_name()? {
+    ///     println!("default-name: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`client_name`()](NamingClientResponseResultHeaders::client_name) - default-name
+    ///
+    /// [`NamingClientResponseResultHeaders`]: crate::generated::models::NamingClientResponseResultHeaders
     #[tracing::function("Client.Naming.Header.response")]
     pub async fn response(
         &self,

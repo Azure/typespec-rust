@@ -108,6 +108,42 @@ impl BlockBlobClient {
     ///
     /// * `blocks` - Blob Blocks.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlockBlobClientCommitBlockListResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.commit_block_list(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](BlockBlobClientCommitBlockListResultHeaders::content_md5) - Content-MD5
+    /// * [`last_modified`()](BlockBlobClientCommitBlockListResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlockBlobClientCommitBlockListResultHeaders::etag) - etag
+    /// * [`content_crc64`()](BlockBlobClientCommitBlockListResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](BlockBlobClientCommitBlockListResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](BlockBlobClientCommitBlockListResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](BlockBlobClientCommitBlockListResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`version_id`()](BlockBlobClientCommitBlockListResultHeaders::version_id) - x-ms-version-id
+    ///
+    /// [`BlockBlobClientCommitBlockListResultHeaders`]: crate::generated::models::BlockBlobClientCommitBlockListResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.commitBlockList")]
     pub async fn commit_block_list(
         &self,
@@ -236,6 +272,37 @@ impl BlockBlobClient {
     /// * `list_type` - Specifies whether to return the list of committed blocks, the list of uncommitted blocks, or both lists
     ///   together.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlockListHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.get_block_list(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.blob_content_length()? {
+    ///     println!("x-ms-blob-content-length: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`last_modified`()](BlockListHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlockListHeaders::etag) - etag
+    /// * [`blob_content_length`()](BlockListHeaders::blob_content_length) - x-ms-blob-content-length
+    ///
+    /// [`BlockListHeaders`]: crate::generated::models::BlockListHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.getBlockList")]
     pub async fn get_block_list(
         &self,
@@ -297,6 +364,42 @@ impl BlockBlobClient {
     ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
     ///   either be public or must be authenticated via a shared access signature.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlockBlobClientPutBlobFromUrlResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.put_blob_from_url(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](BlockBlobClientPutBlobFromUrlResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](BlockBlobClientPutBlobFromUrlResultHeaders::date) - Date
+    /// * [`last_modified`()](BlockBlobClientPutBlobFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlockBlobClientPutBlobFromUrlResultHeaders::etag) - etag
+    /// * [`encryption_key_sha256`()](BlockBlobClientPutBlobFromUrlResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](BlockBlobClientPutBlobFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](BlockBlobClientPutBlobFromUrlResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`version_id`()](BlockBlobClientPutBlobFromUrlResultHeaders::version_id) - x-ms-version-id
+    ///
+    /// [`BlockBlobClientPutBlobFromUrlResultHeaders`]: crate::generated::models::BlockBlobClientPutBlobFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.putBlobFromUrl")]
     pub async fn put_blob_from_url(
         &self,
@@ -446,6 +549,63 @@ impl BlockBlobClient {
     ///
     /// * `query_request` - The query request
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlockBlobClientQueryResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.query(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.accept_ranges()? {
+    ///     println!("Accept-Ranges: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.cache_control()? {
+    ///     println!("Cache-Control: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.content_disposition()? {
+    ///     println!("Content-Disposition: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`accept_ranges`()](BlockBlobClientQueryResultHeaders::accept_ranges) - Accept-Ranges
+    /// * [`cache_control`()](BlockBlobClientQueryResultHeaders::cache_control) - Cache-Control
+    /// * [`content_disposition`()](BlockBlobClientQueryResultHeaders::content_disposition) - Content-Disposition
+    /// * [`content_encoding`()](BlockBlobClientQueryResultHeaders::content_encoding) - Content-Encoding
+    /// * [`content_language`()](BlockBlobClientQueryResultHeaders::content_language) - Content-Language
+    /// * [`content_length`()](BlockBlobClientQueryResultHeaders::content_length) - Content-Length
+    /// * [`content_md5`()](BlockBlobClientQueryResultHeaders::content_md5) - Content-MD5
+    /// * [`content_range`()](BlockBlobClientQueryResultHeaders::content_range) - Content-Range
+    /// * [`date`()](BlockBlobClientQueryResultHeaders::date) - Date
+    /// * [`last_modified`()](BlockBlobClientQueryResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlockBlobClientQueryResultHeaders::etag) - etag
+    /// * [`blob_committed_block_count`()](BlockBlobClientQueryResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
+    /// * [`blob_content_md5`()](BlockBlobClientQueryResultHeaders::blob_content_md5) - x-ms-blob-content-md5
+    /// * [`blob_sequence_number`()](BlockBlobClientQueryResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
+    /// * [`blob_type`()](BlockBlobClientQueryResultHeaders::blob_type) - x-ms-blob-type
+    /// * [`content_crc64`()](BlockBlobClientQueryResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`copy_completion_time`()](BlockBlobClientQueryResultHeaders::copy_completion_time) - x-ms-copy-completion-time
+    /// * [`copy_id`()](BlockBlobClientQueryResultHeaders::copy_id) - x-ms-copy-id
+    /// * [`copy_progress`()](BlockBlobClientQueryResultHeaders::copy_progress) - x-ms-copy-progress
+    /// * [`copy_source`()](BlockBlobClientQueryResultHeaders::copy_source) - x-ms-copy-source
+    /// * [`copy_status`()](BlockBlobClientQueryResultHeaders::copy_status) - x-ms-copy-status
+    /// * [`copy_status_description`()](BlockBlobClientQueryResultHeaders::copy_status_description) - x-ms-copy-status-description
+    /// * [`encryption_key_sha256`()](BlockBlobClientQueryResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](BlockBlobClientQueryResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`duration`()](BlockBlobClientQueryResultHeaders::duration) - x-ms-lease-duration
+    /// * [`lease_state`()](BlockBlobClientQueryResultHeaders::lease_state) - x-ms-lease-state
+    /// * [`lease_status`()](BlockBlobClientQueryResultHeaders::lease_status) - x-ms-lease-status
+    /// * [`metadata`()](BlockBlobClientQueryResultHeaders::metadata) - x-ms-meta
+    /// * [`is_server_encrypted`()](BlockBlobClientQueryResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    ///
+    /// [`BlockBlobClientQueryResultHeaders`]: crate::generated::models::BlockBlobClientQueryResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.query")]
     pub async fn query(
         &self,
@@ -528,6 +688,39 @@ impl BlockBlobClient {
     /// * `content_length` - The length of the request.
     /// * `body` - The body of the request.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlockBlobClientStageBlockResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.stage_block(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.content_crc64()? {
+    ///     println!("x-ms-content-crc64: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.encryption_key_sha256()? {
+    ///     println!("x-ms-encryption-key-sha256: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](BlockBlobClientStageBlockResultHeaders::content_md5) - Content-MD5
+    /// * [`content_crc64`()](BlockBlobClientStageBlockResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](BlockBlobClientStageBlockResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](BlockBlobClientStageBlockResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](BlockBlobClientStageBlockResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    ///
+    /// [`BlockBlobClientStageBlockResultHeaders`]: crate::generated::models::BlockBlobClientStageBlockResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.stageBlock")]
     pub async fn stage_block(
         &self,
@@ -606,6 +799,40 @@ impl BlockBlobClient {
     /// * `content_length` - The length of the request.
     /// * `source_url` - Specify a URL to the copy source.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlockBlobClientStageBlockFromUrlResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.stage_block_from_url(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.date()? {
+    ///     println!("Date: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.content_crc64()? {
+    ///     println!("x-ms-content-crc64: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](BlockBlobClientStageBlockFromUrlResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](BlockBlobClientStageBlockFromUrlResultHeaders::date) - Date
+    /// * [`content_crc64`()](BlockBlobClientStageBlockFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](BlockBlobClientStageBlockFromUrlResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](BlockBlobClientStageBlockFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](BlockBlobClientStageBlockFromUrlResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    ///
+    /// [`BlockBlobClientStageBlockFromUrlResultHeaders`]: crate::generated::models::BlockBlobClientStageBlockFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.stageBlockFromUrl")]
     pub async fn stage_block_from_url(
         &self,
@@ -709,6 +936,41 @@ impl BlockBlobClient {
     /// * `body` - The body of the request.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlockBlobClientUploadResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// # use azure_core::Result;
+    /// # async fn example() -> Result<()> {
+    /// let response = client.upload(/* parameters */).await?;
+    ///
+    /// // Access response headers:
+    /// if let Some(value) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", value);
+    /// }
+    /// if let Some(value) = response.etag()? {
+    ///     println!("etag: {{:?}}", value);
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](BlockBlobClientUploadResultHeaders::content_md5) - Content-MD5
+    /// * [`last_modified`()](BlockBlobClientUploadResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](BlockBlobClientUploadResultHeaders::etag) - etag
+    /// * [`encryption_key_sha256`()](BlockBlobClientUploadResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](BlockBlobClientUploadResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](BlockBlobClientUploadResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`version_id`()](BlockBlobClientUploadResultHeaders::version_id) - x-ms-version-id
+    ///
+    /// [`BlockBlobClientUploadResultHeaders`]: crate::generated::models::BlockBlobClientUploadResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.upload")]
     pub async fn upload(
         &self,
