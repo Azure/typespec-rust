@@ -373,7 +373,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
  */
 function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Constructor | rust.MethodType): string | undefined {
   const formatParamBullet = function (paramName: string): string {
-    return `* \`${paramName}\` - `;
+    return `* ${helpers.wrapInBackTicks(paramName)} - `;
   };
 
   let paramsContent = '';
@@ -498,10 +498,10 @@ function getHeaderTraitDocComment(indent: helpers.indentation, method: ClientMet
   let headerDocs = `${indent.get()}///\n`;
   headerDocs += `${indent.get()}/// ## Response Headers\n`;
   headerDocs += `${indent.get()}///\n`;
-  headerDocs += `${indent.get()}/// The returned [\`Response\`](azure_core::http::Response) implements the [\`${traitName}\`] trait, which provides\n`;
+  headerDocs += `${indent.get()}/// The returned [${helpers.wrapInBackTicks('Response')}](azure_core::http::Response) implements the [${helpers.wrapInBackTicks(traitName)}] trait, which provides\n`;
   headerDocs += `${indent.get()}/// access to response headers. For example:\n`;
   headerDocs += `${indent.get()}///\n`;
-  headerDocs += `${indent.get()}/// \`\`\`no_run\n`;
+  headerDocs += `${indent.get()}/// ${helpers.emitBackTicks(3)}no_run\n`;
   headerDocs += `${indent.get()}/// # use azure_core::Result;\n`;
   headerDocs += `${indent.get()}/// # async fn example() -> Result<()> {\n`;
   headerDocs += `${indent.get()}/// let response = client.${method.name}(/* parameters */).await?;\n`;
@@ -518,17 +518,17 @@ function getHeaderTraitDocComment(indent: helpers.indentation, method: ClientMet
 
   headerDocs += `${indent.get()}/// # Ok(())\n`;
   headerDocs += `${indent.get()}/// # }\n`;
-  headerDocs += `${indent.get()}/// \`\`\`\n`;
+  headerDocs += `${indent.get()}/// ${helpers.emitBackTicks(3)}\n`;
   headerDocs += `${indent.get()}///\n`;
   headerDocs += `${indent.get()}/// ### Available headers\n`;
 
   // List all available headers
   for (const header of method.responseHeaders.headers) {
-    headerDocs += `${indent.get()}/// * [\`${header.name}()\`](${traitName}::${header.name}) - ${header.header}\n`;
+    headerDocs += `${indent.get()}/// * [${helpers.wrapInBackTicks(header.name)}()](${traitName}::${header.name}) - ${header.header}\n`;
   }
 
   headerDocs += `${indent.get()}///\n`;
-  headerDocs += `${indent.get()}/// [\`${traitName}\`]: crate::generated::models::${traitName}\n`;
+  headerDocs += `${indent.get()}/// [${helpers.wrapInBackTicks(traitName)}]: crate::generated::models::${traitName}\n`;
 
   return headerDocs;
 }

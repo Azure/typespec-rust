@@ -146,7 +146,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       body += `///\n`;
       body += `/// # Examples\n`;
       body += `///\n`;
-      body += `/// \`\`\`no_run\n`;
+      body += `/// ${helpers.emitBackTicks(3)}no_run\n`;
       body += `/// # use azure_core::Result;\n`;
       body += `/// # async fn example() -> Result<()> {\n`;
       body += `/// let response = client.some_method(/* parameters */).await?;\n`;
@@ -163,7 +163,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       
       body += `/// # Ok(())\n`;
       body += `/// # }\n`;
-      body += `/// \`\`\`\n`;
+      body += `/// ${helpers.emitBackTicks(3)}\n`;
     }
     body += `pub trait ${trait.name}: private::Sealed {\n`;
     for (const header of trait.headers) {
