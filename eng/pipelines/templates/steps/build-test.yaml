@@ -2,7 +2,7 @@ parameters:
   Nightly: false
 
 steps:
-  - script: |
+  - pwsh: |
       if ("${{ parameters.Nightly }}" -eq "true") {
         pnpm install --no-frozen-lockfile
       } else {
@@ -41,10 +41,10 @@ steps:
   - pwsh: |
       pnpm run tspcompile --verbose
       pnpm -w modtidy $pwd 2>&1
-      if [ "${{ parameters.Nightly }}" = "false" ]; then
+      if ("${{ parameters.Nightly }}" -eq "false") {
         git add -A .
         git diff --staged --exit-code
-      fi
+      }
     displayName: Regenerate Spector Tests
     workingDirectory: $(TypeSpecRustPkgDir)/test
     failOnStderr: true
