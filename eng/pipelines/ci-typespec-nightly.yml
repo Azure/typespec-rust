@@ -40,6 +40,6 @@ jobs:
           echo "typespec-rust/package.json"
           cat packages/typespec-rust/package.json
       displayName: 'Bump TypeSpec Dependencies to dev'
-    - template: /eng/pipelines/templates/steps/build-test.yaml
+    - template: /eng/pipelines/templates/steps/build-test-typespec.yaml
       parameters:
         Nightly: true

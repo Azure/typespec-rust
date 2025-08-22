@@ -1,0 +1,64 @@
+parameters:
+  TypeSpecRustPkgDir: '$(System.DefaultWorkingDirectory)/packages/typespec-rust'
+  Nightly: false
+
+steps:
+  - script: |
+      if [ "${{ parameters.Nightly }}" = "true" ]; then
+        pnpm install --no-frozen-lockfile
+      else
+        pnpm install
+      fi
+      pnpm build
+    displayName: 'Build Emitter Sources'
+    workingDirectory: $(TypeSpecRustPkgDir)
+
+  - script: |
+      pnpm eslint
+    displayName: Run Lint
+    workingDirectory: $(TypeSpecRustPkgDir)
+
+  - script: |
+      export currentVersion=$(node -p -e "require('./package.json').version")
+      pnpm pack
+      if [ "${{ parameters.Nightly }}" = "true" ]; then
+        npm install -g azure-tools-typespec-rust-$currentVersion.tgz --legacy-peer-deps
+      else
+        npm install -g azure-tools-typespec-rust-$currentVersion.tgz
+      fi
+    displayName: 'Create and install npm tarball'
+    workingDirectory: $(TypeSpecRustPkgDir)
+
+  - script: |
+      pnpm tspcompile --emitter-installed --verbose
+      pnpm -w modtidy $pwd 2>&1
+      if [ "${{ parameters.Nightly }}" = "false" ]; then
+        git add -A .
+        git diff --staged -w 1>&2
+      fi
+    displayName: 'Regenerate TypeSpec Tests'
+    workingDirectory: $(TypeSpecRustPkgDir)/test
+    failOnStderr: true
+
+  - pwsh: |
+      cargo +stable clippy --workspace --all-features --all-targets --keep-going --no-deps
+    displayName: Clippy
+    workingDirectory: $(TypeSpecRustPkgDir)/test
+    env:
+      RUSTFLAGS: '-Dwarnings'
+
+  - pwsh: |
+      pnpm spector --start
+      cargo test --no-fail-fast
+      $code = $LASTEXITCODE
+      pnpm spector --stop
+      exit $code
+    displayName: 'Run Spector Tests'
+    timeoutInMinutes: 10
+    workingDirectory: $(TypeSpecRustPkgDir)/test/spector
+
+  - task: PublishTestResults@2
+    inputs:
+      testRunner: JUnit
+      testResultsFiles: $(TypeSpecRustPkgDir)/test-results.xml
+      failTaskOnFailedTests: true
