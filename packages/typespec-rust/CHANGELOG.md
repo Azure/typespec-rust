@@ -5,6 +5,7 @@
 ### Features Added
 
 * Added support for optional path parameters.
+* Added `#![cfg_attr(docsrs, feature(doc_auto_cfg))]` to every generated `src/lib.rs` to automatically document feature conditions.
 
 ### Breaking Changes
 
