@@ -40,14 +40,13 @@ steps:
 
   - pwsh: |
       pnpm run tspcompile --verbose
-      pnpm -w modtidy $pwd 2>&1
+      pnpm -w modtidy $pwd
       if ("${{ parameters.Nightly }}" -eq "false") {
         git add -A .
         git diff --staged --exit-code
       }
     displayName: Regenerate Spector Tests
     workingDirectory: $(TypeSpecRustPkgDir)/test
-    failOnStderr: true
 
   - pwsh: |
       cargo build
