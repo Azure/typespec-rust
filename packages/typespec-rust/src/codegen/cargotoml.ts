@@ -17,7 +17,9 @@ export function emitCargoToml(crate: rust.Crate): string {
   content += 'edition.workspace = true\n';
   content += 'license.workspace = true\n';
   content += 'repository.workspace = true\n';
-  content += 'rust-version.workspace = true\n';
+  content += 'rust-version.workspace = true\n\n';
+  content += '[features]\n';
+  content += 'default = ["azure_core/default"]\n';
   if (crate.dependencies.length > 0) {
     content += '\n[dependencies]\n';
     for (const dependency of crate.dependencies) {
