@@ -282,8 +282,8 @@ impl NamingClient {
     /// let response = client.response(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.client_name()? {
-    ///     println!("default-name: {{:?}}", value);
+    /// if let Some(client_name) = response.client_name()? {
+    ///     println!("default-name: {{:?}}", client_name);
     /// }
     /// # Ok(())
     /// # }

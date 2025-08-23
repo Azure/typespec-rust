@@ -120,14 +120,14 @@ impl BlockBlobClient {
     /// let response = client.commit_block_list(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", value);
+    /// if let Some(content_md5) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", content_md5);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -284,14 +284,14 @@ impl BlockBlobClient {
     /// let response = client.get_block_list(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
-    /// if let Some(value) = response.blob_content_length()? {
-    ///     println!("x-ms-blob-content-length: {{:?}}", value);
+    /// if let Some(blob_content_length) = response.blob_content_length()? {
+    ///     println!("x-ms-blob-content-length: {{:?}}", blob_content_length);
     /// }
     /// # Ok(())
     /// # }
@@ -376,14 +376,14 @@ impl BlockBlobClient {
     /// let response = client.put_blob_from_url(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", value);
+    /// if let Some(content_md5) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", content_md5);
     /// }
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
     /// # Ok(())
     /// # }
@@ -561,14 +561,14 @@ impl BlockBlobClient {
     /// let response = client.query(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.accept_ranges()? {
-    ///     println!("Accept-Ranges: {{:?}}", value);
+    /// if let Some(accept_ranges) = response.accept_ranges()? {
+    ///     println!("Accept-Ranges: {{:?}}", accept_ranges);
     /// }
-    /// if let Some(value) = response.cache_control()? {
-    ///     println!("Cache-Control: {{:?}}", value);
+    /// if let Some(cache_control) = response.cache_control()? {
+    ///     println!("Cache-Control: {{:?}}", cache_control);
     /// }
-    /// if let Some(value) = response.content_disposition()? {
-    ///     println!("Content-Disposition: {{:?}}", value);
+    /// if let Some(content_disposition) = response.content_disposition()? {
+    ///     println!("Content-Disposition: {{:?}}", content_disposition);
     /// }
     /// # Ok(())
     /// # }
@@ -700,14 +700,14 @@ impl BlockBlobClient {
     /// let response = client.stage_block(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", value);
+    /// if let Some(content_md5) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", content_md5);
     /// }
-    /// if let Some(value) = response.content_crc64()? {
-    ///     println!("x-ms-content-crc64: {{:?}}", value);
+    /// if let Some(content_crc64) = response.content_crc64()? {
+    ///     println!("x-ms-content-crc64: {{:?}}", content_crc64);
     /// }
-    /// if let Some(value) = response.encryption_key_sha256()? {
-    ///     println!("x-ms-encryption-key-sha256: {{:?}}", value);
+    /// if let Some(encryption_key_sha256) = response.encryption_key_sha256()? {
+    ///     println!("x-ms-encryption-key-sha256: {{:?}}", encryption_key_sha256);
     /// }
     /// # Ok(())
     /// # }
@@ -811,14 +811,14 @@ impl BlockBlobClient {
     /// let response = client.stage_block_from_url(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", value);
+    /// if let Some(content_md5) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", content_md5);
     /// }
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.content_crc64()? {
-    ///     println!("x-ms-content-crc64: {{:?}}", value);
+    /// if let Some(content_crc64) = response.content_crc64()? {
+    ///     println!("x-ms-content-crc64: {{:?}}", content_crc64);
     /// }
     /// # Ok(())
     /// # }
@@ -948,14 +948,14 @@ impl BlockBlobClient {
     /// let response = client.upload(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", value);
+    /// if let Some(content_md5) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", content_md5);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }

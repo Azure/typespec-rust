@@ -93,8 +93,8 @@ impl StandardClient {
     /// let response = client.create_or_replace(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.operation_location()? {
-    ///     println!("Operation-Location: {{:?}}", value);
+    /// if let Some(operation_location) = response.operation_location()? {
+    ///     println!("Operation-Location: {{:?}}", operation_location);
     /// }
     /// # Ok(())
     /// # }
@@ -195,8 +195,8 @@ impl StandardClient {
     /// let response = client.delete(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.operation_location()? {
-    ///     println!("Operation-Location: {{:?}}", value);
+    /// if let Some(operation_location) = response.operation_location()? {
+    ///     println!("Operation-Location: {{:?}}", operation_location);
     /// }
     /// # Ok(())
     /// # }
@@ -294,8 +294,8 @@ impl StandardClient {
     /// let response = client.export(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.operation_location()? {
-    ///     println!("Operation-Location: {{:?}}", value);
+    /// if let Some(operation_location) = response.operation_location()? {
+    ///     println!("Operation-Location: {{:?}}", operation_location);
     /// }
     /// # Ok(())
     /// # }

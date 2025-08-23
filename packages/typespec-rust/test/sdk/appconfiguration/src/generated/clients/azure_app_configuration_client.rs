@@ -126,11 +126,11 @@ impl AzureAppConfigurationClient {
     /// let response = client.check_key_value(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
-    /// if let Some(value) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag_header) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", etag_header);
     /// }
     /// # Ok(())
     /// # }
@@ -227,11 +227,11 @@ impl AzureAppConfigurationClient {
     /// let response = client.check_key_values(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
-    /// if let Some(value) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag_header) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", etag_header);
     /// }
     /// # Ok(())
     /// # }
@@ -328,8 +328,8 @@ impl AzureAppConfigurationClient {
     /// let response = client.check_keys(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
     /// # Ok(())
     /// # }
@@ -398,8 +398,8 @@ impl AzureAppConfigurationClient {
     /// let response = client.check_labels(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
     /// # Ok(())
     /// # }
@@ -478,11 +478,11 @@ impl AzureAppConfigurationClient {
     /// let response = client.check_revisions(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
-    /// if let Some(value) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag_header) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", etag_header);
     /// }
     /// # Ok(())
     /// # }
@@ -571,14 +571,14 @@ impl AzureAppConfigurationClient {
     /// let response = client.check_snapshot(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.link()? {
-    ///     println!("Link: {{:?}}", value);
+    /// if let Some(link) = response.link()? {
+    ///     println!("Link: {{:?}}", link);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
-    /// if let Some(value) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag_header) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", etag_header);
     /// }
     /// # Ok(())
     /// # }
@@ -655,8 +655,8 @@ impl AzureAppConfigurationClient {
     /// let response = client.check_snapshots(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
     /// # Ok(())
     /// # }
@@ -722,14 +722,14 @@ impl AzureAppConfigurationClient {
     /// let response = client.create_snapshot(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.link()? {
-    ///     println!("Link: {{:?}}", value);
+    /// if let Some(link) = response.link()? {
+    ///     println!("Link: {{:?}}", link);
     /// }
-    /// if let Some(value) = response.operation_location()? {
-    ///     println!("Operation-Location: {{:?}}", value);
+    /// if let Some(operation_location) = response.operation_location()? {
+    ///     println!("Operation-Location: {{:?}}", operation_location);
     /// }
     /// # Ok(())
     /// # }
@@ -842,14 +842,14 @@ impl AzureAppConfigurationClient {
     /// let response = client.delete_key_value(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
-    /// if let Some(value) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag_header) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", etag_header);
     /// }
     /// # Ok(())
     /// # }
@@ -929,14 +929,14 @@ impl AzureAppConfigurationClient {
     /// let response = client.delete_lock(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
-    /// if let Some(value) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag_header) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", etag_header);
     /// }
     /// # Ok(())
     /// # }
@@ -1019,14 +1019,14 @@ impl AzureAppConfigurationClient {
     /// let response = client.get_key_value(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
-    /// if let Some(value) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag_header) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", etag_header);
     /// }
     /// # Ok(())
     /// # }
@@ -1167,14 +1167,14 @@ impl AzureAppConfigurationClient {
     /// let response = client.get_snapshot(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.link()? {
-    ///     println!("Link: {{:?}}", value);
+    /// if let Some(link) = response.link()? {
+    ///     println!("Link: {{:?}}", link);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
     /// # Ok(())
     /// # }
@@ -1265,14 +1265,14 @@ impl AzureAppConfigurationClient {
     /// let response = client.list_key_values(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
-    /// if let Some(value) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag_header) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", etag_header);
     /// }
     /// # Ok(())
     /// # }
@@ -1406,11 +1406,11 @@ impl AzureAppConfigurationClient {
     /// let response = client.list_keys(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
     /// # Ok(())
     /// # }
@@ -1512,11 +1512,11 @@ impl AzureAppConfigurationClient {
     /// let response = client.list_labels(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
     /// # Ok(())
     /// # }
@@ -1631,14 +1631,14 @@ impl AzureAppConfigurationClient {
     /// let response = client.list_revisions(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
-    /// if let Some(value) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag_header) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", etag_header);
     /// }
     /// # Ok(())
     /// # }
@@ -1764,11 +1764,11 @@ impl AzureAppConfigurationClient {
     /// let response = client.list_snapshots(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
     /// # Ok(())
     /// # }
@@ -1889,14 +1889,14 @@ impl AzureAppConfigurationClient {
     /// let response = client.put_key_value(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
-    /// if let Some(value) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag_header) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", etag_header);
     /// }
     /// # Ok(())
     /// # }
@@ -1984,14 +1984,14 @@ impl AzureAppConfigurationClient {
     /// let response = client.put_lock(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
-    /// if let Some(value) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag_header) = response.etag_header()? {
+    ///     println!("etag: {{:?}}", etag_header);
     /// }
     /// # Ok(())
     /// # }
@@ -2076,14 +2076,14 @@ impl AzureAppConfigurationClient {
     /// let response = client.update_snapshot(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", value);
+    /// if let Some(content_type) = response.content_type()? {
+    ///     println!("Content-Type: {{:?}}", content_type);
     /// }
-    /// if let Some(value) = response.link()? {
-    ///     println!("Link: {{:?}}", value);
+    /// if let Some(link) = response.link()? {
+    ///     println!("Link: {{:?}}", link);
     /// }
-    /// if let Some(value) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", value);
+    /// if let Some(sync_token) = response.sync_token()? {
+    ///     println!("Sync-Token: {{:?}}", sync_token);
     /// }
     /// # Ok(())
     /// # }

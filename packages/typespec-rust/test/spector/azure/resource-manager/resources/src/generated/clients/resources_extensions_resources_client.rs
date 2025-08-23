@@ -56,11 +56,11 @@ impl ResourcesExtensionsResourcesClient {
     /// let response = client.create_or_update(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.azure_async_operation()? {
-    ///     println!("Azure-AsyncOperation: {{:?}}", value);
+    /// if let Some(azure_async_operation) = response.azure_async_operation()? {
+    ///     println!("Azure-AsyncOperation: {{:?}}", azure_async_operation);
     /// }
-    /// if let Some(value) = response.retry_after()? {
-    ///     println!("Retry-After: {{:?}}", value);
+    /// if let Some(retry_after) = response.retry_after()? {
+    ///     println!("Retry-After: {{:?}}", retry_after);
     /// }
     /// # Ok(())
     /// # }

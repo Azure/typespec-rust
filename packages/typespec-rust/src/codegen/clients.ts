@@ -511,8 +511,8 @@ function getHeaderTraitDocComment(indent: helpers.indentation, method: ClientMet
   // Add examples for a few key headers
   const exampleHeaders = method.responseHeaders.headers.slice(0, 3); // Show first 3 headers as examples
   for (const header of exampleHeaders) {
-    headerDocs += `${indent.get()}/// if let Some(value) = response.${header.name}()? {\n`;
-    headerDocs += `${indent.get()}///     println!("${header.header}: {{:?}}", value);\n`;
+    headerDocs += `${indent.get()}/// if let Some(${header.name}) = response.${header.name}()? {\n`;
+    headerDocs += `${indent.get()}///     println!("${header.header}: {{:?}}", ${header.name});\n`;
     headerDocs += `${indent.get()}/// }\n`;
   }
 

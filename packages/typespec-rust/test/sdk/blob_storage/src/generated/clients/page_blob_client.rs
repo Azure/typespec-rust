@@ -117,14 +117,14 @@ impl PageBlobClient {
     /// let response = client.clear_pages(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", value);
+    /// if let Some(content_md5) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", content_md5);
     /// }
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
     /// # Ok(())
     /// # }
@@ -257,14 +257,14 @@ impl PageBlobClient {
     /// let response = client.copy_incremental(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -351,14 +351,14 @@ impl PageBlobClient {
     /// let response = client.create(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", value);
+    /// if let Some(content_md5) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", content_md5);
     /// }
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
     /// # Ok(())
     /// # }
@@ -515,14 +515,14 @@ impl PageBlobClient {
     /// let response = client.get_page_ranges(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -620,14 +620,14 @@ impl PageBlobClient {
     /// let response = client.get_page_ranges_diff(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -736,14 +736,14 @@ impl PageBlobClient {
     /// let response = client.resize(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -849,14 +849,14 @@ impl PageBlobClient {
     /// let response = client.update_sequence_number(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -955,14 +955,14 @@ impl PageBlobClient {
     /// let response = client.upload_pages(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", value);
+    /// if let Some(content_md5) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", content_md5);
     /// }
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
     /// # Ok(())
     /// # }
@@ -1117,14 +1117,14 @@ impl PageBlobClient {
     /// let response = client.upload_pages_from_url(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", value);
+    /// if let Some(content_md5) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", content_md5);
     /// }
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
     /// # Ok(())
     /// # }

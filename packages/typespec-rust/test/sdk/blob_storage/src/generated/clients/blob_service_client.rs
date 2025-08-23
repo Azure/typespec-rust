@@ -107,8 +107,8 @@ impl BlobServiceClient {
     /// let response = client.filter_blobs(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
     /// # Ok(())
     /// # }
@@ -188,14 +188,14 @@ impl BlobServiceClient {
     /// let response = client.get_account_info(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.account_kind()? {
-    ///     println!("x-ms-account-kind: {{:?}}", value);
+    /// if let Some(account_kind) = response.account_kind()? {
+    ///     println!("x-ms-account-kind: {{:?}}", account_kind);
     /// }
-    /// if let Some(value) = response.is_hierarchical_namespace_enabled()? {
-    ///     println!("x-ms-is-hns-enabled: {{:?}}", value);
+    /// if let Some(is_hierarchical_namespace_enabled) = response.is_hierarchical_namespace_enabled()? {
+    ///     println!("x-ms-is-hns-enabled: {{:?}}", is_hierarchical_namespace_enabled);
     /// }
     /// # Ok(())
     /// # }
@@ -316,8 +316,8 @@ impl BlobServiceClient {
     /// let response = client.get_statistics(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
     /// # Ok(())
     /// # }
@@ -380,8 +380,8 @@ impl BlobServiceClient {
     /// let response = client.get_user_delegation_key(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
     /// # Ok(())
     /// # }

@@ -129,8 +129,8 @@ impl BlobClient {
     /// let response = client.abort_copy_from_url(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
     /// # Ok(())
     /// # }
@@ -201,14 +201,14 @@ impl BlobClient {
     /// let response = client.acquire_lease(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -298,14 +298,14 @@ impl BlobClient {
     /// let response = client.break_lease(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -394,14 +394,14 @@ impl BlobClient {
     /// let response = client.change_lease(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -492,14 +492,14 @@ impl BlobClient {
     /// let response = client.copy_from_url(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", value);
+    /// if let Some(content_md5) = response.content_md5()? {
+    ///     println!("Content-MD5: {{:?}}", content_md5);
     /// }
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
     /// # Ok(())
     /// # }
@@ -648,14 +648,14 @@ impl BlobClient {
     /// let response = client.create_snapshot(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -840,8 +840,8 @@ impl BlobClient {
     /// let response = client.delete_immutability_policy(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
     /// # Ok(())
     /// # }
@@ -912,14 +912,14 @@ impl BlobClient {
     /// let response = client.download(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.accept_ranges()? {
-    ///     println!("Accept-Ranges: {{:?}}", value);
+    /// if let Some(accept_ranges) = response.accept_ranges()? {
+    ///     println!("Accept-Ranges: {{:?}}", accept_ranges);
     /// }
-    /// if let Some(value) = response.cache_control()? {
-    ///     println!("Cache-Control: {{:?}}", value);
+    /// if let Some(cache_control) = response.cache_control()? {
+    ///     println!("Cache-Control: {{:?}}", cache_control);
     /// }
-    /// if let Some(value) = response.content_disposition()? {
-    ///     println!("Content-Disposition: {{:?}}", value);
+    /// if let Some(content_disposition) = response.content_disposition()? {
+    ///     println!("Content-Disposition: {{:?}}", content_disposition);
     /// }
     /// # Ok(())
     /// # }
@@ -1073,14 +1073,14 @@ impl BlobClient {
     /// let response = client.get_account_info(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.account_kind()? {
-    ///     println!("x-ms-account-kind: {{:?}}", value);
+    /// if let Some(account_kind) = response.account_kind()? {
+    ///     println!("x-ms-account-kind: {{:?}}", account_kind);
     /// }
-    /// if let Some(value) = response.is_hierarchical_namespace_enabled()? {
-    ///     println!("x-ms-is-hns-enabled: {{:?}}", value);
+    /// if let Some(is_hierarchical_namespace_enabled) = response.is_hierarchical_namespace_enabled()? {
+    ///     println!("x-ms-is-hns-enabled: {{:?}}", is_hierarchical_namespace_enabled);
     /// }
     /// # Ok(())
     /// # }
@@ -1186,14 +1186,14 @@ impl BlobClient {
     /// let response = client.get_properties(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.cache_control()? {
-    ///     println!("Cache-Control: {{:?}}", value);
+    /// if let Some(cache_control) = response.cache_control()? {
+    ///     println!("Cache-Control: {{:?}}", cache_control);
     /// }
-    /// if let Some(value) = response.content_disposition()? {
-    ///     println!("Content-Disposition: {{:?}}", value);
+    /// if let Some(content_disposition) = response.content_disposition()? {
+    ///     println!("Content-Disposition: {{:?}}", content_disposition);
     /// }
-    /// if let Some(value) = response.content_encoding()? {
-    ///     println!("Content-Encoding: {{:?}}", value);
+    /// if let Some(content_encoding) = response.content_encoding()? {
+    ///     println!("Content-Encoding: {{:?}}", content_encoding);
     /// }
     /// # Ok(())
     /// # }
@@ -1332,8 +1332,8 @@ impl BlobClient {
     /// let response = client.get_tags(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
     /// # Ok(())
     /// # }
@@ -1412,14 +1412,14 @@ impl BlobClient {
     /// let response = client.release_lease(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -1505,14 +1505,14 @@ impl BlobClient {
     /// let response = client.renew_lease(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -1598,14 +1598,14 @@ impl BlobClient {
     /// let response = client.set_expiry(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -1675,14 +1675,14 @@ impl BlobClient {
     /// let response = client.set_immutability_policy(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.immutability_policy_mode()? {
-    ///     println!("x-ms-immutability-policy-mode: {{:?}}", value);
+    /// if let Some(immutability_policy_mode) = response.immutability_policy_mode()? {
+    ///     println!("x-ms-immutability-policy-mode: {{:?}}", immutability_policy_mode);
     /// }
-    /// if let Some(value) = response.immutability_policy_expires_on()? {
-    ///     println!("x-ms-immutability-policy-until-date: {{:?}}", value);
+    /// if let Some(immutability_policy_expires_on) = response.immutability_policy_expires_on()? {
+    ///     println!("x-ms-immutability-policy-until-date: {{:?}}", immutability_policy_expires_on);
     /// }
     /// # Ok(())
     /// # }
@@ -1770,11 +1770,11 @@ impl BlobClient {
     /// let response = client.set_legal_hold(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.legal_hold()? {
-    ///     println!("x-ms-legal-hold: {{:?}}", value);
+    /// if let Some(legal_hold) = response.legal_hold()? {
+    ///     println!("x-ms-legal-hold: {{:?}}", legal_hold);
     /// }
     /// # Ok(())
     /// # }
@@ -2005,8 +2005,8 @@ impl BlobClient {
     /// let response = client.set_tags(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
     /// # Ok(())
     /// # }
@@ -2150,14 +2150,14 @@ impl BlobClient {
     /// let response = client.start_copy_from_url(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
-    /// if let Some(value) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", value);
+    /// if let Some(last_modified) = response.last_modified()? {
+    ///     println!("Last-Modified: {{:?}}", last_modified);
     /// }
-    /// if let Some(value) = response.etag()? {
-    ///     println!("etag: {{:?}}", value);
+    /// if let Some(etag) = response.etag()? {
+    ///     println!("etag: {{:?}}", etag);
     /// }
     /// # Ok(())
     /// # }
@@ -2297,8 +2297,8 @@ impl BlobClient {
     /// let response = client.undelete(/* parameters */).await?;
     ///
     /// // Access response headers:
-    /// if let Some(value) = response.date()? {
-    ///     println!("Date: {{:?}}", value);
+    /// if let Some(date) = response.date()? {
+    ///     println!("Date: {{:?}}", date);
     /// }
     /// # Ok(())
     /// # }
