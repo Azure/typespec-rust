@@ -20,6 +20,7 @@ use azure_core::{
     time::OffsetDateTime,
 };
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use std::collections::HashMap;
 
 /// Represents an access policy.
@@ -263,10 +264,7 @@ pub struct BlobItemInternal {
     pub name: Option<BlobName>,
 
     /// The object replication metadata of the blob.
-    #[serde(
-        rename = "ObjectReplicationMetadata",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename = "OrMetadata", skip_serializing_if = "Option::is_none")]
     pub object_replication_metadata: Option<ObjectReplicationMetadata>,
 
     /// The properties of the blob.
@@ -283,11 +281,13 @@ pub struct BlobItemInternal {
 }
 
 /// The blob metadata.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, SafeDebug)]
 #[non_exhaustive]
 pub struct BlobMetadata {
+    /// contains unnamed additional properties
+    pub additional_properties: Option<HashMap<String, String>>,
+
     /// Whether the blob metadata is encrypted.
-    #[serde(rename = "@Encrypted", skip_serializing_if = "Option::is_none")]
     pub encrypted: Option<String>,
 }
 
@@ -1094,10 +1094,12 @@ pub struct Metrics {
 }
 
 /// The object replication metadata.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[derive(Clone, Default, SafeDebug)]
 #[non_exhaustive]
-#[serde(rename = "OrMetadata")]
-pub struct ObjectReplicationMetadata {}
+pub struct ObjectReplicationMetadata {
+    /// contains unnamed additional properties
+    pub additional_properties: Option<HashMap<String, String>>,
+}
 
 /// Contains results for `PageBlobClient::clear_pages()`
 #[derive(SafeDebug)]
@@ -1170,8 +1172,11 @@ pub struct PageRange {
 }
 
 /// Represents the Parquet configuration.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-pub struct ParquetConfiguration {}
+#[derive(Clone, Default, SafeDebug)]
+pub struct ParquetConfiguration {
+    /// contains unnamed additional properties
+    pub additional_properties: Option<HashMap<String, Value>>,
+}
 
 /// The query format settings.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]

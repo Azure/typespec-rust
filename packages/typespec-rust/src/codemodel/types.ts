@@ -179,12 +179,15 @@ export interface MarkerType {
   docs: Docs;
 }
 
+/** ModelFieldType contains the types of model fields */
+export type ModelFieldType = ModelField | ModelAdditionalProperties;
+
 /** Model is a Rust struct that participates in serde */
 export interface Model extends StructBase {
   kind: 'model';
 
   /** fields contains the fields within the struct */
-  fields: Array<ModelField>;
+  fields: Array<ModelFieldType>;
 
   /** the flags set for this model */
   flags: ModelFlags;
@@ -194,6 +197,14 @@ export interface Model extends StructBase {
    * different from the type's name.
    */
   xmlName?: string;
+}
+
+/** ModelAdditionalProperties is a field that contains unnamed key/value pairs */
+export interface ModelAdditionalProperties extends StructFieldBase {
+  kind: 'additionalProperties';
+
+  /** the field's underlying type */
+  type: Option<HashMap>;
 }
 
 /** ModelField is a field definition within a model */
@@ -688,8 +699,15 @@ export class MarkerType implements MarkerType {
 export class Model extends StructBase implements Model {
   constructor(name: string, visibility: Visibility, flags: ModelFlags) {
     super('model', name, visibility);
-    this.fields = new Array<ModelField>();
+    this.fields = new Array<ModelFieldType>();
     this.flags = flags;
+  }
+}
+
+export class ModelAdditionalProperties extends StructFieldBase implements ModelAdditionalProperties {
+  constructor(name: string, visibility: Visibility, type: Option<HashMap>) {
+    super(name, visibility, type);
+    this.kind = 'additionalProperties';
   }
 }
 

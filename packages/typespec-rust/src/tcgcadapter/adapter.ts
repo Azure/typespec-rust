@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-// cspell: ignore responseheader subclients lropaging
+// cspell: ignore addl responseheader subclients lropaging
 
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
@@ -266,6 +266,8 @@ export class Adapter {
       allProps.push(prop);
     }
 
+    let addlProps = model.additionalProperties;
+
     let parent = model.baseModel;
     while (parent) {
       for (const parentProp of parent.properties) {
@@ -278,7 +280,18 @@ export class Adapter {
         allProps.push(parentProp);
       }
 
-      // TODO: propagate additional properties https://github.com/Azure/typespec-rust/issues/4
+      // propagate parent's additional properties if we don't yet have any.
+      // if we do, ensure that their kinds match.
+      if (!addlProps) {
+        addlProps = parent.additionalProperties;
+      } else if (parent.additionalProperties && addlProps.kind !== parent.additionalProperties.kind) {
+        throw new AdapterError(
+          'UnsupportedTsp',
+          `model ${model.name} has additional properties kind ${addlProps.kind} which conflicts with parent model ${parent.name} additional properties kind ${parent.additionalProperties.kind}`,
+          model.__raw?.node,
+        );
+      }
+
       parent = parent.baseModel;
     }
 
@@ -298,6 +311,13 @@ export class Adapter {
       }
       const structField = this.getModelField(property, rustModel.visibility, stack);
       rustModel.fields.push(structField);
+    }
+
+    if (addlProps) {
+      const addlPropsType = this.getHashMap(this.typeToWireType(this.getType(addlProps)));
+      const addlPropsField = new rust.ModelAdditionalProperties('additional_properties', 'pub', this.getOptionType(addlPropsType));
+      addlPropsField.docs.summary = 'contains unnamed additional properties';
+      rustModel.fields.push(addlPropsField);
     }
 
     stack.pop();
@@ -1348,11 +1368,14 @@ export class Adapter {
 
         for (let i = 0; i < typeToUnwrap.fields.length; ++i) {
           const field = typeToUnwrap.fields[i];
+          if (field.kind === 'additionalProperties') {
+            continue;
+          }
           if (field.serde === serde) {
             // check if this has already been unwrapped (e.g. type is shared across operations)
             if (field.type.kind === 'option') {
-              typeToUnwrap.fields[i].type = <rust.WireType>(<rust.Option>typeToUnwrap.fields[i].type).type;
-              typeToUnwrap.fields[i].flags |= rust.ModelFieldFlags.PageItems;
+              field.type = <rust.WireType>(field.type).type;
+              field.flags |= rust.ModelFieldFlags.PageItems;
             }
 
             // move to the next segment

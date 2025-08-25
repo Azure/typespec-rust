@@ -285,11 +285,15 @@ export class indentation {
 /**
  * emits the derive annotation with the standard and any additional values
  * 
+ * @param serde indicates if serde annotations should be included
  * @param extra contains any extra derive values
  * @returns a derive macro
  */
-export function annotationDerive(...extra: Array<string>): string {
-  const derive = new Array<string>('Clone', 'Deserialize', 'SafeDebug', 'Serialize');
+export function annotationDerive(serde: boolean, ...extra: Array<string>): string {
+  const derive = new Array<string>('Clone', 'SafeDebug');
+  if (serde) {
+    derive.push('Deserialize', 'Serialize');
+  }
   // remove any empty values
   extra = extra.filter(entry => entry.trim() !== '');
   derive.push(...extra);
@@ -318,6 +322,22 @@ export function getGenericLifetimeAnnotation(lifetime: rust.Lifetime): string {
   return `<${lifetime.name}>`;
 }
 
+/**
+ * construct a for in block
+ * 
+ * @param indent the current indentation helper in scope
+ * @param loopVar the loop var(s) for each iteration
+ * @param iterator the content to iterate
+ * @param body the body of the for in block
+ * @returns the text for the for in block
+ */
+export function buildForIn(indent: indentation, loopVar: string, iterator: string, body: (indent: indentation) => string): string {
+  let forIn = `for ${loopVar} in ${iterator} {\n`;
+  forIn += body(indent.push());
+  forIn += `${indent.pop().get()}}\n`;
+  return forIn;
+}
+
 /** the if condition in an if block */
 export interface ifBlock {
   /** the condition in the if block */
@@ -334,7 +354,7 @@ export interface elseBlock {
 }
 
 /**
- * constructs an if block (can expand to include else if/else as necessary)
+ * constructs an if block
  * 
  * @param indent the current indentation helper in scope
  * @param ifBlock the if block definition
@@ -368,7 +388,7 @@ export interface matchArm {
 }
 
 /**
- * constructs a match expression at the provided indentation level
+ * constructs a match expression
  * 
  * @param indent the current indentation helper in scope
  * @param expr the expression to match
@@ -388,6 +408,21 @@ export function buildMatch(indent: indentation, expr: string, arms: Array<matchA
   }
   match += `${indent.pop().get()}}`;
   return match;
+}
+
+/**
+ * constructs a while loop
+ * 
+ * @param indent the current indentation helper in scope
+ * @param condition the condition for the while loop
+ * @param body the body of the while loop
+ * @returns the text for the while loop
+ */
+export function buildWhile(indent: indentation, condition: string, body: (indent: indentation) => string): string {
+  let whileLoop = `while ${condition} {\n`;
+  whileLoop += body(indent.push());
+  whileLoop += `${indent.pop().get()}}\n`;
+  return whileLoop;
 }
 
 /**
