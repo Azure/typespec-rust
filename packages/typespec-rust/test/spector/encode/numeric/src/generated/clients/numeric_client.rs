@@ -31,7 +31,7 @@ impl NumericClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_numeric")]
+    #[tracing::new("Encode.Numeric")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NumericClientOptions>,

@@ -43,7 +43,7 @@ impl NonResourceClient {
     ///   Entra ID token to use when authenticating.
     /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_armnonresource")]
+    #[tracing::new("Azure.ResourceManager.NonResource")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,

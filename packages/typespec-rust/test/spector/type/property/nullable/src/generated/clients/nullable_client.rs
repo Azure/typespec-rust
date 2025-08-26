@@ -35,7 +35,7 @@ impl NullableClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_nullable")]
+    #[tracing::new("Type.Property.Nullable")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NullableClientOptions>,

@@ -97,7 +97,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
           body += paramsDocs;
         }
         // Fall back on the crate name if the management namespace is not set
-        body += `${indent.get()}#[tracing::new("${client.managementNamespace || crate.name}")]\n`;
+        body += `${indent.get()}#[tracing::new("${client.tracingNamespaceIdentifier || crate.name}")]\n`;
         body += `${indent.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.params, client.constructable.options, use)}) -> Result<Self> {\n`;
         body += `${indent.get()}let options = options.unwrap_or_default();\n`;
         // by convention, the endpoint param is always the first ctor param

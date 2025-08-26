@@ -33,7 +33,7 @@ impl DatetimeClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_datetime")]
+    #[tracing::new("Encode.Datetime")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<DatetimeClientOptions>,

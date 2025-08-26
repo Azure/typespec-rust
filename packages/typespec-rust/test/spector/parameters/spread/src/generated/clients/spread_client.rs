@@ -31,7 +31,7 @@ impl SpreadClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_spread")]
+    #[tracing::new("Parameters.Spread")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<SpreadClientOptions>,

@@ -34,7 +34,7 @@ impl BytesClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_bytes")]
+    #[tracing::new("Encode.Bytes")]
     pub fn with_no_credential(endpoint: &str, options: Option<BytesClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;

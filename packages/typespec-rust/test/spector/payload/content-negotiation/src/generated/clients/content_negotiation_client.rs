@@ -33,7 +33,7 @@ impl ContentNegotiationClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_contentneg")]
+    #[tracing::new("Payload.ContentNegotiation")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<ContentNegotiationClientOptions>,

@@ -30,7 +30,7 @@ impl ParentClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_clientinit")]
+    #[tracing::new("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParentClient")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<ParentClientOptions>,

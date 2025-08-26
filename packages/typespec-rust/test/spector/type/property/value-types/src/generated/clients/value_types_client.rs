@@ -43,7 +43,7 @@ impl ValueTypesClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_valuetypes")]
+    #[tracing::new("Type.Property.ValueTypes")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<ValueTypesClientOptions>,

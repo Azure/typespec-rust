@@ -31,7 +31,7 @@ impl BasicClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_basicparams")]
+    #[tracing::new("Parameters.Basic")]
     pub fn with_no_credential(endpoint: &str, options: Option<BasicClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;

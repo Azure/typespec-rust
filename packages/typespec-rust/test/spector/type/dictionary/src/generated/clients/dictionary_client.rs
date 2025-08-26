@@ -36,7 +36,7 @@ impl DictionaryClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_dictionary")]
+    #[tracing::new("Type.Dictionary")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<DictionaryClientOptions>,

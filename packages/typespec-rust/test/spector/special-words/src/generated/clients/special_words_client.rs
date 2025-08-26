@@ -71,7 +71,7 @@ impl SpecialWordsClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_specialwords")]
+    #[tracing::new("SpecialWords")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<SpecialWordsClientOptions>,

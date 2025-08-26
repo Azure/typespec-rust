@@ -30,7 +30,7 @@ impl ExtensibleClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_extensible")]
+    #[tracing::new("Type.Enum.Extensible")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<ExtensibleClientOptions>,

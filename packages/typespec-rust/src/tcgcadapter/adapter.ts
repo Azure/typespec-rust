@@ -995,16 +995,9 @@ export class Adapter {
       this.adaptMethod(method, rustClient);
     }
 
-    // Set the management namespace for tracing based on the first method's crossLanguageDefinitionId
-    if (client.methods.length > 0) {
-      const firstMethod = client.methods[0];
-      if (firstMethod.crossLanguageDefinitionId) {
-        // Extract namespace by removing the last segment (method name)
-        const parts = firstMethod.crossLanguageDefinitionId.split('.');
-        if (parts.length > 1) {
-          rustClient.managementNamespace = parts.slice(0, -1).join('.');
-        }
-      }
+    // Set the tracing namespace for tracing based on the client's namespace
+    if (client.crossLanguageDefinitionId) {
+      rustClient.tracingNamespaceIdentifier = client.crossLanguageDefinitionId;
     }
 
     this.crate.clients.push(rustClient);
