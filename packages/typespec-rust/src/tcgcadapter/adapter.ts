@@ -996,9 +996,7 @@ export class Adapter {
     }
 
     // Set the tracing namespace for tracing based on the client's namespace
-    if (client.crossLanguageDefinitionId) {
-      rustClient.tracingNamespaceIdentifier = client.crossLanguageDefinitionId;
-    }
+    rustClient.tracingIdentifier = client.crossLanguageDefinitionId;
 
     this.crate.clients.push(rustClient);
     return rustClient;
