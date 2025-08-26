@@ -21,7 +21,10 @@ describe('typespec-rust: codegen', () => {
         'edition.workspace = true\n' +
         'license.workspace = true\n' +
         'repository.workspace = true\n' +
-        'rust-version.workspace = true\n';
+        'rust-version.workspace = true\n' +
+        '\n' +
+        '[features]\n' +
+        'default = ["azure_core/default"]\n';
 
       const codegen = new CodeGenerator(new rust.Crate('test_crate', '1.2.3', 'azure-arm'));
       const cargoToml = codegen.emitCargoToml();
@@ -37,6 +40,9 @@ describe('typespec-rust: codegen', () => {
         'license.workspace = true\n' +
         'repository.workspace = true\n' +
         'rust-version.workspace = true\n' +
+        '\n' +
+        '[features]\n' +
+        'default = ["azure_core/default"]\n' +
         '\n' +
         '[dependencies]\n' +
         'azure_core = { workspace = true }\n';
