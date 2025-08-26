@@ -290,7 +290,7 @@ impl NamingClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`client_name`()](NamingClientResponseResultHeaders::client_name) - default-name
+    /// * [`client_name`()](crate::generated::models::NamingClientResponseResultHeaders::client_name) - default-name
     ///
     /// [`NamingClientResponseResultHeaders`]: crate::generated::models::NamingClientResponseResultHeaders
     #[tracing::function("Client.Naming.Header.response")]

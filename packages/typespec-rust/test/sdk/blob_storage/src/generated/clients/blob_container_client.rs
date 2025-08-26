@@ -137,10 +137,10 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobContainerClientAcquireLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobContainerClientAcquireLeaseResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobContainerClientAcquireLeaseResultHeaders::etag) - etag
-    /// * [`lease_id`()](BlobContainerClientAcquireLeaseResultHeaders::lease_id) - x-ms-lease-id
+    /// * [`date`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::lease_id) - x-ms-lease-id
     ///
     /// [`BlobContainerClientAcquireLeaseResultHeaders`]: crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.acquireLease")]
@@ -223,11 +223,11 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobContainerClientBreakLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobContainerClientBreakLeaseResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobContainerClientBreakLeaseResultHeaders::etag) - etag
-    /// * [`lease_id`()](BlobContainerClientBreakLeaseResultHeaders::lease_id) - x-ms-lease-id
-    /// * [`lease_time`()](BlobContainerClientBreakLeaseResultHeaders::lease_time) - x-ms-lease-time
+    /// * [`date`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::lease_id) - x-ms-lease-id
+    /// * [`lease_time`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::lease_time) - x-ms-lease-time
     ///
     /// [`BlobContainerClientBreakLeaseResultHeaders`]: crate::generated::models::BlobContainerClientBreakLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.breakLease")]
@@ -309,10 +309,10 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobContainerClientChangeLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobContainerClientChangeLeaseResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobContainerClientChangeLeaseResultHeaders::etag) - etag
-    /// * [`lease_id`()](BlobContainerClientChangeLeaseResultHeaders::lease_id) - x-ms-lease-id
+    /// * [`date`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::lease_id) - x-ms-lease-id
     ///
     /// [`BlobContainerClientChangeLeaseResultHeaders`]: crate::generated::models::BlobContainerClientChangeLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.changeLease")]
@@ -491,7 +491,7 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](FilterBlobSegmentHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::FilterBlobSegmentHeaders::date) - Date
     ///
     /// [`FilterBlobSegmentHeaders`]: crate::generated::models::FilterBlobSegmentHeaders
     #[tracing::function("Storage.Blob.Container.filterBlobs")]
@@ -581,10 +581,10 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](VecSignedIdentifierHeaders::date) - Date
-    /// * [`last_modified`()](VecSignedIdentifierHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](VecSignedIdentifierHeaders::etag) - etag
-    /// * [`access`()](VecSignedIdentifierHeaders::access) - x-ms-blob-public-access
+    /// * [`date`()](crate::generated::models::VecSignedIdentifierHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::VecSignedIdentifierHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::VecSignedIdentifierHeaders::etag) - etag
+    /// * [`access`()](crate::generated::models::VecSignedIdentifierHeaders::access) - x-ms-blob-public-access
     ///
     /// [`VecSignedIdentifierHeaders`]: crate::generated::models::VecSignedIdentifierHeaders
     #[tracing::function("Storage.Blob.Container.getAccessPolicy")]
@@ -657,10 +657,10 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobContainerClientGetAccountInfoResultHeaders::date) - Date
-    /// * [`account_kind`()](BlobContainerClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
-    /// * [`is_hierarchical_namespace_enabled`()](BlobContainerClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
-    /// * [`sku_name`()](BlobContainerClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
+    /// * [`date`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::date) - Date
+    /// * [`account_kind`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
+    /// * [`is_hierarchical_namespace_enabled`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
+    /// * [`sku_name`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
     ///
     /// [`BlobContainerClientGetAccountInfoResultHeaders`]: crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders
     #[tracing::function("Storage.Blob.Container.getAccountInfo")]
@@ -746,18 +746,18 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`last_modified`()](BlobContainerClientGetPropertiesResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobContainerClientGetPropertiesResultHeaders::etag) - etag
-    /// * [`access`()](BlobContainerClientGetPropertiesResultHeaders::access) - x-ms-blob-public-access
-    /// * [`default_encryption_scope`()](BlobContainerClientGetPropertiesResultHeaders::default_encryption_scope) - x-ms-default-encryption-scope
-    /// * [`prevent_encryption_scope_override`()](BlobContainerClientGetPropertiesResultHeaders::prevent_encryption_scope_override) - x-ms-deny-encryption-scope-override
-    /// * [`has_immutability_policy`()](BlobContainerClientGetPropertiesResultHeaders::has_immutability_policy) - x-ms-has-immutability-policy
-    /// * [`has_legal_hold`()](BlobContainerClientGetPropertiesResultHeaders::has_legal_hold) - x-ms-has-legal-hold
-    /// * [`is_immutable_storage_with_versioning_enabled`()](BlobContainerClientGetPropertiesResultHeaders::is_immutable_storage_with_versioning_enabled) - x-ms-immutable-storage-with-versioning-enabled
-    /// * [`duration`()](BlobContainerClientGetPropertiesResultHeaders::duration) - x-ms-lease-duration
-    /// * [`lease_state`()](BlobContainerClientGetPropertiesResultHeaders::lease_state) - x-ms-lease-state
-    /// * [`lease_status`()](BlobContainerClientGetPropertiesResultHeaders::lease_status) - x-ms-lease-status
-    /// * [`metadata`()](BlobContainerClientGetPropertiesResultHeaders::metadata) - x-ms-meta
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::etag) - etag
+    /// * [`access`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::access) - x-ms-blob-public-access
+    /// * [`default_encryption_scope`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::default_encryption_scope) - x-ms-default-encryption-scope
+    /// * [`prevent_encryption_scope_override`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::prevent_encryption_scope_override) - x-ms-deny-encryption-scope-override
+    /// * [`has_immutability_policy`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::has_immutability_policy) - x-ms-has-immutability-policy
+    /// * [`has_legal_hold`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::has_legal_hold) - x-ms-has-legal-hold
+    /// * [`is_immutable_storage_with_versioning_enabled`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::is_immutable_storage_with_versioning_enabled) - x-ms-immutable-storage-with-versioning-enabled
+    /// * [`duration`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::duration) - x-ms-lease-duration
+    /// * [`lease_state`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::lease_state) - x-ms-lease-state
+    /// * [`lease_status`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::lease_status) - x-ms-lease-status
+    /// * [`metadata`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::metadata) - x-ms-meta
     ///
     /// [`BlobContainerClientGetPropertiesResultHeaders`]: crate::generated::models::BlobContainerClientGetPropertiesResultHeaders
     #[tracing::function("Storage.Blob.Container.getProperties")]
@@ -821,7 +821,7 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](ListBlobsFlatSegmentResponseHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::ListBlobsFlatSegmentResponseHeaders::date) - Date
     ///
     /// [`ListBlobsFlatSegmentResponseHeaders`]: crate::generated::models::ListBlobsFlatSegmentResponseHeaders
     #[tracing::function("Storage.Blob.Container.listBlobFlatSegment")]
@@ -944,7 +944,7 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](ListBlobsHierarchySegmentResponseHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::ListBlobsHierarchySegmentResponseHeaders::date) - Date
     ///
     /// [`ListBlobsHierarchySegmentResponseHeaders`]: crate::generated::models::ListBlobsHierarchySegmentResponseHeaders
     #[tracing::function("Storage.Blob.Container.listBlobHierarchySegment")]
@@ -1076,9 +1076,9 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobContainerClientReleaseLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobContainerClientReleaseLeaseResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobContainerClientReleaseLeaseResultHeaders::etag) - etag
+    /// * [`date`()](crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders::etag) - etag
     ///
     /// [`BlobContainerClientReleaseLeaseResultHeaders`]: crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.releaseLease")]
@@ -1151,7 +1151,7 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobContainerClientRenameResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobContainerClientRenameResultHeaders::date) - Date
     ///
     /// [`BlobContainerClientRenameResultHeaders`]: crate::generated::models::BlobContainerClientRenameResultHeaders
     #[tracing::function("Storage.Blob.Container.rename")]
@@ -1227,10 +1227,10 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobContainerClientRenewLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobContainerClientRenewLeaseResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobContainerClientRenewLeaseResultHeaders::etag) - etag
-    /// * [`lease_id`()](BlobContainerClientRenewLeaseResultHeaders::lease_id) - x-ms-lease-id
+    /// * [`date`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::lease_id) - x-ms-lease-id
     ///
     /// [`BlobContainerClientRenewLeaseResultHeaders`]: crate::generated::models::BlobContainerClientRenewLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.renewLease")]
@@ -1302,7 +1302,7 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobContainerClientRestoreResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobContainerClientRestoreResultHeaders::date) - Date
     ///
     /// [`BlobContainerClientRestoreResultHeaders`]: crate::generated::models::BlobContainerClientRestoreResultHeaders
     #[tracing::function("Storage.Blob.Container.restore")]
@@ -1379,9 +1379,9 @@ impl BlobContainerClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobContainerClientSetAccessPolicyResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobContainerClientSetAccessPolicyResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobContainerClientSetAccessPolicyResultHeaders::etag) - etag
+    /// * [`date`()](crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders::etag) - etag
     ///
     /// [`BlobContainerClientSetAccessPolicyResultHeaders`]: crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders
     #[tracing::function("Storage.Blob.Container.setAccessPolicy")]

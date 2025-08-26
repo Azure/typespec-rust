@@ -61,8 +61,8 @@ impl OperationTemplatesLroClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](OrderHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`retry_after`()](OrderHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::OrderHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](crate::generated::models::OrderHeaders::retry_after) - Retry-After
     ///
     /// [`OrderHeaders`]: crate::generated::models::OrderHeaders
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.createOrReplace")]
@@ -169,8 +169,8 @@ impl OperationTemplatesLroClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](ArmOperationStatusResourceProvisioningStateHeaders::location) - Location
-    /// * [`retry_after`()](ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
+    /// * [`location`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
     ///
     /// [`ArmOperationStatusResourceProvisioningStateHeaders`]: crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.delete")]
@@ -275,9 +275,9 @@ impl OperationTemplatesLroClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](ExportResultHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`location`()](ExportResultHeaders::location) - Location
-    /// * [`retry_after`()](ExportResultHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::ExportResultHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`location`()](crate::generated::models::ExportResultHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::ExportResultHeaders::retry_after) - Retry-After
     ///
     /// [`ExportResultHeaders`]: crate::generated::models::ExportResultHeaders
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.export")]

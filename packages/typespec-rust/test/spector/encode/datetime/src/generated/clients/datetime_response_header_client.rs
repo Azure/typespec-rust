@@ -52,7 +52,7 @@ impl DatetimeResponseHeaderClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`value`()](DatetimeResponseHeaderClientDefaultResultHeaders::value) - value
+    /// * [`value`()](crate::generated::models::DatetimeResponseHeaderClientDefaultResultHeaders::value) - value
     ///
     /// [`DatetimeResponseHeaderClientDefaultResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientDefaultResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.default")]
@@ -102,7 +102,7 @@ impl DatetimeResponseHeaderClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`value`()](DatetimeResponseHeaderClientRfc3339ResultHeaders::value) - value
+    /// * [`value`()](crate::generated::models::DatetimeResponseHeaderClientRfc3339ResultHeaders::value) - value
     ///
     /// [`DatetimeResponseHeaderClientRfc3339ResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientRfc3339ResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.rfc3339")]
@@ -152,7 +152,7 @@ impl DatetimeResponseHeaderClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`value`()](DatetimeResponseHeaderClientRfc7231ResultHeaders::value) - value
+    /// * [`value`()](crate::generated::models::DatetimeResponseHeaderClientRfc7231ResultHeaders::value) - value
     ///
     /// [`DatetimeResponseHeaderClientRfc7231ResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientRfc7231ResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.rfc7231")]
@@ -202,7 +202,7 @@ impl DatetimeResponseHeaderClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`value`()](DatetimeResponseHeaderClientUnixTimestampResultHeaders::value) - value
+    /// * [`value`()](crate::generated::models::DatetimeResponseHeaderClientUnixTimestampResultHeaders::value) - value
     ///
     /// [`DatetimeResponseHeaderClientUnixTimestampResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientUnixTimestampResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.unixTimestamp")]

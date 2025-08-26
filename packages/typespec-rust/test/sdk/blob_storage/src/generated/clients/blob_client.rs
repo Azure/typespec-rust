@@ -137,7 +137,7 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientAbortCopyFromUrlResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobClientAbortCopyFromUrlResultHeaders::date) - Date
     ///
     /// [`BlobClientAbortCopyFromUrlResultHeaders`]: crate::generated::models::BlobClientAbortCopyFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.abortCopyFromUrl")]
@@ -215,10 +215,10 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientAcquireLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobClientAcquireLeaseResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobClientAcquireLeaseResultHeaders::etag) - etag
-    /// * [`lease_id`()](BlobClientAcquireLeaseResultHeaders::lease_id) - x-ms-lease-id
+    /// * [`date`()](crate::generated::models::BlobClientAcquireLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobClientAcquireLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobClientAcquireLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](crate::generated::models::BlobClientAcquireLeaseResultHeaders::lease_id) - x-ms-lease-id
     ///
     /// [`BlobClientAcquireLeaseResultHeaders`]: crate::generated::models::BlobClientAcquireLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.acquireLease")]
@@ -312,10 +312,10 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientBreakLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobClientBreakLeaseResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobClientBreakLeaseResultHeaders::etag) - etag
-    /// * [`lease_time`()](BlobClientBreakLeaseResultHeaders::lease_time) - x-ms-lease-time
+    /// * [`date`()](crate::generated::models::BlobClientBreakLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobClientBreakLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobClientBreakLeaseResultHeaders::etag) - etag
+    /// * [`lease_time`()](crate::generated::models::BlobClientBreakLeaseResultHeaders::lease_time) - x-ms-lease-time
     ///
     /// [`BlobClientBreakLeaseResultHeaders`]: crate::generated::models::BlobClientBreakLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.breakLease")]
@@ -408,10 +408,10 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientChangeLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobClientChangeLeaseResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobClientChangeLeaseResultHeaders::etag) - etag
-    /// * [`lease_id`()](BlobClientChangeLeaseResultHeaders::lease_id) - x-ms-lease-id
+    /// * [`date`()](crate::generated::models::BlobClientChangeLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobClientChangeLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobClientChangeLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](crate::generated::models::BlobClientChangeLeaseResultHeaders::lease_id) - x-ms-lease-id
     ///
     /// [`BlobClientChangeLeaseResultHeaders`]: crate::generated::models::BlobClientChangeLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.changeLease")]
@@ -506,15 +506,15 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](BlobClientCopyFromUrlResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](BlobClientCopyFromUrlResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobClientCopyFromUrlResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobClientCopyFromUrlResultHeaders::etag) - etag
-    /// * [`content_crc64`()](BlobClientCopyFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
-    /// * [`copy_id`()](BlobClientCopyFromUrlResultHeaders::copy_id) - x-ms-copy-id
-    /// * [`copy_status`()](BlobClientCopyFromUrlResultHeaders::copy_status) - x-ms-copy-status
-    /// * [`encryption_scope`()](BlobClientCopyFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
-    /// * [`version_id`()](BlobClientCopyFromUrlResultHeaders::version_id) - x-ms-version-id
+    /// * [`content_md5`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::etag) - etag
+    /// * [`content_crc64`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`copy_id`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::copy_id) - x-ms-copy-id
+    /// * [`copy_status`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::copy_status) - x-ms-copy-status
+    /// * [`encryption_scope`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`version_id`()](crate::generated::models::BlobClientCopyFromUrlResultHeaders::version_id) - x-ms-version-id
     ///
     /// [`BlobClientCopyFromUrlResultHeaders`]: crate::generated::models::BlobClientCopyFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.copyFromUrl")]
@@ -662,12 +662,12 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientCreateSnapshotResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobClientCreateSnapshotResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobClientCreateSnapshotResultHeaders::etag) - etag
-    /// * [`is_server_encrypted`()](BlobClientCreateSnapshotResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
-    /// * [`snapshot`()](BlobClientCreateSnapshotResultHeaders::snapshot) - x-ms-snapshot
-    /// * [`version_id`()](BlobClientCreateSnapshotResultHeaders::version_id) - x-ms-version-id
+    /// * [`date`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::etag) - etag
+    /// * [`is_server_encrypted`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`snapshot`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::snapshot) - x-ms-snapshot
+    /// * [`version_id`()](crate::generated::models::BlobClientCreateSnapshotResultHeaders::version_id) - x-ms-version-id
     ///
     /// [`BlobClientCreateSnapshotResultHeaders`]: crate::generated::models::BlobClientCreateSnapshotResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.createSnapshot")]
@@ -848,7 +848,7 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientDeleteImmutabilityPolicyResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobClientDeleteImmutabilityPolicyResultHeaders::date) - Date
     ///
     /// [`BlobClientDeleteImmutabilityPolicyResultHeaders`]: crate::generated::models::BlobClientDeleteImmutabilityPolicyResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.deleteImmutabilityPolicy")]
@@ -926,45 +926,45 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`accept_ranges`()](BlobClientDownloadResultHeaders::accept_ranges) - Accept-Ranges
-    /// * [`cache_control`()](BlobClientDownloadResultHeaders::cache_control) - Cache-Control
-    /// * [`content_disposition`()](BlobClientDownloadResultHeaders::content_disposition) - Content-Disposition
-    /// * [`content_encoding`()](BlobClientDownloadResultHeaders::content_encoding) - Content-Encoding
-    /// * [`content_language`()](BlobClientDownloadResultHeaders::content_language) - Content-Language
-    /// * [`content_length`()](BlobClientDownloadResultHeaders::content_length) - Content-Length
-    /// * [`content_md5`()](BlobClientDownloadResultHeaders::content_md5) - Content-MD5
-    /// * [`content_range`()](BlobClientDownloadResultHeaders::content_range) - Content-Range
-    /// * [`last_modified`()](BlobClientDownloadResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobClientDownloadResultHeaders::etag) - etag
-    /// * [`blob_committed_block_count`()](BlobClientDownloadResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
-    /// * [`blob_content_md5`()](BlobClientDownloadResultHeaders::blob_content_md5) - x-ms-blob-content-md5
-    /// * [`is_sealed`()](BlobClientDownloadResultHeaders::is_sealed) - x-ms-blob-sealed
-    /// * [`blob_sequence_number`()](BlobClientDownloadResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
-    /// * [`blob_type`()](BlobClientDownloadResultHeaders::blob_type) - x-ms-blob-type
-    /// * [`content_crc64`()](BlobClientDownloadResultHeaders::content_crc64) - x-ms-content-crc64
-    /// * [`copy_completion_time`()](BlobClientDownloadResultHeaders::copy_completion_time) - x-ms-copy-completion-time
-    /// * [`copy_id`()](BlobClientDownloadResultHeaders::copy_id) - x-ms-copy-id
-    /// * [`copy_progress`()](BlobClientDownloadResultHeaders::copy_progress) - x-ms-copy-progress
-    /// * [`copy_source`()](BlobClientDownloadResultHeaders::copy_source) - x-ms-copy-source
-    /// * [`copy_status`()](BlobClientDownloadResultHeaders::copy_status) - x-ms-copy-status
-    /// * [`copy_status_description`()](BlobClientDownloadResultHeaders::copy_status_description) - x-ms-copy-status-description
-    /// * [`creation_time`()](BlobClientDownloadResultHeaders::creation_time) - x-ms-creation-time
-    /// * [`encryption_key_sha256`()](BlobClientDownloadResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
-    /// * [`encryption_scope`()](BlobClientDownloadResultHeaders::encryption_scope) - x-ms-encryption-scope
-    /// * [`immutability_policy_mode`()](BlobClientDownloadResultHeaders::immutability_policy_mode) - x-ms-immutability-policy-mode
-    /// * [`immutability_policy_expires_on`()](BlobClientDownloadResultHeaders::immutability_policy_expires_on) - x-ms-immutability-policy-until-date
-    /// * [`is_current_version`()](BlobClientDownloadResultHeaders::is_current_version) - x-ms-is-current-version
-    /// * [`last_accessed`()](BlobClientDownloadResultHeaders::last_accessed) - x-ms-last-access-time
-    /// * [`duration`()](BlobClientDownloadResultHeaders::duration) - x-ms-lease-duration
-    /// * [`lease_state`()](BlobClientDownloadResultHeaders::lease_state) - x-ms-lease-state
-    /// * [`lease_status`()](BlobClientDownloadResultHeaders::lease_status) - x-ms-lease-status
-    /// * [`legal_hold`()](BlobClientDownloadResultHeaders::legal_hold) - x-ms-legal-hold
-    /// * [`metadata`()](BlobClientDownloadResultHeaders::metadata) - x-ms-meta
-    /// * [`object_replication_rules`()](BlobClientDownloadResultHeaders::object_replication_rules) - x-ms-or
-    /// * [`object_replication_policy_id`()](BlobClientDownloadResultHeaders::object_replication_policy_id) - x-ms-or-policy-id
-    /// * [`is_server_encrypted`()](BlobClientDownloadResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
-    /// * [`tag_count`()](BlobClientDownloadResultHeaders::tag_count) - x-ms-tag-count
-    /// * [`version_id`()](BlobClientDownloadResultHeaders::version_id) - x-ms-version-id
+    /// * [`accept_ranges`()](crate::generated::models::BlobClientDownloadResultHeaders::accept_ranges) - Accept-Ranges
+    /// * [`cache_control`()](crate::generated::models::BlobClientDownloadResultHeaders::cache_control) - Cache-Control
+    /// * [`content_disposition`()](crate::generated::models::BlobClientDownloadResultHeaders::content_disposition) - Content-Disposition
+    /// * [`content_encoding`()](crate::generated::models::BlobClientDownloadResultHeaders::content_encoding) - Content-Encoding
+    /// * [`content_language`()](crate::generated::models::BlobClientDownloadResultHeaders::content_language) - Content-Language
+    /// * [`content_length`()](crate::generated::models::BlobClientDownloadResultHeaders::content_length) - Content-Length
+    /// * [`content_md5`()](crate::generated::models::BlobClientDownloadResultHeaders::content_md5) - Content-MD5
+    /// * [`content_range`()](crate::generated::models::BlobClientDownloadResultHeaders::content_range) - Content-Range
+    /// * [`last_modified`()](crate::generated::models::BlobClientDownloadResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobClientDownloadResultHeaders::etag) - etag
+    /// * [`blob_committed_block_count`()](crate::generated::models::BlobClientDownloadResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
+    /// * [`blob_content_md5`()](crate::generated::models::BlobClientDownloadResultHeaders::blob_content_md5) - x-ms-blob-content-md5
+    /// * [`is_sealed`()](crate::generated::models::BlobClientDownloadResultHeaders::is_sealed) - x-ms-blob-sealed
+    /// * [`blob_sequence_number`()](crate::generated::models::BlobClientDownloadResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
+    /// * [`blob_type`()](crate::generated::models::BlobClientDownloadResultHeaders::blob_type) - x-ms-blob-type
+    /// * [`content_crc64`()](crate::generated::models::BlobClientDownloadResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`copy_completion_time`()](crate::generated::models::BlobClientDownloadResultHeaders::copy_completion_time) - x-ms-copy-completion-time
+    /// * [`copy_id`()](crate::generated::models::BlobClientDownloadResultHeaders::copy_id) - x-ms-copy-id
+    /// * [`copy_progress`()](crate::generated::models::BlobClientDownloadResultHeaders::copy_progress) - x-ms-copy-progress
+    /// * [`copy_source`()](crate::generated::models::BlobClientDownloadResultHeaders::copy_source) - x-ms-copy-source
+    /// * [`copy_status`()](crate::generated::models::BlobClientDownloadResultHeaders::copy_status) - x-ms-copy-status
+    /// * [`copy_status_description`()](crate::generated::models::BlobClientDownloadResultHeaders::copy_status_description) - x-ms-copy-status-description
+    /// * [`creation_time`()](crate::generated::models::BlobClientDownloadResultHeaders::creation_time) - x-ms-creation-time
+    /// * [`encryption_key_sha256`()](crate::generated::models::BlobClientDownloadResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::BlobClientDownloadResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`immutability_policy_mode`()](crate::generated::models::BlobClientDownloadResultHeaders::immutability_policy_mode) - x-ms-immutability-policy-mode
+    /// * [`immutability_policy_expires_on`()](crate::generated::models::BlobClientDownloadResultHeaders::immutability_policy_expires_on) - x-ms-immutability-policy-until-date
+    /// * [`is_current_version`()](crate::generated::models::BlobClientDownloadResultHeaders::is_current_version) - x-ms-is-current-version
+    /// * [`last_accessed`()](crate::generated::models::BlobClientDownloadResultHeaders::last_accessed) - x-ms-last-access-time
+    /// * [`duration`()](crate::generated::models::BlobClientDownloadResultHeaders::duration) - x-ms-lease-duration
+    /// * [`lease_state`()](crate::generated::models::BlobClientDownloadResultHeaders::lease_state) - x-ms-lease-state
+    /// * [`lease_status`()](crate::generated::models::BlobClientDownloadResultHeaders::lease_status) - x-ms-lease-status
+    /// * [`legal_hold`()](crate::generated::models::BlobClientDownloadResultHeaders::legal_hold) - x-ms-legal-hold
+    /// * [`metadata`()](crate::generated::models::BlobClientDownloadResultHeaders::metadata) - x-ms-meta
+    /// * [`object_replication_rules`()](crate::generated::models::BlobClientDownloadResultHeaders::object_replication_rules) - x-ms-or
+    /// * [`object_replication_policy_id`()](crate::generated::models::BlobClientDownloadResultHeaders::object_replication_policy_id) - x-ms-or-policy-id
+    /// * [`is_server_encrypted`()](crate::generated::models::BlobClientDownloadResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`tag_count`()](crate::generated::models::BlobClientDownloadResultHeaders::tag_count) - x-ms-tag-count
+    /// * [`version_id`()](crate::generated::models::BlobClientDownloadResultHeaders::version_id) - x-ms-version-id
     ///
     /// [`BlobClientDownloadResultHeaders`]: crate::generated::models::BlobClientDownloadResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.download")]
@@ -1087,10 +1087,10 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientGetAccountInfoResultHeaders::date) - Date
-    /// * [`account_kind`()](BlobClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
-    /// * [`is_hierarchical_namespace_enabled`()](BlobClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
-    /// * [`sku_name`()](BlobClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
+    /// * [`date`()](crate::generated::models::BlobClientGetAccountInfoResultHeaders::date) - Date
+    /// * [`account_kind`()](crate::generated::models::BlobClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
+    /// * [`is_hierarchical_namespace_enabled`()](crate::generated::models::BlobClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
+    /// * [`sku_name`()](crate::generated::models::BlobClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
     ///
     /// [`BlobClientGetAccountInfoResultHeaders`]: crate::generated::models::BlobClientGetAccountInfoResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.getAccountInfo")]
@@ -1200,49 +1200,49 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`cache_control`()](BlobClientGetPropertiesResultHeaders::cache_control) - Cache-Control
-    /// * [`content_disposition`()](BlobClientGetPropertiesResultHeaders::content_disposition) - Content-Disposition
-    /// * [`content_encoding`()](BlobClientGetPropertiesResultHeaders::content_encoding) - Content-Encoding
-    /// * [`content_language`()](BlobClientGetPropertiesResultHeaders::content_language) - Content-Language
-    /// * [`content_length`()](BlobClientGetPropertiesResultHeaders::content_length) - Content-Length
-    /// * [`content_md5`()](BlobClientGetPropertiesResultHeaders::content_md5) - Content-MD5
-    /// * [`last_modified`()](BlobClientGetPropertiesResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobClientGetPropertiesResultHeaders::etag) - etag
-    /// * [`tier`()](BlobClientGetPropertiesResultHeaders::tier) - x-ms-access-tier
-    /// * [`access_tier_change_time`()](BlobClientGetPropertiesResultHeaders::access_tier_change_time) - x-ms-access-tier-change-time
-    /// * [`access_tier_inferred`()](BlobClientGetPropertiesResultHeaders::access_tier_inferred) - x-ms-access-tier-inferred
-    /// * [`archive_status`()](BlobClientGetPropertiesResultHeaders::archive_status) - x-ms-archive-status
-    /// * [`blob_committed_block_count`()](BlobClientGetPropertiesResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
-    /// * [`is_sealed`()](BlobClientGetPropertiesResultHeaders::is_sealed) - x-ms-blob-sealed
-    /// * [`blob_sequence_number`()](BlobClientGetPropertiesResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
-    /// * [`blob_type`()](BlobClientGetPropertiesResultHeaders::blob_type) - x-ms-blob-type
-    /// * [`copy_completion_time`()](BlobClientGetPropertiesResultHeaders::copy_completion_time) - x-ms-copy-completion-time
-    /// * [`destination_snapshot`()](BlobClientGetPropertiesResultHeaders::destination_snapshot) - x-ms-copy-destination-snapshot
-    /// * [`copy_id`()](BlobClientGetPropertiesResultHeaders::copy_id) - x-ms-copy-id
-    /// * [`copy_progress`()](BlobClientGetPropertiesResultHeaders::copy_progress) - x-ms-copy-progress
-    /// * [`copy_source`()](BlobClientGetPropertiesResultHeaders::copy_source) - x-ms-copy-source
-    /// * [`copy_status`()](BlobClientGetPropertiesResultHeaders::copy_status) - x-ms-copy-status
-    /// * [`copy_status_description`()](BlobClientGetPropertiesResultHeaders::copy_status_description) - x-ms-copy-status-description
-    /// * [`creation_time`()](BlobClientGetPropertiesResultHeaders::creation_time) - x-ms-creation-time
-    /// * [`encryption_key_sha256`()](BlobClientGetPropertiesResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
-    /// * [`encryption_scope`()](BlobClientGetPropertiesResultHeaders::encryption_scope) - x-ms-encryption-scope
-    /// * [`expires_on`()](BlobClientGetPropertiesResultHeaders::expires_on) - x-ms-expiry-time
-    /// * [`immutability_policy_mode`()](BlobClientGetPropertiesResultHeaders::immutability_policy_mode) - x-ms-immutability-policy-mode
-    /// * [`immutability_policy_expires_on`()](BlobClientGetPropertiesResultHeaders::immutability_policy_expires_on) - x-ms-immutability-policy-until-date
-    /// * [`is_incremental_copy`()](BlobClientGetPropertiesResultHeaders::is_incremental_copy) - x-ms-incremental-copy
-    /// * [`is_current_version`()](BlobClientGetPropertiesResultHeaders::is_current_version) - x-ms-is-current-version
-    /// * [`last_accessed`()](BlobClientGetPropertiesResultHeaders::last_accessed) - x-ms-last-access-time
-    /// * [`duration`()](BlobClientGetPropertiesResultHeaders::duration) - x-ms-lease-duration
-    /// * [`lease_state`()](BlobClientGetPropertiesResultHeaders::lease_state) - x-ms-lease-state
-    /// * [`lease_status`()](BlobClientGetPropertiesResultHeaders::lease_status) - x-ms-lease-status
-    /// * [`legal_hold`()](BlobClientGetPropertiesResultHeaders::legal_hold) - x-ms-legal-hold
-    /// * [`metadata`()](BlobClientGetPropertiesResultHeaders::metadata) - x-ms-meta
-    /// * [`object_replication_rules`()](BlobClientGetPropertiesResultHeaders::object_replication_rules) - x-ms-or
-    /// * [`object_replication_policy_id`()](BlobClientGetPropertiesResultHeaders::object_replication_policy_id) - x-ms-or-policy-id
-    /// * [`rehydrate_priority`()](BlobClientGetPropertiesResultHeaders::rehydrate_priority) - x-ms-rehydrate-priority
-    /// * [`is_server_encrypted`()](BlobClientGetPropertiesResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
-    /// * [`tag_count`()](BlobClientGetPropertiesResultHeaders::tag_count) - x-ms-tag-count
-    /// * [`version_id`()](BlobClientGetPropertiesResultHeaders::version_id) - x-ms-version-id
+    /// * [`cache_control`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::cache_control) - Cache-Control
+    /// * [`content_disposition`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_disposition) - Content-Disposition
+    /// * [`content_encoding`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_encoding) - Content-Encoding
+    /// * [`content_language`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_language) - Content-Language
+    /// * [`content_length`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_length) - Content-Length
+    /// * [`content_md5`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::content_md5) - Content-MD5
+    /// * [`last_modified`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::etag) - etag
+    /// * [`tier`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::tier) - x-ms-access-tier
+    /// * [`access_tier_change_time`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::access_tier_change_time) - x-ms-access-tier-change-time
+    /// * [`access_tier_inferred`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::access_tier_inferred) - x-ms-access-tier-inferred
+    /// * [`archive_status`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::archive_status) - x-ms-archive-status
+    /// * [`blob_committed_block_count`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
+    /// * [`is_sealed`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::is_sealed) - x-ms-blob-sealed
+    /// * [`blob_sequence_number`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
+    /// * [`blob_type`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::blob_type) - x-ms-blob-type
+    /// * [`copy_completion_time`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::copy_completion_time) - x-ms-copy-completion-time
+    /// * [`destination_snapshot`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::destination_snapshot) - x-ms-copy-destination-snapshot
+    /// * [`copy_id`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::copy_id) - x-ms-copy-id
+    /// * [`copy_progress`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::copy_progress) - x-ms-copy-progress
+    /// * [`copy_source`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::copy_source) - x-ms-copy-source
+    /// * [`copy_status`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::copy_status) - x-ms-copy-status
+    /// * [`copy_status_description`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::copy_status_description) - x-ms-copy-status-description
+    /// * [`creation_time`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::creation_time) - x-ms-creation-time
+    /// * [`encryption_key_sha256`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`expires_on`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::expires_on) - x-ms-expiry-time
+    /// * [`immutability_policy_mode`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::immutability_policy_mode) - x-ms-immutability-policy-mode
+    /// * [`immutability_policy_expires_on`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::immutability_policy_expires_on) - x-ms-immutability-policy-until-date
+    /// * [`is_incremental_copy`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::is_incremental_copy) - x-ms-incremental-copy
+    /// * [`is_current_version`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::is_current_version) - x-ms-is-current-version
+    /// * [`last_accessed`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::last_accessed) - x-ms-last-access-time
+    /// * [`duration`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::duration) - x-ms-lease-duration
+    /// * [`lease_state`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::lease_state) - x-ms-lease-state
+    /// * [`lease_status`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::lease_status) - x-ms-lease-status
+    /// * [`legal_hold`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::legal_hold) - x-ms-legal-hold
+    /// * [`metadata`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::metadata) - x-ms-meta
+    /// * [`object_replication_rules`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::object_replication_rules) - x-ms-or
+    /// * [`object_replication_policy_id`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::object_replication_policy_id) - x-ms-or-policy-id
+    /// * [`rehydrate_priority`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::rehydrate_priority) - x-ms-rehydrate-priority
+    /// * [`is_server_encrypted`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`tag_count`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::tag_count) - x-ms-tag-count
+    /// * [`version_id`()](crate::generated::models::BlobClientGetPropertiesResultHeaders::version_id) - x-ms-version-id
     ///
     /// [`BlobClientGetPropertiesResultHeaders`]: crate::generated::models::BlobClientGetPropertiesResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.getProperties")]
@@ -1340,7 +1340,7 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobTagsHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobTagsHeaders::date) - Date
     ///
     /// [`BlobTagsHeaders`]: crate::generated::models::BlobTagsHeaders
     #[tracing::function("Storage.Blob.Container.Blob.getTags")]
@@ -1426,9 +1426,9 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientReleaseLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobClientReleaseLeaseResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobClientReleaseLeaseResultHeaders::etag) - etag
+    /// * [`date`()](crate::generated::models::BlobClientReleaseLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobClientReleaseLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobClientReleaseLeaseResultHeaders::etag) - etag
     ///
     /// [`BlobClientReleaseLeaseResultHeaders`]: crate::generated::models::BlobClientReleaseLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.releaseLease")]
@@ -1519,10 +1519,10 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientRenewLeaseResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobClientRenewLeaseResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobClientRenewLeaseResultHeaders::etag) - etag
-    /// * [`lease_id`()](BlobClientRenewLeaseResultHeaders::lease_id) - x-ms-lease-id
+    /// * [`date`()](crate::generated::models::BlobClientRenewLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobClientRenewLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobClientRenewLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](crate::generated::models::BlobClientRenewLeaseResultHeaders::lease_id) - x-ms-lease-id
     ///
     /// [`BlobClientRenewLeaseResultHeaders`]: crate::generated::models::BlobClientRenewLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.renewLease")]
@@ -1612,9 +1612,9 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientSetExpiryResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobClientSetExpiryResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobClientSetExpiryResultHeaders::etag) - etag
+    /// * [`date`()](crate::generated::models::BlobClientSetExpiryResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobClientSetExpiryResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobClientSetExpiryResultHeaders::etag) - etag
     ///
     /// [`BlobClientSetExpiryResultHeaders`]: crate::generated::models::BlobClientSetExpiryResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.setExpiry")]
@@ -1689,9 +1689,9 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientSetImmutabilityPolicyResultHeaders::date) - Date
-    /// * [`immutability_policy_mode`()](BlobClientSetImmutabilityPolicyResultHeaders::immutability_policy_mode) - x-ms-immutability-policy-mode
-    /// * [`immutability_policy_expires_on`()](BlobClientSetImmutabilityPolicyResultHeaders::immutability_policy_expires_on) - x-ms-immutability-policy-until-date
+    /// * [`date`()](crate::generated::models::BlobClientSetImmutabilityPolicyResultHeaders::date) - Date
+    /// * [`immutability_policy_mode`()](crate::generated::models::BlobClientSetImmutabilityPolicyResultHeaders::immutability_policy_mode) - x-ms-immutability-policy-mode
+    /// * [`immutability_policy_expires_on`()](crate::generated::models::BlobClientSetImmutabilityPolicyResultHeaders::immutability_policy_expires_on) - x-ms-immutability-policy-until-date
     ///
     /// [`BlobClientSetImmutabilityPolicyResultHeaders`]: crate::generated::models::BlobClientSetImmutabilityPolicyResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.setImmutabilityPolicy")]
@@ -1781,8 +1781,8 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientSetLegalHoldResultHeaders::date) - Date
-    /// * [`legal_hold`()](BlobClientSetLegalHoldResultHeaders::legal_hold) - x-ms-legal-hold
+    /// * [`date`()](crate::generated::models::BlobClientSetLegalHoldResultHeaders::date) - Date
+    /// * [`legal_hold`()](crate::generated::models::BlobClientSetLegalHoldResultHeaders::legal_hold) - x-ms-legal-hold
     ///
     /// [`BlobClientSetLegalHoldResultHeaders`]: crate::generated::models::BlobClientSetLegalHoldResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.setLegalHold")]
@@ -2013,7 +2013,7 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientSetTagsResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobClientSetTagsResultHeaders::date) - Date
     ///
     /// [`BlobClientSetTagsResultHeaders`]: crate::generated::models::BlobClientSetTagsResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.setTags")]
@@ -2164,12 +2164,12 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientStartCopyFromUrlResultHeaders::date) - Date
-    /// * [`last_modified`()](BlobClientStartCopyFromUrlResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlobClientStartCopyFromUrlResultHeaders::etag) - etag
-    /// * [`copy_id`()](BlobClientStartCopyFromUrlResultHeaders::copy_id) - x-ms-copy-id
-    /// * [`copy_status`()](BlobClientStartCopyFromUrlResultHeaders::copy_status) - x-ms-copy-status
-    /// * [`version_id`()](BlobClientStartCopyFromUrlResultHeaders::version_id) - x-ms-version-id
+    /// * [`date`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::etag) - etag
+    /// * [`copy_id`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::copy_id) - x-ms-copy-id
+    /// * [`copy_status`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::copy_status) - x-ms-copy-status
+    /// * [`version_id`()](crate::generated::models::BlobClientStartCopyFromUrlResultHeaders::version_id) - x-ms-version-id
     ///
     /// [`BlobClientStartCopyFromUrlResultHeaders`]: crate::generated::models::BlobClientStartCopyFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.startCopyFromUrl")]
@@ -2305,7 +2305,7 @@ impl BlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobClientUndeleteResultHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::BlobClientUndeleteResultHeaders::date) - Date
     ///
     /// [`BlobClientUndeleteResultHeaders`]: crate::generated::models::BlobClientUndeleteResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.undelete")]

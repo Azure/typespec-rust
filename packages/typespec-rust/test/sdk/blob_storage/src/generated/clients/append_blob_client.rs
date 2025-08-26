@@ -126,17 +126,17 @@ impl AppendBlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](AppendBlobClientAppendBlockResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](AppendBlobClientAppendBlockResultHeaders::date) - Date
-    /// * [`last_modified`()](AppendBlobClientAppendBlockResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](AppendBlobClientAppendBlockResultHeaders::etag) - etag
-    /// * [`blob_append_offset`()](AppendBlobClientAppendBlockResultHeaders::blob_append_offset) - x-ms-blob-append-offset
-    /// * [`blob_committed_block_count`()](AppendBlobClientAppendBlockResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
-    /// * [`content_crc64`()](AppendBlobClientAppendBlockResultHeaders::content_crc64) - x-ms-content-crc64
-    /// * [`encryption_key_sha256`()](AppendBlobClientAppendBlockResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
-    /// * [`encryption_scope`()](AppendBlobClientAppendBlockResultHeaders::encryption_scope) - x-ms-encryption-scope
-    /// * [`is_server_encrypted`()](AppendBlobClientAppendBlockResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
-    /// * [`structured_body_type`()](AppendBlobClientAppendBlockResultHeaders::structured_body_type) - x-ms-structured-body
+    /// * [`content_md5`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::etag) - etag
+    /// * [`blob_append_offset`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::blob_append_offset) - x-ms-blob-append-offset
+    /// * [`blob_committed_block_count`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
+    /// * [`content_crc64`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`structured_body_type`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::structured_body_type) - x-ms-structured-body
     ///
     /// [`AppendBlobClientAppendBlockResultHeaders`]: crate::generated::models::AppendBlobClientAppendBlockResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.appendBlock")]
@@ -267,16 +267,16 @@ impl AppendBlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](AppendBlobClientAppendBlockFromUrlResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](AppendBlobClientAppendBlockFromUrlResultHeaders::date) - Date
-    /// * [`last_modified`()](AppendBlobClientAppendBlockFromUrlResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](AppendBlobClientAppendBlockFromUrlResultHeaders::etag) - etag
-    /// * [`blob_append_offset`()](AppendBlobClientAppendBlockFromUrlResultHeaders::blob_append_offset) - x-ms-blob-append-offset
-    /// * [`blob_committed_block_count`()](AppendBlobClientAppendBlockFromUrlResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
-    /// * [`content_crc64`()](AppendBlobClientAppendBlockFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
-    /// * [`encryption_key_sha256`()](AppendBlobClientAppendBlockFromUrlResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
-    /// * [`encryption_scope`()](AppendBlobClientAppendBlockFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
-    /// * [`is_server_encrypted`()](AppendBlobClientAppendBlockFromUrlResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`content_md5`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::etag) - etag
+    /// * [`blob_append_offset`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::blob_append_offset) - x-ms-blob-append-offset
+    /// * [`blob_committed_block_count`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
+    /// * [`content_crc64`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
     ///
     /// [`AppendBlobClientAppendBlockFromUrlResultHeaders`]: crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.appendBlockFromUrl")]
@@ -425,14 +425,14 @@ impl AppendBlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](AppendBlobClientCreateResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](AppendBlobClientCreateResultHeaders::date) - Date
-    /// * [`last_modified`()](AppendBlobClientCreateResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](AppendBlobClientCreateResultHeaders::etag) - etag
-    /// * [`encryption_key_sha256`()](AppendBlobClientCreateResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
-    /// * [`encryption_scope`()](AppendBlobClientCreateResultHeaders::encryption_scope) - x-ms-encryption-scope
-    /// * [`is_server_encrypted`()](AppendBlobClientCreateResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
-    /// * [`version_id`()](AppendBlobClientCreateResultHeaders::version_id) - x-ms-version-id
+    /// * [`content_md5`()](crate::generated::models::AppendBlobClientCreateResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::AppendBlobClientCreateResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::AppendBlobClientCreateResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::AppendBlobClientCreateResultHeaders::etag) - etag
+    /// * [`encryption_key_sha256`()](crate::generated::models::AppendBlobClientCreateResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::AppendBlobClientCreateResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::AppendBlobClientCreateResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`version_id`()](crate::generated::models::AppendBlobClientCreateResultHeaders::version_id) - x-ms-version-id
     ///
     /// [`AppendBlobClientCreateResultHeaders`]: crate::generated::models::AppendBlobClientCreateResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.create")]
@@ -579,10 +579,10 @@ impl AppendBlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](AppendBlobClientSealResultHeaders::date) - Date
-    /// * [`last_modified`()](AppendBlobClientSealResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](AppendBlobClientSealResultHeaders::etag) - etag
-    /// * [`is_sealed`()](AppendBlobClientSealResultHeaders::is_sealed) - x-ms-blob-sealed
+    /// * [`date`()](crate::generated::models::AppendBlobClientSealResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::AppendBlobClientSealResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::AppendBlobClientSealResultHeaders::etag) - etag
+    /// * [`is_sealed`()](crate::generated::models::AppendBlobClientSealResultHeaders::is_sealed) - x-ms-blob-sealed
     ///
     /// [`AppendBlobClientSealResultHeaders`]: crate::generated::models::AppendBlobClientSealResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.seal")]

@@ -134,14 +134,14 @@ impl BlockBlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](BlockBlobClientCommitBlockListResultHeaders::content_md5) - Content-MD5
-    /// * [`last_modified`()](BlockBlobClientCommitBlockListResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlockBlobClientCommitBlockListResultHeaders::etag) - etag
-    /// * [`content_crc64`()](BlockBlobClientCommitBlockListResultHeaders::content_crc64) - x-ms-content-crc64
-    /// * [`encryption_key_sha256`()](BlockBlobClientCommitBlockListResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
-    /// * [`encryption_scope`()](BlockBlobClientCommitBlockListResultHeaders::encryption_scope) - x-ms-encryption-scope
-    /// * [`is_server_encrypted`()](BlockBlobClientCommitBlockListResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
-    /// * [`version_id`()](BlockBlobClientCommitBlockListResultHeaders::version_id) - x-ms-version-id
+    /// * [`content_md5`()](crate::generated::models::BlockBlobClientCommitBlockListResultHeaders::content_md5) - Content-MD5
+    /// * [`last_modified`()](crate::generated::models::BlockBlobClientCommitBlockListResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlockBlobClientCommitBlockListResultHeaders::etag) - etag
+    /// * [`content_crc64`()](crate::generated::models::BlockBlobClientCommitBlockListResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](crate::generated::models::BlockBlobClientCommitBlockListResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::BlockBlobClientCommitBlockListResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::BlockBlobClientCommitBlockListResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`version_id`()](crate::generated::models::BlockBlobClientCommitBlockListResultHeaders::version_id) - x-ms-version-id
     ///
     /// [`BlockBlobClientCommitBlockListResultHeaders`]: crate::generated::models::BlockBlobClientCommitBlockListResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.commitBlockList")]
@@ -298,9 +298,9 @@ impl BlockBlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`last_modified`()](BlockListHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlockListHeaders::etag) - etag
-    /// * [`blob_content_length`()](BlockListHeaders::blob_content_length) - x-ms-blob-content-length
+    /// * [`last_modified`()](crate::generated::models::BlockListHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlockListHeaders::etag) - etag
+    /// * [`blob_content_length`()](crate::generated::models::BlockListHeaders::blob_content_length) - x-ms-blob-content-length
     ///
     /// [`BlockListHeaders`]: crate::generated::models::BlockListHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.getBlockList")]
@@ -390,14 +390,14 @@ impl BlockBlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](BlockBlobClientPutBlobFromUrlResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](BlockBlobClientPutBlobFromUrlResultHeaders::date) - Date
-    /// * [`last_modified`()](BlockBlobClientPutBlobFromUrlResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlockBlobClientPutBlobFromUrlResultHeaders::etag) - etag
-    /// * [`encryption_key_sha256`()](BlockBlobClientPutBlobFromUrlResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
-    /// * [`encryption_scope`()](BlockBlobClientPutBlobFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
-    /// * [`is_server_encrypted`()](BlockBlobClientPutBlobFromUrlResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
-    /// * [`version_id`()](BlockBlobClientPutBlobFromUrlResultHeaders::version_id) - x-ms-version-id
+    /// * [`content_md5`()](crate::generated::models::BlockBlobClientPutBlobFromUrlResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::BlockBlobClientPutBlobFromUrlResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlockBlobClientPutBlobFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlockBlobClientPutBlobFromUrlResultHeaders::etag) - etag
+    /// * [`encryption_key_sha256`()](crate::generated::models::BlockBlobClientPutBlobFromUrlResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::BlockBlobClientPutBlobFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::BlockBlobClientPutBlobFromUrlResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`version_id`()](crate::generated::models::BlockBlobClientPutBlobFromUrlResultHeaders::version_id) - x-ms-version-id
     ///
     /// [`BlockBlobClientPutBlobFromUrlResultHeaders`]: crate::generated::models::BlockBlobClientPutBlobFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.putBlobFromUrl")]
@@ -575,35 +575,35 @@ impl BlockBlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`accept_ranges`()](BlockBlobClientQueryResultHeaders::accept_ranges) - Accept-Ranges
-    /// * [`cache_control`()](BlockBlobClientQueryResultHeaders::cache_control) - Cache-Control
-    /// * [`content_disposition`()](BlockBlobClientQueryResultHeaders::content_disposition) - Content-Disposition
-    /// * [`content_encoding`()](BlockBlobClientQueryResultHeaders::content_encoding) - Content-Encoding
-    /// * [`content_language`()](BlockBlobClientQueryResultHeaders::content_language) - Content-Language
-    /// * [`content_length`()](BlockBlobClientQueryResultHeaders::content_length) - Content-Length
-    /// * [`content_md5`()](BlockBlobClientQueryResultHeaders::content_md5) - Content-MD5
-    /// * [`content_range`()](BlockBlobClientQueryResultHeaders::content_range) - Content-Range
-    /// * [`date`()](BlockBlobClientQueryResultHeaders::date) - Date
-    /// * [`last_modified`()](BlockBlobClientQueryResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlockBlobClientQueryResultHeaders::etag) - etag
-    /// * [`blob_committed_block_count`()](BlockBlobClientQueryResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
-    /// * [`blob_content_md5`()](BlockBlobClientQueryResultHeaders::blob_content_md5) - x-ms-blob-content-md5
-    /// * [`blob_sequence_number`()](BlockBlobClientQueryResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
-    /// * [`blob_type`()](BlockBlobClientQueryResultHeaders::blob_type) - x-ms-blob-type
-    /// * [`content_crc64`()](BlockBlobClientQueryResultHeaders::content_crc64) - x-ms-content-crc64
-    /// * [`copy_completion_time`()](BlockBlobClientQueryResultHeaders::copy_completion_time) - x-ms-copy-completion-time
-    /// * [`copy_id`()](BlockBlobClientQueryResultHeaders::copy_id) - x-ms-copy-id
-    /// * [`copy_progress`()](BlockBlobClientQueryResultHeaders::copy_progress) - x-ms-copy-progress
-    /// * [`copy_source`()](BlockBlobClientQueryResultHeaders::copy_source) - x-ms-copy-source
-    /// * [`copy_status`()](BlockBlobClientQueryResultHeaders::copy_status) - x-ms-copy-status
-    /// * [`copy_status_description`()](BlockBlobClientQueryResultHeaders::copy_status_description) - x-ms-copy-status-description
-    /// * [`encryption_key_sha256`()](BlockBlobClientQueryResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
-    /// * [`encryption_scope`()](BlockBlobClientQueryResultHeaders::encryption_scope) - x-ms-encryption-scope
-    /// * [`duration`()](BlockBlobClientQueryResultHeaders::duration) - x-ms-lease-duration
-    /// * [`lease_state`()](BlockBlobClientQueryResultHeaders::lease_state) - x-ms-lease-state
-    /// * [`lease_status`()](BlockBlobClientQueryResultHeaders::lease_status) - x-ms-lease-status
-    /// * [`metadata`()](BlockBlobClientQueryResultHeaders::metadata) - x-ms-meta
-    /// * [`is_server_encrypted`()](BlockBlobClientQueryResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`accept_ranges`()](crate::generated::models::BlockBlobClientQueryResultHeaders::accept_ranges) - Accept-Ranges
+    /// * [`cache_control`()](crate::generated::models::BlockBlobClientQueryResultHeaders::cache_control) - Cache-Control
+    /// * [`content_disposition`()](crate::generated::models::BlockBlobClientQueryResultHeaders::content_disposition) - Content-Disposition
+    /// * [`content_encoding`()](crate::generated::models::BlockBlobClientQueryResultHeaders::content_encoding) - Content-Encoding
+    /// * [`content_language`()](crate::generated::models::BlockBlobClientQueryResultHeaders::content_language) - Content-Language
+    /// * [`content_length`()](crate::generated::models::BlockBlobClientQueryResultHeaders::content_length) - Content-Length
+    /// * [`content_md5`()](crate::generated::models::BlockBlobClientQueryResultHeaders::content_md5) - Content-MD5
+    /// * [`content_range`()](crate::generated::models::BlockBlobClientQueryResultHeaders::content_range) - Content-Range
+    /// * [`date`()](crate::generated::models::BlockBlobClientQueryResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlockBlobClientQueryResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlockBlobClientQueryResultHeaders::etag) - etag
+    /// * [`blob_committed_block_count`()](crate::generated::models::BlockBlobClientQueryResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
+    /// * [`blob_content_md5`()](crate::generated::models::BlockBlobClientQueryResultHeaders::blob_content_md5) - x-ms-blob-content-md5
+    /// * [`blob_sequence_number`()](crate::generated::models::BlockBlobClientQueryResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
+    /// * [`blob_type`()](crate::generated::models::BlockBlobClientQueryResultHeaders::blob_type) - x-ms-blob-type
+    /// * [`content_crc64`()](crate::generated::models::BlockBlobClientQueryResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`copy_completion_time`()](crate::generated::models::BlockBlobClientQueryResultHeaders::copy_completion_time) - x-ms-copy-completion-time
+    /// * [`copy_id`()](crate::generated::models::BlockBlobClientQueryResultHeaders::copy_id) - x-ms-copy-id
+    /// * [`copy_progress`()](crate::generated::models::BlockBlobClientQueryResultHeaders::copy_progress) - x-ms-copy-progress
+    /// * [`copy_source`()](crate::generated::models::BlockBlobClientQueryResultHeaders::copy_source) - x-ms-copy-source
+    /// * [`copy_status`()](crate::generated::models::BlockBlobClientQueryResultHeaders::copy_status) - x-ms-copy-status
+    /// * [`copy_status_description`()](crate::generated::models::BlockBlobClientQueryResultHeaders::copy_status_description) - x-ms-copy-status-description
+    /// * [`encryption_key_sha256`()](crate::generated::models::BlockBlobClientQueryResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::BlockBlobClientQueryResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`duration`()](crate::generated::models::BlockBlobClientQueryResultHeaders::duration) - x-ms-lease-duration
+    /// * [`lease_state`()](crate::generated::models::BlockBlobClientQueryResultHeaders::lease_state) - x-ms-lease-state
+    /// * [`lease_status`()](crate::generated::models::BlockBlobClientQueryResultHeaders::lease_status) - x-ms-lease-status
+    /// * [`metadata`()](crate::generated::models::BlockBlobClientQueryResultHeaders::metadata) - x-ms-meta
+    /// * [`is_server_encrypted`()](crate::generated::models::BlockBlobClientQueryResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
     ///
     /// [`BlockBlobClientQueryResultHeaders`]: crate::generated::models::BlockBlobClientQueryResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.query")]
@@ -714,11 +714,11 @@ impl BlockBlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](BlockBlobClientStageBlockResultHeaders::content_md5) - Content-MD5
-    /// * [`content_crc64`()](BlockBlobClientStageBlockResultHeaders::content_crc64) - x-ms-content-crc64
-    /// * [`encryption_key_sha256`()](BlockBlobClientStageBlockResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
-    /// * [`encryption_scope`()](BlockBlobClientStageBlockResultHeaders::encryption_scope) - x-ms-encryption-scope
-    /// * [`is_server_encrypted`()](BlockBlobClientStageBlockResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`content_md5`()](crate::generated::models::BlockBlobClientStageBlockResultHeaders::content_md5) - Content-MD5
+    /// * [`content_crc64`()](crate::generated::models::BlockBlobClientStageBlockResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](crate::generated::models::BlockBlobClientStageBlockResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::BlockBlobClientStageBlockResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::BlockBlobClientStageBlockResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
     ///
     /// [`BlockBlobClientStageBlockResultHeaders`]: crate::generated::models::BlockBlobClientStageBlockResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.stageBlock")]
@@ -825,12 +825,12 @@ impl BlockBlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](BlockBlobClientStageBlockFromUrlResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](BlockBlobClientStageBlockFromUrlResultHeaders::date) - Date
-    /// * [`content_crc64`()](BlockBlobClientStageBlockFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
-    /// * [`encryption_key_sha256`()](BlockBlobClientStageBlockFromUrlResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
-    /// * [`encryption_scope`()](BlockBlobClientStageBlockFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
-    /// * [`is_server_encrypted`()](BlockBlobClientStageBlockFromUrlResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`content_md5`()](crate::generated::models::BlockBlobClientStageBlockFromUrlResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::BlockBlobClientStageBlockFromUrlResultHeaders::date) - Date
+    /// * [`content_crc64`()](crate::generated::models::BlockBlobClientStageBlockFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](crate::generated::models::BlockBlobClientStageBlockFromUrlResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::BlockBlobClientStageBlockFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::BlockBlobClientStageBlockFromUrlResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
     ///
     /// [`BlockBlobClientStageBlockFromUrlResultHeaders`]: crate::generated::models::BlockBlobClientStageBlockFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.stageBlockFromUrl")]
@@ -962,13 +962,13 @@ impl BlockBlobClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_md5`()](BlockBlobClientUploadResultHeaders::content_md5) - Content-MD5
-    /// * [`last_modified`()](BlockBlobClientUploadResultHeaders::last_modified) - Last-Modified
-    /// * [`etag`()](BlockBlobClientUploadResultHeaders::etag) - etag
-    /// * [`encryption_key_sha256`()](BlockBlobClientUploadResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
-    /// * [`encryption_scope`()](BlockBlobClientUploadResultHeaders::encryption_scope) - x-ms-encryption-scope
-    /// * [`is_server_encrypted`()](BlockBlobClientUploadResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
-    /// * [`version_id`()](BlockBlobClientUploadResultHeaders::version_id) - x-ms-version-id
+    /// * [`content_md5`()](crate::generated::models::BlockBlobClientUploadResultHeaders::content_md5) - Content-MD5
+    /// * [`last_modified`()](crate::generated::models::BlockBlobClientUploadResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlockBlobClientUploadResultHeaders::etag) - etag
+    /// * [`encryption_key_sha256`()](crate::generated::models::BlockBlobClientUploadResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::BlockBlobClientUploadResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::BlockBlobClientUploadResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`version_id`()](crate::generated::models::BlockBlobClientUploadResultHeaders::version_id) - x-ms-version-id
     ///
     /// [`BlockBlobClientUploadResultHeaders`]: crate::generated::models::BlockBlobClientUploadResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.BlockBlob.upload")]

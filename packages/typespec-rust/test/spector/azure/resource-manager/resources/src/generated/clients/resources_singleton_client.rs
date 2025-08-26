@@ -63,8 +63,8 @@ impl ResourcesSingletonClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](SingletonTrackedResourceHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`retry_after`()](SingletonTrackedResourceHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::SingletonTrackedResourceHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](crate::generated::models::SingletonTrackedResourceHeaders::retry_after) - Retry-After
     ///
     /// [`SingletonTrackedResourceHeaders`]: crate::generated::models::SingletonTrackedResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Singleton.createOrUpdate")]

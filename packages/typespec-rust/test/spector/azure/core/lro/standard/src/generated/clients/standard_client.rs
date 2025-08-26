@@ -101,7 +101,7 @@ impl StandardClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`operation_location`()](UserHeaders::operation_location) - Operation-Location
+    /// * [`operation_location`()](crate::generated::models::UserHeaders::operation_location) - Operation-Location
     ///
     /// [`UserHeaders`]: crate::generated::models::UserHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.createOrReplace")]
@@ -203,7 +203,7 @@ impl StandardClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`operation_location`()](OperationStatusErrorHeaders::operation_location) - Operation-Location
+    /// * [`operation_location`()](crate::generated::models::OperationStatusErrorHeaders::operation_location) - Operation-Location
     ///
     /// [`OperationStatusErrorHeaders`]: crate::generated::models::OperationStatusErrorHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.delete")]
@@ -302,7 +302,7 @@ impl StandardClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`operation_location`()](ExportedUserHeaders::operation_location) - Operation-Location
+    /// * [`operation_location`()](crate::generated::models::ExportedUserHeaders::operation_location) - Operation-Location
     ///
     /// [`ExportedUserHeaders`]: crate::generated::models::ExportedUserHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.export")]

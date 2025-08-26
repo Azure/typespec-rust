@@ -509,7 +509,7 @@ function getHeaderTraitDocComment(indent: helpers.indentation, crate: rust.Crate
 
   // List all available headers
   for (const header of method.responseHeaders.headers) {
-    headerDocs += `${indent.get()}/// * [${helpers.wrapInBackTicks(header.name)}()](${traitName}::${header.name}) - ${header.header}\n`;
+    headerDocs += `${indent.get()}/// * [${helpers.wrapInBackTicks(header.name)}()](crate::generated::models::${traitName}::${header.name}) - ${header.header}\n`;
   }
 
   headerDocs += `${indent.get()}///\n`;

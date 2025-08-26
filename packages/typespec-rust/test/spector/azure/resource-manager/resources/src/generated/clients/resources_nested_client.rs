@@ -65,8 +65,8 @@ impl ResourcesNestedClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](NestedProxyResourceHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`retry_after`()](NestedProxyResourceHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::NestedProxyResourceHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](crate::generated::models::NestedProxyResourceHeaders::retry_after) - Retry-After
     ///
     /// [`NestedProxyResourceHeaders`]: crate::generated::models::NestedProxyResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.createOrReplace")]
@@ -179,8 +179,8 @@ impl ResourcesNestedClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](ArmOperationStatusResourceProvisioningStateHeaders::location) - Location
-    /// * [`retry_after`()](ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
+    /// * [`location`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
     ///
     /// [`ArmOperationStatusResourceProvisioningStateHeaders`]: crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.delete")]
@@ -438,8 +438,8 @@ impl ResourcesNestedClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](NestedProxyResourceHeaders::location) - Location
-    /// * [`retry_after`()](NestedProxyResourceHeaders::retry_after) - Retry-After
+    /// * [`location`()](crate::generated::models::NestedProxyResourceHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::NestedProxyResourceHeaders::retry_after) - Retry-After
     ///
     /// [`NestedProxyResourceHeaders`]: crate::generated::models::NestedProxyResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.update")]

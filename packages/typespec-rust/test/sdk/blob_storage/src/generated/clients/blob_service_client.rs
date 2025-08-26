@@ -115,7 +115,7 @@ impl BlobServiceClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](FilterBlobSegmentHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::FilterBlobSegmentHeaders::date) - Date
     ///
     /// [`FilterBlobSegmentHeaders`]: crate::generated::models::FilterBlobSegmentHeaders
     #[tracing::function("Storage.Blob.filterBlobs")]
@@ -202,10 +202,10 @@ impl BlobServiceClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](BlobServiceClientGetAccountInfoResultHeaders::date) - Date
-    /// * [`account_kind`()](BlobServiceClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
-    /// * [`is_hierarchical_namespace_enabled`()](BlobServiceClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
-    /// * [`sku_name`()](BlobServiceClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
+    /// * [`date`()](crate::generated::models::BlobServiceClientGetAccountInfoResultHeaders::date) - Date
+    /// * [`account_kind`()](crate::generated::models::BlobServiceClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
+    /// * [`is_hierarchical_namespace_enabled`()](crate::generated::models::BlobServiceClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
+    /// * [`sku_name`()](crate::generated::models::BlobServiceClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
     ///
     /// [`BlobServiceClientGetAccountInfoResultHeaders`]: crate::generated::models::BlobServiceClientGetAccountInfoResultHeaders
     #[tracing::function("Storage.Blob.getAccountInfo")]
@@ -324,7 +324,7 @@ impl BlobServiceClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](StorageServiceStatsHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::StorageServiceStatsHeaders::date) - Date
     ///
     /// [`StorageServiceStatsHeaders`]: crate::generated::models::StorageServiceStatsHeaders
     #[tracing::function("Storage.Blob.getStatistics")]
@@ -388,7 +388,7 @@ impl BlobServiceClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](UserDelegationKeyHeaders::date) - Date
+    /// * [`date`()](crate::generated::models::UserDelegationKeyHeaders::date) - Date
     ///
     /// [`UserDelegationKeyHeaders`]: crate::generated::models::UserDelegationKeyHeaders
     #[tracing::function("Storage.Blob.getUserDelegationKey")]

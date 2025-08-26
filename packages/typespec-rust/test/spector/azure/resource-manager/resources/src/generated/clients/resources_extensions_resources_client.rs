@@ -67,8 +67,8 @@ impl ResourcesExtensionsResourcesClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](ExtensionsResourceHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`retry_after`()](ExtensionsResourceHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::ExtensionsResourceHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](crate::generated::models::ExtensionsResourceHeaders::retry_after) - Retry-After
     ///
     /// [`ExtensionsResourceHeaders`]: crate::generated::models::ExtensionsResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.createOrUpdate")]

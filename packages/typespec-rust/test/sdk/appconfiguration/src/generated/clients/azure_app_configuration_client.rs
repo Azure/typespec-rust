@@ -137,8 +137,8 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`sync_token`()](AzureAppConfigurationClientCheckKeyValueResultHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](AzureAppConfigurationClientCheckKeyValueResultHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValueResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValueResultHeaders::etag_header) - etag
     ///
     /// [`AzureAppConfigurationClientCheckKeyValueResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckKeyValueResultHeaders
     #[tracing::function("AzureAppConfiguration.checkKeyValue")]
@@ -238,8 +238,8 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`sync_token`()](AzureAppConfigurationClientCheckKeyValuesResultHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](AzureAppConfigurationClientCheckKeyValuesResultHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValuesResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValuesResultHeaders::etag_header) - etag
     ///
     /// [`AzureAppConfigurationClientCheckKeyValuesResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckKeyValuesResultHeaders
     #[tracing::function("AzureAppConfiguration.checkKeyValues")]
@@ -336,7 +336,7 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`sync_token`()](AzureAppConfigurationClientCheckKeysResultHeaders::sync_token) - Sync-Token
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckKeysResultHeaders::sync_token) - Sync-Token
     ///
     /// [`AzureAppConfigurationClientCheckKeysResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckKeysResultHeaders
     #[tracing::function("AzureAppConfiguration.checkKeys")]
@@ -406,7 +406,7 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`sync_token`()](AzureAppConfigurationClientCheckLabelsResultHeaders::sync_token) - Sync-Token
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckLabelsResultHeaders::sync_token) - Sync-Token
     ///
     /// [`AzureAppConfigurationClientCheckLabelsResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckLabelsResultHeaders
     #[tracing::function("AzureAppConfiguration.checkLabels")]
@@ -489,8 +489,8 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`sync_token`()](AzureAppConfigurationClientCheckRevisionsResultHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](AzureAppConfigurationClientCheckRevisionsResultHeaders::etag_header) - etag
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckRevisionsResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCheckRevisionsResultHeaders::etag_header) - etag
     ///
     /// [`AzureAppConfigurationClientCheckRevisionsResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckRevisionsResultHeaders
     #[tracing::function("AzureAppConfiguration.checkRevisions")]
@@ -585,9 +585,9 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`link`()](AzureAppConfigurationClientCheckSnapshotResultHeaders::link) - Link
-    /// * [`sync_token`()](AzureAppConfigurationClientCheckSnapshotResultHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](AzureAppConfigurationClientCheckSnapshotResultHeaders::etag_header) - etag
+    /// * [`link`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders::link) - Link
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders::etag_header) - etag
     ///
     /// [`AzureAppConfigurationClientCheckSnapshotResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders
     #[tracing::function("AzureAppConfiguration.checkSnapshot")]
@@ -663,7 +663,7 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`sync_token`()](AzureAppConfigurationClientCheckSnapshotsResultHeaders::sync_token) - Sync-Token
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotsResultHeaders::sync_token) - Sync-Token
     ///
     /// [`AzureAppConfigurationClientCheckSnapshotsResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckSnapshotsResultHeaders
     #[tracing::function("AzureAppConfiguration.checkSnapshots")]
@@ -736,11 +736,11 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](SnapshotHeaders::content_type) - Content-Type
-    /// * [`link`()](SnapshotHeaders::link) - Link
-    /// * [`operation_location`()](SnapshotHeaders::operation_location) - Operation-Location
-    /// * [`sync_token`()](SnapshotHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](SnapshotHeaders::etag_header) - etag
+    /// * [`content_type`()](crate::generated::models::SnapshotHeaders::content_type) - Content-Type
+    /// * [`link`()](crate::generated::models::SnapshotHeaders::link) - Link
+    /// * [`operation_location`()](crate::generated::models::SnapshotHeaders::operation_location) - Operation-Location
+    /// * [`sync_token`()](crate::generated::models::SnapshotHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::SnapshotHeaders::etag_header) - etag
     ///
     /// [`SnapshotHeaders`]: crate::generated::models::SnapshotHeaders
     #[tracing::function("AzureAppConfiguration.createSnapshot")]
@@ -856,9 +856,9 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](KeyValueHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](KeyValueHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](KeyValueHeaders::etag_header) - etag
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
     ///
     /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.deleteKeyValue")]
@@ -943,9 +943,9 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](KeyValueHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](KeyValueHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](KeyValueHeaders::etag_header) - etag
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
     ///
     /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.deleteLock")]
@@ -1033,10 +1033,10 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](KeyValueHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](KeyValueHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](KeyValueHeaders::etag_header) - etag
-    /// * [`request_id`()](KeyValueHeaders::request_id) - x-ms-request-id
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
+    /// * [`request_id`()](crate::generated::models::KeyValueHeaders::request_id) - x-ms-request-id
     ///
     /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.getKeyValue")]
@@ -1181,11 +1181,11 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](SnapshotHeaders::content_type) - Content-Type
-    /// * [`link`()](SnapshotHeaders::link) - Link
-    /// * [`sync_token`()](SnapshotHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](SnapshotHeaders::etag_header) - etag
-    /// * [`request_id`()](SnapshotHeaders::request_id) - x-ms-request-id
+    /// * [`content_type`()](crate::generated::models::SnapshotHeaders::content_type) - Content-Type
+    /// * [`link`()](crate::generated::models::SnapshotHeaders::link) - Link
+    /// * [`sync_token`()](crate::generated::models::SnapshotHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::SnapshotHeaders::etag_header) - etag
+    /// * [`request_id`()](crate::generated::models::SnapshotHeaders::request_id) - x-ms-request-id
     ///
     /// [`SnapshotHeaders`]: crate::generated::models::SnapshotHeaders
     #[tracing::function("AzureAppConfiguration.getSnapshot")]
@@ -1279,9 +1279,9 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](KeyValueListResultHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](KeyValueListResultHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](KeyValueListResultHeaders::etag_header) - etag
+    /// * [`content_type`()](crate::generated::models::KeyValueListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueListResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueListResultHeaders::etag_header) - etag
     ///
     /// [`KeyValueListResultHeaders`]: crate::generated::models::KeyValueListResultHeaders
     #[tracing::function("AzureAppConfiguration.getKeyValues")]
@@ -1417,8 +1417,8 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](KeyListResultHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](KeyListResultHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::KeyListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyListResultHeaders::sync_token) - Sync-Token
     ///
     /// [`KeyListResultHeaders`]: crate::generated::models::KeyListResultHeaders
     #[tracing::function("AzureAppConfiguration.getKeys")]
@@ -1523,8 +1523,8 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](LabelListResultHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](LabelListResultHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::LabelListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::LabelListResultHeaders::sync_token) - Sync-Token
     ///
     /// [`LabelListResultHeaders`]: crate::generated::models::LabelListResultHeaders
     #[tracing::function("AzureAppConfiguration.getLabels")]
@@ -1645,9 +1645,9 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](KeyValueListResultHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](KeyValueListResultHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](KeyValueListResultHeaders::etag_header) - etag
+    /// * [`content_type`()](crate::generated::models::KeyValueListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueListResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueListResultHeaders::etag_header) - etag
     ///
     /// [`KeyValueListResultHeaders`]: crate::generated::models::KeyValueListResultHeaders
     #[tracing::function("AzureAppConfiguration.getRevisions")]
@@ -1775,8 +1775,8 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](SnapshotListResultHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](SnapshotListResultHeaders::sync_token) - Sync-Token
+    /// * [`content_type`()](crate::generated::models::SnapshotListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::SnapshotListResultHeaders::sync_token) - Sync-Token
     ///
     /// [`SnapshotListResultHeaders`]: crate::generated::models::SnapshotListResultHeaders
     #[tracing::function("AzureAppConfiguration.getSnapshots")]
@@ -1903,9 +1903,9 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](KeyValueHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](KeyValueHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](KeyValueHeaders::etag_header) - etag
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
     ///
     /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.putKeyValue")]
@@ -1998,9 +1998,9 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](KeyValueHeaders::content_type) - Content-Type
-    /// * [`sync_token`()](KeyValueHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](KeyValueHeaders::etag_header) - etag
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
     ///
     /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.putLock")]
@@ -2090,10 +2090,10 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](SnapshotHeaders::content_type) - Content-Type
-    /// * [`link`()](SnapshotHeaders::link) - Link
-    /// * [`sync_token`()](SnapshotHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](SnapshotHeaders::etag_header) - etag
+    /// * [`content_type`()](crate::generated::models::SnapshotHeaders::content_type) - Content-Type
+    /// * [`link`()](crate::generated::models::SnapshotHeaders::link) - Link
+    /// * [`sync_token`()](crate::generated::models::SnapshotHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::SnapshotHeaders::etag_header) - etag
     ///
     /// [`SnapshotHeaders`]: crate::generated::models::SnapshotHeaders
     #[tracing::function("AzureAppConfiguration.updateSnapshot")]

@@ -124,8 +124,8 @@ impl ResourcesTopLevelClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](TopLevelTrackedResourceHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`retry_after`()](TopLevelTrackedResourceHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::TopLevelTrackedResourceHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](crate::generated::models::TopLevelTrackedResourceHeaders::retry_after) - Retry-After
     ///
     /// [`TopLevelTrackedResourceHeaders`]: crate::generated::models::TopLevelTrackedResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.createOrReplace")]
@@ -235,8 +235,8 @@ impl ResourcesTopLevelClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](ArmOperationStatusResourceProvisioningStateHeaders::location) - Location
-    /// * [`retry_after`()](ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
+    /// * [`location`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
     ///
     /// [`ArmOperationStatusResourceProvisioningStateHeaders`]: crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.delete")]
@@ -536,8 +536,8 @@ impl ResourcesTopLevelClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](TopLevelTrackedResourceHeaders::location) - Location
-    /// * [`retry_after`()](TopLevelTrackedResourceHeaders::retry_after) - Retry-After
+    /// * [`location`()](crate::generated::models::TopLevelTrackedResourceHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::TopLevelTrackedResourceHeaders::retry_after) - Retry-After
     ///
     /// [`TopLevelTrackedResourceHeaders`]: crate::generated::models::TopLevelTrackedResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.update")]
