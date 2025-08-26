@@ -45,19 +45,19 @@ impl ArmOperationStatusResourceProvisioningStateHeaders
 /// # Examples
 ///
 /// ```no_run
-/// # use azure_core::Result;
-/// # async fn example() -> Result<()> {
-/// let response = client.some_method(/* parameters */).await?;
-///
-/// // Access response headers:
-/// if let Some(value) = response.azure_async_operation()? {
-///     println!("Azure-AsyncOperation: {{:?}}", value);
+/// use azure_core::{Result, http::Response};
+/// use spector_armresources::models::{ExtensionsResource, ExtensionsResourceHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<ExtensionsResource> = unimplemented!();
+///     // Access response headers
+///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+///     }
+///     if let Some(retry_after) = response.retry_after()? {
+///         println!("Retry-After: {:?}", retry_after);
+///     }
+///     Ok(())
 /// }
-/// if let Some(value) = response.retry_after()? {
-///     println!("Retry-After: {{:?}}", value);
-/// }
-/// # Ok(())
-/// # }
 /// ```
 pub trait ExtensionsResourceHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
@@ -107,19 +107,19 @@ impl NestedProxyResourceHeaders for Response<NestedProxyResource> {
 /// # Examples
 ///
 /// ```no_run
-/// # use azure_core::Result;
-/// # async fn example() -> Result<()> {
-/// let response = client.some_method(/* parameters */).await?;
-///
-/// // Access response headers:
-/// if let Some(value) = response.azure_async_operation()? {
-///     println!("Azure-AsyncOperation: {{:?}}", value);
+/// use azure_core::{Result, http::Response};
+/// use spector_armresources::models::{SingletonTrackedResource, SingletonTrackedResourceHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<SingletonTrackedResource> = unimplemented!();
+///     // Access response headers
+///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+///     }
+///     if let Some(retry_after) = response.retry_after()? {
+///         println!("Retry-After: {:?}", retry_after);
+///     }
+///     Ok(())
 /// }
-/// if let Some(value) = response.retry_after()? {
-///     println!("Retry-After: {{:?}}", value);
-/// }
-/// # Ok(())
-/// # }
 /// ```
 pub trait SingletonTrackedResourceHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;

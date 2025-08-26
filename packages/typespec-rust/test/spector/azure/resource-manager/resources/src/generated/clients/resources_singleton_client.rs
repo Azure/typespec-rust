@@ -47,19 +47,19 @@ impl ResourcesSingletonClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.create_or_update(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(azure_async_operation) = response.azure_async_operation()? {
-    ///     println!("Azure-AsyncOperation: {{:?}}", azure_async_operation);
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armresources::models::{SingletonTrackedResource, SingletonTrackedResourceHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<SingletonTrackedResource> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(retry_after) = response.retry_after()? {
-    ///     println!("Retry-After: {{:?}}", retry_after);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers

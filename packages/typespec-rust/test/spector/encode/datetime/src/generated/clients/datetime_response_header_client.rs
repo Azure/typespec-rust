@@ -39,16 +39,16 @@ impl DatetimeResponseHeaderClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.default(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(value) = response.value()? {
-    ///     println!("value: {{:?}}", value);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_datetime::models::{DatetimeResponseHeaderClientDefaultResult, DatetimeResponseHeaderClientDefaultResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<DatetimeResponseHeaderClientDefaultResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(value) = response.value()? {
+    ///         println!("value: {:?}", value);
+    ///     }
+    ///     Ok(())
     /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -89,16 +89,16 @@ impl DatetimeResponseHeaderClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.rfc3339(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(value) = response.value()? {
-    ///     println!("value: {{:?}}", value);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_datetime::models::{DatetimeResponseHeaderClientRfc3339Result, DatetimeResponseHeaderClientRfc3339ResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<DatetimeResponseHeaderClientRfc3339Result, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(value) = response.value()? {
+    ///         println!("value: {:?}", value);
+    ///     }
+    ///     Ok(())
     /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -139,16 +139,16 @@ impl DatetimeResponseHeaderClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.rfc7231(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(value) = response.value()? {
-    ///     println!("value: {{:?}}", value);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_datetime::models::{DatetimeResponseHeaderClientRfc7231Result, DatetimeResponseHeaderClientRfc7231ResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<DatetimeResponseHeaderClientRfc7231Result, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(value) = response.value()? {
+    ///         println!("value: {:?}", value);
+    ///     }
+    ///     Ok(())
     /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -189,16 +189,16 @@ impl DatetimeResponseHeaderClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.unix_timestamp(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(value) = response.value()? {
-    ///     println!("value: {{:?}}", value);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_datetime::models::{DatetimeResponseHeaderClientUnixTimestampResult, DatetimeResponseHeaderClientUnixTimestampResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<DatetimeResponseHeaderClientUnixTimestampResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(value) = response.value()? {
+    ///         println!("value: {:?}", value);
+    ///     }
+    ///     Ok(())
     /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers

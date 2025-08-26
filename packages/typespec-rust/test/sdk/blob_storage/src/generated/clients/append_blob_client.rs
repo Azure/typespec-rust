@@ -107,22 +107,22 @@ impl AppendBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.append_block(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_md5) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", content_md5);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{AppendBlobClientAppendBlockResult, AppendBlobClientAppendBlockResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<AppendBlobClientAppendBlockResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
-    /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -248,22 +248,22 @@ impl AppendBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.append_block_from_url(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_md5) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", content_md5);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{AppendBlobClientAppendBlockFromUrlResult, AppendBlobClientAppendBlockFromUrlResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<AppendBlobClientAppendBlockFromUrlResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
-    /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -406,22 +406,22 @@ impl AppendBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.create(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_md5) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", content_md5);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{AppendBlobClientCreateResult, AppendBlobClientCreateResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<AppendBlobClientCreateResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
-    /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -560,22 +560,22 @@ impl AppendBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.seal(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{AppendBlobClientSealResult, AppendBlobClientSealResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<AppendBlobClientSealResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers

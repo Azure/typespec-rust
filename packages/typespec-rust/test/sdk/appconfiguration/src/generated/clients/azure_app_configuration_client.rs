@@ -121,19 +121,19 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.check_key_value(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckKeyValueResult, AzureAppConfigurationClientCheckKeyValueResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(etag_header) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", etag_header);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -222,19 +222,19 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.check_key_values(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckKeyValuesResult, AzureAppConfigurationClientCheckKeyValuesResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(etag_header) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", etag_header);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -323,16 +323,16 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.check_keys(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckKeysResult, AzureAppConfigurationClientCheckKeysResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<AzureAppConfigurationClientCheckKeysResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
     /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -393,16 +393,16 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.check_labels(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckLabelsResult, AzureAppConfigurationClientCheckLabelsResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<AzureAppConfigurationClientCheckLabelsResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
     /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -473,19 +473,19 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.check_revisions(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckRevisionsResult, AzureAppConfigurationClientCheckRevisionsResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(etag_header) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", etag_header);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -566,22 +566,22 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.check_snapshot(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(link) = response.link()? {
-    ///     println!("Link: {{:?}}", link);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckSnapshotResult, AzureAppConfigurationClientCheckSnapshotResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(link) = response.link()? {
+    ///         println!("Link: {:?}", link);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// if let Some(etag_header) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", etag_header);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -650,16 +650,16 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.check_snapshots(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckSnapshotsResult, AzureAppConfigurationClientCheckSnapshotsResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
     /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -717,22 +717,22 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.create_snapshot(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{Snapshot, SnapshotHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<Snapshot> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(link) = response.link()? {
+    ///         println!("Link: {:?}", link);
+    ///     }
+    ///     if let Some(operation_location) = response.operation_location()? {
+    ///         println!("Operation-Location: {:?}", operation_location);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(link) = response.link()? {
-    ///     println!("Link: {{:?}}", link);
-    /// }
-    /// if let Some(operation_location) = response.operation_location()? {
-    ///     println!("Operation-Location: {{:?}}", operation_location);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -837,22 +837,22 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.delete_key_value(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValue, KeyValueHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<KeyValue> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// if let Some(etag_header) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", etag_header);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -924,22 +924,22 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.delete_lock(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValue, KeyValueHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<KeyValue> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// if let Some(etag_header) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", etag_header);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1014,22 +1014,22 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.get_key_value(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValue, KeyValueHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<KeyValue> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// if let Some(etag_header) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", etag_header);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1162,22 +1162,22 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.get_snapshot(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{Snapshot, SnapshotHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<Snapshot> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(link) = response.link()? {
+    ///         println!("Link: {:?}", link);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(link) = response.link()? {
-    ///     println!("Link: {{:?}}", link);
-    /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1260,22 +1260,22 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.list_key_values(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValueListResult, KeyValueListResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<KeyValueListResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// if let Some(etag_header) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", etag_header);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1401,19 +1401,19 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.list_keys(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyListResult, KeyListResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<KeyListResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1507,19 +1507,19 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.list_labels(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{LabelListResult, LabelListResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<LabelListResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1626,22 +1626,22 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.list_revisions(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValueListResult, KeyValueListResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<KeyValueListResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// if let Some(etag_header) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", etag_header);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1759,19 +1759,19 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.list_snapshots(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{SnapshotListResult, SnapshotListResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<SnapshotListResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1884,22 +1884,22 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.put_key_value(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValue, KeyValueHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<KeyValue> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// if let Some(etag_header) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", etag_header);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1979,22 +1979,22 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.put_lock(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValue, KeyValueHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<KeyValue> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// if let Some(etag_header) = response.etag_header()? {
-    ///     println!("etag: {{:?}}", etag_header);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -2071,22 +2071,22 @@ impl AzureAppConfigurationClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.update_snapshot(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_type) = response.content_type()? {
-    ///     println!("Content-Type: {{:?}}", content_type);
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{Snapshot, SnapshotHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<Snapshot> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(link) = response.link()? {
+    ///         println!("Link: {:?}", link);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(link) = response.link()? {
-    ///     println!("Link: {{:?}}", link);
-    /// }
-    /// if let Some(sync_token) = response.sync_token()? {
-    ///     println!("Sync-Token: {{:?}}", sync_token);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers

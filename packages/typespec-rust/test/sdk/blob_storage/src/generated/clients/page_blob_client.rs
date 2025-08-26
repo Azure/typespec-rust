@@ -112,22 +112,22 @@ impl PageBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.clear_pages(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_md5) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", content_md5);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientClearPagesResult, PageBlobClientClearPagesResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<PageBlobClientClearPagesResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
-    /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -252,22 +252,22 @@ impl PageBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.copy_incremental(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientCopyIncrementalResult, PageBlobClientCopyIncrementalResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<PageBlobClientCopyIncrementalResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -346,22 +346,22 @@ impl PageBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.create(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_md5) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", content_md5);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientCreateResult, PageBlobClientCreateResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<PageBlobClientCreateResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
-    /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -510,22 +510,22 @@ impl PageBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.get_page_ranges(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{PageList, PageListHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<PageList, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -615,22 +615,22 @@ impl PageBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.get_page_ranges_diff(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{PageList, PageListHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<PageList, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -731,22 +731,22 @@ impl PageBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.resize(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientResizeResult, PageBlobClientResizeResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<PageBlobClientResizeResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -844,22 +844,22 @@ impl PageBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.update_sequence_number(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientUpdateSequenceNumberResult, PageBlobClientUpdateSequenceNumberResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<PageBlobClientUpdateSequenceNumberResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -950,22 +950,22 @@ impl PageBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.upload_pages(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_md5) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", content_md5);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientUploadPagesResult, PageBlobClientUploadPagesResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<PageBlobClientUploadPagesResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
-    /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1112,22 +1112,22 @@ impl PageBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.upload_pages_from_url(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_md5) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", content_md5);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientUploadPagesFromUrlResult, PageBlobClientUploadPagesFromUrlResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<PageBlobClientUploadPagesFromUrlResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
-    /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers

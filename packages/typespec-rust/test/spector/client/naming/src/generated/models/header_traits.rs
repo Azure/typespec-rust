@@ -19,15 +19,16 @@ const DEFAULT_NAME: HeaderName = HeaderName::from_static("default-name");
 /// # Examples
 ///
 /// ```no_run
-/// # async fn example() -> azure_core::Result<()> {
-/// # let response: azure_core::http::Response<T> = unimplemented!();
-/// // Access response headers
-/// // let response = client.some_method(/* parameters */).await?;
-/// if let Some(client_name) = response.client_name()? {
-///     println!("client_name: {{:?}}", client_name);
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use spector_naming::models::{NamingClientResponseResult, NamingClientResponseResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<NamingClientResponseResult, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(client_name) = response.client_name()? {
+///         println!("default-name: {:?}", client_name);
+///     }
+///     Ok(())
 /// }
-/// Ok(())
-/// # }
 /// ```
 pub trait NamingClientResponseResultHeaders: private::Sealed {
     fn client_name(&self) -> Result<Option<String>>;

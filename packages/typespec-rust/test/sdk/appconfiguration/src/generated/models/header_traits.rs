@@ -33,18 +33,19 @@ const SYNC_TOKEN: HeaderName = HeaderName::from_static("sync-token");
 /// # Examples
 ///
 /// ```no_run
-/// # async fn example() -> azure_core::Result<()> {
-/// # let response: azure_core::http::Response<T> = unimplemented!();
-/// // Access response headers
-/// // let response = client.some_method(/* parameters */).await?;
-/// if let Some(sync_token) = response.sync_token()? {
-///     println!("sync_token: {{:?}}", sync_token);
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use appconfiguration::models::{AzureAppConfigurationClientCheckKeyValueResult, AzureAppConfigurationClientCheckKeyValueResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("Sync-Token: {:?}", sync_token);
+///     }
+///     if let Some(etag_header) = response.etag_header()? {
+///         println!("etag: {:?}", etag_header);
+///     }
+///     Ok(())
 /// }
-/// if let Some(etag_header) = response.etag_header()? {
-///     println!("etag_header: {{:?}}", etag_header);
-/// }
-/// Ok(())
-/// # }
 /// ```
 pub trait AzureAppConfigurationClientCheckKeyValueResultHeaders: private::Sealed {
     fn sync_token(&self) -> Result<Option<String>>;
@@ -70,18 +71,19 @@ impl AzureAppConfigurationClientCheckKeyValueResultHeaders
 /// # Examples
 ///
 /// ```no_run
-/// # async fn example() -> azure_core::Result<()> {
-/// # let response: azure_core::http::Response<T> = unimplemented!();
-/// // Access response headers
-/// // let response = client.some_method(/* parameters */).await?;
-/// if let Some(sync_token) = response.sync_token()? {
-///     println!("sync_token: {{:?}}", sync_token);
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use appconfiguration::models::{AzureAppConfigurationClientCheckKeyValuesResult, AzureAppConfigurationClientCheckKeyValuesResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("Sync-Token: {:?}", sync_token);
+///     }
+///     if let Some(etag_header) = response.etag_header()? {
+///         println!("etag: {:?}", etag_header);
+///     }
+///     Ok(())
 /// }
-/// if let Some(etag_header) = response.etag_header()? {
-///     println!("etag_header: {{:?}}", etag_header);
-/// }
-/// Ok(())
-/// # }
 /// ```
 pub trait AzureAppConfigurationClientCheckKeyValuesResultHeaders: private::Sealed {
     fn sync_token(&self) -> Result<Option<String>>;
@@ -107,15 +109,16 @@ impl AzureAppConfigurationClientCheckKeyValuesResultHeaders
 /// # Examples
 ///
 /// ```no_run
-/// # async fn example() -> azure_core::Result<()> {
-/// # let response: azure_core::http::Response<T> = unimplemented!();
-/// // Access response headers
-/// // let response = client.some_method(/* parameters */).await?;
-/// if let Some(sync_token) = response.sync_token()? {
-///     println!("sync_token: {{:?}}", sync_token);
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use appconfiguration::models::{AzureAppConfigurationClientCheckKeysResult, AzureAppConfigurationClientCheckKeysResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<AzureAppConfigurationClientCheckKeysResult, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("Sync-Token: {:?}", sync_token);
+///     }
+///     Ok(())
 /// }
-/// Ok(())
-/// # }
 /// ```
 pub trait AzureAppConfigurationClientCheckKeysResultHeaders: private::Sealed {
     fn sync_token(&self) -> Result<Option<String>>;
@@ -135,15 +138,16 @@ impl AzureAppConfigurationClientCheckKeysResultHeaders
 /// # Examples
 ///
 /// ```no_run
-/// # async fn example() -> azure_core::Result<()> {
-/// # let response: azure_core::http::Response<T> = unimplemented!();
-/// // Access response headers
-/// // let response = client.some_method(/* parameters */).await?;
-/// if let Some(sync_token) = response.sync_token()? {
-///     println!("sync_token: {{:?}}", sync_token);
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use appconfiguration::models::{AzureAppConfigurationClientCheckLabelsResult, AzureAppConfigurationClientCheckLabelsResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<AzureAppConfigurationClientCheckLabelsResult, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("Sync-Token: {:?}", sync_token);
+///     }
+///     Ok(())
 /// }
-/// Ok(())
-/// # }
 /// ```
 pub trait AzureAppConfigurationClientCheckLabelsResultHeaders: private::Sealed {
     fn sync_token(&self) -> Result<Option<String>>;
@@ -163,18 +167,19 @@ impl AzureAppConfigurationClientCheckLabelsResultHeaders
 /// # Examples
 ///
 /// ```no_run
-/// # async fn example() -> azure_core::Result<()> {
-/// # let response: azure_core::http::Response<T> = unimplemented!();
-/// // Access response headers
-/// // let response = client.some_method(/* parameters */).await?;
-/// if let Some(sync_token) = response.sync_token()? {
-///     println!("sync_token: {{:?}}", sync_token);
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use appconfiguration::models::{AzureAppConfigurationClientCheckRevisionsResult, AzureAppConfigurationClientCheckRevisionsResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("Sync-Token: {:?}", sync_token);
+///     }
+///     if let Some(etag_header) = response.etag_header()? {
+///         println!("etag: {:?}", etag_header);
+///     }
+///     Ok(())
 /// }
-/// if let Some(etag_header) = response.etag_header()? {
-///     println!("etag_header: {{:?}}", etag_header);
-/// }
-/// Ok(())
-/// # }
 /// ```
 pub trait AzureAppConfigurationClientCheckRevisionsResultHeaders: private::Sealed {
     fn sync_token(&self) -> Result<Option<String>>;
@@ -200,18 +205,22 @@ impl AzureAppConfigurationClientCheckRevisionsResultHeaders
 /// # Examples
 ///
 /// ```no_run
-/// # async fn example() -> azure_core::Result<()> {
-/// # let response: azure_core::http::Response<T> = unimplemented!();
-/// // Access response headers
-/// // let response = client.some_method(/* parameters */).await?;
-/// if let Some(link) = response.link()? {
-///     println!("link: {{:?}}", link);
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use appconfiguration::models::{AzureAppConfigurationClientCheckSnapshotResult, AzureAppConfigurationClientCheckSnapshotResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(link) = response.link()? {
+///         println!("Link: {:?}", link);
+///     }
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("Sync-Token: {:?}", sync_token);
+///     }
+///     if let Some(etag_header) = response.etag_header()? {
+///         println!("etag: {:?}", etag_header);
+///     }
+///     Ok(())
 /// }
-/// if let Some(sync_token) = response.sync_token()? {
-///     println!("sync_token: {{:?}}", sync_token);
-/// }
-/// Ok(())
-/// # }
 /// ```
 pub trait AzureAppConfigurationClientCheckSnapshotResultHeaders: private::Sealed {
     fn link(&self) -> Result<Option<String>>;
@@ -243,15 +252,16 @@ impl AzureAppConfigurationClientCheckSnapshotResultHeaders
 /// # Examples
 ///
 /// ```no_run
-/// # async fn example() -> azure_core::Result<()> {
-/// # let response: azure_core::http::Response<T> = unimplemented!();
-/// // Access response headers
-/// // let response = client.some_method(/* parameters */).await?;
-/// if let Some(sync_token) = response.sync_token()? {
-///     println!("sync_token: {{:?}}", sync_token);
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use appconfiguration::models::{AzureAppConfigurationClientCheckSnapshotsResult, AzureAppConfigurationClientCheckSnapshotsResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("Sync-Token: {:?}", sync_token);
+///     }
+///     Ok(())
 /// }
-/// Ok(())
-/// # }
 /// ```
 pub trait AzureAppConfigurationClientCheckSnapshotsResultHeaders: private::Sealed {
     fn sync_token(&self) -> Result<Option<String>>;
@@ -271,18 +281,19 @@ impl AzureAppConfigurationClientCheckSnapshotsResultHeaders
 /// # Examples
 ///
 /// ```no_run
-/// # async fn example() -> azure_core::Result<()> {
-/// # let response: azure_core::http::Response<T> = unimplemented!();
-/// // Access response headers
-/// // let response = client.some_method(/* parameters */).await?;
-/// if let Some(content_type) = response.content_type()? {
-///     println!("content_type: {{:?}}", content_type);
+/// use azure_core::{Result, http::Response};
+/// use appconfiguration::models::{KeyListResult, KeyListResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<KeyListResult> = unimplemented!();
+///     // Access response headers
+///     if let Some(content_type) = response.content_type()? {
+///         println!("Content-Type: {:?}", content_type);
+///     }
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("Sync-Token: {:?}", sync_token);
+///     }
+///     Ok(())
 /// }
-/// if let Some(sync_token) = response.sync_token()? {
-///     println!("sync_token: {{:?}}", sync_token);
-/// }
-/// Ok(())
-/// # }
 /// ```
 pub trait KeyListResultHeaders: private::Sealed {
     fn content_type(&self) -> Result<Option<GetKeysResponseContentType>>;
@@ -367,18 +378,19 @@ impl KeyValueListResultHeaders for Response<KeyValueListResult> {
 /// # Examples
 ///
 /// ```no_run
-/// # async fn example() -> azure_core::Result<()> {
-/// # let response: azure_core::http::Response<T> = unimplemented!();
-/// // Access response headers
-/// // let response = client.some_method(/* parameters */).await?;
-/// if let Some(content_type) = response.content_type()? {
-///     println!("content_type: {{:?}}", content_type);
+/// use azure_core::{Result, http::Response};
+/// use appconfiguration::models::{LabelListResult, LabelListResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<LabelListResult> = unimplemented!();
+///     // Access response headers
+///     if let Some(content_type) = response.content_type()? {
+///         println!("Content-Type: {:?}", content_type);
+///     }
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("Sync-Token: {:?}", sync_token);
+///     }
+///     Ok(())
 /// }
-/// if let Some(sync_token) = response.sync_token()? {
-///     println!("sync_token: {{:?}}", sync_token);
-/// }
-/// Ok(())
-/// # }
 /// ```
 pub trait LabelListResultHeaders: private::Sealed {
     fn content_type(&self) -> Result<Option<GetLabelsResponseContentType>>;
@@ -447,18 +459,19 @@ impl SnapshotHeaders for Response<Snapshot> {
 /// # Examples
 ///
 /// ```no_run
-/// # async fn example() -> azure_core::Result<()> {
-/// # let response: azure_core::http::Response<T> = unimplemented!();
-/// // Access response headers
-/// // let response = client.some_method(/* parameters */).await?;
-/// if let Some(content_type) = response.content_type()? {
-///     println!("content_type: {{:?}}", content_type);
+/// use azure_core::{Result, http::Response};
+/// use appconfiguration::models::{SnapshotListResult, SnapshotListResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<SnapshotListResult> = unimplemented!();
+///     // Access response headers
+///     if let Some(content_type) = response.content_type()? {
+///         println!("Content-Type: {:?}", content_type);
+///     }
+///     if let Some(sync_token) = response.sync_token()? {
+///         println!("Sync-Token: {:?}", sync_token);
+///     }
+///     Ok(())
 /// }
-/// if let Some(sync_token) = response.sync_token()? {
-///     println!("sync_token: {{:?}}", sync_token);
-/// }
-/// Ok(())
-/// # }
 /// ```
 pub trait SnapshotListResultHeaders: private::Sealed {
     fn content_type(&self) -> Result<Option<GetSnapshotsResponseContentType>>;

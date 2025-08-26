@@ -45,19 +45,19 @@ impl OperationTemplatesLroClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.create_or_replace(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(azure_async_operation) = response.azure_async_operation()? {
-    ///     println!("Azure-AsyncOperation: {{:?}}", azure_async_operation);
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armoptemplates::models::{Order, OrderHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<Order> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(retry_after) = response.retry_after()? {
-    ///     println!("Retry-After: {{:?}}", retry_after);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -153,19 +153,19 @@ impl OperationTemplatesLroClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.delete(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(location) = response.location()? {
-    ///     println!("Location: {{:?}}", location);
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armoptemplates::models::{ArmOperationStatusResourceProvisioningState, ArmOperationStatusResourceProvisioningStateHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(location) = response.location()? {
+    ///         println!("Location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(retry_after) = response.retry_after()? {
-    ///     println!("Retry-After: {{:?}}", retry_after);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -256,22 +256,22 @@ impl OperationTemplatesLroClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.export(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(azure_async_operation) = response.azure_async_operation()? {
-    ///     println!("Azure-AsyncOperation: {{:?}}", azure_async_operation);
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armoptemplates::models::{ExportResult, ExportResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<ExportResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///     }
+    ///     if let Some(location) = response.location()? {
+    ///         println!("Location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(location) = response.location()? {
-    ///     println!("Location: {{:?}}", location);
-    /// }
-    /// if let Some(retry_after) = response.retry_after()? {
-    ///     println!("Retry-After: {{:?}}", retry_after);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers

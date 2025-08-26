@@ -118,22 +118,22 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.acquire_lease(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientAcquireLeaseResult, BlobContainerClientAcquireLeaseResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlobContainerClientAcquireLeaseResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -204,22 +204,22 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.break_lease(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientBreakLeaseResult, BlobContainerClientBreakLeaseResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlobContainerClientBreakLeaseResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -290,22 +290,22 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.change_lease(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientChangeLeaseResult, BlobContainerClientChangeLeaseResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlobContainerClientChangeLeaseResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -478,16 +478,16 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.filter_blobs(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{FilterBlobSegment, FilterBlobSegmentHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<FilterBlobSegment, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     Ok(())
     /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -562,22 +562,22 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.get_access_policy(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{SignedIdentifier, VecSignedIdentifierHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<Vec<SignedIdentifier>, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -638,22 +638,22 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.get_account_info(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientGetAccountInfoResult, BlobContainerClientGetAccountInfoResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlobContainerClientGetAccountInfoResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(account_kind) = response.account_kind()? {
+    ///         println!("x-ms-account-kind: {:?}", account_kind);
+    ///     }
+    ///     if let Some(is_hierarchical_namespace_enabled) = response.is_hierarchical_namespace_enabled()? {
+    ///         println!("x-ms-is-hns-enabled: {:?}", is_hierarchical_namespace_enabled);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(account_kind) = response.account_kind()? {
-    ///     println!("x-ms-account-kind: {{:?}}", account_kind);
-    /// }
-    /// if let Some(is_hierarchical_namespace_enabled) = response.is_hierarchical_namespace_enabled()? {
-    ///     println!("x-ms-is-hns-enabled: {{:?}}", is_hierarchical_namespace_enabled);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -727,22 +727,22 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.get_properties(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientGetPropertiesResult, BlobContainerClientGetPropertiesResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlobContainerClientGetPropertiesResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(access) = response.access()? {
+    ///         println!("x-ms-blob-public-access: {:?}", access);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// if let Some(access) = response.access()? {
-    ///     println!("x-ms-blob-public-access: {{:?}}", access);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -808,16 +808,16 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.list_blob_flat_segment(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{ListBlobsFlatSegmentResponse, ListBlobsFlatSegmentResponseHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<ListBlobsFlatSegmentResponse, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     Ok(())
     /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -931,16 +931,16 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.list_blob_hierarchy_segment(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{ListBlobsHierarchySegmentResponse, ListBlobsHierarchySegmentResponseHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<ListBlobsHierarchySegmentResponse, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     Ok(())
     /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1057,22 +1057,22 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.release_lease(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientReleaseLeaseResult, BlobContainerClientReleaseLeaseResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlobContainerClientReleaseLeaseResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1138,16 +1138,16 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.rename(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientRenameResult, BlobContainerClientRenameResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlobContainerClientRenameResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     Ok(())
     /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1208,22 +1208,22 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.renew_lease(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientRenewLeaseResult, BlobContainerClientRenewLeaseResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlobContainerClientRenewLeaseResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1289,16 +1289,16 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.restore(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientRestoreResult, BlobContainerClientRestoreResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlobContainerClientRestoreResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     Ok(())
     /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -1360,22 +1360,22 @@ impl BlobContainerClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.set_access_policy(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientSetAccessPolicyResult, BlobContainerClientSetAccessPolicyResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlobContainerClientSetAccessPolicyResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers

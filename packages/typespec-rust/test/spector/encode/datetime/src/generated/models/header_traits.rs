@@ -23,16 +23,16 @@ const VALUE: HeaderName = HeaderName::from_static("value");
 /// # Examples
 ///
 /// ```no_run
-/// # use azure_core::Result;
-/// # async fn example() -> Result<()> {
-/// let response = client.some_method(/* parameters */).await?;
-///
-/// // Access response headers:
-/// if let Some(value) = response.value()? {
-///     println!("value: {{:?}}", value);
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use spector_datetime::models::{DatetimeResponseHeaderClientDefaultResult, DatetimeResponseHeaderClientDefaultResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<DatetimeResponseHeaderClientDefaultResult, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(value) = response.value()? {
+///         println!("value: {:?}", value);
+///     }
+///     Ok(())
 /// }
-/// # Ok(())
-/// # }
 /// ```
 pub trait DatetimeResponseHeaderClientDefaultResultHeaders: private::Sealed {
     fn value(&self) -> Result<Option<OffsetDateTime>>;
@@ -51,16 +51,16 @@ impl DatetimeResponseHeaderClientDefaultResultHeaders
 /// # Examples
 ///
 /// ```no_run
-/// # use azure_core::Result;
-/// # async fn example() -> Result<()> {
-/// let response = client.some_method(/* parameters */).await?;
-///
-/// // Access response headers:
-/// if let Some(value) = response.value()? {
-///     println!("value: {{:?}}", value);
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use spector_datetime::models::{DatetimeResponseHeaderClientRfc3339Result, DatetimeResponseHeaderClientRfc3339ResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<DatetimeResponseHeaderClientRfc3339Result, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(value) = response.value()? {
+///         println!("value: {:?}", value);
+///     }
+///     Ok(())
 /// }
-/// # Ok(())
-/// # }
 /// ```
 pub trait DatetimeResponseHeaderClientRfc3339ResultHeaders: private::Sealed {
     fn value(&self) -> Result<Option<OffsetDateTime>>;
@@ -79,16 +79,16 @@ impl DatetimeResponseHeaderClientRfc3339ResultHeaders
 /// # Examples
 ///
 /// ```no_run
-/// # use azure_core::Result;
-/// # async fn example() -> Result<()> {
-/// let response = client.some_method(/* parameters */).await?;
-///
-/// // Access response headers:
-/// if let Some(value) = response.value()? {
-///     println!("value: {{:?}}", value);
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use spector_datetime::models::{DatetimeResponseHeaderClientRfc7231Result, DatetimeResponseHeaderClientRfc7231ResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<DatetimeResponseHeaderClientRfc7231Result, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(value) = response.value()? {
+///         println!("value: {:?}", value);
+///     }
+///     Ok(())
 /// }
-/// # Ok(())
-/// # }
 /// ```
 pub trait DatetimeResponseHeaderClientRfc7231ResultHeaders: private::Sealed {
     fn value(&self) -> Result<Option<OffsetDateTime>>;
@@ -107,16 +107,16 @@ impl DatetimeResponseHeaderClientRfc7231ResultHeaders
 /// # Examples
 ///
 /// ```no_run
-/// # use azure_core::Result;
-/// # async fn example() -> Result<()> {
-/// let response = client.some_method(/* parameters */).await?;
-///
-/// // Access response headers:
-/// if let Some(value) = response.value()? {
-///     println!("value: {{:?}}", value);
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use spector_datetime::models::{DatetimeResponseHeaderClientUnixTimestampResult, DatetimeResponseHeaderClientUnixTimestampResultHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<DatetimeResponseHeaderClientUnixTimestampResult, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(value) = response.value()? {
+///         println!("value: {:?}", value);
+///     }
+///     Ok(())
 /// }
-/// # Ok(())
-/// # }
 /// ```
 pub trait DatetimeResponseHeaderClientUnixTimestampResultHeaders: private::Sealed {
     fn value(&self) -> Result<Option<OffsetDateTime>>;

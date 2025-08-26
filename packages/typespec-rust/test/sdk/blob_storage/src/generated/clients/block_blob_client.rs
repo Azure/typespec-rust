@@ -115,22 +115,22 @@ impl BlockBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.commit_block_list(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_md5) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", content_md5);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlockBlobClientCommitBlockListResult, BlockBlobClientCommitBlockListResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlockBlobClientCommitBlockListResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -279,22 +279,22 @@ impl BlockBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.get_block_list(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{BlockList, BlockListHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlockList, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(blob_content_length) = response.blob_content_length()? {
+    ///         println!("x-ms-blob-content-length: {:?}", blob_content_length);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// if let Some(blob_content_length) = response.blob_content_length()? {
-    ///     println!("x-ms-blob-content-length: {{:?}}", blob_content_length);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -371,22 +371,22 @@ impl BlockBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.put_blob_from_url(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_md5) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", content_md5);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlockBlobClientPutBlobFromUrlResult, BlockBlobClientPutBlobFromUrlResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlockBlobClientPutBlobFromUrlResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
-    /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -556,22 +556,22 @@ impl BlockBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.query(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(accept_ranges) = response.accept_ranges()? {
-    ///     println!("Accept-Ranges: {{:?}}", accept_ranges);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlockBlobClientQueryResult, BlockBlobClientQueryResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlockBlobClientQueryResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(accept_ranges) = response.accept_ranges()? {
+    ///         println!("Accept-Ranges: {:?}", accept_ranges);
+    ///     }
+    ///     if let Some(cache_control) = response.cache_control()? {
+    ///         println!("Cache-Control: {:?}", cache_control);
+    ///     }
+    ///     if let Some(content_disposition) = response.content_disposition()? {
+    ///         println!("Content-Disposition: {:?}", content_disposition);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(cache_control) = response.cache_control()? {
-    ///     println!("Cache-Control: {{:?}}", cache_control);
-    /// }
-    /// if let Some(content_disposition) = response.content_disposition()? {
-    ///     println!("Content-Disposition: {{:?}}", content_disposition);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -695,22 +695,22 @@ impl BlockBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.stage_block(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_md5) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", content_md5);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlockBlobClientStageBlockResult, BlockBlobClientStageBlockResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlockBlobClientStageBlockResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(content_crc64) = response.content_crc64()? {
+    ///         println!("x-ms-content-crc64: {:?}", content_crc64);
+    ///     }
+    ///     if let Some(encryption_key_sha256) = response.encryption_key_sha256()? {
+    ///         println!("x-ms-encryption-key-sha256: {:?}", encryption_key_sha256);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(content_crc64) = response.content_crc64()? {
-    ///     println!("x-ms-content-crc64: {{:?}}", content_crc64);
-    /// }
-    /// if let Some(encryption_key_sha256) = response.encryption_key_sha256()? {
-    ///     println!("x-ms-encryption-key-sha256: {{:?}}", encryption_key_sha256);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -806,22 +806,22 @@ impl BlockBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.stage_block_from_url(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_md5) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", content_md5);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlockBlobClientStageBlockFromUrlResult, BlockBlobClientStageBlockFromUrlResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlockBlobClientStageBlockFromUrlResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(content_crc64) = response.content_crc64()? {
+    ///         println!("x-ms-content-crc64: {:?}", content_crc64);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(date) = response.date()? {
-    ///     println!("Date: {{:?}}", date);
-    /// }
-    /// if let Some(content_crc64) = response.content_crc64()? {
-    ///     println!("x-ms-content-crc64: {{:?}}", content_crc64);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers
@@ -943,22 +943,22 @@ impl BlockBlobClient {
     /// access to response headers. For example:
     ///
     /// ```no_run
-    /// # use azure_core::Result;
-    /// # async fn example() -> Result<()> {
-    /// let response = client.upload(/* parameters */).await?;
-    ///
-    /// // Access response headers:
-    /// if let Some(content_md5) = response.content_md5()? {
-    ///     println!("Content-MD5: {{:?}}", content_md5);
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlockBlobClientUploadResult, BlockBlobClientUploadResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     # let response: Response<BlockBlobClientUploadResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
     /// }
-    /// if let Some(last_modified) = response.last_modified()? {
-    ///     println!("Last-Modified: {{:?}}", last_modified);
-    /// }
-    /// if let Some(etag) = response.etag()? {
-    ///     println!("etag: {{:?}}", etag);
-    /// }
-    /// # Ok(())
-    /// # }
     /// ```
     ///
     /// ### Available headers

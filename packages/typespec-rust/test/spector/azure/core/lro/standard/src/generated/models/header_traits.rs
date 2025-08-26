@@ -19,16 +19,16 @@ const OPERATION_LOCATION: HeaderName = HeaderName::from_static("operation-locati
 /// # Examples
 ///
 /// ```no_run
-/// # use azure_core::Result;
-/// # async fn example() -> Result<()> {
-/// let response = client.some_method(/* parameters */).await?;
-///
-/// // Access response headers:
-/// if let Some(value) = response.operation_location()? {
-///     println!("Operation-Location: {{:?}}", value);
+/// use azure_core::{Result, http::Response};
+/// use spector_lrostd::models::{ExportedUser, ExportedUserHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<ExportedUser> = unimplemented!();
+///     // Access response headers
+///     if let Some(operation_location) = response.operation_location()? {
+///         println!("Operation-Location: {:?}", operation_location);
+///     }
+///     Ok(())
 /// }
-/// # Ok(())
-/// # }
 /// ```
 pub trait ExportedUserHeaders: private::Sealed {
     fn operation_location(&self) -> Result<Option<String>>;
@@ -46,16 +46,16 @@ impl ExportedUserHeaders for Response<ExportedUser> {
 /// # Examples
 ///
 /// ```no_run
-/// # use azure_core::Result;
-/// # async fn example() -> Result<()> {
-/// let response = client.some_method(/* parameters */).await?;
-///
-/// // Access response headers:
-/// if let Some(value) = response.operation_location()? {
-///     println!("Operation-Location: {{:?}}", value);
+/// use azure_core::{Result, http::Response};
+/// use spector_lrostd::models::{OperationStatusError, OperationStatusErrorHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<OperationStatusError> = unimplemented!();
+///     // Access response headers
+///     if let Some(operation_location) = response.operation_location()? {
+///         println!("Operation-Location: {:?}", operation_location);
+///     }
+///     Ok(())
 /// }
-/// # Ok(())
-/// # }
 /// ```
 pub trait OperationStatusErrorHeaders: private::Sealed {
     fn operation_location(&self) -> Result<Option<String>>;
@@ -73,16 +73,16 @@ impl OperationStatusErrorHeaders for Response<OperationStatusError> {
 /// # Examples
 ///
 /// ```no_run
-/// # use azure_core::Result;
-/// # async fn example() -> Result<()> {
-/// let response = client.some_method(/* parameters */).await?;
-///
-/// // Access response headers:
-/// if let Some(value) = response.operation_location()? {
-///     println!("Operation-Location: {{:?}}", value);
+/// use azure_core::{Result, http::Response};
+/// use spector_lrostd::models::{User, UserHeaders};
+/// async fn example() -> Result<()> {
+///     # let response: Response<User> = unimplemented!();
+///     // Access response headers
+///     if let Some(operation_location) = response.operation_location()? {
+///         println!("Operation-Location: {:?}", operation_location);
+///     }
+///     Ok(())
 /// }
-/// # Ok(())
-/// # }
 /// ```
 pub trait UserHeaders: private::Sealed {
     fn operation_location(&self) -> Result<Option<String>>;

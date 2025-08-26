@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
+import { emitHeaderTraitDocExample } from './docTests.js';
 import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
@@ -146,23 +147,7 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       body += `///\n`;
       body += `/// # Examples\n`;
       body += `///\n`;
-      body += `/// ${helpers.emitBackTicks(3)}no_run\n`;
-      body += `/// # async fn example() -> azure_core::Result<()> {\n`;
-      body += `/// # let response: azure_core::http::Response<T> = unimplemented!();\n`;
-      body += `/// // Access response headers\n`;
-      body += `/// // let response = client.some_method(/* parameters */).await?;\n`;
-      
-      // Add examples for the first few headers
-      const exampleHeaders = trait.headers.slice(0, 2);
-      for (const header of exampleHeaders) {
-        body += `/// if let Some(${header.name}) = response.${header.name}()? {\n`;
-        body += `///     println!("${header.name}: {{:?}}", ${header.name});\n`;
-        body += `/// }\n`;
-      }
-      
-      body += `/// Ok(())\n`;
-      body += `/// # }\n`;
-      body += `/// ${helpers.emitBackTicks(3)}\n`;
+      body += emitHeaderTraitDocExample(crate.name, trait);
     }
     body += `pub trait ${trait.name}: private::Sealed {\n`;
     for (const header of trait.headers) {

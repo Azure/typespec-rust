@@ -7,6 +7,7 @@
 
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
+import { emitHeaderTraitDocExample } from './docTests.js';
 import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import queryString from 'query-string';
@@ -237,7 +238,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
       }
       // client accessors will never have response headers
       if (method.kind !== 'clientaccessor' && method.responseHeaders) {
-        body += getHeaderTraitDocComment(indent, method);
+        body += getHeaderTraitDocComment(indent, crate, method);
       }
       if (isPublicApi) {
         body += `${indent.get()}#[tracing::function("${method.languageIndependentName}")]\n`;
@@ -486,10 +487,11 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
  * returns documentation for header trait access if the method has response headers.
  * 
  * @param indent the current indentation level
+ * @param crate the crate to which method belongs
  * @param method the method for which to generate header trait documentation
  * @returns the header trait documentation or empty string if not applicable
  */
-function getHeaderTraitDocComment(indent: helpers.indentation, method: ClientMethod): string {
+function getHeaderTraitDocComment(indent: helpers.indentation, crate: rust.Crate, method: ClientMethod): string {
   if (!method.responseHeaders) {
     return '';
   }
@@ -501,24 +503,7 @@ function getHeaderTraitDocComment(indent: helpers.indentation, method: ClientMet
   headerDocs += `${indent.get()}/// The returned [${helpers.wrapInBackTicks('Response')}](azure_core::http::Response) implements the [${helpers.wrapInBackTicks(traitName)}] trait, which provides\n`;
   headerDocs += `${indent.get()}/// access to response headers. For example:\n`;
   headerDocs += `${indent.get()}///\n`;
-  headerDocs += `${indent.get()}/// ${helpers.emitBackTicks(3)}no_run\n`;
-  headerDocs += `${indent.get()}/// # use azure_core::Result;\n`;
-  headerDocs += `${indent.get()}/// # async fn example() -> Result<()> {\n`;
-  headerDocs += `${indent.get()}/// let response = client.${method.name}(/* parameters */).await?;\n`;
-  headerDocs += `${indent.get()}/// \n`;
-  headerDocs += `${indent.get()}/// // Access response headers:\n`;
-
-  // Add examples for a few key headers
-  const exampleHeaders = method.responseHeaders.headers.slice(0, 3); // Show first 3 headers as examples
-  for (const header of exampleHeaders) {
-    headerDocs += `${indent.get()}/// if let Some(${header.name}) = response.${header.name}()? {\n`;
-    headerDocs += `${indent.get()}///     println!("${header.header}: {{:?}}", ${header.name});\n`;
-    headerDocs += `${indent.get()}/// }\n`;
-  }
-
-  headerDocs += `${indent.get()}/// # Ok(())\n`;
-  headerDocs += `${indent.get()}/// # }\n`;
-  headerDocs += `${indent.get()}/// ${helpers.emitBackTicks(3)}\n`;
+  headerDocs += emitHeaderTraitDocExample(crate.name, method.responseHeaders, indent);
   headerDocs += `${indent.get()}///\n`;
   headerDocs += `${indent.get()}/// ### Available headers\n`;
 
