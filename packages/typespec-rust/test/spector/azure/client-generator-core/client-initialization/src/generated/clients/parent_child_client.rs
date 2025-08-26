@@ -36,7 +36,9 @@ impl ParentChildClient {
     /// * `endpoint` - Service host
     /// * `blob_name` - The name of the blob. This parameter is used as a path parameter in all operations.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_clientinit")]
+    #[tracing::new(
+        "_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParentClient.ChildClient"
+    )]
     pub fn with_no_credential(
         endpoint: &str,
         blob_name: String,

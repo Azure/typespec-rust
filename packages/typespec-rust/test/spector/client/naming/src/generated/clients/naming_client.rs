@@ -41,7 +41,7 @@ impl NamingClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_naming")]
+    #[tracing::new("Client.Naming")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NamingClientOptions>,

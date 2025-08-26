@@ -35,7 +35,7 @@ impl JsonMergePatchClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_jmergepatch")]
+    #[tracing::new("Payload.JsonMergePatch")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<JsonMergePatchClientOptions>,

@@ -40,7 +40,7 @@ impl StandardClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_lrostd")]
+    #[tracing::new("_Specs_.Azure.Core.Lro.Standard")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<StandardClientOptions>,

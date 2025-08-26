@@ -66,7 +66,7 @@ impl BlobContainerClient {
     ///   Entra ID token to use when authenticating.
     /// * `container_name` - The name of the container.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("blob_storage")]
+    #[tracing::new("Storage.Blob.Container")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,

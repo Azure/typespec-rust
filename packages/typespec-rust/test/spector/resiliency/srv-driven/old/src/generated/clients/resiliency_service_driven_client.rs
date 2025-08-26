@@ -42,7 +42,7 @@ impl ResiliencyServiceDrivenClient {
     ///   'v1' is for the deployment when the service had only one api version. 'v2' is for the deployment when the service had
     ///   api-versions 'v1' and 'v2'.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_srvdrivenold")]
+    #[tracing::new("Resiliency.ServiceDriven.AddOptionalParam")]
     pub fn with_no_credential(
         endpoint: &str,
         service_deployment_version: String,

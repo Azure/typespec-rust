@@ -34,7 +34,7 @@ impl MadeOptionalClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_madeoptional")]
+    #[tracing::new("Versioning.MadeOptional")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<MadeOptionalClientOptions>,

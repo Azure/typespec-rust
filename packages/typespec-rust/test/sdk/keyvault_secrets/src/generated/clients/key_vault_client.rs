@@ -53,7 +53,7 @@ impl KeyVaultClient {
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("keyvault_secrets")]
+    #[tracing::new("KeyVault")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,

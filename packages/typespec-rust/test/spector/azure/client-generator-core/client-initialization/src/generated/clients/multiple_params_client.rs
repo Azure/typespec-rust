@@ -37,7 +37,7 @@ impl MultipleParamsClient {
     /// * `name` - The name of the client. This parameter is used as a header in all operations.
     /// * `region` - The region to use for all operations. This parameter is used as a query parameter.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_clientinit")]
+    #[tracing::new("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MultipleParams")]
     pub fn with_no_credential(
         endpoint: &str,
         name: String,

@@ -35,7 +35,7 @@ impl ClientAClient {
     /// * `endpoint` - Service host
     /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_multiclient")]
+    #[tracing::new("Client.Structure.MultiClient.ClientA")]
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,

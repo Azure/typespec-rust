@@ -35,7 +35,7 @@ impl ParamAliasClient {
     /// * `endpoint` - Service host
     /// * `blob_name` - Blob name for the client.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_clientinit")]
+    #[tracing::new("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.ParamAlias")]
     pub fn with_no_credential(
         endpoint: &str,
         blob_name: String,

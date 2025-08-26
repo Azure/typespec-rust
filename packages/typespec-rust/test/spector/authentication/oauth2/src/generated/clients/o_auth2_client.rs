@@ -39,7 +39,7 @@ impl OAuth2Client {
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_oauth2")]
+    #[tracing::new("Authentication.OAuth2")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,

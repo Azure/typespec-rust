@@ -35,7 +35,7 @@ impl MultipleClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_multiple")]
+    #[tracing::new("Server.Path.Multiple")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<MultipleClientOptions>,

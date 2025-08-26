@@ -35,7 +35,7 @@ impl PageableClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_azurepageable")]
+    #[tracing::new("_Specs_.Azure.Payload.Pageable")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<PageableClientOptions>,

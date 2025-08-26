@@ -58,7 +58,7 @@ impl PageBlobClient {
     /// * `container_name` - The name of the container.
     /// * `blob_name` - The name of the blob.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("blob_storage")]
+    #[tracing::new("Storage.Blob.Container.Blob.PageBlob")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
