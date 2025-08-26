@@ -147,21 +147,20 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       body += `/// # Examples\n`;
       body += `///\n`;
       body += `/// ${helpers.emitBackTicks(3)}no_run\n`;
-      body += `/// # use azure_core::Result;\n`;
-      body += `/// # async fn example() -> Result<()> {\n`;
-      body += `/// let response = client.some_method(/* parameters */).await?;\n`;
-      body += `///\n`;
-      body += `/// // Access response headers:\n`;
+      body += `/// # async fn example() -> azure_core::Result<()> {\n`;
+      body += `/// # let response: azure_core::http::Response<T> = unimplemented!();\n`;
+      body += `/// // Access response headers\n`;
+      body += `/// // let response = client.some_method(/* parameters */).await?;\n`;
       
       // Add examples for the first few headers
       const exampleHeaders = trait.headers.slice(0, 2);
       for (const header of exampleHeaders) {
-        body += `/// if let Some(value) = response.${header.name}()? {\n`;
-        body += `///     println!("${header.header}: {{:?}}", value);\n`;
+        body += `/// if let Some(${header.name}) = response.${header.name}()? {\n`;
+        body += `///     println!("${header.name}: {{:?}}", ${header.name});\n`;
         body += `/// }\n`;
       }
       
-      body += `/// # Ok(())\n`;
+      body += `/// Ok(())\n`;
       body += `/// # }\n`;
       body += `/// ${helpers.emitBackTicks(3)}\n`;
     }
