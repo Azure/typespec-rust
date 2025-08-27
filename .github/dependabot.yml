@@ -13,8 +13,6 @@ updates:
         patterns:
           - "*azure-tools/azure-http-specs"
           - "*typespec*"
-        schedule:
-          interval: "daily"
       eslint:
         patterns:
           - "*eslint*"
