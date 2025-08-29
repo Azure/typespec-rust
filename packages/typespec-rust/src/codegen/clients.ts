@@ -1018,12 +1018,13 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
  */
 function errIfNotSuccessResponse(use: Use, indent: helpers.indentation): string {
   use.add('azure_core', 'Error', 'Result');
+  use.add('azure_core::http::headers', 'ERROR_CODE');
   use.add('azure_core::error', 'ErrorKind', 'HttpError');
   return helpers.buildIfBlock(indent, {
     condition: '!rsp.status().is_success()',
     body: (indent) => {
       let body = `${indent.get()}let status = rsp.status();\n`
-      body += `${indent.get()}let http_error = HttpError::new(rsp).await;\n`;
+      body += `${indent.get()}let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;\n`;
       body += `${indent.get()}let error_kind = ErrorKind::http_response(status, http_error.error_code().map(std::borrow::ToOwned::to_owned));\n`;
       body += `${indent.get()}return Err(Error::new(error_kind, http_error));\n`;
       return body;
@@ -1318,6 +1319,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
   use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
+  use.add('azure_core::http::headers', 'RETRY_AFTER', 'X_MS_RETRY_AFTER_MS', 'RETRY_AFTER_MS' );
   use.add('azure_core::http::poller', 'get_retry_after', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor as _');
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));
@@ -1368,7 +1370,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}async move {\n`
   body += `${indent.push().get()}let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;\n`
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
-  body += `${indent.get()}let retry_after = get_retry_after(&headers, &options.poller_options);\n`
+  body += `${indent.get()}let retry_after = get_retry_after(&headers, &[(X_MS_RETRY_AFTER_MS, false), (RETRY_AFTER_MS, false), (RETRY_AFTER, true)], &options.poller_options);\n`
   body += `${indent.get()}let bytes = body.collect().await?;\n`
 
   let deserialize = '';

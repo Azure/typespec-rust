@@ -12,6 +12,7 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{
+        headers::{ERROR_CODE, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         pager::{PagerResult, PagerState},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         Method, Pager, Pipeline, Poller, RawResponse, Request, RequestContent, Response, Url,
@@ -103,7 +104,15 @@ impl ResourcesNestedClient {
                 async move {
                     let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[
+                            (X_MS_RETRY_AFTER_MS, false),
+                            (RETRY_AFTER_MS, false),
+                            (RETRY_AFTER, true),
+                        ],
+                        &options.poller_options,
+                    );
                     let bytes = body.collect().await?;
                     let res: NestedProxyResource = json::from_json(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
@@ -184,7 +193,15 @@ impl ResourcesNestedClient {
                 async move {
                     let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[
+                            (X_MS_RETRY_AFTER_MS, false),
+                            (RETRY_AFTER_MS, false),
+                            (RETRY_AFTER, true),
+                        ],
+                        &options.poller_options,
+                    );
                     let bytes = body.collect().await?;
                     let res: ArmOperationStatusResourceProvisioningState = json::from_json(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
@@ -255,7 +272,7 @@ impl ResourcesNestedClient {
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
         if !rsp.status().is_success() {
             let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
+            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
             let error_kind = ErrorKind::http_response(
                 status,
                 http_error.error_code().map(std::borrow::ToOwned::to_owned),
@@ -330,7 +347,7 @@ impl ResourcesNestedClient {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 if !rsp.status().is_success() {
                     let status = rsp.status();
-                    let http_error = HttpError::new(rsp).await;
+                    let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
                     let error_kind = ErrorKind::http_response(
                         status,
                         http_error.error_code().map(std::borrow::ToOwned::to_owned),
@@ -422,7 +439,15 @@ impl ResourcesNestedClient {
                 async move {
                     let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[
+                            (X_MS_RETRY_AFTER_MS, false),
+                            (RETRY_AFTER_MS, false),
+                            (RETRY_AFTER, true),
+                        ],
+                        &options.poller_options,
+                    );
                     let bytes = body.collect().await?;
                     let res: NestedProxyResource = json::from_json(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
