@@ -9,13 +9,13 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<EmptyInput> for RequestContent<EmptyInput> {
     type Error = azure_core::Error;
     fn try_from(value: EmptyInput) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<EmptyInputOutput> for RequestContent<EmptyInputOutput> {
     type Error = azure_core::Error;
     fn try_from(value: EmptyInputOutput) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

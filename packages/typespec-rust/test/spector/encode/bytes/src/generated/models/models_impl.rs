@@ -11,27 +11,27 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<Base64BytesProperty> for RequestContent<Base64BytesProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Base64BytesProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<Base64urlArrayBytesProperty> for RequestContent<Base64urlArrayBytesProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Base64urlArrayBytesProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<Base64urlBytesProperty> for RequestContent<Base64urlBytesProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Base64urlBytesProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<DefaultBytesProperty> for RequestContent<DefaultBytesProperty> {
     type Error = azure_core::Error;
     fn try_from(value: DefaultBytesProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
