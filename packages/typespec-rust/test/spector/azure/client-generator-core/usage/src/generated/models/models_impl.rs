@@ -9,13 +9,13 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<InputModel> for RequestContent<InputModel> {
     type Error = azure_core::Error;
     fn try_from(value: InputModel) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<RoundTripModel> for RequestContent<RoundTripModel> {
     type Error = azure_core::Error;
     fn try_from(value: RoundTripModel) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

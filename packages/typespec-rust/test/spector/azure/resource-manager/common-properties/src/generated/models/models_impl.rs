@@ -9,13 +9,13 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<ConfidentialResource> for RequestContent<ConfidentialResource> {
     type Error = azure_core::Error;
     fn try_from(value: ConfidentialResource) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<ManagedIdentityTrackedResource> for RequestContent<ManagedIdentityTrackedResource> {
     type Error = azure_core::Error;
     fn try_from(value: ManagedIdentityTrackedResource) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

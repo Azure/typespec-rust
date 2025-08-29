@@ -12,21 +12,21 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<DefaultDatetimeProperty> for RequestContent<DefaultDatetimeProperty> {
     type Error = azure_core::Error;
     fn try_from(value: DefaultDatetimeProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<Rfc3339DatetimeProperty> for RequestContent<Rfc3339DatetimeProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Rfc3339DatetimeProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<Rfc7231DatetimeProperty> for RequestContent<Rfc7231DatetimeProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Rfc7231DatetimeProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
@@ -35,13 +35,13 @@ impl TryFrom<UnixTimestampArrayDatetimeProperty>
 {
     type Error = azure_core::Error;
     fn try_from(value: UnixTimestampArrayDatetimeProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<UnixTimestampDatetimeProperty> for RequestContent<UnixTimestampDatetimeProperty> {
     type Error = azure_core::Error;
     fn try_from(value: UnixTimestampDatetimeProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

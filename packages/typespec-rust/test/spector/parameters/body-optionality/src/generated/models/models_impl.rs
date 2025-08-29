@@ -9,6 +9,6 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<BodyModel> for RequestContent<BodyModel> {
     type Error = azure_core::Error;
     fn try_from(value: BodyModel) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

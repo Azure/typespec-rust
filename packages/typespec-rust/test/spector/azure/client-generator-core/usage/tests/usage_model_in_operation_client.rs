@@ -2,6 +2,7 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use azure_core::http::RequestContent;
 use spector_coreusage::{
     models::{InputModel, OutputModel, RoundTripModel},
     UsageClient,
@@ -38,7 +39,7 @@ async fn orphan_model_serializable() {
     client
         .get_usage_model_in_operation_client()
         .orphan_model_serializable(
-            r#"{"name": "name", "desc": "desc"}"#.try_into().unwrap(),
+            RequestContent::from_str(r#"{"name": "name", "desc": "desc"}"#),
             None,
         )
         .await

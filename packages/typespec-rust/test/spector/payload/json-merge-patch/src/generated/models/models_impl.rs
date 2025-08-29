@@ -9,13 +9,13 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<Resource> for RequestContent<Resource> {
     type Error = azure_core::Error;
     fn try_from(value: Resource) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<ResourcePatch> for RequestContent<ResourcePatch> {
     type Error = azure_core::Error;
     fn try_from(value: ResourcePatch) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

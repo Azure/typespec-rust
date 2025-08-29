@@ -37,20 +37,20 @@ impl Page for SecretListResult {
 impl TryFrom<SecretRestoreParameters> for RequestContent<SecretRestoreParameters> {
     type Error = azure_core::Error;
     fn try_from(value: SecretRestoreParameters) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<SecretSetParameters> for RequestContent<SecretSetParameters> {
     type Error = azure_core::Error;
     fn try_from(value: SecretSetParameters) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<SecretUpdateParameters> for RequestContent<SecretUpdateParameters> {
     type Error = azure_core::Error;
     fn try_from(value: SecretUpdateParameters) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

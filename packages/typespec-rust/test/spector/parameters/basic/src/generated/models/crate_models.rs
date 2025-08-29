@@ -14,6 +14,6 @@ pub(crate) struct SimpleRequest {
 impl TryFrom<SimpleRequest> for RequestContent<SimpleRequest> {
     type Error = azure_core::Error;
     fn try_from(value: SimpleRequest) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

@@ -18,13 +18,13 @@ create_extensible_enum!(
 impl TryFrom<ClientExtensibleEnum> for RequestContent<ClientExtensibleEnum> {
     type Error = azure_core::Error;
     fn try_from(value: ClientExtensibleEnum) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<ExtensibleEnum> for RequestContent<ExtensibleEnum> {
     type Error = azure_core::Error;
     fn try_from(value: ExtensibleEnum) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

@@ -61,20 +61,20 @@ impl StatusMonitor for Snapshot {
 impl TryFrom<KeyValue> for RequestContent<KeyValue> {
     type Error = azure_core::Error;
     fn try_from(value: KeyValue) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<Snapshot> for RequestContent<Snapshot> {
     type Error = azure_core::Error;
     fn try_from(value: Snapshot) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<SnapshotUpdateParameters> for RequestContent<SnapshotUpdateParameters> {
     type Error = azure_core::Error;
     fn try_from(value: SnapshotUpdateParameters) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

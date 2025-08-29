@@ -24,6 +24,6 @@ impl Page for PagedUser {
 impl TryFrom<User> for RequestContent<User> {
     type Error = azure_core::Error;
     fn try_from(value: User) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
