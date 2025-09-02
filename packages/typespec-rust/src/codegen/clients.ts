@@ -7,6 +7,7 @@
 
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
+import { emitHeaderTraitDocExample } from './docTests.js';
 import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import queryString from 'query-string';
@@ -235,6 +236,10 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
       if (paramsDocs) {
         body += paramsDocs;
       }
+      // client accessors will never have response headers
+      if (method.kind !== 'clientaccessor' && method.responseHeaders) {
+        body += getHeaderTraitDocComment(indent, crate, method);
+      }
       if (isPublicApi) {
         body += `${indent.get()}#[tracing::function("${method.languageIndependentName}")]\n`;
       } else if (isSubclientNew) {
@@ -369,7 +374,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
  */
 function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Constructor | rust.MethodType): string | undefined {
   const formatParamBullet = function (paramName: string): string {
-    return `* \`${paramName}\` - `;
+    return `* ${helpers.wrapInBackTicks(paramName)} - `;
   };
 
   let paramsContent = '';
@@ -476,6 +481,41 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
   }
 
   return paramsSig.join(', ');
+}
+
+/**
+ * returns documentation for header trait access if the method has response headers.
+ * 
+ * @param indent the current indentation level
+ * @param crate the crate to which method belongs
+ * @param method the method for which to generate header trait documentation
+ * @returns the header trait documentation or empty string if not applicable
+ */
+function getHeaderTraitDocComment(indent: helpers.indentation, crate: rust.Crate, method: ClientMethod): string {
+  if (!method.responseHeaders) {
+    return '';
+  }
+
+  const traitName = method.responseHeaders.name;
+  let headerDocs = `${indent.get()}///\n`;
+  headerDocs += `${indent.get()}/// ## Response Headers\n`;
+  headerDocs += `${indent.get()}///\n`;
+  headerDocs += `${indent.get()}/// The returned [${helpers.wrapInBackTicks('Response')}](azure_core::http::Response) implements the [${helpers.wrapInBackTicks(traitName)}] trait, which provides\n`;
+  headerDocs += `${indent.get()}/// access to response headers. For example:\n`;
+  headerDocs += `${indent.get()}///\n`;
+  headerDocs += emitHeaderTraitDocExample(crate.name, method.responseHeaders, indent);
+  headerDocs += `${indent.get()}///\n`;
+  headerDocs += `${indent.get()}/// ### Available headers\n`;
+
+  // List all available headers
+  for (const header of method.responseHeaders.headers) {
+    headerDocs += `${indent.get()}/// * [${helpers.wrapInBackTicks(header.name)}()](crate::generated::models::${traitName}::${header.name}) - ${header.header}\n`;
+  }
+
+  headerDocs += `${indent.get()}///\n`;
+  headerDocs += `${indent.get()}/// [${helpers.wrapInBackTicks(traitName)}]: crate::generated::models::${traitName}\n`;
+
+  return headerDocs;
 }
 
 /**

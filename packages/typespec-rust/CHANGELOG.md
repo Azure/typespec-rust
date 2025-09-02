@@ -18,6 +18,7 @@
 ### Other Changes
 
 * Required path parameters that are empty will return an error.
+* Added improved doc comments for accessing header traits (includes examples).
 
 ## 0.20.0 (2025-08-01)
 

@@ -38,6 +38,33 @@ impl OperationTemplatesLroClient {
     /// * `order_name` - The name of the Order
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`OrderHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armoptemplates::models::{Order, OrderHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<Order> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`azure_async_operation`()](crate::generated::models::OrderHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](crate::generated::models::OrderHeaders::retry_after) - Retry-After
+    ///
+    /// [`OrderHeaders`]: crate::generated::models::OrderHeaders
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.createOrReplace")]
     pub fn create_or_replace(
         &self,
@@ -119,6 +146,33 @@ impl OperationTemplatesLroClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `order_name` - The name of the Order
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ArmOperationStatusResourceProvisioningStateHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armoptemplates::models::{ArmOperationStatusResourceProvisioningState, ArmOperationStatusResourceProvisioningStateHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(location) = response.location()? {
+    ///         println!("Location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`location`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
+    ///
+    /// [`ArmOperationStatusResourceProvisioningStateHeaders`]: crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.delete")]
     pub fn delete(
         &self,
@@ -195,6 +249,37 @@ impl OperationTemplatesLroClient {
     /// * `order_name` - The name of the Order
     /// * `body` - The content of the action request
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ExportResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armoptemplates::models::{ExportResult, ExportResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ExportResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///     }
+    ///     if let Some(location) = response.location()? {
+    ///         println!("Location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`azure_async_operation`()](crate::generated::models::ExportResultHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`location`()](crate::generated::models::ExportResultHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::ExportResultHeaders::retry_after) - Retry-After
+    ///
+    /// [`ExportResultHeaders`]: crate::generated::models::ExportResultHeaders
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.export")]
     pub fn export(
         &self,

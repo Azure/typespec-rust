@@ -42,6 +42,33 @@ impl ResourcesNestedClient {
     /// * `nexted_proxy_resource_name` - Name of the nested resource.
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`NestedProxyResourceHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armresources::models::{NestedProxyResource, NestedProxyResourceHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<NestedProxyResource> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`azure_async_operation`()](crate::generated::models::NestedProxyResourceHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](crate::generated::models::NestedProxyResourceHeaders::retry_after) - Retry-After
+    ///
+    /// [`NestedProxyResourceHeaders`]: crate::generated::models::NestedProxyResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.createOrReplace")]
     pub fn create_or_replace(
         &self,
@@ -129,6 +156,33 @@ impl ResourcesNestedClient {
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `nexted_proxy_resource_name` - Name of the nested resource.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ArmOperationStatusResourceProvisioningStateHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armresources::models::{ArmOperationStatusResourceProvisioningState, ArmOperationStatusResourceProvisioningStateHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(location) = response.location()? {
+    ///         println!("Location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`location`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
+    ///
+    /// [`ArmOperationStatusResourceProvisioningStateHeaders`]: crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.delete")]
     pub fn delete(
         &self,
@@ -361,6 +415,33 @@ impl ResourcesNestedClient {
     /// * `nexted_proxy_resource_name` - Name of the nested resource.
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`NestedProxyResourceHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armresources::models::{NestedProxyResource, NestedProxyResourceHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<NestedProxyResource> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(location) = response.location()? {
+    ///         println!("Location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`location`()](crate::generated::models::NestedProxyResourceHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::NestedProxyResourceHeaders::retry_after) - Retry-After
+    ///
+    /// [`NestedProxyResourceHeaders`]: crate::generated::models::NestedProxyResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.update")]
     pub fn update(
         &self,
