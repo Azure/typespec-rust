@@ -48,7 +48,7 @@ impl ArmOperationStatusResourceProvisioningStateHeaders
 /// use azure_core::{Result, http::Response};
 /// use spector_armresources::models::{ExtensionsResource, ExtensionsResourceHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<ExtensionsResource> = unimplemented!();
+///     let response: Response<ExtensionsResource> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
 ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
@@ -110,7 +110,7 @@ impl NestedProxyResourceHeaders for Response<NestedProxyResource> {
 /// use azure_core::{Result, http::Response};
 /// use spector_armresources::models::{SingletonTrackedResource, SingletonTrackedResourceHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<SingletonTrackedResource> = unimplemented!();
+///     let response: Response<SingletonTrackedResource> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
 ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);

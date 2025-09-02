@@ -120,7 +120,7 @@ const VERSION_ID: HeaderName = HeaderName::from_static("x-ms-version-id");
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{AppendBlobClientAppendBlockFromUrlResult, AppendBlobClientAppendBlockFromUrlResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<AppendBlobClientAppendBlockFromUrlResult, NoFormat> = unimplemented!();
+///     let response: Response<AppendBlobClientAppendBlockFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -217,7 +217,7 @@ impl AppendBlobClientAppendBlockFromUrlResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{AppendBlobClientAppendBlockResult, AppendBlobClientAppendBlockResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<AppendBlobClientAppendBlockResult, NoFormat> = unimplemented!();
+///     let response: Response<AppendBlobClientAppendBlockResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -320,7 +320,7 @@ impl AppendBlobClientAppendBlockResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{AppendBlobClientCreateResult, AppendBlobClientCreateResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<AppendBlobClientCreateResult, NoFormat> = unimplemented!();
+///     let response: Response<AppendBlobClientCreateResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -403,7 +403,7 @@ impl AppendBlobClientCreateResultHeaders for Response<AppendBlobClientCreateResu
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{AppendBlobClientSealResult, AppendBlobClientSealResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<AppendBlobClientSealResult, NoFormat> = unimplemented!();
+///     let response: Response<AppendBlobClientSealResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -456,7 +456,7 @@ impl AppendBlobClientSealResultHeaders for Response<AppendBlobClientSealResult, 
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientAbortCopyFromUrlResult, BlobClientAbortCopyFromUrlResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientAbortCopyFromUrlResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientAbortCopyFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -485,7 +485,7 @@ impl BlobClientAbortCopyFromUrlResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientAcquireLeaseResult, BlobClientAcquireLeaseResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientAcquireLeaseResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientAcquireLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -538,7 +538,7 @@ impl BlobClientAcquireLeaseResultHeaders for Response<BlobClientAcquireLeaseResu
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientBreakLeaseResult, BlobClientBreakLeaseResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientBreakLeaseResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientBreakLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -591,7 +591,7 @@ impl BlobClientBreakLeaseResultHeaders for Response<BlobClientBreakLeaseResult, 
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientChangeLeaseResult, BlobClientChangeLeaseResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientChangeLeaseResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientChangeLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -644,7 +644,7 @@ impl BlobClientChangeLeaseResultHeaders for Response<BlobClientChangeLeaseResult
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientCopyFromUrlResult, BlobClientCopyFromUrlResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientCopyFromUrlResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientCopyFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -732,7 +732,7 @@ impl BlobClientCopyFromUrlResultHeaders for Response<BlobClientCopyFromUrlResult
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientCreateSnapshotResult, BlobClientCreateSnapshotResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientCreateSnapshotResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientCreateSnapshotResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -800,7 +800,7 @@ impl BlobClientCreateSnapshotResultHeaders for Response<BlobClientCreateSnapshot
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientDeleteImmutabilityPolicyResult, BlobClientDeleteImmutabilityPolicyResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientDeleteImmutabilityPolicyResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientDeleteImmutabilityPolicyResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -829,7 +829,7 @@ impl BlobClientDeleteImmutabilityPolicyResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientDownloadResult, BlobClientDownloadResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientDownloadResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientDownloadResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(accept_ranges) = response.accept_ranges()? {
 ///         println!("Accept-Ranges: {:?}", accept_ranges);
@@ -1141,7 +1141,7 @@ impl BlobClientDownloadResultHeaders for Response<BlobClientDownloadResult, NoFo
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientGetAccountInfoResult, BlobClientGetAccountInfoResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientGetAccountInfoResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientGetAccountInfoResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -1192,7 +1192,7 @@ impl BlobClientGetAccountInfoResultHeaders for Response<BlobClientGetAccountInfo
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientGetPropertiesResult, BlobClientGetPropertiesResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientGetPropertiesResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientGetPropertiesResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(cache_control) = response.cache_control()? {
 ///         println!("Cache-Control: {:?}", cache_control);
@@ -1532,7 +1532,7 @@ impl BlobClientGetPropertiesResultHeaders for Response<BlobClientGetPropertiesRe
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientReleaseLeaseResult, BlobClientReleaseLeaseResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientReleaseLeaseResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientReleaseLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -1579,7 +1579,7 @@ impl BlobClientReleaseLeaseResultHeaders for Response<BlobClientReleaseLeaseResu
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientRenewLeaseResult, BlobClientRenewLeaseResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientRenewLeaseResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientRenewLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -1632,7 +1632,7 @@ impl BlobClientRenewLeaseResultHeaders for Response<BlobClientRenewLeaseResult, 
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientSetExpiryResult, BlobClientSetExpiryResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientSetExpiryResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientSetExpiryResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -1679,7 +1679,7 @@ impl BlobClientSetExpiryResultHeaders for Response<BlobClientSetExpiryResult, No
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientSetImmutabilityPolicyResult, BlobClientSetImmutabilityPolicyResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientSetImmutabilityPolicyResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientSetImmutabilityPolicyResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -1728,7 +1728,7 @@ impl BlobClientSetImmutabilityPolicyResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientSetLegalHoldResult, BlobClientSetLegalHoldResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientSetLegalHoldResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientSetLegalHoldResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -1764,7 +1764,7 @@ impl BlobClientSetLegalHoldResultHeaders for Response<BlobClientSetLegalHoldResu
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientSetTagsResult, BlobClientSetTagsResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientSetTagsResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientSetTagsResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -1791,7 +1791,7 @@ impl BlobClientSetTagsResultHeaders for Response<BlobClientSetTagsResult, NoForm
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientStartCopyFromUrlResult, BlobClientStartCopyFromUrlResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientStartCopyFromUrlResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientStartCopyFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -1860,7 +1860,7 @@ impl BlobClientStartCopyFromUrlResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobClientUndeleteResult, BlobClientUndeleteResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobClientUndeleteResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobClientUndeleteResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -1887,7 +1887,7 @@ impl BlobClientUndeleteResultHeaders for Response<BlobClientUndeleteResult, NoFo
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobContainerClientAcquireLeaseResult, BlobContainerClientAcquireLeaseResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobContainerClientAcquireLeaseResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobContainerClientAcquireLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -1942,7 +1942,7 @@ impl BlobContainerClientAcquireLeaseResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobContainerClientBreakLeaseResult, BlobContainerClientBreakLeaseResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobContainerClientBreakLeaseResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobContainerClientBreakLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -2003,7 +2003,7 @@ impl BlobContainerClientBreakLeaseResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobContainerClientChangeLeaseResult, BlobContainerClientChangeLeaseResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobContainerClientChangeLeaseResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobContainerClientChangeLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -2058,7 +2058,7 @@ impl BlobContainerClientChangeLeaseResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobContainerClientGetAccountInfoResult, BlobContainerClientGetAccountInfoResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobContainerClientGetAccountInfoResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobContainerClientGetAccountInfoResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -2111,7 +2111,7 @@ impl BlobContainerClientGetAccountInfoResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobContainerClientGetPropertiesResult, BlobContainerClientGetPropertiesResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobContainerClientGetPropertiesResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobContainerClientGetPropertiesResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(last_modified) = response.last_modified()? {
 ///         println!("Last-Modified: {:?}", last_modified);
@@ -2223,7 +2223,7 @@ impl BlobContainerClientGetPropertiesResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobContainerClientReleaseLeaseResult, BlobContainerClientReleaseLeaseResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobContainerClientReleaseLeaseResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobContainerClientReleaseLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -2272,7 +2272,7 @@ impl BlobContainerClientReleaseLeaseResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobContainerClientRenameResult, BlobContainerClientRenameResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobContainerClientRenameResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobContainerClientRenameResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -2301,7 +2301,7 @@ impl BlobContainerClientRenameResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobContainerClientRenewLeaseResult, BlobContainerClientRenewLeaseResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobContainerClientRenewLeaseResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobContainerClientRenewLeaseResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -2356,7 +2356,7 @@ impl BlobContainerClientRenewLeaseResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobContainerClientRestoreResult, BlobContainerClientRestoreResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobContainerClientRestoreResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobContainerClientRestoreResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -2385,7 +2385,7 @@ impl BlobContainerClientRestoreResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobContainerClientSetAccessPolicyResult, BlobContainerClientSetAccessPolicyResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobContainerClientSetAccessPolicyResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobContainerClientSetAccessPolicyResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -2434,7 +2434,7 @@ impl BlobContainerClientSetAccessPolicyResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlobServiceClientGetAccountInfoResult, BlobServiceClientGetAccountInfoResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobServiceClientGetAccountInfoResult, NoFormat> = unimplemented!();
+///     let response: Response<BlobServiceClientGetAccountInfoResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -2487,7 +2487,7 @@ impl BlobServiceClientGetAccountInfoResultHeaders
 /// use azure_core::{Result, http::{Response, XmlFormat}};
 /// use blob_storage::models::{BlobTags, BlobTagsHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlobTags, XmlFormat> = unimplemented!();
+///     let response: Response<BlobTags, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -2514,7 +2514,7 @@ impl BlobTagsHeaders for Response<BlobTags, XmlFormat> {
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlockBlobClientCommitBlockListResult, BlockBlobClientCommitBlockListResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlockBlobClientCommitBlockListResult, NoFormat> = unimplemented!();
+///     let response: Response<BlockBlobClientCommitBlockListResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -2599,7 +2599,7 @@ impl BlockBlobClientCommitBlockListResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlockBlobClientPutBlobFromUrlResult, BlockBlobClientPutBlobFromUrlResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlockBlobClientPutBlobFromUrlResult, NoFormat> = unimplemented!();
+///     let response: Response<BlockBlobClientPutBlobFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -2684,7 +2684,7 @@ impl BlockBlobClientPutBlobFromUrlResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlockBlobClientQueryResult, BlockBlobClientQueryResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlockBlobClientQueryResult, NoFormat> = unimplemented!();
+///     let response: Response<BlockBlobClientQueryResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(accept_ranges) = response.accept_ranges()? {
 ///         println!("Accept-Ranges: {:?}", accept_ranges);
@@ -2920,7 +2920,7 @@ impl BlockBlobClientQueryResultHeaders for Response<BlockBlobClientQueryResult, 
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlockBlobClientStageBlockFromUrlResult, BlockBlobClientStageBlockFromUrlResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlockBlobClientStageBlockFromUrlResult, NoFormat> = unimplemented!();
+///     let response: Response<BlockBlobClientStageBlockFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -2990,7 +2990,7 @@ impl BlockBlobClientStageBlockFromUrlResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlockBlobClientStageBlockResult, BlockBlobClientStageBlockResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlockBlobClientStageBlockResult, NoFormat> = unimplemented!();
+///     let response: Response<BlockBlobClientStageBlockResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -3054,7 +3054,7 @@ impl BlockBlobClientStageBlockResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{BlockBlobClientUploadResult, BlockBlobClientUploadResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlockBlobClientUploadResult, NoFormat> = unimplemented!();
+///     let response: Response<BlockBlobClientUploadResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -3131,7 +3131,7 @@ impl BlockBlobClientUploadResultHeaders for Response<BlockBlobClientUploadResult
 /// use azure_core::{Result, http::{Response, XmlFormat}};
 /// use blob_storage::models::{BlockList, BlockListHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<BlockList, XmlFormat> = unimplemented!();
+///     let response: Response<BlockList, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(last_modified) = response.last_modified()? {
 ///         println!("Last-Modified: {:?}", last_modified);
@@ -3193,7 +3193,7 @@ impl FilterBlobSegmentHeaders for Response<FilterBlobSegment, XmlFormat> {
 /// use azure_core::{Result, http::{Response, XmlFormat}};
 /// use blob_storage::models::{ListBlobsFlatSegmentResponse, ListBlobsFlatSegmentResponseHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<ListBlobsFlatSegmentResponse, XmlFormat> = unimplemented!();
+///     let response: Response<ListBlobsFlatSegmentResponse, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -3220,7 +3220,7 @@ impl ListBlobsFlatSegmentResponseHeaders for Response<ListBlobsFlatSegmentRespon
 /// use azure_core::{Result, http::{Response, XmlFormat}};
 /// use blob_storage::models::{ListBlobsHierarchySegmentResponse, ListBlobsHierarchySegmentResponseHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<ListBlobsHierarchySegmentResponse, XmlFormat> = unimplemented!();
+///     let response: Response<ListBlobsHierarchySegmentResponse, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -3249,7 +3249,7 @@ impl ListBlobsHierarchySegmentResponseHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{PageBlobClientClearPagesResult, PageBlobClientClearPagesResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<PageBlobClientClearPagesResult, NoFormat> = unimplemented!();
+///     let response: Response<PageBlobClientClearPagesResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -3315,7 +3315,7 @@ impl PageBlobClientClearPagesResultHeaders for Response<PageBlobClientClearPages
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{PageBlobClientCopyIncrementalResult, PageBlobClientCopyIncrementalResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<PageBlobClientCopyIncrementalResult, NoFormat> = unimplemented!();
+///     let response: Response<PageBlobClientCopyIncrementalResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -3377,7 +3377,7 @@ impl PageBlobClientCopyIncrementalResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{PageBlobClientCreateResult, PageBlobClientCreateResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<PageBlobClientCreateResult, NoFormat> = unimplemented!();
+///     let response: Response<PageBlobClientCreateResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -3460,7 +3460,7 @@ impl PageBlobClientCreateResultHeaders for Response<PageBlobClientCreateResult, 
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{PageBlobClientResizeResult, PageBlobClientResizeResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<PageBlobClientResizeResult, NoFormat> = unimplemented!();
+///     let response: Response<PageBlobClientResizeResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -3513,7 +3513,7 @@ impl PageBlobClientResizeResultHeaders for Response<PageBlobClientResizeResult, 
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{PageBlobClientUpdateSequenceNumberResult, PageBlobClientUpdateSequenceNumberResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<PageBlobClientUpdateSequenceNumberResult, NoFormat> = unimplemented!();
+///     let response: Response<PageBlobClientUpdateSequenceNumberResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -3568,7 +3568,7 @@ impl PageBlobClientUpdateSequenceNumberResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{PageBlobClientUploadPagesFromUrlResult, PageBlobClientUploadPagesFromUrlResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<PageBlobClientUploadPagesFromUrlResult, NoFormat> = unimplemented!();
+///     let response: Response<PageBlobClientUploadPagesFromUrlResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -3658,7 +3658,7 @@ impl PageBlobClientUploadPagesFromUrlResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use blob_storage::models::{PageBlobClientUploadPagesResult, PageBlobClientUploadPagesResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<PageBlobClientUploadPagesResult, NoFormat> = unimplemented!();
+///     let response: Response<PageBlobClientUploadPagesResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_md5) = response.content_md5()? {
 ///         println!("Content-MD5: {:?}", content_md5);
@@ -3789,7 +3789,7 @@ impl PageListHeaders for Response<PageList, XmlFormat> {
 /// use azure_core::{Result, http::{Response, XmlFormat}};
 /// use blob_storage::models::{StorageServiceStats, StorageServiceStatsHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<StorageServiceStats, XmlFormat> = unimplemented!();
+///     let response: Response<StorageServiceStats, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -3816,7 +3816,7 @@ impl StorageServiceStatsHeaders for Response<StorageServiceStats, XmlFormat> {
 /// use azure_core::{Result, http::{Response, XmlFormat}};
 /// use blob_storage::models::{UserDelegationKey, UserDelegationKeyHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<UserDelegationKey, XmlFormat> = unimplemented!();
+///     let response: Response<UserDelegationKey, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);
@@ -3843,7 +3843,7 @@ impl UserDelegationKeyHeaders for Response<UserDelegationKey, XmlFormat> {
 /// use azure_core::{Result, http::{Response, XmlFormat}};
 /// use blob_storage::models::{SignedIdentifier, VecSignedIdentifierHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<Vec<SignedIdentifier>, XmlFormat> = unimplemented!();
+///     let response: Response<Vec<SignedIdentifier>, XmlFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(date) = response.date()? {
 ///         println!("Date: {:?}", date);

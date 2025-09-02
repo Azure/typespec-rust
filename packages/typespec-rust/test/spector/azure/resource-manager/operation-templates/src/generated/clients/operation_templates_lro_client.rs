@@ -48,7 +48,7 @@ impl OperationTemplatesLroClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_armoptemplates::models::{Order, OrderHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<Order> = unimplemented!();
+    ///     let response: Response<Order> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
     ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
@@ -156,7 +156,7 @@ impl OperationTemplatesLroClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_armoptemplates::models::{ArmOperationStatusResourceProvisioningState, ArmOperationStatusResourceProvisioningStateHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
+    ///     let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
     ///         println!("Location: {:?}", location);
@@ -259,7 +259,7 @@ impl OperationTemplatesLroClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_armoptemplates::models::{ExportResult, ExportResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<ExportResult> = unimplemented!();
+    ///     let response: Response<ExportResult> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
     ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);

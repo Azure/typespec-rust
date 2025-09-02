@@ -105,7 +105,7 @@ impl BlobServiceClient {
     /// use azure_core::{Result, http::{Response, XmlFormat}};
     /// use blob_storage::models::{FilterBlobSegment, FilterBlobSegmentHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<FilterBlobSegment, XmlFormat> = unimplemented!();
+    ///     let response: Response<FilterBlobSegment, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
     ///         println!("Date: {:?}", date);
@@ -186,7 +186,7 @@ impl BlobServiceClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{BlobServiceClientGetAccountInfoResult, BlobServiceClientGetAccountInfoResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<BlobServiceClientGetAccountInfoResult, NoFormat> = unimplemented!();
+    ///     let response: Response<BlobServiceClientGetAccountInfoResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
     ///         println!("Date: {:?}", date);
@@ -314,7 +314,7 @@ impl BlobServiceClient {
     /// use azure_core::{Result, http::{Response, XmlFormat}};
     /// use blob_storage::models::{StorageServiceStats, StorageServiceStatsHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<StorageServiceStats, XmlFormat> = unimplemented!();
+    ///     let response: Response<StorageServiceStats, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
     ///         println!("Date: {:?}", date);
@@ -378,7 +378,7 @@ impl BlobServiceClient {
     /// use azure_core::{Result, http::{Response, XmlFormat}};
     /// use blob_storage::models::{UserDelegationKey, UserDelegationKeyHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<UserDelegationKey, XmlFormat> = unimplemented!();
+    ///     let response: Response<UserDelegationKey, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
     ///         println!("Date: {:?}", date);

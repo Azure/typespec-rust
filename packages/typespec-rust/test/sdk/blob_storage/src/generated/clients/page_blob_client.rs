@@ -115,7 +115,7 @@ impl PageBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{PageBlobClientClearPagesResult, PageBlobClientClearPagesResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<PageBlobClientClearPagesResult, NoFormat> = unimplemented!();
+    ///     let response: Response<PageBlobClientClearPagesResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
@@ -255,7 +255,7 @@ impl PageBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{PageBlobClientCopyIncrementalResult, PageBlobClientCopyIncrementalResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<PageBlobClientCopyIncrementalResult, NoFormat> = unimplemented!();
+    ///     let response: Response<PageBlobClientCopyIncrementalResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
     ///         println!("Date: {:?}", date);
@@ -349,7 +349,7 @@ impl PageBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{PageBlobClientCreateResult, PageBlobClientCreateResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<PageBlobClientCreateResult, NoFormat> = unimplemented!();
+    ///     let response: Response<PageBlobClientCreateResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
@@ -513,7 +513,7 @@ impl PageBlobClient {
     /// use azure_core::{Result, http::{Response, XmlFormat}};
     /// use blob_storage::models::{PageList, PageListHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<PageList, XmlFormat> = unimplemented!();
+    ///     let response: Response<PageList, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
     ///         println!("Date: {:?}", date);
@@ -618,7 +618,7 @@ impl PageBlobClient {
     /// use azure_core::{Result, http::{Response, XmlFormat}};
     /// use blob_storage::models::{PageList, PageListHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<PageList, XmlFormat> = unimplemented!();
+    ///     let response: Response<PageList, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
     ///         println!("Date: {:?}", date);
@@ -734,7 +734,7 @@ impl PageBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{PageBlobClientResizeResult, PageBlobClientResizeResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<PageBlobClientResizeResult, NoFormat> = unimplemented!();
+    ///     let response: Response<PageBlobClientResizeResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
     ///         println!("Date: {:?}", date);
@@ -847,7 +847,7 @@ impl PageBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{PageBlobClientUpdateSequenceNumberResult, PageBlobClientUpdateSequenceNumberResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<PageBlobClientUpdateSequenceNumberResult, NoFormat> = unimplemented!();
+    ///     let response: Response<PageBlobClientUpdateSequenceNumberResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
     ///         println!("Date: {:?}", date);
@@ -953,7 +953,7 @@ impl PageBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{PageBlobClientUploadPagesResult, PageBlobClientUploadPagesResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<PageBlobClientUploadPagesResult, NoFormat> = unimplemented!();
+    ///     let response: Response<PageBlobClientUploadPagesResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
@@ -1115,7 +1115,7 @@ impl PageBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{PageBlobClientUploadPagesFromUrlResult, PageBlobClientUploadPagesFromUrlResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<PageBlobClientUploadPagesFromUrlResult, NoFormat> = unimplemented!();
+    ///     let response: Response<PageBlobClientUploadPagesFromUrlResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);

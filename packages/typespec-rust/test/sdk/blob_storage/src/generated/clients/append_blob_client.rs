@@ -110,7 +110,7 @@ impl AppendBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{AppendBlobClientAppendBlockResult, AppendBlobClientAppendBlockResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<AppendBlobClientAppendBlockResult, NoFormat> = unimplemented!();
+    ///     let response: Response<AppendBlobClientAppendBlockResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
@@ -251,7 +251,7 @@ impl AppendBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{AppendBlobClientAppendBlockFromUrlResult, AppendBlobClientAppendBlockFromUrlResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<AppendBlobClientAppendBlockFromUrlResult, NoFormat> = unimplemented!();
+    ///     let response: Response<AppendBlobClientAppendBlockFromUrlResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
@@ -409,7 +409,7 @@ impl AppendBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{AppendBlobClientCreateResult, AppendBlobClientCreateResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<AppendBlobClientCreateResult, NoFormat> = unimplemented!();
+    ///     let response: Response<AppendBlobClientCreateResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
@@ -563,7 +563,7 @@ impl AppendBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{AppendBlobClientSealResult, AppendBlobClientSealResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<AppendBlobClientSealResult, NoFormat> = unimplemented!();
+    ///     let response: Response<AppendBlobClientSealResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(date) = response.date()? {
     ///         println!("Date: {:?}", date);

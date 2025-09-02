@@ -36,7 +36,7 @@ const SYNC_TOKEN: HeaderName = HeaderName::from_static("sync-token");
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use appconfiguration::models::{AzureAppConfigurationClientCheckKeyValueResult, AzureAppConfigurationClientCheckKeyValueResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat> = unimplemented!();
+///     let response: Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(sync_token) = response.sync_token()? {
 ///         println!("Sync-Token: {:?}", sync_token);
@@ -74,7 +74,7 @@ impl AzureAppConfigurationClientCheckKeyValueResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use appconfiguration::models::{AzureAppConfigurationClientCheckKeyValuesResult, AzureAppConfigurationClientCheckKeyValuesResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat> = unimplemented!();
+///     let response: Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(sync_token) = response.sync_token()? {
 ///         println!("Sync-Token: {:?}", sync_token);
@@ -112,7 +112,7 @@ impl AzureAppConfigurationClientCheckKeyValuesResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use appconfiguration::models::{AzureAppConfigurationClientCheckKeysResult, AzureAppConfigurationClientCheckKeysResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<AzureAppConfigurationClientCheckKeysResult, NoFormat> = unimplemented!();
+///     let response: Response<AzureAppConfigurationClientCheckKeysResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(sync_token) = response.sync_token()? {
 ///         println!("Sync-Token: {:?}", sync_token);
@@ -141,7 +141,7 @@ impl AzureAppConfigurationClientCheckKeysResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use appconfiguration::models::{AzureAppConfigurationClientCheckLabelsResult, AzureAppConfigurationClientCheckLabelsResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<AzureAppConfigurationClientCheckLabelsResult, NoFormat> = unimplemented!();
+///     let response: Response<AzureAppConfigurationClientCheckLabelsResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(sync_token) = response.sync_token()? {
 ///         println!("Sync-Token: {:?}", sync_token);
@@ -170,7 +170,7 @@ impl AzureAppConfigurationClientCheckLabelsResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use appconfiguration::models::{AzureAppConfigurationClientCheckRevisionsResult, AzureAppConfigurationClientCheckRevisionsResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat> = unimplemented!();
+///     let response: Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(sync_token) = response.sync_token()? {
 ///         println!("Sync-Token: {:?}", sync_token);
@@ -208,7 +208,7 @@ impl AzureAppConfigurationClientCheckRevisionsResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use appconfiguration::models::{AzureAppConfigurationClientCheckSnapshotResult, AzureAppConfigurationClientCheckSnapshotResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat> = unimplemented!();
+///     let response: Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(link) = response.link()? {
 ///         println!("Link: {:?}", link);
@@ -255,7 +255,7 @@ impl AzureAppConfigurationClientCheckSnapshotResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use appconfiguration::models::{AzureAppConfigurationClientCheckSnapshotsResult, AzureAppConfigurationClientCheckSnapshotsResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat> = unimplemented!();
+///     let response: Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(sync_token) = response.sync_token()? {
 ///         println!("Sync-Token: {:?}", sync_token);
@@ -284,7 +284,7 @@ impl AzureAppConfigurationClientCheckSnapshotsResultHeaders
 /// use azure_core::{Result, http::Response};
 /// use appconfiguration::models::{KeyListResult, KeyListResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<KeyListResult> = unimplemented!();
+///     let response: Response<KeyListResult> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_type) = response.content_type()? {
 ///         println!("Content-Type: {:?}", content_type);
@@ -381,7 +381,7 @@ impl KeyValueListResultHeaders for Response<KeyValueListResult> {
 /// use azure_core::{Result, http::Response};
 /// use appconfiguration::models::{LabelListResult, LabelListResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<LabelListResult> = unimplemented!();
+///     let response: Response<LabelListResult> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_type) = response.content_type()? {
 ///         println!("Content-Type: {:?}", content_type);
@@ -462,7 +462,7 @@ impl SnapshotHeaders for Response<Snapshot> {
 /// use azure_core::{Result, http::Response};
 /// use appconfiguration::models::{SnapshotListResult, SnapshotListResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<SnapshotListResult> = unimplemented!();
+///     let response: Response<SnapshotListResult> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_type) = response.content_type()? {
 ///         println!("Content-Type: {:?}", content_type);

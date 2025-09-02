@@ -26,7 +26,7 @@ const VALUE: HeaderName = HeaderName::from_static("value");
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use spector_datetime::models::{DatetimeResponseHeaderClientDefaultResult, DatetimeResponseHeaderClientDefaultResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<DatetimeResponseHeaderClientDefaultResult, NoFormat> = unimplemented!();
+///     let response: Response<DatetimeResponseHeaderClientDefaultResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(value) = response.value()? {
 ///         println!("value: {:?}", value);
@@ -54,7 +54,7 @@ impl DatetimeResponseHeaderClientDefaultResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use spector_datetime::models::{DatetimeResponseHeaderClientRfc3339Result, DatetimeResponseHeaderClientRfc3339ResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<DatetimeResponseHeaderClientRfc3339Result, NoFormat> = unimplemented!();
+///     let response: Response<DatetimeResponseHeaderClientRfc3339Result, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(value) = response.value()? {
 ///         println!("value: {:?}", value);
@@ -82,7 +82,7 @@ impl DatetimeResponseHeaderClientRfc3339ResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use spector_datetime::models::{DatetimeResponseHeaderClientRfc7231Result, DatetimeResponseHeaderClientRfc7231ResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<DatetimeResponseHeaderClientRfc7231Result, NoFormat> = unimplemented!();
+///     let response: Response<DatetimeResponseHeaderClientRfc7231Result, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(value) = response.value()? {
 ///         println!("value: {:?}", value);
@@ -110,7 +110,7 @@ impl DatetimeResponseHeaderClientRfc7231ResultHeaders
 /// use azure_core::{Result, http::{Response, NoFormat}};
 /// use spector_datetime::models::{DatetimeResponseHeaderClientUnixTimestampResult, DatetimeResponseHeaderClientUnixTimestampResultHeaders};
 /// async fn example() -> Result<()> {
-///     # let response: Response<DatetimeResponseHeaderClientUnixTimestampResult, NoFormat> = unimplemented!();
+///     let response: Response<DatetimeResponseHeaderClientUnixTimestampResult, NoFormat> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(value) = response.value()? {
 ///         println!("value: {:?}", value);

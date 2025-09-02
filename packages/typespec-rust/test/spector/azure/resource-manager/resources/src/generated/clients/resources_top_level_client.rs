@@ -111,7 +111,7 @@ impl ResourcesTopLevelClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_armresources::models::{TopLevelTrackedResource, TopLevelTrackedResourceHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<TopLevelTrackedResource> = unimplemented!();
+    ///     let response: Response<TopLevelTrackedResource> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
     ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
@@ -222,7 +222,7 @@ impl ResourcesTopLevelClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_armresources::models::{ArmOperationStatusResourceProvisioningState, ArmOperationStatusResourceProvisioningStateHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
+    ///     let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
     ///         println!("Location: {:?}", location);
@@ -523,7 +523,7 @@ impl ResourcesTopLevelClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_armresources::models::{TopLevelTrackedResource, TopLevelTrackedResourceHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<TopLevelTrackedResource> = unimplemented!();
+    ///     let response: Response<TopLevelTrackedResource> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
     ///         println!("Location: {:?}", location);

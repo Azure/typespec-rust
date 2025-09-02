@@ -54,7 +54,7 @@ impl ResourcesExtensionsResourcesClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_armresources::models::{ExtensionsResource, ExtensionsResourceHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<ExtensionsResource> = unimplemented!();
+    ///     let response: Response<ExtensionsResource> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
     ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);

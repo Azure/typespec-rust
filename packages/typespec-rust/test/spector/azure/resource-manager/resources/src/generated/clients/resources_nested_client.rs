@@ -52,7 +52,7 @@ impl ResourcesNestedClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_armresources::models::{NestedProxyResource, NestedProxyResourceHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<NestedProxyResource> = unimplemented!();
+    ///     let response: Response<NestedProxyResource> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
     ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
@@ -166,7 +166,7 @@ impl ResourcesNestedClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_armresources::models::{ArmOperationStatusResourceProvisioningState, ArmOperationStatusResourceProvisioningStateHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
+    ///     let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
     ///         println!("Location: {:?}", location);
@@ -425,7 +425,7 @@ impl ResourcesNestedClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_armresources::models::{NestedProxyResource, NestedProxyResourceHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<NestedProxyResource> = unimplemented!();
+    ///     let response: Response<NestedProxyResource> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
     ///         println!("Location: {:?}", location);

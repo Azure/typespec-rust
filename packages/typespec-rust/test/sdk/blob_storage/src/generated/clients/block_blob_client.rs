@@ -118,7 +118,7 @@ impl BlockBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{BlockBlobClientCommitBlockListResult, BlockBlobClientCommitBlockListResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<BlockBlobClientCommitBlockListResult, NoFormat> = unimplemented!();
+    ///     let response: Response<BlockBlobClientCommitBlockListResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
@@ -282,7 +282,7 @@ impl BlockBlobClient {
     /// use azure_core::{Result, http::{Response, XmlFormat}};
     /// use blob_storage::models::{BlockList, BlockListHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<BlockList, XmlFormat> = unimplemented!();
+    ///     let response: Response<BlockList, XmlFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(last_modified) = response.last_modified()? {
     ///         println!("Last-Modified: {:?}", last_modified);
@@ -374,7 +374,7 @@ impl BlockBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{BlockBlobClientPutBlobFromUrlResult, BlockBlobClientPutBlobFromUrlResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<BlockBlobClientPutBlobFromUrlResult, NoFormat> = unimplemented!();
+    ///     let response: Response<BlockBlobClientPutBlobFromUrlResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
@@ -559,7 +559,7 @@ impl BlockBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{BlockBlobClientQueryResult, BlockBlobClientQueryResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<BlockBlobClientQueryResult, NoFormat> = unimplemented!();
+    ///     let response: Response<BlockBlobClientQueryResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(accept_ranges) = response.accept_ranges()? {
     ///         println!("Accept-Ranges: {:?}", accept_ranges);
@@ -698,7 +698,7 @@ impl BlockBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{BlockBlobClientStageBlockResult, BlockBlobClientStageBlockResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<BlockBlobClientStageBlockResult, NoFormat> = unimplemented!();
+    ///     let response: Response<BlockBlobClientStageBlockResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
@@ -809,7 +809,7 @@ impl BlockBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{BlockBlobClientStageBlockFromUrlResult, BlockBlobClientStageBlockFromUrlResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<BlockBlobClientStageBlockFromUrlResult, NoFormat> = unimplemented!();
+    ///     let response: Response<BlockBlobClientStageBlockFromUrlResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
@@ -946,7 +946,7 @@ impl BlockBlobClient {
     /// use azure_core::{Result, http::{Response, NoFormat}};
     /// use blob_storage::models::{BlockBlobClientUploadResult, BlockBlobClientUploadResultHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<BlockBlobClientUploadResult, NoFormat> = unimplemented!();
+    ///     let response: Response<BlockBlobClientUploadResult, NoFormat> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);

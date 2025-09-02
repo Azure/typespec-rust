@@ -91,7 +91,7 @@ impl StandardClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_lrostd::models::{User, UserHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<User> = unimplemented!();
+    ///     let response: Response<User> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(operation_location) = response.operation_location()? {
     ///         println!("Operation-Location: {:?}", operation_location);
@@ -193,7 +193,7 @@ impl StandardClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_lrostd::models::{OperationStatusError, OperationStatusErrorHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<OperationStatusError> = unimplemented!();
+    ///     let response: Response<OperationStatusError> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(operation_location) = response.operation_location()? {
     ///         println!("Operation-Location: {:?}", operation_location);
@@ -292,7 +292,7 @@ impl StandardClient {
     /// use azure_core::{Result, http::Response};
     /// use spector_lrostd::models::{ExportedUser, ExportedUserHeaders};
     /// async fn example() -> Result<()> {
-    ///     # let response: Response<ExportedUser> = unimplemented!();
+    ///     let response: Response<ExportedUser> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(operation_location) = response.operation_location()? {
     ///         println!("Operation-Location: {:?}", operation_location);

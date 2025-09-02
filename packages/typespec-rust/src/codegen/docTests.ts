@@ -34,7 +34,7 @@ export function emitHeaderTraitDocExample(crateName: string, trait: rust.Respons
   // we need to unwrap content in case it's a Vec<T> etc
   headerDocs += `${indent.get()}/// use ${crateName}::models::{${helpers.getTypeDeclaration(helpers.unwrapType(trait.implFor.content))}, ${trait.name}};\n`;
   headerDocs += `${indent.get()}/// async fn example() -> Result<()> {\n`;
-  headerDocs += `${indent.get()}///     # let response: ${helpers.getTypeDeclaration(trait.implFor)} = unimplemented!();\n`;
+  headerDocs += `${indent.get()}///     let response: ${helpers.getTypeDeclaration(trait.implFor)} = unimplemented!();\n`;
   headerDocs += `${indent.get()}///     // Access response headers\n`;
 
   // show first 3 headers as examples
