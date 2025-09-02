@@ -16,7 +16,7 @@ export interface Client {
   /** any docs for the client */
   docs: types.Docs;
 
-  /** the identifier used for tracing */
+  /** the client's language-independent name, currently used for tracing */
   languageIndependentName: string;
 
   /** contains info for instantiable clients */
