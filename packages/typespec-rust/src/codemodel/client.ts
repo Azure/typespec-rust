@@ -16,8 +16,8 @@ export interface Client {
   /** any docs for the client */
   docs: types.Docs;
 
-  /** the management namespace for tracing */
-  tracingIdentifier: string;
+  /** the identifier used for tracing */
+  languageIndependentName: string;
 
   /** contains info for instantiable clients */
   constructable?: ClientConstruction;
