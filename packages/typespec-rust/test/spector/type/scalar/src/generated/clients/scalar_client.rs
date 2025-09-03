@@ -33,7 +33,7 @@ impl ScalarClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_scalar")]
+    #[tracing::new("Type.Scalar")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<ScalarClientOptions>,

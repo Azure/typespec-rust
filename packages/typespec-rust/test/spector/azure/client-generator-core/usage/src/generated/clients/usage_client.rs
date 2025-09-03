@@ -31,7 +31,7 @@ impl UsageClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_coreusage")]
+    #[tracing::new("_Specs_.Azure.ClientGenerator.Core.Usage")]
     pub fn with_no_credential(endpoint: &str, options: Option<UsageClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;

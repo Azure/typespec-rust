@@ -995,6 +995,9 @@ export class Adapter {
       this.adaptMethod(method, rustClient);
     }
 
+    // Set the tracing namespace for tracing based on the client's namespace
+    rustClient.languageIndependentName = client.crossLanguageDefinitionId;
+
     this.crate.clients.push(rustClient);
     return rustClient;
   }

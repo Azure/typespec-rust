@@ -34,7 +34,7 @@ impl SingleClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_single")]
+    #[tracing::new("Server.Path.Single")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<SingleClientOptions>,

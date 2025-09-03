@@ -37,7 +37,7 @@ impl RoutesClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_routes")]
+    #[tracing::new("Routes")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<RoutesClientOptions>,

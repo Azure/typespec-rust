@@ -15,6 +15,21 @@ use azure_core::{
 const OPERATION_LOCATION: HeaderName = HeaderName::from_static("operation-location");
 
 /// Provides access to typed response headers for [`StandardClient::export()`](crate::generated::clients::StandardClient::export())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use spector_lrostd::models::{ExportedUser, ExportedUserHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<ExportedUser> = unimplemented!();
+///     // Access response headers
+///     if let Some(operation_location) = response.operation_location()? {
+///         println!("Operation-Location: {:?}", operation_location);
+///     }
+///     Ok(())
+/// }
+/// ```
 pub trait ExportedUserHeaders: private::Sealed {
     fn operation_location(&self) -> Result<Option<String>>;
 }
@@ -27,6 +42,21 @@ impl ExportedUserHeaders for Response<ExportedUser> {
 }
 
 /// Provides access to typed response headers for [`StandardClient::delete()`](crate::generated::clients::StandardClient::delete())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use spector_lrostd::models::{OperationStatusError, OperationStatusErrorHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<OperationStatusError> = unimplemented!();
+///     // Access response headers
+///     if let Some(operation_location) = response.operation_location()? {
+///         println!("Operation-Location: {:?}", operation_location);
+///     }
+///     Ok(())
+/// }
+/// ```
 pub trait OperationStatusErrorHeaders: private::Sealed {
     fn operation_location(&self) -> Result<Option<String>>;
 }
@@ -39,6 +69,21 @@ impl OperationStatusErrorHeaders for Response<OperationStatusError> {
 }
 
 /// Provides access to typed response headers for [`StandardClient::create_or_replace()`](crate::generated::clients::StandardClient::create_or_replace())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use spector_lrostd::models::{User, UserHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<User> = unimplemented!();
+///     // Access response headers
+///     if let Some(operation_location) = response.operation_location()? {
+///         println!("Operation-Location: {:?}", operation_location);
+///     }
+///     Ok(())
+/// }
+/// ```
 pub trait UserHeaders: private::Sealed {
     fn operation_location(&self) -> Result<Option<String>>;
 }

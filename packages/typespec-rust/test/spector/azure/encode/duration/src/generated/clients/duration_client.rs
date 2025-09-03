@@ -35,7 +35,7 @@ impl DurationClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_azureduration")]
+    #[tracing::new("_Specs_.Azure.Encode.Duration")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<DurationClientOptions>,

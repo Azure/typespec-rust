@@ -526,3 +526,28 @@ export function getDateTimeEncodingMethod(encoding: rust.DateTimeEncoding, direc
   use.add('azure_core', `time::${method}`);
   return method;
 }
+
+/**
+ * wraps the specified string in back tick characters.
+ * e.g. `value`
+ * 
+ * @param value the string to wrap
+ * @returns the string wrapped in back ticks
+ */
+export function wrapInBackTicks(value: string): string {
+  return `\`${value}\``;
+}
+
+/**
+ * emits a sequence of back tick characters
+ * 
+ * @param count the number of back ticks to emit
+ * @returns a string of back tick characters
+ */
+export function emitBackTicks(count: number): string {
+  let backticks = '';
+  for (let i = 0; i < count; ++i) {
+    backticks += '`';
+  }
+  return backticks;
+}

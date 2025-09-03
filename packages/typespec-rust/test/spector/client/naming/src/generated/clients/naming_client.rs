@@ -44,7 +44,7 @@ impl NamingClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_naming")]
+    #[tracing::new("Client.Naming")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NamingClientOptions>,
@@ -274,6 +274,29 @@ impl NamingClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`NamingClientResponseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_naming::models::{NamingClientResponseResult, NamingClientResponseResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<NamingClientResponseResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(client_name) = response.client_name()? {
+    ///         println!("default-name: {:?}", client_name);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`client_name`()](crate::generated::models::NamingClientResponseResultHeaders::client_name) - default-name
+    ///
+    /// [`NamingClientResponseResultHeaders`]: crate::generated::models::NamingClientResponseResultHeaders
     #[tracing::function("Client.Naming.Header.response")]
     pub async fn response(
         &self,

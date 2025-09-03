@@ -59,7 +59,7 @@ impl PageBlobClient {
     /// * `container_name` - The name of the container.
     /// * `blob_name` - The name of the blob.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("blob_storage")]
+    #[tracing::new("Storage.Blob.Container.Blob.PageBlob")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -107,6 +107,40 @@ impl PageBlobClient {
     ///
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`PageBlobClientClearPagesResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientClearPagesResult, PageBlobClientClearPagesResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<PageBlobClientClearPagesResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](crate::generated::models::PageBlobClientClearPagesResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::PageBlobClientClearPagesResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::PageBlobClientClearPagesResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::PageBlobClientClearPagesResultHeaders::etag) - etag
+    /// * [`blob_sequence_number`()](crate::generated::models::PageBlobClientClearPagesResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
+    /// * [`content_crc64`()](crate::generated::models::PageBlobClientClearPagesResultHeaders::content_crc64) - x-ms-content-crc64
+    ///
+    /// [`PageBlobClientClearPagesResultHeaders`]: crate::generated::models::PageBlobClientClearPagesResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.PageBlob.clearPages")]
     pub async fn clear_pages(
         &self,
@@ -213,6 +247,39 @@ impl PageBlobClient {
     ///   specifies a page blob snapshot. The value should be URL-encoded as it would appear in a request URI. The source blob must
     ///   either be public or must be authenticated via a shared access signature.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`PageBlobClientCopyIncrementalResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientCopyIncrementalResult, PageBlobClientCopyIncrementalResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<PageBlobClientCopyIncrementalResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::PageBlobClientCopyIncrementalResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::PageBlobClientCopyIncrementalResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::PageBlobClientCopyIncrementalResultHeaders::etag) - etag
+    /// * [`copy_id`()](crate::generated::models::PageBlobClientCopyIncrementalResultHeaders::copy_id) - x-ms-copy-id
+    /// * [`copy_status`()](crate::generated::models::PageBlobClientCopyIncrementalResultHeaders::copy_status) - x-ms-copy-status
+    ///
+    /// [`PageBlobClientCopyIncrementalResultHeaders`]: crate::generated::models::PageBlobClientCopyIncrementalResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.PageBlob.copyIncremental")]
     pub async fn copy_incremental(
         &self,
@@ -274,6 +341,42 @@ impl PageBlobClient {
     /// * `blob_content_length` - This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must
     ///   be aligned to a 512-byte boundary.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`PageBlobClientCreateResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientCreateResult, PageBlobClientCreateResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<PageBlobClientCreateResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](crate::generated::models::PageBlobClientCreateResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::PageBlobClientCreateResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::PageBlobClientCreateResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::PageBlobClientCreateResultHeaders::etag) - etag
+    /// * [`encryption_key_sha256`()](crate::generated::models::PageBlobClientCreateResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::PageBlobClientCreateResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::PageBlobClientCreateResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`version_id`()](crate::generated::models::PageBlobClientCreateResultHeaders::version_id) - x-ms-version-id
+    ///
+    /// [`PageBlobClientCreateResultHeaders`]: crate::generated::models::PageBlobClientCreateResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.PageBlob.create")]
     pub async fn create(
         &self,
@@ -402,6 +505,38 @@ impl PageBlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`PageListHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{PageList, PageListHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<PageList, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::PageListHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::PageListHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::PageListHeaders::etag) - etag
+    /// * [`blob_content_length`()](crate::generated::models::PageListHeaders::blob_content_length) - x-ms-blob-content-length
+    ///
+    /// [`PageListHeaders`]: crate::generated::models::PageListHeaders
     #[tracing::function("Storage.Blob.Container.Blob.PageBlob.getPageRanges")]
     pub async fn get_page_ranges(
         &self,
@@ -475,6 +610,38 @@ impl PageBlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`PageListHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{PageList, PageListHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<PageList, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::PageListHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::PageListHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::PageListHeaders::etag) - etag
+    /// * [`blob_content_length`()](crate::generated::models::PageListHeaders::blob_content_length) - x-ms-blob-content-length
+    ///
+    /// [`PageListHeaders`]: crate::generated::models::PageListHeaders
     #[tracing::function("Storage.Blob.Container.Blob.PageBlob.getPageRangesDiff")]
     pub async fn get_page_ranges_diff(
         &self,
@@ -559,6 +726,38 @@ impl PageBlobClient {
     /// * `blob_content_length` - This header specifies the maximum size for the page blob, up to 1 TB. The page blob size must
     ///   be aligned to a 512-byte boundary.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`PageBlobClientResizeResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientResizeResult, PageBlobClientResizeResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<PageBlobClientResizeResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::PageBlobClientResizeResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::PageBlobClientResizeResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::PageBlobClientResizeResultHeaders::etag) - etag
+    /// * [`blob_sequence_number`()](crate::generated::models::PageBlobClientResizeResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
+    ///
+    /// [`PageBlobClientResizeResultHeaders`]: crate::generated::models::PageBlobClientResizeResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.PageBlob.resize")]
     pub async fn resize(
         &self,
@@ -640,6 +839,38 @@ impl PageBlobClient {
     /// * `sequence_number_action` - Required if the x-ms-blob-sequence-number header is set for the request. This property applies
     ///   to page blobs only. This property indicates how the service should modify the blob's sequence number
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`PageBlobClientUpdateSequenceNumberResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientUpdateSequenceNumberResult, PageBlobClientUpdateSequenceNumberResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<PageBlobClientUpdateSequenceNumberResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::PageBlobClientUpdateSequenceNumberResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::PageBlobClientUpdateSequenceNumberResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::PageBlobClientUpdateSequenceNumberResultHeaders::etag) - etag
+    /// * [`blob_sequence_number`()](crate::generated::models::PageBlobClientUpdateSequenceNumberResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
+    ///
+    /// [`PageBlobClientUpdateSequenceNumberResultHeaders`]: crate::generated::models::PageBlobClientUpdateSequenceNumberResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.PageBlob.updateSequenceNumber")]
     pub async fn update_sequence_number(
         &self,
@@ -714,6 +945,44 @@ impl PageBlobClient {
     /// * `body` - The body of the request.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`PageBlobClientUploadPagesResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientUploadPagesResult, PageBlobClientUploadPagesResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<PageBlobClientUploadPagesResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](crate::generated::models::PageBlobClientUploadPagesResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::PageBlobClientUploadPagesResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::PageBlobClientUploadPagesResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::PageBlobClientUploadPagesResultHeaders::etag) - etag
+    /// * [`blob_sequence_number`()](crate::generated::models::PageBlobClientUploadPagesResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
+    /// * [`content_crc64`()](crate::generated::models::PageBlobClientUploadPagesResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](crate::generated::models::PageBlobClientUploadPagesResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::PageBlobClientUploadPagesResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::PageBlobClientUploadPagesResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`structured_body_type`()](crate::generated::models::PageBlobClientUploadPagesResultHeaders::structured_body_type) - x-ms-structured-body
+    ///
+    /// [`PageBlobClientUploadPagesResultHeaders`]: crate::generated::models::PageBlobClientUploadPagesResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.PageBlob.uploadPages")]
     pub async fn upload_pages(
         &self,
@@ -838,6 +1107,43 @@ impl PageBlobClient {
     /// * `range` - Bytes of source data in the specified range. The length of this range should match the ContentLength header
     ///   and x-ms-range/Range destination range header.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`PageBlobClientUploadPagesFromUrlResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{PageBlobClientUploadPagesFromUrlResult, PageBlobClientUploadPagesFromUrlResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<PageBlobClientUploadPagesFromUrlResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](crate::generated::models::PageBlobClientUploadPagesFromUrlResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::PageBlobClientUploadPagesFromUrlResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::PageBlobClientUploadPagesFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::PageBlobClientUploadPagesFromUrlResultHeaders::etag) - etag
+    /// * [`blob_sequence_number`()](crate::generated::models::PageBlobClientUploadPagesFromUrlResultHeaders::blob_sequence_number) - x-ms-blob-sequence-number
+    /// * [`content_crc64`()](crate::generated::models::PageBlobClientUploadPagesFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](crate::generated::models::PageBlobClientUploadPagesFromUrlResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::PageBlobClientUploadPagesFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::PageBlobClientUploadPagesFromUrlResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    ///
+    /// [`PageBlobClientUploadPagesFromUrlResultHeaders`]: crate::generated::models::PageBlobClientUploadPagesFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.PageBlob.uploadPagesFromUrl")]
     pub async fn upload_pages_from_url(
         &self,

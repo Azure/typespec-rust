@@ -12,14 +12,14 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<DefaultDurationProperty> for RequestContent<DefaultDurationProperty> {
     type Error = azure_core::Error;
     fn try_from(value: DefaultDurationProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<Float64SecondsDurationProperty> for RequestContent<Float64SecondsDurationProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Float64SecondsDurationProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
@@ -28,27 +28,27 @@ impl TryFrom<FloatSecondsDurationArrayProperty>
 {
     type Error = azure_core::Error;
     fn try_from(value: FloatSecondsDurationArrayProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<FloatSecondsDurationProperty> for RequestContent<FloatSecondsDurationProperty> {
     type Error = azure_core::Error;
     fn try_from(value: FloatSecondsDurationProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<ISO8601DurationProperty> for RequestContent<ISO8601DurationProperty> {
     type Error = azure_core::Error;
     fn try_from(value: ISO8601DurationProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<Int32SecondsDurationProperty> for RequestContent<Int32SecondsDurationProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Int32SecondsDurationProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

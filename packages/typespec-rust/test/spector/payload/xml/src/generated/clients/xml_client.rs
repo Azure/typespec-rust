@@ -38,7 +38,7 @@ impl XmlClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_xml")]
+    #[tracing::new("Payload.Xml")]
     pub fn with_no_credential(endpoint: &str, options: Option<XmlClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;

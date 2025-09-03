@@ -41,7 +41,7 @@ impl BodyOptionalityClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_bodyoptional")]
+    #[tracing::new("Parameters.BodyOptionality")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<BodyOptionalityClientOptions>,

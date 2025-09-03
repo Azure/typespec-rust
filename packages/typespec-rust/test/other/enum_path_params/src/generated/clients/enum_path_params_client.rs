@@ -36,7 +36,7 @@ impl EnumPathParamsClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("enum_path_params")]
+    #[tracing::new("EnumPathParams")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<EnumPathParamsClientOptions>,

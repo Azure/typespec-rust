@@ -33,7 +33,7 @@ impl DurationClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_duration")]
+    #[tracing::new("Encode.Duration")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<DurationClientOptions>,

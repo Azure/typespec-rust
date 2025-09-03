@@ -32,6 +32,29 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`DatetimeResponseHeaderClientDefaultResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_datetime::models::{DatetimeResponseHeaderClientDefaultResult, DatetimeResponseHeaderClientDefaultResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<DatetimeResponseHeaderClientDefaultResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(value) = response.value()? {
+    ///         println!("value: {:?}", value);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`value`()](crate::generated::models::DatetimeResponseHeaderClientDefaultResultHeaders::value) - value
+    ///
+    /// [`DatetimeResponseHeaderClientDefaultResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientDefaultResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.default")]
     pub async fn default(
         &self,
@@ -59,6 +82,29 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`DatetimeResponseHeaderClientRfc3339ResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_datetime::models::{DatetimeResponseHeaderClientRfc3339Result, DatetimeResponseHeaderClientRfc3339ResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<DatetimeResponseHeaderClientRfc3339Result, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(value) = response.value()? {
+    ///         println!("value: {:?}", value);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`value`()](crate::generated::models::DatetimeResponseHeaderClientRfc3339ResultHeaders::value) - value
+    ///
+    /// [`DatetimeResponseHeaderClientRfc3339ResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientRfc3339ResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.rfc3339")]
     pub async fn rfc3339(
         &self,
@@ -86,6 +132,29 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`DatetimeResponseHeaderClientRfc7231ResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_datetime::models::{DatetimeResponseHeaderClientRfc7231Result, DatetimeResponseHeaderClientRfc7231ResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<DatetimeResponseHeaderClientRfc7231Result, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(value) = response.value()? {
+    ///         println!("value: {:?}", value);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`value`()](crate::generated::models::DatetimeResponseHeaderClientRfc7231ResultHeaders::value) - value
+    ///
+    /// [`DatetimeResponseHeaderClientRfc7231ResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientRfc7231ResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.rfc7231")]
     pub async fn rfc7231(
         &self,
@@ -113,6 +182,29 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`DatetimeResponseHeaderClientUnixTimestampResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_datetime::models::{DatetimeResponseHeaderClientUnixTimestampResult, DatetimeResponseHeaderClientUnixTimestampResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<DatetimeResponseHeaderClientUnixTimestampResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(value) = response.value()? {
+    ///         println!("value: {:?}", value);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`value`()](crate::generated::models::DatetimeResponseHeaderClientUnixTimestampResultHeaders::value) - value
+    ///
+    /// [`DatetimeResponseHeaderClientUnixTimestampResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientUnixTimestampResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.unixTimestamp")]
     pub async fn unix_timestamp(
         &self,

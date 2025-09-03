@@ -34,7 +34,7 @@ impl NotDefinedClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_noendpoint")]
+    #[tracing::new("Server.Endpoint.NotDefined")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NotDefinedClientOptions>,

@@ -45,7 +45,7 @@ impl CommonPropertiesClient {
     ///   Entra ID token to use when authenticating.
     /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_armcommon")]
+    #[tracing::new("Azure.ResourceManager.CommonProperties")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,

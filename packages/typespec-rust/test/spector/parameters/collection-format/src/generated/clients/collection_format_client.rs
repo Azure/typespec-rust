@@ -31,7 +31,7 @@ impl CollectionFormatClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_collectionfmt")]
+    #[tracing::new("Parameters.CollectionFormat")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<CollectionFormatClientOptions>,

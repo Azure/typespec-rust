@@ -17,6 +17,24 @@ const LOCATION: HeaderName = HeaderName::from_static("location");
 const RETRY_AFTER: HeaderName = HeaderName::from_static("retry-after");
 
 /// Provides access to typed response headers for [`OperationTemplatesLroClient::delete()`](crate::generated::clients::OperationTemplatesLroClient::delete())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use spector_armoptemplates::models::{ArmOperationStatusResourceProvisioningState, ArmOperationStatusResourceProvisioningStateHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
+///     // Access response headers
+///     if let Some(location) = response.location()? {
+///         println!("Location: {:?}", location);
+///     }
+///     if let Some(retry_after) = response.retry_after()? {
+///         println!("Retry-After: {:?}", retry_after);
+///     }
+///     Ok(())
+/// }
+/// ```
 pub trait ArmOperationStatusResourceProvisioningStateHeaders: private::Sealed {
     fn location(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;
@@ -37,6 +55,27 @@ impl ArmOperationStatusResourceProvisioningStateHeaders
 }
 
 /// Provides access to typed response headers for [`OperationTemplatesLroClient::export()`](crate::generated::clients::OperationTemplatesLroClient::export())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use spector_armoptemplates::models::{ExportResult, ExportResultHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<ExportResult> = unimplemented!();
+///     // Access response headers
+///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+///     }
+///     if let Some(location) = response.location()? {
+///         println!("Location: {:?}", location);
+///     }
+///     if let Some(retry_after) = response.retry_after()? {
+///         println!("Retry-After: {:?}", retry_after);
+///     }
+///     Ok(())
+/// }
+/// ```
 pub trait ExportResultHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
     fn location(&self) -> Result<Option<String>>;
@@ -61,6 +100,24 @@ impl ExportResultHeaders for Response<ExportResult> {
 }
 
 /// Provides access to typed response headers for [`OperationTemplatesLroClient::create_or_replace()`](crate::generated::clients::OperationTemplatesLroClient::create_or_replace())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use spector_armoptemplates::models::{Order, OrderHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<Order> = unimplemented!();
+///     // Access response headers
+///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+///     }
+///     if let Some(retry_after) = response.retry_after()? {
+///         println!("Retry-After: {:?}", retry_after);
+///     }
+///     Ok(())
+/// }
+/// ```
 pub trait OrderHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;

@@ -39,7 +39,7 @@ impl VersionedClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_versioned")]
+    #[tracing::new("Server.Versions.Versioned")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<VersionedClientOptions>,

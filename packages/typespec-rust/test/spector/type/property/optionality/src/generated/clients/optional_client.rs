@@ -38,7 +38,7 @@ impl OptionalClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_optionality")]
+    #[tracing::new("Type.Property.Optional")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<OptionalClientOptions>,

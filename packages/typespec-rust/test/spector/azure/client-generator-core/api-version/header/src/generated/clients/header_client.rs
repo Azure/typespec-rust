@@ -35,7 +35,7 @@ impl HeaderClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_apiverheader")]
+    #[tracing::new("Client.AlternateApiVersion.Service.Header")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<HeaderClientOptions>,

@@ -41,6 +41,24 @@ impl ArmOperationStatusResourceProvisioningStateHeaders
 }
 
 /// Provides access to typed response headers for [`ResourcesExtensionsResourcesClient::create_or_update()`](crate::generated::clients::ResourcesExtensionsResourcesClient::create_or_update())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use spector_armresources::models::{ExtensionsResource, ExtensionsResourceHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<ExtensionsResource> = unimplemented!();
+///     // Access response headers
+///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+///     }
+///     if let Some(retry_after) = response.retry_after()? {
+///         println!("Retry-After: {:?}", retry_after);
+///     }
+///     Ok(())
+/// }
+/// ```
 pub trait ExtensionsResourceHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;
@@ -85,6 +103,24 @@ impl NestedProxyResourceHeaders for Response<NestedProxyResource> {
 }
 
 /// Provides access to typed response headers for [`ResourcesSingletonClient::create_or_update()`](crate::generated::clients::ResourcesSingletonClient::create_or_update())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use spector_armresources::models::{SingletonTrackedResource, SingletonTrackedResourceHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<SingletonTrackedResource> = unimplemented!();
+///     // Access response headers
+///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+///     }
+///     if let Some(retry_after) = response.retry_after()? {
+///         println!("Retry-After: {:?}", retry_after);
+///     }
+///     Ok(())
+/// }
+/// ```
 pub trait SingletonTrackedResourceHeaders: private::Sealed {
     fn azure_async_operation(&self) -> Result<Option<String>>;
     fn retry_after(&self) -> Result<Option<i32>>;

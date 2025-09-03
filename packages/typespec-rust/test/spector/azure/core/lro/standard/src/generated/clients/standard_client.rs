@@ -41,7 +41,7 @@ impl StandardClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_lrostd")]
+    #[tracing::new("_Specs_.Azure.Core.Lro.Standard")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<StandardClientOptions>,
@@ -83,6 +83,29 @@ impl StandardClient {
     /// * `name` - The name of user.
     /// * `resource` - The resource instance.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`UserHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_lrostd::models::{User, UserHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<User> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(operation_location) = response.operation_location()? {
+    ///         println!("Operation-Location: {:?}", operation_location);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`operation_location`()](crate::generated::models::UserHeaders::operation_location) - Operation-Location
+    ///
+    /// [`UserHeaders`]: crate::generated::models::UserHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.createOrReplace")]
     pub fn create_or_replace(
         &self,
@@ -166,6 +189,29 @@ impl StandardClient {
     ///
     /// * `name` - The name of user.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`OperationStatusErrorHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_lrostd::models::{OperationStatusError, OperationStatusErrorHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<OperationStatusError> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(operation_location) = response.operation_location()? {
+    ///         println!("Operation-Location: {:?}", operation_location);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`operation_location`()](crate::generated::models::OperationStatusErrorHeaders::operation_location) - Operation-Location
+    ///
+    /// [`OperationStatusErrorHeaders`]: crate::generated::models::OperationStatusErrorHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.delete")]
     pub fn delete(
         &self,
@@ -246,6 +292,29 @@ impl StandardClient {
     /// * `name` - The name of user.
     /// * `format` - The format of the data.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ExportedUserHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_lrostd::models::{ExportedUser, ExportedUserHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ExportedUser> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(operation_location) = response.operation_location()? {
+    ///         println!("Operation-Location: {:?}", operation_location);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`operation_location`()](crate::generated::models::ExportedUserHeaders::operation_location) - Operation-Location
+    ///
+    /// [`ExportedUserHeaders`]: crate::generated::models::ExportedUserHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.export")]
     pub fn export(
         &self,

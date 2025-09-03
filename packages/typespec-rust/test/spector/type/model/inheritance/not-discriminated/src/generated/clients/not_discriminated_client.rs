@@ -38,7 +38,7 @@ impl NotDiscriminatedClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_nodisc")]
+    #[tracing::new("Type.Model.Inheritance.NotDiscriminated")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NotDiscriminatedClientOptions>,

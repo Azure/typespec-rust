@@ -38,7 +38,7 @@ impl MixedParamsClient {
     /// * `endpoint` - Service host
     /// * `name` - The name of the client. This parameter is used as a header in all operations.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_clientinit")]
+    #[tracing::new("_Specs_.Azure.ClientGeneratorCore.ClientInitialization.MixedParams")]
     pub fn with_no_credential(
         endpoint: &str,
         name: String,

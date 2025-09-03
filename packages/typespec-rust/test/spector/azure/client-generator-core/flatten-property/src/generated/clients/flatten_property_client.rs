@@ -38,7 +38,7 @@ impl FlattenPropertyClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_flattenproperty")]
+    #[tracing::new("_Specs_.Azure.ClientGenerator.Core.FlattenProperty")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<FlattenPropertyClientOptions>,

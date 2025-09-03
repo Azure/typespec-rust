@@ -17,202 +17,202 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<BooleanLiteralProperty> for RequestContent<BooleanLiteralProperty> {
     type Error = azure_core::Error;
     fn try_from(value: BooleanLiteralProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<BooleanProperty> for RequestContent<BooleanProperty> {
     type Error = azure_core::Error;
     fn try_from(value: BooleanProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<BytesProperty> for RequestContent<BytesProperty> {
     type Error = azure_core::Error;
     fn try_from(value: BytesProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<CollectionsIntProperty> for RequestContent<CollectionsIntProperty> {
     type Error = azure_core::Error;
     fn try_from(value: CollectionsIntProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<CollectionsModelProperty> for RequestContent<CollectionsModelProperty> {
     type Error = azure_core::Error;
     fn try_from(value: CollectionsModelProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<CollectionsStringProperty> for RequestContent<CollectionsStringProperty> {
     type Error = azure_core::Error;
     fn try_from(value: CollectionsStringProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<DatetimeProperty> for RequestContent<DatetimeProperty> {
     type Error = azure_core::Error;
     fn try_from(value: DatetimeProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<Decimal128Property> for RequestContent<Decimal128Property> {
     type Error = azure_core::Error;
     fn try_from(value: Decimal128Property) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<DecimalProperty> for RequestContent<DecimalProperty> {
     type Error = azure_core::Error;
     fn try_from(value: DecimalProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<DictionaryStringProperty> for RequestContent<DictionaryStringProperty> {
     type Error = azure_core::Error;
     fn try_from(value: DictionaryStringProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<DurationProperty> for RequestContent<DurationProperty> {
     type Error = azure_core::Error;
     fn try_from(value: DurationProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<EnumProperty> for RequestContent<EnumProperty> {
     type Error = azure_core::Error;
     fn try_from(value: EnumProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<ExtensibleEnumProperty> for RequestContent<ExtensibleEnumProperty> {
     type Error = azure_core::Error;
     fn try_from(value: ExtensibleEnumProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<FloatLiteralProperty> for RequestContent<FloatLiteralProperty> {
     type Error = azure_core::Error;
     fn try_from(value: FloatLiteralProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<FloatProperty> for RequestContent<FloatProperty> {
     type Error = azure_core::Error;
     fn try_from(value: FloatProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<IntLiteralProperty> for RequestContent<IntLiteralProperty> {
     type Error = azure_core::Error;
     fn try_from(value: IntLiteralProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<IntProperty> for RequestContent<IntProperty> {
     type Error = azure_core::Error;
     fn try_from(value: IntProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<ModelProperty> for RequestContent<ModelProperty> {
     type Error = azure_core::Error;
     fn try_from(value: ModelProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<NeverProperty> for RequestContent<NeverProperty> {
     type Error = azure_core::Error;
     fn try_from(value: NeverProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<StringLiteralProperty> for RequestContent<StringLiteralProperty> {
     type Error = azure_core::Error;
     fn try_from(value: StringLiteralProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<StringProperty> for RequestContent<StringProperty> {
     type Error = azure_core::Error;
     fn try_from(value: StringProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<UnionEnumValueProperty> for RequestContent<UnionEnumValueProperty> {
     type Error = azure_core::Error;
     fn try_from(value: UnionEnumValueProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<UnionFloatLiteralProperty> for RequestContent<UnionFloatLiteralProperty> {
     type Error = azure_core::Error;
     fn try_from(value: UnionFloatLiteralProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<UnionIntLiteralProperty> for RequestContent<UnionIntLiteralProperty> {
     type Error = azure_core::Error;
     fn try_from(value: UnionIntLiteralProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<UnionStringLiteralProperty> for RequestContent<UnionStringLiteralProperty> {
     type Error = azure_core::Error;
     fn try_from(value: UnionStringLiteralProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<UnknownArrayProperty> for RequestContent<UnknownArrayProperty> {
     type Error = azure_core::Error;
     fn try_from(value: UnknownArrayProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<UnknownDictProperty> for RequestContent<UnknownDictProperty> {
     type Error = azure_core::Error;
     fn try_from(value: UnknownDictProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<UnknownIntProperty> for RequestContent<UnknownIntProperty> {
     type Error = azure_core::Error;
     fn try_from(value: UnknownIntProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<UnknownStringProperty> for RequestContent<UnknownStringProperty> {
     type Error = azure_core::Error;
     fn try_from(value: UnknownStringProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
