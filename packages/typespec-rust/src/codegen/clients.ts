@@ -173,7 +173,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         body += `${indent.get()}option_env!("CARGO_PKG_VERSION"),\n`;
         body += `${indent.get()}options.client_options,\n`;
         body += `${indent.get()}Vec::default(),\n`;
-        body += `${indent.get()}${authPolicy ? 'vec![auth_policy]' : 'Vec::default()'},\n`;
+        body += `${indent.get()}${authPolicy ? 'vec![auth_policy]' : 'Vec::default()'}, None,\n`;
         body += `${indent.pop().get()}),\n`; // end Pipeline::new
         body += `${indent.pop().get()}})\n`; // end Ok
         body += `${indent.pop().get()}}\n`; // end constructor
@@ -1370,7 +1370,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}async move {\n`
   body += `${indent.push().get()}let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;\n`
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
-  body += `${indent.get()}let retry_after = get_retry_after(&headers, &[(X_MS_RETRY_AFTER_MS, false), (RETRY_AFTER_MS, false), (RETRY_AFTER, true)], &options.poller_options);\n`
+  body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &options.poller_options);\n`
   body += `${indent.get()}let bytes = body.collect().await?;\n`
 
   let deserialize = '';

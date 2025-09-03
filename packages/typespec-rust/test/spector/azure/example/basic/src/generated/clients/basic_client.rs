@@ -54,6 +54,7 @@ impl BasicClient {
                 options.client_options,
                 Vec::default(),
                 Vec::default(),
+                None,
             ),
         })
     }

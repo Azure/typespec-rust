@@ -102,11 +102,7 @@ impl ResourcesExtensionsResourcesClient {
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
-                        &[
-                            (X_MS_RETRY_AFTER_MS, false),
-                            (RETRY_AFTER_MS, false),
-                            (RETRY_AFTER, true),
-                        ],
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &options.poller_options,
                     );
                     let bytes = body.collect().await?;
