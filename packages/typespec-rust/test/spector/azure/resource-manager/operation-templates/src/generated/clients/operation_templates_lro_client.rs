@@ -10,6 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     http::{
+        headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         Method, Pipeline, Poller, RawResponse, Request, RequestContent, Url,
     },
@@ -121,7 +122,11 @@ impl OperationTemplatesLroClient {
                 async move {
                     let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
                     let bytes = body.collect().await?;
                     let res: Order = json::from_json(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
@@ -223,7 +228,11 @@ impl OperationTemplatesLroClient {
                 async move {
                     let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
                     let bytes = body.collect().await?;
                     let res: ArmOperationStatusResourceProvisioningState = json::from_json(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();
@@ -336,7 +345,11 @@ impl OperationTemplatesLroClient {
                 async move {
                     let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
                     let bytes = body.collect().await?;
                     let res: ExportResult = json::from_json(&bytes)?;
                     let rsp = RawResponse::from_bytes(status, headers, bytes).into();

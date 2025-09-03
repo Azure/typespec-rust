@@ -9,6 +9,7 @@ use crate::generated::models::{
 use azure_core::{
     error::{ErrorKind, HttpError},
     http::{
+        headers::ERROR_CODE,
         pager::{PagerResult, PagerState},
         Method, Pager, Pipeline, RawResponse, Request, Url,
     },
@@ -71,7 +72,7 @@ impl OperationTemplatesOperationsClient {
                 let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
                 if !rsp.status().is_success() {
                     let status = rsp.status();
-                    let http_error = HttpError::new(rsp).await;
+                    let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
                     let error_kind = ErrorKind::http_response(
                         status,
                         http_error.error_code().map(std::borrow::ToOwned::to_owned),
