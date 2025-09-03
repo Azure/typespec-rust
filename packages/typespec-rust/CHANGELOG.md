@@ -1,12 +1,6 @@
 # Release History
 
-## 0.21.0 (Unreleased)
-
-### Features Added
-
-* Added `#![cfg_attr(docsrs, feature(doc_auto_cfg))]` to every generated `src/lib.rs` to automatically document feature conditions.
-* Added support for optional path parameters.
-* Added support for TypeSpec models that extend a `Record<T>` (the "additional properties" pattern).
+## 0.21.0 (2025-09-03)
 
 ### Breaking Changes
 
@@ -14,6 +8,13 @@
 
 * Calls `Context::to_borrowed` instead of `Context::with_context`.
 * Imports types moved from `azure_core::http` to `azure_core::http::{pager, poller}` modules.
+* Support new API signatures in `Pipeline::new()` and `get_retry_after()`.
+
+### Features Added
+
+* Added `#![cfg_attr(docsrs, feature(doc_auto_cfg))]` to every generated `src/lib.rs` to automatically document feature conditions.
+* Added support for optional path parameters.
+* Added support for TypeSpec models that extend a `Record<T>` (the "additional properties" pattern).
 
 ### Other Changes
 
