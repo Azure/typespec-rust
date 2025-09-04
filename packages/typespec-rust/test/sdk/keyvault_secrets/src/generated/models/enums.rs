@@ -6,6 +6,15 @@
 use azure_core::{create_enum, create_extensible_enum};
 
 create_extensible_enum!(
+    #[doc = r#"The media type (MIME type)."#]
+    ContentType,
+    #[doc = r#"The PEM file format."#]
+    (PEM, "application/x-pem-file"),
+    #[doc = r#"The PKCS#12 file format."#]
+    (PFX, "application/x-pkcs12")
+);
+
+create_extensible_enum!(
     #[doc = r#"Reflects the deletion recovery level currently in effect for secrets in the current vault. If it contains 'Purgeable',
 the secret can be permanently deleted by a privileged user; otherwise, only the system can purge the secret, at the end
 of the retention interval."#]

@@ -5,4 +5,4 @@
 
 pub mod clients;
 pub mod models;
-pub use clients::{KeyVaultClient, KeyVaultClientOptions};
+pub use clients::{SecretClient, SecretClientOptions};

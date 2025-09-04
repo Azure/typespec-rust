@@ -5,40 +5,40 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`KeyVaultClient::backup_secret()`](crate::generated::clients::KeyVaultClient::backup_secret())
+/// Options to be passed to [`SecretClient::backup_secret()`](crate::generated::clients::SecretClient::backup_secret())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientBackupSecretOptions<'a> {
+pub struct SecretClientBackupSecretOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`KeyVaultClient::delete_secret()`](crate::generated::clients::KeyVaultClient::delete_secret())
+/// Options to be passed to [`SecretClient::delete_secret()`](crate::generated::clients::SecretClient::delete_secret())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientDeleteSecretOptions<'a> {
+pub struct SecretClientDeleteSecretOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`KeyVaultClient::get_deleted_secret()`](crate::generated::clients::KeyVaultClient::get_deleted_secret())
+/// Options to be passed to [`SecretClient::get_deleted_secret()`](crate::generated::clients::SecretClient::get_deleted_secret())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientGetDeletedSecretOptions<'a> {
+pub struct SecretClientGetDeletedSecretOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`KeyVaultClient::get_secret()`](crate::generated::clients::KeyVaultClient::get_secret())
+/// Options to be passed to [`SecretClient::get_secret()`](crate::generated::clients::SecretClient::get_secret())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientGetSecretOptions<'a> {
+pub struct SecretClientGetSecretOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
-    /// The version of the secret. This value is optional. If not specified, the latest version of the secret is returned.
+    /// The version of the secret. This URI fragment is optional. If not specified, the latest version of the secret is returned.
     pub secret_version: Option<String>,
 }
 
-/// Options to be passed to [`KeyVaultClient::list_deleted_secrets()`](crate::generated::clients::KeyVaultClient::list_deleted_secrets())
+/// Options to be passed to [`SecretClient::list_deleted_secret_properties()`](crate::generated::clients::SecretClient::list_deleted_secret_properties())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientListDeletedSecretsOptions<'a> {
+pub struct SecretClientListDeletedSecretPropertiesOptions<'a> {
     /// Maximum number of results to return in a page. If not specified the service will return up to 25 results.
     pub maxresults: Option<i32>,
 
@@ -46,9 +46,9 @@ pub struct KeyVaultClientListDeletedSecretsOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-impl KeyVaultClientListDeletedSecretsOptions<'_> {
-    pub fn into_owned(self) -> KeyVaultClientListDeletedSecretsOptions<'static> {
-        KeyVaultClientListDeletedSecretsOptions {
+impl SecretClientListDeletedSecretPropertiesOptions<'_> {
+    pub fn into_owned(self) -> SecretClientListDeletedSecretPropertiesOptions<'static> {
+        SecretClientListDeletedSecretPropertiesOptions {
             maxresults: self.maxresults,
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
@@ -57,9 +57,9 @@ impl KeyVaultClientListDeletedSecretsOptions<'_> {
     }
 }
 
-/// Options to be passed to [`KeyVaultClient::list_secret_versions()`](crate::generated::clients::KeyVaultClient::list_secret_versions())
+/// Options to be passed to [`SecretClient::list_secret_properties()`](crate::generated::clients::SecretClient::list_secret_properties())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientListSecretVersionsOptions<'a> {
+pub struct SecretClientListSecretPropertiesOptions<'a> {
     /// Maximum number of results to return in a page. If not specified the service will return up to 25 results.
     pub maxresults: Option<i32>,
 
@@ -67,9 +67,9 @@ pub struct KeyVaultClientListSecretVersionsOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-impl KeyVaultClientListSecretVersionsOptions<'_> {
-    pub fn into_owned(self) -> KeyVaultClientListSecretVersionsOptions<'static> {
-        KeyVaultClientListSecretVersionsOptions {
+impl SecretClientListSecretPropertiesOptions<'_> {
+    pub fn into_owned(self) -> SecretClientListSecretPropertiesOptions<'static> {
+        SecretClientListSecretPropertiesOptions {
             maxresults: self.maxresults,
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
@@ -78,9 +78,9 @@ impl KeyVaultClientListSecretVersionsOptions<'_> {
     }
 }
 
-/// Options to be passed to [`KeyVaultClient::list_secrets()`](crate::generated::clients::KeyVaultClient::list_secrets())
+/// Options to be passed to [`SecretClient::list_secret_properties_versions()`](crate::generated::clients::SecretClient::list_secret_properties_versions())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientListSecretsOptions<'a> {
+pub struct SecretClientListSecretPropertiesVersionsOptions<'a> {
     /// Maximum number of results to return in a page. If not specified the service will return up to 25 results.
     pub maxresults: Option<i32>,
 
@@ -88,9 +88,9 @@ pub struct KeyVaultClientListSecretsOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
-impl KeyVaultClientListSecretsOptions<'_> {
-    pub fn into_owned(self) -> KeyVaultClientListSecretsOptions<'static> {
-        KeyVaultClientListSecretsOptions {
+impl SecretClientListSecretPropertiesVersionsOptions<'_> {
+    pub fn into_owned(self) -> SecretClientListSecretPropertiesVersionsOptions<'static> {
+        SecretClientListSecretPropertiesVersionsOptions {
             maxresults: self.maxresults,
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
@@ -99,37 +99,40 @@ impl KeyVaultClientListSecretsOptions<'_> {
     }
 }
 
-/// Options to be passed to [`KeyVaultClient::purge_deleted_secret()`](crate::generated::clients::KeyVaultClient::purge_deleted_secret())
+/// Options to be passed to [`SecretClient::purge_deleted_secret()`](crate::generated::clients::SecretClient::purge_deleted_secret())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientPurgeDeletedSecretOptions<'a> {
+pub struct SecretClientPurgeDeletedSecretOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`KeyVaultClient::recover_deleted_secret()`](crate::generated::clients::KeyVaultClient::recover_deleted_secret())
+/// Options to be passed to [`SecretClient::recover_deleted_secret()`](crate::generated::clients::SecretClient::recover_deleted_secret())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientRecoverDeletedSecretOptions<'a> {
+pub struct SecretClientRecoverDeletedSecretOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`KeyVaultClient::restore_secret()`](crate::generated::clients::KeyVaultClient::restore_secret())
+/// Options to be passed to [`SecretClient::restore_secret()`](crate::generated::clients::SecretClient::restore_secret())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientRestoreSecretOptions<'a> {
+pub struct SecretClientRestoreSecretOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`KeyVaultClient::set_secret()`](crate::generated::clients::KeyVaultClient::set_secret())
+/// Options to be passed to [`SecretClient::set_secret()`](crate::generated::clients::SecretClient::set_secret())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientSetSecretOptions<'a> {
+pub struct SecretClientSetSecretOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`KeyVaultClient::update_secret()`](crate::generated::clients::KeyVaultClient::update_secret())
+/// Options to be passed to [`SecretClient::update_secret()`](crate::generated::clients::SecretClient::update_secret())
 #[derive(Clone, Default, SafeDebug)]
-pub struct KeyVaultClientUpdateSecretOptions<'a> {
+pub struct SecretClientUpdateSecretOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
+
+    /// The version of the secret.
+    pub secret_version: Option<String>,
 }
