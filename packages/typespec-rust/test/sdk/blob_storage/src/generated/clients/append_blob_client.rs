@@ -7,7 +7,7 @@ use crate::generated::models::{
     AppendBlobClientAppendBlockFromUrlOptions, AppendBlobClientAppendBlockFromUrlResult,
     AppendBlobClientAppendBlockOptions, AppendBlobClientAppendBlockResult,
     AppendBlobClientCreateOptions, AppendBlobClientCreateResult, AppendBlobClientSealOptions,
-    AppendBlobClientSealResult, BlobType,
+    AppendBlobClientSealResult,
 };
 use azure_core::{
     base64::encode,
@@ -26,8 +26,6 @@ use std::sync::Arc;
 
 #[tracing::client]
 pub struct AppendBlobClient {
-    pub(crate) blob_name: String,
-    pub(crate) container_name: String,
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
     pub(crate) version: String,
@@ -50,15 +48,11 @@ impl AppendBlobClient {
     /// * `endpoint` - Service host
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
-    /// * `container_name` - The name of the container.
-    /// * `blob_name` - The name of the blob.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("Storage.Blob.Container.Blob.AppendBlob")]
+    #[tracing::new("Storage.Blob.AppendBlob")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
-        container_name: String,
-        blob_name: String,
         options: Option<AppendBlobClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
@@ -75,8 +69,6 @@ impl AppendBlobClient {
             vec!["https://storage.azure.com/.default"],
         ));
         Ok(Self {
-            blob_name,
-            container_name,
             endpoint,
             version: options.version,
             pipeline: Pipeline::new(
@@ -117,11 +109,11 @@ impl AppendBlobClient {
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
     ///     }
-    ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
     ///     if let Some(last_modified) = response.last_modified()? {
     ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
     ///     }
     ///     Ok(())
     /// }
@@ -129,7 +121,6 @@ impl AppendBlobClient {
     ///
     /// ### Available headers
     /// * [`content_md5`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::date) - Date
     /// * [`last_modified`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::last_modified) - Last-Modified
     /// * [`etag`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::etag) - etag
     /// * [`blob_append_offset`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::blob_append_offset) - x-ms-blob-append-offset
@@ -138,10 +129,9 @@ impl AppendBlobClient {
     /// * [`encryption_key_sha256`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
     /// * [`encryption_scope`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::encryption_scope) - x-ms-encryption-scope
     /// * [`is_server_encrypted`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
-    /// * [`structured_body_type`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::structured_body_type) - x-ms-structured-body
     ///
     /// [`AppendBlobClientAppendBlockResultHeaders`]: crate::generated::models::AppendBlobClientAppendBlockResultHeaders
-    #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.appendBlock")]
+    #[tracing::function("Storage.Blob.AppendBlob.appendBlock")]
     pub async fn append_block(
         &self,
         body: RequestContent<Bytes, NoFormat>,
@@ -151,10 +141,6 @@ impl AppendBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
-        path = path.replace("{blobName}", &self.blob_name);
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "appendblock");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -258,11 +244,11 @@ impl AppendBlobClient {
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
     ///     }
-    ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
     ///     if let Some(last_modified) = response.last_modified()? {
     ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
     ///     }
     ///     Ok(())
     /// }
@@ -270,7 +256,6 @@ impl AppendBlobClient {
     ///
     /// ### Available headers
     /// * [`content_md5`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::date) - Date
     /// * [`last_modified`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::last_modified) - Last-Modified
     /// * [`etag`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::etag) - etag
     /// * [`blob_append_offset`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::blob_append_offset) - x-ms-blob-append-offset
@@ -281,7 +266,7 @@ impl AppendBlobClient {
     /// * [`is_server_encrypted`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
     ///
     /// [`AppendBlobClientAppendBlockFromUrlResultHeaders`]: crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders
-    #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.appendBlockFromUrl")]
+    #[tracing::function("Storage.Blob.AppendBlob.appendBlockFromUrl")]
     pub async fn append_block_from_url(
         &self,
         source_url: String,
@@ -291,10 +276,6 @@ impl AppendBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
-        path = path.replace("{blobName}", &self.blob_name);
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("comp", "appendblock")
             .append_key_only("fromUrl");
@@ -348,6 +329,9 @@ impl AppendBlobClient {
         if let Some(encryption_scope) = options.encryption_scope {
             request.insert_header("x-ms-encryption-scope", encryption_scope);
         }
+        if let Some(file_request_intent) = options.file_request_intent {
+            request.insert_header("x-ms-file-request-intent", file_request_intent.to_string());
+        }
         if let Some(if_tags) = options.if_tags {
             request.insert_header("x-ms-if-tags", if_tags);
         }
@@ -399,7 +383,6 @@ impl AppendBlobClient {
     ///
     /// # Arguments
     ///
-    /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
     ///
     /// ## Response Headers
@@ -416,11 +399,11 @@ impl AppendBlobClient {
     ///     if let Some(content_md5) = response.content_md5()? {
     ///         println!("Content-MD5: {:?}", content_md5);
     ///     }
-    ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
     ///     if let Some(last_modified) = response.last_modified()? {
     ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
     ///     }
     ///     Ok(())
     /// }
@@ -428,7 +411,6 @@ impl AppendBlobClient {
     ///
     /// ### Available headers
     /// * [`content_md5`()](crate::generated::models::AppendBlobClientCreateResultHeaders::content_md5) - Content-MD5
-    /// * [`date`()](crate::generated::models::AppendBlobClientCreateResultHeaders::date) - Date
     /// * [`last_modified`()](crate::generated::models::AppendBlobClientCreateResultHeaders::last_modified) - Last-Modified
     /// * [`etag`()](crate::generated::models::AppendBlobClientCreateResultHeaders::etag) - etag
     /// * [`encryption_key_sha256`()](crate::generated::models::AppendBlobClientCreateResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
@@ -437,26 +419,20 @@ impl AppendBlobClient {
     /// * [`version_id`()](crate::generated::models::AppendBlobClientCreateResultHeaders::version_id) - x-ms-version-id
     ///
     /// [`AppendBlobClientCreateResultHeaders`]: crate::generated::models::AppendBlobClientCreateResultHeaders
-    #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.create")]
+    #[tracing::function("Storage.Blob.AppendBlob.create")]
     pub async fn create(
         &self,
-        content_length: u64,
         options: Option<AppendBlobClientCreateOptions<'_>>,
     ) -> Result<Response<AppendBlobClientCreateResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
-        path = path.replace("{blobName}", &self.blob_name);
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
-        url.query_pairs_mut().append_key_only("AppendBlob");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
         }
         let mut request = Request::new(url, Method::Put);
-        request.insert_header("content-length", content_length.to_string());
+        request.insert_header("content-length", "0");
         if let Some(if_match) = options.if_match {
             request.insert_header("if-match", if_match);
         }
@@ -487,7 +463,7 @@ impl AppendBlobClient {
         if let Some(blob_content_type) = options.blob_content_type {
             request.insert_header("x-ms-blob-content-type", blob_content_type);
         }
-        request.insert_header("x-ms-blob-type", BlobType::AppendBlob.to_string());
+        request.insert_header("x-ms-blob-type", "AppendBlob");
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
@@ -567,27 +543,26 @@ impl AppendBlobClient {
     /// async fn example() -> Result<()> {
     ///     let response: Response<AppendBlobClientSealResult, NoFormat> = unimplemented!();
     ///     // Access response headers
-    ///     if let Some(date) = response.date()? {
-    ///         println!("Date: {:?}", date);
-    ///     }
     ///     if let Some(last_modified) = response.last_modified()? {
     ///         println!("Last-Modified: {:?}", last_modified);
     ///     }
     ///     if let Some(etag) = response.etag()? {
     ///         println!("etag: {:?}", etag);
     ///     }
+    ///     if let Some(is_sealed) = response.is_sealed()? {
+    ///         println!("x-ms-blob-sealed: {:?}", is_sealed);
+    ///     }
     ///     Ok(())
     /// }
     /// ```
     ///
     /// ### Available headers
-    /// * [`date`()](crate::generated::models::AppendBlobClientSealResultHeaders::date) - Date
     /// * [`last_modified`()](crate::generated::models::AppendBlobClientSealResultHeaders::last_modified) - Last-Modified
     /// * [`etag`()](crate::generated::models::AppendBlobClientSealResultHeaders::etag) - etag
     /// * [`is_sealed`()](crate::generated::models::AppendBlobClientSealResultHeaders::is_sealed) - x-ms-blob-sealed
     ///
     /// [`AppendBlobClientSealResultHeaders`]: crate::generated::models::AppendBlobClientSealResultHeaders
-    #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.seal")]
+    #[tracing::function("Storage.Blob.AppendBlob.seal")]
     pub async fn seal(
         &self,
         options: Option<AppendBlobClientSealOptions<'_>>,
@@ -595,10 +570,6 @@ impl AppendBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
-        path = path.replace("{blobName}", &self.blob_name);
-        path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
         url.query_pairs_mut().append_pair("comp", "seal");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -646,7 +617,7 @@ impl Default for AppendBlobClientOptions {
     fn default() -> Self {
         Self {
             client_options: ClientOptions::default(),
-            version: String::from("2025-01-05"),
+            version: String::from("2025-11-05"),
         }
     }
 }

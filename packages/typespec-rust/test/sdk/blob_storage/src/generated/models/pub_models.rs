@@ -6,9 +6,8 @@
 use super::{
     models_serde,
     xml_helpers::{
-        Blob_tag_setTag, BlobsBlob, Clear_rangeClearRange, Committed_blocksBlock,
-        Container_itemsContainer, CorsCorsRule, Page_rangePageRange, SchemaField,
-        Uncommitted_blocksBlock,
+        Blob_tag_setTag, BlobsBlob, Committed_blocksBlock, Container_itemsContainer, CorsCorsRule,
+        SchemaField, Uncommitted_blocksBlock,
     },
     AccessTier, ArchiveStatus, BlobImmutabilityPolicyMode, BlobType, CopyStatus,
     GeoReplicationStatusType, LeaseDuration, LeaseState, LeaseStatus, PublicAccessType,
@@ -31,7 +30,7 @@ pub struct AccessPolicy {
         default,
         rename = "Expiry",
         skip_serializing_if = "Option::is_none",
-        with = "azure_core::time::rfc3339::option"
+        with = "azure_core::time::rfc7231::option"
     )]
     pub expiry: Option<OffsetDateTime>,
 
@@ -44,7 +43,7 @@ pub struct AccessPolicy {
         default,
         rename = "Start",
         skip_serializing_if = "Option::is_none",
-        with = "azure_core::time::rfc3339::option"
+        with = "azure_core::time::rfc7231::option"
     )]
     pub start: Option<OffsetDateTime>,
 }
@@ -172,46 +171,6 @@ pub struct BlobClientStartCopyFromUrlResult;
 #[derive(SafeDebug)]
 pub struct BlobClientUndeleteResult;
 
-/// Contains results for `BlobContainerClient::acquire_lease()`
-#[derive(SafeDebug)]
-pub struct BlobContainerClientAcquireLeaseResult;
-
-/// Contains results for `BlobContainerClient::break_lease()`
-#[derive(SafeDebug)]
-pub struct BlobContainerClientBreakLeaseResult;
-
-/// Contains results for `BlobContainerClient::change_lease()`
-#[derive(SafeDebug)]
-pub struct BlobContainerClientChangeLeaseResult;
-
-/// Contains results for `BlobContainerClient::get_account_info()`
-#[derive(SafeDebug)]
-pub struct BlobContainerClientGetAccountInfoResult;
-
-/// Contains results for `BlobContainerClient::get_properties()`
-#[derive(SafeDebug)]
-pub struct BlobContainerClientGetPropertiesResult;
-
-/// Contains results for `BlobContainerClient::release_lease()`
-#[derive(SafeDebug)]
-pub struct BlobContainerClientReleaseLeaseResult;
-
-/// Contains results for `BlobContainerClient::rename()`
-#[derive(SafeDebug)]
-pub struct BlobContainerClientRenameResult;
-
-/// Contains results for `BlobContainerClient::renew_lease()`
-#[derive(SafeDebug)]
-pub struct BlobContainerClientRenewLeaseResult;
-
-/// Contains results for `BlobContainerClient::restore()`
-#[derive(SafeDebug)]
-pub struct BlobContainerClientRestoreResult;
-
-/// Contains results for `BlobContainerClient::set_access_policy()`
-#[derive(SafeDebug)]
-pub struct BlobContainerClientSetAccessPolicyResult;
-
 /// The blob flat list segment.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
@@ -264,7 +223,10 @@ pub struct BlobItemInternal {
     pub name: Option<BlobName>,
 
     /// The object replication metadata of the blob.
-    #[serde(rename = "OrMetadata", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ObjectReplicationMetadata",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub object_replication_metadata: Option<ObjectReplicationMetadata>,
 
     /// The properties of the blob.
@@ -456,7 +418,7 @@ pub struct BlobPropertiesInternal {
     pub encryption_scope: Option<String>,
 
     /// The blog ETag.
-    #[serde(rename = "ETag", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "Etag", skip_serializing_if = "Option::is_none")]
     pub etag: Option<String>,
 
     /// The expire time of the blob.
@@ -545,10 +507,6 @@ pub struct BlobPropertiesInternal {
     #[serde(rename = "TagCount", skip_serializing_if = "Option::is_none")]
     pub tag_count: Option<i32>,
 }
-
-/// Contains results for `BlobServiceClient::get_account_info()`
-#[derive(SafeDebug)]
-pub struct BlobServiceClientGetAccountInfoResult;
 
 /// The blob tags.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
@@ -690,6 +648,46 @@ pub struct ClearRange {
     #[serde(rename = "Start", skip_serializing_if = "Option::is_none")]
     pub start: Option<i64>,
 }
+
+/// Contains results for `ContainerClient::acquire_lease()`
+#[derive(SafeDebug)]
+pub struct ContainerClientAcquireLeaseResult;
+
+/// Contains results for `ContainerClient::break_lease()`
+#[derive(SafeDebug)]
+pub struct ContainerClientBreakLeaseResult;
+
+/// Contains results for `ContainerClient::change_lease()`
+#[derive(SafeDebug)]
+pub struct ContainerClientChangeLeaseResult;
+
+/// Contains results for `ContainerClient::get_account_info()`
+#[derive(SafeDebug)]
+pub struct ContainerClientGetAccountInfoResult;
+
+/// Contains results for `ContainerClient::get_properties()`
+#[derive(SafeDebug)]
+pub struct ContainerClientGetPropertiesResult;
+
+/// Contains results for `ContainerClient::release_lease()`
+#[derive(SafeDebug)]
+pub struct ContainerClientReleaseLeaseResult;
+
+/// Contains results for `ContainerClient::rename()`
+#[derive(SafeDebug)]
+pub struct ContainerClientRenameResult;
+
+/// Contains results for `ContainerClient::renew_lease()`
+#[derive(SafeDebug)]
+pub struct ContainerClientRenewLeaseResult;
+
+/// Contains results for `ContainerClient::restore()`
+#[derive(SafeDebug)]
+pub struct ContainerClientRestoreResult;
+
+/// Contains results for `ContainerClient::set_access_policy()`
+#[derive(SafeDebug)]
+pub struct ContainerClientSetAccessPolicyResult;
 
 /// An Azure Storage container.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
@@ -1117,9 +1115,9 @@ pub struct PageBlobClientCreateResult;
 #[derive(SafeDebug)]
 pub struct PageBlobClientResizeResult;
 
-/// Contains results for `PageBlobClient::update_sequence_number()`
+/// Contains results for `PageBlobClient::set_sequence_number()`
 #[derive(SafeDebug)]
-pub struct PageBlobClientUpdateSequenceNumberResult;
+pub struct PageBlobClientSetSequenceNumberResult;
 
 /// Contains results for `PageBlobClient::upload_pages_from_url()`
 #[derive(SafeDebug)]
@@ -1134,13 +1132,7 @@ pub struct PageBlobClientUploadPagesResult;
 #[non_exhaustive]
 pub struct PageList {
     /// The clear ranges.
-    #[serde(
-        default,
-        deserialize_with = "Clear_rangeClearRange::unwrap",
-        rename = "ClearRange",
-        serialize_with = "Clear_rangeClearRange::wrap",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename = "ClearRange", skip_serializing_if = "Option::is_none")]
     pub clear_range: Option<Vec<ClearRange>>,
 
     /// The next marker.
@@ -1148,13 +1140,7 @@ pub struct PageList {
     pub next_marker: Option<String>,
 
     /// The page ranges.
-    #[serde(
-        default,
-        deserialize_with = "Page_rangePageRange::unwrap",
-        rename = "PageRange",
-        serialize_with = "Page_rangePageRange::wrap",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename = "PageRange", skip_serializing_if = "Option::is_none")]
     pub page_range: Option<Vec<PageRange>>,
 }
 
@@ -1260,6 +1246,10 @@ pub struct RetentionPolicy {
     #[serde(rename = "Enabled", skip_serializing_if = "Option::is_none")]
     pub enabled: Option<bool>,
 }
+
+/// Contains results for `ServiceClient::get_account_info()`
+#[derive(SafeDebug)]
+pub struct ServiceClientGetAccountInfoResult;
 
 /// The signed identifier.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]

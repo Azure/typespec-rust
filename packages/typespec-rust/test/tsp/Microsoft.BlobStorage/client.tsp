@@ -7,65 +7,24 @@ using Storage.Blob;
 
 namespace Customizations;
 
-/** Parameters to be added in client constructors */
-model BlobServiceClientParameters {
-  ...ContainerNamePathParameter;
-  ...BlobPathParameter;
-}
-
 @@clientNamespace(Storage.Blob, "Azure.Storage.Blobs");
 @@clientNamespace(Storage.Blob.Container, "Azure.Storage.Blobs");
-@@clientNamespace(Storage.Blob.Container.Blob, "Azure.Storage.Blobs");
-@@clientNamespace(Storage.Blob.Container.Blob.AppendBlob,
+@@clientNamespace(Storage.Blob.Blob, "Azure.Storage.Blobs");
+@@clientNamespace(Storage.Blob.AppendBlob,
   "Azure.Storage.Blobs"
 );
-@@clientNamespace(Storage.Blob.Container.Blob.BlockBlob, "Azure.Storage.Blobs");
-@@clientNamespace(Storage.Blob.Container.Blob.PageBlob, "Azure.Storage.Blobs");
+@@clientNamespace(Storage.Blob.BlockBlob, "Azure.Storage.Blobs");
+@@clientNamespace(Storage.Blob.PageBlob, "Azure.Storage.Blobs");
 
 @@clientName(Storage.Blob, "BlobServiceClient", "rust");
 @@clientName(Storage.Blob.Container, "BlobContainerClient", "rust");
-@@clientName(Storage.Blob.Container.Blob, "BlobClient", "rust");
-@@clientName(Storage.Blob.Container.Blob.AppendBlob,
+@@clientName(Storage.Blob.Blob, "BlobClient", "rust");
+@@clientName(Storage.Blob.AppendBlob,
   "AppendBlobClient",
   "rust"
 );
-@@clientName(Storage.Blob.Container.Blob.BlockBlob, "BlockBlobClient", "rust");
-@@clientName(Storage.Blob.Container.Blob.PageBlob, "PageBlobClient", "rust");
-@@clientName(Storage.Blob.Container.Blob.setHttpHeaders,
-  "SetProperties",
-  "rust"
-);
-
-@@clientInitialization(Storage.Blob.Container,
-  {
-    parameters: ContainerNamePathParameter,
-    initializedBy: InitializedBy.parent | InitializedBy.individually,
-  }
-);
-@@clientInitialization(Storage.Blob.Container.Blob,
-  {
-    parameters: BlobServiceClientParameters,
-    initializedBy: InitializedBy.parent | InitializedBy.individually,
-  }
-);
-@@clientInitialization(Storage.Blob.Container.Blob.AppendBlob,
-  {
-    parameters: BlobServiceClientParameters,
-    initializedBy: InitializedBy.parent | InitializedBy.individually,
-  }
-);
-@@clientInitialization(Storage.Blob.Container.Blob.BlockBlob,
-  {
-    parameters: BlobServiceClientParameters,
-    initializedBy: InitializedBy.parent | InitializedBy.individually,
-  }
-);
-@@clientInitialization(Storage.Blob.Container.Blob.PageBlob,
-  {
-    parameters: BlobServiceClientParameters,
-    initializedBy: InitializedBy.parent | InitializedBy.individually,
-  }
-);
+@@clientName(Storage.Blob.BlockBlob, "BlockBlobClient", "rust");
+@@clientName(Storage.Blob.PageBlob, "PageBlobClient", "rust");
 
 @@clientName(ContainerProperties.denyEncryptionScopeOverride,
   "PreventEncryptionScopeOverride"
@@ -98,3 +57,6 @@ model BlobServiceClientParameters {
   uint64,
   "rust"
 );
+
+@@scope(Storage.Blob.Container.submitBatch, "!rust");
+@@scope(Storage.Blob.Service.submitBatch, "!rust");
