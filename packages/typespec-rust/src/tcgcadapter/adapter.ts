@@ -891,7 +891,7 @@ export class Adapter {
                 // note that the types of the param and the field are different.
                 // NOTE: we use param.name here instead of templateArg.name as
                 // the former has the fixed name "endpoint" which is what we want.
-                const adaptedParam = new rust.ClientMethodParameter(param.name, this.getRefType(this.getStringSlice()), false);
+                const adaptedParam = new rust.ClientEndpointParameter(param.name);
                 adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
                 ctorParams.push(adaptedParam);
                 rustClient.fields.push(new rust.StructField(param.name, 'pubCrate', new rust.Url(this.crate)));
@@ -923,7 +923,7 @@ export class Adapter {
               }
 
               const clientParam = this.adaptClientParameter(templateArg, rustClient.constructable);
-              if (clientParam.kind !== 'clientEndpoint') {
+              if (clientParam.kind !== 'clientSupplementalEndpoint') {
                 throw new AdapterError('InternalError', `unexpected client parameter kind ${clientParam.kind}`, templateArg.__raw?.node);
               }
               rustClient.constructable.endpoint?.parameters.push(clientParam);
@@ -1021,7 +1021,7 @@ export class Adapter {
       throw new AdapterError('InternalError', 'scopes must contain at least one entry', cred.model);
     }
     const ctorTokenCredential = new rust.Constructor('new');
-    const tokenCredParam = new rust.ClientMethodParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)), false);
+    const tokenCredParam = new rust.ClientCredentialParameter('credential', new rust.Arc(new rust.TokenCredential(this.crate, scopes)));
     tokenCredParam.docs.summary = `An implementation of [\`TokenCredential\`](azure_core::credentials::TokenCredential) that can provide an Entra ID token to use when authenticating.`;
     ctorTokenCredential.params.push(tokenCredParam);
     ctorTokenCredential.docs.summary = `Creates a new ${rustClient.name}, using Entra ID authentication.`;
@@ -1070,7 +1070,7 @@ export class Adapter {
         adaptedParam = new rust.ClientMethodParameter(paramName, paramType, optional);
         break;
       case 'path':
-        adaptedParam = new rust.ClientEndpointParameter(paramName, paramType, optional, param.serializedName);
+        adaptedParam = new rust.ClientSupplementalEndpointParameter(paramName, paramType, optional, param.serializedName);
         break;
     }
 
