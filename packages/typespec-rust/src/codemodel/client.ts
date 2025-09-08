@@ -62,7 +62,7 @@ export interface ClientOptions extends types.Option {
 }
 
 /** ClientParameter defines the possible client parameter types */
-export type ClientParameter = ClientEndpointParameter | ClientMethodParameter;
+export type ClientParameter = ClientCredentialParameter | ClientEndpointParameter | ClientMethodParameter | ClientSupplementalEndpointParameter;
 
 /** represents a client constructor function */
 export interface Constructor {
@@ -83,12 +83,31 @@ export interface ClientMethodParameter extends ClientParameterBase {
   kind: 'clientMethod';
 }
 
-/** ClientEndpointParameter is used when constructing the endpoint's supplemental path */
+/** ClientEndpointParameter is the client's host parameter */
 export interface ClientEndpointParameter extends ClientParameterBase {
   kind: 'clientEndpoint';
 
+  /** the endpoint param is always a &str */
+  type: types.Ref<types.StringSlice>;
+
+  /** never optional */
+  optional: false;
+}
+
+/** ClientEndpointParameter is used when constructing the endpoint's supplemental path */
+export interface ClientSupplementalEndpointParameter extends ClientParameterBase {
+  kind: 'clientSupplementalEndpoint';
+
   /** the segment name to be replaced with the param's value */
   segment: string;
+}
+
+/** ClientCredentialParameter is the client's credential parameter */
+export interface ClientCredentialParameter extends ClientParameterBase {
+  kind: 'clientCredential';
+
+  /** never optional */
+  optional: false;
 }
 
 /** contains data on how to supplement a client endpoint */
@@ -97,7 +116,7 @@ export interface SupplementalEndpoint {
   path: string;
 
   /** the parameters used to replace segments in the path */
-  parameters: Array<ClientEndpointParameter>;
+  parameters: Array<ClientSupplementalEndpointParameter>;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -633,10 +652,24 @@ export class Constructor implements Constructor {
   }
 }
 
+export class ClientCredentialParameter extends ClientParameterBase implements ClientCredentialParameter {
+  constructor(name: string, type: types.Type) {
+    super(name, type, false);
+    this.kind = 'clientCredential';
+  }
+}
+
 export class ClientEndpointParameter extends ClientParameterBase implements ClientEndpointParameter {
+  constructor(name: string) {
+    super(name, new types.Ref(new types.StringSlice()), false);
+    this.kind = 'clientEndpoint';
+  }
+}
+
+export class ClientSupplementalEndpointParameter extends ClientParameterBase implements ClientSupplementalEndpointParameter {
   constructor(name: string, type: types.Type, optional: boolean, segment: string) {
     super(name, type, optional);
-    this.kind = 'clientEndpoint';
+    this.kind = 'clientSupplementalEndpoint';
     this.segment = segment;
   }
 }
@@ -810,6 +843,6 @@ export class ResponseHeadersTrait implements ResponseHeadersTrait {
 export class SupplementalEndpoint implements SupplementalEndpoint {
   constructor(path: string) {
     this.path = path;
-    this.parameters = new Array<ClientEndpointParameter>();
+    this.parameters = new Array<ClientSupplementalEndpointParameter>();
   }
 }

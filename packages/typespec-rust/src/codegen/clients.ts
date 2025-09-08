@@ -114,7 +114,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
           const supplementalEndpoint = client.constructable.endpoint;
           body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
           for (const param of supplementalEndpoint.parameters) {
-            body += `${indent.get()}host = host.replace("{${param.segment}}", ${getClientEndpointParamValue(param)});\n`;
+            body += `${indent.get()}host = host.replace("{${param.segment}}", ${getClientSupplementalEndpointParamValue(param)});\n`;
           }
           body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
         }
@@ -133,13 +133,10 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         // exclude endpoint params as they aren't propagated to clients (they're consumed when creating the complete endpoint)
         const sortedParams = values([...constructor.params]
           .sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); }))
-          .where((each) => each.kind !== 'clientEndpoint').toArray();
+          .where((each) => each.kind !== 'clientSupplementalEndpoint' && each.kind !== 'clientCredential').toArray();
 
         for (const param of sortedParams) {
           if (param.optional) {
-            continue;
-          } else if (isCredential(param.type)) {
-            // credential params aren't persisted on the client so skip them
             continue;
           }
 
@@ -1450,7 +1447,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
  * @param param the param for which to get the value
  * @returns the code to use for the param's value
  */
-function getClientEndpointParamValue(param: rust.ClientEndpointParameter): string {
+function getClientSupplementalEndpointParamValue(param: rust.ClientSupplementalEndpointParameter): string {
   let paramName = param.name;
   if (param.optional) {
     paramName = 'options.' + paramName;
@@ -1604,10 +1601,4 @@ function nonCopyableType(type: rust.Type): boolean {
 /** returns true if the type is the azure_core::ClientMethodOptions type */
 function isClientMethodOptions(type: rust.Type): boolean {
   return type.kind === 'external' && type.name === 'ClientMethodOptions';
-}
-
-/** returns true if the type is a credential */
-function isCredential(type: rust.Type): boolean {
-  const unwrappedType = helpers.unwrapType(type);
-  return unwrappedType.kind === 'tokenCredential';
 }

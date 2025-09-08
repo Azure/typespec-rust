@@ -94,7 +94,7 @@ export function fixUpEnumValueNameWorker(name: string, kind: tcgc.SdkBuiltInKind
  */
 export function sortClientParameters(params: Array<rust.ClientParameter>): void {
   params.sort((a: rust.ClientParameter, b: rust.ClientParameter): number => {
-    if (a.name === 'endpoint' || (a.name === 'credential' && b.name !== 'endpoint')) {
+    if (a.kind === 'clientEndpoint' || (a.kind === 'clientCredential' && b.kind !== 'clientEndpoint')) {
       // endpoint always comes first, followed by credential (if applicable)
       return -1;
     }
