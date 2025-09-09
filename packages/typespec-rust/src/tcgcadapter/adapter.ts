@@ -49,6 +49,12 @@ export class AdapterError extends Error {
   }
 }
 
+/**
+ * thrown when an external component reports a diagnostic
+ * error that would prevent the emitter from proceeding.
+ */
+export class ExternalError extends Error {}
+
 /** Adapter converts the tcgc code model to a Rust Crate */
 export class Adapter {
   /**
@@ -65,7 +71,18 @@ export class Adapter {
       additionalDecorators: ['TypeSpec\\.@encodedName', '@clientName'],
       disableUsageAccessPropagationToBase: true,
     });
+
     context.program.reportDiagnostics(ctx.diagnostics);
+    for (const diag of ctx.diagnostics) {
+      if (diag.severity === 'error') {
+        // there's no point in continuing if tcgc
+        // has reported diagnostic errors, so exit.
+        // this prevents spurious crashes in the
+        // emitter as our input state is invalid.
+        throw new ExternalError();
+      }
+    }
+
     return new Adapter(ctx, context.options);
   }
 

@@ -1,5 +1,11 @@
 # Release History
 
+## 0.21.1 (unreleased)
+
+### Other Changes
+
+* Exit early when there are existing diagnostic errors.
+
 ## 0.21.0 (2025-09-03)
 
 ### Breaking Changes
