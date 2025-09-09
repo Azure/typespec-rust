@@ -2,6 +2,13 @@ import "@typespec/http";
 
 using Http;
 
+@server(
+  "{bogusUrl}",
+  "Customized host name for a service that doesn't exist.",
+  {
+    bogusUrl: url,
+  }
+)
 @service(#{
   title: "Optional enum path parameters",
 })

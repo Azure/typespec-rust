@@ -32,8 +32,8 @@ use std::sync::Arc;
 pub struct BlockBlobClient {
     pub(crate) blob_name: String,
     pub(crate) container_name: String,
-    pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
+    pub(crate) url: Url,
     pub(crate) version: String,
 }
 
@@ -51,7 +51,7 @@ impl BlockBlobClient {
     ///
     /// # Arguments
     ///
-    /// * `endpoint` - Service host
+    /// * `url` - Service host
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `container_name` - The name of the container.
@@ -59,21 +59,21 @@ impl BlockBlobClient {
     /// * `options` - Optional configuration for the client.
     #[tracing::new("Storage.Blob.Container.Blob.BlockBlob")]
     pub fn new(
-        endpoint: &str,
+        url: &str,
         credential: Arc<dyn TokenCredential>,
         container_name: String,
         blob_name: String,
         options: Option<BlockBlobClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
-        if !endpoint.scheme().starts_with("http") {
+        let mut url = Url::parse(url)?;
+        if !url.scheme().starts_with("http") {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
-                format!("{endpoint} must use http(s)"),
+                format!("{url} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
+        url.set_query(None);
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
             credential,
             vec!["https://storage.azure.com/.default"],
@@ -81,7 +81,7 @@ impl BlockBlobClient {
         Ok(Self {
             blob_name,
             container_name,
-            endpoint,
+            url,
             version: options.version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
@@ -96,7 +96,7 @@ impl BlockBlobClient {
 
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
-        &self.endpoint
+        &self.url
     }
 
     /// The Commit Block List operation writes a blob by specifying the list of block IDs that make up the blob. In order to be
@@ -154,7 +154,7 @@ impl BlockBlobClient {
     ) -> Result<Response<BlockBlobClientCommitBlockListResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.endpoint.clone();
+        let mut url = self.url.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -313,7 +313,7 @@ impl BlockBlobClient {
     ) -> Result<Response<BlockList, XmlFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.endpoint.clone();
+        let mut url = self.url.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -411,7 +411,7 @@ impl BlockBlobClient {
     ) -> Result<Response<BlockBlobClientPutBlobFromUrlResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.endpoint.clone();
+        let mut url = self.url.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -616,7 +616,7 @@ impl BlockBlobClient {
     ) -> Result<Response<BlockBlobClientQueryResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.endpoint.clone();
+        let mut url = self.url.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -733,7 +733,7 @@ impl BlockBlobClient {
     ) -> Result<Response<BlockBlobClientStageBlockResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.endpoint.clone();
+        let mut url = self.url.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -845,7 +845,7 @@ impl BlockBlobClient {
     ) -> Result<Response<BlockBlobClientStageBlockFromUrlResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.endpoint.clone();
+        let mut url = self.url.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -982,7 +982,7 @@ impl BlockBlobClient {
     ) -> Result<Response<BlockBlobClientUploadResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.endpoint.clone();
+        let mut url = self.url.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);

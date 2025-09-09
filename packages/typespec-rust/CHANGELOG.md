@@ -5,6 +5,7 @@
 ### Other Changes
 
 * Exit early when there are existing diagnostic errors.
+* For client constructors, the host URL parameter no longer has the hard-coded name `endpoint` and will respect what was authored.
 
 ## 0.21.0 (2025-09-03)
 

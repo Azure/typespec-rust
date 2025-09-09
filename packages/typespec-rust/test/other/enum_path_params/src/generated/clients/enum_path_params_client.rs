@@ -18,7 +18,7 @@ use azure_core::{
 
 #[tracing::client]
 pub struct EnumPathParamsClient {
-    pub(crate) endpoint: Url,
+    pub(crate) bogus_url: Url,
     pub(crate) pipeline: Pipeline,
 }
 
@@ -34,24 +34,24 @@ impl EnumPathParamsClient {
     ///
     /// # Arguments
     ///
-    /// * `endpoint` - Service host
+    /// * `bogus_url` - Service host
     /// * `options` - Optional configuration for the client.
     #[tracing::new("EnumPathParams")]
     pub fn with_no_credential(
-        endpoint: &str,
+        bogus_url: &str,
         options: Option<EnumPathParamsClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
-        if !endpoint.scheme().starts_with("http") {
+        let mut bogus_url = Url::parse(bogus_url)?;
+        if !bogus_url.scheme().starts_with("http") {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
-                format!("{endpoint} must use http(s)"),
+                format!("{bogus_url} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
+        bogus_url.set_query(None);
         Ok(Self {
-            endpoint,
+            bogus_url,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
                 option_env!("CARGO_PKG_VERSION"),
@@ -65,7 +65,7 @@ impl EnumPathParamsClient {
 
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
-        &self.endpoint
+        &self.bogus_url
     }
 
     ///
@@ -86,7 +86,7 @@ impl EnumPathParamsClient {
         }
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.endpoint.clone();
+        let mut url = self.bogus_url.clone();
         let mut path = String::from("optional/{shape}/{value}");
         path = path.replace("{shape}", shape.as_ref());
         path = match options.value {
@@ -120,7 +120,7 @@ impl EnumPathParamsClient {
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.endpoint.clone();
+        let mut url = self.bogus_url.clone();
         let mut path = String::from("fixed/{shape}/{value}");
         path = path.replace("{shape}", shape.as_ref());
         path = match options.value {

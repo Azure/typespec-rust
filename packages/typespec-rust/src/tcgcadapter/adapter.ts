@@ -906,12 +906,11 @@ export class Adapter {
               if (i === 0) {
                 // the first template arg is always the endpoint parameter.
                 // note that the types of the param and the field are different.
-                // NOTE: we use param.name here instead of templateArg.name as
-                // the former has the fixed name "endpoint" which is what we want.
-                const adaptedParam = new rust.ClientEndpointParameter(param.name);
+                const endpointName = snakeCaseName(templateArg.name);
+                const adaptedParam = new rust.ClientEndpointParameter(endpointName);
                 adaptedParam.docs = this.adaptDocs(param.summary, param.doc);
                 ctorParams.push(adaptedParam);
-                rustClient.fields.push(new rust.StructField(param.name, 'pubCrate', new rust.Url(this.crate)));
+                rustClient.fields.push(new rust.StructField(endpointName, 'pubCrate', new rust.Url(this.crate)));
 
                 // if the server's URL is *only* the endpoint parameter then we're done.
                 // this is the param.type.kind === 'endpoint' case.
