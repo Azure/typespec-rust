@@ -50,8 +50,8 @@ export class AdapterError extends Error {
 }
 
 /**
- * thrown when an external component reports a diagnostic
- * error that would prevent the emitter from proceeding.
+ * ExternalError is thrown when an external component reports a
+ * diagnostic error that would prevent the emitter from proceeding.
  */
 export class ExternalError extends Error {}
 
