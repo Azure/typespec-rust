@@ -958,7 +958,7 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
 
     if (isOptionalContentTypeHeader(headerParam)) {
       // when the body is optional, the Content-Type header
-      // wil be set IFF the optional body param is not None.
+      // will be set IFF the optional body param is not None.
       // this logic happens elsewhere so we skip it here.
       continue;
     }
