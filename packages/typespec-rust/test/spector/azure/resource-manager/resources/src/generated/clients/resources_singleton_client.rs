@@ -229,6 +229,7 @@ impl ResourcesSingletonClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp = pipeline.send(&ctx, &mut request).await?;
+                let rsp = check_success(rsp).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: SingletonTrackedResourceListResult = json::from_json(&bytes)?;

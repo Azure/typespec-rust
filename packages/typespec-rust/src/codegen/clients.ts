@@ -1259,6 +1259,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     }
   }
 
+  // Pipeline::send() returns a BufResponse, so no reason to declare the type if not something else.
   let rspType = '';
   let rspInto = '';
   if (method.strategy.kind === 'continuationToken' && method.strategy.responseToken.kind === 'responseHeaderScalar') {
@@ -1275,7 +1276,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
   body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut request).await?${rspInto};\n`;
-  if (rspType === 'BufResponse') {
+  if (rspType === '') {
     body += errIfNotSuccessResponse(use, indent);
   }
 

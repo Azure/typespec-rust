@@ -285,6 +285,7 @@ impl SecretClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp = pipeline.send(&ctx, &mut request).await?;
+                let rsp = check_success(rsp).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: ListDeletedSecretPropertiesResult = json::from_json(&bytes)?;
@@ -349,6 +350,7 @@ impl SecretClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp = pipeline.send(&ctx, &mut request).await?;
+                let rsp = check_success(rsp).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: ListSecretPropertiesResult = json::from_json(&bytes)?;
@@ -422,6 +424,7 @@ impl SecretClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp = pipeline.send(&ctx, &mut request).await?;
+                let rsp = check_success(rsp).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: ListSecretPropertiesResult = json::from_json(&bytes)?;

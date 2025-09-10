@@ -15,6 +15,7 @@ use crate::generated::{
 use azure_core::{
     fmt::SafeDebug,
     http::{
+        check_success,
         pager::{PagerResult, PagerState},
         BufResponse, ClientOptions, Method, Pager, Pipeline, Request, RequestContent, Url,
     },
@@ -116,6 +117,7 @@ impl PageClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp = pipeline.send(&ctx, &mut request).await?;
+                let rsp = check_success(rsp).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: ParameterizedNextLinkPagingResult = json::from_json(&bytes)?;
@@ -171,6 +173,7 @@ impl PageClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp = pipeline.send(&ctx, &mut request).await?;
+                let rsp = check_success(rsp).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: UserListResults = json::from_json(&bytes)?;
@@ -226,6 +229,7 @@ impl PageClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp = pipeline.send(&ctx, &mut request).await?;
+                let rsp = check_success(rsp).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;
@@ -290,6 +294,7 @@ impl PageClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp = pipeline.send(&ctx, &mut request).await?;
+                let rsp = check_success(rsp).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;

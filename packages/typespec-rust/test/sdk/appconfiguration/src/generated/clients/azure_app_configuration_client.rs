@@ -1271,6 +1271,7 @@ impl AzureAppConfigurationClient {
                 let pipeline = pipeline.clone();
                 async move {
                     let rsp = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = check_success(rsp).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
@@ -1369,6 +1370,7 @@ impl AzureAppConfigurationClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp = pipeline.send(&ctx, &mut request).await?;
+                let rsp = check_success(rsp).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: KeyListResult = json::from_json(&bytes)?;
@@ -1479,6 +1481,7 @@ impl AzureAppConfigurationClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp = pipeline.send(&ctx, &mut request).await?;
+                let rsp = check_success(rsp).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: LabelListResult = json::from_json(&bytes)?;
@@ -1602,6 +1605,7 @@ impl AzureAppConfigurationClient {
                 let pipeline = pipeline.clone();
                 async move {
                     let rsp = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = check_success(rsp).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
@@ -1717,6 +1721,7 @@ impl AzureAppConfigurationClient {
             let pipeline = pipeline.clone();
             async move {
                 let rsp = pipeline.send(&ctx, &mut request).await?;
+                let rsp = check_success(rsp).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: SnapshotListResult = json::from_json(&bytes)?;
