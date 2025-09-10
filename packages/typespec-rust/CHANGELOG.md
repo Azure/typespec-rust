@@ -7,6 +7,7 @@
 * Exit early when there are existing diagnostic errors.
 * For client constructors, the server URL parameter name will be honored IFF the `@clientName` decorator is applied.
 * Client constructors no longer remove all query parameters from the provided endpoint.
+* Updated to the latest tsp toolset.
 
 ## 0.21.0 (2025-09-03)
 
