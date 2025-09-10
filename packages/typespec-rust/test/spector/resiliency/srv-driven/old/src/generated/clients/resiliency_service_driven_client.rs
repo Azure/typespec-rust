@@ -58,7 +58,6 @@ impl ResiliencyServiceDrivenClient {
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         let mut host = String::from("resiliency/service-driven/client:v1/service:{serviceDeploymentVersion}/api-version:{apiVersion}/");
         host = host.replace("{serviceDeploymentVersion}", &service_deployment_version);
         host = host.replace("{apiVersion}", &options.api_version);

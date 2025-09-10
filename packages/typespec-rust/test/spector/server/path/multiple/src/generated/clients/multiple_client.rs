@@ -50,7 +50,6 @@ impl MultipleClient {
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         let mut host = String::from("server/path/multiple/{apiVersion}/");
         host = host.replace("{apiVersion}", &options.api_version);
         endpoint = endpoint.join(&host)?;

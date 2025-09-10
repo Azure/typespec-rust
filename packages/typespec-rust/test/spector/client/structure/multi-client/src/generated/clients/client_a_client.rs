@@ -51,7 +51,6 @@ impl ClientAClient {
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         let mut host = String::from("client/structure/{client}/");
         host = host.replace("{client}", client.as_ref());
         endpoint = endpoint.join(&host)?;

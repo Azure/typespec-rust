@@ -50,7 +50,6 @@ impl MadeOptionalClient {
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         let mut host = String::from("versioning/made-optional/api-version:{version}/");
         host = host.replace("{version}", &options.version);
         endpoint = endpoint.join(&host)?;

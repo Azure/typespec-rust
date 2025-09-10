@@ -42,14 +42,13 @@ impl EnumPathParamsClient {
         options: Option<EnumPathParamsClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut bogus_url = Url::parse(bogus_url)?;
+        let bogus_url = Url::parse(bogus_url)?;
         if !bogus_url.scheme().starts_with("http") {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
                 format!("{bogus_url} must use http(s)"),
             ));
         }
-        bogus_url.set_query(None);
         Ok(Self {
             bogus_url,
             pipeline: Pipeline::new(
