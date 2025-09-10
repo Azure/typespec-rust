@@ -40,7 +40,7 @@ impl BytesQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/query/base64")?;
-        url.query_pairs_mut().append_pair("value", &encode(value));
+        super::set_query_param(&mut url, "value", &encode(value));
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
         if !rsp.status().is_success() {
@@ -69,8 +69,7 @@ impl BytesQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/query/base64url")?;
-        url.query_pairs_mut()
-            .append_pair("value", &encode_url_safe(value));
+        super::set_query_param(&mut url, "value", &encode_url_safe(value));
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
         if !rsp.status().is_success() {
@@ -99,7 +98,8 @@ impl BytesQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/query/base64url-array")?;
-        url.query_pairs_mut().append_pair(
+        super::set_query_param(
+            &mut url,
             "value",
             &value
                 .iter()
@@ -135,7 +135,7 @@ impl BytesQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("encode/bytes/query/default")?;
-        url.query_pairs_mut().append_pair("value", &encode(value));
+        super::set_query_param(&mut url, "value", &encode(value));
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
         if !rsp.status().is_success() {

@@ -81,7 +81,7 @@ export class CodeGenerator {
     const clientModules = emitClients(this.crate);
     if (clientModules) {
       files.push(...clientModules.modules.map((module) => { return { name: `${clientsSubDir}/${module.name}.rs`, content: module.content }; }));
-      files.push({ name: `${clientsSubDir}/mod.rs`, content: emitClientsModRs(clientModules.modules.map((module) => module.name)) });
+      files.push({ name: `${clientsSubDir}/mod.rs`, content: emitClientsModRs(this.crate, clientModules.modules.map((module) => module.name)) });
       addModelsFile(clientModules.options, 'pubUse');
     }
 

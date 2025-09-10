@@ -102,12 +102,11 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         body += `${indent.get()}let options = options.unwrap_or_default();\n`;
         // by convention, the endpoint param is always the first ctor param
         const endpointParamName = constructor.params[0].name;
-        body += `${indent.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
+        body += `${indent.push().get()}let ${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
         body += `${indent.get()}${helpers.buildIfBlock(indent, {
           condition: `!${endpointParamName}.scheme().starts_with("http")`,
           body: (indent) => `${indent.get()}return Err(azure_core::Error::message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
         })}`
-        body += `${indent.get()}${endpointParamName}.set_query(None);\n`;
 
         // construct the supplemental path and join it to the endpoint
         if (client.constructable.endpoint) {
@@ -914,7 +913,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
           text += `${indent.push().get()}${urlVarName}.query_pairs_mut().append_pair(k, &v.to_string());\n`;
           text += `${indent.pop().get()}}\n`;
         } else {
-          text += `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${queryParam.name}_vec.iter().map(|(k, v)| format!("{k},{v}")).collect::<Vec<String>>().join(",").as_str());\n`;
+          text += `${indent.get()}super::set_query_param(&mut ${urlVarName}, "${queryParam.key}", ${queryParam.name}_vec.iter().map(|(k, v)| format!("{k},{v}")).collect::<Vec<String>>().join(",").as_str());\n`;
         }
         text += `${indent.pop().get()}}\n`;
         return text;
@@ -923,7 +922,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       body += getParamValueHelper(indent, queryParam, false, () => {
         // for enums we call .as_ref() which elides the need to borrow
         const borrow = queryParam.type.kind === 'enum' ? '' : borrowOrNot(queryParam);
-        return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${borrow}${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional)});\n`;
+        return `${indent.get()}super::set_query_param(&mut ${urlVarName}, "${queryParam.key}", ${borrow}${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional)});\n`;
       });
     }
   }
@@ -942,7 +941,6 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
  * @returns the code which sets HTTP headers for the request
  */
 function applyHeaderParams(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean): string {
-
   let body = '';
 
   for (const headerParam of paramGroups.header) {
@@ -1222,7 +1220,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
                 return body;
               },
             });
-            body += `${indent.get()}url.query_pairs_mut().append_pair("${reqTokenValue}", &${reqTokenParam});\n`;
+            body += `${indent.get()}super::set_query_param(&mut url, "${reqTokenValue}", &${reqTokenParam});\n`;
             return body;
           }
         })}`
@@ -1243,7 +1241,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
             // api-version as specified on the client.
             let setApiVerBody = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
             setApiVerBody += `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
-            setApiVerBody += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
+            setApiVerBody += `${indent.get()}super::set_query_param(&mut ${nextLinkName}, ${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
             setApiVerBody += `${indent.get()}${nextLinkName}\n`;
             return setApiVerBody;
           }

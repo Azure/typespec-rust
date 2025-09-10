@@ -15,3 +15,18 @@ pub use bytes_property_client::*;
 pub use bytes_query_client::*;
 pub use bytes_request_body_client::*;
 pub use bytes_response_body_client::*;
+fn set_query_param(url: &mut azure_core::http::Url, name: &str, value: &str) {
+    match url.query_pairs().any(|(item, _)| item.eq(name)) {
+        true => {
+            let qp = url.query_pairs().filter(|(name, _)| name.ne(name));
+            let mut url = url.clone();
+            url.query_pairs_mut()
+                .clear()
+                .extend_pairs(qp)
+                .append_pair(name, value);
+        }
+        false => {
+            url.query_pairs_mut().append_pair(name, value);
+        }
+    }
+}
