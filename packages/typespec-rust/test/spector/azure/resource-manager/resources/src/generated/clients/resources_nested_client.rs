@@ -10,14 +10,14 @@ use crate::generated::models::{
     ResourcesNestedClientListByTopLevelTrackedResourceOptions, ResourcesNestedClientUpdateOptions,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
     http::{
-        headers::{ERROR_CODE, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
+        check_success,
+        headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         pager::{PagerResult, PagerState},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        Method, Pager, Pipeline, Poller, RawResponse, Request, RequestContent, Response, Url,
+        BufResponse, Method, Pager, Pipeline, Poller, Request, RequestContent, Response, Url,
     },
-    json, tracing, Error, Result,
+    json, tracing, Result,
 };
 
 #[tracing::client]
@@ -129,7 +129,7 @@ impl ResourcesNestedClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -138,7 +138,7 @@ impl ResourcesNestedClient {
                     );
                     let bytes = body.collect().await?;
                     let res: NestedProxyResource = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -241,7 +241,7 @@ impl ResourcesNestedClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -250,7 +250,7 @@ impl ResourcesNestedClient {
                     );
                     let bytes = body.collect().await?;
                     let res: ArmOperationStatusResourceProvisioningState = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -316,15 +316,7 @@ impl ResourcesNestedClient {
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -390,20 +382,11 @@ impl ResourcesNestedClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                if !rsp.status().is_success() {
-                    let status = rsp.status();
-                    let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-                    let error_kind = ErrorKind::http_response(
-                        status,
-                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                    );
-                    return Err(Error::new(error_kind, http_error));
-                }
+                let rsp = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: NestedProxyResourceListResult = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
@@ -510,7 +493,7 @@ impl ResourcesNestedClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -519,7 +502,7 @@ impl ResourcesNestedClient {
                     );
                     let bytes = body.collect().await?;
                     let res: NestedProxyResource = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,

@@ -5,12 +5,9 @@
 
 use crate::generated::models::SingleClientMyOpOptions;
 use azure_core::{
-    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
-    http::{
-        headers::ERROR_CODE, ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url,
-    },
-    tracing, Error, Result,
+    http::{check_success, ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
+    tracing, Result,
 };
 
 /// Illustrates server with a single path parameter @server
@@ -80,15 +77,7 @@ impl SingleClient {
         url = url.join("server/path/single/myOp")?;
         let mut request = Request::new(url, Method::Head);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 }

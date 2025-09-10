@@ -12,7 +12,7 @@ use azure_core::{
     http::{
         headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        ClientOptions, Method, Pipeline, Poller, RawResponse, Request, RequestContent, Url,
+        BufResponse, ClientOptions, Method, Pipeline, Poller, Request, RequestContent, Url,
     },
     json, tracing, Result,
 };
@@ -156,7 +156,7 @@ impl StandardClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -165,7 +165,7 @@ impl StandardClient {
                     );
                     let bytes = body.collect().await?;
                     let res: User = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -258,7 +258,7 @@ impl StandardClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -267,7 +267,7 @@ impl StandardClient {
                     );
                     let bytes = body.collect().await?;
                     let res: OperationStatusError = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -363,7 +363,7 @@ impl StandardClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -372,7 +372,7 @@ impl StandardClient {
                     );
                     let bytes = body.collect().await?;
                     let res: ExportedUser = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,

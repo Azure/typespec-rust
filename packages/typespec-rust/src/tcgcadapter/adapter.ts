@@ -1456,7 +1456,7 @@ export class Adapter {
       rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, markerType, responseFormat));
     } else if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
       // bytes encoding indicates a streaming binary response
-      rustMethod.returns = new rust.Result(this.crate, new rust.RawResponse(this.crate));
+      rustMethod.returns = new rust.Result(this.crate, new rust.BufResponse(this.crate));
     } else {
       rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, this.getUnitType(), responseFormat));
     }
@@ -1558,7 +1558,7 @@ export class Adapter {
         implFor = <rust.Response<rust.MarkerType | rust.WireType>>method.returns.type;
         break;
       default:
-        // this is RawResponse which should have been previously skipped
+        // this is BufResponse which should have been previously skipped
         throw new AdapterError('InternalError', `unexpected method return kind ${method.returns.type.kind}`);
     }
 

@@ -9,9 +9,8 @@ use crate::generated::models::{
     BytesResponseBodyClientOctetStreamOptions,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
-    http::{headers::ERROR_CODE, Method, Pipeline, RawResponse, Request, Response, Url},
-    tracing, Error, Result,
+    http::{check_success, BufResponse, Method, Pipeline, Request, Response, Url},
+    tracing, Result,
 };
 
 #[tracing::client]
@@ -42,15 +41,7 @@ impl BytesResponseBodyClient {
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -70,15 +61,7 @@ impl BytesResponseBodyClient {
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -90,7 +73,7 @@ impl BytesResponseBodyClient {
     pub async fn custom_content_type(
         &self,
         options: Option<BytesResponseBodyClientCustomContentTypeOptions<'_>>,
-    ) -> Result<RawResponse> {
+    ) -> Result<BufResponse> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
@@ -98,15 +81,7 @@ impl BytesResponseBodyClient {
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp)
     }
 
@@ -118,7 +93,7 @@ impl BytesResponseBodyClient {
     pub async fn default(
         &self,
         options: Option<BytesResponseBodyClientDefaultOptions<'_>>,
-    ) -> Result<RawResponse> {
+    ) -> Result<BufResponse> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
@@ -126,15 +101,7 @@ impl BytesResponseBodyClient {
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/octet-stream");
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp)
     }
 
@@ -146,7 +113,7 @@ impl BytesResponseBodyClient {
     pub async fn octet_stream(
         &self,
         options: Option<BytesResponseBodyClientOctetStreamOptions<'_>>,
-    ) -> Result<RawResponse> {
+    ) -> Result<BufResponse> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
@@ -154,15 +121,7 @@ impl BytesResponseBodyClient {
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/octet-stream");
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp)
     }
 }

@@ -1059,25 +1059,15 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
 }
 
 /**
- * Return an error if a local RawResponse variable "rsp" has a non-success status code.
+ * Return an error if a local BufResponse variable "rsp" has a non-success status code.
  * @param use the use statement builder currently in scope
  * @param indent the indentation helper currently in scope
  * @returns code to return an error if the status code of "rsp" doesn't indicate success
  */
 function errIfNotSuccessResponse(use: Use, indent: helpers.indentation): string {
-  use.add('azure_core', 'Error', 'Result');
-  use.add('azure_core::http::headers', 'ERROR_CODE');
-  use.add('azure_core::error', 'ErrorKind', 'HttpError');
-  return helpers.buildIfBlock(indent, {
-    condition: '!rsp.status().is_success()',
-    body: (indent) => {
-      let body = `${indent.get()}let status = rsp.status();\n`
-      body += `${indent.get()}let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;\n`;
-      body += `${indent.get()}let error_kind = ErrorKind::http_response(status, http_error.error_code().map(std::borrow::ToOwned::to_owned));\n`;
-      body += `${indent.get()}return Err(Error::new(error_kind, http_error));\n`;
-      return body;
-    },
-  });
+  use.add('azure_core::http', 'check_success');
+  const body = `${indent.get()}let rsp = check_success(rsp).await?;\n`;
+  return body;
 }
 
 /**
@@ -1170,7 +1160,7 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   body += `${indent.get()}let rsp = self.pipeline.send(&ctx, &mut request).await?;\n`;
   body += errIfNotSuccessResponse(use, indent);
   let rspInto = 'rsp.into()';
-  if (method.returns.type.kind === 'rawResponse') {
+  if (method.returns.type.kind === 'bufResponse') {
     rspInto = 'rsp';
   }
   body += `${indent.get()}Ok(${rspInto})\n`;
@@ -1269,39 +1259,34 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     }
   }
 
-  let rspType: string;
-  let rspInto: string;
+  let rspType = '';
+  let rspInto = '';
   if (method.strategy.kind === 'continuationToken' && method.strategy.responseToken.kind === 'responseHeaderScalar') {
     // the continuation token comes from a response header. therefore,
     // we need a Response<T> so we have access to the header trait.
     use.addForType(method.returns.type.type);
-    rspType = helpers.getTypeDeclaration(method.returns.type.type);
+    const rspTypeDecl = helpers.getTypeDeclaration(method.returns.type.type);
+    rspType = `: ${rspTypeDecl}`;
     rspInto = '.into()';
-  } else {
-    // continuation token comes from the response body.
-    // we'll deconstruct the raw response and parse it later.
-    use.add('azure_core', 'http::RawResponse');
-    rspType = 'RawResponse';
-    rspInto = '';
   }
 
   body += constructRequest(indent, use, method, paramGroups, true);
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
-  body += `${indent.push().get()}let rsp: ${rspType} = pipeline.send(&ctx, &mut request).await?${rspInto};\n`;
-  if (rspType === 'RawResponse') {
+  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut request).await?${rspInto};\n`;
+  if (rspType === 'BufResponse') {
     body += errIfNotSuccessResponse(use, indent);
   }
 
   // check if we need to extract the next link field from the response model
   if (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'modelField') {
-    use.add('azure_core', 'http::RawResponse');
+    use.add('azure_core', 'http::BufResponse');
     body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
     body += `${indent.get()}let bytes = body.collect().await?;\n`;
     const deserialize = bodyFormat === 'json' ? 'json::from_json' : 'xml::read_xml';
     body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&bytes)?;\n`;
-    body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, bytes).into();\n`;
+    body += `${indent.get()}let rsp = BufResponse::from_bytes(status, headers, bytes).into();\n`;
   }
 
   let srcNextPage: string;
@@ -1366,7 +1351,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroMethod): string {
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
-  use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
+  use.add('azure_core::http', 'Method', 'BufResponse', 'Request', 'Url');
   use.add('azure_core::http::headers', 'RETRY_AFTER', 'X_MS_RETRY_AFTER_MS', 'RETRY_AFTER_MS');
   use.add('azure_core::http::poller', 'get_retry_after', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor as _');
   use.addForType(method.returns.type);
@@ -1416,7 +1401,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`
   body += `${indent.get()}let pipeline = pipeline.clone();\n`
   body += `${indent.get()}async move {\n`
-  body += `${indent.push().get()}let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;\n`
+  body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut request).await?;\n`
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
   body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &options.poller_options);\n`
   body += `${indent.get()}let bytes = body.collect().await?;\n`
@@ -1429,7 +1414,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     deserialize = 'xml::read_xml';
   }
   body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&bytes)?;\n`
-  body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, bytes).into();\n`
+  body += `${indent.get()}let rsp = BufResponse::from_bytes(status, headers, bytes).into();\n`
 
   body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', [{
     pattern: `PollerStatus::InProgress`,

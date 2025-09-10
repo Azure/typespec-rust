@@ -1,6 +1,13 @@
 # Release History
 
-## 0.21.1 (unreleased)
+## 0.22.0 (unreleased)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Client methods call `check_success()` to handle service errors.
+* Client methods return a `BufResponse` rather than a `RawResponse`.
 
 ### Bugs Fixed
 

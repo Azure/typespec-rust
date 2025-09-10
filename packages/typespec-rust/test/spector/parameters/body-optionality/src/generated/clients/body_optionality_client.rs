@@ -11,13 +11,12 @@ use crate::generated::{
     },
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
-        headers::ERROR_CODE, ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent,
+        check_success, ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent,
         Response, Url,
     },
-    tracing, Error, Result,
+    tracing, Result,
 };
 
 /// Test describing optionality of the request body.
@@ -101,15 +100,7 @@ impl BodyOptionalityClient {
         request.insert_header("content-type", "application/json");
         request.set_body(body);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -132,15 +123,7 @@ impl BodyOptionalityClient {
         let body: RequestContent<BodyModel> = BodyModel { name: Some(name) }.try_into()?;
         request.set_body(body);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 }

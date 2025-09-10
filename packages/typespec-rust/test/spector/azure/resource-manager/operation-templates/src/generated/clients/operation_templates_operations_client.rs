@@ -7,13 +7,11 @@ use crate::generated::models::{
     OperationListResult, OperationTemplatesOperationsClientListOptions,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
     http::{
-        headers::ERROR_CODE,
         pager::{PagerResult, PagerState},
-        Method, Pager, Pipeline, RawResponse, Request, Url,
+        BufResponse, Method, Pager, Pipeline, Request, Url,
     },
-    json, tracing, Error, Result,
+    json, tracing, Result,
 };
 
 #[tracing::client]
@@ -69,20 +67,11 @@ impl OperationTemplatesOperationsClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                if !rsp.status().is_success() {
-                    let status = rsp.status();
-                    let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-                    let error_kind = ErrorKind::http_response(
-                        status,
-                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                    );
-                    return Err(Error::new(error_kind, http_error));
-                }
+                let rsp = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: OperationListResult = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,

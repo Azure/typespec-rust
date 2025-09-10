@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | Poller | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | Poller | BufResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
 export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
@@ -315,10 +315,10 @@ export interface Payload<T extends WireType = WireType> {
 }
 
 /**
- * RawResponse is used for operations that receive a streaming response.
+ * BufResponse is used for operations that receive a streaming response.
  */
-export interface RawResponse extends External {
-  kind: 'rawResponse';
+export interface BufResponse extends External {
+  kind: 'bufResponse';
 }
 
 /**
@@ -374,7 +374,7 @@ export interface Response<T extends ResponseTypes = ResponseTypes, Format extend
 }
 
 /** ResultTypes defines the type constraint when creating a Result<T> */
-type ResultTypes = PageIterator | Pager | Poller | RawResponse | Response;
+type ResultTypes = PageIterator | Pager | Poller | BufResponse | Response;
 
 /** Result is a Rust Result<T> from azure_core */
 export interface Result<T extends ResultTypes = ResultTypes> extends External {
@@ -769,10 +769,10 @@ export class Payload<T> implements Payload<T> {
   }
 }
 
-export class RawResponse extends External implements RawResponse {
+export class BufResponse extends External implements BufResponse {
   constructor(crate: Crate) {
-    super(crate, 'RawResponse', 'azure_core::http');
-    this.kind = 'rawResponse';
+    super(crate, 'BufResponse', 'azure_core::http');
+    this.kind = 'bufResponse';
   }
 }
 

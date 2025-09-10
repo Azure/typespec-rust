@@ -7,11 +7,8 @@ use crate::generated::models::{
     BooleanProperty, ValueTypesBooleanClientGetOptions, ValueTypesBooleanClientPutOptions,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
-    http::{
-        headers::ERROR_CODE, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
-    },
-    tracing, Error, Result,
+    http::{check_success, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    tracing, Result,
 };
 
 #[tracing::client]
@@ -43,15 +40,7 @@ impl ValueTypesBooleanClient {
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -75,15 +64,7 @@ impl ValueTypesBooleanClient {
         request.insert_header("content-type", "application/json");
         request.set_body(body);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 }

@@ -9,10 +9,9 @@ use crate::generated::models::{
     DatetimeQueryClientUnixTimestampOptions,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
-    http::{headers::ERROR_CODE, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{check_success, Method, NoFormat, Pipeline, Request, Response, Url},
     time::{to_rfc3339, to_rfc7231, OffsetDateTime},
-    tracing, Error, Result,
+    tracing, Result,
 };
 
 #[tracing::client]
@@ -45,15 +44,7 @@ impl DatetimeQueryClient {
             .append_pair("value", &to_rfc3339(&value));
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -75,15 +66,7 @@ impl DatetimeQueryClient {
             .append_pair("value", &to_rfc3339(&value));
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -105,15 +88,7 @@ impl DatetimeQueryClient {
             .append_pair("value", &to_rfc7231(&value));
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -135,15 +110,7 @@ impl DatetimeQueryClient {
             .append_pair("value", &value.unix_timestamp().to_string());
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -171,15 +138,7 @@ impl DatetimeQueryClient {
         );
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 }

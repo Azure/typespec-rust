@@ -179,7 +179,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return `Poller<${getTypeDeclaration(type.type.content, withAnonymousLifetime)}>`;
     case 'payload':
       return getTypeDeclaration(type.type, withAnonymousLifetime);
-    case 'rawResponse':
+    case 'bufResponse':
       return type.name;
     case 'ref':
       return `&${getTypeDeclaration(type.type)}`;

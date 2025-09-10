@@ -11,9 +11,8 @@ use crate::generated::models::{
     DatetimeResponseHeaderClientUnixTimestampResult,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
-    http::{headers::ERROR_CODE, Method, NoFormat, Pipeline, Request, Response, Url},
-    tracing, Error, Result,
+    http::{check_success, Method, NoFormat, Pipeline, Request, Response, Url},
+    tracing, Result,
 };
 
 #[tracing::client]
@@ -66,15 +65,7 @@ impl DatetimeResponseHeaderClient {
         url = url.join("encode/datetime/responseheader/default")?;
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -116,15 +107,7 @@ impl DatetimeResponseHeaderClient {
         url = url.join("encode/datetime/responseheader/rfc3339")?;
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -166,15 +149,7 @@ impl DatetimeResponseHeaderClient {
         url = url.join("encode/datetime/responseheader/rfc7231")?;
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -216,15 +191,7 @@ impl DatetimeResponseHeaderClient {
         url = url.join("encode/datetime/responseheader/unix-timestamp")?;
         let mut request = Request::new(url, Method::Get);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 }

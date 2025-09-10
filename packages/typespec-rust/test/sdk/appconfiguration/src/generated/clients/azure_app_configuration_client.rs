@@ -30,17 +30,17 @@ use crate::generated::models::{
 };
 use azure_core::{
     credentials::TokenCredential,
-    error::{ErrorKind, HttpError},
     fmt::SafeDebug,
     http::{
-        headers::{ERROR_CODE, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
+        check_success,
+        headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         pager::{PagerResult, PagerState},
         policies::{BearerTokenCredentialPolicy, Policy},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        ClientOptions, Method, NoFormat, PageIterator, Pager, Pipeline, Poller, RawResponse,
+        BufResponse, ClientOptions, Method, NoFormat, PageIterator, Pager, Pipeline, Poller,
         Request, RequestContent, Response, Url,
     },
-    json, tracing, Error, Result,
+    json, tracing, Result,
 };
 use std::sync::Arc;
 
@@ -197,15 +197,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -298,15 +290,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -368,15 +352,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -448,15 +424,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -540,15 +508,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -625,15 +585,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -689,15 +641,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -803,7 +747,7 @@ impl AzureAppConfigurationClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -812,7 +756,7 @@ impl AzureAppConfigurationClient {
                     );
                     let bytes = body.collect().await?;
                     let res: Snapshot = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -902,15 +846,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -992,15 +928,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -1101,15 +1029,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -1140,15 +1060,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -1239,15 +1151,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -1366,20 +1270,11 @@ impl AzureAppConfigurationClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                    if !rsp.status().is_success() {
-                        let status = rsp.status();
-                        let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-                        let error_kind = ErrorKind::http_response(
-                            status,
-                            http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                        );
-                        return Err(Error::new(error_kind, http_error));
-                    }
+                    let rsp = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                     Ok(match res.next_link {
                         Some(next_link) if !next_link.is_empty() => PagerResult::More {
                             response: rsp,
@@ -1473,20 +1368,11 @@ impl AzureAppConfigurationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                if !rsp.status().is_success() {
-                    let status = rsp.status();
-                    let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-                    let error_kind = ErrorKind::http_response(
-                        status,
-                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                    );
-                    return Err(Error::new(error_kind, http_error));
-                }
+                let rsp = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: KeyListResult = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
@@ -1592,20 +1478,11 @@ impl AzureAppConfigurationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                if !rsp.status().is_success() {
-                    let status = rsp.status();
-                    let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-                    let error_kind = ErrorKind::http_response(
-                        status,
-                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                    );
-                    return Err(Error::new(error_kind, http_error));
-                }
+                let rsp = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: LabelListResult = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
@@ -1724,20 +1601,11 @@ impl AzureAppConfigurationClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                    if !rsp.status().is_success() {
-                        let status = rsp.status();
-                        let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-                        let error_kind = ErrorKind::http_response(
-                            status,
-                            http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                        );
-                        return Err(Error::new(error_kind, http_error));
-                    }
+                    let rsp = pipeline.send(&ctx, &mut request).await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                     Ok(match res.next_link {
                         Some(next_link) if !next_link.is_empty() => PagerResult::More {
                             response: rsp,
@@ -1848,20 +1716,11 @@ impl AzureAppConfigurationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                if !rsp.status().is_success() {
-                    let status = rsp.status();
-                    let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-                    let error_kind = ErrorKind::http_response(
-                        status,
-                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                    );
-                    return Err(Error::new(error_kind, http_error));
-                }
+                let rsp = pipeline.send(&ctx, &mut request).await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: SnapshotListResult = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
@@ -1957,15 +1816,7 @@ impl AzureAppConfigurationClient {
             request.set_body(entity);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -2047,15 +1898,7 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 
@@ -2141,15 +1984,7 @@ impl AzureAppConfigurationClient {
         }
         request.set_body(entity);
         let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp, Some(ERROR_CODE)).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = check_success(rsp).await?;
         Ok(rsp.into())
     }
 }
