@@ -956,6 +956,13 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
       continue;
     }
 
+    if (isOptionalContentTypeHeader(headerParam)) {
+      // when the body is optional, the Content-Type header
+      // will be set IFF the optional body param is not None.
+      // this logic happens elsewhere so we skip it here.
+      continue;
+    }
+
     body += getParamValueHelper(indent, headerParam, inClosure, () => {
       if (headerParam.kind === 'headerHashMap') {
         let setter = `for (k, v) in &${headerParam.name} {\n`;
@@ -971,6 +978,11 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
   }
 
   return body;
+}
+
+/** type guard to determine if headerParam is an optional Content-Type header */
+function isOptionalContentTypeHeader(headerParam: HeaderParamType): headerParam is rust.HeaderScalarParameter {
+  return headerParam.kind === 'headerScalar' && headerParam.optional && headerParam.header.toLowerCase() === 'content-type';
 }
 
 /**
@@ -995,7 +1007,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
   let optionalContentTypeParam: rust.HeaderScalarParameter | undefined;
   for (const headerParam of paramGroups.header) {
     // if the content-type header is optional, we need to emit it inside the "if let Some(body)" clause below.
-    if (headerParam.kind === 'headerScalar' && headerParam.optional && headerParam.header.toLowerCase() === 'content-type') {
+    if (isOptionalContentTypeHeader(headerParam)) {
       optionalContentTypeParam = headerParam;
     }
   }
