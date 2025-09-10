@@ -43,8 +43,8 @@ use std::sync::Arc;
 #[tracing::client]
 pub struct BlobContainerClient {
     pub(crate) container_name: String,
+    pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
-    pub(crate) url: Url,
     pub(crate) version: String,
 }
 
@@ -62,34 +62,34 @@ impl BlobContainerClient {
     ///
     /// # Arguments
     ///
-    /// * `url` - Service host
+    /// * `endpoint` - Service host
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `container_name` - The name of the container.
     /// * `options` - Optional configuration for the client.
     #[tracing::new("Storage.Blob.Container")]
     pub fn new(
-        url: &str,
+        endpoint: &str,
         credential: Arc<dyn TokenCredential>,
         container_name: String,
         options: Option<BlobContainerClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut url = Url::parse(url)?;
-        if !url.scheme().starts_with("http") {
+        let mut endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
-                format!("{url} must use http(s)"),
+                format!("{endpoint} must use http(s)"),
             ));
         }
-        url.set_query(None);
+        endpoint.set_query(None);
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
             credential,
             vec!["https://storage.azure.com/.default"],
         ));
         Ok(Self {
             container_name,
-            url,
+            endpoint,
             version: options.version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
@@ -104,7 +104,7 @@ impl BlobContainerClient {
 
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
-        &self.url
+        &self.endpoint
     }
 
     /// The Acquire Lease operation requests a new lease on a container. The lease lock duration can be 15 to 60 seconds, or can
@@ -152,7 +152,7 @@ impl BlobContainerClient {
     ) -> Result<Response<BlobContainerClientAcquireLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_key_only("acquire")
@@ -239,7 +239,7 @@ impl BlobContainerClient {
     ) -> Result<Response<BlobContainerClientBreakLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_key_only("break")
@@ -326,7 +326,7 @@ impl BlobContainerClient {
     ) -> Result<Response<BlobContainerClientChangeLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_key_only("change")
@@ -376,7 +376,7 @@ impl BlobContainerClient {
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
@@ -432,7 +432,7 @@ impl BlobContainerClient {
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
@@ -503,7 +503,7 @@ impl BlobContainerClient {
     ) -> Result<Response<FilterBlobSegment, XmlFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "blobs")
@@ -596,7 +596,7 @@ impl BlobContainerClient {
     ) -> Result<Response<Vec<SignedIdentifier>, XmlFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "acl")
@@ -672,7 +672,7 @@ impl BlobContainerClient {
     ) -> Result<Response<BlobContainerClientGetAccountInfoResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "properties")
@@ -710,8 +710,8 @@ impl BlobContainerClient {
         BlobClient {
             blob_name,
             container_name: self.container_name.clone(),
+            endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-            url: self.url.clone(),
             version: self.version.clone(),
         }
     }
@@ -769,7 +769,7 @@ impl BlobContainerClient {
     ) -> Result<Response<BlobContainerClientGetPropertiesResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut().append_pair("restype", "container");
         if let Some(timeout) = options.timeout {
@@ -833,7 +833,7 @@ impl BlobContainerClient {
     ) -> Result<PageIterator<Response<ListBlobsFlatSegmentResponse, XmlFormat>>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let mut first_url = self.url.clone();
+        let mut first_url = self.endpoint.clone();
         first_url = first_url.join(&self.container_name)?;
         first_url
             .query_pairs_mut()
@@ -957,7 +957,7 @@ impl BlobContainerClient {
     ) -> Result<PageIterator<Response<ListBlobsHierarchySegmentResponse, XmlFormat>>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let mut first_url = self.url.clone();
+        let mut first_url = self.endpoint.clone();
         first_url = first_url.join(&self.container_name)?;
         first_url
             .query_pairs_mut()
@@ -1091,7 +1091,7 @@ impl BlobContainerClient {
     ) -> Result<Response<BlobContainerClientReleaseLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "lease")
@@ -1164,7 +1164,7 @@ impl BlobContainerClient {
     ) -> Result<Response<BlobContainerClientRenameResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "rename")
@@ -1243,7 +1243,7 @@ impl BlobContainerClient {
     ) -> Result<Response<BlobContainerClientRenewLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "lease")
@@ -1314,7 +1314,7 @@ impl BlobContainerClient {
     ) -> Result<Response<BlobContainerClientRestoreResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "undelete")
@@ -1394,7 +1394,7 @@ impl BlobContainerClient {
     ) -> Result<Response<BlobContainerClientSetAccessPolicyResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "acl")
@@ -1447,7 +1447,7 @@ impl BlobContainerClient {
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join(&self.container_name)?;
         url.query_pairs_mut()
             .append_pair("comp", "metadata")

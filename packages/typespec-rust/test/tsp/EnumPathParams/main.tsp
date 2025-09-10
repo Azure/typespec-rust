@@ -1,11 +1,14 @@
+import "@azure-tools/typespec-client-generator-core";
 import "@typespec/http";
 
+using Azure.ClientGenerator.Core;
 using Http;
 
 @server(
   "{bogusUrl}",
   "Customized host name for a service that doesn't exist.",
   {
+    @clientName("bogusUrl")
     bogusUrl: url,
   }
 )

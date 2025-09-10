@@ -32,8 +32,8 @@ use std::sync::Arc;
 #[tracing::client]
 pub struct SecretClient {
     pub(crate) api_version: String,
+    pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
-    pub(crate) vault_base_url: Url,
 }
 
 /// Options used when creating a [`SecretClient`](SecretClient)
@@ -50,31 +50,31 @@ impl SecretClient {
     ///
     /// # Arguments
     ///
-    /// * `vault_base_url` - Service host
+    /// * `endpoint` - Service host
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `options` - Optional configuration for the client.
     #[tracing::new("KeyVault")]
     pub fn new(
-        vault_base_url: &str,
+        endpoint: &str,
         credential: Arc<dyn TokenCredential>,
         options: Option<SecretClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut vault_base_url = Url::parse(vault_base_url)?;
-        if !vault_base_url.scheme().starts_with("http") {
+        let mut endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
-                format!("{vault_base_url} must use http(s)"),
+                format!("{endpoint} must use http(s)"),
             ));
         }
-        vault_base_url.set_query(None);
+        endpoint.set_query(None);
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
             credential,
             vec!["https://vault.azure.net/.default"],
         ));
         Ok(Self {
-            vault_base_url,
+            endpoint,
             api_version: options.api_version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
@@ -89,7 +89,7 @@ impl SecretClient {
 
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
-        &self.vault_base_url
+        &self.endpoint
     }
 
     /// Backs up the specified secret.
@@ -115,7 +115,7 @@ impl SecretClient {
         }
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.vault_base_url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}/backup");
         path = path.replace("{secret-name}", secret_name);
         url = url.join(&path)?;
@@ -159,7 +159,7 @@ impl SecretClient {
         }
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.vault_base_url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}");
         path = path.replace("{secret-name}", secret_name);
         url = url.join(&path)?;
@@ -203,7 +203,7 @@ impl SecretClient {
         }
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.vault_base_url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("deletedsecrets/{secret-name}");
         path = path.replace("{secret-name}", secret_name);
         url = url.join(&path)?;
@@ -246,7 +246,7 @@ impl SecretClient {
         }
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.vault_base_url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", secret_name);
         path = match options.secret_version {
@@ -286,7 +286,7 @@ impl SecretClient {
     ) -> Result<Pager<ListDeletedSecretPropertiesResult>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let mut first_url = self.vault_base_url.clone();
+        let mut first_url = self.endpoint.clone();
         first_url = first_url.join("deletedsecrets")?;
         first_url
             .query_pairs_mut()
@@ -359,7 +359,7 @@ impl SecretClient {
     ) -> Result<Pager<ListSecretPropertiesResult>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let mut first_url = self.vault_base_url.clone();
+        let mut first_url = self.endpoint.clone();
         first_url = first_url.join("secrets")?;
         first_url
             .query_pairs_mut()
@@ -439,7 +439,7 @@ impl SecretClient {
         }
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let mut first_url = self.vault_base_url.clone();
+        let mut first_url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}/versions");
         path = path.replace("{secret-name}", secret_name);
         first_url = first_url.join(&path)?;
@@ -521,7 +521,7 @@ impl SecretClient {
         }
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.vault_base_url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("deletedsecrets/{secret-name}");
         path = path.replace("{secret-name}", secret_name);
         url = url.join(&path)?;
@@ -564,7 +564,7 @@ impl SecretClient {
         }
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.vault_base_url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("deletedsecrets/{secret-name}/recover");
         path = path.replace("{secret-name}", secret_name);
         url = url.join(&path)?;
@@ -601,7 +601,7 @@ impl SecretClient {
     ) -> Result<Response<Secret>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.vault_base_url.clone();
+        let mut url = self.endpoint.clone();
         url = url.join("secrets/restore")?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -648,7 +648,7 @@ impl SecretClient {
         }
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.vault_base_url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}");
         path = path.replace("{secret-name}", secret_name);
         url = url.join(&path)?;
@@ -696,7 +696,7 @@ impl SecretClient {
         }
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.vault_base_url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}/{secret-version}");
         path = path.replace("{secret-name}", secret_name);
         path = match options.secret_version {

@@ -31,8 +31,8 @@ use std::sync::Arc;
 
 #[tracing::client]
 pub struct BlobServiceClient {
+    pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
-    pub(crate) url: Url,
     pub(crate) version: String,
 }
 
@@ -50,31 +50,31 @@ impl BlobServiceClient {
     ///
     /// # Arguments
     ///
-    /// * `url` - Service host
+    /// * `endpoint` - Service host
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `options` - Optional configuration for the client.
     #[tracing::new("Storage.Blob")]
     pub fn new(
-        url: &str,
+        endpoint: &str,
         credential: Arc<dyn TokenCredential>,
         options: Option<BlobServiceClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut url = Url::parse(url)?;
-        if !url.scheme().starts_with("http") {
+        let mut endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
-                format!("{url} must use http(s)"),
+                format!("{endpoint} must use http(s)"),
             ));
         }
-        url.set_query(None);
+        endpoint.set_query(None);
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
             credential,
             vec!["https://storage.azure.com/.default"],
         ));
         Ok(Self {
-            url,
+            endpoint,
             version: options.version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
@@ -89,7 +89,7 @@ impl BlobServiceClient {
 
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
-        &self.url
+        &self.endpoint
     }
 
     /// The Filter Blobs operation enables callers to list blobs across all containers whose tags match a given search expression.
@@ -127,7 +127,7 @@ impl BlobServiceClient {
     ) -> Result<Response<FilterBlobSegment, XmlFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url.query_pairs_mut().append_pair("comp", "blobs");
         if let Some(include) = options.include {
             url.query_pairs_mut().append_pair(
@@ -217,7 +217,7 @@ impl BlobServiceClient {
     ) -> Result<Response<BlobServiceClientGetAccountInfoResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url.query_pairs_mut()
             .append_pair("comp", "properties")
             .append_pair("restype", "account");
@@ -253,8 +253,8 @@ impl BlobServiceClient {
     pub fn get_blob_container_client(&self, container_name: String) -> BlobContainerClient {
         BlobContainerClient {
             container_name,
+            endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-            url: self.url.clone(),
             version: self.version.clone(),
         }
     }
@@ -272,7 +272,7 @@ impl BlobServiceClient {
     ) -> Result<Response<StorageServiceProperties, XmlFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url.query_pairs_mut()
             .append_pair("comp", "properties")
             .append_pair("restype", "service");
@@ -336,7 +336,7 @@ impl BlobServiceClient {
     ) -> Result<Response<StorageServiceStats, XmlFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url.query_pairs_mut()
             .append_pair("comp", "stats")
             .append_pair("restype", "service");
@@ -401,7 +401,7 @@ impl BlobServiceClient {
     ) -> Result<Response<UserDelegationKey, XmlFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url.query_pairs_mut()
             .append_pair("comp", "userdelegationkey")
             .append_pair("restype", "service");
@@ -442,7 +442,7 @@ impl BlobServiceClient {
     ) -> Result<PageIterator<Response<ListContainersSegmentResponse, XmlFormat>>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let mut first_url = self.url.clone();
+        let mut first_url = self.endpoint.clone();
         first_url.query_pairs_mut().append_pair("comp", "list");
         if let Some(include) = options.include {
             first_url.query_pairs_mut().append_pair(
@@ -536,7 +536,7 @@ impl BlobServiceClient {
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         url.query_pairs_mut()
             .append_pair("comp", "properties")
             .append_pair("restype", "service");

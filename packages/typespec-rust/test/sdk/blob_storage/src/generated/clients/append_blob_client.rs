@@ -28,8 +28,8 @@ use std::sync::Arc;
 pub struct AppendBlobClient {
     pub(crate) blob_name: String,
     pub(crate) container_name: String,
+    pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
-    pub(crate) url: Url,
     pub(crate) version: String,
 }
 
@@ -47,7 +47,7 @@ impl AppendBlobClient {
     ///
     /// # Arguments
     ///
-    /// * `url` - Service host
+    /// * `endpoint` - Service host
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `container_name` - The name of the container.
@@ -55,21 +55,21 @@ impl AppendBlobClient {
     /// * `options` - Optional configuration for the client.
     #[tracing::new("Storage.Blob.Container.Blob.AppendBlob")]
     pub fn new(
-        url: &str,
+        endpoint: &str,
         credential: Arc<dyn TokenCredential>,
         container_name: String,
         blob_name: String,
         options: Option<AppendBlobClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut url = Url::parse(url)?;
-        if !url.scheme().starts_with("http") {
+        let mut endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
-                format!("{url} must use http(s)"),
+                format!("{endpoint} must use http(s)"),
             ));
         }
-        url.set_query(None);
+        endpoint.set_query(None);
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
             credential,
             vec!["https://storage.azure.com/.default"],
@@ -77,7 +77,7 @@ impl AppendBlobClient {
         Ok(Self {
             blob_name,
             container_name,
-            url,
+            endpoint,
             version: options.version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
@@ -92,7 +92,7 @@ impl AppendBlobClient {
 
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
-        &self.url
+        &self.endpoint
     }
 
     /// The Append Block operation commits a new block of data to the end of an append blob.
@@ -150,7 +150,7 @@ impl AppendBlobClient {
     ) -> Result<Response<AppendBlobClientAppendBlockResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -290,7 +290,7 @@ impl AppendBlobClient {
     ) -> Result<Response<AppendBlobClientAppendBlockFromUrlResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -445,7 +445,7 @@ impl AppendBlobClient {
     ) -> Result<Response<AppendBlobClientCreateResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -594,7 +594,7 @@ impl AppendBlobClient {
     ) -> Result<Response<AppendBlobClientSealResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);

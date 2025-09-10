@@ -45,8 +45,8 @@ use std::sync::Arc;
 pub struct BlobClient {
     pub(crate) blob_name: String,
     pub(crate) container_name: String,
+    pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
-    pub(crate) url: Url,
     pub(crate) version: String,
 }
 
@@ -64,7 +64,7 @@ impl BlobClient {
     ///
     /// # Arguments
     ///
-    /// * `url` - Service host
+    /// * `endpoint` - Service host
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `container_name` - The name of the container.
@@ -72,21 +72,21 @@ impl BlobClient {
     /// * `options` - Optional configuration for the client.
     #[tracing::new("Storage.Blob.Container.Blob")]
     pub fn new(
-        url: &str,
+        endpoint: &str,
         credential: Arc<dyn TokenCredential>,
         container_name: String,
         blob_name: String,
         options: Option<BlobClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut url = Url::parse(url)?;
-        if !url.scheme().starts_with("http") {
+        let mut endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
             return Err(azure_core::Error::message(
                 azure_core::error::ErrorKind::Other,
-                format!("{url} must use http(s)"),
+                format!("{endpoint} must use http(s)"),
             ));
         }
-        url.set_query(None);
+        endpoint.set_query(None);
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
             credential,
             vec!["https://storage.azure.com/.default"],
@@ -94,7 +94,7 @@ impl BlobClient {
         Ok(Self {
             blob_name,
             container_name,
-            url,
+            endpoint,
             version: options.version,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
@@ -109,7 +109,7 @@ impl BlobClient {
 
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
-        &self.url
+        &self.endpoint
     }
 
     /// The Abort Copy From URL operation aborts a pending Copy From URL operation, and leaves a destination blob with zero length
@@ -150,7 +150,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientAbortCopyFromUrlResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -230,7 +230,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientAcquireLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -327,7 +327,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientBreakLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -425,7 +425,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientChangeLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -527,7 +527,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientCopyFromUrlResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -679,7 +679,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientCreateSnapshotResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -766,7 +766,7 @@ impl BlobClient {
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -860,7 +860,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientDeleteImmutabilityPolicyResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -976,7 +976,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientDownloadResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -1102,7 +1102,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientGetAccountInfoResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -1140,8 +1140,8 @@ impl BlobClient {
         AppendBlobClient {
             blob_name: self.blob_name.clone(),
             container_name: self.container_name.clone(),
+            endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-            url: self.url.clone(),
             version: self.version.clone(),
         }
     }
@@ -1152,8 +1152,8 @@ impl BlobClient {
         BlockBlobClient {
             blob_name: self.blob_name.clone(),
             container_name: self.container_name.clone(),
+            endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-            url: self.url.clone(),
             version: self.version.clone(),
         }
     }
@@ -1164,8 +1164,8 @@ impl BlobClient {
         PageBlobClient {
             blob_name: self.blob_name.clone(),
             container_name: self.container_name.clone(),
+            endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
-            url: self.url.clone(),
             version: self.version.clone(),
         }
     }
@@ -1254,7 +1254,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientGetPropertiesResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -1352,7 +1352,7 @@ impl BlobClient {
     ) -> Result<Response<BlobTags, XmlFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -1441,7 +1441,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientReleaseLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -1535,7 +1535,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientRenewLeaseResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -1627,7 +1627,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientSetExpiryResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -1703,7 +1703,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientSetImmutabilityPolicyResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -1795,7 +1795,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientSetLegalHoldResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -1843,7 +1843,7 @@ impl BlobClient {
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -1922,7 +1922,7 @@ impl BlobClient {
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -2026,7 +2026,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientSetTagsResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -2087,7 +2087,7 @@ impl BlobClient {
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -2182,7 +2182,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientStartCopyFromUrlResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
@@ -2317,7 +2317,7 @@ impl BlobClient {
     ) -> Result<Response<BlobClientUndeleteResult, NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.url.clone();
+        let mut url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
