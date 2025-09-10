@@ -2,6 +2,10 @@
 
 ## 0.21.1 (unreleased)
 
+### Bugs Fixed
+
+* Omit the `Content-Type` header for optional body parameters that are `None`.
+
 ### Other Changes
 
 * Exit early when there are existing diagnostic errors.
