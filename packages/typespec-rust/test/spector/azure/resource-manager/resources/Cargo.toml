@@ -13,13 +13,12 @@ default = ["azure_core/default"]
 [dependencies]
 async-trait = { workspace = true }
 azure_core = { workspace = true }
-futures = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 typespec_client_core = { workspace = true, features = ["derive"] }
 
 [dev-dependencies]
-async-trait = "0.1"
+futures = { workspace = true }
 serde_json = { workspace = true }
 time = { workspace = true }
 tokio = { workspace = true }
