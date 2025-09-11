@@ -23,7 +23,7 @@ async fn get() {
         .unwrap();
     assert_eq!(
         resp.property,
-        Some(UnionFloatLiteralPropertyProperty::Float32Value46Point875)
+        Some(UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_46_875)
     );
 }
 
@@ -35,7 +35,7 @@ async fn put() {
         .get_value_types_union_float_literal_client()
         .put(
             UnionFloatLiteralProperty {
-                property: Some(UnionFloatLiteralPropertyProperty::Float32Value46Point875),
+                property: Some(UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_46_875),
             }
             .try_into()
             .unwrap(),

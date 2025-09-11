@@ -1,6 +1,18 @@
 # Release History
 
-## 0.22.1 (unreleased)
+## 0.23.0 (unreleased)
+
+### Breaking Changes
+
+* The naming algorithm for enum values has changed, which can result in name changes in some cases.
+  * The most common change is words being Pascal cased (e.g. `AES256` is now `Aes256`).
+  * Identifiers that contain a decimal value will now use an underscore to separate the whole number from the fraction (e.g. `Version7.1` is now `Version7_1`).
+  * For enum values that begin with a number, the prefix `INVLD_IDENTIFIER_` will be added as a flag indicating the name must be fixed in the TypeSpec.
+
+### Bugs Fixed
+
+* TypeSpec enum values that coalesce into the same enum value name will report a diagnostic error, requiring a rename in the TypeSpec.
+  * Previously, the dupicate names would be emitted, resulting in a compile-time error.
 
 ### Other Changes
 

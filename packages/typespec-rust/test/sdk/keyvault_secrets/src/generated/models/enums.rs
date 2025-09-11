@@ -9,9 +9,9 @@ create_extensible_enum!(
     #[doc = r#"The media type (MIME type)."#]
     ContentType,
     #[doc = r#"The PEM file format."#]
-    (PEM, "application/x-pem-file"),
+    (Pem, "application/x-pem-file"),
     #[doc = r#"The PKCS#12 file format."#]
-    (PFX, "application/x-pkcs12")
+    (Pfx, "application/x-pkcs12")
 );
 
 create_extensible_enum!(

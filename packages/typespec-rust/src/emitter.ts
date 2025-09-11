@@ -70,6 +70,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
         code: error.code,
         target: error.target,
         format: {
+          message: error.message,
           stack: error.stack ? truncateStack(error.stack, 'tcgcToCrate') : 'Stack trace unavailable\n',
         }
       });
@@ -78,6 +79,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
         code: error.code,
         target: NoTarget,
         format: {
+          message: error.message,
           stack: error.stack ? truncateStack(error.stack, 'tcgcToCrate') : 'Stack trace unavailable\n',
         }
       });

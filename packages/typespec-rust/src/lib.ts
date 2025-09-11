@@ -64,19 +64,19 @@ const libDef = {
     'InternalError': {
       severity: 'error',
       messages: {
-        default: paramMessage`The emitter encountered an internal error during preprocessing. Please open an issue at https://github.com/Azure/typespec-rust/issues and include the complete error message.\n${'stack'}`
+        default: paramMessage`The emitter encountered an internal error during preprocessing. Please open an issue at https://github.com/Azure/typespec-rust/issues and include the complete error message.\n${'message'}\n${'stack'}`
       }
     },
     'InvalidArgument': {
       severity: 'error',
       messages: {
-        default: 'Invalid arguments were passed to the emitter.'
+        default: paramMessage`Invalid arguments were passed to the emitter.\n${'message'}`
       }
     },
     'NameCollision': {
       severity: 'error',
       messages: {
-        default: 'The emitter automatically renamed one or more items which resulted in a name collision. Please update the client.tsp to rename the type(s) to avoid the collision.'
+        default: paramMessage`The emitter automatically renamed one or more items which resulted in a name collision. Please update the client.tsp to rename the type(s) to avoid the collision.\n${'message'}`
       }
     },
     'UnsupportedTsp': {

@@ -135,7 +135,7 @@ function should_generate(name) {
   return true
 }
 
-const appconfiguration = pkgRoot + 'test/tsp/AppConfiguration';
+const appconfiguration = pkgRoot + 'test/tsp/AppConfiguration/client.tsp';
 generate('appconfiguration', appconfiguration, 'test/sdk/appconfiguration');
 
 const keyvault_secrets = pkgRoot + 'test/tsp/Security.KeyVault.Secrets/client.tsp';

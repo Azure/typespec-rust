@@ -7,26 +7,53 @@
 
 import * as rust from '../src/codemodel/index.js';
 import * as helpers from '../src/tcgcadapter/helpers.js';
+import * as naming from '../src/tcgcadapter/naming.js';
 import { deepEqual, strictEqual } from 'assert';
 import { describe, it } from 'vitest';
 
 describe('typespec-rust: tcgcadapter', () => {
   describe('helpers', () => {
     it('fixUpEnumValueName', () => {
-      strictEqual(helpers.fixUpEnumValueNameWorker('fooBar', 'string'), 'FooBar');
-      strictEqual(helpers.fixUpEnumValueNameWorker('foo_bar', 'string'), 'FooBar');
-      strictEqual(helpers.fixUpEnumValueNameWorker('V2022_12_01_preview', 'string'), 'V2022_12_01Preview');
-      strictEqual(helpers.fixUpEnumValueNameWorker('V7.6_preview.1', 'string'), 'V7Dot6Preview1');
-      strictEqual(helpers.fixUpEnumValueNameWorker('RSA_AES_KEY_WRAP_256', 'string'), 'RsaAesKeyWrap256');
-      strictEqual(helpers.fixUpEnumValueNameWorker('CKM_AES_KEY_WRAP', 'string'), 'CkmAesKeyWrap');
-      strictEqual(helpers.fixUpEnumValueNameWorker('RSA1_5', 'string'), 'RSA1_5');
-      strictEqual(helpers.fixUpEnumValueNameWorker('RSA-OAEP', 'string'), 'RsaOaep');
-      strictEqual(helpers.fixUpEnumValueNameWorker('RSA-OAEP-256', 'string'), 'RsaOaep256');
-      strictEqual(helpers.fixUpEnumValueNameWorker('P-256K', 'string'), 'P256K');
-      strictEqual(helpers.fixUpEnumValueNameWorker('42', 'integer'), 'IntegerValue42');
-      strictEqual(helpers.fixUpEnumValueNameWorker('3.14', 'float'), 'FloatValue3Point14');
-      strictEqual(helpers.fixUpEnumValueNameWorker('42', 'int32'), 'Int32Value42');
-      strictEqual(helpers.fixUpEnumValueNameWorker('3.14', 'float64'), 'Float64Value3Point14');
+      strictEqual(naming.fixUpEnumValueNameWorker('fooBar'), 'FooBar');
+      strictEqual(naming.fixUpEnumValueNameWorker('foo_bar'), 'FooBar');
+      strictEqual(naming.fixUpEnumValueNameWorker('V2022_12_01_preview'), 'V2022_12_01Preview');
+      strictEqual(naming.fixUpEnumValueNameWorker('V7.6_preview.1'), 'V7_6Preview1');
+      strictEqual(naming.fixUpEnumValueNameWorker('RSA_AES_KEY_WRAP_256'), 'RsaAesKeyWrap256');
+      strictEqual(naming.fixUpEnumValueNameWorker('CKM_AES_KEY_WRAP'), 'CkmAesKeyWrap');
+      strictEqual(naming.fixUpEnumValueNameWorker('RSA1_5'), 'Rsa1_5');
+      strictEqual(naming.fixUpEnumValueNameWorker('RSA'), 'Rsa');
+      strictEqual(naming.fixUpEnumValueNameWorker('RSA-OAEP'), 'RsaOaep');
+      strictEqual(naming.fixUpEnumValueNameWorker('RSA-OAEP-256'), 'RsaOaep256');
+      strictEqual(naming.fixUpEnumValueNameWorker('P-256K'), 'P256K');
+      strictEqual(naming.fixUpEnumValueNameWorker('42'), 'INVLD_IDENTIFIER_42');
+      strictEqual(naming.fixUpEnumValueNameWorker('3.14'), 'INVLD_IDENTIFIER_3_14');
+      strictEqual(naming.fixUpEnumValueNameWorker('42'), 'INVLD_IDENTIFIER_42');
+      strictEqual(naming.fixUpEnumValueNameWorker('3.14'), 'INVLD_IDENTIFIER_3_14');
+      strictEqual(naming.fixUpEnumValueNameWorker('A128CBC'), 'A128Cbc');
+      strictEqual(naming.fixUpEnumValueNameWorker('A128CBCPAD'), 'A128Cbcpad');
+      strictEqual(naming.fixUpEnumValueNameWorker('aaBBcc'), 'AaBBcc');
+      strictEqual(naming.fixUpEnumValueNameWorker('aa12BBB'), 'Aa12Bbb');
+      strictEqual(naming.fixUpEnumValueNameWorker('XMLHttpRequest'), 'XmlHttpRequest');
+      strictEqual(naming.fixUpEnumValueNameWorker('HTTPSConnection'), 'HttpsConnection');
+      strictEqual(naming.fixUpEnumValueNameWorker('IOError'), 'IoError');
+      strictEqual(naming.fixUpEnumValueNameWorker('URLParser'), 'UrlParser');
+      strictEqual(naming.fixUpEnumValueNameWorker('HTMLElement'), 'HtmlElement');
+      strictEqual(naming.fixUpEnumValueNameWorker('myVarName'), 'MyVarName');
+      strictEqual(naming.fixUpEnumValueNameWorker('someHTTPConnection'), 'SomeHttpConnection');
+      strictEqual(naming.fixUpEnumValueNameWorker('value123ABC'), 'Value123Abc');
+      strictEqual(naming.fixUpEnumValueNameWorker('ABC123DEF'), 'Abc123Def');
+      strictEqual(naming.fixUpEnumValueNameWorker('testABC123DEF456'), 'TestAbc123Def456');
+      strictEqual(naming.fixUpEnumValueNameWorker('a-1-bb-BB'), 'A1BbBb');
+      strictEqual(naming.fixUpEnumValueNameWorker('test_123_ABC'), 'Test123Abc');
+      strictEqual(naming.fixUpEnumValueNameWorker('my-var-NAME'), 'MyVarName');
+      strictEqual(naming.fixUpEnumValueNameWorker('RSA_OAEP256'), 'RsaOaep256');
+      strictEqual(naming.fixUpEnumValueNameWorker('A256_CBCPAD'), 'A256Cbcpad');
+      strictEqual(naming.fixUpEnumValueNameWorker('CKM_AES256_WRAP'), 'CkmAes256Wrap');
+      strictEqual(naming.fixUpEnumValueNameWorker('ABCD'), 'Abcd');
+      strictEqual(naming.fixUpEnumValueNameWorker('abcd'), 'Abcd');
+      strictEqual(naming.fixUpEnumValueNameWorker('A'), 'A');
+      strictEqual(naming.fixUpEnumValueNameWorker('123ABC'), 'INVLD_IDENTIFIER_123Abc');
+      strictEqual(naming.fixUpEnumValueNameWorker('a1b2c3'), 'A1B2C3');
     });
 
     it('sortClientParameters', () => {

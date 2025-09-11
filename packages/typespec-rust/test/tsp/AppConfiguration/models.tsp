@@ -1,10 +1,12 @@
 import "@typespec/rest";
 import "@typespec/http";
 import "@azure-tools/typespec-azure-core";
+import "@azure-tools/typespec-client-generator-core";
 
 using TypeSpec.Rest;
 using TypeSpec.Http;
 using Azure.Core;
+using Azure.ClientGenerator.Core;
 
 namespace AzureAppConfiguration;
 
@@ -440,4 +442,14 @@ alias NamePathParam<TDoc extends valueof string> = {
   @maxLength(256)
   @path
   name: string;
+};
+
+union PutKeyValueRequestContentType {
+  "application/vnd.microsoft.appconfig.kv+json",
+  "application/vnd.microsoft.appconfig.kvset+json",
+  "application/json",
+  "text/json",
+  @clientName("applicationAnyJson", "rust")
+  "application/*+json",
+  "application/json-patch+json",
 };

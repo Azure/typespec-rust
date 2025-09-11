@@ -7,14 +7,14 @@ use azure_core::create_enum;
 
 create_enum!(
     UnionFloatLiteralPropertyProperty,
-    (Float32Value1Point25, "1.25"),
-    (Float32Value2Point375, "2.375")
+    (INVLD_IDENTIFIER_1_25, "1.25"),
+    (INVLD_IDENTIFIER_2_375, "2.375")
 );
 
 create_enum!(
     UnionIntLiteralPropertyProperty,
-    (Int32Value1, "1"),
-    (Int32Value2, "2")
+    (INVLD_IDENTIFIER_1, "1"),
+    (INVLD_IDENTIFIER_2, "2")
 );
 
 create_enum!(

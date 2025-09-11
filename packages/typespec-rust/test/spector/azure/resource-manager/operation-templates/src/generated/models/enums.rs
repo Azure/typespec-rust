@@ -43,7 +43,7 @@ create_extensible_enum!(
     #[doc = r#"Indicates the operation is initiated by a user."#]
     (User, "user"),
     #[doc = r#"Indicates the operation is initiated by a user or system."#]
-    (Usersystem, "user,system")
+    (UserSystem, "user,system")
 );
 
 create_extensible_enum!(

@@ -193,8 +193,15 @@ export class Adapter {
     rustEnum.docs = this.adaptDocs(sdkEnum.summary, sdkEnum.doc);
     this.types.set(enumName, rustEnum);
 
+    const rustEnumNameToSdkEnumName = new Map<string, string>();
     for (const value of sdkEnum.values) {
-      const rustEnumValue = new rust.EnumValue(helpers.fixUpEnumValueName(value), rustEnum, value.value);
+      const enumValueName = naming.fixUpEnumValueName(value);
+      const existingMapping = rustEnumNameToSdkEnumName.get(enumValueName);
+      if (existingMapping) {
+        throw new AdapterError('NameCollision', `enum values ${value.name} and ${existingMapping} coalesce into the same name ${enumValueName}`, sdkEnum.__raw?.node);
+      }
+      rustEnumNameToSdkEnumName.set(enumValueName, value.name);
+      const rustEnumValue = new rust.EnumValue(enumValueName, rustEnum, value.value);
       rustEnumValue.docs = this.adaptDocs(value.summary, value.doc);
       rustEnum.values.push(rustEnumValue);
     }
@@ -213,7 +220,7 @@ export class Adapter {
     const enumType = this.getEnum(sdkEnumValue.enumType);
     // find the specified enum value
     for (const value of enumType.values) {
-      if (value.name === helpers.fixUpEnumValueName(sdkEnumValue)) {
+      if (value.name === naming.fixUpEnumValueName(sdkEnumValue)) {
         return value;
       }
     }

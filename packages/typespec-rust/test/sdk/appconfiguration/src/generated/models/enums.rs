@@ -122,7 +122,7 @@ create_extensible_enum!(
 
 create_enum!(
     PutKeyValueRequestContentType,
-    (ApplicationAlljson, "application/*+json"),
+    (ApplicationAnyJson, "application/*+json"),
     (ApplicationJson, "application/json"),
     (ApplicationJsonPatchJson, "application/json-patch+json"),
     (

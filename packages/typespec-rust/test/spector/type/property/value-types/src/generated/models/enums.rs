@@ -27,14 +27,14 @@ create_extensible_enum!(
 
 create_enum!(
     UnionFloatLiteralPropertyProperty,
-    (Float32Value43Point125, "43.125"),
-    (Float32Value46Point875, "46.875")
+    (INVLD_IDENTIFIER_43_125, "43.125"),
+    (INVLD_IDENTIFIER_46_875, "46.875")
 );
 
 create_enum!(
     UnionIntLiteralPropertyProperty,
-    (Int32Value42, "42"),
-    (Int32Value43, "43")
+    (INVLD_IDENTIFIER_42, "42"),
+    (INVLD_IDENTIFIER_43, "43")
 );
 
 create_enum!(

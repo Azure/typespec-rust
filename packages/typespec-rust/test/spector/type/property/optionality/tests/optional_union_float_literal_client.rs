@@ -24,7 +24,7 @@ async fn get_all() {
     // According to mockapi.ts, the all endpoint returns { property: 2.375 }
     assert_eq!(
         resp.property,
-        Some(UnionFloatLiteralPropertyProperty::Float32Value2Point375)
+        Some(UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_2_375)
     );
 }
 
@@ -50,7 +50,7 @@ async fn put_all() {
     let client = OptionalClient::with_no_credential("http://localhost:3000", None).unwrap();
     // Create a model with property set to union float literal
     let model = UnionFloatLiteralProperty {
-        property: Some(UnionFloatLiteralPropertyProperty::Float32Value2Point375),
+        property: Some(UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_2_375),
     };
 
     client
