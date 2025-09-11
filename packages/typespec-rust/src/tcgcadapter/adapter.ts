@@ -132,26 +132,6 @@ export class Adapter {
       this.crate.addDependency(new rust.CrateDependency('typespec_client_core', ['derive']));
     }
 
-    // TODO: remove once https://github.com/Azure/typespec-rust/issues/22 is fixed
-    for (const client of this.crate.clients) {
-      let done = false;
-      for (const method of client.methods) {
-        if (method.kind === 'pageable') {
-          if (method.returns.type.kind === 'pager') {
-            this.crate.addDependency(new rust.CrateDependency('async-trait')); // required for azure_core::http::Page trait
-          }
-          // TODO: why is this here?
-          this.crate.addDependency(new rust.CrateDependency('futures'));
-          done = true;
-          break;
-        }
-      }
-      if (done) {
-        break;
-      }
-    }
-    // end TODO
-
     this.crate.sortContent();
     return this.crate;
   }
@@ -1417,6 +1397,7 @@ export class Adapter {
       if (synthesizedModel.fields.length > 2) {
         rustMethod.returns = new rust.Result(this.crate, new rust.PageIterator(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
       } else {
+        this.crate.addDependency(new rust.CrateDependency('async-trait'));
         rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
       }
     } else if (method.kind === 'lro') {

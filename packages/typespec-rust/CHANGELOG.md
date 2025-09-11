@@ -1,5 +1,11 @@
 # Release History
 
+## 0.22.1 (unreleased)
+
+### Other Changes
+
+* Removed `futures` from crate dependencies for pageable methods as it's not required.
+
 ## 0.22.0 (2025-09-10)
 
 ### Breaking Changes
