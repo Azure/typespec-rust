@@ -36,12 +36,14 @@ export function emitClientsModRs(modules: Array<string>): string {
  */
 export function emitGeneratedModRs(crate: rust.Crate): string {
   let content = helpers.contentPreamble();
+  const pubModModels = '/// Contains all the data structures and types used by the client library.\npub mod models;\n'
   if (crate.clients.length > 0) {
+    content += '/// Clients used to communicate with the service.\n';
     content += 'pub mod clients;\n';
     // client method options are in the models module
-    content += 'pub mod models;\n';
+    content += pubModModels;
   } else if (crate.enums.length > 0 || crate.models.length > 0) {
-    content += 'pub mod models;\n';
+    content += pubModModels;
   }
 
   if (crate.clients.length > 0) {
