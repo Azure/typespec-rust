@@ -3,8 +3,6 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-//cspell: ignore INVLD
-
 import * as codegen from '@azure-tools/codegen';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 
