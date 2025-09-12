@@ -326,7 +326,9 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
       body += '}\n\n'; // end options
 
       if (method.kind === 'pageable' || method.kind === 'lro') {
-        body += `impl ${helpers.getTypeDeclaration(method.options.type, true)} {\n`;
+        body += `impl ${helpers.getTypeDeclaration(method.options.type, 'anonymous')} {\n`;
+        const wrappedTypeName = helpers.wrapInBackTicks(helpers.getTypeDeclaration(method.options.type, 'omit'));
+        body += `${indent.get()}/// Transforms this [${wrappedTypeName}] into a new [${wrappedTypeName}] that owns the underlying data, cloning it if necessary.\n`;
         body += `${indent.get()}pub fn into_owned(self) -> ${method.options.type.name}<'static> {\n`;
         body += `${indent.push().get()}${method.options.type.name} {\n`;
         indent.push();
@@ -473,7 +475,7 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
       }
     }
 
-    paramsSig.push(`options: ${helpers.getTypeDeclaration(method.options, true)}`);
+    paramsSig.push(`options: ${helpers.getTypeDeclaration(method.options, 'anonymous')}`);
   }
 
   return paramsSig.join(', ');

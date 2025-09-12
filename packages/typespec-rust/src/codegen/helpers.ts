@@ -141,10 +141,10 @@ export function emitVisibility(visibility: rust.Visibility): string {
  * returns the type declaration string for the specified Rust type
  * 
  * @param type is the Rust type for which to emit the declaration
- * @param withAnonymousLifetime indicates if an existing lifetime annotation should be substituted with the anonymous lifetime
+ * @param withLifetime indicates how the lifetime annotation should be emitted
  * @returns 
  */
-export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.ResponseHeadersTrait | rust.Type, withAnonymousLifetime = false): string {
+export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.ResponseHeadersTrait | rust.Type, withLifetime: 'default' | 'anonymous' | 'omit' = 'default'): string {
   switch (type.kind) {
     case 'arc':
       return `${type.name}<dyn ${getTypeDeclaration(type.type)}>`;
@@ -162,23 +162,23 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'Etag':
       return type.kind;
     case 'hashmap':
-      return `${type.name}<String, ${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+      return `${type.name}<String, ${getTypeDeclaration(type.type, withLifetime)}>`;
     case 'implTrait':
-      return `impl ${type.name}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+      return `impl ${type.name}<${getTypeDeclaration(type.type, withLifetime)}>`;
     case 'literal':
       return getTypeDeclaration(type.valueKind);
     case 'option':
-      return `Option<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+      return `Option<${getTypeDeclaration(type.type, withLifetime)}>`;
     case 'pageIterator':
       return `PageIterator<${getTypeDeclaration(type.type)}>`;
     case 'pager':
       // we explicitly omit the Response<T> from the type decl
-      return `Pager<${getTypeDeclaration(type.type.content, withAnonymousLifetime)}>`;
+      return `Pager<${getTypeDeclaration(type.type.content, withLifetime)}>`;
     case 'poller':
       // we explicitly omit the Response<T> from the type decl
-      return `Poller<${getTypeDeclaration(type.type.content, withAnonymousLifetime)}>`;
+      return `Poller<${getTypeDeclaration(type.type.content, withLifetime)}>`;
     case 'payload':
-      return getTypeDeclaration(type.type, withAnonymousLifetime);
+      return getTypeDeclaration(type.type, withLifetime);
     case 'bufResponse':
       return type.name;
     case 'ref':
@@ -189,12 +189,12 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
         case 'bytes':
           return `${type.name}<${getTypeDeclaration(type.content)}${formatType}>`;
         case 'payload':
-          return `${type.name}<${getTypeDeclaration(type.content.type, withAnonymousLifetime)}${formatType}>`;
+          return `${type.name}<${getTypeDeclaration(type.content.type, withLifetime)}${formatType}>`;
       }
       break;
     }
     case 'result':
-      return `${type.name}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+      return `${type.name}<${getTypeDeclaration(type.type, withLifetime)}>`;
     case 'response':
       // JsonFormat is the default, so we can elide it
       return `${type.name}<${getTypeDeclaration(type.content)}${type.format !== 'JsonFormat' ? `, ${type.format}` : ''}>`;
@@ -218,15 +218,19 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'struct':
       if (!type.lifetime) {
         return type.name;
-      } else if (withAnonymousLifetime) {
-        // this type has a lifetime but we don't want its name
-        return `${type.name}${AnonymousLifetimeAnnotation}`;
       }
-      return `${type.name}${getGenericLifetimeAnnotation(type.lifetime)}`;
+      switch (withLifetime) {
+        case 'default':
+          return `${type.name}${getGenericLifetimeAnnotation(type.lifetime)}`;
+        case 'anonymous':
+          return `${type.name}${AnonymousLifetimeAnnotation}`;
+        default:
+          return type.name;
+      }
     case 'unit':
       return '()';      
     case 'Vec':
-      return `${type.kind}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+      return `${type.kind}<${getTypeDeclaration(type.type, withLifetime)}>`;
   }
 }
 

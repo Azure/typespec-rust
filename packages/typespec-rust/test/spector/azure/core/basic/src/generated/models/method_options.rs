@@ -76,6 +76,7 @@ pub struct BasicClientListOptions<'a> {
 }
 
 impl BasicClientListOptions<'_> {
+    /// Transforms this [`BasicClientListOptions`] into a new [`BasicClientListOptions`] that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> BasicClientListOptions<'static> {
         BasicClientListOptions {
             expand: self.expand,

@@ -6,6 +6,7 @@
 
 * Removed `futures` from crate dependencies for pageable methods as it's not required.
 * Added doc comments for public modules.
+* Added doc comment for `into_owned()` implementations.
 
 ## 0.22.0 (2025-09-10)
 

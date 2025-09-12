@@ -34,6 +34,7 @@ pub struct OperationTemplatesLroClientCreateOrReplaceOptions<'a> {
 }
 
 impl OperationTemplatesLroClientCreateOrReplaceOptions<'_> {
+    /// Transforms this [`OperationTemplatesLroClientCreateOrReplaceOptions`] into a new [`OperationTemplatesLroClientCreateOrReplaceOptions`] that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> OperationTemplatesLroClientCreateOrReplaceOptions<'static> {
         OperationTemplatesLroClientCreateOrReplaceOptions {
             method_options: ClientMethodOptions {
@@ -55,6 +56,7 @@ pub struct OperationTemplatesLroClientDeleteOptions<'a> {
 }
 
 impl OperationTemplatesLroClientDeleteOptions<'_> {
+    /// Transforms this [`OperationTemplatesLroClientDeleteOptions`] into a new [`OperationTemplatesLroClientDeleteOptions`] that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> OperationTemplatesLroClientDeleteOptions<'static> {
         OperationTemplatesLroClientDeleteOptions {
             method_options: ClientMethodOptions {
@@ -76,6 +78,7 @@ pub struct OperationTemplatesLroClientExportOptions<'a> {
 }
 
 impl OperationTemplatesLroClientExportOptions<'_> {
+    /// Transforms this [`OperationTemplatesLroClientExportOptions`] into a new [`OperationTemplatesLroClientExportOptions`] that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> OperationTemplatesLroClientExportOptions<'static> {
         OperationTemplatesLroClientExportOptions {
             method_options: ClientMethodOptions {
@@ -93,6 +96,7 @@ pub struct OperationTemplatesOperationsClientListOptions<'a> {
 }
 
 impl OperationTemplatesOperationsClientListOptions<'_> {
+    /// Transforms this [`OperationTemplatesOperationsClientListOptions`] into a new [`OperationTemplatesOperationsClientListOptions`] that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> OperationTemplatesOperationsClientListOptions<'static> {
         OperationTemplatesOperationsClientListOptions {
             method_options: ClientMethodOptions {
