@@ -141,7 +141,10 @@ export function emitVisibility(visibility: rust.Visibility): string {
  * returns the type declaration string for the specified Rust type
  * 
  * @param type is the Rust type for which to emit the declaration
- * @param withLifetime indicates how the lifetime annotation should be emitted
+ * @param withLifetime controls how the lifetime annotation is emitted:
+ *   - 'default': Emits the standard lifetime annotation if required by the type.
+ *   - 'anonymous': Emits an anonymous lifetime annotation (e.g., <'_>) if required by the type.
+ *   - 'omit': Omits the lifetime annotation entirely, even if the type would normally require one.
  * @returns 
  */
 export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.ResponseHeadersTrait | rust.Type, withLifetime: 'default' | 'anonymous' | 'omit' = 'default'): string {
