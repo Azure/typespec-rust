@@ -5,6 +5,5 @@
 
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 #[allow(non_camel_case_types)]
-
 mod generated;
 pub use generated::*;
