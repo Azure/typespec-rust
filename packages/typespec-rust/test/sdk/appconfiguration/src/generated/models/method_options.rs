@@ -231,7 +231,7 @@ pub struct AzureAppConfigurationClientCreateSnapshotOptions<'a> {
 }
 
 impl AzureAppConfigurationClientCreateSnapshotOptions<'_> {
-    /// Transforms this [`AzureAppConfigurationClientCreateSnapshotOptions`] into a new [`AzureAppConfigurationClientCreateSnapshotOptions`] that owns the underlying data, cloning it if necessary.
+    /// Transforms this [`AzureAppConfigurationClientCreateSnapshotOptions`] into a new `AzureAppConfigurationClientCreateSnapshotOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> AzureAppConfigurationClientCreateSnapshotOptions<'static> {
         AzureAppConfigurationClientCreateSnapshotOptions {
             method_options: ClientMethodOptions {
@@ -402,7 +402,7 @@ pub struct AzureAppConfigurationClientListKeyValuesOptions<'a> {
 }
 
 impl AzureAppConfigurationClientListKeyValuesOptions<'_> {
-    /// Transforms this [`AzureAppConfigurationClientListKeyValuesOptions`] into a new [`AzureAppConfigurationClientListKeyValuesOptions`] that owns the underlying data, cloning it if necessary.
+    /// Transforms this [`AzureAppConfigurationClientListKeyValuesOptions`] into a new `AzureAppConfigurationClientListKeyValuesOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> AzureAppConfigurationClientListKeyValuesOptions<'static> {
         AzureAppConfigurationClientListKeyValuesOptions {
             accept_datetime: self.accept_datetime,
@@ -444,7 +444,7 @@ pub struct AzureAppConfigurationClientListKeysOptions<'a> {
 }
 
 impl AzureAppConfigurationClientListKeysOptions<'_> {
-    /// Transforms this [`AzureAppConfigurationClientListKeysOptions`] into a new [`AzureAppConfigurationClientListKeysOptions`] that owns the underlying data, cloning it if necessary.
+    /// Transforms this [`AzureAppConfigurationClientListKeysOptions`] into a new `AzureAppConfigurationClientListKeysOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> AzureAppConfigurationClientListKeysOptions<'static> {
         AzureAppConfigurationClientListKeysOptions {
             accept_datetime: self.accept_datetime,
@@ -486,7 +486,7 @@ pub struct AzureAppConfigurationClientListLabelsOptions<'a> {
 }
 
 impl AzureAppConfigurationClientListLabelsOptions<'_> {
-    /// Transforms this [`AzureAppConfigurationClientListLabelsOptions`] into a new [`AzureAppConfigurationClientListLabelsOptions`] that owns the underlying data, cloning it if necessary.
+    /// Transforms this [`AzureAppConfigurationClientListLabelsOptions`] into a new `AzureAppConfigurationClientListLabelsOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> AzureAppConfigurationClientListLabelsOptions<'static> {
         AzureAppConfigurationClientListLabelsOptions {
             accept_datetime: self.accept_datetime,
@@ -539,7 +539,7 @@ pub struct AzureAppConfigurationClientListRevisionsOptions<'a> {
 }
 
 impl AzureAppConfigurationClientListRevisionsOptions<'_> {
-    /// Transforms this [`AzureAppConfigurationClientListRevisionsOptions`] into a new [`AzureAppConfigurationClientListRevisionsOptions`] that owns the underlying data, cloning it if necessary.
+    /// Transforms this [`AzureAppConfigurationClientListRevisionsOptions`] into a new `AzureAppConfigurationClientListRevisionsOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> AzureAppConfigurationClientListRevisionsOptions<'static> {
         AzureAppConfigurationClientListRevisionsOptions {
             accept_datetime: self.accept_datetime,
@@ -581,7 +581,7 @@ pub struct AzureAppConfigurationClientListSnapshotsOptions<'a> {
 }
 
 impl AzureAppConfigurationClientListSnapshotsOptions<'_> {
-    /// Transforms this [`AzureAppConfigurationClientListSnapshotsOptions`] into a new [`AzureAppConfigurationClientListSnapshotsOptions`] that owns the underlying data, cloning it if necessary.
+    /// Transforms this [`AzureAppConfigurationClientListSnapshotsOptions`] into a new `AzureAppConfigurationClientListSnapshotsOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> AzureAppConfigurationClientListSnapshotsOptions<'static> {
         AzureAppConfigurationClientListSnapshotsOptions {
             after: self.after,

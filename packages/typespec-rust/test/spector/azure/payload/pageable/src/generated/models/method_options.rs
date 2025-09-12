@@ -16,7 +16,7 @@ pub struct PageableClientListOptions<'a> {
 }
 
 impl PageableClientListOptions<'_> {
-    /// Transforms this [`PageableClientListOptions`] into a new [`PageableClientListOptions`] that owns the underlying data, cloning it if necessary.
+    /// Transforms this [`PageableClientListOptions`] into a new `PageableClientListOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> PageableClientListOptions<'static> {
         PageableClientListOptions {
             maxpagesize: self.maxpagesize,
