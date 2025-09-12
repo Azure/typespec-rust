@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-// cspell: ignore tcgcadapter
+// cspell: ignore INVLD tcgcadapter
 
 import * as rust from '../src/codemodel/index.js';
 import * as helpers from '../src/tcgcadapter/helpers.js';

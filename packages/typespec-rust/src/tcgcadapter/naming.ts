@@ -3,6 +3,8 @@
 *  Licensed under the MIT License. See License.txt in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+//cspell: ignore INVLD
+
 import * as codegen from '@azure-tools/codegen';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 
@@ -38,7 +40,7 @@ const reservedWords = new Set<string>(
 );
 
 /**
- * fixes up enum names to follow Rust conventions
+ * fixes up enum value names to follow Rust conventions
  * 
  * @param enumValue the enum value type to fix up
  * @returns the fixed up name. can be the original value if no fix-up was required
