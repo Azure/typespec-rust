@@ -12,7 +12,7 @@
 ### Bugs Fixed
 
 * TypeSpec enum values that coalesce into the same enum value name will report a diagnostic error, requiring a rename in the TypeSpec.
-  * Previously, the dupicate names would be emitted, resulting in a compile-time error.
+  * Previously, the duplicate names would be emitted, resulting in a compile-time error.
 
 ### Other Changes
 
