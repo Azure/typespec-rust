@@ -79,6 +79,7 @@ const azureHttpSpecsGroup = {
   'spector_apiverpath': {input: 'azure/client-generator-core/api-version/path/client.tsp'},
   'spector_apiverquery': {input: 'azure/client-generator-core/api-version/query/client.tsp'},
   'spector_clientinit': {input: 'azure/client-generator-core/client-initialization/client.tsp'},
+  'spector_clientloc': {input: 'azure/client-generator-core/client-location'},
   'spector_flattenproperty': {input: 'azure/client-generator-core/flatten-property'},
   'spector_coreusage': {input: 'azure/client-generator-core/usage'},
   'spector_basic': {input: 'azure/core/basic'},
