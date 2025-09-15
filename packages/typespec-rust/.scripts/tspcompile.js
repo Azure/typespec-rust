@@ -96,6 +96,7 @@ const azureHttpSpecsGroup = {
   'spector_armoptemplates': {input: 'azure/resource-manager/operation-templates'},
   'spector_armresources': {input: 'azure/resource-manager/resources'},
   'spector_naming': {input: 'client/naming'},
+  'spector_overload': {input: 'client/overload/client.tsp'},
   'spector_clientopgroup': {input: 'client/structure/client-operation-group/client.tsp'},
   'spector_default': {input: 'client/structure/default/client.tsp'},
   'spector_multiclient': {input: 'client/structure/multi-client/client.tsp'},
