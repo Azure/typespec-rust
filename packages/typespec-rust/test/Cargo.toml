@@ -40,6 +40,7 @@ members = [
     "spector/azure/example/basic",
     "spector/azure/payload/pageable",
     "spector/azure/resource-manager/common-properties",
+    "spector/azure/resource-manager/method-subscription-id",
     "spector/azure/resource-manager/non-resource",
     "spector/azure/resource-manager/operation-templates",
     "spector/azure/resource-manager/resources",
