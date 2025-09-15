@@ -84,9 +84,7 @@ impl ResourcesSingletonClient {
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-
         let api_version = self.api_version.clone();
-
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>| {
                 let (mut request, next_link) = match next_link {
@@ -100,11 +98,9 @@ impl ResourcesSingletonClient {
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
-
                         (request, next_link)
                     }
                     PollerState::Initial => {
@@ -112,11 +108,9 @@ impl ResourcesSingletonClient {
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
                         request.set_body(resource.clone());
-
                         (request, url.clone())
                     }
                 };
-
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {

@@ -943,7 +943,6 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
  * @returns the code which sets HTTP headers for the request
  */
 function applyHeaderParams(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean): string {
-
   let body = '';
 
   for (const headerParam of paramGroups.header) {
@@ -1366,9 +1365,9 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
-  body += `${constructUrl(indent, use, method, paramGroups, urlVar)}\n\n`;
+  body += constructUrl(indent, use, method, paramGroups, urlVar);
   if (paramGroups.apiVersion) {
-    body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n\n`;
+    body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n`;
   }
 
   body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(\n`
@@ -1377,17 +1376,14 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     pattern: `PollerState::More(next_link)`,
     body: (indent) => {
       let body = '';
-      if (paramGroups.apiVersion) {
-        body += `${indent.get()}let qp = next_link.query_pairs().filter(|(name, _)| name.ne("api-version"));\n`;
+      if (paramGroups.apiVersion?.kind === 'queryScalar') {
+        body += `${indent.get()}let qp = next_link.query_pairs().filter(|(name, _)| name.ne("${paramGroups.apiVersion.key}"));\n`;
+        body += `${indent.get()}let mut next_link = next_link.clone();\n`;
+        body += `${indent.get()}next_link.query_pairs_mut().clear().extend_pairs(qp).append_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`;
       }
 
-      body += `${indent.get()}let mut next_link = next_link.clone();\n`;
-
-      if (paramGroups.apiVersion) {
-        body += `${indent.get()}next_link.query_pairs_mut().clear().extend_pairs(qp).append_pair("api-version", &${paramGroups.apiVersion.name});\n\n`;
-      }
-      body += `${indent.get()}let ${paramGroups.header.length > 0 ? 'mut ' : ''}request = Request::new(next_link.clone(), Method::Get);`;
-      body += `\n${applyHeaderParams(indent, use, method, paramGroups, true)}\n\n`
+      body += `${indent.get()}let ${paramGroups.header.length > 0 ? 'mut ' : ''}request = Request::new(next_link.clone(), Method::Get);\n`;
+      body += applyHeaderParams(indent, use, method, paramGroups, true);
       body += `${indent.get()}(request, next_link)\n`;
 
       return body;
@@ -1395,12 +1391,12 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   }, {
     pattern: 'PollerState::Initial',
     body: (indent) => {
-      let body = `${constructRequest(indent, use, method, paramGroups, true, true, false)}\n`;
+      let body = constructRequest(indent, use, method, paramGroups, true, true, false);
       body += `${indent.get()}(request, url.clone())\n`;
 
       return body;
     },
-  }])};\n\n`;
+  }])};\n`;
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`
   body += `${indent.get()}let pipeline = pipeline.clone();\n`
   body += `${indent.get()}async move {\n`
