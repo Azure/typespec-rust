@@ -7,6 +7,7 @@ import { emitCargoToml } from './cargotoml.js';
 import { emitClients } from './clients.js';
 import { Context } from './context.js';
 import { emitEnums } from './enums.js';
+import { emitUnions } from './unions.js';
 import { Module } from './helpers.js';
 import { emitLibRs } from './lib.js';
 import { emitHeaderTraits } from './headerTraits.js';
@@ -86,6 +87,7 @@ export class CodeGenerator {
     }
 
     addModelsFile(emitEnums(this.crate, this.context), 'pubUse');
+    addModelsFile(emitUnions(this.crate), 'pubUse');
 
     const models = emitModels(this.crate, this.context);
     addModelsFile(models.public, 'pubUse');

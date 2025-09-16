@@ -63,6 +63,7 @@ members = [
     "spector/type/property/optionality",
     "spector/type/property/value-types",
     "spector/type/scalar",
+    "spector/type/union/discriminated",
     "spector/versioning/madeOptional",
 ]
 resolver = "2"

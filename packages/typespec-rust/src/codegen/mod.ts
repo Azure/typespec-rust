@@ -42,7 +42,7 @@ export function emitGeneratedModRs(crate: rust.Crate): string {
     content += 'pub mod clients;\n';
     // client method options are in the models module
     content += pubModModels;
-  } else if (crate.enums.length > 0 || crate.models.length > 0) {
+  } else if (crate.enums.length > 0 || crate.models.length > 0 || crate.unions.length > 0) {
     content += pubModModels;
   }
 

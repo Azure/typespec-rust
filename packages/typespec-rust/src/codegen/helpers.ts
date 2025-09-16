@@ -209,7 +209,9 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return type.type;
     case 'slice':
       return `[${getTypeDeclaration(type.type)}]`;
+    case 'unionMember':
     case 'enum':
+    case 'union':
     case 'jsonValue':
     case 'offsetDateTime':
     case 'responseHeadersTrait':

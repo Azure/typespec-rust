@@ -23,6 +23,9 @@ export interface Crate {
   /** the Crates on which this Crate depends */
   dependencies: Array<CrateDependency>;
 
+  /** enums contains all of the unions for this crate. can be empty */
+  unions: Array<types.Union>;
+
   /** enums contains all of the enums for this crate. can be empty */
   enums: Array<types.Enum>;
 
@@ -57,7 +60,8 @@ export class Crate implements Crate {
     this.name = name;
     this.version = version;
     this.type = type;
-    this.dependencies = new Array<CrateDependency>();
+    this.dependencies = new Array<CrateDependency>()
+    this.unions = new Array<types.Union>();
     this.enums = new Array<types.Enum>();
     this.models = new Array<types.Model>();
     this.clients = new Array<client.Client>();
@@ -85,6 +89,10 @@ export class Crate implements Crate {
     };
 
     this.dependencies.sort((a: CrateDependency, b: CrateDependency) => { return sortAscending(a.name, b.name); });
+    this.unions.sort((a: types.Union, b: types.Union) => { return sortAscending(a.name, b.name); });
+    for (const rustUnion of this.unions) {
+      rustUnion.members.sort((a: types.UnionMember, b: types.UnionMember) => { return sortAscending(a.name, b.name); });
+    }
     this.enums.sort((a: types.Enum, b: types.Enum) => { return sortAscending(a.name, b.name); });
     for (const rustEnum of this.enums) {
       rustEnum.values.sort((a: types.EnumValue, b: types.EnumValue) => { return sortAscending(a.name, b.name); });

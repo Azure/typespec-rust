@@ -128,7 +128,7 @@ export class Adapter {
       this.crate.addDependency(new rust.CrateDependency('serde'));
     }
 
-    if (this.crate.clients.length > 0 || this.crate.enums.length > 0 || this.crate.models.length > 0) {
+    if (this.crate.clients.length > 0 || this.crate.enums.length > 0 || this.crate.models.length > 0 || this.crate.unions.length > 0) {
       this.crate.addDependency(new rust.CrateDependency('typespec_client_core', ['derive']));
     }
 
@@ -152,6 +152,11 @@ export class Adapter {
 
   /** converts all tcgc types to their Rust type equivalent */
   private adaptTypes(): void {
+    for (const sdkUnion of this.ctx.sdkPackage.unions.filter(u => u.kind === 'union')) {
+      const rustUnion = this.getUnion(sdkUnion);
+      this.crate.unions.push(rustUnion);
+    }
+
     for (const sdkEnum of this.ctx.sdkPackage.enums) {
       if (<tcgc.UsageFlags>(sdkEnum.usage & tcgc.UsageFlags.ApiVersionEnum) === tcgc.UsageFlags.ApiVersionEnum) {
         // we skip generating the enums for API
@@ -327,6 +332,49 @@ export class Adapter {
     stack.pop();
 
     return rustModel;
+  }
+
+  /**
+   * converts a tcgc union to a Rust union
+   *
+   * @param union the tcgc union to convert
+   * @param stack is a stack of model type names used to detect recursive type definitions
+   * @returns a Rust union
+   */
+  private getUnion(union: tcgc.SdkUnionType, stack?: Array<string>): rust.Union {
+    if (union.name.length === 0) {
+      throw new AdapterError('InternalError', 'unnamed union', union.__raw?.node);
+    }
+    const unionName = codegen.capitalize(union.name);
+    let rustUnion = this.types.get(unionName);
+    if (rustUnion) {
+      return <rust.Union>rustUnion;
+    }
+
+    // no stack means this is the first model in
+    // the chain of potentially recursive calls
+    if (!stack) {
+      stack = new Array<string>();
+    }
+    stack.push(unionName);
+
+    rustUnion = new rust.Union(unionName, union.access === 'public');
+    rustUnion.docs = this.adaptDocs(union.summary, union.doc);
+    this.types.set(unionName, rustUnion);
+
+    for (const unionMember of union.variantTypes) {
+      const unionMemberType = this.getType(unionMember, stack);
+      if (unionMemberType.kind !== 'model') {
+        throw new AdapterError('UnsupportedTsp', `non-model union member`, unionMember.__raw?.node);
+      }
+      const unionMemberName = unionMemberType.name;
+
+      rustUnion.members.push(new rust.UnionMember(unionMemberName, unionMemberType));
+    }
+
+    stack.pop();
+
+    return rustUnion;
   }
 
   private getSerializedPropertyName(property: tcgc.SdkModelPropertyType | tcgc.SdkPathParameter): string | undefined {
@@ -520,6 +568,9 @@ export class Adapter {
         timeType = new rust.OffsetDateTime(this.crate, encoding, true);
         this.types.set(keyName, timeType);
         return timeType;
+      }
+      case 'union': {
+        return this.getUnion(type);
       }
       default:
         throw new AdapterError('UnsupportedTsp', `unhandled tcgc type ${type.kind}`, type.__raw?.node);
@@ -1897,6 +1948,8 @@ export class Adapter {
       case 'slice':
       case 'str':
       case 'String':
+      case 'union':
+      case 'unionMember':
       case 'Url':
       case 'Vec':
         return type;

@@ -18,7 +18,7 @@ export interface Docs {
 export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | Poller | BufResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
-export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
+export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Union | UnionMember | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
 
 /** Type defines a type within the Rust type system */
 export type Type = SdkType | WireType;
@@ -107,6 +107,37 @@ export interface EnumValue {
 
   /** the value used in SerDe operations */
   value: number | string;
+}
+
+/** Union is a Rust enum type with values of different types. */
+export interface Union {
+  kind: 'union';
+
+  /** the name of the union type */
+  name: string;
+
+  /** any docs for the type */
+  docs: Docs;
+
+  /** indicates the visibility of the union */
+  visibility: Visibility;
+
+  /** indicates if the union and its values should be public */
+  pub: boolean;
+
+  /** one or more members of the union */
+  members: Array<UnionMember>;
+}
+
+/** UnionMember is a union member for a specific Union */
+export interface UnionMember {
+  kind: 'unionMember';
+
+  /** the name of the union member */
+  name: string;
+
+  /** the type of the union member */
+  type: Type;
 }
 
 /** Etag is an azure_core::Etag */
@@ -693,6 +724,23 @@ export class MarkerType implements MarkerType {
     this.kind = 'marker';
     this.name = name;
     this.docs = {};
+  }
+}
+
+export class Union implements Union {
+  constructor(name: string, pub: boolean) {
+    this.kind = 'union';
+    this.name = name;
+    this.pub = pub;
+    this.members = new Array<UnionMember>();
+  }
+}
+
+export class UnionMember implements UnionMember {
+  constructor(name: string, type: Type) {
+    this.kind = 'unionMember';
+    this.name = name;
+    this.type = type;
   }
 }
 
