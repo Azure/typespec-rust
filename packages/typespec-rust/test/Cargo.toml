@@ -50,6 +50,7 @@ members = [
     "spector/client/structure/multi-client",
     "spector/client/structure/renamed-operation",
     "spector/client/structure/two-operation-group",
+    "spector/payload/pageable",
     "spector/resiliency/srv-driven/new",
     "spector/resiliency/srv-driven/old",
     "spector/routes",
