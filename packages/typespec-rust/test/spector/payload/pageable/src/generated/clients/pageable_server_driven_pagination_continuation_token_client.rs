@@ -61,7 +61,11 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             if let Some(foo) = &options.foo {
                 request.insert_header("foo", foo);
             }
-            if let PagerState::More(token) = token {
+            let token = match token {
+                PagerState::More(token) => &Some(token),
+                PagerState::Initial => &options.token,
+            };
+            if let Some(token) = token {
                 request.insert_header("token", token);
             }
             let ctx = options.method_options.context.clone();
@@ -78,9 +82,9 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                         .nested_next
                         .and_then(|nested_next| nested_next.next_token)
                     {
-                        Some(nested_next) if !nested_next.is_empty() => PagerResult::More {
+                        Some(next_token) if !next_token.is_empty() => PagerResult::More {
                             response: rsp,
-                            continuation: nested_next,
+                            continuation: next_token,
                         },
                         _ => PagerResult::Done { response: rsp },
                     },
@@ -116,13 +120,12 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             if let Some(foo) = &options.foo {
                 request.insert_header("foo", foo);
             }
-            match token {
-                PagerState::More(token) => request.insert_header("token", token),
-                PagerState::Initial => {
-                    if let Some(token) = &options.token {
-                        request.insert_header("token", token);
-                    }
-                }
+            let token = match token {
+                PagerState::More(token) => &Some(token),
+                PagerState::Initial => &options.token,
+            };
+            if let Some(token) = token {
+                request.insert_header("token", token);
             }
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
@@ -196,13 +199,12 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             if let Some(foo) = &options.foo {
                 request.insert_header("foo", foo);
             }
-            match token {
-                PagerState::More(token) => request.insert_header("token", token),
-                PagerState::Initial => {
-                    if let Some(token) = &options.token {
-                        request.insert_header("token", token);
-                    }
-                }
+            let token = match token {
+                PagerState::More(token) => &Some(token),
+                PagerState::Initial => &options.token,
+            };
+            if let Some(token) = token {
+                request.insert_header("token", token);
             }
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
@@ -277,9 +279,9 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                         .nested_next
                         .and_then(|nested_next| nested_next.next_token)
                     {
-                        Some(nested_next) if !nested_next.is_empty() => PagerResult::More {
+                        Some(next_token) if !next_token.is_empty() => PagerResult::More {
                             response: rsp,
-                            continuation: nested_next,
+                            continuation: next_token,
                         },
                         _ => PagerResult::Done { response: rsp },
                     },

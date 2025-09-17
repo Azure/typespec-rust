@@ -950,10 +950,20 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
       // we have some special handling for the header continuation token.
       // if we have a token value, i.e. from the next page, then use that value.
       // if not, then check if an optional token value was provided.
+      body += `${indent.get()}let ${headerParam.name} = ` + helpers.buildMatch(indent, headerParam.name, [
+        {
+          pattern: `PagerState::More(${headerParam.name})`,
+          body: (indent) => `${indent.get()}&Some(${headerParam.name})\n`,
+        },
+        {
+          pattern: 'PagerState::Initial',
+          body: (indent) => `${indent.get()}&options.${headerParam.name}\n`,
+        }
+      ]) + ';\n';
       body += indent.get() + helpers.buildIfBlock(indent, {
-        condition: `let Some(${headerParam.name}) = ${headerParam.name}.or_else(|| options.${headerParam.name}.clone())`,
+        condition: `let Some(${headerParam.name}) = ${headerParam.name}`,
         body: (indent) => `${indent.get()}request.insert_header("${headerParam.header}", ${headerParam.name});\n`,
-      })
+      }) + '\n';
       continue;
     }
 
@@ -1179,7 +1189,7 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
  */
 function getPageableMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.PageableMethod): string {
   if (!method.strategy) {
-    throw new CodegenError('InternalError', 'paged method with no strategy NYI');
+    return 'todo!();';
   }
 
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
@@ -1223,16 +1233,15 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
                 body += `${indent.get()}url = new_url;\n`;
                 return body;
               },
-            });
+            }) + '\n';
             body += `${indent.get()}url.query_pairs_mut().append_pair("${reqTokenValue}", &${reqTokenParam});\n`;
             return body;
           }
-        })}`
+        })}\n`
       }
       break;
     }
     case 'nextLink': {
-      // Build the field path accessor string (e.g., "nestedNext.next" for nested fields)
       const nextLinkName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
       body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>| {\n`;
       body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
@@ -1283,7 +1292,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   }
 
   // check if we need to extract the next link field from the response model
-  if (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'modelField') {
+  if (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'nextLink') {
     use.add('azure_core', 'http::BufResponse');
     body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
     body += `${indent.get()}let bytes = body.collect().await?;\n`;
@@ -1292,32 +1301,44 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     body += `${indent.get()}let rsp = BufResponse::from_bytes(status, headers, bytes).into();\n`;
   }
 
+  /** provides access to the next link field, handling nested fields as required */
+  const buildNextLinkPath = function (nextLinkPath: Array<rust.ModelField>): string {
+    let fullPath = nextLinkPath[0].name;
+    if (nextLinkPath.length > 1) {
+      for (let i = 1; i < nextLinkPath.length; ++i) {
+        const prev = nextLinkPath[i - 1];
+        const cur = nextLinkPath[i];
+        fullPath += `.and_then(|${prev.name}| ${prev.name}.${cur.name})`;
+      }
+    }
+    return fullPath;
+  };
+
   let srcNextPage: string;
   let nextPageValue: string;
   let continuation: string;
   switch (method.strategy.kind) {
     case 'continuationToken':
-      nextPageValue = method.strategy.responseToken.name;
-      continuation = nextPageValue;
       switch (method.strategy.responseToken.kind) {
-        case 'modelField':
-          srcNextPage = `res.${nextPageValue}`;
+        case 'nextLink':
+          nextPageValue = method.strategy.responseToken.nextLinkPath[method.strategy.responseToken.nextLinkPath.length - 1].name;
+          srcNextPage = `res.${buildNextLinkPath(method.strategy.responseToken.nextLinkPath)}`;
           break;
         case 'responseHeaderScalar':
           if (!method.responseHeaders) {
             throw new CodegenError('InternalError', `missing response headers trait for method ${method.name}`);
           }
+          nextPageValue = method.strategy.responseToken.name;
           use.addForType(method.responseHeaders);
           srcNextPage = `rsp.${method.strategy.responseToken.name}()?`;
           break;
       }
+      continuation = nextPageValue;
       break;
     case 'nextLink': {
-      // Build the field path accessor string (e.g., "nested_next.next" for nested fields)
-      const nextLinkFieldPath = method.strategy.nextLinkPath.map(field => field.name).join('.');
       const lastFieldName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
       nextPageValue = lastFieldName;
-      srcNextPage = `res.${nextLinkFieldPath}`;
+      srcNextPage = `res.${buildNextLinkPath(method.strategy.nextLinkPath)}`;
       continuation = `${lastFieldName}.parse()?`;
       break;
     }
@@ -1329,13 +1350,13 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}Ok(${helpers.buildMatch(indent, srcNextPage, [{
     pattern: `Some(${nextPageValue}) if !${nextPageValue}.is_empty()`,
     body: (indent) => {
-      return `${indent.get()}response: rsp, continuation: ${continuation}`;
+      return `${indent.get()}response: rsp, continuation: ${continuation}\n`;
     },
     returns: 'PagerResult::More',
   }, {
     pattern: '_',
     body: (indent) => {
-      return `${indent.get()}response: rsp`;
+      return `${indent.get()}response: rsp\n`;
     },
     returns: 'PagerResult::Done',
   }])}`;
