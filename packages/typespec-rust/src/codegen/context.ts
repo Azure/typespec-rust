@@ -158,18 +158,35 @@ export class Context {
       return undefined;
     }
 
-    // find the page items field in the model
-    let pageItemsField: rust.ModelField | undefined;
-    for (const field of model.fields) {
-      if (field.kind === 'additionalProperties') {
-        continue;
-      }
-      if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.PageItems) === rust.ModelFieldFlags.PageItems) {
-        pageItemsField = field;
-        break;
-      }
-    }
+    // find the page items field in the model.
+    // since the items can be nested, we need to
+    // traverse through the models.
 
+    const fieldPaths = new Array<string>();
+    const recursiveFindPageItemsField = function(model: rust.Model): rust.ModelField | undefined {
+      for (const field of model.fields) {
+        if (field.kind === 'additionalProperties') {
+          continue;
+        }
+        if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.PageItems) === rust.ModelFieldFlags.PageItems) {
+          fieldPaths.push(field.name);
+          let pageItemsField: rust.ModelField | undefined;
+          if (field.type.kind === 'model') {
+            pageItemsField = recursiveFindPageItemsField(field.type);
+          }
+
+          // if the child type has a paged items field then favor that (nested case)
+          if (pageItemsField) {
+            return pageItemsField;
+          } else {
+            return field;
+          }
+        }
+      }
+      return undefined;
+    };
+
+    const pageItemsField = recursiveFindPageItemsField(model);
     if (!pageItemsField) {
       throw new CodegenError('InternalError', `didn't find page items field in model ${model.name}`);
     }
@@ -188,7 +205,7 @@ export class Context {
     content += `${indent.get()}type Item = ${helpers.getTypeDeclaration(helpers.unwrapType(pageItemsField.type))};\n`;
     content += `${indent.get()}type IntoIter = <${helpers.getTypeDeclaration(pageItemsField.type)} as IntoIterator>::IntoIter;\n`;
     content += `${indent.get()}async fn into_items(self) -> Result<Self::IntoIter> {\n`;
-    content += `${indent.push().get()}Ok(self.${pageItemsField.name}.into_iter())\n`;
+    content += `${indent.push().get()}Ok(self.${fieldPaths.join('.')}.into_iter())\n`;
     content += `${indent.pop().get()}}\n`; // end fn
     content += '}\n\n'; // end impl
 

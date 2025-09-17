@@ -1568,36 +1568,31 @@ export class Adapter {
    * @param respHeadersMap maps tcgc response headers to Rust response headers (needed for continuation token strategy)
    * @returns the pageable strategy
    */
-  private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | rust.QueryScalarParameter>, respHeadersMap: Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>): rust.PageableStrategyKind {
+  private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | rust.QueryScalarParameter>, respHeadersMap: Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>): rust.PageableStrategyKind | undefined {
+    const buildNextLinkPath = (segments: Array<tcgc.SdkServiceResponseHeader | tcgc.SdkModelPropertyType>): Array<rust.ModelField> => {
+      // build the field path for the next link segments
+      const nextLinkPath = new Array<rust.ModelField>();
+      for (const segment of segments) {
+        if (segment.kind !== 'property') {
+          throw new AdapterError('InternalError', `unexpected kind ${segment.kind} for next link segment in operation ${method.name}`, method.__raw?.node);
+        }
+
+        const nextLinkField = this.fieldsMap.get(segment);
+        if (!nextLinkField) {
+          // the most likely explanation for this is lack of reference equality
+          throw new AdapterError('InternalError', `missing next link field name ${segment.name} for operation ${method.name}`, method.__raw?.node);
+        }
+        nextLinkPath.push(nextLinkField);
+      }
+      return nextLinkPath;
+    };
+
     if (method.pagingMetadata.nextLinkOperation) {
       // TODO: https://github.com/Azure/autorest.rust/issues/103
       throw new AdapterError('UnsupportedTsp', 'next page operation NYI', method.__raw?.node);
     } else if (method.pagingMetadata.nextLinkSegments) {
-      if (method.pagingMetadata.nextLinkSegments.length > 1) {
-        // TODO: https://github.com/Azure/autorest.rust/issues/102
-        throw new AdapterError('UnsupportedTsp', 'nested next link path NYI', method.__raw?.node);
-      }
-
-      // this is the field in the response type that contains the next link URL
-      const nextLinkSegment = method.pagingMetadata.nextLinkSegments[0];
-      if (nextLinkSegment.kind !== 'property') {
-        throw new AdapterError('InternalError', `unexpected kind ${nextLinkSegment.kind} for next link segment in operation ${method.name}`, method.__raw?.node);
-      }
-
-      const nextLinkField = this.fieldsMap.get(nextLinkSegment);
-      if (!nextLinkField) {
-        // the most likely explanation for this is lack of reference equality
-        throw new AdapterError('InternalError', `missing next link field name ${nextLinkSegment.name} for operation ${method.name}`, method.__raw?.node);
-      }
-      return new rust.PageableStrategyNextLink(nextLinkField);
+      return new rust.PageableStrategyNextLink(buildNextLinkPath(method.pagingMetadata.nextLinkSegments));
     } else if (method.pagingMetadata.continuationTokenParameterSegments && method.pagingMetadata.continuationTokenResponseSegments) {
-      if (method.pagingMetadata.continuationTokenParameterSegments.length > 1) {
-        throw new AdapterError('UnsupportedTsp', `nested continuationTokenParameterSegments NYI`, method.__raw?.node);
-      }
-      if (method.pagingMetadata.continuationTokenResponseSegments.length > 1) {
-        throw new AdapterError('UnsupportedTsp', `nested continuationTokenResponseSegments NYI`, method.__raw?.node);
-      }
-
       const tokenReq = method.pagingMetadata.continuationTokenParameterSegments[0];
       const tokenResp = method.pagingMetadata.continuationTokenResponseSegments[0];
 
@@ -1617,14 +1612,10 @@ export class Adapter {
       }
 
       // find the continuation token response
-      let responseToken: rust.ResponseHeaderScalar | rust.ModelField;
+      let responseToken: rust.ResponseHeaderScalar | rust.PageableStrategyNextLink;
       switch (tokenResp.kind) {
         case 'property': {
-          const tokenField = this.fieldsMap.get(tokenResp);
-          if (!tokenField) {
-            throw new AdapterError('InternalError', `missing continuation token response field name ${tokenResp.name} for operation ${method.name}`, method.__raw?.node);
-          }
-          responseToken = tokenField;
+          responseToken = new rust.PageableStrategyNextLink(buildNextLinkPath(method.pagingMetadata.continuationTokenResponseSegments));
           break;
         }
         case 'responseheader': {
@@ -1643,7 +1634,8 @@ export class Adapter {
       }
       return new rust.PageableStrategyContinuationToken(requestToken, responseToken);
     } else {
-      throw new AdapterError('InternalError', `unknown paging strategy for operation ${method.name}`, method.__raw?.node);
+      // operation is pageable but doesn't yet support fetching subsequent pages
+      return undefined;
     }
   }
 
