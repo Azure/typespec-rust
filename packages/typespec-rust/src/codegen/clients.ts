@@ -1369,7 +1369,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     body += ')\n'; // end Ok
   } else {
     // non-continuation case, so we don't need to worry about next links, continuation tokens, etc...
-    body += `${indent.get()}Ok(PagerResult::Done { response: rsp.try_into()? })\n`;
+    body += `${indent.get()}Ok(PagerResult::Done { response: rsp.into() })\n`;
   }
 
   body += `${indent.pop().get()}}\n`; // end async move

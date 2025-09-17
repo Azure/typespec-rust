@@ -102,7 +102,7 @@ impl PageableClient {
                 let rsp = pipeline.send(&ctx, &mut request).await?;
                 let rsp = check_success(rsp).await?;
                 Ok(PagerResult::Done {
-                    response: rsp.try_into()?,
+                    response: rsp.into(),
                 })
             }
         }))
