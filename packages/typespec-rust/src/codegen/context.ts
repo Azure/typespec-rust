@@ -163,7 +163,7 @@ export class Context {
     // traverse through the models.
 
     const fieldPaths = new Array<string>();
-    const recursiveFindPageItemgsField = function(model: rust.Model): rust.ModelField | undefined {
+    const recursiveFindPageItemsField = function(model: rust.Model): rust.ModelField | undefined {
       for (const field of model.fields) {
         if (field.kind === 'additionalProperties') {
           continue;
@@ -172,7 +172,7 @@ export class Context {
           fieldPaths.push(field.name);
           let pageItemsField: rust.ModelField | undefined;
           if (field.type.kind === 'model') {
-            pageItemsField = recursiveFindPageItemgsField(field.type);
+            pageItemsField = recursiveFindPageItemsField(field.type);
           }
 
           // if the child type has a paged items field then favor that (nested case)
@@ -186,7 +186,7 @@ export class Context {
       return undefined;
     };
 
-    const pageItemsField = recursiveFindPageItemgsField(model);
+    const pageItemsField = recursiveFindPageItemsField(model);
     if (!pageItemsField) {
       throw new CodegenError('InternalError', `didn't find page items field in model ${model.name}`);
     }
