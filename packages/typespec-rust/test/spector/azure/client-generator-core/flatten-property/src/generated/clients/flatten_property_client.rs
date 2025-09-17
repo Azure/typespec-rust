@@ -8,9 +8,11 @@ use crate::generated::models::{
     FlattenPropertyClientPutNestedFlattenModelOptions, NestedFlattenModel,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
-        check_success, ClientOptions, Method, Pipeline, Request, RequestContent, Response, Url,
+        ClientOptions, Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response,
+        Url,
     },
     tracing, Result,
 };
@@ -85,8 +87,19 @@ impl FlattenPropertyClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -108,8 +121,19 @@ impl FlattenPropertyClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(input);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

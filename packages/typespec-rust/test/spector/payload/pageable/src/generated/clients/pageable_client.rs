@@ -8,11 +8,11 @@ use crate::generated::{
     models::{ListWithoutContinuationResponse, PageableClientListWithoutContinuationOptions},
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
-        check_success,
         pager::{PagerResult, PagerState},
-        ClientOptions, Method, Pager, Pipeline, Request, Url,
+        ClientOptions, Method, Pager, Pipeline, PipelineSendOptions, Request, Url,
     },
     tracing, Result,
 };
@@ -99,8 +99,18 @@ impl PageableClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success_options: CheckSuccessOptions {
+                                success_statuses: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 Ok(PagerResult::Done {
                     response: rsp.into(),
                 })

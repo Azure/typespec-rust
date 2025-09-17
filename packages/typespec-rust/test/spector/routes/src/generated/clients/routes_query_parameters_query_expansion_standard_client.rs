@@ -9,7 +9,8 @@ use crate::generated::models::{
     RoutesQueryParametersQueryExpansionStandardClientRecordOptions,
 };
 use azure_core::{
-    http::{check_success, Method, NoFormat, Pipeline, Request, Response, Url},
+    error::CheckSuccessOptions,
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
 use std::collections::HashMap;
@@ -42,8 +43,19 @@ impl RoutesQueryParametersQueryExpansionStandardClient {
         url = url.join("routes/query/query-expansion/standard/array")?;
         url.query_pairs_mut().append_pair("param", &param.join(","));
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -63,8 +75,19 @@ impl RoutesQueryParametersQueryExpansionStandardClient {
         url = url.join("routes/query/query-expansion/standard/primitive")?;
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -96,8 +119,19 @@ impl RoutesQueryParametersQueryExpansionStandardClient {
             );
         }
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

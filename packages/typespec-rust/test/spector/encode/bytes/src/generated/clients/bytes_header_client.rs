@@ -9,7 +9,8 @@ use crate::generated::models::{
 };
 use azure_core::{
     base64::{encode, encode_url_safe},
-    http::{check_success, Method, NoFormat, Pipeline, Request, Response, Url},
+    error::CheckSuccessOptions,
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
 
@@ -41,8 +42,19 @@ impl BytesHeaderClient {
         url = url.join("encode/bytes/header/base64")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", encode(value));
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -62,8 +74,19 @@ impl BytesHeaderClient {
         url = url.join("encode/bytes/header/base64url")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", encode_url_safe(value));
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -90,8 +113,19 @@ impl BytesHeaderClient {
                 .collect::<Vec<String>>()
                 .join(","),
         );
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -111,8 +145,19 @@ impl BytesHeaderClient {
         url = url.join("encode/bytes/header/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", encode(value));
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

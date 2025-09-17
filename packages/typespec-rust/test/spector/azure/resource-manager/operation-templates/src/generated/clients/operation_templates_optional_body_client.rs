@@ -10,7 +10,8 @@ use crate::generated::models::{
     OperationTemplatesOptionalBodyClientProviderPostOptions, Widget,
 };
 use azure_core::{
-    http::{check_success, Method, Pipeline, Request, Response, Url},
+    error::CheckSuccessOptions,
+    http::{Method, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
 
@@ -66,8 +67,19 @@ impl OperationTemplatesOptionalBodyClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -113,8 +125,19 @@ impl OperationTemplatesOptionalBodyClient {
             request.insert_header("content-type", "application/json");
             request.set_body(properties);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -160,8 +183,19 @@ impl OperationTemplatesOptionalBodyClient {
             request.insert_header("content-type", "application/json");
             request.set_body(body);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -188,8 +222,19 @@ impl OperationTemplatesOptionalBodyClient {
             request.insert_header("content-type", "application/json");
             request.set_body(body);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

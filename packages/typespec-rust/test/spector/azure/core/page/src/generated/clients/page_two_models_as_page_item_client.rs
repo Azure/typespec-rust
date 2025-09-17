@@ -8,10 +8,10 @@ use crate::generated::models::{
     PageTwoModelsAsPageItemClientListSecondItemOptions, PagedFirstItem, PagedSecondItem,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     http::{
-        check_success,
         pager::{PagerResult, PagerState},
-        BufResponse, Method, Pager, Pipeline, Request, Url,
+        BufResponse, Method, Pager, Pipeline, PipelineSendOptions, Request, Url,
     },
     json, tracing, Result,
 };
@@ -68,8 +68,18 @@ impl PageTwoModelsAsPageItemClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success_options: CheckSuccessOptions {
+                                success_statuses: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedFirstItem = json::from_json(&bytes)?;
@@ -124,8 +134,18 @@ impl PageTwoModelsAsPageItemClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success_options: CheckSuccessOptions {
+                                success_statuses: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedSecondItem = json::from_json(&bytes)?;

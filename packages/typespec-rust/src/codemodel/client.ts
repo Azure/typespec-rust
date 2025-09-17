@@ -543,6 +543,11 @@ interface HTTPMethodBase extends method.Method<types.Type> {
   /** the type returned by the method */
   returns: types.Result;
 
+  /** the list of HTTP status codes that should be treated as successes. If empty,
+   * treat non success status codes as errors (2xx status codes).
+   */
+  statusCodes: Array<number>;
+
   /** contains the trait for accessing response headers */
   responseHeaders?: ResponseHeadersTrait;
 

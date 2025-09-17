@@ -16,10 +16,10 @@ use crate::generated::models::{
     RequestQueryResponseHeaderResponse, RequestQueryResponseHeaderResponseHeaders,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     http::{
-        check_success,
         pager::{PagerResult, PagerState},
-        BufResponse, Method, Pager, Pipeline, Request, Response, Url,
+        BufResponse, Method, Pager, Pipeline, PipelineSendOptions, Request, Response, Url,
     },
     json, tracing, Result,
 };
@@ -71,8 +71,18 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success_options: CheckSuccessOptions {
+                                success_statuses: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: RequestHeaderNestedResponseBodyResponse = json::from_json(&bytes)?;
@@ -130,8 +140,18 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success_options: CheckSuccessOptions {
+                                success_statuses: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: RequestHeaderResponseBodyResponse = json::from_json(&bytes)?;
@@ -209,8 +229,19 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<RequestHeaderResponseHeaderResponse> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: Response<RequestHeaderResponseHeaderResponse> = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success_options: CheckSuccessOptions {
+                                success_statuses: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?
+                    .into();
                 Ok(match rsp.next_token()? {
                     Some(next_token) if !next_token.is_empty() => PagerResult::More {
                         response: rsp,
@@ -268,8 +299,18 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success_options: CheckSuccessOptions {
+                                success_statuses: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: RequestQueryNestedResponseBodyResponse = json::from_json(&bytes)?;
@@ -334,8 +375,18 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success_options: CheckSuccessOptions {
+                                success_statuses: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: RequestQueryResponseBodyResponse = json::from_json(&bytes)?;
@@ -418,8 +469,19 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: Response<RequestQueryResponseHeaderResponse> =
-                    pipeline.send(&ctx, &mut request).await?.into();
+                let rsp: Response<RequestQueryResponseHeaderResponse> = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success_options: CheckSuccessOptions {
+                                success_statuses: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?
+                    .into();
                 Ok(match rsp.next_token()? {
                     Some(next_token) if !next_token.is_empty() => PagerResult::More {
                         response: rsp,

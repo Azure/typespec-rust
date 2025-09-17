@@ -7,9 +7,10 @@ use crate::generated::models::{
     Input, MultipleParamsClientWithBodyOptions, MultipleParamsClientWithQueryOptions,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
-        check_success, ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent,
+        ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent,
         Response, Url,
     },
     tracing, Result,
@@ -96,8 +97,19 @@ impl MultipleParamsClient {
         request.insert_header("content-type", "application/json");
         request.insert_header("name", &self.name);
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -122,8 +134,19 @@ impl MultipleParamsClient {
         url.query_pairs_mut().append_pair("region", &self.region);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("name", &self.name);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

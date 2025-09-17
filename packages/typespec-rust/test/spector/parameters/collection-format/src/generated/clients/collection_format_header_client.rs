@@ -5,7 +5,8 @@
 
 use crate::generated::models::CollectionFormatHeaderClientCsvOptions;
 use azure_core::{
-    http::{check_success, Method, NoFormat, Pipeline, Request, Response, Url},
+    error::CheckSuccessOptions,
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
 
@@ -38,8 +39,19 @@ impl CollectionFormatHeaderClient {
         url = url.join("parameters/collection-format/header/csv")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("colors", colors.join(","));
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

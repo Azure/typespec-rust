@@ -102,7 +102,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         body += `${indent.get()}let options = options.unwrap_or_default();\n`;
         // by convention, the endpoint param is always the first ctor param
         const endpointParamName = constructor.params[0].name;
-        body += `${indent.push().get()}let ${client.constructable.endpoint ? 'mut ': ''}${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
+        body += `${indent.push().get()}let ${client.constructable.endpoint ? 'mut ' : ''}${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
         body += `${indent.get()}${helpers.buildIfBlock(indent, {
           condition: `!${endpointParamName}.scheme().starts_with("http")`,
           body: (indent) => `${indent.get()}return Err(azure_core::Error::message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
@@ -1069,17 +1069,6 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
   return body;
 }
 
-/**
- * Return an error if a local BufResponse variable "rsp" has a non-success status code.
- * @param use the use statement builder currently in scope
- * @param indent the indentation helper currently in scope
- * @returns code to return an error if the status code of "rsp" doesn't indicate success
- */
-function errIfNotSuccessResponse(use: Use, indent: helpers.indentation): string {
-  use.add('azure_core::http', 'check_success');
-  const body = `${indent.get()}let rsp = check_success(rsp).await?;\n`;
-  return body;
-}
 
 /**
  * Returns 'mut ' if the Url local var needs to be mutable, else the empty string.
@@ -1168,8 +1157,8 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
 
   body += constructUrl(indent, use, method, paramGroups);
   body += constructRequest(indent, use, method, paramGroups, false);
-  body += `${indent.get()}let rsp = self.pipeline.send(&ctx, &mut request).await?;\n`;
-  body += errIfNotSuccessResponse(use, indent);
+  body += `${indent.get()}let rsp = self.pipeline.send(&ctx, &mut request, ${getPipelineSendOptions(indent, use, method)}).await?;\n`;
+
   let rspInto = 'rsp.into()';
   if (method.returns.type.kind === 'bufResponse') {
     rspInto = 'rsp';
@@ -1290,10 +1279,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
-  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut request).await?${rspInto};\n`;
-  if (rspType === '') {
-    body += errIfNotSuccessResponse(use, indent);
-  }
+  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut request, ${getPipelineSendOptions(indent, use, method)}).await?${rspInto};\n`;
 
   // check if we need to extract the next link field from the response model
   if (method.strategy && (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'nextLink')) {
@@ -1437,7 +1423,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`
   body += `${indent.get()}let pipeline = pipeline.clone();\n`
   body += `${indent.get()}async move {\n`
-  body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut request).await?;\n`
+  body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut request, ${getPipelineSendOptions(indent, use, method)}).await?;\n`
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
   body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &options.poller_options);\n`
   body += `${indent.get()}let bytes = body.collect().await?;\n`
@@ -1633,4 +1619,20 @@ function nonCopyableType(type: rust.Type): boolean {
 /** returns true if the type is the azure_core::ClientMethodOptions type */
 function isClientMethodOptions(type: rust.Type): boolean {
   return type.kind === 'external' && type.name === 'ClientMethodOptions';
+}
+
+function getPipelineSendOptions(indent: helpers.indentation, use: Use, method: ClientMethod): string {
+  let options = '';
+  if (method.statusCodes.length != 0) {
+    use.add("azure_core::http", "PipelineSendOptions");
+    use.add("azure_core::error", "CheckSuccessOptions");
+    options += `Some(PipelineSendOptions {\n`;
+    indent.push();
+    options += `${indent.get()}check_success_options: CheckSuccessOptions{ success_statuses: &[${method.statusCodes.join(', ')}]},\n`;
+    options += `${indent.get()}..Default::default()\n`;
+    options += `${indent.pop().get()}})`;
+    return options;
+  } else {
+    return 'None';
+  }
 }

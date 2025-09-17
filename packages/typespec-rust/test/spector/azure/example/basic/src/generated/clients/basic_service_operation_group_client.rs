@@ -7,7 +7,8 @@ use crate::generated::models::{
     ActionRequest, ActionResponse, BasicServiceOperationGroupClientBasicOptions,
 };
 use azure_core::{
-    http::{check_success, Method, Pipeline, Request, RequestContent, Response, Url},
+    error::CheckSuccessOptions,
+    http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
     tracing, Result,
 };
 
@@ -49,8 +50,19 @@ impl BasicServiceOperationGroupClient {
         request.insert_header("content-type", "application/json");
         request.insert_header("header-param", header_param);
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success_options: CheckSuccessOptions {
+                        success_statuses: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

@@ -29,7 +29,7 @@ impl TokenCredential for FakeTokenCredential {
     async fn get_token(
         &self,
         _scopes: &[&str],
-        _options: Option<TokenRequestOptions>,
+        _options: Option<TokenRequestOptions<'_>>,
     ) -> Result<AccessToken> {
         Ok(AccessToken::new(
             self.token.clone(),
