@@ -23,7 +23,7 @@ export interface Crate {
   /** the Crates on which this Crate depends */
   dependencies: Array<CrateDependency>;
 
-  /** enums contains all of the unions for this crate. can be empty */
+  /** unions contains all of the unions for this crate. can be empty */
   unions: Array<types.Union>;
 
   /** enums contains all of the enums for this crate. can be empty */
