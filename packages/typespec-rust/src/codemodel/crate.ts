@@ -60,7 +60,7 @@ export class Crate implements Crate {
     this.name = name;
     this.version = version;
     this.type = type;
-    this.dependencies = new Array<CrateDependency>()
+    this.dependencies = new Array<CrateDependency>();
     this.unions = new Array<types.Union>();
     this.enums = new Array<types.Enum>();
     this.models = new Array<types.Model>();
