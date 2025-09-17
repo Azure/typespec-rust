@@ -9,7 +9,11 @@ use crate::generated::{
 };
 use azure_core::{
     fmt::SafeDebug,
-    http::{ClientOptions, Pager, Pipeline, Url},
+    http::{
+        check_success,
+        pager::{PagerResult, PagerState},
+        ClientOptions, Method, Pager, Pipeline, Request, Url,
+    },
     tracing, Result,
 };
 
@@ -85,6 +89,22 @@ impl PageableClient {
         &self,
         options: Option<PageableClientListWithoutContinuationOptions<'_>>,
     ) -> Result<Pager<ListWithoutContinuationResponse>> {
-        todo!();
+        let options = options.unwrap_or_default().into_owned();
+        let pipeline = self.pipeline.clone();
+        let mut url = self.endpoint.clone();
+        url = url.join("payload/pageable/simple")?;
+        Ok(Pager::from_callback(move |_: PagerState<Url>| {
+            let mut request = Request::new(url.clone(), Method::Get);
+            request.insert_header("accept", "application/json");
+            let ctx = options.method_options.context.clone();
+            let pipeline = pipeline.clone();
+            async move {
+                let rsp = pipeline.send(&ctx, &mut request).await?;
+                let rsp = check_success(rsp).await?;
+                Ok(PagerResult::Done {
+                    response: rsp.try_into()?,
+                })
+            }
+        }))
     }
 }

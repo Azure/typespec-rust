@@ -1188,20 +1188,14 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
  * @returns the contents of the method body
  */
 function getPageableMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.PageableMethod): string {
-  if (!method.strategy) {
-    return 'todo!();';
-  }
-
-  const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
-
   use.add('azure_core::http', 'Method', 'Request', 'Url');
   use.add('azure_core::http::pager', 'PagerResult', 'PagerState');
-  use.add('azure_core', bodyFormat, 'Result');
+  use.add('azure_core', 'Result');
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));
 
   const paramGroups = getMethodParamGroup(method);
-  const urlVar = 'first_url';
+  const urlVar = method.strategy ? 'first_url' : 'url';
 
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default().into_owned();\n';
@@ -1212,68 +1206,78 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n`;
   }
 
-  switch (method.strategy.kind) {
-    case 'continuationToken': {
-      const reqTokenParam = method.strategy.requestToken.name;
-      body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: PagerState<String>| {\n`;
-      body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ' : ''}url = first_url.clone();\n`;
-      if (method.strategy.requestToken.kind === 'queryScalar') {
-        // if the url already contains the token query param,
-        // e.g. we started on some page, then we need to remove
-        // it before appending the token for the next page.
-        const reqTokenValue = method.strategy.requestToken.key;
-        body += `${indent.get()}${helpers.buildIfBlock(indent, {
-          condition: `let PagerState::More(${reqTokenParam}) = ${reqTokenParam}`,
-          body: (indent) => {
-            let body = indent.get() + helpers.buildIfBlock(indent, {
-              condition: `url.query_pairs().any(|(name, _)| name.eq("${reqTokenValue}"))`,
-              body: (indent) => {
-                let body = `${indent.get()}let mut new_url = url.clone();\n`;
-                body += `${indent.get()}new_url.query_pairs_mut().clear().extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("${reqTokenValue}")));\n`;
-                body += `${indent.get()}url = new_url;\n`;
-                return body;
-              },
-            }) + '\n';
-            body += `${indent.get()}url.query_pairs_mut().append_pair("${reqTokenValue}", &${reqTokenParam});\n`;
-            return body;
-          }
-        })}\n`
-      }
-      break;
-    }
-    case 'nextLink': {
-      const nextLinkName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
-      body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>| {\n`;
-      body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
-        pattern: `PagerState::More(${nextLinkName})`,
-        body: (indent) => {
-          if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'queryScalar') {
-            const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
-            // there are no APIs to set/update an existing query parameter.
-            // so, we filter the existing query params to remove the api-version
-            // query param. we then add back the filtered set and then add the
-            // api-version as specified on the client.
-            let setApiVerBody = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
-            setApiVerBody += `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
-            setApiVerBody += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
-            setApiVerBody += `${indent.get()}${nextLinkName}\n`;
-            return setApiVerBody;
-          }
-          return `${indent.get()} ${nextLinkName}\n`;
+  // passed to constructRequest. we only need to
+  // clone it for the non-continuation case.
+  let cloneUrl = false;
+
+  if (method.strategy) {
+    switch (method.strategy.kind) {
+      case 'continuationToken': {
+        const reqTokenParam = method.strategy.requestToken.name;
+        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: PagerState<String>| {\n`;
+        body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ' : ''}url = first_url.clone();\n`;
+        if (method.strategy.requestToken.kind === 'queryScalar') {
+          // if the url already contains the token query param,
+          // e.g. we started on some page, then we need to remove
+          // it before appending the token for the next page.
+          const reqTokenValue = method.strategy.requestToken.key;
+          body += `${indent.get()}${helpers.buildIfBlock(indent, {
+            condition: `let PagerState::More(${reqTokenParam}) = ${reqTokenParam}`,
+            body: (indent) => {
+              let body = indent.get() + helpers.buildIfBlock(indent, {
+                condition: `url.query_pairs().any(|(name, _)| name.eq("${reqTokenValue}"))`,
+                body: (indent) => {
+                  let body = `${indent.get()}let mut new_url = url.clone();\n`;
+                  body += `${indent.get()}new_url.query_pairs_mut().clear().extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("${reqTokenValue}")));\n`;
+                  body += `${indent.get()}url = new_url;\n`;
+                  return body;
+                },
+              }) + '\n';
+              body += `${indent.get()}url.query_pairs_mut().append_pair("${reqTokenValue}", &${reqTokenParam});\n`;
+              return body;
+            }
+          })}\n`
         }
-      }, {
-        pattern: 'PagerState::Initial',
-        body: (indent) => `${indent.get()}${urlVar}.clone()\n`
-      }]);
-      body += ';\n';
-      break;
+        break;
+      }
+      case 'nextLink': {
+        const nextLinkName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
+        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>| {\n`;
+        body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
+          pattern: `PagerState::More(${nextLinkName})`,
+          body: (indent) => {
+            if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'queryScalar') {
+              const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
+              // there are no APIs to set/update an existing query parameter.
+              // so, we filter the existing query params to remove the api-version
+              // query param. we then add back the filtered set and then add the
+              // api-version as specified on the client.
+              let setApiVerBody = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
+              setApiVerBody += `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
+              setApiVerBody += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
+              setApiVerBody += `${indent.get()}${nextLinkName}\n`;
+              return setApiVerBody;
+            }
+            return `${indent.get()} ${nextLinkName}\n`;
+          }
+        }, {
+          pattern: 'PagerState::Initial',
+          body: (indent) => `${indent.get()}${urlVar}.clone()\n`
+        }]);
+        body += ';\n';
+        break;
+      }
     }
+  } else {
+    // no next link when there's no strategy
+    body += `${indent.get()}Ok(Pager::from_callback(move |_: PagerState<Url>| {\n`;
+    cloneUrl = true;
   }
 
   // Pipeline::send() returns a BufResponse, so no reason to declare the type if not something else.
   let rspType = '';
   let rspInto = '';
-  if (method.strategy.kind === 'continuationToken' && method.strategy.responseToken.kind === 'responseHeaderScalar') {
+  if (method.strategy && method.strategy.kind === 'continuationToken' && method.strategy.responseToken.kind === 'responseHeaderScalar') {
     // the continuation token comes from a response header. therefore,
     // we need a Response<T> so we have access to the header trait.
     use.addForType(method.returns.type.type);
@@ -1282,7 +1286,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     rspInto = '.into()';
   }
 
-  body += constructRequest(indent, use, method, paramGroups, true);
+  body += constructRequest(indent, use, method, paramGroups, true, cloneUrl);
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
@@ -1292,8 +1296,9 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   }
 
   // check if we need to extract the next link field from the response model
-  if (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'nextLink') {
-    use.add('azure_core', 'http::BufResponse');
+  if (method.strategy && (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'nextLink')) {
+    const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
+    use.add('azure_core', bodyFormat, 'http::BufResponse');
     body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
     body += `${indent.get()}let bytes = body.collect().await?;\n`;
     const deserialize = bodyFormat === 'json' ? 'json::from_json' : 'xml::read_xml';
@@ -1301,66 +1306,72 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     body += `${indent.get()}let rsp = BufResponse::from_bytes(status, headers, bytes).into();\n`;
   }
 
-  /** provides access to the next link field, handling nested fields as required */
-  const buildNextLinkPath = function (nextLinkPath: Array<rust.ModelField>): string {
-    let fullPath = nextLinkPath[0].name;
-    if (nextLinkPath.length > 1) {
-      for (let i = 1; i < nextLinkPath.length; ++i) {
-        const prev = nextLinkPath[i - 1];
-        const cur = nextLinkPath[i];
-        fullPath += `.and_then(|${prev.name}| ${prev.name}.${cur.name})`;
+  if (method.strategy) {
+    /** provides access to the next link field, handling nested fields as required */
+    const buildNextLinkPath = function (nextLinkPath: Array<rust.ModelField>): string {
+      let fullPath = nextLinkPath[0].name;
+      if (nextLinkPath.length > 1) {
+        for (let i = 1; i < nextLinkPath.length; ++i) {
+          const prev = nextLinkPath[i - 1];
+          const cur = nextLinkPath[i];
+          fullPath += `.and_then(|${prev.name}| ${prev.name}.${cur.name})`;
+        }
       }
-    }
-    return fullPath;
-  };
+      return fullPath;
+    };
 
-  let srcNextPage: string;
-  let nextPageValue: string;
-  let continuation: string;
-  switch (method.strategy.kind) {
-    case 'continuationToken':
-      switch (method.strategy.responseToken.kind) {
-        case 'nextLink':
-          nextPageValue = method.strategy.responseToken.nextLinkPath[method.strategy.responseToken.nextLinkPath.length - 1].name;
-          srcNextPage = `res.${buildNextLinkPath(method.strategy.responseToken.nextLinkPath)}`;
-          break;
-        case 'responseHeaderScalar':
-          if (!method.responseHeaders) {
-            throw new CodegenError('InternalError', `missing response headers trait for method ${method.name}`);
-          }
-          nextPageValue = method.strategy.responseToken.name;
-          use.addForType(method.responseHeaders);
-          srcNextPage = `rsp.${method.strategy.responseToken.name}()?`;
-          break;
+    let srcNextPage: string;
+    let nextPageValue: string;
+    let continuation: string;
+    switch (method.strategy.kind) {
+      case 'continuationToken':
+        switch (method.strategy.responseToken.kind) {
+          case 'nextLink':
+            nextPageValue = method.strategy.responseToken.nextLinkPath[method.strategy.responseToken.nextLinkPath.length - 1].name;
+            srcNextPage = `res.${buildNextLinkPath(method.strategy.responseToken.nextLinkPath)}`;
+            break;
+          case 'responseHeaderScalar':
+            if (!method.responseHeaders) {
+              throw new CodegenError('InternalError', `missing response headers trait for method ${method.name}`);
+            }
+            nextPageValue = method.strategy.responseToken.name;
+            use.addForType(method.responseHeaders);
+            srcNextPage = `rsp.${method.strategy.responseToken.name}()?`;
+            break;
+        }
+        continuation = nextPageValue;
+        break;
+      case 'nextLink': {
+        const lastFieldName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
+        nextPageValue = lastFieldName;
+        srcNextPage = `res.${buildNextLinkPath(method.strategy.nextLinkPath)}`;
+        continuation = `${lastFieldName}.parse()?`;
+        break;
       }
-      continuation = nextPageValue;
-      break;
-    case 'nextLink': {
-      const lastFieldName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
-      nextPageValue = lastFieldName;
-      srcNextPage = `res.${buildNextLinkPath(method.strategy.nextLinkPath)}`;
-      continuation = `${lastFieldName}.parse()?`;
-      break;
     }
+
+    // we need to handle the case where the next page value is the empty string,
+    // so checking strictly for None(theNextLink) is insufficient.
+    // the most common case for this is XML, e.g. an empty tag like <NextLink />
+    body += `${indent.get()}Ok(${helpers.buildMatch(indent, srcNextPage, [{
+      pattern: `Some(${nextPageValue}) if !${nextPageValue}.is_empty()`,
+      body: (indent) => {
+        return `${indent.get()}response: rsp, continuation: ${continuation}\n`;
+      },
+      returns: 'PagerResult::More',
+    }, {
+      pattern: '_',
+      body: (indent) => {
+        return `${indent.get()}response: rsp\n`;
+      },
+      returns: 'PagerResult::Done',
+    }])}`;
+    body += ')\n'; // end Ok
+  } else {
+    // non-continuation case, so we don't need to worry about next links, continuation tokens, etc...
+    body += `${indent.get()}Ok(PagerResult::Done { response: rsp.try_into()? })\n`;
   }
 
-  // we need to handle the case where the next page value is the empty string,
-  // so checking strictly for None(theNextLink) is insufficient.
-  // the most common case for this is XML, e.g. an empty tag like <NextLink />
-  body += `${indent.get()}Ok(${helpers.buildMatch(indent, srcNextPage, [{
-    pattern: `Some(${nextPageValue}) if !${nextPageValue}.is_empty()`,
-    body: (indent) => {
-      return `${indent.get()}response: rsp, continuation: ${continuation}\n`;
-    },
-    returns: 'PagerResult::More',
-  }, {
-    pattern: '_',
-    body: (indent) => {
-      return `${indent.get()}response: rsp\n`;
-    },
-    returns: 'PagerResult::Done',
-  }])}`;
-  body += ')\n'; // end Ok
   body += `${indent.pop().get()}}\n`; // end async move
   body += `${indent.pop().get()}}))`; // end Ok/Pager::from_callback
 
