@@ -1465,7 +1465,7 @@ export class Adapter {
       rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, this.getUnitType(), responseFormat));
     }
 
-    // Mark the set of error codes expected from this method.
+    // Mark the set of success status codes expected from this method.
     rustMethod.statusCodes = getStatusCodes(method.operation);
 
     // For long running operations, we add 200 OK if not already present for the LRO polling and terminal states.
