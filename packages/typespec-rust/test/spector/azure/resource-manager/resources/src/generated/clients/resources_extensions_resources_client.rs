@@ -158,13 +158,13 @@ impl ResourcesExtensionsResourcesClient {
         options: Option<ResourcesExtensionsResourcesClientDeleteOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if extensions_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter extensions_resource_name cannot be empty",
             ));
         }
         if resource_uri.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_uri cannot be empty",
             ));
@@ -199,13 +199,13 @@ impl ResourcesExtensionsResourcesClient {
         options: Option<ResourcesExtensionsResourcesClientGetOptions<'_>>,
     ) -> Result<Response<ExtensionsResource>> {
         if extensions_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter extensions_resource_name cannot be empty",
             ));
         }
         if resource_uri.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_uri cannot be empty",
             ));
@@ -239,7 +239,7 @@ impl ResourcesExtensionsResourcesClient {
         options: Option<ResourcesExtensionsResourcesClientListByScopeOptions<'_>>,
     ) -> Result<Pager<ExtensionsResourceListResult>> {
         if resource_uri.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_uri cannot be empty",
             ));
@@ -311,13 +311,13 @@ impl ResourcesExtensionsResourcesClient {
         options: Option<ResourcesExtensionsResourcesClientUpdateOptions<'_>>,
     ) -> Result<Response<ExtensionsResource>> {
         if extensions_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter extensions_resource_name cannot be empty",
             ));
         }
         if resource_uri.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_uri cannot be empty",
             ));

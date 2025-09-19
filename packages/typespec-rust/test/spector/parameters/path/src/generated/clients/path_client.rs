@@ -36,7 +36,7 @@ impl PathClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -70,7 +70,7 @@ impl PathClient {
         options: Option<PathClientNormalOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));

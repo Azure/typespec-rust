@@ -50,13 +50,13 @@ impl ResourcesLocationResourcesClient {
         options: Option<ResourcesLocationResourcesClientCreateOrUpdateOptions<'_>>,
     ) -> Result<Response<LocationResource>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
         }
         if location_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location_resource_name cannot be empty",
             ));
@@ -95,13 +95,13 @@ impl ResourcesLocationResourcesClient {
         options: Option<ResourcesLocationResourcesClientDeleteOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
         }
         if location_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location_resource_name cannot be empty",
             ));
@@ -137,13 +137,13 @@ impl ResourcesLocationResourcesClient {
         options: Option<ResourcesLocationResourcesClientGetOptions<'_>>,
     ) -> Result<Response<LocationResource>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
         }
         if location_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location_resource_name cannot be empty",
             ));
@@ -178,7 +178,7 @@ impl ResourcesLocationResourcesClient {
         options: Option<ResourcesLocationResourcesClientListByLocationOptions<'_>>,
     ) -> Result<Pager<LocationResourceListResult>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
@@ -249,13 +249,13 @@ impl ResourcesLocationResourcesClient {
         options: Option<ResourcesLocationResourcesClientUpdateOptions<'_>>,
     ) -> Result<Response<LocationResource>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
         }
         if location_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location_resource_name cannot be empty",
             ));

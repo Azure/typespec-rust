@@ -63,7 +63,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -96,7 +96,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestMixOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -152,7 +152,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestWithoutBodyOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));

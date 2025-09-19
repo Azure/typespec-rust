@@ -79,7 +79,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -149,7 +149,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckKeyValueOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -558,7 +558,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckSnapshotOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -812,7 +812,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientDeleteKeyValueOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -891,7 +891,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientDeleteLockOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -974,7 +974,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientGetKeyValueOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -1107,7 +1107,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientGetSnapshotOptions<'_>>,
     ) -> Result<Response<Snapshot>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -1780,7 +1780,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientPutKeyValueOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -1866,7 +1866,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientPutLockOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -1953,7 +1953,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientUpdateSnapshotOptions<'_>>,
     ) -> Result<Response<Snapshot>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));

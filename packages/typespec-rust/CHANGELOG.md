@@ -4,10 +4,13 @@
 
 ### Breaking Changes
 
+**Note this version is incompatible with earlier versions of `azure_core`**
+
 * The naming algorithm for enum values has changed, which can result in name changes in some cases.
   * The most common change is words being Pascal cased (e.g. `AES256` is now `Aes256`).
   * Identifiers that contain a decimal value will now use an underscore to separate the whole number from the fraction (e.g. `Version7.1` is now `Version7_1`).
   * For enum values that begin with a number, the prefix `INVLD_IDENTIFIER_` will be added as a flag indicating the name must be fixed in the TypeSpec.
+* Calls `Error::with_message()` instead of `Error::message()` after [Azure/azure-sdk-for-rust#3024](https://github.com/Azure/azure-sdk-for-rust/pull/3024) was merged.
 
 ### Bugs Fixed
 
