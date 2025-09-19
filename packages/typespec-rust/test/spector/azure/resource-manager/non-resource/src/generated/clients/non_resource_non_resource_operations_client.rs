@@ -43,13 +43,13 @@ impl NonResourceNonResourceOperationsClient {
         options: Option<NonResourceNonResourceOperationsClientCreateOptions<'_>>,
     ) -> Result<Response<NonResource>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
         }
         if parameter.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter parameter cannot be empty",
             ));
@@ -87,13 +87,13 @@ impl NonResourceNonResourceOperationsClient {
         options: Option<NonResourceNonResourceOperationsClientGetOptions<'_>>,
     ) -> Result<Response<NonResource>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
         }
         if parameter.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter parameter cannot be empty",
             ));

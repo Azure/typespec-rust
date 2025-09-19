@@ -105,7 +105,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         body += `${indent.push().get()}let ${client.constructable.endpoint ? 'mut ': ''}${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
         body += `${indent.get()}${helpers.buildIfBlock(indent, {
           condition: `!${endpointParamName}.scheme().starts_with("http")`,
-          body: (indent) => `${indent.get()}return Err(azure_core::Error::message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
+          body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
         })}`
 
         // construct the supplemental path and join it to the endpoint
@@ -1144,7 +1144,7 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
   }
   return helpers.buildIfBlock(indent, {
     condition: `${param.name}${toString}.is_empty()`,
-    body: (indent) => `${indent.get()}return Err(azure_core::Error::message(azure_core::error::ErrorKind::Other, "parameter ${param.name} cannot be empty"));`,
+    body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, "parameter ${param.name} cannot be empty"));`,
   });
 }
 

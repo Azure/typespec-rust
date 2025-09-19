@@ -43,13 +43,13 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperatio
         options: Option<MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsClientDeleteOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
         }
         if resource_group_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_resource_name cannot be empty",
             ));
@@ -85,13 +85,13 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperatio
         options: Option<MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsClientGetOptions<'_>>,
     ) -> Result<Response<ResourceGroupResource>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
         }
         if resource_group_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_resource_name cannot be empty",
             ));
@@ -130,13 +130,13 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperatio
         options: Option<MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsClientPutOptions<'_>>,
     ) -> Result<Response<ResourceGroupResource>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
         }
         if resource_group_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_resource_name cannot be empty",
             ));

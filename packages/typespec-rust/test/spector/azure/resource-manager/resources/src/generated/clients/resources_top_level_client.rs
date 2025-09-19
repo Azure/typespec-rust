@@ -54,13 +54,13 @@ impl ResourcesTopLevelClient {
         options: Option<ResourcesTopLevelClientActionSyncOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
         }
         if top_level_tracked_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter top_level_tracked_resource_name cannot be empty",
             ));
@@ -314,13 +314,13 @@ impl ResourcesTopLevelClient {
         options: Option<ResourcesTopLevelClientGetOptions<'_>>,
     ) -> Result<Response<TopLevelTrackedResource>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
         }
         if top_level_tracked_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter top_level_tracked_resource_name cannot be empty",
             ));
@@ -358,7 +358,7 @@ impl ResourcesTopLevelClient {
         options: Option<ResourcesTopLevelClientListByResourceGroupOptions<'_>>,
     ) -> Result<Pager<TopLevelTrackedResourceListResult>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));

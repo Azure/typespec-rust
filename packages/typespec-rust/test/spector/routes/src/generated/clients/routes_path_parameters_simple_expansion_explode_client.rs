@@ -59,7 +59,7 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
         options: Option<RoutesPathParametersSimpleExpansionExplodeClientPrimitiveOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if param.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter param cannot be empty",
             ));

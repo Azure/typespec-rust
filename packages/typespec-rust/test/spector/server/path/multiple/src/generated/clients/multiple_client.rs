@@ -42,7 +42,7 @@ impl MultipleClient {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -97,7 +97,7 @@ impl MultipleClient {
         options: Option<MultipleClientWithOperationPathParamOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if keyword.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter keyword cannot be empty",
             ));

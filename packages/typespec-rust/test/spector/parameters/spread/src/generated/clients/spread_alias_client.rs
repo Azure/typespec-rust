@@ -68,7 +68,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadAsRequestParameterOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if id.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter id cannot be empty",
             ));
@@ -107,7 +107,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadParameterWithInnerAliasOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if id.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter id cannot be empty",
             ));
@@ -142,7 +142,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadParameterWithInnerModelOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if id.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter id cannot be empty",
             ));
@@ -180,7 +180,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadWithMultipleParametersOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if id.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter id cannot be empty",
             ));

@@ -47,13 +47,13 @@ impl CommonPropertiesManagedIdentityClient {
         options: Option<CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions<'_>>,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
         if managed_identity_tracked_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter managed_identity_tracked_resource_name cannot be empty",
             ));
         }
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
@@ -95,13 +95,13 @@ impl CommonPropertiesManagedIdentityClient {
         options: Option<CommonPropertiesManagedIdentityClientGetOptions<'_>>,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
         if managed_identity_tracked_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter managed_identity_tracked_resource_name cannot be empty",
             ));
         }
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
@@ -145,13 +145,13 @@ impl CommonPropertiesManagedIdentityClient {
         >,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
         if managed_identity_tracked_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter managed_identity_tracked_resource_name cannot be empty",
             ));
         }
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
