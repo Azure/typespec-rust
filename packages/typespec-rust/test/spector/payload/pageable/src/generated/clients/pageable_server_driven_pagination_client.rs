@@ -72,8 +72,8 @@ impl PageableServerDrivenPaginationClient {
                         &ctx,
                         &mut request,
                         Some(PipelineSendOptions {
-                            check_success_options: CheckSuccessOptions {
-                                success_statuses: &[200],
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
                             },
                             ..Default::default()
                         }),
@@ -122,8 +122,8 @@ impl PageableServerDrivenPaginationClient {
                         &ctx,
                         &mut request,
                         Some(PipelineSendOptions {
-                            check_success_options: CheckSuccessOptions {
-                                success_statuses: &[200],
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
                             },
                             ..Default::default()
                         }),
@@ -174,8 +174,8 @@ impl PageableServerDrivenPaginationClient {
                         &ctx,
                         &mut request,
                         Some(PipelineSendOptions {
-                            check_success_options: CheckSuccessOptions {
-                                success_statuses: &[200],
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
                             },
                             ..Default::default()
                         }),

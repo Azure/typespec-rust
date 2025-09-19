@@ -65,8 +65,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -97,8 +97,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -129,8 +129,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -161,8 +161,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -193,8 +193,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -225,8 +225,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -258,8 +258,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -290,8 +290,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -323,8 +323,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -356,8 +356,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -388,8 +388,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -420,8 +420,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -452,8 +452,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -484,8 +484,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -516,8 +516,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -548,8 +548,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -580,8 +580,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -612,8 +612,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -644,8 +644,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -676,8 +676,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -708,8 +708,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -740,8 +740,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -772,8 +772,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -804,8 +804,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -836,8 +836,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -868,8 +868,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -900,8 +900,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -932,8 +932,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -964,8 +964,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -996,8 +996,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -1028,8 +1028,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -1060,8 +1060,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -1092,8 +1092,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),
@@ -1124,8 +1124,8 @@ impl SpecialWordsParametersClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
                     },
                     ..Default::default()
                 }),

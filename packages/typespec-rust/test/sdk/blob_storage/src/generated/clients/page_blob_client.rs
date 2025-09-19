@@ -227,8 +227,8 @@ impl PageBlobClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[201],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[201],
                     },
                     ..Default::default()
                 }),
@@ -327,8 +327,8 @@ impl PageBlobClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[202],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[202],
                     },
                     ..Default::default()
                 }),
@@ -497,8 +497,8 @@ impl PageBlobClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[201],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[201],
                     },
                     ..Default::default()
                 }),
@@ -605,8 +605,8 @@ impl PageBlobClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[200],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
                     },
                     ..Default::default()
                 }),
@@ -722,8 +722,8 @@ impl PageBlobClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[200],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
                     },
                     ..Default::default()
                 }),
@@ -837,8 +837,8 @@ impl PageBlobClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[200],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
                     },
                     ..Default::default()
                 }),
@@ -947,8 +947,8 @@ impl PageBlobClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[200],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
                     },
                     ..Default::default()
                 }),
@@ -1108,8 +1108,8 @@ impl PageBlobClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[201],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[201],
                     },
                     ..Default::default()
                 }),
@@ -1285,8 +1285,8 @@ impl PageBlobClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[201],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[201],
                     },
                     ..Default::default()
                 }),

@@ -129,8 +129,8 @@ impl ResourcesNestedClient {
                             &ctx,
                             &mut request,
                             Some(PipelineSendOptions {
-                                check_success_options: CheckSuccessOptions {
-                                    success_statuses: &[200, 201, 200],
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 201],
                                 },
                                 ..Default::default()
                             }),
@@ -246,8 +246,8 @@ impl ResourcesNestedClient {
                             &ctx,
                             &mut request,
                             Some(PipelineSendOptions {
-                                check_success_options: CheckSuccessOptions {
-                                    success_statuses: &[202, 204, 200],
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202, 204],
                                 },
                                 ..Default::default()
                             }),
@@ -332,8 +332,8 @@ impl ResourcesNestedClient {
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[200],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
                     },
                     ..Default::default()
                 }),
@@ -409,8 +409,8 @@ impl ResourcesNestedClient {
                         &ctx,
                         &mut request,
                         Some(PipelineSendOptions {
-                            check_success_options: CheckSuccessOptions {
-                                success_statuses: &[200],
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
                             },
                             ..Default::default()
                         }),
@@ -525,8 +525,8 @@ impl ResourcesNestedClient {
                             &ctx,
                             &mut request,
                             Some(PipelineSendOptions {
-                                check_success_options: CheckSuccessOptions {
-                                    success_statuses: &[200, 202, 200],
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
                                 },
                                 ..Default::default()
                             }),

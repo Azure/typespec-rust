@@ -74,8 +74,8 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperatio
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[200, 204],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200, 204],
                     },
                     ..Default::default()
                 }),
@@ -128,8 +128,8 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperatio
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[200],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
                     },
                     ..Default::default()
                 }),
@@ -186,8 +186,8 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperatio
                 &ctx,
                 &mut request,
                 Some(PipelineSendOptions {
-                    check_success_options: CheckSuccessOptions {
-                        success_statuses: &[200, 201],
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200, 201],
                     },
                     ..Default::default()
                 }),
