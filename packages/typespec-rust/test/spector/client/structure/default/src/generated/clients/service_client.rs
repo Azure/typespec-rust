@@ -53,7 +53,7 @@ impl ServiceClient {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));

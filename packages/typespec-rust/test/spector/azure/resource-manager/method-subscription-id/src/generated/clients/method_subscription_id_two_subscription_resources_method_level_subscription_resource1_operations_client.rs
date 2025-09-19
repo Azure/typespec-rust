@@ -46,13 +46,13 @@ impl MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource
         options: Option<MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource1OperationsClientDeleteOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if subscription_id.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter subscription_id cannot be empty",
             ));
         }
         if subscription_resource1_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter subscription_resource1_name cannot be empty",
             ));
@@ -98,13 +98,13 @@ impl MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource
         options: Option<MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource1OperationsClientGetOptions<'_>>,
     ) -> Result<Response<SubscriptionResource1>> {
         if subscription_id.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter subscription_id cannot be empty",
             ));
         }
         if subscription_resource1_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter subscription_resource1_name cannot be empty",
             ));
@@ -153,13 +153,13 @@ impl MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource
         options: Option<MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource1OperationsClientPutOptions<'_>>,
     ) -> Result<Response<SubscriptionResource1>> {
         if subscription_id.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter subscription_id cannot be empty",
             ));
         }
         if subscription_resource1_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter subscription_resource1_name cannot be empty",
             ));

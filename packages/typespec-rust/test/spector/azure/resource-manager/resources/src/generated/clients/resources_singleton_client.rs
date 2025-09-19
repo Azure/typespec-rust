@@ -163,7 +163,7 @@ impl ResourcesSingletonClient {
         options: Option<ResourcesSingletonClientGetByResourceGroupOptions<'_>>,
     ) -> Result<Response<SingletonTrackedResource>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
@@ -208,7 +208,7 @@ impl ResourcesSingletonClient {
         options: Option<ResourcesSingletonClientListByResourceGroupOptions<'_>>,
     ) -> Result<Pager<SingletonTrackedResourceListResult>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
@@ -287,7 +287,7 @@ impl ResourcesSingletonClient {
         options: Option<ResourcesSingletonClientUpdateOptions<'_>>,
     ) -> Result<Response<SingletonTrackedResource>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));

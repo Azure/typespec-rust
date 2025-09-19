@@ -87,7 +87,7 @@ impl OperationTemplatesCheckNameAvailabilityClient {
         options: Option<OperationTemplatesCheckNameAvailabilityClientCheckLocalOptions<'_>>,
     ) -> Result<Response<CheckNameAvailabilityResponse>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));

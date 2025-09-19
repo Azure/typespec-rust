@@ -42,7 +42,7 @@ impl OverloadClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -107,7 +107,7 @@ impl OverloadClient {
         options: Option<OverloadClientListByScopeOptions<'_>>,
     ) -> Result<Response<Vec<Resource>>> {
         if scope.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter scope cannot be empty",
             ));

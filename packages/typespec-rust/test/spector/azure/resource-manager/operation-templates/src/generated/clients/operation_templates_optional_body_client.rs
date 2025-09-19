@@ -44,13 +44,13 @@ impl OperationTemplatesOptionalBodyClient {
         options: Option<OperationTemplatesOptionalBodyClientGetOptions<'_>>,
     ) -> Result<Response<Widget>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
         }
         if widget_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter widget_name cannot be empty",
             ));
@@ -98,13 +98,13 @@ impl OperationTemplatesOptionalBodyClient {
         options: Option<OperationTemplatesOptionalBodyClientPatchOptions<'_>>,
     ) -> Result<Response<Widget>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
         }
         if widget_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter widget_name cannot be empty",
             ));
@@ -156,13 +156,13 @@ impl OperationTemplatesOptionalBodyClient {
         options: Option<OperationTemplatesOptionalBodyClientPostOptions<'_>>,
     ) -> Result<Response<ActionResult>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
         }
         if widget_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter widget_name cannot be empty",
             ));

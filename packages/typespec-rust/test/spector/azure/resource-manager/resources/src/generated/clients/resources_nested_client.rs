@@ -293,19 +293,19 @@ impl ResourcesNestedClient {
         options: Option<ResourcesNestedClientGetOptions<'_>>,
     ) -> Result<Response<NestedProxyResource>> {
         if nexted_proxy_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter nexted_proxy_resource_name cannot be empty",
             ));
         }
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
         }
         if top_level_tracked_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter top_level_tracked_resource_name cannot be empty",
             ));
@@ -357,13 +357,13 @@ impl ResourcesNestedClient {
         options: Option<ResourcesNestedClientListByTopLevelTrackedResourceOptions<'_>>,
     ) -> Result<Pager<NestedProxyResourceListResult>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
         }
         if top_level_tracked_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter top_level_tracked_resource_name cannot be empty",
             ));

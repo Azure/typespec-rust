@@ -44,7 +44,7 @@ impl EnumPathParamsClient {
         let options = options.unwrap_or_default();
         let bogus_url = Url::parse(bogus_url)?;
         if !bogus_url.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{bogus_url} must use http(s)"),
             ));
@@ -78,7 +78,7 @@ impl EnumPathParamsClient {
         options: Option<EnumPathParamsClientOptionalExtensibleOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if shape.as_ref().is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter shape cannot be empty",
             ));

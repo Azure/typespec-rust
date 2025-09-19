@@ -62,7 +62,7 @@ impl SecretClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -106,7 +106,7 @@ impl SecretClient {
         options: Option<SecretClientBackupSecretOptions<'_>>,
     ) -> Result<Response<BackupSecretResult>> {
         if secret_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
             ));
@@ -153,7 +153,7 @@ impl SecretClient {
         options: Option<SecretClientDeleteSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecret>> {
         if secret_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
             ));
@@ -200,7 +200,7 @@ impl SecretClient {
         options: Option<SecretClientGetDeletedSecretOptions<'_>>,
     ) -> Result<Response<DeletedSecret>> {
         if secret_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
             ));
@@ -246,7 +246,7 @@ impl SecretClient {
         options: Option<SecretClientGetSecretOptions<'_>>,
     ) -> Result<Response<Secret>> {
         if secret_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
             ));
@@ -446,7 +446,7 @@ impl SecretClient {
         options: Option<SecretClientListSecretPropertiesVersionsOptions<'_>>,
     ) -> Result<Pager<ListSecretPropertiesResult>> {
         if secret_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
             ));
@@ -530,7 +530,7 @@ impl SecretClient {
         options: Option<SecretClientPurgeDeletedSecretOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if secret_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
             ));
@@ -576,7 +576,7 @@ impl SecretClient {
         options: Option<SecretClientRecoverDeletedSecretOptions<'_>>,
     ) -> Result<Response<Secret>> {
         if secret_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
             ));
@@ -666,7 +666,7 @@ impl SecretClient {
         options: Option<SecretClientSetSecretOptions<'_>>,
     ) -> Result<Response<Secret>> {
         if secret_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
             ));
@@ -717,7 +717,7 @@ impl SecretClient {
         options: Option<SecretClientUpdateSecretOptions<'_>>,
     ) -> Result<Response<Secret>> {
         if secret_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter secret_name cannot be empty",
             ));
