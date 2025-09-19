@@ -1628,7 +1628,7 @@ function getPipelineSendOptions(indent: helpers.indentation, use: Use, method: C
     use.add("azure_core::error", "CheckSuccessOptions");
     options += `Some(PipelineSendOptions {\n`;
     indent.push();
-    options += `${indent.get()}check_success_options: CheckSuccessOptions{ success_statuses: &[${method.statusCodes.join(', ')}]},\n`;
+    options += `${indent.get()}check_success: CheckSuccessOptions{ success_codes: &[${method.statusCodes.join(', ')}]},\n`;
     options += `${indent.get()}..Default::default()\n`;
     options += `${indent.pop().get()}})`;
     return options;

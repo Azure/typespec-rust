@@ -1470,8 +1470,11 @@ export class Adapter {
 
     // For long running operations, we add 200 OK if not already present for the LRO polling and terminal states.
     if (method.kind === 'lro') {
-      rustMethod.statusCodes.push(200);
+      if (!rustMethod.statusCodes.includes(200)) {
+        rustMethod.statusCodes.push(200);
+      }
     }
+    rustMethod.statusCodes.sort((a, b) => a - b);
 
     const responseHeadersMap = this.adaptResponseHeaders(responseHeaders);
     rustMethod.responseHeaders = this.adaptResponseHeadersTrait(rustClient, rustMethod, Array.from(responseHeadersMap.values()));
