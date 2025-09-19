@@ -1,6 +1,6 @@
 # Release History
 
-## 0.23.0 (unreleased)
+## 0.23.0 (2025-09-19)
 
 ### Breaking Changes
 
@@ -11,6 +11,7 @@
   * Identifiers that contain a decimal value will now use an underscore to separate the whole number from the fraction (e.g. `Version7.1` is now `Version7_1`).
   * For enum values that begin with a number, the prefix `INVLD_IDENTIFIER_` will be added as a flag indicating the name must be fixed in the TypeSpec.
 * Calls `Error::with_message()` instead of `Error::message()` after [Azure/azure-sdk-for-rust#3024](https://github.com/Azure/azure-sdk-for-rust/pull/3024) was merged.
+* Calls `pipeline.send` with the set of expected status codes for each operation.
 
 ### Bugs Fixed
 
