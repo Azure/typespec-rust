@@ -20,18 +20,24 @@ async fn no_envelope_default_put() {
         meow: Some(true),
     });
 
-    let a = cat.try_into();
-    let b = a.unwrap();
-
     let client = DiscriminatedClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_discriminated_no_envelope_client()
         .get_discriminated_no_envelope_default_client()
-        .put(b, None)
+        .put(cat.try_into().unwrap(), None)
         .await
         .unwrap();
 
     assert_eq!(resp.status(), 200);
+
+    let value: PetInline = resp.into_body().await.unwrap();
+    match value {
+        PetInline::Cat(cat) => {
+            assert_eq!(cat.name, Some(String::from("Whiskers")));
+            assert_eq!(cat.meow, Some(true));
+        }
+        _ => assert_ne!("Didn't get a Cat", "Expected a Cat"),
+    }
 }
 
 #[tokio::test]
@@ -41,18 +47,24 @@ async fn no_envelope_custom_put() {
         meow: Some(true),
     });
 
-    let a = cat.try_into();
-    let b = a.unwrap();
-
     let client = DiscriminatedClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_discriminated_no_envelope_client()
         .get_discriminated_no_envelope_custom_discriminator_client()
-        .put(b, None)
+        .put(cat.try_into().unwrap(), None)
         .await
         .unwrap();
 
     assert_eq!(resp.status(), 200);
+
+    let value: PetInlineWithCustomDiscriminator = resp.into_body().await.unwrap();
+    match value {
+        PetInlineWithCustomDiscriminator::Cat(cat) => {
+            assert_eq!(cat.name, Some(String::from("Whiskers")));
+            assert_eq!(cat.meow, Some(true));
+        }
+        _ => assert_ne!("Didn't get a Cat", "Expected a Cat"),
+    }
 }
 
 #[tokio::test]
@@ -72,6 +84,15 @@ async fn envelope_default_put() {
         .unwrap();
 
     assert_eq!(resp.status(), 200);
+
+    let value: PetWithEnvelope = resp.into_body().await.unwrap();
+    match value {
+        PetWithEnvelope::Cat(cat) => {
+            assert_eq!(cat.name, Some(String::from("Whiskers")));
+            assert_eq!(cat.meow, Some(true));
+        }
+        _ => assert_ne!("Didn't get a Cat", "Expected a Cat"),
+    }
 }
 
 #[tokio::test]
@@ -91,6 +112,15 @@ async fn envelope_custom_put() {
         .unwrap();
 
     assert_eq!(resp.status(), 200);
+
+    let value: PetWithCustomNames = resp.into_body().await.unwrap();
+    match value {
+        PetWithCustomNames::Cat(cat) => {
+            assert_eq!(cat.name, Some(String::from("Whiskers")));
+            assert_eq!(cat.meow, Some(true));
+        }
+        _ => assert_ne!("Didn't get a Cat", "Expected a Cat"),
+    }
 }
 
 #[tokio::test]

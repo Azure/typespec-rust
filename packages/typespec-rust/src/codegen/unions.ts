@@ -31,8 +31,9 @@ export function emitUnions(crate: rust.Crate, context: Context): helpers.Module 
       body += `${indent.get()}#[doc = r#"${docs.substring(0, docs.length - 1)}"#]\n`;
     }
 
-    use.add("serde", "Serialize", "Deserialize");
-    body += `#[derive(Serialize, Deserialize, Debug)]\n`;
+    use.add('serde', 'Deserialize', 'Serialize');
+    use.add('azure_core::fmt', 'SafeDebug');
+    body += `#[derive(Deserialize, Serialize, SafeDebug)]\n`;
     const tag = (rustUnion.discriminatorName !== "") ? `tag = "${rustUnion.discriminatorName}"` : '';
     const content = (rustUnion.envelopeName !== "") ? `content = "${rustUnion.envelopeName}"` : '';
     if (tag !== '' || content !== '') {
@@ -54,10 +55,7 @@ export function emitUnions(crate: rust.Crate, context: Context): helpers.Module 
         body += `#[serde(rename = "${member.discriminatorValue}")]\n`;
       }
       body += `${indent.get()}${member.name}(${helpers.getTypeDeclaration(memberType)})`;
-      if (i + 1 < rustUnion.members.length) {
-        body += ',';
-      }
-      body += '\n';
+      body += ',\n\n';
     }
 
     body += '}\n\n'; // end enum declaration
