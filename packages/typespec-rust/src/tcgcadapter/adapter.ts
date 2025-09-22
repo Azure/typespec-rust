@@ -365,30 +365,30 @@ export class Adapter {
     {
       // TODO: Rewrite getting information from __raw?.node
       // after https://github.com/microsoft/typespec/issues/8455 is implemented
-      // eslint-disable-next-line no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const node: any = union.__raw?.node;
       if (node) {
-        // eslint-disable-next-line no-unnecessary-type-assertion, no-unsafe-argument, no-unsafe-member-access, no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
         for (const unionMember of Array.from(node.symbol.members) as any[]) {
-          // eslint-disable-next-line no-unsafe-assignment, no-unsafe-member-access
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           const discriminatorValue = unionMember[0];
-          // eslint-disable-next-line no-unsafe-assignment, no-unsafe-member-access
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           const discriminatorTypeName = unionMember[1].node.value.target.sv;
-          // eslint-disable-next-line no-unsafe-argument
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           discriminatorValues.set(discriminatorTypeName, discriminatorValue);
         }
-        // eslint-disable-next-line no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         for (const decorator of node.decorators) {
-          // eslint-disable-next-line no-unsafe-member-access
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           if (decorator.target.sv === 'discriminated') {
-            // eslint-disable-next-line no-unsafe-assignment, no-unsafe-member-access
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             const argument = decorator.arguments[0];
             if (argument) {
-              // eslint-disable-next-line no-unsafe-member-access
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               for (const property of argument.properties) {
-                // eslint-disable-next-line no-unsafe-member-access
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 const propertyName = property.id.sv as string;
-                // eslint-disable-next-line no-unsafe-member-access
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 const propertyValue = property.value.value as string;
                 if (propertyName === 'envelope') {
                   if (propertyValue === 'none') {
