@@ -335,6 +335,73 @@ export class Adapter {
   }
 
   /**
+   * Gets properties of a TypeSpec union
+   *
+   * @param union tcgc union to convert
+   * @returns TypeSpec union properties
+   */
+  // TODO: Rewrite getting information from __raw?.node after https://github.com/microsoft/typespec/issues/8455 is implemented
+  private getUnionProperties(union: tcgc.SdkUnionType): {
+    // A map from union member name to its kind (kind gets sent over the wire)
+    discriminatorValues: Map<string, string>;
+
+    // Name of the virtual property to serialize the kind into.
+    discriminatorPropertyName: string;
+
+    // Name of the virtual property to serialize date into. If empty, no envelope is needed.
+    envelopePropertyName: string;
+  } {
+    const result = {
+      discriminatorValues: new Map<string, string>(),
+      discriminatorPropertyName: 'kind',
+      envelopePropertyName: 'value'
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const tspRawNode: any = union.__raw?.node;
+
+    if (tspRawNode) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+      for (const unionMember of Array.from(tspRawNode.symbol.members) as any[]) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        const discriminatorValue = unionMember[0];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        const discriminatorTypeName = unionMember[1].node.value.target.sv;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        result.discriminatorValues.set(discriminatorTypeName, discriminatorValue);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      for (const decorator of tspRawNode.decorators) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (decorator.target.sv === 'discriminated') {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          const argument = decorator.arguments[0];
+          if (argument) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            for (const property of argument.properties) {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              const propertyName = property.id.sv as string;
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              const propertyValue = property.value.value as string;
+              if (propertyName === 'envelope') {
+                if (propertyValue === 'none') {
+                  result.envelopePropertyName = '';
+                }
+              } else if (propertyName === 'discriminatorPropertyName') {
+                result.discriminatorPropertyName = propertyValue;
+              } else if (propertyName === 'envelopePropertyName') {
+                result.envelopePropertyName = propertyValue;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return result;
+  }
+
+  /**
    * converts a tcgc union to a Rust union
    *
    * @param union the tcgc union to convert
@@ -358,55 +425,8 @@ export class Adapter {
     }
     stack.push(unionName);
 
-
-    const discriminatorValues = new Map<string, string>();
-    let discriminatorPropertyName: string = 'kind';
-    let envelopePropertyName: string = 'value';
-    {
-      // TODO: Rewrite getting information from __raw?.node
-      // after https://github.com/microsoft/typespec/issues/8455 is implemented
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const node: any = union.__raw?.node;
-      if (node) {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-        for (const unionMember of Array.from(node.symbol.members) as any[]) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          const discriminatorValue = unionMember[0];
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          const discriminatorTypeName = unionMember[1].node.value.target.sv;
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          discriminatorValues.set(discriminatorTypeName, discriminatorValue);
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        for (const decorator of node.decorators) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          if (decorator.target.sv === 'discriminated') {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-            const argument = decorator.arguments[0];
-            if (argument) {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              for (const property of argument.properties) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                const propertyName = property.id.sv as string;
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                const propertyValue = property.value.value as string;
-                if (propertyName === 'envelope') {
-                  if (propertyValue === 'none') {
-                    envelopePropertyName = '';
-                  }
-                } else if (propertyName === 'discriminatorPropertyName') {
-                  discriminatorPropertyName = propertyValue;
-                } else if (propertyName === 'envelopePropertyName') {
-                  envelopePropertyName = propertyValue;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    rustUnion = new rust.Union(unionName, union.access === 'public', discriminatorPropertyName, envelopePropertyName);
+    const tspUnionProperties = this.getUnionProperties(union);
+    rustUnion = new rust.Union(unionName, union.access === 'public', tspUnionProperties.discriminatorPropertyName, tspUnionProperties.envelopePropertyName);
 
     rustUnion.docs = this.adaptDocs(union.summary, union.doc);
     this.types.set(unionName, rustUnion);
@@ -417,7 +437,7 @@ export class Adapter {
         throw new AdapterError('UnsupportedTsp', `non-model union member`, unionMember.__raw?.node);
       }
 
-      const discriminatorValue = discriminatorValues.get(unionMember.name);
+      const discriminatorValue = tspUnionProperties.discriminatorValues.get(unionMember.name);
       if (!discriminatorValue) {
         throw new AdapterError('InternalError', `unmatched discriminator`, union.__raw?.node);
       }
