@@ -36,7 +36,7 @@ export function emitUnions(crate: rust.Crate, context: Context): helpers.Module 
     const tag = (rustUnion.discriminatorName !== "") ? `tag = "${rustUnion.discriminatorName}"` : '';
     const content = (rustUnion.envelopeName !== "") ? `content = "${rustUnion.envelopeName}"` : '';
     if (tag !== '' || content !== '') {
-      body += `#[serde(${[tag, content].join(', ')})]\n`;
+      body += `#[serde(${[tag, content].filter(x => x !== '').join(', ')})]\n`;
     }
     body += `pub enum ${rustUnion.name} {\n`;
 
