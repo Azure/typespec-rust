@@ -148,7 +148,7 @@ async fn no_envelope_default_get() {
             .get_discriminated_no_envelope_client()
             .get_discriminated_no_envelope_default_client()
             .get(Some(DiscriminatedNoEnvelopeDefaultClientGetOptions {
-                kind: Some(String::from("Dog")),
+                kind: Some(String::from("dog")),
                 ..Default::default()
             }))
             .await
@@ -191,7 +191,7 @@ async fn no_envelope_custom_get() {
             .get_discriminated_no_envelope_custom_discriminator_client()
             .get(Some(
                 DiscriminatedNoEnvelopeCustomDiscriminatorClientGetOptions {
-                    type_param: Some(String::from("Dog")),
+                    type_param: Some(String::from("dog")),
                     ..Default::default()
                 },
             ))
@@ -236,7 +236,7 @@ async fn envelope_default_get() {
             .get_discriminated_envelope_object_client()
             .get_discriminated_envelope_object_default_client()
             .get(Some(DiscriminatedEnvelopeObjectDefaultClientGetOptions {
-                kind: Some(String::from("Dog")),
+                kind: Some(String::from("dog")),
                 ..Default::default()
             }))
             .await
@@ -281,7 +281,7 @@ async fn envelope_custom_get() {
             .get_discriminated_envelope_object_custom_properties_client()
             .get(Some(
                 DiscriminatedEnvelopeObjectCustomPropertiesClientGetOptions {
-                    pet_type: Some(String::from("Dog")),
+                    pet_type: Some(String::from("dog")),
                     ..Default::default()
                 },
             ))
