@@ -33,7 +33,7 @@ export function emitUnions(crate: rust.Crate, context: Context): helpers.Module 
 
     use.add('serde', 'Deserialize', 'Serialize');
     use.add('azure_core::fmt', 'SafeDebug');
-    body += `#[derive(Deserialize, Serialize, SafeDebug)]\n`;
+    body += `#[derive(Deserialize, Serialize, SafeDebug, Clone)]\n`;
     const tag = (rustUnion.discriminatorName !== "") ? `tag = "${rustUnion.discriminatorName}"` : '';
     const content = (rustUnion.envelopeName !== "") ? `content = "${rustUnion.envelopeName}"` : '';
     if (tag !== '' || content !== '') {

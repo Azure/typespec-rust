@@ -7,7 +7,7 @@ use crate::generated::models::{Cat, Dog};
 use azure_core::{fmt::SafeDebug, http::RequestContent, json::to_json, Result};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, SafeDebug)]
+#[derive(Deserialize, Serialize, SafeDebug, Clone)]
 #[serde(tag = "kind")]
 pub enum PetInline {
     #[serde(rename = "cat")]
@@ -17,7 +17,7 @@ pub enum PetInline {
     Dog(Dog),
 }
 
-#[derive(Deserialize, Serialize, SafeDebug)]
+#[derive(Deserialize, Serialize, SafeDebug, Clone)]
 #[serde(tag = "type")]
 pub enum PetInlineWithCustomDiscriminator {
     #[serde(rename = "cat")]
@@ -27,7 +27,7 @@ pub enum PetInlineWithCustomDiscriminator {
     Dog(Dog),
 }
 
-#[derive(Deserialize, Serialize, SafeDebug)]
+#[derive(Deserialize, Serialize, SafeDebug, Clone)]
 #[serde(tag = "petType", content = "petData")]
 pub enum PetWithCustomNames {
     #[serde(rename = "cat")]
@@ -37,7 +37,7 @@ pub enum PetWithCustomNames {
     Dog(Dog),
 }
 
-#[derive(Deserialize, Serialize, SafeDebug)]
+#[derive(Deserialize, Serialize, SafeDebug, Clone)]
 #[serde(tag = "kind", content = "value")]
 pub enum PetWithEnvelope {
     #[serde(rename = "cat")]
