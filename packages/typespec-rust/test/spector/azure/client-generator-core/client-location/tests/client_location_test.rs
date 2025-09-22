@@ -64,11 +64,12 @@ async fn test_get_admin_info() {
 #[tokio::test]
 async fn test_get_blob() {
     let client = ClientLocationClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let parameter_client = client.get_client_location_move_method_parameter_to_client();
+    let parameter_client =
+        client.get_client_location_move_method_parameter_to_client("testaccount".to_string());
     let blob_client =
         parameter_client.get_client_location_move_method_parameter_to_blob_operations_client();
     let result = blob_client
-        .get_blob("testaccount", "testcontainer", "testblob.txt", None)
+        .get_blob("testcontainer", "testblob.txt", None)
         .await
         .unwrap();
     let blob: Blob = result.into_body().await.unwrap();
