@@ -51,7 +51,7 @@ export function emitUnions(crate: rust.Crate, context: Context): helpers.Module 
       }
 
       if (member.discriminatorValue != member.name) {
-        body += `#[serde(rename = "${member.discriminatorValue}")]`;
+        body += `#[serde(rename = "${member.discriminatorValue}")]\n`;
       }
       body += `${indent.get()}${member.name}(${helpers.getTypeDeclaration(memberType)})`;
       if (i + 1 < rustUnion.members.length) {
