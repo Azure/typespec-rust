@@ -36,7 +36,7 @@ async fn no_envelope_default_put() {
             assert_eq!(cat.name, Some(String::from("Whiskers")));
             assert_eq!(cat.meow, Some(true));
         }
-        _ => assert_ne!("Didn't get a Cat", "Expected a Cat"),
+        _ => panic!("Expected a Cat"),
     }
 }
 
@@ -63,7 +63,7 @@ async fn no_envelope_custom_put() {
             assert_eq!(cat.name, Some(String::from("Whiskers")));
             assert_eq!(cat.meow, Some(true));
         }
-        _ => assert_ne!("Didn't get a Cat", "Expected a Cat"),
+        _ => panic!("Expected a Cat"),
     }
 }
 
@@ -91,7 +91,7 @@ async fn envelope_default_put() {
             assert_eq!(cat.name, Some(String::from("Whiskers")));
             assert_eq!(cat.meow, Some(true));
         }
-        _ => assert_ne!("Didn't get a Cat", "Expected a Cat"),
+        _ => panic!("Expected a Cat"),
     }
 }
 
@@ -119,7 +119,7 @@ async fn envelope_custom_put() {
             assert_eq!(cat.name, Some(String::from("Whiskers")));
             assert_eq!(cat.meow, Some(true));
         }
-        _ => assert_ne!("Didn't get a Cat", "Expected a Cat"),
+        _ => panic!("Expected a Cat"),
     }
 }
 
@@ -140,7 +140,7 @@ async fn no_envelope_default_get() {
                 assert_eq!(cat.name, Some(String::from("Whiskers")));
                 assert_eq!(cat.meow, Some(true));
             }
-            _ => assert_ne!("Didn't get a Cat", "Expected a Cat"),
+            _ => panic!("Expected a Cat"),
         }
     }
     {
@@ -160,7 +160,7 @@ async fn no_envelope_default_get() {
                 assert_eq!(dog.name, Some(String::from("Rex")));
                 assert_eq!(dog.bark, Some(false));
             }
-            _ => assert_ne!("Didn't get a Dog", "Expected a Dog"),
+            _ => panic!("Expected a Dog"),
         }
     }
 }
@@ -182,7 +182,7 @@ async fn no_envelope_custom_get() {
                 assert_eq!(cat.name, Some(String::from("Whiskers")));
                 assert_eq!(cat.meow, Some(true));
             }
-            _ => assert_ne!("Didn't get a Cat", "Expected a Cat"),
+            _ => panic!("Expected a Cat"),
         }
     }
     {
@@ -204,7 +204,7 @@ async fn no_envelope_custom_get() {
                 assert_eq!(dog.name, Some(String::from("Rex")));
                 assert_eq!(dog.bark, Some(false));
             }
-            _ => assert_ne!("Didn't get a Dog", "Expected a Dog"),
+            _ => panic!("Expected a Dog"),
         }
     }
 }
@@ -227,7 +227,7 @@ async fn envelope_default_get() {
                 assert_eq!(cat.name, Some(String::from("Whiskers")));
                 assert_eq!(cat.meow, Some(true));
             }
-            _ => assert_ne!("Didn't get a Cat", "Expected a Cat"),
+            _ => panic!("Expected a Cat"),
         }
     }
     {
@@ -248,7 +248,7 @@ async fn envelope_default_get() {
                 assert_eq!(dog.name, Some(String::from("Rex")));
                 assert_eq!(dog.bark, Some(false));
             }
-            _ => assert_ne!("Didn't get a Dog", "Expected a Dog"),
+            _ => panic!("Expected a Dog"),
         }
     }
 }
@@ -271,7 +271,7 @@ async fn envelope_custom_get() {
                 assert_eq!(cat.name, Some(String::from("Whiskers")));
                 assert_eq!(cat.meow, Some(true));
             }
-            _ => assert_ne!("Didn't get a Cat", "Expected a Cat"),
+            _ => panic!("Expected a Cat"),
         }
     }
     {
@@ -294,7 +294,7 @@ async fn envelope_custom_get() {
                 assert_eq!(dog.name, Some(String::from("Rex")));
                 assert_eq!(dog.bark, Some(false));
             }
-            _ => assert_ne!("Didn't get a Dog", "Expected a Dog"),
+            _ => panic!("Expected a Dog"),
         }
     }
 }
