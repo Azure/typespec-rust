@@ -28,23 +28,29 @@ members = [
     "spector/azure/client-generator-core/api-version/path",
     "spector/azure/client-generator-core/api-version/query",
     "spector/azure/client-generator-core/client-initialization",
+    "spector/azure/client-generator-core/client-location",
     "spector/azure/client-generator-core/flatten-property",
     "spector/azure/client-generator-core/usage",
     "spector/azure/core/basic",
     "spector/azure/core/lro/standard",
+    "spector/azure/core/model",
     "spector/azure/core/page",
+    "spector/azure/core/scalar",
     "spector/azure/encode/duration",
     "spector/azure/example/basic",
     "spector/azure/payload/pageable",
     "spector/azure/resource-manager/common-properties",
+    "spector/azure/resource-manager/method-subscription-id",
     "spector/azure/resource-manager/non-resource",
     "spector/azure/resource-manager/operation-templates",
     "spector/azure/resource-manager/resources",
+    "spector/client/overload",
     "spector/client/structure/client-operation-group",
     "spector/client/structure/default",
     "spector/client/structure/multi-client",
     "spector/client/structure/renamed-operation",
     "spector/client/structure/two-operation-group",
+    "spector/payload/pageable",
     "spector/resiliency/srv-driven/new",
     "spector/resiliency/srv-driven/old",
     "spector/routes",
@@ -78,7 +84,7 @@ rust-version = "1.85"
 [workspace.dependencies]
 # Third-party dependencies should be kept up to date with https://github.com/Azure/azure-sdk-for-rust/blob/main/Cargo.lock
 async-trait = "0.1.88"
-azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "ca68ec5596626224a2a9ca166685c56afae3eb85", features = [
+azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "119b9651833e340e4b3d13563fe6b003bf12697e", features = [
     "decimal",
     "reqwest",
 ] }
@@ -89,7 +95,7 @@ serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.141"
 time = { version = "0.3.41", features = ["serde-well-known"] }
 tokio = { version = "1.46.1", default-features = false, features = ["macros"] }
-typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "ca68ec5596626224a2a9ca166685c56afae3eb85", features = [
+typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "119b9651833e340e4b3d13563fe6b003bf12697e", features = [
     "decimal",
     "reqwest",
 ] }

@@ -5,8 +5,11 @@
 
 use crate::generated::models::QueryClientQueryApiVersionOptions;
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{check_success, ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{
+        ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+    },
     tracing, Result,
 };
 
@@ -37,7 +40,7 @@ impl QueryClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -77,8 +80,19 @@ impl QueryClient {
         url = url.join("azure/client-generator-core/api-version/query")?;
         url.query_pairs_mut().append_pair("version", &self.version);
         let mut request = Request::new(url, Method::Post);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

@@ -8,7 +8,10 @@ use crate::generated::models::{
     ScalarDecimalTypeClientResponseBodyOptions,
 };
 use azure_core::{
-    http::{check_success, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    error::CheckSuccessOptions,
+    http::{
+        Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+    },
     tracing, Result,
 };
 use rust_decimal::Decimal;
@@ -43,8 +46,19 @@ impl ScalarDecimalTypeClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -65,8 +79,19 @@ impl ScalarDecimalTypeClient {
         url.query_pairs_mut()
             .append_pair("value", &value.to_string());
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -85,8 +110,19 @@ impl ScalarDecimalTypeClient {
         url = url.join("type/scalar/decimal/response_body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

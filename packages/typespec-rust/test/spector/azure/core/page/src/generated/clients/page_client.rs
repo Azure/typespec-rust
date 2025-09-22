@@ -13,11 +13,12 @@ use crate::generated::{
     },
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
-        check_success,
         pager::{PagerResult, PagerState},
-        BufResponse, ClientOptions, Method, Pager, Pipeline, Request, RequestContent, Url,
+        BufResponse, ClientOptions, Method, Pager, Pipeline, PipelineSendOptions, Request,
+        RequestContent, Url,
     },
     json, tracing, Result,
 };
@@ -51,7 +52,7 @@ impl PageClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -116,8 +117,18 @@ impl PageClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: ParameterizedNextLinkPagingResult = json::from_json(&bytes)?;
@@ -172,8 +183,18 @@ impl PageClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: UserListResults = json::from_json(&bytes)?;
@@ -228,8 +249,18 @@ impl PageClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;
@@ -293,8 +324,18 @@ impl PageClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;

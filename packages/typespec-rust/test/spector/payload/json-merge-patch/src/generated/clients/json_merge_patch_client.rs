@@ -8,9 +8,11 @@ use crate::generated::models::{
     JsonMergePatchClientUpdateResourceOptions, Resource, ResourcePatch,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
-        check_success, ClientOptions, Method, Pipeline, Request, RequestContent, Response, Url,
+        ClientOptions, Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response,
+        Url,
     },
     tracing, Result,
 };
@@ -44,7 +46,7 @@ impl JsonMergePatchClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -86,8 +88,19 @@ impl JsonMergePatchClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -111,8 +124,19 @@ impl JsonMergePatchClient {
         if let Some(body) = options.body {
             request.set_body(body);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -135,8 +159,19 @@ impl JsonMergePatchClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

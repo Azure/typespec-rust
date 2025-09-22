@@ -30,15 +30,15 @@ use crate::generated::models::{
 };
 use azure_core::{
     credentials::TokenCredential,
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
-        check_success,
         headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         pager::{PagerResult, PagerState},
         policies::{BearerTokenCredentialPolicy, Policy},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        BufResponse, ClientOptions, Method, NoFormat, PageIterator, Pager, Pipeline, Poller,
-        Request, RequestContent, Response, Url,
+        BufResponse, ClientOptions, Method, NoFormat, PageIterator, Pager, Pipeline,
+        PipelineSendOptions, Poller, Request, RequestContent, Response, Url,
     },
     json, tracing, Result,
 };
@@ -79,7 +79,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -149,7 +149,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckKeyValueOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -196,8 +196,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -289,8 +300,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -351,8 +373,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -423,8 +456,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -507,8 +551,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -558,7 +613,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckSnapshotOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -584,8 +639,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -640,8 +706,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -741,7 +818,18 @@ impl AzureAppConfigurationClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 201],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -812,7 +900,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientDeleteKeyValueOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -839,8 +927,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200, 204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -891,7 +990,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientDeleteLockOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -921,8 +1020,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -974,7 +1084,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientGetKeyValueOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -1022,8 +1132,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -1053,8 +1174,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -1107,7 +1239,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientGetSnapshotOptions<'_>>,
     ) -> Result<Response<Snapshot>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -1144,8 +1276,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -1264,8 +1407,18 @@ impl AzureAppConfigurationClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp = pipeline.send(&ctx, &mut request).await?;
-                    let rsp = check_success(rsp).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
@@ -1363,8 +1516,18 @@ impl AzureAppConfigurationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: KeyListResult = json::from_json(&bytes)?;
@@ -1474,8 +1637,18 @@ impl AzureAppConfigurationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: LabelListResult = json::from_json(&bytes)?;
@@ -1598,8 +1771,18 @@ impl AzureAppConfigurationClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp = pipeline.send(&ctx, &mut request).await?;
-                    let rsp = check_success(rsp).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let bytes = body.collect().await?;
                     let res: KeyValueListResult = json::from_json(&bytes)?;
@@ -1714,8 +1897,18 @@ impl AzureAppConfigurationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: SnapshotListResult = json::from_json(&bytes)?;
@@ -1780,7 +1973,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientPutKeyValueOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -1814,8 +2007,19 @@ impl AzureAppConfigurationClient {
         if let Some(entity) = options.entity {
             request.set_body(entity);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -1866,7 +2070,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientPutLockOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -1896,8 +2100,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -1953,7 +2168,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientUpdateSnapshotOptions<'_>>,
     ) -> Result<Response<Snapshot>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -1982,8 +2197,19 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.set_body(entity);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

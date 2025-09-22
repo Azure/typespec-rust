@@ -8,8 +8,11 @@ use crate::generated::models::{
     ParentChildClientGetStandaloneOptions, ParentChildClientWithQueryOptions,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{check_success, ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{
+        ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+    },
     tracing, Result,
 };
 
@@ -46,7 +49,7 @@ impl ParentChildClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -88,8 +91,19 @@ impl ParentChildClient {
         path = path.replace("{blobName}", &self.blob_name);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Delete);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -110,8 +124,19 @@ impl ParentChildClient {
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -138,8 +163,19 @@ impl ParentChildClient {
             url.query_pairs_mut().append_pair("format", &format);
         }
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

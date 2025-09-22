@@ -8,8 +8,11 @@ use crate::generated::models::{
     ExtensibleShape, FixedShape,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{check_success, ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{
+        ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+    },
     tracing, Result,
 };
 
@@ -41,7 +44,7 @@ impl EnumPathParamsClient {
         let options = options.unwrap_or_default();
         let bogus_url = Url::parse(bogus_url)?;
         if !bogus_url.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{bogus_url} must use http(s)"),
             ));
@@ -75,7 +78,7 @@ impl EnumPathParamsClient {
         options: Option<EnumPathParamsClientOptionalExtensibleOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if shape.as_ref().is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter shape cannot be empty",
             ));
@@ -91,8 +94,19 @@ impl EnumPathParamsClient {
         };
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -117,8 +131,19 @@ impl EnumPathParamsClient {
         };
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

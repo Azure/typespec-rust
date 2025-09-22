@@ -9,10 +9,11 @@ use crate::generated::models::{
     OperationTemplatesLroClientExportOptions, Order,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     http::{
         headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        BufResponse, Method, Pipeline, Poller, Request, RequestContent, Url,
+        BufResponse, Method, Pipeline, PipelineSendOptions, Poller, Request, RequestContent, Url,
     },
     json, tracing, Result,
 };
@@ -114,7 +115,18 @@ impl OperationTemplatesLroClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 201],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -214,7 +226,18 @@ impl OperationTemplatesLroClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202, 204],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -325,7 +348,18 @@ impl OperationTemplatesLroClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,

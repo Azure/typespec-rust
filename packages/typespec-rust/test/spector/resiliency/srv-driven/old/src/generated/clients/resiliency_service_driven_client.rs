@@ -9,8 +9,11 @@ use crate::generated::models::{
     ResiliencyServiceDrivenClientFromOneRequiredOptions,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{check_success, ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{
+        ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+    },
     tracing, Result,
 };
 
@@ -50,7 +53,7 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -92,8 +95,19 @@ impl ResiliencyServiceDrivenClient {
         let mut url = self.endpoint.clone();
         url = url.join("add-optional-param/from-none")?;
         let mut request = Request::new(url, Method::Head);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -116,8 +130,19 @@ impl ResiliencyServiceDrivenClient {
             url.query_pairs_mut().append_pair("parameter", &parameter);
         }
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -140,8 +165,19 @@ impl ResiliencyServiceDrivenClient {
         url = url.join("add-optional-param/from-one-required")?;
         url.query_pairs_mut().append_pair("parameter", parameter);
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

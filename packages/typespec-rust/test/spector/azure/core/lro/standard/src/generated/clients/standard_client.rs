@@ -8,11 +8,13 @@ use crate::generated::models::{
     StandardClientDeleteOptions, StandardClientExportOptions, User,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
         headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        BufResponse, ClientOptions, Method, Pipeline, Poller, Request, RequestContent, Url,
+        BufResponse, ClientOptions, Method, Pipeline, PipelineSendOptions, Poller, Request,
+        RequestContent, Url,
     },
     json, tracing, Result,
 };
@@ -49,7 +51,7 @@ impl StandardClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -150,7 +152,18 @@ impl StandardClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 201],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -246,7 +259,18 @@ impl StandardClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -345,7 +369,18 @@ impl StandardClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,

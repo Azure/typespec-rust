@@ -5,11 +5,11 @@
 
 use crate::generated::models::{PageableClientListOptions, PagedUser};
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
-        check_success,
         pager::{PagerResult, PagerState},
-        BufResponse, ClientOptions, Method, Pager, Pipeline, Request, Url,
+        BufResponse, ClientOptions, Method, Pager, Pipeline, PipelineSendOptions, Request, Url,
     },
     json, tracing, Result,
 };
@@ -43,7 +43,7 @@ impl PageableClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -92,8 +92,18 @@ impl PageableClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: PagedUser = json::from_json(&bytes)?;

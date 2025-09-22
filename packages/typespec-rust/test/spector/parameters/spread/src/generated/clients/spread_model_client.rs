@@ -11,7 +11,10 @@ use crate::generated::models::{
     SpreadModelClientSpreadCompositeRequestWithoutBodyOptions,
 };
 use azure_core::{
-    http::{check_success, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
+    error::CheckSuccessOptions,
+    http::{
+        Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+    },
     tracing, Result,
 };
 
@@ -45,8 +48,19 @@ impl SpreadModelClient {
         request.insert_header("content-type", "application/json");
         let body: RequestContent<BodyParameter> = BodyParameter { name: Some(name) }.try_into()?;
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -63,7 +77,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -78,8 +92,19 @@ impl SpreadModelClient {
         request.insert_header("content-type", "application/json");
         request.insert_header("test-header", test_header);
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -96,7 +121,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestMixOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -113,8 +138,19 @@ impl SpreadModelClient {
         let body: RequestContent<SpreadCompositeRequestMixRequest> =
             SpreadCompositeRequestMixRequest { prop }.try_into()?;
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -135,8 +171,19 @@ impl SpreadModelClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -152,7 +199,7 @@ impl SpreadModelClient {
         options: Option<SpreadModelClientSpreadCompositeRequestWithoutBodyOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -166,8 +213,19 @@ impl SpreadModelClient {
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Put);
         request.insert_header("test-header", test_header);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

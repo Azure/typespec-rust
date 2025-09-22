@@ -8,8 +8,11 @@ use crate::generated::models::{
     NotVersionedClientWithoutApiVersionOptions,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{check_success, ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
+    http::{
+        ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+    },
     tracing, Result,
 };
 
@@ -42,7 +45,7 @@ impl NotVersionedClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -76,7 +79,7 @@ impl NotVersionedClient {
         options: Option<NotVersionedClientWithPathApiVersionOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if api_version.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter api_version cannot be empty",
             ));
@@ -89,8 +92,19 @@ impl NotVersionedClient {
         path = path.replace("{apiVersion}", api_version);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Head);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -111,8 +125,19 @@ impl NotVersionedClient {
         url.query_pairs_mut()
             .append_pair("api-version", api_version);
         let mut request = Request::new(url, Method::Head);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -130,8 +155,19 @@ impl NotVersionedClient {
         let mut url = self.endpoint.clone();
         url = url.join("server/versions/not-versioned/without-api-version")?;
         let mut request = Request::new(url, Method::Head);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

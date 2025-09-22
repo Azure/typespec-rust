@@ -11,9 +11,10 @@ use crate::generated::{
     },
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
-        check_success, ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent,
+        ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent,
         Response, Url,
     },
     tracing, Result,
@@ -48,7 +49,7 @@ impl BodyOptionalityClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -99,8 +100,19 @@ impl BodyOptionalityClient {
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -122,8 +134,19 @@ impl BodyOptionalityClient {
         request.insert_header("content-type", "application/json");
         let body: RequestContent<BodyModel> = BodyModel { name: Some(name) }.try_into()?;
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

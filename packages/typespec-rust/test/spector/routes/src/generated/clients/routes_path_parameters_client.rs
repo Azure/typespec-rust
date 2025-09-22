@@ -15,7 +15,8 @@ use crate::generated::{
     },
 };
 use azure_core::{
-    http::{check_success, Method, NoFormat, Pipeline, Request, Response, Url},
+    error::CheckSuccessOptions,
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
 
@@ -42,7 +43,7 @@ impl RoutesPathParametersClient {
         options: Option<RoutesPathParametersClientAnnotationOnlyOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if param.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter param cannot be empty",
             ));
@@ -54,8 +55,19 @@ impl RoutesPathParametersClient {
         path = path.replace("{param}", param);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -70,7 +82,7 @@ impl RoutesPathParametersClient {
         options: Option<RoutesPathParametersClientExplicitOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if param.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter param cannot be empty",
             ));
@@ -82,8 +94,19 @@ impl RoutesPathParametersClient {
         path = path.replace("{param}", param);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -153,7 +176,7 @@ impl RoutesPathParametersClient {
         options: Option<RoutesPathParametersClientTemplateOnlyOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if param.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter param cannot be empty",
             ));
@@ -165,8 +188,19 @@ impl RoutesPathParametersClient {
         path = path.replace("{param}", param);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

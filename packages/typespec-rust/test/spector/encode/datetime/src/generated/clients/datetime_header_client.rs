@@ -9,7 +9,8 @@ use crate::generated::models::{
     DatetimeHeaderClientUnixTimestampOptions,
 };
 use azure_core::{
-    http::{check_success, Method, NoFormat, Pipeline, Request, Response, Url},
+    error::CheckSuccessOptions,
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
     time::{to_rfc3339, to_rfc7231, OffsetDateTime},
     tracing, Result,
 };
@@ -42,8 +43,19 @@ impl DatetimeHeaderClient {
         url = url.join("encode/datetime/header/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", to_rfc7231(&value));
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -63,8 +75,19 @@ impl DatetimeHeaderClient {
         url = url.join("encode/datetime/header/rfc3339")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", to_rfc3339(&value));
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -84,8 +107,19 @@ impl DatetimeHeaderClient {
         url = url.join("encode/datetime/header/rfc7231")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", to_rfc7231(&value));
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -105,8 +139,19 @@ impl DatetimeHeaderClient {
         url = url.join("encode/datetime/header/unix-timestamp")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", value.unix_timestamp().to_string());
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -133,8 +178,19 @@ impl DatetimeHeaderClient {
                 .collect::<Vec<String>>()
                 .join(","),
         );
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

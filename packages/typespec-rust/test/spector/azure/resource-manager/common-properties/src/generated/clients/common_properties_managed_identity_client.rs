@@ -10,7 +10,8 @@ use crate::generated::models::{
     ManagedIdentityTrackedResource,
 };
 use azure_core::{
-    http::{check_success, Method, Pipeline, Request, RequestContent, Response, Url},
+    error::CheckSuccessOptions,
+    http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
     tracing, Result,
 };
 
@@ -47,13 +48,13 @@ impl CommonPropertiesManagedIdentityClient {
         options: Option<CommonPropertiesManagedIdentityClientCreateWithSystemAssignedOptions<'_>>,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
         if managed_identity_tracked_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter managed_identity_tracked_resource_name cannot be empty",
             ));
         }
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
@@ -75,8 +76,19 @@ impl CommonPropertiesManagedIdentityClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(resource);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200, 201],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -95,13 +107,13 @@ impl CommonPropertiesManagedIdentityClient {
         options: Option<CommonPropertiesManagedIdentityClientGetOptions<'_>>,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
         if managed_identity_tracked_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter managed_identity_tracked_resource_name cannot be empty",
             ));
         }
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
@@ -121,8 +133,19 @@ impl CommonPropertiesManagedIdentityClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -145,13 +168,13 @@ impl CommonPropertiesManagedIdentityClient {
         >,
     ) -> Result<Response<ManagedIdentityTrackedResource>> {
         if managed_identity_tracked_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter managed_identity_tracked_resource_name cannot be empty",
             ));
         }
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
@@ -173,8 +196,19 @@ impl CommonPropertiesManagedIdentityClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(properties);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

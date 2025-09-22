@@ -9,7 +9,8 @@ use crate::generated::models::{
     DurationHeaderClientIso8601ArrayOptions, DurationHeaderClientIso8601Options,
 };
 use azure_core::{
-    http::{check_success, Method, NoFormat, Pipeline, Request, Response, Url},
+    error::CheckSuccessOptions,
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
 
@@ -41,8 +42,19 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/default")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -62,8 +74,19 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/float64-seconds")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -83,8 +106,19 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/float-seconds")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -104,8 +138,19 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/int32-seconds")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -125,8 +170,19 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/iso8601")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -146,8 +202,19 @@ impl DurationHeaderClient {
         url = url.join("encode/duration/header/iso8601-array")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.join(","));
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

@@ -9,7 +9,8 @@ use crate::generated::models::{
     RoutesQueryParametersQueryContinuationStandardClientRecordOptions,
 };
 use azure_core::{
-    http::{check_success, Method, NoFormat, Pipeline, Request, Response, Url},
+    error::CheckSuccessOptions,
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
 use std::collections::HashMap;
@@ -43,8 +44,19 @@ impl RoutesQueryParametersQueryContinuationStandardClient {
         url.query_pairs_mut().append_pair("fixed", "true");
         url.query_pairs_mut().append_pair("param", &param.join(","));
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -65,8 +77,19 @@ impl RoutesQueryParametersQueryContinuationStandardClient {
         url.query_pairs_mut().append_pair("fixed", "true");
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -99,8 +122,19 @@ impl RoutesQueryParametersQueryContinuationStandardClient {
             );
         }
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

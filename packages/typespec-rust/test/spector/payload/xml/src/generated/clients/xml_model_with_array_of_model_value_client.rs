@@ -8,8 +8,9 @@ use crate::generated::models::{
     XmlModelWithArrayOfModelValueClientPutOptions,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     http::{
-        check_success, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
+        Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
         XmlFormat,
     },
     tracing, Result,
@@ -43,8 +44,19 @@ impl XmlModelWithArrayOfModelValueClient {
         url = url.join("payload/xml/modelWithArrayOfModel")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -65,8 +77,19 @@ impl XmlModelWithArrayOfModelValueClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.set_body(input);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

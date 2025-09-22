@@ -7,9 +7,10 @@ use crate::generated::models::{
     HeaderParamClientWithBodyOptions, HeaderParamClientWithQueryOptions, Input,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
-        check_success, ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent,
+        ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent,
         Response, Url,
     },
     tracing, Result,
@@ -47,7 +48,7 @@ impl HeaderParamClient {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
@@ -92,8 +93,19 @@ impl HeaderParamClient {
         request.insert_header("content-type", "application/json");
         request.insert_header("name", &self.name);
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -117,8 +129,19 @@ impl HeaderParamClient {
         url.query_pairs_mut().append_pair("id", id);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("name", &self.name);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

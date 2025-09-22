@@ -7,10 +7,10 @@ use crate::generated::models::{
     OperationListResult, OperationTemplatesOperationsClientListOptions,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     http::{
-        check_success,
         pager::{PagerResult, PagerState},
-        BufResponse, Method, Pager, Pipeline, Request, Url,
+        BufResponse, Method, Pager, Pipeline, PipelineSendOptions, Request, Url,
     },
     json, tracing, Result,
 };
@@ -68,8 +68,18 @@ impl OperationTemplatesOperationsClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: OperationListResult = json::from_json(&bytes)?;

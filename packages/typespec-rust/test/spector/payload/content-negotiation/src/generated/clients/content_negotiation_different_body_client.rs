@@ -8,7 +8,8 @@ use crate::generated::models::{
     ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions, PngImageAsJson,
 };
 use azure_core::{
-    http::{check_success, BufResponse, Method, Pipeline, Request, Response, Url},
+    error::CheckSuccessOptions,
+    http::{BufResponse, Method, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
 
@@ -39,8 +40,19 @@ impl ContentNegotiationDifferentBodyClient {
         url = url.join("content-negotiation/different-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -59,8 +71,19 @@ impl ContentNegotiationDifferentBodyClient {
         url = url.join("content-negotiation/different-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp)
     }
 }

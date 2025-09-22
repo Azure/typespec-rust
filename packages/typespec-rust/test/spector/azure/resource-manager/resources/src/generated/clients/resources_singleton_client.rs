@@ -10,12 +10,13 @@ use crate::generated::models::{
     SingletonTrackedResource, SingletonTrackedResourceListResult,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     http::{
-        check_success,
         headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         pager::{PagerResult, PagerState},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        BufResponse, Method, Pager, Pipeline, Poller, Request, RequestContent, Response, Url,
+        BufResponse, Method, Pager, Pipeline, PipelineSendOptions, Poller, Request, RequestContent,
+        Response, Url,
     },
     json, tracing, Result,
 };
@@ -114,7 +115,18 @@ impl ResourcesSingletonClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 201],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let retry_after = get_retry_after(
                         &headers,
@@ -151,7 +163,7 @@ impl ResourcesSingletonClient {
         options: Option<ResourcesSingletonClientGetByResourceGroupOptions<'_>>,
     ) -> Result<Response<SingletonTrackedResource>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
@@ -167,8 +179,19 @@ impl ResourcesSingletonClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -185,7 +208,7 @@ impl ResourcesSingletonClient {
         options: Option<ResourcesSingletonClientListByResourceGroupOptions<'_>>,
     ) -> Result<Pager<SingletonTrackedResourceListResult>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
@@ -222,8 +245,18 @@ impl ResourcesSingletonClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp = pipeline.send(&ctx, &mut request).await?;
-                let rsp = check_success(rsp).await?;
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let bytes = body.collect().await?;
                 let res: SingletonTrackedResourceListResult = json::from_json(&bytes)?;
@@ -254,7 +287,7 @@ impl ResourcesSingletonClient {
         options: Option<ResourcesSingletonClientUpdateOptions<'_>>,
     ) -> Result<Response<SingletonTrackedResource>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
@@ -272,8 +305,19 @@ impl ResourcesSingletonClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(properties);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        let rsp = check_success(rsp).await?;
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

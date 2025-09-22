@@ -188,15 +188,19 @@ export interface PageableStrategyContinuationToken {
    * the location in the response that contains the continuation token.
    * can be a response header or a field in response model.
    */
-  responseToken: ResponseHeaderScalar | types.ModelField;
+  responseToken: ResponseHeaderScalar | PageableStrategyNextLink;
 }
 
 /** PageableStrategyNextLink indicates a pageable method uses the nextLink strategy */
 export interface PageableStrategyNextLink {
   kind: 'nextLink';
 
-  /** the field in the response that contains the next link URL */
-  nextLink: types.ModelField;
+  /**
+   * the field path in the response that contains the next link URL.
+   * one entry at minimum. when the next link is nested in the response
+   * type, the array will contain the "path" to the next link.
+   */
+  nextLinkPath: Array<types.ModelField>;
 }
 
 /** PageableStrategyKind contains different strategies for fetching subsequent pages */
@@ -539,6 +543,12 @@ interface HTTPMethodBase extends method.Method<types.Type> {
   /** the type returned by the method */
   returns: types.Result;
 
+  /**
+   * List of HTTP status codes that should be treated as successes.
+   * If empty, default success determination (any 2xx) is used.
+   */
+  statusCodes: Array<number>;
+
   /** contains the trait for accessing response headers */
   responseHeaders?: ResponseHeadersTrait;
 
@@ -725,7 +735,7 @@ export class LroMethod extends HTTPMethodBase implements LroMethod {
 }
 
 export class PageableStrategyContinuationToken implements PageableStrategyContinuationToken {
-  constructor(requestToken: HeaderScalarParameter | QueryScalarParameter, responseToken: ResponseHeaderScalar | types.ModelField) {
+  constructor(requestToken: HeaderScalarParameter | QueryScalarParameter, responseToken: ResponseHeaderScalar | PageableStrategyNextLink) {
     this.kind = 'continuationToken';
     this.requestToken = requestToken;
     this.responseToken = responseToken;
@@ -733,9 +743,9 @@ export class PageableStrategyContinuationToken implements PageableStrategyContin
 }
 
 export class PageableStrategyNextLink implements PageableStrategyNextLink {
-  constructor(nextLink: types.ModelField) {
+  constructor(nextLinkPath: Array<types.ModelField>) {
     this.kind = 'nextLink';
-    this.nextLink = nextLink;
+    this.nextLinkPath = nextLinkPath;
   }
 }
 
