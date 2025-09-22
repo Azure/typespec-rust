@@ -358,18 +358,63 @@ export class Adapter {
     }
     stack.push(unionName);
 
-    rustUnion = new rust.Union(unionName, union.access === 'public');
+
+    const discriminatorValues = new Map<string, string>();
+    let discriminatorPropertyName: string = 'kind';
+    let envelopePropertyName: string = 'value';
+    {
+      // TODO: Rewrite getting information from __raw?.node
+      // after https://github.com/microsoft/typespec/issues/8455 is implemented
+      const node: any = union.__raw?.node;
+      if (node) {
+        for (const unionMember of Array.from(node.symbol.members) as any[]) {
+          const discriminatorValue = unionMember[0];
+          const discriminatorTypeName = unionMember[1].node.value.target.sv;
+          discriminatorValues.set(discriminatorTypeName, discriminatorValue);
+        }
+        for (const decorator of node.decorators) {
+          if (decorator.target.sv === 'discriminated') {
+            const argument = decorator.arguments[0];
+            if (argument) {
+              for (const property of argument.properties) {
+                const propertyName = property.id.sv as string;
+                const propertyValue = property.value.value as string;
+                if (propertyName === 'envelope') {
+                  if (propertyValue === 'none') {
+                    envelopePropertyName = '';
+                  }
+                } else if (propertyName === 'discriminatorPropertyName') {
+                  discriminatorPropertyName = propertyValue;
+                } else if (propertyName === 'envelopePropertyName') {
+                  envelopePropertyName = propertyValue;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    rustUnion = new rust.Union(unionName, union.access === 'public', discriminatorPropertyName, envelopePropertyName);
+
     rustUnion.docs = this.adaptDocs(union.summary, union.doc);
     this.types.set(unionName, rustUnion);
 
     for (const unionMember of union.variantTypes) {
       const unionMemberType = this.getType(unionMember, stack);
-      if (unionMemberType.kind !== 'model') {
+      if (unionMemberType.kind !== 'model' || unionMember.kind !== 'model') {
         throw new AdapterError('UnsupportedTsp', `non-model union member`, unionMember.__raw?.node);
       }
-      const unionMemberName = unionMemberType.name;
 
-      rustUnion.members.push(new rust.UnionMember(unionMemberName, unionMemberType));
+      const discriminatorValue = discriminatorValues.get(unionMember.name);
+      if (!discriminatorValue) {
+        throw new AdapterError('InternalError', `unmatched discriminator`, union.__raw?.node);
+      }
+
+      const unionMemberName = unionMemberType.name;
+      const rustUnionMember = new rust.UnionMember(unionMemberName, unionMemberType, discriminatorValue);
+      rustUnionMember.docs = this.adaptDocs(unionMember.summary, unionMember.doc);
+      rustUnion.members.push(rustUnionMember);
     }
 
     stack.pop();
@@ -383,7 +428,7 @@ export class Adapter {
 
   /**
    * converts a tcgc model property to a model field
-   * 
+   *
    * @param property the tcgc model property to convert
    * @param modelVisibility the visibility of the model that contains the property
    * @param stack is a stack of model type names used to detect recursive type definitions

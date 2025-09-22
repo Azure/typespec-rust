@@ -127,6 +127,12 @@ export interface Union {
 
   /** one or more members of the union */
   members: Array<UnionMember>;
+
+  /** discriminator property name */
+  discriminatorName: string;
+
+  /** data envelope property name */
+  envelopeName: string;
 }
 
 /** UnionMember is a union member for a specific Union */
@@ -136,8 +142,14 @@ export interface UnionMember {
   /** the name of the union member */
   name: string;
 
+  /** any docs for the type */
+  docs: Docs;
+
   /** the type of the union member */
   type: Type;
+
+  /** discriminator property value */
+  discriminatorValue: string;
 }
 
 /** Etag is an azure_core::Etag */
@@ -728,19 +740,22 @@ export class MarkerType implements MarkerType {
 }
 
 export class Union implements Union {
-  constructor(name: string, pub: boolean) {
+  constructor(name: string, pub: boolean, discriminatorName: string, envelopeName: string) {
     this.kind = 'union';
     this.name = name;
     this.pub = pub;
     this.members = new Array<UnionMember>();
+    this.discriminatorName = discriminatorName;
+    this.envelopeName = envelopeName;
   }
 }
 
 export class UnionMember implements UnionMember {
-  constructor(name: string, type: Type) {
+  constructor(name: string, type: Type, discriminatorValue: string) {
     this.kind = 'unionMember';
     this.name = name;
     this.type = type;
+    this.discriminatorValue = discriminatorValue;
   }
 }
 
