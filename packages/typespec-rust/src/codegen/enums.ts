@@ -69,7 +69,7 @@ function create_enum(use: Use, rustEnum: rust.Enum, indent: helpers.indentation)
     body += indent.get() + `${value.name}`;
     body += ',\n';
     if (rustEnum.extensible && i + 1 === rustEnum.values.length) {
-      body += `\n`+indent.get() + `/// Any other value not defined in \`${rustEnum.name}\`.\n`;
+      body += `\n` + indent.get() + `/// Any other value not defined in \`${rustEnum.name}\`.\n`;
       body += indent.get() + `UnknownValue(String)`;
     }
     body += '\n';
@@ -121,7 +121,7 @@ function create_enum(use: Use, rustEnum: rust.Enum, indent: helpers.indentation)
     body += indent.get() + `_ => ${rustEnum.name}::UnknownValue(s.to_string()),\n`;
   }
   else {
-    body += indent.get() + `_ => return Err(Error::with_message_fn(ErrorKind::DataConversion, || format!("unknown variant of ${rustEnum.name} found: \\\"{s}\\\"")))\n`;
+    body += indent.get() + `_ => return Err(Error::with_message_fn(ErrorKind::DataConversion, || format!("unknown variant of ${rustEnum.name} found: \\"{s}\\"")))\n`;
   }
   body += indent.pop().get() + `})\n`; // end match
   body += indent.pop().get() + `}\n`; // end fn
