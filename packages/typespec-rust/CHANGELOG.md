@@ -1,5 +1,11 @@
 # Release History
 
+## 0.23.1 (2025-09-23)
+
+### Bugs Fixed
+
+* Fix document examples for header trait methods that return `HashMap` or `Vec` (not optional).
+
 ## 0.23.0 (2025-09-19)
 
 ### Breaking Changes
