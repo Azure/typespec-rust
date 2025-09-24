@@ -357,18 +357,17 @@ export class Adapter {
       envelopePropertyName: 'value'
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    /*
+      eslint-disable
+        @typescript-eslint/no-explicit-any,
+        @typescript-eslint/no-unnecessary-type-assertion,
+        @typescript-eslint/no-unsafe-argument,
+        @typescript-eslint/no-unsafe-assignment,
+        @typescript-eslint/no-unsafe-member-access
+      */
     const tspRawNode: any = union.__raw?.node;
 
     if (tspRawNode) {
-      /*
-        eslint-disable
-          @typescript-eslint/no-explicit-any,
-          @typescript-eslint/no-unnecessary-type-assertion,
-          @typescript-eslint/no-unsafe-argument,
-          @typescript-eslint/no-unsafe-assignment,
-          @typescript-eslint/no-unsafe-member-access
-      */
       for (const unionMember of Array.from(tspRawNode.symbol.members) as any[]) {
         const discriminatorValue = unionMember[0];
         const discriminatorTypeName = unionMember[1].node.value.target.sv;
@@ -394,8 +393,8 @@ export class Adapter {
           }
         }
       }
-      /* eslint-enable */
     }
+    /* eslint-enable */
 
     return result;
   }
