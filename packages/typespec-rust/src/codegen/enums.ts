@@ -66,10 +66,9 @@ function create_enum(use: Use, rustEnum: rust.Enum, indent: helpers.indentation)
     if (docs.length > 0) {
       body += indent.get() + `${docs.substring(0, docs.length - 1)}\n`;
     }
-    body += indent.get() + `${value.name}`;
-    body += ',\n';
+    body += indent.get() + `${value.name},\n`;
     if (rustEnum.extensible && i + 1 === rustEnum.values.length) {
-      body += `\n` + indent.get() + `/// Any other value not defined in \`${rustEnum.name}\`.\n`;
+      body += indent.get() + `/// Any other value not defined in \`${rustEnum.name}\`.\n`;
       body += indent.get() + `UnknownValue(String)`;
     }
     body += '\n';
