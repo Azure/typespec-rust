@@ -128,7 +128,7 @@ export class Adapter {
       this.crate.addDependency(new rust.CrateDependency('serde'));
     }
 
-    if (this.crate.clients.length > 0 || this.crate.enums.length > 0 || this.crate.models.length > 0) {
+    if (this.crate.clients.length > 0 || this.crate.enums.length > 0 || this.crate.models.length > 0 || this.crate.unions.length > 0) {
       this.crate.addDependency(new rust.CrateDependency('typespec_client_core', ['derive']));
     }
 
@@ -152,6 +152,11 @@ export class Adapter {
 
   /** converts all tcgc types to their Rust type equivalent */
   private adaptTypes(): void {
+    for (const sdkUnion of this.ctx.sdkPackage.unions.filter(u => u.kind === 'union')) {
+      const rustUnion = this.getUnion(sdkUnion);
+      this.crate.unions.push(rustUnion);
+    }
+
     for (const sdkEnum of this.ctx.sdkPackage.enums) {
       if (<tcgc.UsageFlags>(sdkEnum.usage & tcgc.UsageFlags.ApiVersionEnum) === tcgc.UsageFlags.ApiVersionEnum) {
         // we skip generating the enums for API
@@ -329,13 +334,130 @@ export class Adapter {
     return rustModel;
   }
 
+  /**
+   * Gets properties of a TypeSpec union
+   *
+   * @param union tcgc union to convert
+   * @returns TypeSpec union properties
+   */
+  // TODO: Rewrite getting information from __raw?.node after https://github.com/microsoft/typespec/issues/8455 is implemented
+  private getUnionProperties(union: tcgc.SdkUnionType): {
+    // A map from union member name to its kind (kind gets sent over the wire)
+    discriminatorValues: Map<string, string>;
+
+    // Name of the virtual property to serialize the kind into.
+    discriminatorPropertyName: string;
+
+    // Name of the virtual property to serialize data into. If empty, no envelope is needed.
+    envelopePropertyName: string;
+  } {
+    const result = {
+      discriminatorValues: new Map<string, string>(),
+      discriminatorPropertyName: 'kind',
+      envelopePropertyName: 'value'
+    };
+
+    /*
+      eslint-disable
+        @typescript-eslint/no-explicit-any,
+        @typescript-eslint/no-unnecessary-type-assertion,
+        @typescript-eslint/no-unsafe-argument,
+        @typescript-eslint/no-unsafe-assignment,
+        @typescript-eslint/no-unsafe-member-access
+      */
+    const tspRawNode: any = union.__raw?.node;
+
+    if (tspRawNode) {
+      for (const unionMember of Array.from(tspRawNode.symbol.members) as any[]) {
+        const discriminatorValue = unionMember[0];
+        const discriminatorTypeName = unionMember[1].node.value.target.sv;
+        result.discriminatorValues.set(discriminatorTypeName, discriminatorValue);
+      }
+      for (const decorator of tspRawNode.decorators) {
+        if (decorator.target.sv === 'discriminated') {
+          const argument = decorator.arguments[0];
+          if (argument) {
+            for (const property of argument.properties) {
+              const propertyName = property.id.sv as string;
+              const propertyValue = property.value.value as string;
+              if (propertyName === 'envelope') {
+                if (propertyValue === 'none') {
+                  result.envelopePropertyName = '';
+                }
+              } else if (propertyName === 'discriminatorPropertyName') {
+                result.discriminatorPropertyName = propertyValue;
+              } else if (propertyName === 'envelopePropertyName') {
+                result.envelopePropertyName = propertyValue;
+              }
+            }
+          }
+        }
+      }
+    }
+    /* eslint-enable */
+
+    return result;
+  }
+
+  /**
+   * converts a tcgc union to a Rust union
+   *
+   * @param union the tcgc union to convert
+   * @param stack is a stack of model type names used to detect recursive type definitions
+   * @returns a Rust union
+   */
+  private getUnion(union: tcgc.SdkUnionType, stack?: Array<string>): rust.Union {
+    if (union.name.length === 0) {
+      throw new AdapterError('InternalError', 'unnamed union', union.__raw?.node);
+    }
+    const unionName = codegen.capitalize(union.name);
+    let rustUnion = this.types.get(unionName);
+    if (rustUnion) {
+      return <rust.Union>rustUnion;
+    }
+
+    // no stack means this is the first model in
+    // the chain of potentially recursive calls
+    if (!stack) {
+      stack = new Array<string>();
+    }
+    stack.push(unionName);
+
+    const tspUnionProperties = this.getUnionProperties(union);
+    rustUnion = new rust.Union(unionName, union.access === 'public', tspUnionProperties.discriminatorPropertyName, tspUnionProperties.envelopePropertyName);
+
+    rustUnion.docs = this.adaptDocs(union.summary, union.doc);
+    this.types.set(unionName, rustUnion);
+
+    for (const unionMember of union.variantTypes) {
+      const unionMemberType = this.getType(unionMember, stack);
+      if (unionMemberType.kind !== 'model' || unionMember.kind !== 'model') {
+        throw new AdapterError('UnsupportedTsp', `non-model union member`, unionMember.__raw?.node);
+      }
+
+      const discriminatorValue = tspUnionProperties.discriminatorValues.get(unionMember.name);
+      if (!discriminatorValue) {
+        throw new AdapterError('InternalError', `unmatched discriminator`, union.__raw?.node);
+      }
+
+      const unionMemberName = unionMemberType.name;
+      const rustUnionMember = new rust.UnionMember(unionMemberName, unionMemberType, discriminatorValue);
+      rustUnionMember.docs = this.adaptDocs(unionMember.summary, unionMember.doc);
+      rustUnion.members.push(rustUnionMember);
+    }
+
+    stack.pop();
+
+    return rustUnion;
+  }
+
   private getSerializedPropertyName(property: tcgc.SdkModelPropertyType | tcgc.SdkPathParameter): string | undefined {
     return property.kind === 'property' ? property.serializationOptions.json?.name ?? property.serializationOptions.xml?.name ?? property.serializationOptions.multipart?.name : undefined;
   }
 
   /**
    * converts a tcgc model property to a model field
-   * 
+   *
    * @param property the tcgc model property to convert
    * @param modelVisibility the visibility of the model that contains the property
    * @param stack is a stack of model type names used to detect recursive type definitions
@@ -520,6 +642,9 @@ export class Adapter {
         timeType = new rust.OffsetDateTime(this.crate, encoding, true);
         this.types.set(keyName, timeType);
         return timeType;
+      }
+      case 'union': {
+        return this.getUnion(type);
       }
       default:
         throw new AdapterError('UnsupportedTsp', `unhandled tcgc type ${type.kind}`, type.__raw?.node);
@@ -1916,6 +2041,8 @@ export class Adapter {
       case 'slice':
       case 'str':
       case 'String':
+      case 'union':
+      case 'unionMember':
       case 'Url':
       case 'Vec':
         return type;

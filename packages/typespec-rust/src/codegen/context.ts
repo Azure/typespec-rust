@@ -22,7 +22,7 @@ export class Context {
 
   /**
    * instantiates a new Context for the provided crate
-   * 
+   *
    * @param crate the crate for which the context will be constructed
    */
   constructor(crate: rust.Crate) {
@@ -70,7 +70,7 @@ export class Context {
               // no body format to propagate
               continue;
             }
-            if (param.type.content.type.kind === 'enum' || param.type.content.type.kind === 'model') {
+            if (param.type.content.type.kind === 'enum' || param.type.content.type.kind === 'model' || param.type.content.type.kind === 'union') {
               this.tryFromForRequestTypes.set(helpers.getTypeDeclaration(param.type.content.type), param.type.content.format);
             }
             recursiveAddBodyFormat(param.type.content.type, param.type.content.format);
@@ -97,17 +97,17 @@ export class Context {
   /**
    * returns the impl TryFrom<T> for RequestContent<T> where T is type.
    * if no impl is required, it returns undefined.
-   * 
+   *
    * @param model the model for which to implement TryFrom
    * @param use the use statement builder currently in scope
    * @returns the impl TryFrom<T> block for type or undefined
    */
-  getTryFromForRequestContent(model: rust.Enum | rust.Model, use: Use): string | undefined {
+  getTryFromForRequestContent(model: rust.Union | rust.Enum | rust.Model, use: Use): string | undefined {
     const format = this.tryFromForRequestTypes.get(helpers.getTypeDeclaration(model));
     if (!format) {
       return undefined;
     }
-    
+
     const formatType = getPayloadFormatType(format);
     if (formatType != 'JsonFormat') {
       use.add('azure_core::http', formatType);
