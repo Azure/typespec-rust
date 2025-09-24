@@ -348,7 +348,7 @@ export class Adapter {
     // Name of the virtual property to serialize the kind into.
     discriminatorPropertyName: string;
 
-    // Name of the virtual property to serialize date into. If empty, no envelope is needed.
+    // Name of the virtual property to serialize data into. If empty, no envelope is needed.
     envelopePropertyName: string;
   } {
     const result = {
@@ -361,27 +361,18 @@ export class Adapter {
     const tspRawNode: any = union.__raw?.node;
 
     if (tspRawNode) {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+      // eslint-disable
       for (const unionMember of Array.from(tspRawNode.symbol.members) as any[]) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         const discriminatorValue = unionMember[0];
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         const discriminatorTypeName = unionMember[1].node.value.target.sv;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         result.discriminatorValues.set(discriminatorTypeName, discriminatorValue);
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       for (const decorator of tspRawNode.decorators) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (decorator.target.sv === 'discriminated') {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           const argument = decorator.arguments[0];
           if (argument) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             for (const property of argument.properties) {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               const propertyName = property.id.sv as string;
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               const propertyValue = property.value.value as string;
               if (propertyName === 'envelope') {
                 if (propertyValue === 'none') {
@@ -396,6 +387,7 @@ export class Adapter {
           }
         }
       }
+      // eslint-enable
     }
 
     return result;
