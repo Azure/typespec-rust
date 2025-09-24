@@ -20,6 +20,7 @@ pub enum CompositionType {
 
     /// The 'key_label' composition type.
     KeyLabel,
+
     /// Any other value not defined in `CompositionType`.
     UnknownValue(String),
 }
@@ -80,7 +81,7 @@ impl Serialize for CompositionType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -148,7 +149,7 @@ impl Serialize for CreateSnapshotRequestContentType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -216,7 +217,7 @@ impl Serialize for GetKeyValueResponseContentType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -284,7 +285,7 @@ impl Serialize for GetKeyValuesResponseContentType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -352,7 +353,7 @@ impl Serialize for GetKeysResponseContentType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -420,7 +421,7 @@ impl Serialize for GetLabelsResponseContentType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -488,7 +489,7 @@ impl Serialize for GetSnapshotResponseContentType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -556,7 +557,7 @@ impl Serialize for GetSnapshotsResponseContentType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -587,6 +588,7 @@ pub enum KeyValueFields {
 
     /// Value field.
     Value,
+
     /// Any other value not defined in `KeyValueFields`.
     UnknownValue(String),
 }
@@ -671,7 +673,7 @@ impl Serialize for KeyValueFields {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -681,6 +683,7 @@ impl Serialize for KeyValueFields {
 pub enum LabelFields {
     /// Name field.
     Name,
+
     /// Any other value not defined in `LabelFields`.
     UnknownValue(String),
 }
@@ -737,7 +740,7 @@ impl Serialize for LabelFields {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -759,6 +762,7 @@ pub enum OperationState {
 
     /// The operation has completed successfully.
     Succeeded,
+
     /// Any other value not defined in `OperationState`.
     UnknownValue(String),
 }
@@ -831,7 +835,7 @@ impl Serialize for OperationState {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -931,7 +935,7 @@ impl Serialize for PutKeyValueRequestContentType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -971,6 +975,7 @@ pub enum SnapshotFields {
 
     /// Tags field.
     Tags,
+
     /// Any other value not defined in `SnapshotFields`.
     UnknownValue(String),
 }
@@ -1067,7 +1072,7 @@ impl Serialize for SnapshotFields {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1086,6 +1091,7 @@ pub enum SnapshotStatus {
 
     /// Ready
     Ready,
+
     /// Any other value not defined in `SnapshotStatus`.
     UnknownValue(String),
 }
@@ -1154,7 +1160,7 @@ impl Serialize for SnapshotStatus {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1222,6 +1228,6 @@ impl Serialize for UpdateSnapshotRequestContentType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }

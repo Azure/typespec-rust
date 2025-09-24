@@ -16,6 +16,7 @@ use std::{
 pub enum ActionType {
     /// Actions are for internal-only APIs.
     Internal,
+
     /// Any other value not defined in `ActionType`.
     UnknownValue(String),
 }
@@ -72,7 +73,7 @@ impl Serialize for ActionType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -91,6 +92,7 @@ pub enum CreatedByType {
 
     /// The entity was created by a user.
     User,
+
     /// Any other value not defined in `CreatedByType`.
     UnknownValue(String),
 }
@@ -159,7 +161,7 @@ impl Serialize for CreatedByType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -176,6 +178,7 @@ pub enum Origin {
 
     /// Indicates the operation is initiated by a user or system.
     UserSystem,
+
     /// Any other value not defined in `Origin`.
     UnknownValue(String),
 }
@@ -240,7 +243,7 @@ impl Serialize for Origin {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -256,6 +259,7 @@ pub enum ResourceProvisioningState {
 
     /// Resource has been created.
     Succeeded,
+
     /// Any other value not defined in `ResourceProvisioningState`.
     UnknownValue(String),
 }
@@ -320,6 +324,6 @@ impl Serialize for ResourceProvisioningState {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }

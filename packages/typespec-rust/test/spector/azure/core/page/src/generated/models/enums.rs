@@ -70,6 +70,6 @@ impl Serialize for ListItemInputExtensibleEnum {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }

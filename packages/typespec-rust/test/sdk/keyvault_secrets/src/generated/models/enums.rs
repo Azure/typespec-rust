@@ -19,6 +19,7 @@ pub enum ContentType {
 
     /// The PKCS#12 file format.
     Pfx,
+
     /// Any other value not defined in `ContentType`.
     UnknownValue(String),
 }
@@ -79,7 +80,7 @@ impl Serialize for ContentType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -125,6 +126,7 @@ pub enum DeletionRecoveryLevel {
     /// a Purge operation is requested, or the subscription is cancelled. System wil permanently delete it after 90 days, if not
     /// recovered
     RecoverablePurgeable,
+
     /// Any other value not defined in `DeletionRecoveryLevel`.
     UnknownValue(String),
 }
@@ -229,6 +231,6 @@ impl Serialize for DeletionRecoveryLevel {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }

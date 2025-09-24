@@ -25,6 +25,7 @@ pub enum CreatedByType {
 
     /// The entity was created by a user.
     User,
+
     /// Any other value not defined in `CreatedByType`.
     UnknownValue(String),
 }
@@ -93,7 +94,7 @@ impl Serialize for CreatedByType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -116,6 +117,7 @@ pub enum ProvisioningState {
     Succeeded,
 
     Updating,
+
     /// Any other value not defined in `ProvisioningState`.
     UnknownValue(String),
 }
@@ -196,7 +198,7 @@ impl Serialize for ProvisioningState {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -212,6 +214,7 @@ pub enum ResourceProvisioningState {
 
     /// Resource has been created.
     Succeeded,
+
     /// Any other value not defined in `ResourceProvisioningState`.
     UnknownValue(String),
 }
@@ -276,6 +279,6 @@ impl Serialize for ResourceProvisioningState {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }

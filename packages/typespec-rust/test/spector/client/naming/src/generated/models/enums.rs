@@ -15,6 +15,7 @@ use std::{
 #[non_exhaustive]
 pub enum ClientExtensibleEnum {
     EnumValue1,
+
     /// Any other value not defined in `ClientExtensibleEnum`.
     UnknownValue(String),
 }
@@ -71,7 +72,7 @@ impl Serialize for ClientExtensibleEnum {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -81,6 +82,7 @@ pub enum ExtensibleEnum {
     ClientEnumValue1,
 
     ClientEnumValue2,
+
     /// Any other value not defined in `ExtensibleEnum`.
     UnknownValue(String),
 }
@@ -141,7 +143,7 @@ impl Serialize for ExtensibleEnum {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 

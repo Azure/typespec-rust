@@ -28,6 +28,7 @@ pub enum OperationState {
 
     /// The operation has completed successfully.
     Succeeded,
+
     /// Any other value not defined in `OperationState`.
     UnknownValue(String),
 }
@@ -100,6 +101,6 @@ impl Serialize for OperationState {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }

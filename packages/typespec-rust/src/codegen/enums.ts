@@ -67,11 +67,11 @@ function create_enum(use: Use, rustEnum: rust.Enum, indent: helpers.indentation)
       body += indent.get() + `${docs.substring(0, docs.length - 1)}\n`;
     }
     body += indent.get() + `${value.name},\n`;
+    body += '\n';
     if (rustEnum.extensible && i + 1 === rustEnum.values.length) {
       body += indent.get() + `/// Any other value not defined in \`${rustEnum.name}\`.\n`;
       body += indent.get() + `UnknownValue(String)`;
     }
-    body += '\n';
   }
   body += indent.pop().get() + '}\n\n';
 
@@ -194,7 +194,7 @@ function emit_serde_impls(use: Use, rustEnum: rust.Enum, indent: helpers.indenta
   body += indent.get() + `S: Serializer,\n`;
   body += indent.get() + `{\n`;
   indent.push();
-  body += indent.get() + `return s.serialize_str(&self.to_string());\n`;
+  body += indent.get() + `s.serialize_str(self.as_ref())\n`;
   body += indent.pop().get() + `}\n`; // end fn
   body += indent.pop().get() + `}\n\n`; // end impl
   return body;

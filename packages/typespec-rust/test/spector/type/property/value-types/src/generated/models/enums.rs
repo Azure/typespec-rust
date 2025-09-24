@@ -15,6 +15,7 @@ use std::{
 #[non_exhaustive]
 pub enum ExtendedEnum {
     EnumValue2,
+
     /// Any other value not defined in `ExtendedEnum`.
     UnknownValue(String),
 }
@@ -71,7 +72,7 @@ impl Serialize for ExtendedEnum {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -134,7 +135,7 @@ impl Serialize for FixedInnerEnum {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -147,6 +148,7 @@ pub enum InnerEnum {
 
     /// Second value.
     ValueTwo,
+
     /// Any other value not defined in `InnerEnum`.
     UnknownValue(String),
 }
@@ -207,7 +209,7 @@ impl Serialize for InnerEnum {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -267,7 +269,7 @@ impl Serialize for UnionFloatLiteralPropertyProperty {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -327,7 +329,7 @@ impl Serialize for UnionIntLiteralPropertyProperty {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -387,6 +389,6 @@ impl Serialize for UnionStringLiteralPropertyProperty {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }

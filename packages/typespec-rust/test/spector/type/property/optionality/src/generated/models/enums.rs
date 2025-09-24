@@ -67,7 +67,7 @@ impl Serialize for UnionFloatLiteralPropertyProperty {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -127,7 +127,7 @@ impl Serialize for UnionIntLiteralPropertyProperty {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -187,6 +187,6 @@ impl Serialize for UnionStringLiteralPropertyProperty {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }

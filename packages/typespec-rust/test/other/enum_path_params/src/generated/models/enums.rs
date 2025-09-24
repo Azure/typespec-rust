@@ -17,6 +17,7 @@ pub enum ExtensibleShape {
     Round,
 
     Square,
+
     /// Any other value not defined in `ExtensibleShape`.
     UnknownValue(String),
 }
@@ -77,7 +78,7 @@ impl Serialize for ExtensibleShape {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -87,6 +88,7 @@ pub enum ExtensibleValues {
     One,
 
     Two,
+
     /// Any other value not defined in `ExtensibleValues`.
     UnknownValue(String),
 }
@@ -147,7 +149,7 @@ impl Serialize for ExtensibleValues {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -207,7 +209,7 @@ impl Serialize for FixedShape {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -267,6 +269,6 @@ impl Serialize for FixedValues {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }

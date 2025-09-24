@@ -61,6 +61,7 @@ pub enum AccessTier {
 
     /// The Premium access tier.
     Premium,
+
     /// Any other value not defined in `AccessTier`.
     UnknownValue(String),
 }
@@ -177,7 +178,7 @@ impl Serialize for AccessTier {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -199,6 +200,7 @@ pub enum AccountKind {
 
     /// The storage account is a storage V2 account.
     StorageV2,
+
     /// Any other value not defined in `AccountKind`.
     UnknownValue(String),
 }
@@ -271,7 +273,7 @@ impl Serialize for AccountKind {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -287,6 +289,7 @@ pub enum ArchiveStatus {
 
     /// The archive status is rehydrating pending to hot.
     RehydratePendingToHot,
+
     /// Any other value not defined in `ArchiveStatus`.
     UnknownValue(String),
 }
@@ -351,7 +354,7 @@ impl Serialize for ArchiveStatus {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -361,6 +364,7 @@ impl Serialize for ArchiveStatus {
 pub enum BlobDeleteType {
     /// Permanently delete the blob.
     Permanent,
+
     /// Any other value not defined in `BlobDeleteType`.
     UnknownValue(String),
 }
@@ -417,7 +421,7 @@ impl Serialize for BlobDeleteType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -436,6 +440,7 @@ pub enum BlobExpiryOptions {
 
     /// Relative to now.
     RelativeToNow,
+
     /// Any other value not defined in `BlobExpiryOptions`.
     UnknownValue(String),
 }
@@ -504,7 +509,7 @@ impl Serialize for BlobExpiryOptions {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -520,6 +525,7 @@ pub enum BlobImmutabilityPolicyMode {
 
     /// The immutability policy is unlocked.
     Unlocked,
+
     /// Any other value not defined in `BlobImmutabilityPolicyMode`.
     UnknownValue(String),
 }
@@ -584,7 +590,7 @@ impl Serialize for BlobImmutabilityPolicyMode {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -600,6 +606,7 @@ pub enum BlobType {
 
     /// The blob is a page blob.
     PageBlob,
+
     /// Any other value not defined in `BlobType`.
     UnknownValue(String),
 }
@@ -664,7 +671,7 @@ impl Serialize for BlobType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -680,6 +687,7 @@ pub enum BlockListType {
 
     /// The list of uncommitted blocks.
     Uncommitted,
+
     /// Any other value not defined in `BlockListType`.
     UnknownValue(String),
 }
@@ -744,7 +752,7 @@ impl Serialize for BlockListType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -763,6 +771,7 @@ pub enum CopyStatus {
 
     /// The copy operation succeeded.
     Success,
+
     /// Any other value not defined in `CopyStatus`.
     UnknownValue(String),
 }
@@ -831,7 +840,7 @@ impl Serialize for CopyStatus {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -844,6 +853,7 @@ pub enum DeleteSnapshotsOptionType {
 
     /// The delete snapshots include option is only.
     Only,
+
     /// Any other value not defined in `DeleteSnapshotsOptionType`.
     UnknownValue(String),
 }
@@ -904,7 +914,7 @@ impl Serialize for DeleteSnapshotsOptionType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -915,6 +925,7 @@ impl Serialize for DeleteSnapshotsOptionType {
 pub enum EncryptionAlgorithmType {
     /// The AES256 encryption algorithm.
     Aes256,
+
     /// Any other value not defined in `EncryptionAlgorithmType`.
     UnknownValue(String),
 }
@@ -971,7 +982,7 @@ impl Serialize for EncryptionAlgorithmType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -984,6 +995,7 @@ pub enum FilterBlobsIncludeItem {
 
     /// The filter includes n versions.
     Versions,
+
     /// Any other value not defined in `FilterBlobsIncludeItem`.
     UnknownValue(String),
 }
@@ -1044,7 +1056,7 @@ impl Serialize for FilterBlobsIncludeItem {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1060,6 +1072,7 @@ pub enum GeoReplicationStatusType {
 
     /// The geo replication is unavailable.
     Unavailable,
+
     /// Any other value not defined in `GeoReplicationStatusType`.
     UnknownValue(String),
 }
@@ -1124,7 +1137,7 @@ impl Serialize for GeoReplicationStatusType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1137,6 +1150,7 @@ pub enum LeaseDuration {
 
     /// The lease is of infinite duration.
     Infinite,
+
     /// Any other value not defined in `LeaseDuration`.
     UnknownValue(String),
 }
@@ -1197,7 +1211,7 @@ impl Serialize for LeaseDuration {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1219,6 +1233,7 @@ pub enum LeaseState {
 
     /// The lease is currently leased.
     Leased,
+
     /// Any other value not defined in `LeaseState`.
     UnknownValue(String),
 }
@@ -1291,7 +1306,7 @@ impl Serialize for LeaseState {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1304,6 +1319,7 @@ pub enum LeaseStatus {
 
     /// The lease is unlocked.
     Unlocked,
+
     /// Any other value not defined in `LeaseStatus`.
     UnknownValue(String),
 }
@@ -1364,7 +1380,7 @@ impl Serialize for LeaseStatus {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1401,6 +1417,7 @@ pub enum ListBlobsIncludeItem {
 
     /// The include versions.
     Versions,
+
     /// Any other value not defined in `ListBlobsIncludeItem`.
     UnknownValue(String),
 }
@@ -1493,7 +1510,7 @@ impl Serialize for ListBlobsIncludeItem {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1509,6 +1526,7 @@ pub enum ListContainersIncludeType {
 
     /// Include system
     System,
+
     /// Any other value not defined in `ListContainersIncludeType`.
     UnknownValue(String),
 }
@@ -1573,7 +1591,7 @@ impl Serialize for ListContainersIncludeType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1613,6 +1631,7 @@ pub enum PremiumPageBlobAccessTier {
 
     /// The premium page blob access tier is P80.
     P80,
+
     /// Any other value not defined in `PremiumPageBlobAccessTier`.
     UnknownValue(String),
 }
@@ -1709,7 +1728,7 @@ impl Serialize for PremiumPageBlobAccessTier {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1722,6 +1741,7 @@ pub enum PublicAccessType {
 
     /// Container access.
     Container,
+
     /// Any other value not defined in `PublicAccessType`.
     UnknownValue(String),
 }
@@ -1782,7 +1802,7 @@ impl Serialize for PublicAccessType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1792,6 +1812,7 @@ impl Serialize for PublicAccessType {
 pub enum QueryRequestType {
     /// The SQL request query type.
     Sql,
+
     /// Any other value not defined in `QueryRequestType`.
     UnknownValue(String),
 }
@@ -1848,7 +1869,7 @@ impl Serialize for QueryRequestType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1867,6 +1888,7 @@ pub enum QueryType {
 
     /// The query format type is Parquet.
     Parquet,
+
     /// Any other value not defined in `QueryType`.
     UnknownValue(String),
 }
@@ -1935,7 +1957,7 @@ impl Serialize for QueryType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -1949,6 +1971,7 @@ pub enum RehydratePriority {
 
     /// The rehydrate priority is standard.
     Standard,
+
     /// Any other value not defined in `RehydratePriority`.
     UnknownValue(String),
 }
@@ -2009,7 +2032,7 @@ impl Serialize for RehydratePriority {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -2025,6 +2048,7 @@ pub enum SequenceNumberActionType {
 
     /// Update the sequence number.
     Update,
+
     /// Any other value not defined in `SequenceNumberActionType`.
     UnknownValue(String),
 }
@@ -2089,7 +2113,7 @@ impl Serialize for SequenceNumberActionType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -2111,6 +2135,7 @@ pub enum SkuName {
 
     /// The standard ZRS SKU.
     StandardZrs,
+
     /// Any other value not defined in `SkuName`.
     UnknownValue(String),
 }
@@ -2183,6 +2208,6 @@ impl Serialize for SkuName {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }

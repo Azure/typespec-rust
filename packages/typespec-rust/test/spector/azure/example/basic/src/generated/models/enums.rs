@@ -14,6 +14,7 @@ use std::{
 #[non_exhaustive]
 pub enum Enum {
     EnumValue1,
+
     /// Any other value not defined in `Enum`.
     UnknownValue(String),
 }
@@ -70,6 +71,6 @@ impl Serialize for Enum {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }

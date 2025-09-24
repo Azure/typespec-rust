@@ -25,6 +25,7 @@ pub enum CreatedByType {
 
     /// The entity was created by a user.
     User,
+
     /// Any other value not defined in `CreatedByType`.
     UnknownValue(String),
 }
@@ -93,7 +94,7 @@ impl Serialize for CreatedByType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
 
@@ -112,6 +113,7 @@ pub enum ManagedServiceIdentityType {
 
     /// User assigned managed identity.
     UserAssigned,
+
     /// Any other value not defined in `ManagedServiceIdentityType`.
     UnknownValue(String),
 }
@@ -182,6 +184,6 @@ impl Serialize for ManagedServiceIdentityType {
     where
         S: Serializer,
     {
-        return s.serialize_str(&self.to_string());
+        s.serialize_str(self.as_ref())
     }
 }
