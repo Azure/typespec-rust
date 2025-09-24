@@ -120,7 +120,11 @@ function create_enum(use: Use, rustEnum: rust.Enum, indent: helpers.indentation)
     body += indent.get() + `_ => ${rustEnum.name}::UnknownValue(s.to_string()),\n`;
   }
   else {
-    body += indent.get() + `_ => return Err(Error::with_message_fn(ErrorKind::DataConversion, || format!("unknown variant of ${rustEnum.name} found: \\"{s}\\"")))\n`;
+    body += indent.get() + `_ => { \n`;
+    indent.push(); body += `return Err(Error::with_message_fn(ErrorKind::DataConversion, || {\n`;
+    indent.push(); body += `format!("unknown variant of ${rustEnum.name} found: \\"{s}\\"")\n`;
+    body += indent.pop().get() + `}))\n`;
+    indent.pop().get(); body += `}\n`;
   }
   body += indent.pop().get() + `})\n`; // end match
   body += indent.pop().get() + `}\n`; // end fn
