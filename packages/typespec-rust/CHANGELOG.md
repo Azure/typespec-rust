@@ -1,6 +1,10 @@
 # Release History
 
-## 0.23.1 (2025-09-23)
+## 0.24.0 (2025-09-24)
+
+### Features Added
+
+* Added support for discriminated unions.
 
 ### Bugs Fixed
 
