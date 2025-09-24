@@ -47,7 +47,7 @@ export function emitEnums(crate: rust.Crate, context: Context): helpers.Module |
 function create_enum(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
 
   let body = '';
-  // THe formatDocComment function adds a trailing \n we don't want.
+  // The formatDocComment function adds a trailing \n we don't want.
   const docs = helpers.formatDocComment(rustEnum.docs, false);
   if (docs.length > 0) {
     body += indent.get() + `${docs.substring(0, docs.length - 1)}\n`;
@@ -70,7 +70,7 @@ function create_enum(use: Use, rustEnum: rust.Enum, indent: helpers.indentation)
     body += '\n';
     if (rustEnum.extensible && i + 1 === rustEnum.values.length) {
       body += indent.get() + `/// Any other value not defined in \`${rustEnum.name}\`.\n`;
-      body += indent.get() + `UnknownValue(String)`;
+      body += indent.get() + `UnknownValue(String),\n`;
     }
   }
   body += indent.pop().get() + '}\n\n';
@@ -103,8 +103,7 @@ function create_enum(use: Use, rustEnum: rust.Enum, indent: helpers.indentation)
   if (rustEnum.extensible) {
     use.add('std', 'convert::Infallible');
     body += indent.get() + `type Err = Infallible;\n`;
-  }
-  else {
+  }else {
     use.add('azure_core', 'error::Error', 'error::ErrorKind');
     body += indent.get() + `type Err = Error;\n`;
   }
