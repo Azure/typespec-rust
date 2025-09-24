@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "other/doc_tests",
     "other/enum_path_params",
     "other/serde_tests",
     "sdk/appconfiguration",

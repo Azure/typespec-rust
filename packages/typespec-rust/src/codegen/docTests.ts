@@ -40,9 +40,13 @@ export function emitHeaderTraitDocExample(crateName: string, trait: rust.Respons
   // show first 3 headers as examples
   const exampleHeaders = trait.headers.slice(0, 3);
   for (const header of exampleHeaders) {
-    headerDocs += `${indent.get()}///     if let Some(${header.name}) = response.${header.name}()? {\n`;
-    headerDocs += `${indent.get()}///         println!("${header.header}: {:?}", ${header.name});\n`;
-    headerDocs += `${indent.get()}///     }\n`;
+    if (header.kind === 'responseHeaderScalar') {
+      headerDocs += `${indent.get()}///     if let Some(${header.name}) = response.${header.name}()? {\n`;
+      headerDocs += `${indent.get()}///         println!("${header.header}: {:?}", ${header.name});\n`;
+      headerDocs += `${indent.get()}///     }\n`;
+    } else {
+      headerDocs += `${indent.get()}///     println!("${header.header}: {:?}", response.${header.name}()?);\n`;
+    }
   }
 
   headerDocs += `${indent.get()}///     Ok(())\n`;

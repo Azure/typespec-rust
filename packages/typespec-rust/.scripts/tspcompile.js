@@ -152,6 +152,9 @@ generate('blob_storage', blob_storage, 'test/sdk/blob_storage', ['temp-omit-doc-
 const serde_tests = pkgRoot + 'test/tsp/SerdeTests';
 generate('serde_tests', serde_tests, 'test/other/serde_tests');
 
+const doc_tests = pkgRoot + 'test/tsp/DocTests';
+generate('doc_tests', doc_tests, 'test/other/doc_tests');
+
 const enum_path_params = pkgRoot + 'test/tsp/EnumPathParams';
 generate('enum_path_params', enum_path_params, 'test/other/enum_path_params');
 
