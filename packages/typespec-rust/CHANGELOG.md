@@ -1,5 +1,12 @@
 # Release History
 
+## 0.23.2 (2025-09-25)
+
+### Features Added
+
+* Removed support for create_extensible_enum and create_enum macros and manually expand their implementation.
+  * Refactored `enums.rs` into `enums.rs`, `enums_impl.rs`, and `enums_serde.rs` to follow the models types.
+
 ## 0.23.1 (2025-09-24)
 
 ### Features Added
