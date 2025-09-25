@@ -13,6 +13,7 @@ use azure_core::{
 pub struct ClientLocationMoveMethodParameterToClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
+    pub(crate) storage_account: String,
 }
 
 impl ClientLocationMoveMethodParameterToClient {
@@ -29,6 +30,7 @@ impl ClientLocationMoveMethodParameterToClient {
         ClientLocationMoveMethodParameterToBlobOperationsClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
+            storage_account: self.storage_account.clone(),
         }
     }
 }

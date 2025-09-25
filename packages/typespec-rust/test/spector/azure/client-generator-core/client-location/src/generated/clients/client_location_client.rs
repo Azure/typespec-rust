@@ -87,10 +87,12 @@ impl ClientLocationClient {
     #[tracing::subclient]
     pub fn get_client_location_move_method_parameter_to_client(
         &self,
+        storage_account: String,
     ) -> ClientLocationMoveMethodParameterToClient {
         ClientLocationMoveMethodParameterToClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
+            storage_account,
         }
     }
 

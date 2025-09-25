@@ -16,6 +16,7 @@ use azure_core::{
 pub struct ClientLocationMoveMethodParameterToBlobOperationsClient {
     pub(crate) endpoint: Url,
     pub(crate) pipeline: Pipeline,
+    pub(crate) storage_account: String,
 }
 
 impl ClientLocationMoveMethodParameterToBlobOperationsClient {
@@ -31,7 +32,6 @@ impl ClientLocationMoveMethodParameterToBlobOperationsClient {
     #[tracing::function("_Specs_.Azure.ClientGenerator.Core.ClientLocation.MoveMethodParameterToClient.BlobOperations.getBlob")]
     pub async fn get_blob(
         &self,
-        storage_account: &str,
         container: &str,
         blob: &str,
         options: Option<ClientLocationMoveMethodParameterToBlobOperationsClientGetBlobOptions<'_>>,
@@ -43,7 +43,7 @@ impl ClientLocationMoveMethodParameterToBlobOperationsClient {
         url.query_pairs_mut().append_pair("blob", blob);
         url.query_pairs_mut().append_pair("container", container);
         url.query_pairs_mut()
-            .append_pair("storageAccount", storage_account);
+            .append_pair("storageAccount", &self.storage_account);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
