@@ -18,7 +18,6 @@ export interface Enums {
 
   /** trait impls for public enumerations */
   impls?: helpers.Module;
-
 }
 
 /**
@@ -48,7 +47,7 @@ function emitEnumsPublic(crate: rust.Crate): helpers.Module | undefined {
 
   let body = '';
   for (const rustEnum of crate.enums) {
-    body += emit_enum_public(use, rustEnum, indent);
+    body += emitEnumPublicDefinitions(use, rustEnum, indent);
   }
 
   let content = helpers.contentPreamble();
@@ -68,7 +67,7 @@ function emitEnumsSerde(crate: rust.Crate): helpers.Module | undefined {
 
   let body = '';
   for (const rustEnum of crate.enums) {
-    body += emit_enum_serde(use, rustEnum, indent);
+    body += emitEnumSerdeDefinitions(use, rustEnum, indent);
   }
 
   let content = helpers.contentPreamble();
@@ -88,7 +87,7 @@ function emitEnumsImpls(crate: rust.Crate, context: Context): helpers.Module | u
 
   let body = '';
   for (const rustEnum of crate.enums) {
-    body += emit_enum_impls(use, rustEnum, indent);
+    body += emitEnumImplDefinitions(use, rustEnum, indent);
   }
 
   // emit impls as required
@@ -106,7 +105,7 @@ function emitEnumsImpls(crate: rust.Crate, context: Context): helpers.Module | u
   };
 }
 
-function emit_enum_public(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
+function emitEnumPublicDefinitions(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
 
   let body = '';
   // The formatDocComment function adds a trailing \n we don't want.
@@ -141,7 +140,7 @@ function emit_enum_public(use: Use, rustEnum: rust.Enum, indent: helpers.indenta
 }
 
 
-function emit_enum_impls(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
+function emitEnumImplDefinitions(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
   // Now add conversions to and from &str, Display, Serialize, Deserialize
 
   use.add(`crate`, `models::${rustEnum.name}`);
@@ -242,7 +241,7 @@ function emit_enum_impls(use: Use, rustEnum: rust.Enum, indent: helpers.indentat
   return body;
 }
 
-function emit_enum_serde(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
+function emitEnumSerdeDefinitions(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
   use.add(`crate`, `models::${rustEnum.name}`);
 
   use.add('serde', 'Deserialize', 'Serialize', 'Serializer', 'Deserializer');
