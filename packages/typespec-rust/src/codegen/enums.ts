@@ -29,7 +29,7 @@ export interface Enums {
  * @param context the context for the provided crate
  * @returns the enum models or undefined
  */
-export function emitEnums(crate: rust.Crate, context: Context): Enums  {
+export function emitEnums(crate: rust.Crate, context: Context): Enums {
   if (crate.enums.length === 0) {
     return {};
   }
@@ -42,7 +42,7 @@ export function emitEnums(crate: rust.Crate, context: Context): Enums  {
 }
 
 function emitEnumsPublic(crate: rust.Crate): helpers.Module | undefined {
-  
+
   const use = new Use('models');
   const indent = new helpers.indentation();
 
@@ -56,13 +56,13 @@ function emitEnumsPublic(crate: rust.Crate): helpers.Module | undefined {
   content += body;
 
   return {
-    name:  'enums',
+    name: 'enums',
     content: content,
   };
 }
 
 function emitEnumsSerde(crate: rust.Crate): helpers.Module | undefined {
-  
+
   const use = new Use('models');
   const indent = new helpers.indentation();
 
@@ -76,13 +76,13 @@ function emitEnumsSerde(crate: rust.Crate): helpers.Module | undefined {
   content += body;
 
   return {
-    name:  'enums_serde',
+    name: 'enums_serde',
     content: content,
   };
 }
 
 function emitEnumsImpls(crate: rust.Crate, context: Context): helpers.Module | undefined {
-  
+
   const use = new Use('models');
   const indent = new helpers.indentation();
 
@@ -101,7 +101,7 @@ function emitEnumsImpls(crate: rust.Crate, context: Context): helpers.Module | u
   content += body;
 
   return {
-    name:  'enums_impl',
+    name: 'enums_impl',
     content: content,
   };
 }
@@ -142,7 +142,7 @@ function emit_enum_public(use: Use, rustEnum: rust.Enum, indent: helpers.indenta
 
 
 function emit_enum_impls(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
-// Now add conversions to and from &str, Display, Serialize, Deserialize
+  // Now add conversions to and from &str, Display, Serialize, Deserialize
 
   use.add(`crate`, `models::${rustEnum.name}`);
 

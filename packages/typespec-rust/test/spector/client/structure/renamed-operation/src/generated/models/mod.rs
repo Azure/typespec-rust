@@ -5,7 +5,7 @@
 
 mod enums;
 mod enums_impl;
+mod enums_serde;
 mod method_options;
 pub use enums::*;
 pub use method_options::*;
-pub(crate) mod enums_serde;

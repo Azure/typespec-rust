@@ -5,11 +5,11 @@
 
 mod enums;
 mod enums_impl;
+mod enums_serde;
 mod method_options;
 mod models_impl;
 mod pub_models;
 pub use enums::*;
 pub use method_options::*;
 pub use pub_models::*;
-pub(crate) mod enums_serde;
 pub(crate) mod models_serde;
