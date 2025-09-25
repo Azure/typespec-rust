@@ -8,25 +8,87 @@ import * as helpers from './helpers.js';
 import { Use } from './use.js';
 import * as rust from '../codemodel/index.js';
 
+/** contains different types of enumerations to emit */
+export interface Enums {
+  /** enumerations that are part of public surface area */
+  public?: helpers.Module;
+
+  /** serde helpers for public enumerations */
+  serde?: helpers.Module;
+
+  /** trait impls for public enumerations */
+  impls?: helpers.Module;
+
+}
+
 /**
  * returns the emitted enum types, or undefined if the
  * crate contains no enum types.
  * 
  * @param crate the crate for which to emit enums
  * @param context the context for the provided crate
- * @returns the enum content or undefined
+ * @returns the enum models or undefined
  */
-export function emitEnums(crate: rust.Crate, context: Context): helpers.Module | undefined {
+export function emitEnums(crate: rust.Crate, context: Context): Enums  {
   if (crate.enums.length === 0) {
-    return undefined;
+    return {};
   }
 
+  return {
+    public: emitEnumsPublic(crate, context),
+    serde: emitEnumsSerde(crate, context),
+    impls: emitEnumsImpls(crate, context),
+  };
+}
+
+function emitEnumsPublic(crate: rust.Crate, context: Context): helpers.Module | undefined {
+  
   const use = new Use('models');
   const indent = new helpers.indentation();
 
   let body = '';
   for (const rustEnum of crate.enums) {
-    body += create_enum(use, rustEnum, indent);
+    body += emit_enum_public(use, rustEnum, indent);
+  }
+
+  let content = helpers.contentPreamble();
+  content += use.text();
+  content += body;
+
+  return {
+    name:  'pub_enums',
+    content: content,
+  };
+}
+
+function emitEnumsSerde(crate: rust.Crate, context: Context): helpers.Module | undefined {
+  
+  const use = new Use('models');
+  const indent = new helpers.indentation();
+
+  let body = '';
+  for (const rustEnum of crate.enums) {
+    body += emit_enum_serde(use, rustEnum, indent);
+  }
+
+  let content = helpers.contentPreamble();
+  content += use.text();
+  content += body;
+
+  return {
+    name:  'enums_serde',
+    content: content,
+  };
+}
+
+function emitEnumsImpls(crate: rust.Crate, context: Context): helpers.Module | undefined {
+  
+  const use = new Use('models');
+  const indent = new helpers.indentation();
+
+  let body = '';
+  for (const rustEnum of crate.enums) {
+    body += emit_enum_impls(use, rustEnum, indent);
   }
 
   // emit impls as required
@@ -39,12 +101,12 @@ export function emitEnums(crate: rust.Crate, context: Context): helpers.Module |
   content += body;
 
   return {
-    name: 'enums',
+    name:  'enums_impl',
     content: content,
   };
 }
 
-function create_enum(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
+function emit_enum_public(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
 
   let body = '';
   // The formatDocComment function adds a trailing \n we don't want.
@@ -75,9 +137,16 @@ function create_enum(use: Use, rustEnum: rust.Enum, indent: helpers.indentation)
   }
   body += indent.pop().get() + '}\n\n';
 
-  // Now add conversions to and from &str, Display, Serialize, Deserialize
+  return body;
+}
 
 
+function emit_enum_impls(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
+// Now add conversions to and from &str, Display, Serialize, Deserialize
+
+  use.add(`crate`, `models::${rustEnum.name}`);
+
+  let body = '';
   if (rustEnum.extensible) {
     use.add("std", "convert::From");
     body += indent.get() + `impl<'a> From<&'a ${rustEnum.name}> for &'a str {\n`;
@@ -103,7 +172,7 @@ function create_enum(use: Use, rustEnum: rust.Enum, indent: helpers.indentation)
   if (rustEnum.extensible) {
     use.add('std', 'convert::Infallible');
     body += indent.get() + `type Err = Infallible;\n`;
-  }else {
+  } else {
     use.add('azure_core', 'error::Error', 'error::ErrorKind');
     body += indent.get() + `type Err = Error;\n`;
   }
@@ -170,12 +239,12 @@ function create_enum(use: Use, rustEnum: rust.Enum, indent: helpers.indentation)
   body += indent.pop().get() + `}\n`; // end fn
   body += indent.pop().get() + `}\n\n`; // end impl
 
-  body += emit_serde_impls(use, rustEnum, indent);
-
   return body;
 }
 
-function emit_serde_impls(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
+function emit_enum_serde(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
+  use.add(`crate`, `models::${rustEnum.name}`);
+
   use.add('serde', 'Deserialize', 'Serialize', 'Serializer', 'Deserializer');
   let body = '';
   body += indent.get() + `impl<'de> Deserialize<'de> for ${rustEnum.name} {\n`;
