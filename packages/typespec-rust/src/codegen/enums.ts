@@ -56,7 +56,7 @@ function emitEnumsPublic(crate: rust.Crate, context: Context): helpers.Module | 
   content += body;
 
   return {
-    name:  'pub_enums',
+    name:  'enums',
     content: content,
   };
 }
