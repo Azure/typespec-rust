@@ -35,13 +35,13 @@ export function emitEnums(crate: rust.Crate, context: Context): Enums  {
   }
 
   return {
-    public: emitEnumsPublic(crate, context),
-    serde: emitEnumsSerde(crate, context),
+    public: emitEnumsPublic(crate),
+    serde: emitEnumsSerde(crate),
     impls: emitEnumsImpls(crate, context),
   };
 }
 
-function emitEnumsPublic(crate: rust.Crate, context: Context): helpers.Module | undefined {
+function emitEnumsPublic(crate: rust.Crate): helpers.Module | undefined {
   
   const use = new Use('models');
   const indent = new helpers.indentation();
@@ -61,7 +61,7 @@ function emitEnumsPublic(crate: rust.Crate, context: Context): helpers.Module | 
   };
 }
 
-function emitEnumsSerde(crate: rust.Crate, context: Context): helpers.Module | undefined {
+function emitEnumsSerde(crate: rust.Crate): helpers.Module | undefined {
   
   const use = new Use('models');
   const indent = new helpers.indentation();
