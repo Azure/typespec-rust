@@ -34,6 +34,6 @@ steps:
     displayName: Log tool versions used
 
   - script: |
-      rustup install --force
+      rustup install --no-self-update 1.85
       rustup show
     displayName: Install Rust
