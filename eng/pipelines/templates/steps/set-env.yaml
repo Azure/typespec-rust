@@ -1,5 +1,6 @@
 parameters:
   nodeVersion: "20.x"
+  rustVersion: "1.85"
   pnpmStorePath: $(Pipeline.Workspace)/.pnpm-store
 
 steps:
@@ -34,6 +35,7 @@ steps:
     displayName: Log tool versions used
 
   - script: |
-      rustup install --no-self-update 1.85
+      rustup install --no-self-update ${{ parameters.rustVersion }}
+      rustup default ${{ parameters.rustVersion }}
       rustup show
     displayName: Install Rust
