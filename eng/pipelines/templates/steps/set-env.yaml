@@ -34,6 +34,6 @@ steps:
     displayName: Log tool versions used
 
   - script: |
-      rustup install
+      rustup install --force
       rustup show
     displayName: Install Rust
