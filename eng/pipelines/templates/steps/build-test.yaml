@@ -54,7 +54,7 @@ steps:
     workingDirectory: $(TypeSpecRustPkgDir)/test
 
   - pwsh: |
-      cargo +stable clippy --workspace --all-features --all-targets --keep-going --no-deps
+      cargo clippy --workspace --all-features --all-targets --keep-going --no-deps
     displayName: Clippy
     workingDirectory: $(TypeSpecRustPkgDir)/test
     env:
