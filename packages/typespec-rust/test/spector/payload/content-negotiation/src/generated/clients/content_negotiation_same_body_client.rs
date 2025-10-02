@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{BufResponse, Method, Pipeline, PipelineSendOptions, Request, Url},
+    http::{AsyncResponse, Method, Pipeline, PipelineStreamOptions, Request, Url},
     tracing, Result,
 };
 
@@ -33,7 +33,7 @@ impl ContentNegotiationSameBodyClient {
     pub async fn get_avatar_as_jpeg(
         &self,
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsJpegOptions<'_>>,
-    ) -> Result<BufResponse> {
+    ) -> Result<AsyncResponse> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
@@ -42,10 +42,10 @@ impl ContentNegotiationSameBodyClient {
         request.insert_header("accept", "image/jpeg");
         let rsp = self
             .pipeline
-            .send(
+            .stream(
                 &ctx,
                 &mut request,
-                Some(PipelineSendOptions {
+                Some(PipelineStreamOptions {
                     check_success: CheckSuccessOptions {
                         success_codes: &[200],
                     },
@@ -53,7 +53,7 @@ impl ContentNegotiationSameBodyClient {
                 }),
             )
             .await?;
-        Ok(rsp)
+        Ok(rsp.into())
     }
 
     ///
@@ -64,7 +64,7 @@ impl ContentNegotiationSameBodyClient {
     pub async fn get_avatar_as_png(
         &self,
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsPngOptions<'_>>,
-    ) -> Result<BufResponse> {
+    ) -> Result<AsyncResponse> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
@@ -73,10 +73,10 @@ impl ContentNegotiationSameBodyClient {
         request.insert_header("accept", "image/png");
         let rsp = self
             .pipeline
-            .send(
+            .stream(
                 &ctx,
                 &mut request,
-                Some(PipelineSendOptions {
+                Some(PipelineStreamOptions {
                     check_success: CheckSuccessOptions {
                         success_codes: &[200],
                     },
@@ -84,6 +84,6 @@ impl ContentNegotiationSameBodyClient {
                 }),
             )
             .await?;
-        Ok(rsp)
+        Ok(rsp.into())
     }
 }

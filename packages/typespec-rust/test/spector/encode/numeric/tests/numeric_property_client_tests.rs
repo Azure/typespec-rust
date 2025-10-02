@@ -23,7 +23,6 @@ async fn test_safeint_as_string() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
 
     // Verify the response
@@ -45,7 +44,6 @@ async fn test_uint32_as_string_optional() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
 
     // Verify the response
@@ -69,7 +67,6 @@ async fn test_uint8_as_string() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
 
     // Verify the response

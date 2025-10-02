@@ -15,7 +15,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap();
-    let value: ModelWithRenamedFields = resp.into_body().await.unwrap();
+    let value: ModelWithRenamedFields = resp.into_body().unwrap();
     let input_data = value.input_data.unwrap();
     assert_eq!(input_data.age, Some(123));
     assert_eq!(input_data.name, Some("foo".to_string()));

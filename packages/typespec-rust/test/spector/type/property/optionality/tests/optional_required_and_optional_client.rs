@@ -13,7 +13,6 @@ async fn get_all() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     // According to mockapi.ts, the all endpoint returns
     // { optionalProperty: "hello", requiredProperty: 42 }
@@ -31,7 +30,6 @@ async fn get_required_only() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     // According to mockapi.ts, the required-only endpoint returns { requiredProperty: 42 }
     assert_eq!(resp.optional_property, None);

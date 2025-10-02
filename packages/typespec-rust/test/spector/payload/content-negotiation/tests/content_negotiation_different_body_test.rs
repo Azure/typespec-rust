@@ -14,7 +14,7 @@ async fn get_avatar_as_json() {
         .get_avatar_as_json(None)
         .await
         .unwrap();
-    let result: PngImageAsJson = resp.into_body().await.unwrap();
+    let result: PngImageAsJson = resp.into_body().unwrap();
     let image_png =
         fs::read("../../../../node_modules/@typespec/http-specs/assets/image.png").unwrap();
     assert_eq!(result.content, Some(image_png));
@@ -29,7 +29,7 @@ async fn get_avatar_as_png() {
         .get_avatar_as_png(None)
         .await
         .unwrap();
-    let body = resp.into_body().collect().await.unwrap();
+    let body = resp.into_raw_body().collect().await.unwrap();
     let image_png =
         fs::read("../../../../node_modules/@typespec/http-specs/assets/image.png").unwrap();
     assert_eq!(body, image_png);

@@ -29,7 +29,7 @@ async fn model_in_read_only_property() {
         .model_in_read_only_property(RoundTripModel::default().try_into().unwrap(), None)
         .await
         .unwrap();
-    let res: RoundTripModel = resp.into_body().await.unwrap();
+    let res: RoundTripModel = resp.into_body().unwrap();
     assert_eq!(res.result.unwrap().name, Some("Madge".to_string()));
 }
 
@@ -54,6 +54,6 @@ async fn output_to_input_output() {
         .output_to_input_output(None)
         .await
         .unwrap();
-    let res: OutputModel = resp.into_body().await.unwrap();
+    let res: OutputModel = resp.into_body().unwrap();
     assert_eq!(res.name, Some("Madge".to_string()));
 }

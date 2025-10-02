@@ -63,7 +63,7 @@ async fn test_list_operations_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page = page.into_body().await.unwrap();
+        let page = page.into_body().unwrap();
         match page_count {
             1 => {
                 let value = page.value;

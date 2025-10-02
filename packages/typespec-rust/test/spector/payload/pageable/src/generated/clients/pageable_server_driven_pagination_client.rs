@@ -16,7 +16,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         pager::{PagerResult, PagerState},
-        BufResponse, Method, Pager, Pipeline, PipelineSendOptions, Request, Url,
+        Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Url,
     },
     json, tracing, Result,
 };
@@ -80,9 +80,8 @@ impl PageableServerDrivenPaginationClient {
                     )
                     .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: LinkResponse = json::from_json(&bytes)?;
-                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                let res: LinkResponse = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next {
                     Some(next) if !next.is_empty() => PagerResult::More {
                         response: rsp,
@@ -130,9 +129,8 @@ impl PageableServerDrivenPaginationClient {
                     )
                     .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: NestedLinkResponse = json::from_json(&bytes)?;
-                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                let res: NestedLinkResponse = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(
                     match res.nested_next.and_then(|nested_next| nested_next.next) {
                         Some(next) if !next.is_empty() => PagerResult::More {
@@ -182,9 +180,8 @@ impl PageableServerDrivenPaginationClient {
                     )
                     .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: LinkStringResponse = json::from_json(&bytes)?;
-                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                let res: LinkStringResponse = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next {
                     Some(next) if !next.is_empty() => PagerResult::More {
                         response: rsp,

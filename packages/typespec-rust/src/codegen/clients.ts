@@ -1157,13 +1157,18 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
 
   body += constructUrl(indent, use, method, paramGroups);
   body += constructRequest(indent, use, method, paramGroups, false);
-  body += `${indent.get()}let rsp = self.pipeline.send(&ctx, &mut request, ${getPipelineSendOptions(indent, use, method)}).await?;\n`;
 
-  let rspInto = 'rsp.into()';
-  if (method.returns.type.kind === 'bufResponse') {
-    rspInto = 'rsp';
+  let pipelineMethod: string;
+  switch (method.returns.type.kind) {
+    case 'asyncResponse':
+      pipelineMethod = 'stream';
+      break;
+    case 'response':
+      pipelineMethod = 'send';
+      break;
   }
-  body += `${indent.get()}Ok(${rspInto})\n`;
+  body += `${indent.get()}let rsp = self.pipeline.${pipelineMethod}(&ctx, &mut request, ${getPipelineOptions(indent, use, method)}).await?;\n`;
+  body += `${indent.get()}Ok(rsp.into())\n`;
   return body;
 }
 
@@ -1263,7 +1268,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     cloneUrl = true;
   }
 
-  // Pipeline::send() returns a BufResponse, so no reason to declare the type if not something else.
+  // Pipeline::send() returns a RawResponse, so no reason to declare the type if not something else.
   let rspType = '';
   let rspInto = '';
   if (method.strategy && method.strategy.kind === 'continuationToken' && method.strategy.responseToken.kind === 'responseHeaderScalar') {
@@ -1279,17 +1284,16 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
-  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut request, ${getPipelineSendOptions(indent, use, method)}).await?${rspInto};\n`;
+  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut request, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
 
   // check if we need to extract the next link field from the response model
   if (method.strategy && (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'nextLink')) {
     const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
-    use.add('azure_core', bodyFormat, 'http::BufResponse');
+    use.add('azure_core', bodyFormat, 'http::RawResponse');
     body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
-    body += `${indent.get()}let bytes = body.collect().await?;\n`;
     const deserialize = bodyFormat === 'json' ? 'json::from_json' : 'xml::read_xml';
-    body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&bytes)?;\n`;
-    body += `${indent.get()}let rsp = BufResponse::from_bytes(status, headers, bytes).into();\n`;
+    body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
+    body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`;
   }
 
   if (method.strategy) {
@@ -1376,7 +1380,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroMethod): string {
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
-  use.add('azure_core::http', 'Method', 'BufResponse', 'Request', 'Url');
+  use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
   use.add('azure_core::http::headers', 'RETRY_AFTER', 'X_MS_RETRY_AFTER_MS', 'RETRY_AFTER_MS');
   use.add('azure_core::http::poller', 'get_retry_after', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor as _');
   use.addForType(method.returns.type);
@@ -1423,10 +1427,9 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`
   body += `${indent.get()}let pipeline = pipeline.clone();\n`
   body += `${indent.get()}async move {\n`
-  body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut request, ${getPipelineSendOptions(indent, use, method)}).await?;\n`
+  body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut request, ${getPipelineOptions(indent, use, method)}).await?;\n`
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
   body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &options.poller_options);\n`
-  body += `${indent.get()}let bytes = body.collect().await?;\n`
 
   let deserialize = '';
   if (bodyFormat === 'json') {
@@ -1435,8 +1438,8 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   } else {
     deserialize = 'xml::read_xml';
   }
-  body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&bytes)?;\n`
-  body += `${indent.get()}let rsp = BufResponse::from_bytes(status, headers, bytes).into();\n`
+  body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`
+  body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`
 
   body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', [{
     pattern: `PollerStatus::InProgress`,
@@ -1621,12 +1624,30 @@ function isClientMethodOptions(type: rust.Type): boolean {
   return type.kind === 'external' && type.name === 'ClientMethodOptions';
 }
 
-function getPipelineSendOptions(indent: helpers.indentation, use: Use, method: ClientMethod): string {
+/**
+ * returns an instantiation of pipeline options or None
+ * if no options are required.
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param use the use statement builder currently in scope
+ * @param method the method for which to construct the pipeline options
+ * @returns the pipeline options text
+ */
+function getPipelineOptions(indent: helpers.indentation, use: Use, method: ClientMethod): string {
   let options = '';
   if (method.statusCodes.length != 0) {
-    use.add("azure_core::http", "PipelineSendOptions");
+    let pipelineOptions: string;
+    switch (method.returns.type.kind) {
+      case 'asyncResponse':
+        pipelineOptions = 'PipelineStreamOptions';
+        break;
+      default:
+        pipelineOptions = 'PipelineSendOptions';
+        break;
+    }
+    use.add("azure_core::http", pipelineOptions);
     use.add("azure_core::error", "CheckSuccessOptions");
-    options += `Some(PipelineSendOptions {\n`;
+    options += `Some(${pipelineOptions} {\n`;
     indent.push();
     options += `${indent.get()}check_success: CheckSuccessOptions{ success_codes: &[${method.statusCodes.join(', ')}]},\n`;
     options += `${indent.get()}..Default::default()\n`;

@@ -13,7 +13,6 @@ async fn get_all() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     // According to mockapi.ts, the all endpoint returns
     // { property: ["aGVsbG8sIHdvcmxkIQ==", "aGVsbG8sIHdvcmxkIQ=="] }
@@ -36,7 +35,6 @@ async fn get_default() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     // According to mockapi.ts, the default endpoint returns {}
     assert!(resp.property.is_none());

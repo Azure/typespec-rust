@@ -32,6 +32,6 @@ async fn basic() {
         )
         .await
         .unwrap();
-    let action_resp: ActionResponse = resp.into_body().await.unwrap();
+    let action_resp: ActionResponse = resp.into_body().unwrap();
     assert_eq!(action_resp.string_property, Some("text".to_string()));
 }

@@ -16,7 +16,6 @@ async fn get() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     // The mock API returns "UnknownValue" which should be parsed as a custom value
     assert!(resp.property.is_some());

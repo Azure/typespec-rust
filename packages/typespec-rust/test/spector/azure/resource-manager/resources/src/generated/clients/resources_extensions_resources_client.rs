@@ -16,7 +16,7 @@ use azure_core::{
         headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         pager::{PagerResult, PagerState},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        BufResponse, Method, NoFormat, Pager, Pipeline, PipelineSendOptions, Poller, Request,
+        Method, NoFormat, Pager, Pipeline, PipelineSendOptions, Poller, RawResponse, Request,
         RequestContent, Response, Url,
     },
     json, tracing, Result,
@@ -137,9 +137,8 @@ impl ResourcesExtensionsResourcesClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &options.poller_options,
                     );
-                    let bytes = body.collect().await?;
-                    let res: ExtensionsResource = json::from_json(&bytes)?;
-                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                    let res: ExtensionsResource = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -323,9 +322,8 @@ impl ResourcesExtensionsResourcesClient {
                     )
                     .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: ExtensionsResourceListResult = json::from_json(&bytes)?;
-                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                let res: ExtensionsResourceListResult = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,

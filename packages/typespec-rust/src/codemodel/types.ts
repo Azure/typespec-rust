@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | Poller | BufResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType =  Arc | AsyncResponse | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | Poller | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
 export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Union | UnionMember | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
@@ -35,6 +35,14 @@ export interface Arc extends QualifiedType {
    * at present, only TokenCredential is supported
    */
   type: TokenCredential;
+}
+
+/** AsyncResponse is an azure_core::http::AsyncResponse<T> */
+export interface AsyncResponse<T extends MarkerType | Unit = MarkerType | Unit> extends External {
+  kind: 'asyncResponse';
+
+  /** the generic type param */
+  type: T;
 }
 
 /** Box is a Rust Box<T> */
@@ -357,11 +365,9 @@ export interface Payload<T extends WireType = WireType> {
   format: PayloadFormat;
 }
 
-/**
- * BufResponse is used for operations that receive a streaming response.
- */
-export interface BufResponse extends External {
-  kind: 'bufResponse';
+/** RawResponse is an azure_core::http::RawResponse */
+export interface RawResponse extends External {
+  kind: 'rawResponse';
 }
 
 /**
@@ -417,7 +423,7 @@ export interface Response<T extends ResponseTypes = ResponseTypes, Format extend
 }
 
 /** ResultTypes defines the type constraint when creating a Result<T> */
-type ResultTypes = PageIterator | Pager | Poller | BufResponse | Response;
+export type ResultTypes = AsyncResponse | PageIterator | Pager | Poller | Response;
 
 /** Result is a Rust Result<T> from azure_core */
 export interface Result<T extends ResultTypes = ResultTypes> extends External {
@@ -629,6 +635,14 @@ export class Arc extends QualifiedType implements Arc {
   }
 }
 
+export class AsyncResponse<T> extends External implements AsyncResponse<T> {
+  constructor(crate: Crate, type: T) {
+    super(crate, 'AsyncResponse', 'azure_core::http');
+    this.kind = 'asyncResponse';
+    this.type = type;
+  }
+}
+
 export class Box implements Box {
   constructor(type: WireType) {
     this.kind = 'box';
@@ -832,10 +846,10 @@ export class Payload<T> implements Payload<T> {
   }
 }
 
-export class BufResponse extends External implements BufResponse {
+export class RawResponse extends External {
   constructor(crate: Crate) {
-    super(crate, 'BufResponse', 'azure_core::http');
-    this.kind = 'bufResponse';
+    super(crate, 'RawResponse', 'azure_core::http');
+    this.kind = 'rawResponse';
   }
 }
 

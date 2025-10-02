@@ -35,7 +35,7 @@ async fn get() {
         .await
         .unwrap();
 
-    let resource: TopLevelTrackedResource = resp.into_body().await.unwrap();
+    let resource: TopLevelTrackedResource = resp.into_body().unwrap();
     let expected_resource = get_valid_top_level_resource();
 
     assert_eq!(expected_resource.id, resource.id);
@@ -131,7 +131,7 @@ async fn list_by_resource_group_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let resources = page.into_body().await.unwrap();
+        let resources = page.into_body().unwrap();
         match page_count {
             1 => {
                 assert_eq!(resources.value.len(), 1);
@@ -235,7 +235,7 @@ async fn list_by_subscription_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let resources = page.into_body().await.unwrap();
+        let resources = page.into_body().unwrap();
         match page_count {
             1 => {
                 assert_eq!(resources.value.len(), 1);

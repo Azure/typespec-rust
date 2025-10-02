@@ -9,7 +9,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         pager::{PagerResult, PagerState},
-        BufResponse, ClientOptions, Method, Pager, Pipeline, PipelineSendOptions, Request, Url,
+        ClientOptions, Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Url,
     },
     json, tracing, Result,
 };
@@ -105,9 +105,8 @@ impl PageableClient {
                     )
                     .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: PagedUser = json::from_json(&bytes)?;
-                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                let res: PagedUser = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,

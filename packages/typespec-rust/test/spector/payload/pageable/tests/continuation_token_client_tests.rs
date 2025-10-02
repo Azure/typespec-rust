@@ -123,7 +123,7 @@ async fn list_header_response_body_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: RequestHeaderResponseBodyResponse = page.into_body().await.unwrap();
+        let page: RequestHeaderResponseBodyResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -167,7 +167,7 @@ async fn list_header_response_body_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: RequestHeaderResponseBodyResponse = page.into_body().await.unwrap();
+        let page: RequestHeaderResponseBodyResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -248,7 +248,7 @@ async fn list_header_response_header_pages() {
         page_count += 1;
         let page = page.unwrap();
         let next_token = page.next_token().unwrap();
-        let page: RequestHeaderResponseHeaderResponse = page.into_body().await.unwrap();
+        let page: RequestHeaderResponseHeaderResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -293,7 +293,7 @@ async fn list_header_response_header_pages() {
         page_count += 1;
         let page = page.unwrap();
         let next_token = page.next_token().unwrap();
-        let page: RequestHeaderResponseHeaderResponse = page.into_body().await.unwrap();
+        let page: RequestHeaderResponseHeaderResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -416,7 +416,7 @@ async fn list_query_response_body_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: RequestQueryResponseBodyResponse = page.into_body().await.unwrap();
+        let page: RequestQueryResponseBodyResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -460,7 +460,7 @@ async fn list_query_response_body_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: RequestQueryResponseBodyResponse = page.into_body().await.unwrap();
+        let page: RequestQueryResponseBodyResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -541,7 +541,7 @@ async fn list_query_response_header_pages() {
         page_count += 1;
         let page = page.unwrap();
         let next_token = page.next_token().unwrap();
-        let page: RequestQueryResponseHeaderResponse = page.into_body().await.unwrap();
+        let page: RequestQueryResponseHeaderResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -586,7 +586,7 @@ async fn list_query_response_header_pages() {
         page_count += 1;
         let page = page.unwrap();
         let next_token = page.next_token().unwrap();
-        let page: RequestQueryResponseHeaderResponse = page.into_body().await.unwrap();
+        let page: RequestQueryResponseHeaderResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;

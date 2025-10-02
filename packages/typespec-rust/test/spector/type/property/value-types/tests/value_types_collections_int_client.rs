@@ -13,7 +13,6 @@ async fn get() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     assert!(resp.property.is_some());
     if let Some(collection) = resp.property {

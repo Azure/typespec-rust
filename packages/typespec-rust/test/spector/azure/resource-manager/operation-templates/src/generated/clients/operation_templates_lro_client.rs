@@ -13,7 +13,7 @@ use azure_core::{
     http::{
         headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        BufResponse, Method, Pipeline, PipelineSendOptions, Poller, Request, RequestContent, Url,
+        Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, RequestContent, Url,
     },
     json, tracing, Result,
 };
@@ -133,9 +133,8 @@ impl OperationTemplatesLroClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &options.poller_options,
                     );
-                    let bytes = body.collect().await?;
-                    let res: Order = json::from_json(&bytes)?;
-                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                    let res: Order = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -244,9 +243,8 @@ impl OperationTemplatesLroClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &options.poller_options,
                     );
-                    let bytes = body.collect().await?;
-                    let res: ArmOperationStatusResourceProvisioningState = json::from_json(&bytes)?;
-                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                    let res: ArmOperationStatusResourceProvisioningState = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -366,9 +364,8 @@ impl OperationTemplatesLroClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &options.poller_options,
                     );
-                    let bytes = body.collect().await?;
-                    let res: ExportResult = json::from_json(&bytes)?;
-                    let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                    let res: ExportResult = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,

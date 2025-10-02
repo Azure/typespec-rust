@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 use azure_core::{
-    http::{headers::Headers, BufResponse, Response, StatusCode, XmlFormat},
+    http::{headers::Headers, RawResponse, Response, StatusCode, XmlFormat},
     xml::to_xml,
 };
 use blob_storage::models::{
@@ -54,9 +54,9 @@ async fn additional_properties_de() {
     </EnumerationResults>"#;
 
     let resp: Response<ListBlobsFlatSegmentResponse, XmlFormat> =
-        BufResponse::from_bytes(StatusCode::Ok, Headers::new(), xml_data).into();
+        RawResponse::from_bytes(StatusCode::Ok, Headers::new(), xml_data).into();
 
-    let body = resp.into_body().await.unwrap();
+    let body = resp.into_body().unwrap();
     assert_eq!(body.segment.blob_items.len(), 5);
 
     let blob0 = &body.segment.blob_items[0];

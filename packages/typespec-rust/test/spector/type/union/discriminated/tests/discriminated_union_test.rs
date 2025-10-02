@@ -30,7 +30,7 @@ async fn no_envelope_default_put() {
 
     assert_eq!(resp.status(), 200);
 
-    let value: PetInline = resp.into_body().await.unwrap();
+    let value: PetInline = resp.into_body().unwrap();
     match value {
         PetInline::Cat(cat) => {
             assert_eq!(cat.name, Some(String::from("Whiskers")));
@@ -57,7 +57,7 @@ async fn no_envelope_custom_put() {
 
     assert_eq!(resp.status(), 200);
 
-    let value: PetInlineWithCustomDiscriminator = resp.into_body().await.unwrap();
+    let value: PetInlineWithCustomDiscriminator = resp.into_body().unwrap();
     match value {
         PetInlineWithCustomDiscriminator::Cat(cat) => {
             assert_eq!(cat.name, Some(String::from("Whiskers")));
@@ -85,7 +85,7 @@ async fn envelope_default_put() {
 
     assert_eq!(resp.status(), 200);
 
-    let value: PetWithEnvelope = resp.into_body().await.unwrap();
+    let value: PetWithEnvelope = resp.into_body().unwrap();
     match value {
         PetWithEnvelope::Cat(cat) => {
             assert_eq!(cat.name, Some(String::from("Whiskers")));
@@ -113,7 +113,7 @@ async fn envelope_custom_put() {
 
     assert_eq!(resp.status(), 200);
 
-    let value: PetWithCustomNames = resp.into_body().await.unwrap();
+    let value: PetWithCustomNames = resp.into_body().unwrap();
     match value {
         PetWithCustomNames::Cat(cat) => {
             assert_eq!(cat.name, Some(String::from("Whiskers")));
@@ -134,7 +134,7 @@ async fn no_envelope_default_get() {
             .await
             .unwrap();
 
-        let value: PetInline = resp.into_body().await.unwrap();
+        let value: PetInline = resp.into_body().unwrap();
         match value {
             PetInline::Cat(cat) => {
                 assert_eq!(cat.name, Some(String::from("Whiskers")));
@@ -154,7 +154,7 @@ async fn no_envelope_default_get() {
             .await
             .unwrap();
 
-        let value: PetInline = resp.into_body().await.unwrap();
+        let value: PetInline = resp.into_body().unwrap();
         match value {
             PetInline::Dog(dog) => {
                 assert_eq!(dog.name, Some(String::from("Rex")));
@@ -176,7 +176,7 @@ async fn no_envelope_custom_get() {
             .await
             .unwrap();
 
-        let value: PetInlineWithCustomDiscriminator = resp.into_body().await.unwrap();
+        let value: PetInlineWithCustomDiscriminator = resp.into_body().unwrap();
         match value {
             PetInlineWithCustomDiscriminator::Cat(cat) => {
                 assert_eq!(cat.name, Some(String::from("Whiskers")));
@@ -198,7 +198,7 @@ async fn no_envelope_custom_get() {
             .await
             .unwrap();
 
-        let value: PetInlineWithCustomDiscriminator = resp.into_body().await.unwrap();
+        let value: PetInlineWithCustomDiscriminator = resp.into_body().unwrap();
         match value {
             PetInlineWithCustomDiscriminator::Dog(dog) => {
                 assert_eq!(dog.name, Some(String::from("Rex")));
@@ -221,7 +221,7 @@ async fn envelope_default_get() {
             .await
             .unwrap();
 
-        let value: PetWithEnvelope = resp.into_body().await.unwrap();
+        let value: PetWithEnvelope = resp.into_body().unwrap();
         match value {
             PetWithEnvelope::Cat(cat) => {
                 assert_eq!(cat.name, Some(String::from("Whiskers")));
@@ -242,7 +242,7 @@ async fn envelope_default_get() {
             .await
             .unwrap();
 
-        let value: PetWithEnvelope = resp.into_body().await.unwrap();
+        let value: PetWithEnvelope = resp.into_body().unwrap();
         match value {
             PetWithEnvelope::Dog(dog) => {
                 assert_eq!(dog.name, Some(String::from("Rex")));
@@ -265,7 +265,7 @@ async fn envelope_custom_get() {
             .await
             .unwrap();
 
-        let value: PetWithCustomNames = resp.into_body().await.unwrap();
+        let value: PetWithCustomNames = resp.into_body().unwrap();
         match value {
             PetWithCustomNames::Cat(cat) => {
                 assert_eq!(cat.name, Some(String::from("Whiskers")));
@@ -288,7 +288,7 @@ async fn envelope_custom_get() {
             .await
             .unwrap();
 
-        let value: PetWithCustomNames = resp.into_body().await.unwrap();
+        let value: PetWithCustomNames = resp.into_body().unwrap();
         match value {
             PetWithCustomNames::Dog(dog) => {
                 assert_eq!(dog.name, Some(String::from("Rex")));
