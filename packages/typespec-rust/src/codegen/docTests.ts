@@ -20,19 +20,29 @@ export function emitHeaderTraitDocExample(crateName: string, trait: rust.Respons
     indent = new helpers.indentation(0);
   }
 
+  let targetType: rust.MarkerType | rust.WireType;
   let useFromHttp = 'http::Response';
-  // JsonFormat is the default so we elide it
-  switch (trait.implFor.format) {
-    case 'NoFormat':
-    case 'XmlFormat':
-      useFromHttp = `http::{Response, ${trait.implFor.format}}`;
+  switch (trait.implFor.kind) {
+    case 'asyncResponse':
+      useFromHttp = 'http::AsyncResponse';
+      targetType = trait.implFor.type;
+      break;
+    case 'response':
+      // JsonFormat is the default so we elide it
+      switch (trait.implFor.format) {
+        case 'NoFormat':
+        case 'XmlFormat':
+          useFromHttp = `http::{Response, ${trait.implFor.format}}`;
+          break;
+      }
+      targetType = trait.implFor.content;
       break;
   }
 
   let headerDocs = `${indent.get()}/// ${helpers.emitBackTicks(3)}no_run\n`;
   headerDocs += `${indent.get()}/// use azure_core::{Result, ${useFromHttp}};\n`;
   // we need to unwrap content in case it's a Vec<T> etc
-  headerDocs += `${indent.get()}/// use ${crateName}::models::{${helpers.getTypeDeclaration(helpers.unwrapType(trait.implFor.content))}, ${trait.name}};\n`;
+  headerDocs += `${indent.get()}/// use ${crateName}::models::{${helpers.getTypeDeclaration(helpers.unwrapType(targetType))}, ${trait.name}};\n`;
   headerDocs += `${indent.get()}/// async fn example() -> Result<()> {\n`;
   headerDocs += `${indent.get()}///     let response: ${helpers.getTypeDeclaration(trait.implFor)} = unimplemented!();\n`;
   headerDocs += `${indent.get()}///     // Access response headers\n`;

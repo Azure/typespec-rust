@@ -1,5 +1,13 @@
 # Release History
 
+## 0.24.0 (2025-10-02)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Methods that return streaming bytes now return an `AsyncResponse<T>`.
+
 ## 0.23.2 (2025-09-25)
 
 ### Features Added

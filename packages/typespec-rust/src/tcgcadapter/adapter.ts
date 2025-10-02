@@ -1582,10 +1582,17 @@ export class Adapter {
       const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name)}Result`);
       markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
       this.crate.models.push(markerType);
-      rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, markerType, responseFormat));
+      let resultType: rust.ResultTypes;
+      if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
+        // method returns a streaming binary response with headers
+        resultType = new rust.AsyncResponse(this.crate, markerType);
+      } else {
+        resultType = new rust.Response(this.crate, markerType, responseFormat);
+      }
+      rustMethod.returns = new rust.Result(this.crate, resultType);
     } else if (method.response.type && method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes') {
       // bytes encoding indicates a streaming binary response
-      rustMethod.returns = new rust.Result(this.crate, new rust.BufResponse(this.crate));
+      rustMethod.returns = new rust.Result(this.crate, new rust.AsyncResponse(this.crate, this.getUnitType()));
     } else {
       rustMethod.returns = new rust.Result(this.crate, new rust.Response(this.crate, this.getUnitType(), responseFormat));
     }
@@ -1680,8 +1687,17 @@ export class Adapter {
       }
     };
 
+    const throwOnUnitType = function(type: rust.ResponseTypes): void {
+      if (type.kind === 'unit') {
+        // this is to filter out unit from ResponseTypes.
+        // methods that return unit should have been skipped by our caller
+        // so we should never hit this (if we do, we have a bug elsewhere).
+        throw new AdapterError('InternalError', `unexpected trait impl kind ${type.kind}`);
+      }
+    };
+
     // response header traits are only ever for marker types and payloads
-    let implFor: rust.Response<rust.MarkerType | rust.WireType>;
+    let implFor: rust.AsyncResponse<rust.MarkerType> | rust.Response<rust.MarkerType | rust.WireType>;
     switch (method.returns.type.kind) {
       case 'pageIterator':
       case 'pager':
@@ -1689,20 +1705,16 @@ export class Adapter {
         implFor = method.returns.type.type;
         break;
       case 'response':
-        if (method.returns.type.content.kind === 'unit') {
-          // this is to filter out unit from ResponseTypes.
-          // methods that return unit should have been skipped by our caller
-          // so we should never hit this (if we do, we have a bug elsewhere).
-          throw new AdapterError('InternalError', `unexpected method content kind ${method.returns.type.content.kind}`);
-        }
+        throwOnUnitType(method.returns.type.content);
         implFor = <rust.Response<rust.MarkerType | rust.WireType>>method.returns.type;
         break;
-      default:
-        // this is BufResponse which should have been previously skipped
-        throw new AdapterError('InternalError', `unexpected method return kind ${method.returns.type.kind}`);
+      case 'asyncResponse':
+        throwOnUnitType(method.returns.type.type);
+        implFor = <rust.AsyncResponse<rust.MarkerType>>method.returns.type;
+        break;
     }
 
-    const traitName = `${recursiveTypeName(implFor.content)}Headers`;
+    const traitName = `${recursiveTypeName(implFor.kind === 'asyncResponse' ? implFor.type : implFor.content)}Headers`;
 
     // NOTE: the complete doc text will be emitted at codegen time
     const docs = this.asDocLink(`${client.name}::${method.name}()`, `crate::generated::clients::${client.name}::${method.name}()`);

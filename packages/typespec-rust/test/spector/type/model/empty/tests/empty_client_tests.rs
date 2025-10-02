@@ -9,7 +9,7 @@ use spector_empty::EmptyClient;
 async fn get_empty() {
     let client = EmptyClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.get_empty(None).await.unwrap();
-    let _value: EmptyOutput = resp.into_body().await.unwrap();
+    let _value: EmptyOutput = resp.into_body().unwrap();
 }
 
 #[tokio::test]
@@ -17,7 +17,7 @@ async fn post_round_trip_empty() {
     let client = EmptyClient::with_no_credential("http://localhost:3000", None).unwrap();
     let req = EmptyInputOutput::try_into(EmptyInputOutput::default()).unwrap();
     let resp = client.post_round_trip_empty(req, None).await.unwrap();
-    let _value: EmptyInputOutput = resp.into_body().await.unwrap();
+    let _value: EmptyInputOutput = resp.into_body().unwrap();
 }
 
 #[tokio::test]

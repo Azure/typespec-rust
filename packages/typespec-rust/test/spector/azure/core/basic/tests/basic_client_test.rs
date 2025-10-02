@@ -20,7 +20,7 @@ async fn create_or_replace() {
         .create_or_replace(1, resource.try_into().unwrap(), None)
         .await
         .unwrap();
-    resource = resp.into_body().await.unwrap();
+    resource = resp.into_body().unwrap();
     assert_eq!(
         resource.etag,
         Some(Etag::from("11bdc430-65e8-45ad-81d9-8ffa60d55b59"))
@@ -40,7 +40,7 @@ async fn create_or_update() {
         .create_or_update(1, resource.try_into().unwrap(), None)
         .await
         .unwrap();
-    resource = resp.into_body().await.unwrap();
+    resource = resp.into_body().unwrap();
     assert_eq!(
         resource.etag,
         Some(Etag::from("11bdc430-65e8-45ad-81d9-8ffa60d55b59"))
@@ -59,7 +59,7 @@ async fn delete() {
 async fn export() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.export(1, "json", None).await.unwrap();
-    let user: User = resp.into_body().await.unwrap();
+    let user: User = resp.into_body().unwrap();
     assert_eq!(
         user.etag,
         Some(Etag::from("11bdc430-65e8-45ad-81d9-8ffa60d55b59"))
@@ -72,7 +72,7 @@ async fn export() {
 async fn export_all_users() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.export_all_users("json", None).await.unwrap();
-    let user_list: UserList = resp.into_body().await.unwrap();
+    let user_list: UserList = resp.into_body().unwrap();
     let user_list = user_list.users.unwrap();
     assert_eq!(2, user_list.len());
     assert_eq!(
@@ -93,7 +93,7 @@ async fn export_all_users() {
 async fn get() {
     let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.get(1, None).await.unwrap();
-    let user: User = resp.into_body().await.unwrap();
+    let user: User = resp.into_body().unwrap();
     assert_eq!(
         user.etag,
         Some(Etag::from("11bdc430-65e8-45ad-81d9-8ffa60d55b59"))
@@ -182,7 +182,7 @@ async fn list_pages() {
     while let Some(page) = pager.next().await {
         let page = page.unwrap();
         page_count += 1;
-        let paged_user: PagedUser = page.into_body().await.unwrap();
+        let paged_user: PagedUser = page.into_body().unwrap();
         let users = paged_user.value;
         assert_eq!(users.len(), 2);
         assert_eq!(

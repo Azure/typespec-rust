@@ -137,7 +137,7 @@ export interface AsyncMethod extends HTTPMethodBase {
   params: Array<MethodParameter>;
 
   /** the type returned by the method */
-  returns: types.Result<types.BufResponse | types.Response>;
+  returns: types.Result<types.AsyncResponse | types.Response>;
 }
 
 /** ClientAccessor is a method that returns a sub-client instance. */
@@ -502,7 +502,7 @@ export interface ResponseHeadersTrait {
   name: string;
 
   /** the type for which to implement the trait */
-  implFor: types.Response<types.MarkerType | types.WireType>;
+  implFor: types.AsyncResponse<types.MarkerType> | types.Response<types.MarkerType | types.WireType>;
 
   /** the headers in the trait */
   headers: Array<ResponseHeader>;
@@ -841,7 +841,7 @@ export class ResponseHeaderScalar implements ResponseHeaderScalar {
 }
 
 export class ResponseHeadersTrait implements ResponseHeadersTrait {
-  constructor(name: string, implFor: types.Response<types.MarkerType | types.WireType>, docs: string) {
+  constructor(name: string, implFor: types.AsyncResponse<types.MarkerType> | types.Response<types.MarkerType | types.WireType>, docs: string) {
     this.kind = 'responseHeadersTrait';
     this.name = name;
     this.implFor = implFor;

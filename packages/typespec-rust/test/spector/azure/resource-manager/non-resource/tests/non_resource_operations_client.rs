@@ -55,7 +55,6 @@ async fn create() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     assert_eq!(resp.id, Some("id".to_string()));
     assert_eq!(resp.name, Some("hello".to_string()));
@@ -77,7 +76,6 @@ async fn get() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     assert_eq!(resp.id, Some("id".to_string()));
     assert_eq!(resp.name, Some("hello".to_string()));

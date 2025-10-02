@@ -16,7 +16,6 @@ async fn test() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     assert_eq!(resp.prop, Some("foo".to_string()));
 }

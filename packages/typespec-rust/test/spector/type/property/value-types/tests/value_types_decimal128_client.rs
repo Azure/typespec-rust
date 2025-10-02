@@ -14,7 +14,6 @@ async fn get() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     assert_eq!(resp.property, Some(Decimal::from_f32(0.33333).unwrap()));
 }

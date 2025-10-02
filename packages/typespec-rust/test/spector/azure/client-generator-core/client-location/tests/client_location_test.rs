@@ -72,7 +72,7 @@ async fn test_get_blob() {
         .get_blob("testcontainer", "testblob.txt", None)
         .await
         .unwrap();
-    let blob: Blob = result.into_body().await.unwrap();
+    let blob: Blob = result.into_body().unwrap();
     assert_eq!(blob.id, Some("blob-001".to_string()));
     assert_eq!(blob.name, Some("testblob.txt".to_string()));
     assert_eq!(blob.size, Some(1024));

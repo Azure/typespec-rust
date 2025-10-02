@@ -19,7 +19,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         pager::{PagerResult, PagerState},
-        BufResponse, Method, Pager, Pipeline, PipelineSendOptions, Request, Response, Url,
+        Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Response, Url,
     },
     json, tracing, Result,
 };
@@ -84,9 +84,8 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     )
                     .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: RequestHeaderNestedResponseBodyResponse = json::from_json(&bytes)?;
-                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                let res: RequestHeaderNestedResponseBodyResponse = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(
                     match res
                         .nested_next
@@ -153,9 +152,8 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     )
                     .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: RequestHeaderResponseBodyResponse = json::from_json(&bytes)?;
-                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                let res: RequestHeaderResponseBodyResponse = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_token {
                     Some(next_token) if !next_token.is_empty() => PagerResult::More {
                         response: rsp,
@@ -312,9 +310,8 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     )
                     .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: RequestQueryNestedResponseBodyResponse = json::from_json(&bytes)?;
-                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                let res: RequestQueryNestedResponseBodyResponse = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(
                     match res
                         .nested_next
@@ -388,9 +385,8 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                     )
                     .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: RequestQueryResponseBodyResponse = json::from_json(&bytes)?;
-                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                let res: RequestQueryResponseBodyResponse = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_token {
                     Some(next_token) if !next_token.is_empty() => PagerResult::More {
                         response: rsp,

@@ -33,7 +33,7 @@ use azure_core::{
     base64::decode,
     http::{
         headers::{HeaderName, Headers},
-        NoFormat, Response, XmlFormat,
+        AsyncResponse, NoFormat, Response, XmlFormat,
     },
     time::{parse_rfc7231, OffsetDateTime},
     Result,
@@ -826,10 +826,10 @@ impl BlobClientDeleteImmutabilityPolicyResultHeaders
 /// # Examples
 ///
 /// ```no_run
-/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use azure_core::{Result, http::AsyncResponse};
 /// use blob_storage::models::{BlobClientDownloadResult, BlobClientDownloadResultHeaders};
 /// async fn example() -> Result<()> {
-///     let response: Response<BlobClientDownloadResult, NoFormat> = unimplemented!();
+///     let response: AsyncResponse<BlobClientDownloadResult> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(accept_ranges) = response.accept_ranges()? {
 ///         println!("Accept-Ranges: {:?}", accept_ranges);
@@ -885,7 +885,7 @@ pub trait BlobClientDownloadResultHeaders: private::Sealed {
     fn version_id(&self) -> Result<Option<String>>;
 }
 
-impl BlobClientDownloadResultHeaders for Response<BlobClientDownloadResult, NoFormat> {
+impl BlobClientDownloadResultHeaders for AsyncResponse<BlobClientDownloadResult> {
     /// Indicates that the service supports requests for partial blob content.
     fn accept_ranges(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &ACCEPT_RANGES)
@@ -2681,10 +2681,10 @@ impl BlockBlobClientPutBlobFromUrlResultHeaders
 /// # Examples
 ///
 /// ```no_run
-/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use azure_core::{Result, http::AsyncResponse};
 /// use blob_storage::models::{BlockBlobClientQueryResult, BlockBlobClientQueryResultHeaders};
 /// async fn example() -> Result<()> {
-///     let response: Response<BlockBlobClientQueryResult, NoFormat> = unimplemented!();
+///     let response: AsyncResponse<BlockBlobClientQueryResult> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(accept_ranges) = response.accept_ranges()? {
 ///         println!("Accept-Ranges: {:?}", accept_ranges);
@@ -2730,7 +2730,7 @@ pub trait BlockBlobClientQueryResultHeaders: private::Sealed {
     fn is_server_encrypted(&self) -> Result<Option<bool>>;
 }
 
-impl BlockBlobClientQueryResultHeaders for Response<BlockBlobClientQueryResult, NoFormat> {
+impl BlockBlobClientQueryResultHeaders for AsyncResponse<BlockBlobClientQueryResult> {
     /// Indicates that the service supports requests for partial blob content.
     fn accept_ranges(&self) -> Result<Option<String>> {
         Headers::get_optional_as(self.headers(), &ACCEPT_RANGES)
@@ -3914,10 +3914,12 @@ mod private {
         PageBlobClientUploadPagesFromUrlResult, PageBlobClientUploadPagesResult, PageList,
         SignedIdentifier, StorageServiceStats, UserDelegationKey,
     };
-    use azure_core::http::{NoFormat, Response, XmlFormat};
+    use azure_core::http::{AsyncResponse, NoFormat, Response, XmlFormat};
 
     pub trait Sealed {}
 
+    impl Sealed for AsyncResponse<BlobClientDownloadResult> {}
+    impl Sealed for AsyncResponse<BlockBlobClientQueryResult> {}
     impl Sealed for Response<AppendBlobClientAppendBlockFromUrlResult, NoFormat> {}
     impl Sealed for Response<AppendBlobClientAppendBlockResult, NoFormat> {}
     impl Sealed for Response<AppendBlobClientCreateResult, NoFormat> {}
@@ -3929,7 +3931,6 @@ mod private {
     impl Sealed for Response<BlobClientCopyFromUrlResult, NoFormat> {}
     impl Sealed for Response<BlobClientCreateSnapshotResult, NoFormat> {}
     impl Sealed for Response<BlobClientDeleteImmutabilityPolicyResult, NoFormat> {}
-    impl Sealed for Response<BlobClientDownloadResult, NoFormat> {}
     impl Sealed for Response<BlobClientGetAccountInfoResult, NoFormat> {}
     impl Sealed for Response<BlobClientGetPropertiesResult, NoFormat> {}
     impl Sealed for Response<BlobClientReleaseLeaseResult, NoFormat> {}
@@ -3954,7 +3955,6 @@ mod private {
     impl Sealed for Response<BlobTags, XmlFormat> {}
     impl Sealed for Response<BlockBlobClientCommitBlockListResult, NoFormat> {}
     impl Sealed for Response<BlockBlobClientPutBlobFromUrlResult, NoFormat> {}
-    impl Sealed for Response<BlockBlobClientQueryResult, NoFormat> {}
     impl Sealed for Response<BlockBlobClientStageBlockFromUrlResult, NoFormat> {}
     impl Sealed for Response<BlockBlobClientStageBlockResult, NoFormat> {}
     impl Sealed for Response<BlockBlobClientUploadResult, NoFormat> {}

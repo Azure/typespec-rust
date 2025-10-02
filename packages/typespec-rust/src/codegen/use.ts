@@ -107,6 +107,7 @@ export class Use {
             break;
         }
         break;
+      case 'asyncResponse':
       case 'option':
       case 'ref':
       case 'result':

@@ -40,7 +40,7 @@ async fn response_body() {
 
     assert_eq!(resp.status(), 200);
     assert_eq!(
-        resp.into_body().await.unwrap(),
+        resp.into_body().unwrap(),
         Decimal::from_f32(0.33333).unwrap()
     );
 }

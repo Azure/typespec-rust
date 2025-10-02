@@ -14,7 +14,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         pager::{PagerResult, PagerState},
-        BufResponse, Method, NoFormat, Pager, Pipeline, PipelineSendOptions, Request,
+        Method, NoFormat, Pager, Pipeline, PipelineSendOptions, RawResponse, Request,
         RequestContent, Response, Url,
     },
     json, tracing, Result,
@@ -262,9 +262,8 @@ impl ResourcesLocationResourcesClient {
                     )
                     .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: LocationResourceListResult = json::from_json(&bytes)?;
-                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                let res: LocationResourceListResult = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,

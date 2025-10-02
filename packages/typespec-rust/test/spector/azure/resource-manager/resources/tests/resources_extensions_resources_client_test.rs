@@ -80,7 +80,7 @@ async fn get_by_tenant() {
         .await
         .unwrap();
 
-    let resource: ExtensionsResource = resp.into_body().await.unwrap();
+    let resource: ExtensionsResource = resp.into_body().unwrap();
     let expected_resource = get_extension_resource(TENANT);
 
     assert_eq!(expected_resource.id, resource.id);
@@ -122,7 +122,7 @@ async fn get_by_subscription() {
         .await
         .unwrap();
 
-    let resource: ExtensionsResource = resp.into_body().await.unwrap();
+    let resource: ExtensionsResource = resp.into_body().unwrap();
     let expected_resource = get_extension_resource(SUBSCRIPTION);
 
     assert_eq!(expected_resource.id, resource.id);
@@ -164,7 +164,7 @@ async fn get_by_resource_group() {
         .await
         .unwrap();
 
-    let resource: ExtensionsResource = resp.into_body().await.unwrap();
+    let resource: ExtensionsResource = resp.into_body().unwrap();
     let expected_resource = get_extension_resource(RESOURCE_GROUP);
 
     assert_eq!(expected_resource.id, resource.id);
@@ -206,7 +206,7 @@ async fn get_by_resource() {
         .await
         .unwrap();
 
-    let resource: ExtensionsResource = resp.into_body().await.unwrap();
+    let resource: ExtensionsResource = resp.into_body().unwrap();
     let expected_resource = get_extension_resource(RESOURCE);
 
     assert_eq!(expected_resource.id, resource.id);
@@ -304,7 +304,7 @@ async fn list_by_scope_tenant_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let resources = page.into_body().await.unwrap();
+        let resources = page.into_body().unwrap();
         match page_count {
             1 => {
                 assert_eq!(resources.value.len(), 1);
@@ -406,7 +406,7 @@ async fn list_by_scope_subscription_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let resources = page.into_body().await.unwrap();
+        let resources = page.into_body().unwrap();
         match page_count {
             1 => {
                 assert_eq!(resources.value.len(), 1);
@@ -508,7 +508,7 @@ async fn list_by_scope_resource_group_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let resources = page.into_body().await.unwrap();
+        let resources = page.into_body().unwrap();
         match page_count {
             1 => {
                 assert_eq!(resources.value.len(), 1);
@@ -610,7 +610,7 @@ async fn list_by_scope_resource_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let resources = page.into_body().await.unwrap();
+        let resources = page.into_body().unwrap();
         match page_count {
             1 => {
                 assert_eq!(resources.value.len(), 1);
@@ -670,7 +670,7 @@ async fn update_by_tenant() {
         .await
         .unwrap();
 
-    let created_resource: ExtensionsResource = resp.into_body().await.unwrap();
+    let created_resource: ExtensionsResource = resp.into_body().unwrap();
     let expected_resource = get_extension_resource(TENANT);
 
     assert_eq!(expected_resource.id, created_resource.id);
@@ -708,7 +708,7 @@ async fn update_by_subscription() {
         .await
         .unwrap();
 
-    let created_resource: ExtensionsResource = resp.into_body().await.unwrap();
+    let created_resource: ExtensionsResource = resp.into_body().unwrap();
     let expected_resource = get_extension_resource(SUBSCRIPTION);
 
     assert_eq!(expected_resource.id, created_resource.id);
@@ -746,7 +746,7 @@ async fn update_by_resource_group() {
         .await
         .unwrap();
 
-    let created_resource: ExtensionsResource = resp.into_body().await.unwrap();
+    let created_resource: ExtensionsResource = resp.into_body().unwrap();
     let expected_resource = get_extension_resource(RESOURCE_GROUP);
 
     assert_eq!(expected_resource.id, created_resource.id);
@@ -779,7 +779,7 @@ async fn update_by_resource() {
         .await
         .unwrap();
 
-    let created_resource: ExtensionsResource = resp.into_body().await.unwrap();
+    let created_resource: ExtensionsResource = resp.into_body().unwrap();
     let expected_resource = get_extension_resource(RESOURCE);
 
     assert_eq!(expected_resource.id, created_resource.id);

@@ -151,6 +151,12 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
   switch (type.kind) {
     case 'arc':
       return `${type.name}<dyn ${getTypeDeclaration(type.type)}>`;
+    case 'asyncResponse':
+      if (type.type.kind === 'unit') {
+        // unit is the default so we can elide it
+        return type.name;
+      }
+      return `${type.name}<${getTypeDeclaration(type.type)}>`;
     case 'box':
       return `Box<${getTypeDeclaration(type.type)}>`;
     case 'bytes':
@@ -182,8 +188,6 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return `Poller<${getTypeDeclaration(type.type.content, withLifetime)}>`;
     case 'payload':
       return getTypeDeclaration(type.type, withLifetime);
-    case 'bufResponse':
-      return type.name;
     case 'ref':
       return `&${getTypeDeclaration(type.type)}`;
     case 'requestContent': {
@@ -214,6 +218,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'union':
     case 'jsonValue':
     case 'offsetDateTime':
+    case 'rawResponse':
     case 'responseHeadersTrait':
     case 'safeint':
     case 'tokenCredential':

@@ -21,7 +21,7 @@ async fn subscription_resource_get() {
         .await
         .unwrap();
 
-    let resource: SubscriptionResource = resp.into_body().await.unwrap();
+    let resource: SubscriptionResource = resp.into_body().unwrap();
     let expected_resource = get_valid_subscription_resource();
 
     assert_eq!(expected_resource.id, resource.id);
@@ -54,7 +54,7 @@ async fn subscription_resource_put() {
         .await
         .unwrap();
 
-    let created_resource: SubscriptionResource = resp.into_body().await.unwrap();
+    let created_resource: SubscriptionResource = resp.into_body().unwrap();
 
     let expected_props = resource.properties.unwrap();
     let created_props = created_resource.properties.unwrap();

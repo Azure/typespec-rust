@@ -10,7 +10,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{BufResponse, Method, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{
+        AsyncResponse, Method, Pipeline, PipelineSendOptions, PipelineStreamOptions, Request,
+        Response, Url,
+    },
     tracing, Result,
 };
 
@@ -96,7 +99,7 @@ impl BytesResponseBodyClient {
     pub async fn custom_content_type(
         &self,
         options: Option<BytesResponseBodyClientCustomContentTypeOptions<'_>>,
-    ) -> Result<BufResponse> {
+    ) -> Result<AsyncResponse> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
@@ -105,10 +108,10 @@ impl BytesResponseBodyClient {
         request.insert_header("accept", "image/png");
         let rsp = self
             .pipeline
-            .send(
+            .stream(
                 &ctx,
                 &mut request,
-                Some(PipelineSendOptions {
+                Some(PipelineStreamOptions {
                     check_success: CheckSuccessOptions {
                         success_codes: &[200],
                     },
@@ -116,7 +119,7 @@ impl BytesResponseBodyClient {
                 }),
             )
             .await?;
-        Ok(rsp)
+        Ok(rsp.into())
     }
 
     ///
@@ -127,7 +130,7 @@ impl BytesResponseBodyClient {
     pub async fn default(
         &self,
         options: Option<BytesResponseBodyClientDefaultOptions<'_>>,
-    ) -> Result<BufResponse> {
+    ) -> Result<AsyncResponse> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
@@ -136,10 +139,10 @@ impl BytesResponseBodyClient {
         request.insert_header("accept", "application/octet-stream");
         let rsp = self
             .pipeline
-            .send(
+            .stream(
                 &ctx,
                 &mut request,
-                Some(PipelineSendOptions {
+                Some(PipelineStreamOptions {
                     check_success: CheckSuccessOptions {
                         success_codes: &[200],
                     },
@@ -147,7 +150,7 @@ impl BytesResponseBodyClient {
                 }),
             )
             .await?;
-        Ok(rsp)
+        Ok(rsp.into())
     }
 
     ///
@@ -158,7 +161,7 @@ impl BytesResponseBodyClient {
     pub async fn octet_stream(
         &self,
         options: Option<BytesResponseBodyClientOctetStreamOptions<'_>>,
-    ) -> Result<BufResponse> {
+    ) -> Result<AsyncResponse> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
@@ -167,10 +170,10 @@ impl BytesResponseBodyClient {
         request.insert_header("accept", "application/octet-stream");
         let rsp = self
             .pipeline
-            .send(
+            .stream(
                 &ctx,
                 &mut request,
-                Some(PipelineSendOptions {
+                Some(PipelineStreamOptions {
                     check_success: CheckSuccessOptions {
                         success_codes: &[200],
                     },
@@ -178,6 +181,6 @@ impl BytesResponseBodyClient {
                 }),
             )
             .await?;
-        Ok(rsp)
+        Ok(rsp.into())
     }
 }

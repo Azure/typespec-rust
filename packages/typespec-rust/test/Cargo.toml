@@ -21,7 +21,7 @@ members = [
     "spector/parameters/spread",
     "spector/payload/content-negotiation",
     "spector/payload/json-merge-patch",
-    #"spector/payload/pageable", # TODO: https://github.com/Azure/typespec-rust/issues/508
+    "spector/payload/pageable",
     "spector/payload/xml",
     "spector/type/array",
     "spector/type/dictionary",
@@ -51,7 +51,6 @@ members = [
     "spector/client/structure/multi-client",
     "spector/client/structure/renamed-operation",
     "spector/client/structure/two-operation-group",
-    "spector/payload/pageable",
     "spector/resiliency/srv-driven/new",
     "spector/resiliency/srv-driven/old",
     "spector/routes",
@@ -85,7 +84,7 @@ rust-version = "1.85"
 [workspace.dependencies]
 # Third-party dependencies should be kept up to date with https://github.com/Azure/azure-sdk-for-rust/blob/main/Cargo.lock
 async-trait = "0.1.88"
-azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "119b9651833e340e4b3d13563fe6b003bf12697e", features = [
+azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "1963e93d7e8ec04ed85b2c7546aef125e2219027", features = [
     "decimal",
     "reqwest",
 ] }
@@ -96,7 +95,7 @@ serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.141"
 time = { version = "0.3.41", features = ["serde-well-known"] }
 tokio = { version = "1.46.1", default-features = false, features = ["macros"] }
-typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "119b9651833e340e4b3d13563fe6b003bf12697e", features = [
+typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "1963e93d7e8ec04ed85b2c7546aef125e2219027", features = [
     "decimal",
     "reqwest",
 ] }

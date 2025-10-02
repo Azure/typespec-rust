@@ -9,7 +9,10 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{BufResponse, Method, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{
+        AsyncResponse, Method, Pipeline, PipelineSendOptions, PipelineStreamOptions, Request,
+        Response, Url,
+    },
     tracing, Result,
 };
 
@@ -64,7 +67,7 @@ impl ContentNegotiationDifferentBodyClient {
     pub async fn get_avatar_as_png(
         &self,
         options: Option<ContentNegotiationDifferentBodyClientGetAvatarAsPngOptions<'_>>,
-    ) -> Result<BufResponse> {
+    ) -> Result<AsyncResponse> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
@@ -73,10 +76,10 @@ impl ContentNegotiationDifferentBodyClient {
         request.insert_header("accept", "image/png");
         let rsp = self
             .pipeline
-            .send(
+            .stream(
                 &ctx,
                 &mut request,
-                Some(PipelineSendOptions {
+                Some(PipelineStreamOptions {
                     check_success: CheckSuccessOptions {
                         success_codes: &[200],
                     },
@@ -84,6 +87,6 @@ impl ContentNegotiationDifferentBodyClient {
                 }),
             )
             .await?;
-        Ok(rsp)
+        Ok(rsp.into())
     }
 }

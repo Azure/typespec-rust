@@ -12,7 +12,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap();
-    let value: ModelWithOptionalField = resp.into_body().await.unwrap();
+    let value: ModelWithOptionalField = resp.into_body().unwrap();
     assert_eq!(value.item, Some("widget".to_string()));
     assert_eq!(value.value, None);
 }

@@ -27,7 +27,7 @@ async fn list_parameterized_next_link() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: ParameterizedNextLinkPagingResult = page.into_body().await.unwrap();
+        let page: ParameterizedNextLinkPagingResult = page.into_body().unwrap();
         match page_count {
             1 => {
                 assert_eq!(page.values.len(), 1);
@@ -81,7 +81,7 @@ async fn list_with_custom_page_model_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: UserListResults = page.into_body().await.unwrap();
+        let page: UserListResults = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_items = page.items;
@@ -133,7 +133,7 @@ async fn list_with_page_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: PagedUser = page.into_body().await.unwrap();
+        let page: PagedUser = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_value = page.value;
@@ -210,7 +210,7 @@ async fn list_with_parameters_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: PagedUser = page.into_body().await.unwrap();
+        let page: PagedUser = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_value = page.value;

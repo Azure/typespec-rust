@@ -21,7 +21,7 @@ async fn base64() {
         .base64(input.try_into().unwrap(), None)
         .await
         .unwrap();
-    let output: Base64BytesProperty = resp.into_body().await.unwrap();
+    let output: Base64BytesProperty = resp.into_body().unwrap();
     assert_eq!(output.value, Some("test".as_bytes().to_owned()));
 }
 
@@ -36,7 +36,7 @@ async fn base64_url() {
         .base64_url(input.try_into().unwrap(), None)
         .await
         .unwrap();
-    let output: Base64urlBytesProperty = resp.into_body().await.unwrap();
+    let output: Base64urlBytesProperty = resp.into_body().unwrap();
     assert_eq!(output.value, Some("test".as_bytes().to_owned()));
 }
 
@@ -54,7 +54,7 @@ async fn base64_url_array() {
         .base64_url_array(input.try_into().unwrap(), None)
         .await
         .unwrap();
-    let output: Base64urlArrayBytesProperty = resp.into_body().await.unwrap();
+    let output: Base64urlArrayBytesProperty = resp.into_body().unwrap();
     assert_eq!(
         output.value,
         Some(vec![
@@ -75,6 +75,6 @@ async fn default() {
         .default(input.try_into().unwrap(), None)
         .await
         .unwrap();
-    let output: DefaultBytesProperty = resp.into_body().await.unwrap();
+    let output: DefaultBytesProperty = resp.into_body().unwrap();
     assert_eq!(output.value, Some("test".as_bytes().to_owned()));
 }

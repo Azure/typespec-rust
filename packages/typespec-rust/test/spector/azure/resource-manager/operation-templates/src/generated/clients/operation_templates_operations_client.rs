@@ -10,7 +10,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         pager::{PagerResult, PagerState},
-        BufResponse, Method, Pager, Pipeline, PipelineSendOptions, Request, Url,
+        Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Url,
     },
     json, tracing, Result,
 };
@@ -81,9 +81,8 @@ impl OperationTemplatesOperationsClient {
                     )
                     .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: OperationListResult = json::from_json(&bytes)?;
-                let rsp = BufResponse::from_bytes(status, headers, bytes).into();
+                let res: OperationListResult = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
