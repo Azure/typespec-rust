@@ -16,6 +16,7 @@ pub struct PageClientListParameterizedNextLinkOptions<'a> {
 }
 
 impl PageClientListParameterizedNextLinkOptions<'_> {
+    /// Transforms this [`PageClientListParameterizedNextLinkOptions`] into a new `PageClientListParameterizedNextLinkOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> PageClientListParameterizedNextLinkOptions<'static> {
         PageClientListParameterizedNextLinkOptions {
             include_pending: self.include_pending,
@@ -34,6 +35,7 @@ pub struct PageClientListWithCustomPageModelOptions<'a> {
 }
 
 impl PageClientListWithCustomPageModelOptions<'_> {
+    /// Transforms this [`PageClientListWithCustomPageModelOptions`] into a new `PageClientListWithCustomPageModelOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> PageClientListWithCustomPageModelOptions<'static> {
         PageClientListWithCustomPageModelOptions {
             method_options: ClientMethodOptions {
@@ -51,6 +53,7 @@ pub struct PageClientListWithPageOptions<'a> {
 }
 
 impl PageClientListWithPageOptions<'_> {
+    /// Transforms this [`PageClientListWithPageOptions`] into a new `PageClientListWithPageOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> PageClientListWithPageOptions<'static> {
         PageClientListWithPageOptions {
             method_options: ClientMethodOptions {
@@ -71,6 +74,7 @@ pub struct PageClientListWithParametersOptions<'a> {
 }
 
 impl PageClientListWithParametersOptions<'_> {
+    /// Transforms this [`PageClientListWithParametersOptions`] into a new `PageClientListWithParametersOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> PageClientListWithParametersOptions<'static> {
         PageClientListWithParametersOptions {
             another: self.another,
@@ -88,6 +92,7 @@ pub struct PageTwoModelsAsPageItemClientListFirstItemOptions<'a> {
 }
 
 impl PageTwoModelsAsPageItemClientListFirstItemOptions<'_> {
+    /// Transforms this [`PageTwoModelsAsPageItemClientListFirstItemOptions`] into a new `PageTwoModelsAsPageItemClientListFirstItemOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> PageTwoModelsAsPageItemClientListFirstItemOptions<'static> {
         PageTwoModelsAsPageItemClientListFirstItemOptions {
             method_options: ClientMethodOptions {
@@ -105,6 +110,7 @@ pub struct PageTwoModelsAsPageItemClientListSecondItemOptions<'a> {
 }
 
 impl PageTwoModelsAsPageItemClientListSecondItemOptions<'_> {
+    /// Transforms this [`PageTwoModelsAsPageItemClientListSecondItemOptions`] into a new `PageTwoModelsAsPageItemClientListSecondItemOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> PageTwoModelsAsPageItemClientListSecondItemOptions<'static> {
         PageTwoModelsAsPageItemClientListSecondItemOptions {
             method_options: ClientMethodOptions {

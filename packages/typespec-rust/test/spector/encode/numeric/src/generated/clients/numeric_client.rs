@@ -31,20 +31,19 @@ impl NumericClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_numeric")]
+    #[tracing::new("Encode.Numeric")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<NumericClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
+        let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         Ok(Self {
             endpoint,
             pipeline: Pipeline::new(
@@ -53,6 +52,7 @@ impl NumericClient {
                 options.client_options,
                 Vec::default(),
                 Vec::default(),
+                None,
             ),
         })
     }

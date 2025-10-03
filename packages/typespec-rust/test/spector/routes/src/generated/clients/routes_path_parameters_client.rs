@@ -15,9 +15,9 @@ use crate::generated::{
     },
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
-    http::{Method, NoFormat, Pipeline, Request, Response, Url},
-    tracing, Error, Result,
+    error::CheckSuccessOptions,
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    tracing, Result,
 };
 
 #[tracing::client]
@@ -43,7 +43,7 @@ impl RoutesPathParametersClient {
         options: Option<RoutesPathParametersClientAnnotationOnlyOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if param.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter param cannot be empty",
             ));
@@ -55,16 +55,19 @@ impl RoutesPathParametersClient {
         path = path.replace("{param}", param);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -79,7 +82,7 @@ impl RoutesPathParametersClient {
         options: Option<RoutesPathParametersClientExplicitOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if param.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter param cannot be empty",
             ));
@@ -91,16 +94,19 @@ impl RoutesPathParametersClient {
         path = path.replace("{param}", param);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -170,7 +176,7 @@ impl RoutesPathParametersClient {
         options: Option<RoutesPathParametersClientTemplateOnlyOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if param.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter param cannot be empty",
             ));
@@ -182,16 +188,19 @@ impl RoutesPathParametersClient {
         path = path.replace("{param}", param);
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

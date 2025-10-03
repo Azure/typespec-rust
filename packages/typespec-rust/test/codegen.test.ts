@@ -21,7 +21,10 @@ describe('typespec-rust: codegen', () => {
         'edition.workspace = true\n' +
         'license.workspace = true\n' +
         'repository.workspace = true\n' +
-        'rust-version.workspace = true\n';
+        'rust-version.workspace = true\n' +
+        '\n' +
+        '[features]\n' +
+        'default = ["azure_core/default"]\n';
 
       const codegen = new CodeGenerator(new rust.Crate('test_crate', '1.2.3', 'azure-arm'));
       const cargoToml = codegen.emitCargoToml();
@@ -38,6 +41,9 @@ describe('typespec-rust: codegen', () => {
         'repository.workspace = true\n' +
         'rust-version.workspace = true\n' +
         '\n' +
+        '[features]\n' +
+        'default = ["azure_core/default"]\n' +
+        '\n' +
         '[dependencies]\n' +
         'azure_core = { workspace = true }\n';
 
@@ -51,9 +57,12 @@ describe('typespec-rust: codegen', () => {
 
   describe('helpers', () => {
     it('annotationDerive', () => {
-      strictEqual(helpers.annotationDerive(), '#[derive(Clone, Deserialize, SafeDebug, Serialize)]\n');
-      strictEqual(helpers.annotationDerive('Copy'), '#[derive(Clone, Copy, Deserialize, SafeDebug, Serialize)]\n');
-      strictEqual(helpers.annotationDerive('', 'Copy'), '#[derive(Clone, Copy, Deserialize, SafeDebug, Serialize)]\n');
+      strictEqual(helpers.annotationDerive(true), '#[derive(Clone, Deserialize, SafeDebug, Serialize)]\n');
+      strictEqual(helpers.annotationDerive(true, 'Copy'), '#[derive(Clone, Copy, Deserialize, SafeDebug, Serialize)]\n');
+      strictEqual(helpers.annotationDerive(true, '', 'Copy'), '#[derive(Clone, Copy, Deserialize, SafeDebug, Serialize)]\n');
+      strictEqual(helpers.annotationDerive(false), '#[derive(Clone, SafeDebug)]\n');
+      strictEqual(helpers.annotationDerive(false, 'Copy'), '#[derive(Clone, Copy, SafeDebug)]\n');
+      strictEqual(helpers.annotationDerive(false, '', 'Copy'), '#[derive(Clone, Copy, SafeDebug)]\n');
     });
 
     it('emitVisibility', () => {

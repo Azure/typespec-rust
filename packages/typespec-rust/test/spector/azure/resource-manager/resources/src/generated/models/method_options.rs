@@ -19,6 +19,7 @@ pub struct ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'a> {
 }
 
 impl ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'_> {
+    /// Transforms this [`ResourcesExtensionsResourcesClientCreateOrUpdateOptions`] into a new `ResourcesExtensionsResourcesClientCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'static> {
         ResourcesExtensionsResourcesClientCreateOrUpdateOptions {
             method_options: ClientMethodOptions {
@@ -51,6 +52,7 @@ pub struct ResourcesExtensionsResourcesClientListByScopeOptions<'a> {
 }
 
 impl ResourcesExtensionsResourcesClientListByScopeOptions<'_> {
+    /// Transforms this [`ResourcesExtensionsResourcesClientListByScopeOptions`] into a new `ResourcesExtensionsResourcesClientListByScopeOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesExtensionsResourcesClientListByScopeOptions<'static> {
         ResourcesExtensionsResourcesClientListByScopeOptions {
             method_options: ClientMethodOptions {
@@ -96,6 +98,7 @@ pub struct ResourcesLocationResourcesClientListByLocationOptions<'a> {
 }
 
 impl ResourcesLocationResourcesClientListByLocationOptions<'_> {
+    /// Transforms this [`ResourcesLocationResourcesClientListByLocationOptions`] into a new `ResourcesLocationResourcesClientListByLocationOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesLocationResourcesClientListByLocationOptions<'static> {
         ResourcesLocationResourcesClientListByLocationOptions {
             method_options: ClientMethodOptions {
@@ -123,6 +126,7 @@ pub struct ResourcesNestedClientCreateOrReplaceOptions<'a> {
 }
 
 impl ResourcesNestedClientCreateOrReplaceOptions<'_> {
+    /// Transforms this [`ResourcesNestedClientCreateOrReplaceOptions`] into a new `ResourcesNestedClientCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesNestedClientCreateOrReplaceOptions<'static> {
         ResourcesNestedClientCreateOrReplaceOptions {
             method_options: ClientMethodOptions {
@@ -144,6 +148,7 @@ pub struct ResourcesNestedClientDeleteOptions<'a> {
 }
 
 impl ResourcesNestedClientDeleteOptions<'_> {
+    /// Transforms this [`ResourcesNestedClientDeleteOptions`] into a new `ResourcesNestedClientDeleteOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesNestedClientDeleteOptions<'static> {
         ResourcesNestedClientDeleteOptions {
             method_options: ClientMethodOptions {
@@ -169,6 +174,7 @@ pub struct ResourcesNestedClientListByTopLevelTrackedResourceOptions<'a> {
 }
 
 impl ResourcesNestedClientListByTopLevelTrackedResourceOptions<'_> {
+    /// Transforms this [`ResourcesNestedClientListByTopLevelTrackedResourceOptions`] into a new `ResourcesNestedClientListByTopLevelTrackedResourceOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesNestedClientListByTopLevelTrackedResourceOptions<'static> {
         ResourcesNestedClientListByTopLevelTrackedResourceOptions {
             method_options: ClientMethodOptions {
@@ -189,6 +195,7 @@ pub struct ResourcesNestedClientUpdateOptions<'a> {
 }
 
 impl ResourcesNestedClientUpdateOptions<'_> {
+    /// Transforms this [`ResourcesNestedClientUpdateOptions`] into a new `ResourcesNestedClientUpdateOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesNestedClientUpdateOptions<'static> {
         ResourcesNestedClientUpdateOptions {
             method_options: ClientMethodOptions {
@@ -209,6 +216,7 @@ pub struct ResourcesSingletonClientCreateOrUpdateOptions<'a> {
 }
 
 impl ResourcesSingletonClientCreateOrUpdateOptions<'_> {
+    /// Transforms this [`ResourcesSingletonClientCreateOrUpdateOptions`] into a new `ResourcesSingletonClientCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesSingletonClientCreateOrUpdateOptions<'static> {
         ResourcesSingletonClientCreateOrUpdateOptions {
             method_options: ClientMethodOptions {
@@ -234,6 +242,7 @@ pub struct ResourcesSingletonClientListByResourceGroupOptions<'a> {
 }
 
 impl ResourcesSingletonClientListByResourceGroupOptions<'_> {
+    /// Transforms this [`ResourcesSingletonClientListByResourceGroupOptions`] into a new `ResourcesSingletonClientListByResourceGroupOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesSingletonClientListByResourceGroupOptions<'static> {
         ResourcesSingletonClientListByResourceGroupOptions {
             method_options: ClientMethodOptions {
@@ -268,6 +277,7 @@ pub struct ResourcesTopLevelClientCreateOrReplaceOptions<'a> {
 }
 
 impl ResourcesTopLevelClientCreateOrReplaceOptions<'_> {
+    /// Transforms this [`ResourcesTopLevelClientCreateOrReplaceOptions`] into a new `ResourcesTopLevelClientCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesTopLevelClientCreateOrReplaceOptions<'static> {
         ResourcesTopLevelClientCreateOrReplaceOptions {
             method_options: ClientMethodOptions {
@@ -289,6 +299,7 @@ pub struct ResourcesTopLevelClientDeleteOptions<'a> {
 }
 
 impl ResourcesTopLevelClientDeleteOptions<'_> {
+    /// Transforms this [`ResourcesTopLevelClientDeleteOptions`] into a new `ResourcesTopLevelClientDeleteOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesTopLevelClientDeleteOptions<'static> {
         ResourcesTopLevelClientDeleteOptions {
             method_options: ClientMethodOptions {
@@ -314,6 +325,7 @@ pub struct ResourcesTopLevelClientListByResourceGroupOptions<'a> {
 }
 
 impl ResourcesTopLevelClientListByResourceGroupOptions<'_> {
+    /// Transforms this [`ResourcesTopLevelClientListByResourceGroupOptions`] into a new `ResourcesTopLevelClientListByResourceGroupOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesTopLevelClientListByResourceGroupOptions<'static> {
         ResourcesTopLevelClientListByResourceGroupOptions {
             method_options: ClientMethodOptions {
@@ -331,6 +343,7 @@ pub struct ResourcesTopLevelClientListBySubscriptionOptions<'a> {
 }
 
 impl ResourcesTopLevelClientListBySubscriptionOptions<'_> {
+    /// Transforms this [`ResourcesTopLevelClientListBySubscriptionOptions`] into a new `ResourcesTopLevelClientListBySubscriptionOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesTopLevelClientListBySubscriptionOptions<'static> {
         ResourcesTopLevelClientListBySubscriptionOptions {
             method_options: ClientMethodOptions {
@@ -351,6 +364,7 @@ pub struct ResourcesTopLevelClientUpdateOptions<'a> {
 }
 
 impl ResourcesTopLevelClientUpdateOptions<'_> {
+    /// Transforms this [`ResourcesTopLevelClientUpdateOptions`] into a new `ResourcesTopLevelClientUpdateOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesTopLevelClientUpdateOptions<'static> {
         ResourcesTopLevelClientUpdateOptions {
             method_options: ClientMethodOptions {

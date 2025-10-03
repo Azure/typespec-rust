@@ -10,13 +10,15 @@ use crate::generated::models::{
     ResourcesNestedClientListByTopLevelTrackedResourceOptions, ResourcesNestedClientUpdateOptions,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
+    error::CheckSuccessOptions,
     http::{
+        headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
+        pager::{PagerResult, PagerState},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        Method, Pager, PagerResult, PagerState, Pipeline, Poller, RawResponse, Request,
-        RequestContent, Response, Url,
+        Method, Pager, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, RequestContent,
+        Response, Url,
     },
-    json, tracing, Error, Result,
+    json, tracing, Result,
 };
 
 #[tracing::client]
@@ -42,6 +44,33 @@ impl ResourcesNestedClient {
     /// * `nexted_proxy_resource_name` - Name of the nested resource.
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`NestedProxyResourceHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armresources::models::{NestedProxyResource, NestedProxyResourceHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<NestedProxyResource> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`azure_async_operation`()](crate::generated::models::NestedProxyResourceHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](crate::generated::models::NestedProxyResourceHeaders::retry_after) - Retry-After
+    ///
+    /// [`NestedProxyResourceHeaders`]: crate::generated::models::NestedProxyResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.createOrReplace")]
     pub fn create_or_replace(
         &self,
@@ -65,9 +94,7 @@ impl ResourcesNestedClient {
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-
         let api_version = self.api_version.clone();
-
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>| {
                 let (mut request, next_link) = match next_link {
@@ -81,11 +108,9 @@ impl ResourcesNestedClient {
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
-
                         (request, next_link)
                     }
                     PollerState::Initial => {
@@ -93,20 +118,32 @@ impl ResourcesNestedClient {
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
                         request.set_body(resource.clone());
-
                         (request, url.clone())
                     }
                 };
-
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 201],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: NestedProxyResource = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
+                    let res: NestedProxyResource = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -129,6 +166,33 @@ impl ResourcesNestedClient {
     /// * `top_level_tracked_resource_name` - arm resource name for path
     /// * `nexted_proxy_resource_name` - Name of the nested resource.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ArmOperationStatusResourceProvisioningStateHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armresources::models::{ArmOperationStatusResourceProvisioningState, ArmOperationStatusResourceProvisioningStateHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(location) = response.location()? {
+    ///         println!("Location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`location`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
+    ///
+    /// [`ArmOperationStatusResourceProvisioningStateHeaders`]: crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.delete")]
     pub fn delete(
         &self,
@@ -151,9 +215,7 @@ impl ResourcesNestedClient {
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-
         let api_version = self.api_version.clone();
-
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>| {
                 let (mut request, next_link) = match next_link {
@@ -167,27 +229,37 @@ impl ResourcesNestedClient {
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-
                         let request = Request::new(next_link.clone(), Method::Get);
-
                         (request, next_link)
                     }
                     PollerState::Initial => {
                         let request = Request::new(url.clone(), Method::Delete);
-
                         (request, url.clone())
                     }
                 };
-
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202, 204],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: ArmOperationStatusResourceProvisioningState = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
+                    let res: ArmOperationStatusResourceProvisioningState = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -219,19 +291,19 @@ impl ResourcesNestedClient {
         options: Option<ResourcesNestedClientGetOptions<'_>>,
     ) -> Result<Response<NestedProxyResource>> {
         if nexted_proxy_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter nexted_proxy_resource_name cannot be empty",
             ));
         }
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
         }
         if top_level_tracked_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter top_level_tracked_resource_name cannot be empty",
             ));
@@ -252,16 +324,19 @@ impl ResourcesNestedClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -280,13 +355,13 @@ impl ResourcesNestedClient {
         options: Option<ResourcesNestedClientListByTopLevelTrackedResourceOptions<'_>>,
     ) -> Result<Pager<NestedProxyResourceListResult>> {
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
         }
         if top_level_tracked_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter top_level_tracked_resource_name cannot be empty",
             ));
@@ -327,20 +402,21 @@ impl ResourcesNestedClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                if !rsp.status().is_success() {
-                    let status = rsp.status();
-                    let http_error = HttpError::new(rsp).await;
-                    let error_kind = ErrorKind::http_response(
-                        status,
-                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                    );
-                    return Err(Error::new(error_kind, http_error));
-                }
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: NestedProxyResourceListResult = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                let res: NestedProxyResourceListResult = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
@@ -361,6 +437,33 @@ impl ResourcesNestedClient {
     /// * `nexted_proxy_resource_name` - Name of the nested resource.
     /// * `properties` - The resource properties to be updated.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`NestedProxyResourceHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armresources::models::{NestedProxyResource, NestedProxyResourceHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<NestedProxyResource> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(location) = response.location()? {
+    ///         println!("Location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`location`()](crate::generated::models::NestedProxyResourceHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::NestedProxyResourceHeaders::retry_after) - Retry-After
+    ///
+    /// [`NestedProxyResourceHeaders`]: crate::generated::models::NestedProxyResourceHeaders
     #[tracing::function("Azure.ResourceManager.Resources.Nested.update")]
     pub fn update(
         &self,
@@ -384,9 +487,7 @@ impl ResourcesNestedClient {
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-
         let api_version = self.api_version.clone();
-
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>| {
                 let (mut request, next_link) = match next_link {
@@ -400,11 +501,9 @@ impl ResourcesNestedClient {
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
-
                         (request, next_link)
                     }
                     PollerState::Initial => {
@@ -412,20 +511,32 @@ impl ResourcesNestedClient {
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
                         request.set_body(properties.clone());
-
                         (request, url.clone())
                     }
                 };
-
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: NestedProxyResource = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
+                    let res: NestedProxyResource = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,

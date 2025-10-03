@@ -8,10 +8,13 @@ use crate::generated::models::{
     JsonMergePatchClientUpdateResourceOptions, Resource, ResourcePatch,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{ClientOptions, Method, Pipeline, Request, RequestContent, Response, Url},
-    tracing, Error, Result,
+    http::{
+        ClientOptions, Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response,
+        Url,
+    },
+    tracing, Result,
 };
 
 /// Test for merge-patch+json content-type
@@ -35,20 +38,19 @@ impl JsonMergePatchClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_jmergepatch")]
+    #[tracing::new("Payload.JsonMergePatch")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<JsonMergePatchClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
+        let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         Ok(Self {
             endpoint,
             pipeline: Pipeline::new(
@@ -57,6 +59,7 @@ impl JsonMergePatchClient {
                 options.client_options,
                 Vec::default(),
                 Vec::default(),
+                None,
             ),
         })
     }
@@ -85,16 +88,19 @@ impl JsonMergePatchClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -118,16 +124,19 @@ impl JsonMergePatchClient {
         if let Some(body) = options.body {
             request.set_body(body);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -150,16 +159,19 @@ impl JsonMergePatchClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

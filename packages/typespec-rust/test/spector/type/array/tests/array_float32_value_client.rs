@@ -15,7 +15,7 @@ async fn get() {
 
     assert_eq!(resp.status(), 200);
 
-    let vec = resp.into_body().await.unwrap();
+    let vec = resp.into_body().unwrap();
     assert_eq!(vec.len(), 1);
     assert_eq!(vec[0], 43.125f32);
 }

@@ -16,7 +16,7 @@ async fn prepare_verify() {
 
     assert_eq!(resp.status(), 200);
 
-    let vec = resp.into_body().await.unwrap();
+    let vec = resp.into_body().unwrap();
     assert_eq!(vec.len(), 3);
     assert_eq!(vec[0], Decimal::from_f32(0.1).unwrap());
     assert_eq!(vec[1], Decimal::from_f32(0.1).unwrap());

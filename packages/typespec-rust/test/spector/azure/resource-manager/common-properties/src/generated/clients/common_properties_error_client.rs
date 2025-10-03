@@ -8,9 +8,9 @@ use crate::generated::models::{
     CommonPropertiesErrorClientGetForPredefinedErrorOptions, ConfidentialResource,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
-    http::{Method, Pipeline, Request, RequestContent, Response, Url},
-    tracing, Error, Result,
+    error::CheckSuccessOptions,
+    http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
+    tracing, Result,
 };
 
 #[tracing::client]
@@ -44,13 +44,13 @@ impl CommonPropertiesErrorClient {
         options: Option<CommonPropertiesErrorClientCreateForUserDefinedErrorOptions<'_>>,
     ) -> Result<Response<ConfidentialResource>> {
         if confidential_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter confidential_resource_name cannot be empty",
             ));
         }
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
@@ -69,16 +69,19 @@ impl CommonPropertiesErrorClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(resource);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200, 201],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -97,13 +100,13 @@ impl CommonPropertiesErrorClient {
         options: Option<CommonPropertiesErrorClientGetForPredefinedErrorOptions<'_>>,
     ) -> Result<Response<ConfidentialResource>> {
         if confidential_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter confidential_resource_name cannot be empty",
             ));
         }
         if resource_group_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter resource_group_name cannot be empty",
             ));
@@ -120,16 +123,19 @@ impl CommonPropertiesErrorClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

@@ -5,10 +5,13 @@
 
 use crate::generated::models::{MadeOptionalClientTestOptions, TestModel};
 use azure_core::{
-    error::{ErrorKind, HttpError},
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{ClientOptions, Method, Pipeline, Request, RequestContent, Response, Url},
-    tracing, Error, Result,
+    http::{
+        ClientOptions, Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response,
+        Url,
+    },
+    tracing, Result,
 };
 
 /// Test for the `@madeOptional` decorator.
@@ -34,7 +37,7 @@ impl MadeOptionalClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_madeoptional")]
+    #[tracing::new("Versioning.MadeOptional")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<MadeOptionalClientOptions>,
@@ -42,12 +45,11 @@ impl MadeOptionalClient {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         let mut host = String::from("versioning/made-optional/api-version:{version}/");
         host = host.replace("{version}", &options.version);
         endpoint = endpoint.join(&host)?;
@@ -59,6 +61,7 @@ impl MadeOptionalClient {
                 options.client_options,
                 Vec::default(),
                 Vec::default(),
+                None,
             ),
         })
     }
@@ -89,16 +92,19 @@ impl MadeOptionalClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

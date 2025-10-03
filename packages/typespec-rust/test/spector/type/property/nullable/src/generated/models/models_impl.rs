@@ -12,48 +12,48 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<BytesProperty> for RequestContent<BytesProperty> {
     type Error = azure_core::Error;
     fn try_from(value: BytesProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<CollectionsByteProperty> for RequestContent<CollectionsByteProperty> {
     type Error = azure_core::Error;
     fn try_from(value: CollectionsByteProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<CollectionsModelProperty> for RequestContent<CollectionsModelProperty> {
     type Error = azure_core::Error;
     fn try_from(value: CollectionsModelProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<CollectionsStringProperty> for RequestContent<CollectionsStringProperty> {
     type Error = azure_core::Error;
     fn try_from(value: CollectionsStringProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<DatetimeProperty> for RequestContent<DatetimeProperty> {
     type Error = azure_core::Error;
     fn try_from(value: DatetimeProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<DurationProperty> for RequestContent<DurationProperty> {
     type Error = azure_core::Error;
     fn try_from(value: DurationProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<StringProperty> for RequestContent<StringProperty> {
     type Error = azure_core::Error;
     fn try_from(value: StringProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

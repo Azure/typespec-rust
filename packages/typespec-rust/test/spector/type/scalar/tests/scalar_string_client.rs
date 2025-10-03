@@ -10,7 +10,7 @@ async fn get() {
     let resp = client.get_scalar_string_client().get(None).await.unwrap();
 
     assert_eq!(resp.status(), 200);
-    assert_eq!(resp.into_body().await.unwrap(), "test");
+    assert_eq!(resp.into_body().unwrap(), "test");
 }
 
 // This test is ignored because it uses #r syntax which technically allows user to pass the value, but this is

@@ -141,13 +141,22 @@ export function emitVisibility(visibility: rust.Visibility): string {
  * returns the type declaration string for the specified Rust type
  * 
  * @param type is the Rust type for which to emit the declaration
- * @param withAnonymousLifetime indicates if an existing lifetime annotation should be substituted with the anonymous lifetime
+ * @param withLifetime controls how the lifetime annotation is emitted:
+ *   - 'default': Emits the standard lifetime annotation if required by the type.
+ *   - 'anonymous': Emits an anonymous lifetime annotation (e.g., <'_>) if required by the type.
+ *   - 'omit': Omits the lifetime annotation entirely, even if the type would normally require one.
  * @returns 
  */
-export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.ResponseHeadersTrait | rust.Type, withAnonymousLifetime = false): string {
+export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.ResponseHeadersTrait | rust.Type, withLifetime: 'default' | 'anonymous' | 'omit' = 'default'): string {
   switch (type.kind) {
     case 'arc':
       return `${type.name}<dyn ${getTypeDeclaration(type.type)}>`;
+    case 'asyncResponse':
+      if (type.type.kind === 'unit') {
+        // unit is the default so we can elide it
+        return type.name;
+      }
+      return `${type.name}<${getTypeDeclaration(type.type)}>`;
     case 'box':
       return `Box<${getTypeDeclaration(type.type)}>`;
     case 'bytes':
@@ -162,25 +171,23 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'Etag':
       return type.kind;
     case 'hashmap':
-      return `${type.name}<String, ${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+      return `${type.name}<String, ${getTypeDeclaration(type.type, withLifetime)}>`;
     case 'implTrait':
-      return `impl ${type.name}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+      return `impl ${type.name}<${getTypeDeclaration(type.type, withLifetime)}>`;
     case 'literal':
       return getTypeDeclaration(type.valueKind);
     case 'option':
-      return `Option<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+      return `Option<${getTypeDeclaration(type.type, withLifetime)}>`;
     case 'pageIterator':
       return `PageIterator<${getTypeDeclaration(type.type)}>`;
     case 'pager':
       // we explicitly omit the Response<T> from the type decl
-      return `Pager<${getTypeDeclaration(type.type.content, withAnonymousLifetime)}>`;
+      return `Pager<${getTypeDeclaration(type.type.content, withLifetime)}>`;
     case 'poller':
       // we explicitly omit the Response<T> from the type decl
-      return `Poller<${getTypeDeclaration(type.type.content, withAnonymousLifetime)}>`;
+      return `Poller<${getTypeDeclaration(type.type.content, withLifetime)}>`;
     case 'payload':
-      return getTypeDeclaration(type.type, withAnonymousLifetime);
-    case 'rawResponse':
-      return type.name;
+      return getTypeDeclaration(type.type, withLifetime);
     case 'ref':
       return `&${getTypeDeclaration(type.type)}`;
     case 'requestContent': {
@@ -189,12 +196,12 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
         case 'bytes':
           return `${type.name}<${getTypeDeclaration(type.content)}${formatType}>`;
         case 'payload':
-          return `${type.name}<${getTypeDeclaration(type.content.type, withAnonymousLifetime)}${formatType}>`;
+          return `${type.name}<${getTypeDeclaration(type.content.type, withLifetime)}${formatType}>`;
       }
       break;
     }
     case 'result':
-      return `${type.name}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+      return `${type.name}<${getTypeDeclaration(type.type, withLifetime)}>`;
     case 'response':
       // JsonFormat is the default, so we can elide it
       return `${type.name}<${getTypeDeclaration(type.content)}${type.format !== 'JsonFormat' ? `, ${type.format}` : ''}>`;
@@ -206,9 +213,12 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return type.type;
     case 'slice':
       return `[${getTypeDeclaration(type.type)}]`;
+    case 'unionMember':
     case 'enum':
+    case 'union':
     case 'jsonValue':
     case 'offsetDateTime':
+    case 'rawResponse':
     case 'responseHeadersTrait':
     case 'safeint':
     case 'tokenCredential':
@@ -218,15 +228,19 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
     case 'struct':
       if (!type.lifetime) {
         return type.name;
-      } else if (withAnonymousLifetime) {
-        // this type has a lifetime but we don't want its name
-        return `${type.name}${AnonymousLifetimeAnnotation}`;
       }
-      return `${type.name}${getGenericLifetimeAnnotation(type.lifetime)}`;
+      switch (withLifetime) {
+        case 'default':
+          return `${type.name}${getGenericLifetimeAnnotation(type.lifetime)}`;
+        case 'anonymous':
+          return `${type.name}${AnonymousLifetimeAnnotation}`;
+        default:
+          return type.name;
+      }
     case 'unit':
       return '()';      
     case 'Vec':
-      return `${type.kind}<${getTypeDeclaration(type.type, withAnonymousLifetime)}>`;
+      return `${type.kind}<${getTypeDeclaration(type.type, withLifetime)}>`;
   }
 }
 
@@ -285,11 +299,15 @@ export class indentation {
 /**
  * emits the derive annotation with the standard and any additional values
  * 
+ * @param serde indicates if serde annotations should be included
  * @param extra contains any extra derive values
  * @returns a derive macro
  */
-export function annotationDerive(...extra: Array<string>): string {
-  const derive = new Array<string>('Clone', 'Deserialize', 'SafeDebug', 'Serialize');
+export function annotationDerive(serde: boolean, ...extra: Array<string>): string {
+  const derive = new Array<string>('Clone', 'SafeDebug');
+  if (serde) {
+    derive.push('Deserialize', 'Serialize');
+  }
   // remove any empty values
   extra = extra.filter(entry => entry.trim() !== '');
   derive.push(...extra);
@@ -318,6 +336,22 @@ export function getGenericLifetimeAnnotation(lifetime: rust.Lifetime): string {
   return `<${lifetime.name}>`;
 }
 
+/**
+ * construct a for in block
+ * 
+ * @param indent the current indentation helper in scope
+ * @param loopVar the loop var(s) for each iteration
+ * @param iterator the content to iterate
+ * @param body the body of the for in block
+ * @returns the text for the for in block
+ */
+export function buildForIn(indent: indentation, loopVar: string, iterator: string, body: (indent: indentation) => string): string {
+  let forIn = `for ${loopVar} in ${iterator} {\n`;
+  forIn += body(indent.push());
+  forIn += `${indent.pop().get()}}\n`;
+  return forIn;
+}
+
 /** the if condition in an if block */
 export interface ifBlock {
   /** the condition in the if block */
@@ -334,7 +368,7 @@ export interface elseBlock {
 }
 
 /**
- * constructs an if block (can expand to include else if/else as necessary)
+ * constructs an if block
  * 
  * @param indent the current indentation helper in scope
  * @param ifBlock the if block definition
@@ -368,7 +402,7 @@ export interface matchArm {
 }
 
 /**
- * constructs a match expression at the provided indentation level
+ * constructs a match expression
  * 
  * @param indent the current indentation helper in scope
  * @param expr the expression to match
@@ -388,6 +422,21 @@ export function buildMatch(indent: indentation, expr: string, arms: Array<matchA
   }
   match += `${indent.pop().get()}}`;
   return match;
+}
+
+/**
+ * constructs a while loop
+ * 
+ * @param indent the current indentation helper in scope
+ * @param condition the condition for the while loop
+ * @param body the body of the while loop
+ * @returns the text for the while loop
+ */
+export function buildWhile(indent: indentation, condition: string, body: (indent: indentation) => string): string {
+  let whileLoop = `while ${condition} {\n`;
+  whileLoop += body(indent.push());
+  whileLoop += `${indent.pop().get()}}\n`;
+  return whileLoop;
 }
 
 /**
@@ -490,4 +539,29 @@ export function getDateTimeEncodingMethod(encoding: rust.DateTimeEncoding, direc
   const method = `${direction}_${encoding}`;
   use.add('azure_core', `time::${method}`);
   return method;
+}
+
+/**
+ * wraps the specified string in back tick characters.
+ * e.g. `value`
+ * 
+ * @param value the string to wrap
+ * @returns the string wrapped in back ticks
+ */
+export function wrapInBackTicks(value: string): string {
+  return `\`${value}\``;
+}
+
+/**
+ * emits a sequence of back tick characters
+ * 
+ * @param count the number of back ticks to emit
+ * @returns a string of back tick characters
+ */
+export function emitBackTicks(count: number): string {
+  let backticks = '';
+  for (let i = 0; i < count; ++i) {
+    backticks += '`';
+  }
+  return backticks;
 }

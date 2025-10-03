@@ -27,7 +27,7 @@ async fn default() {
         .default(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let value: DefaultDatetimeProperty = resp.into_body().await.unwrap();
+    let value: DefaultDatetimeProperty = resp.into_body().unwrap();
     assert_eq!(value.value, Some(odt_utc));
 }
 
@@ -46,7 +46,7 @@ async fn rfc3339() {
         .rfc3339(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let value: Rfc3339DatetimeProperty = resp.into_body().await.unwrap();
+    let value: Rfc3339DatetimeProperty = resp.into_body().unwrap();
     assert_eq!(value.value, Some(odt_utc));
 }
 
@@ -65,7 +65,7 @@ async fn rfc7231() {
         .rfc7231(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let value: Rfc7231DatetimeProperty = resp.into_body().await.unwrap();
+    let value: Rfc7231DatetimeProperty = resp.into_body().unwrap();
     assert_eq!(value.value, Some(odt_utc));
 }
 
@@ -84,7 +84,7 @@ async fn unix_timestamp() {
         .unix_timestamp(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let value: UnixTimestampDatetimeProperty = resp.into_body().await.unwrap();
+    let value: UnixTimestampDatetimeProperty = resp.into_body().unwrap();
     assert_eq!(value.value, Some(odt_utc));
 }
 
@@ -109,6 +109,6 @@ async fn unix_timestamp_array() {
         .unix_timestamp_array(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let value: UnixTimestampArrayDatetimeProperty = resp.into_body().await.unwrap();
+    let value: UnixTimestampArrayDatetimeProperty = resp.into_body().unwrap();
     assert_eq!(value.value, time_stamps);
 }

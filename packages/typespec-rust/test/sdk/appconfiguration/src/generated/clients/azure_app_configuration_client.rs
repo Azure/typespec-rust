@@ -30,15 +30,17 @@ use crate::generated::models::{
 };
 use azure_core::{
     credentials::TokenCredential,
-    error::{ErrorKind, HttpError},
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
+        headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
+        pager::{PagerResult, PagerState},
         policies::{BearerTokenCredentialPolicy, Policy},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        ClientOptions, Method, NoFormat, PageIterator, Pager, PagerResult, PagerState, Pipeline,
+        ClientOptions, Method, NoFormat, PageIterator, Pager, Pipeline, PipelineSendOptions,
         Poller, RawResponse, Request, RequestContent, Response, Url,
     },
-    json, tracing, Error, Result,
+    json, tracing, Result,
 };
 use std::sync::Arc;
 
@@ -68,21 +70,20 @@ impl AzureAppConfigurationClient {
     /// * `credential` - An implementation of [`TokenCredential`](azure_core::credentials::TokenCredential) that can provide an
     ///   Entra ID token to use when authenticating.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("appconfiguration")]
+    #[tracing::new("AzureAppConfiguration")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
         options: Option<AzureAppConfigurationClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
+        let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
             credential,
             vec!["https://azconfig.io/.default"],
@@ -96,6 +97,7 @@ impl AzureAppConfigurationClient {
                 options.client_options,
                 Vec::default(),
                 vec![auth_policy],
+                None,
             ),
         })
     }
@@ -113,6 +115,33 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value to retrieve.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckKeyValueResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckKeyValueResult, AzureAppConfigurationClientCheckKeyValueResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValueResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValueResultHeaders::etag_header) - etag
+    ///
+    /// [`AzureAppConfigurationClientCheckKeyValueResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckKeyValueResultHeaders
     #[tracing::function("AzureAppConfiguration.checkKeyValue")]
     pub async fn check_key_value(
         &self,
@@ -120,7 +149,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckKeyValueOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckKeyValueResult, NoFormat>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -167,16 +196,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -187,6 +219,33 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckKeyValuesResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckKeyValuesResult, AzureAppConfigurationClientCheckKeyValuesResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<AzureAppConfigurationClientCheckKeyValuesResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValuesResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCheckKeyValuesResultHeaders::etag_header) - etag
+    ///
+    /// [`AzureAppConfigurationClientCheckKeyValuesResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckKeyValuesResultHeaders
     #[tracing::function("AzureAppConfiguration.checkKeyValues")]
     pub async fn check_key_values(
         &self,
@@ -241,16 +300,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -261,6 +323,29 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckKeysResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckKeysResult, AzureAppConfigurationClientCheckKeysResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<AzureAppConfigurationClientCheckKeysResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckKeysResultHeaders::sync_token) - Sync-Token
+    ///
+    /// [`AzureAppConfigurationClientCheckKeysResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckKeysResultHeaders
     #[tracing::function("AzureAppConfiguration.checkKeys")]
     pub async fn check_keys(
         &self,
@@ -288,16 +373,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -308,6 +396,29 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckLabelsResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckLabelsResult, AzureAppConfigurationClientCheckLabelsResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<AzureAppConfigurationClientCheckLabelsResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckLabelsResultHeaders::sync_token) - Sync-Token
+    ///
+    /// [`AzureAppConfigurationClientCheckLabelsResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckLabelsResultHeaders
     #[tracing::function("AzureAppConfiguration.checkLabels")]
     pub async fn check_labels(
         &self,
@@ -345,16 +456,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -365,6 +479,33 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckRevisionsResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckRevisionsResult, AzureAppConfigurationClientCheckRevisionsResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckRevisionsResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCheckRevisionsResultHeaders::etag_header) - etag
+    ///
+    /// [`AzureAppConfigurationClientCheckRevisionsResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckRevisionsResultHeaders
     #[tracing::function("AzureAppConfiguration.checkRevisions")]
     pub async fn check_revisions(
         &self,
@@ -410,16 +551,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -431,6 +575,37 @@ impl AzureAppConfigurationClient {
     ///
     /// * `name` - The name of the key-value snapshot to check.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckSnapshotResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckSnapshotResult, AzureAppConfigurationClientCheckSnapshotResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(link) = response.link()? {
+    ///         println!("Link: {:?}", link);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`link`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders::link) - Link
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders::etag_header) - etag
+    ///
+    /// [`AzureAppConfigurationClientCheckSnapshotResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckSnapshotResultHeaders
     #[tracing::function("AzureAppConfiguration.checkSnapshot")]
     pub async fn check_snapshot(
         &self,
@@ -438,7 +613,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientCheckSnapshotOptions<'_>>,
     ) -> Result<Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -464,16 +639,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -484,6 +662,29 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCheckSnapshotsResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCheckSnapshotsResult, AzureAppConfigurationClientCheckSnapshotsResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCheckSnapshotsResultHeaders::sync_token) - Sync-Token
+    ///
+    /// [`AzureAppConfigurationClientCheckSnapshotsResultHeaders`]: crate::generated::models::AzureAppConfigurationClientCheckSnapshotsResultHeaders
     #[tracing::function("AzureAppConfiguration.checkSnapshots")]
     pub async fn check_snapshots(
         &self,
@@ -505,16 +706,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -528,6 +732,39 @@ impl AzureAppConfigurationClient {
     /// * `name` - The name of the key-value snapshot to create.
     /// * `entity` - The key-value snapshot to create.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`SnapshotHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{Snapshot, SnapshotHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<Snapshot> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(link) = response.link()? {
+    ///         println!("Link: {:?}", link);
+    ///     }
+    ///     if let Some(operation_location) = response.operation_location()? {
+    ///         println!("Operation-Location: {:?}", operation_location);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::SnapshotHeaders::content_type) - Content-Type
+    /// * [`link`()](crate::generated::models::SnapshotHeaders::link) - Link
+    /// * [`operation_location`()](crate::generated::models::SnapshotHeaders::operation_location) - Operation-Location
+    /// * [`sync_token`()](crate::generated::models::SnapshotHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::SnapshotHeaders::etag_header) - etag
+    ///
+    /// [`SnapshotHeaders`]: crate::generated::models::SnapshotHeaders
     #[tracing::function("AzureAppConfiguration.createSnapshot")]
     pub fn create_snapshot(
         &self,
@@ -545,9 +782,7 @@ impl AzureAppConfigurationClient {
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-
         let api_version = self.api_version.clone();
-
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>| {
                 let (mut request, next_link) = match next_link {
@@ -561,14 +796,12 @@ impl AzureAppConfigurationClient {
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", &accept);
                         request.insert_header("content-type", content_type.to_string());
                         if let Some(sync_token) = &options.sync_token {
                             request.insert_header("sync-token", sync_token);
                         }
-
                         (request, next_link)
                     }
                     PollerState::Initial => {
@@ -579,20 +812,32 @@ impl AzureAppConfigurationClient {
                             request.insert_header("sync-token", sync_token);
                         }
                         request.set_body(entity.clone());
-
                         (request, url.clone())
                     }
                 };
-
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 201],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: Snapshot = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
+                    let res: Snapshot = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -615,6 +860,37 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value to delete.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValue, KeyValueHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<KeyValue> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
+    ///
+    /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.deleteKeyValue")]
     pub async fn delete_key_value(
         &self,
@@ -623,7 +899,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientDeleteKeyValueOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -650,16 +926,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200, 204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -671,6 +950,37 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value to unlock.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValue, KeyValueHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<KeyValue> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
+    ///
+    /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.deleteLock")]
     pub async fn delete_lock(
         &self,
@@ -679,7 +989,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientDeleteLockOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -709,16 +1019,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -730,6 +1043,38 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValue, KeyValueHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<KeyValue> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
+    /// * [`request_id`()](crate::generated::models::KeyValueHeaders::request_id) - x-ms-request-id
+    ///
+    /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.getKeyValue")]
     pub async fn get_key_value(
         &self,
@@ -738,7 +1083,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientGetKeyValueOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -786,16 +1131,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -825,16 +1173,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -846,6 +1197,39 @@ impl AzureAppConfigurationClient {
     ///
     /// * `name` - The name of the snapshot.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`SnapshotHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{Snapshot, SnapshotHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<Snapshot> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(link) = response.link()? {
+    ///         println!("Link: {:?}", link);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::SnapshotHeaders::content_type) - Content-Type
+    /// * [`link`()](crate::generated::models::SnapshotHeaders::link) - Link
+    /// * [`sync_token`()](crate::generated::models::SnapshotHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::SnapshotHeaders::etag_header) - etag
+    /// * [`request_id`()](crate::generated::models::SnapshotHeaders::request_id) - x-ms-request-id
+    ///
+    /// [`SnapshotHeaders`]: crate::generated::models::SnapshotHeaders
     #[tracing::function("AzureAppConfiguration.getSnapshot")]
     pub async fn get_snapshot(
         &self,
@@ -854,7 +1238,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientGetSnapshotOptions<'_>>,
     ) -> Result<Response<Snapshot>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -891,16 +1275,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -911,6 +1298,37 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueListResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValueListResult, KeyValueListResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<KeyValueListResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::KeyValueListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueListResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueListResultHeaders::etag_header) - etag
+    ///
+    /// [`KeyValueListResultHeaders`]: crate::generated::models::KeyValueListResultHeaders
     #[tracing::function("AzureAppConfiguration.getKeyValues")]
     pub fn list_key_values(
         &self,
@@ -988,20 +1406,21 @@ impl AzureAppConfigurationClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                    if !rsp.status().is_success() {
-                        let status = rsp.status();
-                        let http_error = HttpError::new(rsp).await;
-                        let error_kind = ErrorKind::http_response(
-                            status,
-                            http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                        );
-                        return Err(Error::new(error_kind, http_error));
-                    }
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let bytes = body.collect().await?;
-                    let res: KeyValueListResult = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let res: KeyValueListResult = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.next_link {
                         Some(next_link) if !next_link.is_empty() => PagerResult::More {
                             response: rsp,
@@ -1021,6 +1440,33 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyListResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyListResult, KeyListResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<KeyListResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::KeyListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyListResultHeaders::sync_token) - Sync-Token
+    ///
+    /// [`KeyListResultHeaders`]: crate::generated::models::KeyListResultHeaders
     #[tracing::function("AzureAppConfiguration.getKeys")]
     pub fn list_keys(
         &self,
@@ -1068,20 +1514,21 @@ impl AzureAppConfigurationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                if !rsp.status().is_success() {
-                    let status = rsp.status();
-                    let http_error = HttpError::new(rsp).await;
-                    let error_kind = ErrorKind::http_response(
-                        status,
-                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                    );
-                    return Err(Error::new(error_kind, http_error));
-                }
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: KeyListResult = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                let res: KeyListResult = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
@@ -1100,6 +1547,33 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`LabelListResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{LabelListResult, LabelListResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<LabelListResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::LabelListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::LabelListResultHeaders::sync_token) - Sync-Token
+    ///
+    /// [`LabelListResultHeaders`]: crate::generated::models::LabelListResultHeaders
     #[tracing::function("AzureAppConfiguration.getLabels")]
     pub fn list_labels(
         &self,
@@ -1160,20 +1634,21 @@ impl AzureAppConfigurationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                if !rsp.status().is_success() {
-                    let status = rsp.status();
-                    let http_error = HttpError::new(rsp).await;
-                    let error_kind = ErrorKind::http_response(
-                        status,
-                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                    );
-                    return Err(Error::new(error_kind, http_error));
-                }
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: LabelListResult = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                let res: LabelListResult = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
@@ -1192,6 +1667,37 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueListResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValueListResult, KeyValueListResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<KeyValueListResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::KeyValueListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueListResultHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueListResultHeaders::etag_header) - etag
+    ///
+    /// [`KeyValueListResultHeaders`]: crate::generated::models::KeyValueListResultHeaders
     #[tracing::function("AzureAppConfiguration.getRevisions")]
     pub fn list_revisions(
         &self,
@@ -1261,20 +1767,21 @@ impl AzureAppConfigurationClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                    if !rsp.status().is_success() {
-                        let status = rsp.status();
-                        let http_error = HttpError::new(rsp).await;
-                        let error_kind = ErrorKind::http_response(
-                            status,
-                            http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                        );
-                        return Err(Error::new(error_kind, http_error));
-                    }
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let bytes = body.collect().await?;
-                    let res: KeyValueListResult = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let res: KeyValueListResult = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.next_link {
                         Some(next_link) if !next_link.is_empty() => PagerResult::More {
                             response: rsp,
@@ -1294,6 +1801,33 @@ impl AzureAppConfigurationClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`SnapshotListResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{SnapshotListResult, SnapshotListResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<SnapshotListResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::SnapshotListResultHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::SnapshotListResultHeaders::sync_token) - Sync-Token
+    ///
+    /// [`SnapshotListResultHeaders`]: crate::generated::models::SnapshotListResultHeaders
     #[tracing::function("AzureAppConfiguration.getSnapshots")]
     pub fn list_snapshots(
         &self,
@@ -1358,20 +1892,21 @@ impl AzureAppConfigurationClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                if !rsp.status().is_success() {
-                    let status = rsp.status();
-                    let http_error = HttpError::new(rsp).await;
-                    let error_kind = ErrorKind::http_response(
-                        status,
-                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                    );
-                    return Err(Error::new(error_kind, http_error));
-                }
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: SnapshotListResult = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                let res: SnapshotListResult = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
@@ -1392,6 +1927,37 @@ impl AzureAppConfigurationClient {
     /// * `content_type` - Content-Type header
     /// * `key` - The key of the key-value to create.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValue, KeyValueHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<KeyValue> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
+    ///
+    /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.putKeyValue")]
     pub async fn put_key_value(
         &self,
@@ -1401,7 +1967,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientPutKeyValueOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -1435,16 +2001,19 @@ impl AzureAppConfigurationClient {
         if let Some(entity) = options.entity {
             request.set_body(entity);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -1456,6 +2025,37 @@ impl AzureAppConfigurationClient {
     ///
     /// * `key` - The key of the key-value to lock.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`KeyValueHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{KeyValue, KeyValueHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<KeyValue> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     if let Some(etag_header) = response.etag_header()? {
+    ///         println!("etag: {:?}", etag_header);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::KeyValueHeaders::content_type) - Content-Type
+    /// * [`sync_token`()](crate::generated::models::KeyValueHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::KeyValueHeaders::etag_header) - etag
+    ///
+    /// [`KeyValueHeaders`]: crate::generated::models::KeyValueHeaders
     #[tracing::function("AzureAppConfiguration.putLock")]
     pub async fn put_lock(
         &self,
@@ -1464,7 +2064,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientPutLockOptions<'_>>,
     ) -> Result<Response<KeyValue>> {
         if key.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter key cannot be empty",
             ));
@@ -1494,16 +2094,19 @@ impl AzureAppConfigurationClient {
         if let Some(client_request_id) = options.client_request_id {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -1517,6 +2120,38 @@ impl AzureAppConfigurationClient {
     /// * `name` - The name of the key-value snapshot to update.
     /// * `entity` - The parameters used to update the snapshot.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`SnapshotHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use appconfiguration::models::{Snapshot, SnapshotHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<Snapshot> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_type) = response.content_type()? {
+    ///         println!("Content-Type: {:?}", content_type);
+    ///     }
+    ///     if let Some(link) = response.link()? {
+    ///         println!("Link: {:?}", link);
+    ///     }
+    ///     if let Some(sync_token) = response.sync_token()? {
+    ///         println!("Sync-Token: {:?}", sync_token);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_type`()](crate::generated::models::SnapshotHeaders::content_type) - Content-Type
+    /// * [`link`()](crate::generated::models::SnapshotHeaders::link) - Link
+    /// * [`sync_token`()](crate::generated::models::SnapshotHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::SnapshotHeaders::etag_header) - etag
+    ///
+    /// [`SnapshotHeaders`]: crate::generated::models::SnapshotHeaders
     #[tracing::function("AzureAppConfiguration.updateSnapshot")]
     pub async fn update_snapshot(
         &self,
@@ -1527,7 +2162,7 @@ impl AzureAppConfigurationClient {
         options: Option<AzureAppConfigurationClientUpdateSnapshotOptions<'_>>,
     ) -> Result<Response<Snapshot>> {
         if name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter name cannot be empty",
             ));
@@ -1556,16 +2191,19 @@ impl AzureAppConfigurationClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.set_body(entity);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

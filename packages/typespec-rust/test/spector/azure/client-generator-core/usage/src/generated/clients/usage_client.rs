@@ -31,17 +31,16 @@ impl UsageClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_coreusage")]
+    #[tracing::new("_Specs_.Azure.ClientGenerator.Core.Usage")]
     pub fn with_no_credential(endpoint: &str, options: Option<UsageClientOptions>) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
+        let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         Ok(Self {
             endpoint,
             pipeline: Pipeline::new(
@@ -50,6 +49,7 @@ impl UsageClient {
                 options.client_options,
                 Vec::default(),
                 Vec::default(),
+                None,
             ),
         })
     }

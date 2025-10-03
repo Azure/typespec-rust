@@ -9,7 +9,7 @@ use super::{
 };
 use async_trait::async_trait;
 use azure_core::{
-    http::{Page, RequestContent},
+    http::{pager::Page, RequestContent},
     json::to_json,
     Result,
 };
@@ -67,6 +67,6 @@ impl Page for UserListResults {
 impl TryFrom<ListItemInputBody> for RequestContent<ListItemInputBody> {
     type Error = azure_core::Error;
     fn try_from(value: ListItemInputBody) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

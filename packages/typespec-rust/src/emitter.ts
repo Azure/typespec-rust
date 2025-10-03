@@ -7,7 +7,7 @@
 
 import { CodeGenerator } from './codegen/codeGenerator.js';
 import { CodegenError } from './codegen/errors.js';
-import { Adapter, AdapterError } from './tcgcadapter/adapter.js';
+import { Adapter, AdapterError, ExternalError } from './tcgcadapter/adapter.js';
 import { reportDiagnostic, RustEmitterOptions } from './lib.js';
 import { execSync } from 'child_process';
 import { existsSync, rmSync } from 'fs';
@@ -70,6 +70,7 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
         code: error.code,
         target: error.target,
         format: {
+          message: error.message,
           stack: error.stack ? truncateStack(error.stack, 'tcgcToCrate') : 'Stack trace unavailable\n',
         }
       });
@@ -78,9 +79,15 @@ export async function $onEmit(context: EmitContext<RustEmitterOptions>) {
         code: error.code,
         target: NoTarget,
         format: {
+          message: error.message,
           stack: error.stack ? truncateStack(error.stack, 'tcgcToCrate') : 'Stack trace unavailable\n',
         }
       });
+    } else if (error instanceof ExternalError) {
+      // we don't want to throw in this case as that will
+      // make it appear as if the emitter crashed. just
+      // exit so the diagnostic error isn't lost in the noise
+      return;
     } else {
       throw error;
     }

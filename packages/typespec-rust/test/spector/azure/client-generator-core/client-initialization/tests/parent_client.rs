@@ -26,7 +26,7 @@ async fn get_standalone() {
         .get_standalone(None)
         .await
         .unwrap();
-    let blob_properties: BlobProperties = resp.into_body().await.unwrap();
+    let blob_properties: BlobProperties = resp.into_body().unwrap();
     assert_eq!(blob_properties.content_type, Some("text/plain".to_string()));
     assert_eq!(
         blob_properties.created_on,

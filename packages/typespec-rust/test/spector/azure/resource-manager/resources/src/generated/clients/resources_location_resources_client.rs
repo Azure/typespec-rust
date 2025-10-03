@@ -11,12 +11,13 @@ use crate::generated::models::{
     ResourcesLocationResourcesClientUpdateOptions,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
+    error::CheckSuccessOptions,
     http::{
-        Method, NoFormat, Pager, PagerResult, PagerState, Pipeline, RawResponse, Request,
+        pager::{PagerResult, PagerState},
+        Method, NoFormat, Pager, Pipeline, PipelineSendOptions, RawResponse, Request,
         RequestContent, Response, Url,
     },
-    json, tracing, Error, Result,
+    json, tracing, Result,
 };
 
 #[tracing::client]
@@ -50,13 +51,13 @@ impl ResourcesLocationResourcesClient {
         options: Option<ResourcesLocationResourcesClientCreateOrUpdateOptions<'_>>,
     ) -> Result<Response<LocationResource>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
         }
         if location_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location_resource_name cannot be empty",
             ));
@@ -75,16 +76,19 @@ impl ResourcesLocationResourcesClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(resource);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200, 201],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -103,13 +107,13 @@ impl ResourcesLocationResourcesClient {
         options: Option<ResourcesLocationResourcesClientDeleteOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
         }
         if location_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location_resource_name cannot be empty",
             ));
@@ -125,16 +129,19 @@ impl ResourcesLocationResourcesClient {
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200, 204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -153,13 +160,13 @@ impl ResourcesLocationResourcesClient {
         options: Option<ResourcesLocationResourcesClientGetOptions<'_>>,
     ) -> Result<Response<LocationResource>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
         }
         if location_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location_resource_name cannot be empty",
             ));
@@ -176,16 +183,19 @@ impl ResourcesLocationResourcesClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -202,7 +212,7 @@ impl ResourcesLocationResourcesClient {
         options: Option<ResourcesLocationResourcesClientListByLocationOptions<'_>>,
     ) -> Result<Pager<LocationResourceListResult>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
@@ -239,20 +249,21 @@ impl ResourcesLocationResourcesClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                if !rsp.status().is_success() {
-                    let status = rsp.status();
-                    let http_error = HttpError::new(rsp).await;
-                    let error_kind = ErrorKind::http_response(
-                        status,
-                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                    );
-                    return Err(Error::new(error_kind, http_error));
-                }
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: LocationResourceListResult = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                let res: LocationResourceListResult = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
@@ -281,13 +292,13 @@ impl ResourcesLocationResourcesClient {
         options: Option<ResourcesLocationResourcesClientUpdateOptions<'_>>,
     ) -> Result<Response<LocationResource>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
         }
         if location_resource_name.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location_resource_name cannot be empty",
             ));
@@ -306,16 +317,19 @@ impl ResourcesLocationResourcesClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(properties);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

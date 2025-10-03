@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as codegen from '@azure-tools/codegen';
+import { emitHeaderTraitDocExample } from './docTests.js';
 import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import { Use } from './use.js';
@@ -143,6 +144,10 @@ export function emitHeaderTraits(crate: rust.Crate): helpers.Module | undefined 
       body += trait.docs;
     } else {
       body += `\n/// Provides access to typed response headers for ${trait.docs}\n`;
+      body += `///\n`;
+      body += `/// # Examples\n`;
+      body += `///\n`;
+      body += emitHeaderTraitDocExample(crate.name, trait);
     }
     body += `pub trait ${trait.name}: private::Sealed {\n`;
     for (const header of trait.headers) {

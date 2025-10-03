@@ -8,10 +8,12 @@ use crate::generated::{
     models::RoutesClientFixedOptions,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
-    tracing, Error, Result,
+    http::{
+        ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+    },
+    tracing, Result,
 };
 
 /// Define scenario in building the http route/uri
@@ -35,20 +37,19 @@ impl RoutesClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_routes")]
+    #[tracing::new("Routes")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<RoutesClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
+        let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         Ok(Self {
             endpoint,
             pipeline: Pipeline::new(
@@ -57,6 +58,7 @@ impl RoutesClient {
                 options.client_options,
                 Vec::default(),
                 Vec::default(),
+                None,
             ),
         })
     }
@@ -80,16 +82,19 @@ impl RoutesClient {
         let mut url = self.endpoint.clone();
         url = url.join("routes/fixed")?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 

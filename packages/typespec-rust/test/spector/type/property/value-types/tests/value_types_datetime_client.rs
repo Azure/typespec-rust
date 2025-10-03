@@ -14,7 +14,6 @@ async fn get() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     let datetime = OffsetDateTime::parse(
         "2022-08-26T18:38:00Z",

@@ -8,9 +8,12 @@ use crate::generated::models::{
     PageTwoModelsAsPageItemClientListSecondItemOptions, PagedFirstItem, PagedSecondItem,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
-    http::{Method, Pager, PagerResult, PagerState, Pipeline, RawResponse, Request, Url},
-    json, tracing, Error, Result,
+    error::CheckSuccessOptions,
+    http::{
+        pager::{PagerResult, PagerState},
+        Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Url,
+    },
+    json, tracing, Result,
 };
 
 #[tracing::client]
@@ -65,20 +68,21 @@ impl PageTwoModelsAsPageItemClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                if !rsp.status().is_success() {
-                    let status = rsp.status();
-                    let http_error = HttpError::new(rsp).await;
-                    let error_kind = ErrorKind::http_response(
-                        status,
-                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                    );
-                    return Err(Error::new(error_kind, http_error));
-                }
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: PagedFirstItem = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                let res: PagedFirstItem = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,
@@ -129,20 +133,21 @@ impl PageTwoModelsAsPageItemClient {
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
-                let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                if !rsp.status().is_success() {
-                    let status = rsp.status();
-                    let http_error = HttpError::new(rsp).await;
-                    let error_kind = ErrorKind::http_response(
-                        status,
-                        http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                    );
-                    return Err(Error::new(error_kind, http_error));
-                }
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
                 let (status, headers, body) = rsp.deconstruct();
-                let bytes = body.collect().await?;
-                let res: PagedSecondItem = json::from_json(&bytes)?;
-                let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                let res: PagedSecondItem = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {
                         response: rsp,

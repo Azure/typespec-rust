@@ -9,13 +9,13 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<FlattenModel> for RequestContent<FlattenModel> {
     type Error = azure_core::Error;
     fn try_from(value: FlattenModel) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<NestedFlattenModel> for RequestContent<NestedFlattenModel> {
     type Error = azure_core::Error;
     fn try_from(value: NestedFlattenModel) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "other/doc_tests",
     "other/enum_path_params",
     "other/serde_tests",
     "sdk/appconfiguration",
@@ -20,7 +21,7 @@ members = [
     "spector/parameters/spread",
     "spector/payload/content-negotiation",
     "spector/payload/json-merge-patch",
-    #"spector/payload/pageable", # TODO: https://github.com/Azure/typespec-rust/issues/508
+    "spector/payload/pageable",
     "spector/payload/xml",
     "spector/type/array",
     "spector/type/dictionary",
@@ -28,18 +29,23 @@ members = [
     "spector/azure/client-generator-core/api-version/path",
     "spector/azure/client-generator-core/api-version/query",
     "spector/azure/client-generator-core/client-initialization",
+    "spector/azure/client-generator-core/client-location",
     "spector/azure/client-generator-core/flatten-property",
     "spector/azure/client-generator-core/usage",
     "spector/azure/core/basic",
     "spector/azure/core/lro/standard",
+    "spector/azure/core/model",
     "spector/azure/core/page",
+    "spector/azure/core/scalar",
     "spector/azure/encode/duration",
     "spector/azure/example/basic",
     "spector/azure/payload/pageable",
     "spector/azure/resource-manager/common-properties",
+    "spector/azure/resource-manager/method-subscription-id",
     "spector/azure/resource-manager/non-resource",
     "spector/azure/resource-manager/operation-templates",
     "spector/azure/resource-manager/resources",
+    "spector/client/overload",
     "spector/client/structure/client-operation-group",
     "spector/client/structure/default",
     "spector/client/structure/multi-client",
@@ -63,6 +69,7 @@ members = [
     "spector/type/property/optionality",
     "spector/type/property/value-types",
     "spector/type/scalar",
+    "spector/type/union/discriminated",
     "spector/versioning/madeOptional",
 ]
 resolver = "2"
@@ -77,7 +84,7 @@ rust-version = "1.85"
 [workspace.dependencies]
 # Third-party dependencies should be kept up to date with https://github.com/Azure/azure-sdk-for-rust/blob/main/Cargo.lock
 async-trait = "0.1.88"
-azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "013ed41d6e0f734a88403570c804709a59af4688", features = [
+azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "1963e93d7e8ec04ed85b2c7546aef125e2219027", features = [
     "decimal",
     "reqwest",
 ] }
@@ -88,7 +95,7 @@ serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.141"
 time = { version = "0.3.41", features = ["serde-well-known"] }
 tokio = { version = "1.46.1", default-features = false, features = ["macros"] }
-typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "013ed41d6e0f734a88403570c804709a59af4688", features = [
+typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "1963e93d7e8ec04ed85b2c7546aef125e2219027", features = [
     "decimal",
     "reqwest",
 ] }

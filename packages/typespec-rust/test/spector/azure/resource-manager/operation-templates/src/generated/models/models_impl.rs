@@ -11,8 +11,9 @@ use super::{
 use async_trait::async_trait;
 use azure_core::{
     http::{
+        pager::Page,
         poller::{PollerStatus, StatusMonitor},
-        Page, RequestContent,
+        RequestContent,
     },
     json::to_json,
     Result,
@@ -55,41 +56,41 @@ impl StatusMonitor for Order {
 impl TryFrom<ActionRequest> for RequestContent<ActionRequest> {
     type Error = azure_core::Error;
     fn try_from(value: ActionRequest) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<ChangeAllowanceRequest> for RequestContent<ChangeAllowanceRequest> {
     type Error = azure_core::Error;
     fn try_from(value: ChangeAllowanceRequest) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<CheckNameAvailabilityRequest> for RequestContent<CheckNameAvailabilityRequest> {
     type Error = azure_core::Error;
     fn try_from(value: CheckNameAvailabilityRequest) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<ExportRequest> for RequestContent<ExportRequest> {
     type Error = azure_core::Error;
     fn try_from(value: ExportRequest) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<Order> for RequestContent<Order> {
     type Error = azure_core::Error;
     fn try_from(value: Order) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<Widget> for RequestContent<Widget> {
     type Error = azure_core::Error;
     fn try_from(value: Widget) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

@@ -8,15 +8,17 @@ use crate::generated::models::{
     ExtensibleShape, FixedShape,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{ClientOptions, Method, NoFormat, Pipeline, Request, Response, Url},
-    tracing, Error, Result,
+    http::{
+        ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+    },
+    tracing, Result,
 };
 
 #[tracing::client]
 pub struct EnumPathParamsClient {
-    pub(crate) endpoint: Url,
+    pub(crate) bogus_url: Url,
     pub(crate) pipeline: Pipeline,
 }
 
@@ -32,37 +34,37 @@ impl EnumPathParamsClient {
     ///
     /// # Arguments
     ///
-    /// * `endpoint` - Service host
+    /// * `bogus_url` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("enum_path_params")]
+    #[tracing::new("EnumPathParams")]
     pub fn with_no_credential(
-        endpoint: &str,
+        bogus_url: &str,
         options: Option<EnumPathParamsClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
-        if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+        let bogus_url = Url::parse(bogus_url)?;
+        if !bogus_url.scheme().starts_with("http") {
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
-                format!("{endpoint} must use http(s)"),
+                format!("{bogus_url} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         Ok(Self {
-            endpoint,
+            bogus_url,
             pipeline: Pipeline::new(
                 option_env!("CARGO_PKG_NAME"),
                 option_env!("CARGO_PKG_VERSION"),
                 options.client_options,
                 Vec::default(),
                 Vec::default(),
+                None,
             ),
         })
     }
 
     /// Returns the Url associated with this client.
     pub fn endpoint(&self) -> &Url {
-        &self.endpoint
+        &self.bogus_url
     }
 
     ///
@@ -76,14 +78,14 @@ impl EnumPathParamsClient {
         options: Option<EnumPathParamsClientOptionalExtensibleOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if shape.as_ref().is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter shape cannot be empty",
             ));
         }
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.endpoint.clone();
+        let mut url = self.bogus_url.clone();
         let mut path = String::from("optional/{shape}/{value}");
         path = path.replace("{shape}", shape.as_ref());
         path = match options.value {
@@ -92,16 +94,19 @@ impl EnumPathParamsClient {
         };
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -117,7 +122,7 @@ impl EnumPathParamsClient {
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
-        let mut url = self.endpoint.clone();
+        let mut url = self.bogus_url.clone();
         let mut path = String::from("fixed/{shape}/{value}");
         path = path.replace("{shape}", shape.as_ref());
         path = match options.value {
@@ -126,16 +131,19 @@ impl EnumPathParamsClient {
         };
         url = url.join(&path)?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

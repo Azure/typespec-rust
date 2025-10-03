@@ -12,7 +12,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap();
-    let value: ModelWithUnwrappedArray = resp.into_body().await.unwrap();
+    let value: ModelWithUnwrappedArray = resp.into_body().unwrap();
     assert_eq!(
         value.colors,
         Some(vec![

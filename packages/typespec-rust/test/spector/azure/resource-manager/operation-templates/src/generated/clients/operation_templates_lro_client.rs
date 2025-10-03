@@ -9,9 +9,11 @@ use crate::generated::models::{
     OperationTemplatesLroClientExportOptions, Order,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     http::{
+        headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        Method, Pipeline, Poller, RawResponse, Request, RequestContent, Url,
+        Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, RequestContent, Url,
     },
     json, tracing, Result,
 };
@@ -38,6 +40,33 @@ impl OperationTemplatesLroClient {
     /// * `order_name` - The name of the Order
     /// * `resource` - Resource create parameters.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`OrderHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armoptemplates::models::{Order, OrderHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<Order> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`azure_async_operation`()](crate::generated::models::OrderHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](crate::generated::models::OrderHeaders::retry_after) - Retry-After
+    ///
+    /// [`OrderHeaders`]: crate::generated::models::OrderHeaders
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.createOrReplace")]
     pub fn create_or_replace(
         &self,
@@ -56,9 +85,7 @@ impl OperationTemplatesLroClient {
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-
         let api_version = self.api_version.clone();
-
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>| {
                 let (mut request, next_link) = match next_link {
@@ -72,11 +99,9 @@ impl OperationTemplatesLroClient {
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
-
                         (request, next_link)
                     }
                     PollerState::Initial => {
@@ -84,20 +109,32 @@ impl OperationTemplatesLroClient {
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
                         request.set_body(resource.clone());
-
                         (request, url.clone())
                     }
                 };
-
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 201],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: Order = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
+                    let res: Order = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -119,6 +156,33 @@ impl OperationTemplatesLroClient {
     /// * `resource_group_name` - The name of the resource group. The name is case insensitive.
     /// * `order_name` - The name of the Order
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ArmOperationStatusResourceProvisioningStateHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armoptemplates::models::{ArmOperationStatusResourceProvisioningState, ArmOperationStatusResourceProvisioningStateHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(location) = response.location()? {
+    ///         println!("Location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`location`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
+    ///
+    /// [`ArmOperationStatusResourceProvisioningStateHeaders`]: crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.delete")]
     pub fn delete(
         &self,
@@ -136,9 +200,7 @@ impl OperationTemplatesLroClient {
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-
         let api_version = self.api_version.clone();
-
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>| {
                 let (mut request, next_link) = match next_link {
@@ -152,27 +214,37 @@ impl OperationTemplatesLroClient {
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-
                         let request = Request::new(next_link.clone(), Method::Get);
-
                         (request, next_link)
                     }
                     PollerState::Initial => {
                         let request = Request::new(url.clone(), Method::Delete);
-
                         (request, url.clone())
                     }
                 };
-
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202, 204],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: ArmOperationStatusResourceProvisioningState = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
+                    let res: ArmOperationStatusResourceProvisioningState = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -195,6 +267,37 @@ impl OperationTemplatesLroClient {
     /// * `order_name` - The name of the Order
     /// * `body` - The content of the action request
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ExportResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_armoptemplates::models::{ExportResult, ExportResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ExportResult> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
+    ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
+    ///     }
+    ///     if let Some(location) = response.location()? {
+    ///         println!("Location: {:?}", location);
+    ///     }
+    ///     if let Some(retry_after) = response.retry_after()? {
+    ///         println!("Retry-After: {:?}", retry_after);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`azure_async_operation`()](crate::generated::models::ExportResultHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`location`()](crate::generated::models::ExportResultHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::ExportResultHeaders::retry_after) - Retry-After
+    ///
+    /// [`ExportResultHeaders`]: crate::generated::models::ExportResultHeaders
     #[tracing::function("Azure.ResourceManager.OperationTemplates.Lro.export")]
     pub fn export(
         &self,
@@ -213,9 +316,7 @@ impl OperationTemplatesLroClient {
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-
         let api_version = self.api_version.clone();
-
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>| {
                 let (mut request, next_link) = match next_link {
@@ -229,11 +330,9 @@ impl OperationTemplatesLroClient {
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
-
                         (request, next_link)
                     }
                     PollerState::Initial => {
@@ -241,20 +340,32 @@ impl OperationTemplatesLroClient {
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
                         request.set_body(body.clone());
-
                         (request, url.clone())
                     }
                 };
-
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: ExportResult = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
+                    let res: ExportResult = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,

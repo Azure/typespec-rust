@@ -15,12 +15,7 @@ async fn get() {
 
     assert_eq!(resp.status(), 200);
 
-    let mut vec = resp
-        .into_body()
-        .await
-        .unwrap()
-        .into_iter()
-        .collect::<Vec<_>>();
+    let mut vec = resp.into_body().unwrap().into_iter().collect::<Vec<_>>();
     vec.sort_by_key(|p| p.0.clone());
 
     assert_eq!(vec.len(), 1);

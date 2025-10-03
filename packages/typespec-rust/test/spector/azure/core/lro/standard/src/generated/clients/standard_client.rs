@@ -8,10 +8,13 @@ use crate::generated::models::{
     StandardClientDeleteOptions, StandardClientExportOptions, User,
 };
 use azure_core::{
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
+        headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
-        ClientOptions, Method, Pipeline, Poller, RawResponse, Request, RequestContent, Url,
+        ClientOptions, Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request,
+        RequestContent, Url,
     },
     json, tracing, Result,
 };
@@ -40,20 +43,19 @@ impl StandardClient {
     ///
     /// * `endpoint` - Service host
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_lrostd")]
+    #[tracing::new("_Specs_.Azure.Core.Lro.Standard")]
     pub fn with_no_credential(
         endpoint: &str,
         options: Option<StandardClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
+        let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         Ok(Self {
             endpoint,
             api_version: options.api_version,
@@ -63,6 +65,7 @@ impl StandardClient {
                 options.client_options,
                 Vec::default(),
                 Vec::default(),
+                None,
             ),
         })
     }
@@ -81,6 +84,29 @@ impl StandardClient {
     /// * `name` - The name of user.
     /// * `resource` - The resource instance.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`UserHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_lrostd::models::{User, UserHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<User> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(operation_location) = response.operation_location()? {
+    ///         println!("Operation-Location: {:?}", operation_location);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`operation_location`()](crate::generated::models::UserHeaders::operation_location) - Operation-Location
+    ///
+    /// [`UserHeaders`]: crate::generated::models::UserHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.createOrReplace")]
     pub fn create_or_replace(
         &self,
@@ -96,9 +122,7 @@ impl StandardClient {
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-
         let api_version = self.api_version.clone();
-
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>| {
                 let (mut request, next_link) = match next_link {
@@ -112,11 +136,9 @@ impl StandardClient {
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
-
                         (request, next_link)
                     }
                     PollerState::Initial => {
@@ -124,20 +146,32 @@ impl StandardClient {
                         request.insert_header("accept", "application/json");
                         request.insert_header("content-type", "application/json");
                         request.set_body(resource.clone());
-
                         (request, url.clone())
                     }
                 };
-
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 201],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: User = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
+                    let res: User = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -160,6 +194,29 @@ impl StandardClient {
     ///
     /// * `name` - The name of user.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`OperationStatusErrorHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_lrostd::models::{OperationStatusError, OperationStatusErrorHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<OperationStatusError> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(operation_location) = response.operation_location()? {
+    ///         println!("Operation-Location: {:?}", operation_location);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`operation_location`()](crate::generated::models::OperationStatusErrorHeaders::operation_location) - Operation-Location
+    ///
+    /// [`OperationStatusErrorHeaders`]: crate::generated::models::OperationStatusErrorHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.delete")]
     pub fn delete(
         &self,
@@ -174,9 +231,7 @@ impl StandardClient {
         url = url.join(&path)?;
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-
         let api_version = self.api_version.clone();
-
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>| {
                 let (mut request, next_link) = match next_link {
@@ -190,29 +245,39 @@ impl StandardClient {
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
-
                         (request, next_link)
                     }
                     PollerState::Initial => {
                         let mut request = Request::new(url.clone(), Method::Delete);
                         request.insert_header("accept", "application/json");
-
                         (request, url.clone())
                     }
                 };
-
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: OperationStatusError = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
+                    let res: OperationStatusError = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
@@ -236,6 +301,29 @@ impl StandardClient {
     /// * `name` - The name of user.
     /// * `format` - The format of the data.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ExportedUserHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::Response};
+    /// use spector_lrostd::models::{ExportedUser, ExportedUserHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ExportedUser> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(operation_location) = response.operation_location()? {
+    ///         println!("Operation-Location: {:?}", operation_location);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`operation_location`()](crate::generated::models::ExportedUserHeaders::operation_location) - Operation-Location
+    ///
+    /// [`ExportedUserHeaders`]: crate::generated::models::ExportedUserHeaders
     #[tracing::function("_Specs_.Azure.Core.Lro.Standard.export")]
     pub fn export(
         &self,
@@ -252,9 +340,7 @@ impl StandardClient {
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         url.query_pairs_mut().append_pair("format", format);
-
         let api_version = self.api_version.clone();
-
         Ok(Poller::from_callback(
             move |next_link: PollerState<Url>| {
                 let (mut request, next_link) = match next_link {
@@ -268,29 +354,39 @@ impl StandardClient {
                             .clear()
                             .extend_pairs(qp)
                             .append_pair("api-version", &api_version);
-
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", "application/json");
-
                         (request, next_link)
                     }
                     PollerState::Initial => {
                         let mut request = Request::new(url.clone(), Method::Post);
                         request.insert_header("accept", "application/json");
-
                         (request, url.clone())
                     }
                 };
-
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200, 202],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let retry_after = get_retry_after(&headers, &options.poller_options);
-                    let bytes = body.collect().await?;
-                    let res: ExportedUser = json::from_json(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let retry_after = get_retry_after(
+                        &headers,
+                        &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
+                        &options.poller_options,
+                    );
+                    let res: ExportedUser = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,

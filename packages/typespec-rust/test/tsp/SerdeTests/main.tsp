@@ -92,6 +92,19 @@ model RecursiveType {
   value: MiddleType;
 }
 
+model AddlPropsInt extends Record<int32> {
+  count: int32;
+}
+
+model AddlPropsString extends Record<string> {
+  name: string;
+}
+
+model AddlPropsUnknown extends Record<unknown> {
+  count: int32;
+  name: string;
+}
+
 @@access(SerdeTests.BytesVectors, Access.public);
 @@usage(SerdeTests.BytesVectors, Usage.output);
 @@access(SerdeTests.BytesRecords, Access.public);
@@ -117,3 +130,10 @@ model RecursiveType {
 @@usage(SerdeTests.OffsetDateTimeRecords, Usage.output);
 @@access(SerdeTests.OffsetDateTimeMixed, Access.public);
 @@usage(SerdeTests.OffsetDateTimeMixed, Usage.output);
+
+@@access(SerdeTests.AddlPropsInt, Access.public);
+@@usage(SerdeTests.AddlPropsInt, Usage.output);
+@@access(SerdeTests.AddlPropsString, Access.public);
+@@usage(SerdeTests.AddlPropsString, Usage.output);
+@@access(SerdeTests.AddlPropsUnknown, Access.public);
+@@usage(SerdeTests.AddlPropsUnknown, Usage.output);

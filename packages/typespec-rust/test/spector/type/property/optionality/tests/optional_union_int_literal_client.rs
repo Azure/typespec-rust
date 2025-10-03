@@ -19,12 +19,11 @@ async fn get_all() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     // According to mockapi.ts, the all endpoint returns { property: 2 }
     assert_eq!(
         resp.property,
-        Some(UnionIntLiteralPropertyProperty::Int32Value2)
+        Some(UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_2)
     );
 }
 
@@ -37,7 +36,6 @@ async fn get_default() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap(); // According to mockapi.ts, the default endpoint returns {}
     assert!(resp.property.is_none());
 }
@@ -50,7 +48,7 @@ async fn put_all() {
     let client = OptionalClient::with_no_credential("http://localhost:3000", None).unwrap();
     // Create a model with property set to union int literal
     let model = UnionIntLiteralProperty {
-        property: Some(UnionIntLiteralPropertyProperty::Int32Value2),
+        property: Some(UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_2),
     };
 
     client

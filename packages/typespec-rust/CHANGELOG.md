@@ -1,18 +1,100 @@
 # Release History
 
-## 0.20.1 (unreleased)
+## 0.24.1 (unreleased)
 
-### Features Added
+### Bugs Fixed
 
-* Added support for optional path parameters.
+* Fixed incorrect header trait doc comment.
+
+## 0.24.0 (2025-10-02)
 
 ### Breaking Changes
 
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Methods that return streaming bytes now return an `AsyncResponse<T>`.
+
+## 0.23.2 (2025-09-25)
+
+### Features Added
+
+* Removed support for create_extensible_enum and create_enum macros and manually expanded their implementation.
+  * Refactored `enums.rs` into `enums.rs`, `enums_impl.rs`, and `enums_serde.rs` to follow the models types.
+
+## 0.23.1 (2025-09-24)
+
+### Features Added
+
+* Added support for discriminated unions.
+
+### Bugs Fixed
+
+* Fix document examples for header trait methods that return `HashMap` or `Vec` (not optional).
+
+## 0.23.0 (2025-09-19)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* The naming algorithm for enum values has changed, which can result in name changes in some cases.
+  * The most common change is words being Pascal cased (e.g. `AES256` is now `Aes256`).
+  * Identifiers that contain a decimal value will now use an underscore to separate the whole number from the fraction (e.g. `Version7.1` is now `Version7_1`).
+  * For enum values that begin with a number, the prefix `INVLD_IDENTIFIER_` will be added as a flag indicating the name must be fixed in the TypeSpec.
+* Calls `Error::with_message()` instead of `Error::message()` after [Azure/azure-sdk-for-rust#3024](https://github.com/Azure/azure-sdk-for-rust/pull/3024) was merged.
+* Calls `pipeline.send` with the set of expected status codes for each operation.
+
+### Bugs Fixed
+
+* TypeSpec enum values that coalesce into the same enum value name will report a diagnostic error, requiring a rename in the TypeSpec.
+  * Previously, the duplicate names would be emitted, resulting in a compile-time error.
+
+### Other Changes
+
+* Removed `futures` from crate dependencies for pageable methods as it's not required.
+* Added doc comments for public modules.
+* Added doc comment for `into_owned()` implementations.
+
+## 0.22.0 (2025-09-10)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Client methods call `check_success()` to handle service errors.
+* Client methods return a `BufResponse` rather than a `RawResponse`.
+
+### Bugs Fixed
+
+* Omit the `Content-Type` header for optional body parameters that are `None`.
+
+### Other Changes
+
+* Exit early when there are existing diagnostic errors.
+* For client constructors, the server URL parameter name will be honored IFF the `@clientName` decorator is applied.
+* Client constructors no longer remove all query parameters from the provided endpoint.
+* Updated to the latest tsp toolset.
+
+## 0.21.0 (2025-09-03)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
 * Calls `Context::to_borrowed` instead of `Context::with_context`.
+* Imports types moved from `azure_core::http` to `azure_core::http::{pager, poller}` modules.
+* Support new API signatures in `Pipeline::new()` and `get_retry_after()`.
+
+### Features Added
+
+* Added `#![cfg_attr(docsrs, feature(doc_auto_cfg))]` to every generated `src/lib.rs` to automatically document feature conditions.
+* Added support for optional path parameters.
+* Added support for TypeSpec models that extend a `Record<T>` (the "additional properties" pattern).
 
 ### Other Changes
 
 * Required path parameters that are empty will return an error.
+* Added improved doc comments for accessing header traits (includes examples).
 
 ## 0.20.0 (2025-08-01)
 

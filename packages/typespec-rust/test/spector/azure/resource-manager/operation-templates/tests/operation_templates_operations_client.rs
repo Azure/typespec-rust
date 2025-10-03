@@ -29,7 +29,7 @@ async fn test_list_operations() {
                     item.name,
                     Some("Microsoft.Compute/virtualMachines/write".to_string())
                 );
-                assert_eq!(item.origin, Some(Origin::Usersystem));
+                assert_eq!(item.origin, Some(Origin::UserSystem));
 
                 let display = item.display.as_ref().unwrap();
                 assert_eq!(
@@ -63,7 +63,7 @@ async fn test_list_operations_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page = page.into_body().await.unwrap();
+        let page = page.into_body().unwrap();
         match page_count {
             1 => {
                 let value = page.value;
@@ -76,7 +76,7 @@ async fn test_list_operations_pages() {
                     operation.name,
                     Some("Microsoft.Compute/virtualMachines/write".to_string())
                 );
-                assert_eq!(operation.origin, Some(Origin::Usersystem));
+                assert_eq!(operation.origin, Some(Origin::UserSystem));
 
                 let display = operation.display.as_ref().unwrap();
                 assert_eq!(

@@ -8,9 +8,9 @@ use crate::generated::models::{
     ContentNegotiationSameBodyClientGetAvatarAsPngOptions,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
-    http::{Method, Pipeline, RawResponse, Request, Url},
-    tracing, Error, Result,
+    error::CheckSuccessOptions,
+    http::{AsyncResponse, Method, Pipeline, PipelineStreamOptions, Request, Url},
+    tracing, Result,
 };
 
 #[tracing::client]
@@ -33,24 +33,27 @@ impl ContentNegotiationSameBodyClient {
     pub async fn get_avatar_as_jpeg(
         &self,
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsJpegOptions<'_>>,
-    ) -> Result<RawResponse> {
+    ) -> Result<AsyncResponse> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/jpeg");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
-        Ok(rsp)
+        let rsp = self
+            .pipeline
+            .stream(
+                &ctx,
+                &mut request,
+                Some(PipelineStreamOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
     }
 
     ///
@@ -61,23 +64,26 @@ impl ContentNegotiationSameBodyClient {
     pub async fn get_avatar_as_png(
         &self,
         options: Option<ContentNegotiationSameBodyClientGetAvatarAsPngOptions<'_>>,
-    ) -> Result<RawResponse> {
+    ) -> Result<AsyncResponse> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url = url.join("content-negotiation/same-body")?;
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
-        Ok(rsp)
+        let rsp = self
+            .pipeline
+            .stream(
+                &ctx,
+                &mut request,
+                Some(PipelineStreamOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
     }
 }

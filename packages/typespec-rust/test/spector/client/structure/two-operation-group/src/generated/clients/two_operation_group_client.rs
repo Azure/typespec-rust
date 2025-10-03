@@ -34,7 +34,7 @@ impl TwoOperationGroupClient {
     /// * `endpoint` - Service host
     /// * `client` - Need to be set as 'default', 'multi-client', 'renamed-operation', 'two-operation-group' in client.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_twoop")]
+    #[tracing::new("Client.Structure.TwoOperationGroup")]
     pub fn with_no_credential(
         endpoint: &str,
         client: ClientType,
@@ -43,12 +43,11 @@ impl TwoOperationGroupClient {
         let options = options.unwrap_or_default();
         let mut endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         let mut host = String::from("client/structure/{client}/");
         host = host.replace("{client}", client.as_ref());
         endpoint = endpoint.join(&host)?;
@@ -60,6 +59,7 @@ impl TwoOperationGroupClient {
                 options.client_options,
                 Vec::default(),
                 Vec::default(),
+                None,
             ),
         })
     }

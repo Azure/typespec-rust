@@ -12,14 +12,15 @@ use crate::generated::models::{
 use azure_core::{
     base64::encode,
     credentials::TokenCredential,
-    error::{ErrorKind, HttpError},
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Method, NoFormat, Pipeline, Request, RequestContent, Response, Url,
+        ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent,
+        Response, Url,
     },
     time::to_rfc7231,
-    tracing, Bytes, Error, Result,
+    tracing, Bytes, Result,
 };
 use std::sync::Arc;
 
@@ -52,7 +53,7 @@ impl AppendBlobClient {
     /// * `container_name` - The name of the container.
     /// * `blob_name` - The name of the blob.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("blob_storage")]
+    #[tracing::new("Storage.Blob.Container.Blob.AppendBlob")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -61,14 +62,13 @@ impl AppendBlobClient {
         options: Option<AppendBlobClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
+        let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
             credential,
             vec!["https://storage.azure.com/.default"],
@@ -84,6 +84,7 @@ impl AppendBlobClient {
                 options.client_options,
                 Vec::default(),
                 vec![auth_policy],
+                None,
             ),
         })
     }
@@ -100,6 +101,45 @@ impl AppendBlobClient {
     /// * `body` - The body of the request.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AppendBlobClientAppendBlockResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{AppendBlobClientAppendBlockResult, AppendBlobClientAppendBlockResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<AppendBlobClientAppendBlockResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::etag) - etag
+    /// * [`blob_append_offset`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::blob_append_offset) - x-ms-blob-append-offset
+    /// * [`blob_committed_block_count`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
+    /// * [`content_crc64`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`structured_body_type`()](crate::generated::models::AppendBlobClientAppendBlockResultHeaders::structured_body_type) - x-ms-structured-body
+    ///
+    /// [`AppendBlobClientAppendBlockResultHeaders`]: crate::generated::models::AppendBlobClientAppendBlockResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.appendBlock")]
     pub async fn append_block(
         &self,
@@ -181,16 +221,19 @@ impl AppendBlobClient {
         }
         request.insert_header("x-ms-version", &self.version);
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[201],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -202,6 +245,44 @@ impl AppendBlobClient {
     /// * `source_url` - Specify a URL to the copy source.
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AppendBlobClientAppendBlockFromUrlResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{AppendBlobClientAppendBlockFromUrlResult, AppendBlobClientAppendBlockFromUrlResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<AppendBlobClientAppendBlockFromUrlResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::etag) - etag
+    /// * [`blob_append_offset`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::blob_append_offset) - x-ms-blob-append-offset
+    /// * [`blob_committed_block_count`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::blob_committed_block_count) - x-ms-blob-committed-block-count
+    /// * [`content_crc64`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::content_crc64) - x-ms-content-crc64
+    /// * [`encryption_key_sha256`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    ///
+    /// [`AppendBlobClientAppendBlockFromUrlResultHeaders`]: crate::generated::models::AppendBlobClientAppendBlockFromUrlResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.appendBlockFromUrl")]
     pub async fn append_block_from_url(
         &self,
@@ -303,16 +384,19 @@ impl AppendBlobClient {
             request.insert_header("x-ms-source-range", source_range);
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[201],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -322,6 +406,42 @@ impl AppendBlobClient {
     ///
     /// * `content_length` - The length of the request.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AppendBlobClientCreateResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{AppendBlobClientCreateResult, AppendBlobClientCreateResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<AppendBlobClientCreateResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(content_md5) = response.content_md5()? {
+    ///         println!("Content-MD5: {:?}", content_md5);
+    ///     }
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`content_md5`()](crate::generated::models::AppendBlobClientCreateResultHeaders::content_md5) - Content-MD5
+    /// * [`date`()](crate::generated::models::AppendBlobClientCreateResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::AppendBlobClientCreateResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::AppendBlobClientCreateResultHeaders::etag) - etag
+    /// * [`encryption_key_sha256`()](crate::generated::models::AppendBlobClientCreateResultHeaders::encryption_key_sha256) - x-ms-encryption-key-sha256
+    /// * [`encryption_scope`()](crate::generated::models::AppendBlobClientCreateResultHeaders::encryption_scope) - x-ms-encryption-scope
+    /// * [`is_server_encrypted`()](crate::generated::models::AppendBlobClientCreateResultHeaders::is_server_encrypted) - x-ms-request-server-encrypted
+    /// * [`version_id`()](crate::generated::models::AppendBlobClientCreateResultHeaders::version_id) - x-ms-version-id
+    ///
+    /// [`AppendBlobClientCreateResultHeaders`]: crate::generated::models::AppendBlobClientCreateResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.create")]
     pub async fn create(
         &self,
@@ -421,16 +541,19 @@ impl AppendBlobClient {
             request.insert_header("x-ms-tags", blob_tags_string);
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[201],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -440,6 +563,38 @@ impl AppendBlobClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AppendBlobClientSealResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{AppendBlobClientSealResult, AppendBlobClientSealResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<AppendBlobClientSealResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::AppendBlobClientSealResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::AppendBlobClientSealResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::AppendBlobClientSealResultHeaders::etag) - etag
+    /// * [`is_sealed`()](crate::generated::models::AppendBlobClientSealResultHeaders::is_sealed) - x-ms-blob-sealed
+    ///
+    /// [`AppendBlobClientSealResultHeaders`]: crate::generated::models::AppendBlobClientSealResultHeaders
     #[tracing::function("Storage.Blob.Container.Blob.AppendBlob.seal")]
     pub async fn seal(
         &self,
@@ -481,16 +636,19 @@ impl AppendBlobClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

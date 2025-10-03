@@ -34,6 +34,7 @@ export default tseslint.config([
       ],
       '@typescript-eslint/no-floating-promises': 'error',
       '@typescript-eslint/no-unsafe-declaration-merging': 'off',
+      '@typescript-eslint/no-deprecated': 'error',
     },
   },
   {

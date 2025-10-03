@@ -15,7 +15,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap();
-    let value: ModelWithArrayOfModel = resp.into_body().await.unwrap();
+    let value: ModelWithArrayOfModel = resp.into_body().unwrap();
     let items = value.items.unwrap();
     assert_eq!(items.len(), 2);
     assert_eq!(items[0].age, Some(123));

@@ -7,13 +7,7 @@ use spector_nodisc::{models::Siamese, NotDiscriminatedClient};
 #[tokio::test]
 async fn get_valid() {
     let client = NotDiscriminatedClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let resp = client
-        .get_valid(None)
-        .await
-        .unwrap()
-        .into_body()
-        .await
-        .unwrap();
+    let resp = client.get_valid(None).await.unwrap().into_body().unwrap();
     assert_eq!(resp.age, Some(32));
     assert_eq!(resp.name, Some("abc".to_string()));
     assert_eq!(resp.smart, Some(true));
@@ -46,7 +40,6 @@ async fn put_valid() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     assert_eq!(resp.age, Some(32));
     assert_eq!(resp.name, Some("abc".to_string()));

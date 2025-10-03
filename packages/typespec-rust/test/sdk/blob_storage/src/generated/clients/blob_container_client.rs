@@ -26,15 +26,16 @@ use crate::generated::{
 };
 use azure_core::{
     credentials::TokenCredential,
-    error::{ErrorKind, HttpError},
+    error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
+        pager::{PagerResult, PagerState},
         policies::{BearerTokenCredentialPolicy, Policy},
-        ClientOptions, Method, NoFormat, PageIterator, PagerResult, PagerState, Pipeline,
-        RawResponse, Request, RequestContent, Response, Url, XmlFormat,
+        ClientOptions, Method, NoFormat, PageIterator, Pipeline, PipelineSendOptions, RawResponse,
+        Request, RequestContent, Response, Url, XmlFormat,
     },
     time::to_rfc7231,
-    tracing, xml, Error, Result,
+    tracing, xml, Result,
 };
 use std::sync::Arc;
 
@@ -65,7 +66,7 @@ impl BlobContainerClient {
     ///   Entra ID token to use when authenticating.
     /// * `container_name` - The name of the container.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("blob_storage")]
+    #[tracing::new("Storage.Blob.Container")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -73,14 +74,13 @@ impl BlobContainerClient {
         options: Option<BlobContainerClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
+        let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
             credential,
             vec!["https://storage.azure.com/.default"],
@@ -95,6 +95,7 @@ impl BlobContainerClient {
                 options.client_options,
                 Vec::default(),
                 vec![auth_policy],
+                None,
             ),
         })
     }
@@ -110,6 +111,38 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientAcquireLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientAcquireLeaseResult, BlobContainerClientAcquireLeaseResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<BlobContainerClientAcquireLeaseResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders::lease_id) - x-ms-lease-id
+    ///
+    /// [`BlobContainerClientAcquireLeaseResultHeaders`]: crate::generated::models::BlobContainerClientAcquireLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.acquireLease")]
     pub async fn acquire_lease(
         &self,
@@ -145,16 +178,19 @@ impl BlobContainerClient {
             request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[201],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -164,6 +200,39 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientBreakLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientBreakLeaseResult, BlobContainerClientBreakLeaseResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<BlobContainerClientBreakLeaseResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::lease_id) - x-ms-lease-id
+    /// * [`lease_time`()](crate::generated::models::BlobContainerClientBreakLeaseResultHeaders::lease_time) - x-ms-lease-time
+    ///
+    /// [`BlobContainerClientBreakLeaseResultHeaders`]: crate::generated::models::BlobContainerClientBreakLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.breakLease")]
     pub async fn break_lease(
         &self,
@@ -196,16 +265,19 @@ impl BlobContainerClient {
             request.insert_header("x-ms-lease-break-period", break_period.to_string());
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[202],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -217,6 +289,38 @@ impl BlobContainerClient {
     ///   lease ID must match.
     /// * `proposed_lease_id` - Required. The proposed lease ID for the container.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientChangeLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientChangeLeaseResult, BlobContainerClientChangeLeaseResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<BlobContainerClientChangeLeaseResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](crate::generated::models::BlobContainerClientChangeLeaseResultHeaders::lease_id) - x-ms-lease-id
+    ///
+    /// [`BlobContainerClientChangeLeaseResultHeaders`]: crate::generated::models::BlobContainerClientChangeLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.changeLease")]
     pub async fn change_lease(
         &self,
@@ -250,16 +354,19 @@ impl BlobContainerClient {
         request.insert_header("x-ms-lease-id", lease_id);
         request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -306,16 +413,19 @@ impl BlobContainerClient {
             }
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[201],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -354,16 +464,19 @@ impl BlobContainerClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[202],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -373,6 +486,29 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`FilterBlobSegmentHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{FilterBlobSegment, FilterBlobSegmentHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<FilterBlobSegment, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::FilterBlobSegmentHeaders::date) - Date
+    ///
+    /// [`FilterBlobSegmentHeaders`]: crate::generated::models::FilterBlobSegmentHeaders
     #[tracing::function("Storage.Blob.Container.filterBlobs")]
     pub async fn filter_blobs(
         &self,
@@ -416,16 +552,19 @@ impl BlobContainerClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -434,6 +573,38 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`VecSignedIdentifierHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{SignedIdentifier, VecSignedIdentifierHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<Vec<SignedIdentifier>, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::VecSignedIdentifierHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::VecSignedIdentifierHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::VecSignedIdentifierHeaders::etag) - etag
+    /// * [`access`()](crate::generated::models::VecSignedIdentifierHeaders::access) - x-ms-blob-public-access
+    ///
+    /// [`VecSignedIdentifierHeaders`]: crate::generated::models::VecSignedIdentifierHeaders
     #[tracing::function("Storage.Blob.Container.getAccessPolicy")]
     pub async fn get_access_policy(
         &self,
@@ -460,16 +631,19 @@ impl BlobContainerClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -478,6 +652,38 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientGetAccountInfoResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientGetAccountInfoResult, BlobContainerClientGetAccountInfoResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<BlobContainerClientGetAccountInfoResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(account_kind) = response.account_kind()? {
+    ///         println!("x-ms-account-kind: {:?}", account_kind);
+    ///     }
+    ///     if let Some(is_hierarchical_namespace_enabled) = response.is_hierarchical_namespace_enabled()? {
+    ///         println!("x-ms-is-hns-enabled: {:?}", is_hierarchical_namespace_enabled);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::date) - Date
+    /// * [`account_kind`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::account_kind) - x-ms-account-kind
+    /// * [`is_hierarchical_namespace_enabled`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::is_hierarchical_namespace_enabled) - x-ms-is-hns-enabled
+    /// * [`sku_name`()](crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders::sku_name) - x-ms-sku-name
+    ///
+    /// [`BlobContainerClientGetAccountInfoResultHeaders`]: crate::generated::models::BlobContainerClientGetAccountInfoResultHeaders
     #[tracing::function("Storage.Blob.Container.getAccountInfo")]
     pub async fn get_account_info(
         &self,
@@ -500,16 +706,19 @@ impl BlobContainerClient {
             request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -535,6 +744,46 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientGetPropertiesResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientGetPropertiesResult, BlobContainerClientGetPropertiesResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<BlobContainerClientGetPropertiesResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     if let Some(access) = response.access()? {
+    ///         println!("x-ms-blob-public-access: {:?}", access);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::etag) - etag
+    /// * [`access`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::access) - x-ms-blob-public-access
+    /// * [`default_encryption_scope`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::default_encryption_scope) - x-ms-default-encryption-scope
+    /// * [`prevent_encryption_scope_override`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::prevent_encryption_scope_override) - x-ms-deny-encryption-scope-override
+    /// * [`has_immutability_policy`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::has_immutability_policy) - x-ms-has-immutability-policy
+    /// * [`has_legal_hold`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::has_legal_hold) - x-ms-has-legal-hold
+    /// * [`is_immutable_storage_with_versioning_enabled`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::is_immutable_storage_with_versioning_enabled) - x-ms-immutable-storage-with-versioning-enabled
+    /// * [`duration`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::duration) - x-ms-lease-duration
+    /// * [`lease_state`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::lease_state) - x-ms-lease-state
+    /// * [`lease_status`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::lease_status) - x-ms-lease-status
+    /// * [`metadata`()](crate::generated::models::BlobContainerClientGetPropertiesResultHeaders::metadata) - x-ms-meta
+    ///
+    /// [`BlobContainerClientGetPropertiesResultHeaders`]: crate::generated::models::BlobContainerClientGetPropertiesResultHeaders
     #[tracing::function("Storage.Blob.Container.getProperties")]
     pub async fn get_properties(
         &self,
@@ -558,16 +807,19 @@ impl BlobContainerClient {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -576,6 +828,29 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ListBlobsFlatSegmentResponseHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{ListBlobsFlatSegmentResponse, ListBlobsFlatSegmentResponseHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ListBlobsFlatSegmentResponse, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::ListBlobsFlatSegmentResponseHeaders::date) - Date
+    ///
+    /// [`ListBlobsFlatSegmentResponseHeaders`]: crate::generated::models::ListBlobsFlatSegmentResponseHeaders
     #[tracing::function("Storage.Blob.Container.listBlobFlatSegment")]
     pub fn list_blob_flat_segment(
         &self,
@@ -641,20 +916,21 @@ impl BlobContainerClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                    if !rsp.status().is_success() {
-                        let status = rsp.status();
-                        let http_error = HttpError::new(rsp).await;
-                        let error_kind = ErrorKind::http_response(
-                            status,
-                            http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                        );
-                        return Err(Error::new(error_kind, http_error));
-                    }
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let bytes = body.collect().await?;
-                    let res: ListBlobsFlatSegmentResponse = xml::read_xml(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let res: ListBlobsFlatSegmentResponse = xml::read_xml(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.next_marker {
                         Some(next_marker) if !next_marker.is_empty() => PagerResult::More {
                             response: rsp,
@@ -676,6 +952,29 @@ impl BlobContainerClient {
     ///   that acts as a placeholder for all blobs whose names begin with the same substring up to the appearance of the delimiter
     ///   character. The delimiter may be a single character or a string.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ListBlobsHierarchySegmentResponseHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, XmlFormat}};
+    /// use blob_storage::models::{ListBlobsHierarchySegmentResponse, ListBlobsHierarchySegmentResponseHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<ListBlobsHierarchySegmentResponse, XmlFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::ListBlobsHierarchySegmentResponseHeaders::date) - Date
+    ///
+    /// [`ListBlobsHierarchySegmentResponseHeaders`]: crate::generated::models::ListBlobsHierarchySegmentResponseHeaders
     #[tracing::function("Storage.Blob.Container.listBlobHierarchySegment")]
     pub fn list_blob_hierarchy_segment(
         &self,
@@ -745,20 +1044,21 @@ impl BlobContainerClient {
                 let ctx = options.method_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
-                    let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;
-                    if !rsp.status().is_success() {
-                        let status = rsp.status();
-                        let http_error = HttpError::new(rsp).await;
-                        let error_kind = ErrorKind::http_response(
-                            status,
-                            http_error.error_code().map(std::borrow::ToOwned::to_owned),
-                        );
-                        return Err(Error::new(error_kind, http_error));
-                    }
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
                     let (status, headers, body) = rsp.deconstruct();
-                    let bytes = body.collect().await?;
-                    let res: ListBlobsHierarchySegmentResponse = xml::read_xml(&bytes)?;
-                    let rsp = RawResponse::from_bytes(status, headers, bytes).into();
+                    let res: ListBlobsHierarchySegmentResponse = xml::read_xml(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.next_marker {
                         Some(next_marker) if !next_marker.is_empty() => PagerResult::More {
                             response: rsp,
@@ -779,6 +1079,37 @@ impl BlobContainerClient {
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientReleaseLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientReleaseLeaseResult, BlobContainerClientReleaseLeaseResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<BlobContainerClientReleaseLeaseResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders::etag) - etag
+    ///
+    /// [`BlobContainerClientReleaseLeaseResultHeaders`]: crate::generated::models::BlobContainerClientReleaseLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.releaseLease")]
     pub async fn release_lease(
         &self,
@@ -810,16 +1141,19 @@ impl BlobContainerClient {
         }
         request.insert_header("x-ms-lease-id", lease_id);
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -829,6 +1163,29 @@ impl BlobContainerClient {
     ///
     /// * `source_container_name` - Required. Specifies the name of the container to rename.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientRenameResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientRenameResult, BlobContainerClientRenameResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<BlobContainerClientRenameResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::BlobContainerClientRenameResultHeaders::date) - Date
+    ///
+    /// [`BlobContainerClientRenameResultHeaders`]: crate::generated::models::BlobContainerClientRenameResultHeaders
     #[tracing::function("Storage.Blob.Container.rename")]
     pub async fn rename(
         &self,
@@ -856,16 +1213,19 @@ impl BlobContainerClient {
             request.insert_header("x-ms-source-lease-id", source_lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -876,6 +1236,38 @@ impl BlobContainerClient {
     /// * `lease_id` - Required. A lease ID for the source path. If specified, the source path must have an active lease and the
     ///   lease ID must match.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientRenewLeaseResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientRenewLeaseResult, BlobContainerClientRenewLeaseResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<BlobContainerClientRenewLeaseResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::etag) - etag
+    /// * [`lease_id`()](crate::generated::models::BlobContainerClientRenewLeaseResultHeaders::lease_id) - x-ms-lease-id
+    ///
+    /// [`BlobContainerClientRenewLeaseResultHeaders`]: crate::generated::models::BlobContainerClientRenewLeaseResultHeaders
     #[tracing::function("Storage.Blob.Container.renewLease")]
     pub async fn renew_lease(
         &self,
@@ -907,16 +1299,19 @@ impl BlobContainerClient {
         }
         request.insert_header("x-ms-lease-id", lease_id);
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -925,6 +1320,29 @@ impl BlobContainerClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientRestoreResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientRestoreResult, BlobContainerClientRestoreResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<BlobContainerClientRestoreResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::BlobContainerClientRestoreResultHeaders::date) - Date
+    ///
+    /// [`BlobContainerClientRestoreResultHeaders`]: crate::generated::models::BlobContainerClientRestoreResultHeaders
     #[tracing::function("Storage.Blob.Container.restore")]
     pub async fn restore(
         &self,
@@ -953,16 +1371,19 @@ impl BlobContainerClient {
             request.insert_header("x-ms-deleted-container-version", deleted_container_version);
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[201],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -973,6 +1394,37 @@ impl BlobContainerClient {
     ///
     /// * `container_acl` - The access control list for the container.
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobContainerClientSetAccessPolicyResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use blob_storage::models::{BlobContainerClientSetAccessPolicyResult, BlobContainerClientSetAccessPolicyResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<BlobContainerClientSetAccessPolicyResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(date) = response.date()? {
+    ///         println!("Date: {:?}", date);
+    ///     }
+    ///     if let Some(last_modified) = response.last_modified()? {
+    ///         println!("Last-Modified: {:?}", last_modified);
+    ///     }
+    ///     if let Some(etag) = response.etag()? {
+    ///         println!("etag: {:?}", etag);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`date`()](crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders::date) - Date
+    /// * [`last_modified`()](crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders::last_modified) - Last-Modified
+    /// * [`etag`()](crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders::etag) - etag
+    ///
+    /// [`BlobContainerClientSetAccessPolicyResultHeaders`]: crate::generated::models::BlobContainerClientSetAccessPolicyResultHeaders
     #[tracing::function("Storage.Blob.Container.setAccessPolicy")]
     pub async fn set_access_policy(
         &self,
@@ -1009,16 +1461,19 @@ impl BlobContainerClient {
         }
         request.insert_header("x-ms-version", &self.version);
         request.set_body(container_acl);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -1060,16 +1515,19 @@ impl BlobContainerClient {
             }
         }
         request.insert_header("x-ms-version", &self.version);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

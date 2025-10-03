@@ -12,8 +12,9 @@ use super::{
 use async_trait::async_trait;
 use azure_core::{
     http::{
+        pager::Page,
         poller::{PollerStatus, StatusMonitor},
-        Page, RequestContent,
+        RequestContent,
     },
     json::to_json,
     Result,
@@ -110,41 +111,41 @@ impl StatusMonitor for TopLevelTrackedResource {
 impl TryFrom<ExtensionsResource> for RequestContent<ExtensionsResource> {
     type Error = azure_core::Error;
     fn try_from(value: ExtensionsResource) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<LocationResource> for RequestContent<LocationResource> {
     type Error = azure_core::Error;
     fn try_from(value: LocationResource) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<NestedProxyResource> for RequestContent<NestedProxyResource> {
     type Error = azure_core::Error;
     fn try_from(value: NestedProxyResource) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<NotificationDetails> for RequestContent<NotificationDetails> {
     type Error = azure_core::Error;
     fn try_from(value: NotificationDetails) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<SingletonTrackedResource> for RequestContent<SingletonTrackedResource> {
     type Error = azure_core::Error;
     fn try_from(value: SingletonTrackedResource) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<TopLevelTrackedResource> for RequestContent<TopLevelTrackedResource> {
     type Error = azure_core::Error;
     fn try_from(value: TopLevelTrackedResource) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

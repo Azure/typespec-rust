@@ -16,6 +16,9 @@ export interface Client {
   /** any docs for the client */
   docs: types.Docs;
 
+  /** the client's language-independent name, currently used for tracing */
+  languageIndependentName: string;
+
   /** contains info for instantiable clients */
   constructable?: ClientConstruction;
 
@@ -59,7 +62,7 @@ export interface ClientOptions extends types.Option {
 }
 
 /** ClientParameter defines the possible client parameter types */
-export type ClientParameter = ClientEndpointParameter | ClientMethodParameter;
+export type ClientParameter = ClientCredentialParameter | ClientEndpointParameter | ClientMethodParameter | ClientSupplementalEndpointParameter;
 
 /** represents a client constructor function */
 export interface Constructor {
@@ -80,12 +83,31 @@ export interface ClientMethodParameter extends ClientParameterBase {
   kind: 'clientMethod';
 }
 
-/** ClientEndpointParameter is used when constructing the endpoint's supplemental path */
+/** ClientEndpointParameter is the client's host parameter */
 export interface ClientEndpointParameter extends ClientParameterBase {
   kind: 'clientEndpoint';
 
+  /** the endpoint param is always a &str */
+  type: types.Ref<types.StringSlice>;
+
+  /** never optional */
+  optional: false;
+}
+
+/** ClientEndpointParameter is used when constructing the endpoint's supplemental path */
+export interface ClientSupplementalEndpointParameter extends ClientParameterBase {
+  kind: 'clientSupplementalEndpoint';
+
   /** the segment name to be replaced with the param's value */
   segment: string;
+}
+
+/** ClientCredentialParameter is the client's credential parameter */
+export interface ClientCredentialParameter extends ClientParameterBase {
+  kind: 'clientCredential';
+
+  /** never optional */
+  optional: false;
 }
 
 /** contains data on how to supplement a client endpoint */
@@ -94,7 +116,7 @@ export interface SupplementalEndpoint {
   path: string;
 
   /** the parameters used to replace segments in the path */
-  parameters: Array<ClientEndpointParameter>;
+  parameters: Array<ClientSupplementalEndpointParameter>;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,7 +137,7 @@ export interface AsyncMethod extends HTTPMethodBase {
   params: Array<MethodParameter>;
 
   /** the type returned by the method */
-  returns: types.Result<types.RawResponse | types.Response>;
+  returns: types.Result<types.AsyncResponse | types.Response>;
 }
 
 /** ClientAccessor is a method that returns a sub-client instance. */
@@ -166,15 +188,19 @@ export interface PageableStrategyContinuationToken {
    * the location in the response that contains the continuation token.
    * can be a response header or a field in response model.
    */
-  responseToken: ResponseHeaderScalar | types.ModelField;
+  responseToken: ResponseHeaderScalar | PageableStrategyNextLink;
 }
 
 /** PageableStrategyNextLink indicates a pageable method uses the nextLink strategy */
 export interface PageableStrategyNextLink {
   kind: 'nextLink';
 
-  /** the field in the response that contains the next link URL */
-  nextLink: types.ModelField;
+  /**
+   * the field path in the response that contains the next link URL.
+   * one entry at minimum. when the next link is nested in the response
+   * type, the array will contain the "path" to the next link.
+   */
+  nextLinkPath: Array<types.ModelField>;
 }
 
 /** PageableStrategyKind contains different strategies for fetching subsequent pages */
@@ -476,7 +502,7 @@ export interface ResponseHeadersTrait {
   name: string;
 
   /** the type for which to implement the trait */
-  implFor: types.Response<types.MarkerType | types.WireType>;
+  implFor: types.AsyncResponse<types.MarkerType> | types.Response<types.MarkerType | types.WireType>;
 
   /** the headers in the trait */
   headers: Array<ResponseHeader>;
@@ -516,6 +542,12 @@ interface HTTPMethodBase extends method.Method<types.Type> {
 
   /** the type returned by the method */
   returns: types.Result;
+
+  /**
+   * List of HTTP status codes that should be treated as successes.
+   * If empty, default success determination (any 2xx) is used.
+   */
+  statusCodes: Array<number>;
 
   /** contains the trait for accessing response headers */
   responseHeaders?: ResponseHeadersTrait;
@@ -630,10 +662,24 @@ export class Constructor implements Constructor {
   }
 }
 
+export class ClientCredentialParameter extends ClientParameterBase implements ClientCredentialParameter {
+  constructor(name: string, type: types.Type) {
+    super(name, type, false);
+    this.kind = 'clientCredential';
+  }
+}
+
 export class ClientEndpointParameter extends ClientParameterBase implements ClientEndpointParameter {
+  constructor(name: string) {
+    super(name, new types.Ref(new types.StringSlice()), false);
+    this.kind = 'clientEndpoint';
+  }
+}
+
+export class ClientSupplementalEndpointParameter extends ClientParameterBase implements ClientSupplementalEndpointParameter {
   constructor(name: string, type: types.Type, optional: boolean, segment: string) {
     super(name, type, optional);
-    this.kind = 'clientEndpoint';
+    this.kind = 'clientSupplementalEndpoint';
     this.segment = segment;
   }
 }
@@ -689,7 +735,7 @@ export class LroMethod extends HTTPMethodBase implements LroMethod {
 }
 
 export class PageableStrategyContinuationToken implements PageableStrategyContinuationToken {
-  constructor(requestToken: HeaderScalarParameter | QueryScalarParameter, responseToken: ResponseHeaderScalar | types.ModelField) {
+  constructor(requestToken: HeaderScalarParameter | QueryScalarParameter, responseToken: ResponseHeaderScalar | PageableStrategyNextLink) {
     this.kind = 'continuationToken';
     this.requestToken = requestToken;
     this.responseToken = responseToken;
@@ -697,9 +743,9 @@ export class PageableStrategyContinuationToken implements PageableStrategyContin
 }
 
 export class PageableStrategyNextLink implements PageableStrategyNextLink {
-  constructor(nextLink: types.ModelField) {
+  constructor(nextLinkPath: Array<types.ModelField>) {
     this.kind = 'nextLink';
-    this.nextLink = nextLink;
+    this.nextLinkPath = nextLinkPath;
   }
 }
 
@@ -795,7 +841,7 @@ export class ResponseHeaderScalar implements ResponseHeaderScalar {
 }
 
 export class ResponseHeadersTrait implements ResponseHeadersTrait {
-  constructor(name: string, implFor: types.Response<types.MarkerType | types.WireType>, docs: string) {
+  constructor(name: string, implFor: types.AsyncResponse<types.MarkerType> | types.Response<types.MarkerType | types.WireType>, docs: string) {
     this.kind = 'responseHeadersTrait';
     this.name = name;
     this.implFor = implFor;
@@ -807,6 +853,6 @@ export class ResponseHeadersTrait implements ResponseHeadersTrait {
 export class SupplementalEndpoint implements SupplementalEndpoint {
   constructor(path: string) {
     this.path = path;
-    this.parameters = new Array<ClientEndpointParameter>();
+    this.parameters = new Array<ClientSupplementalEndpointParameter>();
   }
 }

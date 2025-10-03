@@ -13,7 +13,6 @@ async fn get_all() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     // According to mockapi.ts, the all endpoint returns { property: "2022-12-12" }
     assert_eq!(resp.property, Some("2022-12-12".to_string()));
@@ -28,7 +27,6 @@ async fn get_default() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap(); // According to mockapi.ts, the default endpoint returns {}
     assert!(resp.property.is_none());
 }

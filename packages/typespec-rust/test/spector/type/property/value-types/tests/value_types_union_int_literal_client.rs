@@ -19,11 +19,10 @@ async fn get() {
         .await
         .unwrap()
         .into_body()
-        .await
         .unwrap();
     assert_eq!(
         resp.property,
-        Some(UnionIntLiteralPropertyProperty::Int32Value42)
+        Some(UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_42)
     );
 }
 
@@ -35,7 +34,7 @@ async fn put() {
         .get_value_types_union_int_literal_client()
         .put(
             UnionIntLiteralProperty {
-                property: Some(UnionIntLiteralPropertyProperty::Int32Value42),
+                property: Some(UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_42),
             }
             .try_into()
             .unwrap(),

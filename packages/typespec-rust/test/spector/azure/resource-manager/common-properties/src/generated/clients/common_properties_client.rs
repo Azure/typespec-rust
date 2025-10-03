@@ -45,7 +45,7 @@ impl CommonPropertiesClient {
     ///   Entra ID token to use when authenticating.
     /// * `subscription_id` - The ID of the target subscription. The value must be an UUID.
     /// * `options` - Optional configuration for the client.
-    #[tracing::new("spector_armcommon")]
+    #[tracing::new("Azure.ResourceManager.CommonProperties")]
     pub fn new(
         endpoint: &str,
         credential: Arc<dyn TokenCredential>,
@@ -53,14 +53,13 @@ impl CommonPropertiesClient {
         options: Option<CommonPropertiesClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
-        let mut endpoint = Url::parse(endpoint)?;
+        let endpoint = Url::parse(endpoint)?;
         if !endpoint.scheme().starts_with("http") {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        endpoint.set_query(None);
         let auth_policy: Arc<dyn Policy> = Arc::new(BearerTokenCredentialPolicy::new(
             credential,
             vec!["user_impersonation"],
@@ -75,6 +74,7 @@ impl CommonPropertiesClient {
                 options.client_options,
                 Vec::default(),
                 vec![auth_policy],
+                None,
             ),
         })
     }

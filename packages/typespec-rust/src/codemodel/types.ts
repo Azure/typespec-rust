@@ -15,10 +15,10 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | Poller | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType =  Arc | AsyncResponse | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | Poller | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
-export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
+export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Union | UnionMember | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
 
 /** Type defines a type within the Rust type system */
 export type Type = SdkType | WireType;
@@ -35,6 +35,14 @@ export interface Arc extends QualifiedType {
    * at present, only TokenCredential is supported
    */
   type: TokenCredential;
+}
+
+/** AsyncResponse is an azure_core::http::AsyncResponse<T> */
+export interface AsyncResponse<T extends MarkerType | Unit = MarkerType | Unit> extends External {
+  kind: 'asyncResponse';
+
+  /** the generic type param */
+  type: T;
 }
 
 /** Box is a Rust Box<T> */
@@ -109,6 +117,49 @@ export interface EnumValue {
   value: number | string;
 }
 
+/** Union is a Rust enum type with values of different types. */
+export interface Union {
+  kind: 'union';
+
+  /** the name of the union type */
+  name: string;
+
+  /** any docs for the type */
+  docs: Docs;
+
+  /** indicates the visibility of the union */
+  visibility: Visibility;
+
+  /** indicates if the union and its values should be public */
+  pub: boolean;
+
+  /** one or more members of the union */
+  members: Array<UnionMember>;
+
+  /** discriminator property name */
+  discriminatorName: string;
+
+  /** data envelope property name */
+  envelopeName: string;
+}
+
+/** UnionMember is a union member for a specific Union */
+export interface UnionMember {
+  kind: 'unionMember';
+
+  /** the name of the union member */
+  name: string;
+
+  /** any docs for the type */
+  docs: Docs;
+
+  /** the type of the union member */
+  type: Type;
+
+  /** discriminator property value */
+  discriminatorValue: string;
+}
+
 /** Etag is an azure_core::Etag */
 export interface Etag extends External {
   kind: 'Etag';
@@ -179,12 +230,15 @@ export interface MarkerType {
   docs: Docs;
 }
 
+/** ModelFieldType contains the types of model fields */
+export type ModelFieldType = ModelField | ModelAdditionalProperties;
+
 /** Model is a Rust struct that participates in serde */
 export interface Model extends StructBase {
   kind: 'model';
 
   /** fields contains the fields within the struct */
-  fields: Array<ModelField>;
+  fields: Array<ModelFieldType>;
 
   /** the flags set for this model */
   flags: ModelFlags;
@@ -194,6 +248,14 @@ export interface Model extends StructBase {
    * different from the type's name.
    */
   xmlName?: string;
+}
+
+/** ModelAdditionalProperties is a field that contains unnamed key/value pairs */
+export interface ModelAdditionalProperties extends StructFieldBase {
+  kind: 'additionalProperties';
+
+  /** the field's underlying type */
+  type: Option<HashMap>;
 }
 
 /** ModelField is a field definition within a model */
@@ -246,14 +308,17 @@ export interface OffsetDateTime extends External {
   utc: boolean;
 }
 
+/** OptionType defines the possible types for the generic type param in an Option<T> */
+export type OptionType = Box | RequestContent | Struct | WireType;
+
 /** Option is a Rust Option<T> */
-export interface Option {
+export interface Option<T extends OptionType = OptionType> {
   kind: 'option';
 
   /**
    * the generic type param
    */
-  type: Box | RequestContent | Struct | WireType;
+  type: T;
 }
 
 /** PageIterator is a PageIterator<T> from azure_core */
@@ -303,9 +368,7 @@ export interface Payload<T extends WireType = WireType> {
   format: PayloadFormat;
 }
 
-/**
- * RawResponse is used for operations that receive a streaming response.
- */
+/** RawResponse is an azure_core::http::RawResponse */
 export interface RawResponse extends External {
   kind: 'rawResponse';
 }
@@ -363,7 +426,7 @@ export interface Response<T extends ResponseTypes = ResponseTypes, Format extend
 }
 
 /** ResultTypes defines the type constraint when creating a Result<T> */
-type ResultTypes = PageIterator | Pager | Poller | RawResponse | Response;
+export type ResultTypes = AsyncResponse | PageIterator | Pager | Poller | Response;
 
 /** Result is a Rust Result<T> from azure_core */
 export interface Result<T extends ResultTypes = ResultTypes> extends External {
@@ -575,6 +638,14 @@ export class Arc extends QualifiedType implements Arc {
   }
 }
 
+export class AsyncResponse<T> extends External implements AsyncResponse<T> {
+  constructor(crate: Crate, type: T) {
+    super(crate, 'AsyncResponse', 'azure_core::http');
+    this.kind = 'asyncResponse';
+    this.type = type;
+  }
+}
+
 export class Box implements Box {
   constructor(type: WireType) {
     this.kind = 'box';
@@ -685,11 +756,38 @@ export class MarkerType implements MarkerType {
   }
 }
 
+export class Union implements Union {
+  constructor(name: string, pub: boolean, discriminatorName: string, envelopeName: string) {
+    this.kind = 'union';
+    this.name = name;
+    this.pub = pub;
+    this.members = new Array<UnionMember>();
+    this.discriminatorName = discriminatorName;
+    this.envelopeName = envelopeName;
+  }
+}
+
+export class UnionMember implements UnionMember {
+  constructor(name: string, type: Type, discriminatorValue: string) {
+    this.kind = 'unionMember';
+    this.name = name;
+    this.type = type;
+    this.discriminatorValue = discriminatorValue;
+  }
+}
+
 export class Model extends StructBase implements Model {
   constructor(name: string, visibility: Visibility, flags: ModelFlags) {
     super('model', name, visibility);
-    this.fields = new Array<ModelField>();
+    this.fields = new Array<ModelFieldType>();
     this.flags = flags;
+  }
+}
+
+export class ModelAdditionalProperties extends StructFieldBase implements ModelAdditionalProperties {
+  constructor(name: string, visibility: Visibility, type: Option<HashMap>) {
+    super(name, visibility, type);
+    this.kind = 'additionalProperties';
   }
 }
 
@@ -712,8 +810,8 @@ export class OffsetDateTime extends External implements OffsetDateTime {
   }
 }
 
-export class Option implements Option {
-  constructor(type: Box | WireType | RequestContent | Struct) {
+export class Option<T> implements Option<T> {
+  constructor(type: T) {
     this.kind = 'option';
     this.type = type;
   }
@@ -752,7 +850,7 @@ export class Payload<T> implements Payload<T> {
   }
 }
 
-export class RawResponse extends External implements RawResponse {
+export class RawResponse extends External {
   constructor(crate: Crate) {
     super(crate, 'RawResponse', 'azure_core::http');
     this.kind = 'rawResponse';

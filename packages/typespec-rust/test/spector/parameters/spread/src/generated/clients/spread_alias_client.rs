@@ -15,9 +15,11 @@ use crate::generated::models::{
     SpreadAliasClientSpreadWithMultipleParametersOptions,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
-    http::{Method, NoFormat, Pipeline, Request, RequestContent, Response, Url},
-    tracing, Error, Result,
+    error::CheckSuccessOptions,
+    http::{
+        Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+    },
+    tracing, Result,
 };
 
 #[tracing::client]
@@ -51,16 +53,19 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadAsRequestBodyRequest> =
             SpreadAsRequestBodyRequest { name }.try_into()?;
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -77,7 +82,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadAsRequestParameterOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if id.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter id cannot be empty",
             ));
@@ -94,16 +99,19 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadAsRequestParameterRequest> =
             SpreadAsRequestParameterRequest { name }.try_into()?;
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -124,7 +132,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadParameterWithInnerAliasOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if id.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter id cannot be empty",
             ));
@@ -141,16 +149,19 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadParameterWithInnerAliasRequest> =
             SpreadParameterWithInnerAliasRequest { name, age }.try_into()?;
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -167,7 +178,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadParameterWithInnerModelOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if id.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter id cannot be empty",
             ));
@@ -184,16 +195,19 @@ impl SpreadAliasClient {
         let body: RequestContent<SpreadParameterWithInnerModelRequest> =
             SpreadParameterWithInnerModelRequest { name }.try_into()?;
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -213,7 +227,7 @@ impl SpreadAliasClient {
         options: Option<SpreadAliasClientSpreadWithMultipleParametersOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         if id.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter id cannot be empty",
             ));
@@ -236,16 +250,19 @@ impl SpreadAliasClient {
             }
             .try_into()?;
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

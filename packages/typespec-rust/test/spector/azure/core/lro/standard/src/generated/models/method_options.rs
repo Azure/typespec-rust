@@ -19,6 +19,7 @@ pub struct StandardClientCreateOrReplaceOptions<'a> {
 }
 
 impl StandardClientCreateOrReplaceOptions<'_> {
+    /// Transforms this [`StandardClientCreateOrReplaceOptions`] into a new `StandardClientCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> StandardClientCreateOrReplaceOptions<'static> {
         StandardClientCreateOrReplaceOptions {
             method_options: ClientMethodOptions {
@@ -40,6 +41,7 @@ pub struct StandardClientDeleteOptions<'a> {
 }
 
 impl StandardClientDeleteOptions<'_> {
+    /// Transforms this [`StandardClientDeleteOptions`] into a new `StandardClientDeleteOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> StandardClientDeleteOptions<'static> {
         StandardClientDeleteOptions {
             method_options: ClientMethodOptions {
@@ -61,6 +63,7 @@ pub struct StandardClientExportOptions<'a> {
 }
 
 impl StandardClientExportOptions<'_> {
+    /// Transforms this [`StandardClientExportOptions`] into a new `StandardClientExportOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> StandardClientExportOptions<'static> {
         StandardClientExportOptions {
             method_options: ClientMethodOptions {

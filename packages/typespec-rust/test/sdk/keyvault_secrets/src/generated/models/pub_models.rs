@@ -29,7 +29,7 @@ pub struct BackupSecretResult {
 /// A Deleted Secret consisting of its previous id, attributes and its tags, as well as information on when it will be purged.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct DeletedSecretBundle {
+pub struct DeletedSecret {
     /// The secret management attributes.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<SecretAttributes>,
@@ -60,6 +60,11 @@ pub struct DeletedSecretBundle {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub managed: Option<bool>,
 
+    /// The version of the previous certificate, if applicable. Applies only to certificates created after June 1, 2025. Certificates
+    /// created before this date are not retroactively updated.
+    #[serde(rename = "previousVersion", skip_serializing_if = "Option::is_none")]
+    pub previous_version: Option<String>,
+
     /// The url of the recovery object, used to identify and recover the deleted secret.
     #[serde(rename = "recoveryId", skip_serializing_if = "Option::is_none")]
     pub recovery_id: Option<String>,
@@ -85,7 +90,7 @@ pub struct DeletedSecretBundle {
 /// The deleted secret item containing metadata about the deleted secret.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct DeletedSecretItem {
+pub struct DeletedSecretProperties {
     /// The secret management attributes.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<SecretAttributes>,
@@ -132,7 +137,7 @@ pub struct DeletedSecretItem {
 /// The deleted secret list result
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct DeletedSecretListResult {
+pub struct ListDeletedSecretPropertiesResult {
     /// The URL to get the next set of deleted secrets.
     #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
     pub next_link: Option<String>,
@@ -140,7 +145,73 @@ pub struct DeletedSecretListResult {
     /// A response message containing a list of deleted secrets in the key vault along with a link to the next page of deleted
     /// secrets.
     #[serde(default)]
-    pub value: Vec<DeletedSecretItem>,
+    pub value: Vec<DeletedSecretProperties>,
+}
+
+/// The secret list result.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct ListSecretPropertiesResult {
+    /// The URL to get the next set of secrets.
+    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
+    pub next_link: Option<String>,
+
+    /// A response message containing a list of secrets in the key vault along with a link to the next page of secrets.
+    #[serde(default)]
+    pub value: Vec<SecretProperties>,
+}
+
+/// The secret restore parameters.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct RestoreSecretParameters {
+    /// The backup blob associated with a secret bundle.
+    #[serde(
+        default,
+        deserialize_with = "deserialize_url_safe",
+        rename = "value",
+        serialize_with = "serialize_url_safe",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub secret_backup: Option<Vec<u8>>,
+}
+
+/// A secret consisting of a value, id and its attributes.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct Secret {
+    /// The secret management attributes.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub attributes: Option<SecretAttributes>,
+
+    /// The content type of the secret.
+    #[serde(rename = "contentType", skip_serializing_if = "Option::is_none")]
+    pub content_type: Option<String>,
+
+    /// The secret id.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// If this is a secret backing a KV certificate, then this field specifies the corresponding key backing the KV certificate.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub kid: Option<String>,
+
+    /// True if the secret's lifetime is managed by key vault. If this is a secret backing a certificate, then managed will be
+    /// true.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub managed: Option<bool>,
+
+    /// The version of the previous certificate, if applicable. Applies only to certificates created after June 1, 2025. Certificates
+    /// created before this date are not retroactively updated.
+    #[serde(rename = "previousVersion", skip_serializing_if = "Option::is_none")]
+    pub previous_version: Option<String>,
+
+    /// Application specific metadata in the form of key-value pairs.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tags: Option<HashMap<String, String>>,
+
+    /// The secret value.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<String>,
 }
 
 /// The secret management attributes.
@@ -195,44 +266,10 @@ pub struct SecretAttributes {
     pub updated: Option<OffsetDateTime>,
 }
 
-/// A secret consisting of a value, id and its attributes.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct SecretBundle {
-    /// The secret management attributes.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub attributes: Option<SecretAttributes>,
-
-    /// The content type of the secret.
-    #[serde(rename = "contentType", skip_serializing_if = "Option::is_none")]
-    pub content_type: Option<String>,
-
-    /// The secret id.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>,
-
-    /// If this is a secret backing a KV certificate, then this field specifies the corresponding key backing the KV certificate.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub kid: Option<String>,
-
-    /// True if the secret's lifetime is managed by key vault. If this is a secret backing a certificate, then managed will be
-    /// true.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub managed: Option<bool>,
-
-    /// Application specific metadata in the form of key-value pairs.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tags: Option<HashMap<String, String>>,
-
-    /// The secret value.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<String>,
-}
-
 /// The secret item containing secret metadata.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct SecretItem {
+pub struct SecretProperties {
     /// The secret management attributes.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub attributes: Option<SecretAttributes>,
@@ -254,36 +291,9 @@ pub struct SecretItem {
     pub tags: Option<HashMap<String, String>>,
 }
 
-/// The secret list result.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-#[non_exhaustive]
-pub struct SecretListResult {
-    /// The URL to get the next set of secrets.
-    #[serde(rename = "nextLink", skip_serializing_if = "Option::is_none")]
-    pub next_link: Option<String>,
-
-    /// A response message containing a list of secrets in the key vault along with a link to the next page of secrets.
-    #[serde(default)]
-    pub value: Vec<SecretItem>,
-}
-
-/// The secret restore parameters.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-pub struct SecretRestoreParameters {
-    /// The backup blob associated with a secret bundle.
-    #[serde(
-        default,
-        deserialize_with = "deserialize_url_safe",
-        rename = "value",
-        serialize_with = "serialize_url_safe",
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub secret_bundle_backup: Option<Vec<u8>>,
-}
-
 /// The secret set parameters.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-pub struct SecretSetParameters {
+pub struct SetSecretParameters {
     /// Type of the secret value such as a password.
     #[serde(rename = "contentType", skip_serializing_if = "Option::is_none")]
     pub content_type: Option<String>,
@@ -303,7 +313,7 @@ pub struct SecretSetParameters {
 
 /// The secret update parameters.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-pub struct SecretUpdateParameters {
+pub struct UpdateSecretPropertiesParameters {
     /// Type of the secret value such as a password.
     #[serde(rename = "contentType", skip_serializing_if = "Option::is_none")]
     pub content_type: Option<String>,

@@ -12,7 +12,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap();
-    let value: SimpleModel = resp.into_body().await.unwrap();
+    let value: SimpleModel = resp.into_body().unwrap();
     assert_eq!(value.age, Some(123));
     assert_eq!(value.name, Some("foo".to_string()));
 }

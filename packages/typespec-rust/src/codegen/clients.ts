@@ -7,6 +7,7 @@
 
 import * as codegen from '@azure-tools/codegen';
 import { values } from '@azure-tools/linq';
+import { emitHeaderTraitDocExample } from './docTests.js';
 import { CodegenError } from './errors.js';
 import * as helpers from './helpers.js';
 import queryString from 'query-string';
@@ -96,24 +97,23 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         if (paramsDocs) {
           body += paramsDocs;
         }
-        body += `${indent.get()}#[tracing::new("${crate.name}")]\n`;
+        body += `${indent.get()}#[tracing::new("${client.languageIndependentName}")]\n`;
         body += `${indent.get()}pub fn ${constructor.name}(${getConstructorParamsSig(constructor.params, client.constructable.options, use)}) -> Result<Self> {\n`;
         body += `${indent.get()}let options = options.unwrap_or_default();\n`;
         // by convention, the endpoint param is always the first ctor param
         const endpointParamName = constructor.params[0].name;
-        body += `${indent.push().get()}let mut ${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
+        body += `${indent.push().get()}let ${client.constructable.endpoint ? 'mut ' : ''}${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
         body += `${indent.get()}${helpers.buildIfBlock(indent, {
           condition: `!${endpointParamName}.scheme().starts_with("http")`,
-          body: (indent) => `${indent.get()}return Err(azure_core::Error::message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
+          body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
         })}`
-        body += `${indent.get()}${endpointParamName}.set_query(None);\n`;
 
         // construct the supplemental path and join it to the endpoint
         if (client.constructable.endpoint) {
           const supplementalEndpoint = client.constructable.endpoint;
           body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
           for (const param of supplementalEndpoint.parameters) {
-            body += `${indent.get()}host = host.replace("{${param.segment}}", ${getClientEndpointParamValue(param)});\n`;
+            body += `${indent.get()}host = host.replace("{${param.segment}}", ${getClientSupplementalEndpointParamValue(param)});\n`;
           }
           body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
         }
@@ -132,13 +132,10 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         // exclude endpoint params as they aren't propagated to clients (they're consumed when creating the complete endpoint)
         const sortedParams = values([...constructor.params]
           .sort((a: rust.ClientParameter, b: rust.ClientParameter) => { return helpers.sortAscending(a.name, b.name); }))
-          .where((each) => each.kind !== 'clientEndpoint').toArray();
+          .where((each) => each.kind !== 'clientSupplementalEndpoint' && each.kind !== 'clientCredential').toArray();
 
         for (const param of sortedParams) {
           if (param.optional) {
-            continue;
-          } else if (isCredential(param.type)) {
-            // credential params aren't persisted on the client so skip them
             continue;
           }
 
@@ -173,7 +170,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         body += `${indent.get()}option_env!("CARGO_PKG_VERSION"),\n`;
         body += `${indent.get()}options.client_options,\n`;
         body += `${indent.get()}Vec::default(),\n`;
-        body += `${indent.get()}${authPolicy ? 'vec![auth_policy]' : 'Vec::default()'},\n`;
+        body += `${indent.get()}${authPolicy ? 'vec![auth_policy]' : 'Vec::default()'}, None,\n`;
         body += `${indent.pop().get()}),\n`; // end Pipeline::new
         body += `${indent.pop().get()}})\n`; // end Ok
         body += `${indent.pop().get()}}\n`; // end constructor
@@ -234,6 +231,10 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
       const paramsDocs = getParamsBlockDocComment(indent, method);
       if (paramsDocs) {
         body += paramsDocs;
+      }
+      // client accessors will never have response headers
+      if (method.kind !== 'clientaccessor' && method.responseHeaders) {
+        body += getHeaderTraitDocComment(indent, crate, method);
       }
       if (isPublicApi) {
         body += `${indent.get()}#[tracing::function("${method.languageIndependentName}")]\n`;
@@ -325,7 +326,9 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
       body += '}\n\n'; // end options
 
       if (method.kind === 'pageable' || method.kind === 'lro') {
-        body += `impl ${helpers.getTypeDeclaration(method.options.type, true)} {\n`;
+        body += `impl ${helpers.getTypeDeclaration(method.options.type, 'anonymous')} {\n`;
+        const wrappedTypeName = helpers.wrapInBackTicks(helpers.getTypeDeclaration(method.options.type, 'omit'));
+        body += `${indent.get()}/// Transforms this [${wrappedTypeName}] into a new ${wrappedTypeName} that owns the underlying data, cloning it if necessary.\n`;
         body += `${indent.get()}pub fn into_owned(self) -> ${method.options.type.name}<'static> {\n`;
         body += `${indent.push().get()}${method.options.type.name} {\n`;
         indent.push();
@@ -369,7 +372,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
  */
 function getParamsBlockDocComment(indent: helpers.indentation, callable: rust.Constructor | rust.MethodType): string | undefined {
   const formatParamBullet = function (paramName: string): string {
-    return `* \`${paramName}\` - `;
+    return `* ${helpers.wrapInBackTicks(paramName)} - `;
   };
 
   let paramsContent = '';
@@ -472,10 +475,56 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
       }
     }
 
-    paramsSig.push(`options: ${helpers.getTypeDeclaration(method.options, true)}`);
+    paramsSig.push(`options: ${helpers.getTypeDeclaration(method.options, 'anonymous')}`);
   }
 
   return paramsSig.join(', ');
+}
+
+/**
+ * returns documentation for header trait access if the method has response headers.
+ * 
+ * @param indent the current indentation level
+ * @param crate the crate to which method belongs
+ * @param method the method for which to generate header trait documentation
+ * @returns the header trait documentation or empty string if not applicable
+ */
+function getHeaderTraitDocComment(indent: helpers.indentation, crate: rust.Crate, method: ClientMethod): string {
+  if (!method.responseHeaders) {
+    return '';
+  }
+
+  const traitName = method.responseHeaders.name;
+  let headerDocs = `${indent.get()}///\n`;
+  headerDocs += `${indent.get()}/// ## Response Headers\n`;
+  headerDocs += `${indent.get()}///\n`;
+  let returnType: string;
+  switch (method.returns.type.kind) {
+    case 'asyncResponse':
+    case 'response':
+      returnType = method.returns.type.name;
+      break;
+    default:
+      // for pagers/pollers we want their generic type argument type name
+      returnType = method.returns.type.type.name;
+      break;
+  }
+  headerDocs += `${indent.get()}/// The returned [${helpers.wrapInBackTicks(returnType)}](azure_core::http::${returnType}) implements the [${helpers.wrapInBackTicks(traitName)}] trait, which provides\n`;
+  headerDocs += `${indent.get()}/// access to response headers. For example:\n`;
+  headerDocs += `${indent.get()}///\n`;
+  headerDocs += emitHeaderTraitDocExample(crate.name, method.responseHeaders, indent);
+  headerDocs += `${indent.get()}///\n`;
+  headerDocs += `${indent.get()}/// ### Available headers\n`;
+
+  // List all available headers
+  for (const header of method.responseHeaders.headers) {
+    headerDocs += `${indent.get()}/// * [${helpers.wrapInBackTicks(header.name)}()](crate::generated::models::${traitName}::${header.name}) - ${header.header}\n`;
+  }
+
+  headerDocs += `${indent.get()}///\n`;
+  headerDocs += `${indent.get()}/// [${helpers.wrapInBackTicks(traitName)}]: crate::generated::models::${traitName}\n`;
+
+  return headerDocs;
 }
 
 /**
@@ -905,7 +954,6 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
  * @returns the code which sets HTTP headers for the request
  */
 function applyHeaderParams(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean): string {
-
   let body = '';
 
   for (const headerParam of paramGroups.header) {
@@ -913,10 +961,27 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
       // we have some special handling for the header continuation token.
       // if we have a token value, i.e. from the next page, then use that value.
       // if not, then check if an optional token value was provided.
+      body += `${indent.get()}let ${headerParam.name} = ` + helpers.buildMatch(indent, headerParam.name, [
+        {
+          pattern: `PagerState::More(${headerParam.name})`,
+          body: (indent) => `${indent.get()}&Some(${headerParam.name})\n`,
+        },
+        {
+          pattern: 'PagerState::Initial',
+          body: (indent) => `${indent.get()}&options.${headerParam.name}\n`,
+        }
+      ]) + ';\n';
       body += indent.get() + helpers.buildIfBlock(indent, {
-        condition: `let Some(${headerParam.name}) = ${headerParam.name}.or_else(|| options.${headerParam.name}.clone())`,
+        condition: `let Some(${headerParam.name}) = ${headerParam.name}`,
         body: (indent) => `${indent.get()}request.insert_header("${headerParam.header}", ${headerParam.name});\n`,
-      })
+      }) + '\n';
+      continue;
+    }
+
+    if (isOptionalContentTypeHeader(headerParam)) {
+      // when the body is optional, the Content-Type header
+      // will be set IFF the optional body param is not None.
+      // this logic happens elsewhere so we skip it here.
       continue;
     }
 
@@ -935,6 +1000,11 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
   }
 
   return body;
+}
+
+/** type guard to determine if headerParam is an optional Content-Type header */
+function isOptionalContentTypeHeader(headerParam: HeaderParamType): headerParam is rust.HeaderScalarParameter {
+  return headerParam.kind === 'headerScalar' && headerParam.optional && headerParam.header.toLowerCase() === 'content-type';
 }
 
 /**
@@ -959,7 +1029,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
   let optionalContentTypeParam: rust.HeaderScalarParameter | undefined;
   for (const headerParam of paramGroups.header) {
     // if the content-type header is optional, we need to emit it inside the "if let Some(body)" clause below.
-    if (headerParam.kind === 'headerScalar' && headerParam.optional && headerParam.header.toLowerCase() === 'content-type') {
+    if (isOptionalContentTypeHeader(headerParam)) {
       optionalContentTypeParam = headerParam;
     }
   }
@@ -1010,26 +1080,6 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
   return body;
 }
 
-/**
- * Return an error if a local RawResponse variable "rsp" has a non-success status code.
- * @param use the use statement builder currently in scope
- * @param indent the indentation helper currently in scope
- * @returns code to return an error if the status code of "rsp" doesn't indicate success
- */
-function errIfNotSuccessResponse(use: Use, indent: helpers.indentation): string {
-  use.add('azure_core', 'Error', 'Result');
-  use.add('azure_core::error', 'ErrorKind', 'HttpError');
-  return helpers.buildIfBlock(indent, {
-    condition: '!rsp.status().is_success()',
-    body: (indent) => {
-      let body = `${indent.get()}let status = rsp.status();\n`
-      body += `${indent.get()}let http_error = HttpError::new(rsp).await;\n`;
-      body += `${indent.get()}let error_kind = ErrorKind::http_response(status, http_error.error_code().map(std::borrow::ToOwned::to_owned));\n`;
-      body += `${indent.get()}return Err(Error::new(error_kind, http_error));\n`;
-      return body;
-    },
-  });
-}
 
 /**
  * Returns 'mut ' if the Url local var needs to be mutable, else the empty string.
@@ -1094,7 +1144,7 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
   }
   return helpers.buildIfBlock(indent, {
     condition: `${param.name}${toString}.is_empty()`,
-    body: (indent) => `${indent.get()}return Err(azure_core::Error::message(azure_core::error::ErrorKind::Other, "parameter ${param.name} cannot be empty"));`,
+    body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, "parameter ${param.name} cannot be empty"));`,
   });
 }
 
@@ -1118,13 +1168,18 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
 
   body += constructUrl(indent, use, method, paramGroups);
   body += constructRequest(indent, use, method, paramGroups, false);
-  body += `${indent.get()}let rsp = self.pipeline.send(&ctx, &mut request).await?;\n`;
-  body += errIfNotSuccessResponse(use, indent);
-  let rspInto = 'rsp.into()';
-  if (method.returns.type.kind === 'rawResponse') {
-    rspInto = 'rsp';
+
+  let pipelineMethod: string;
+  switch (method.returns.type.kind) {
+    case 'asyncResponse':
+      pipelineMethod = 'stream';
+      break;
+    case 'response':
+      pipelineMethod = 'send';
+      break;
   }
-  body += `${indent.get()}Ok(${rspInto})\n`;
+  body += `${indent.get()}let rsp = self.pipeline.${pipelineMethod}(&ctx, &mut request, ${getPipelineOptions(indent, use, method)}).await?;\n`;
+  body += `${indent.get()}Ok(rsp.into())\n`;
   return body;
 }
 
@@ -1138,19 +1193,14 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
  * @returns the contents of the method body
  */
 function getPageableMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.PageableMethod): string {
-  if (!method.strategy) {
-    throw new CodegenError('InternalError', 'paged method with no strategy NYI');
-  }
-
-  const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
-
-  use.add('azure_core::http', 'Method', 'PagerResult', 'PagerState', 'Request', 'Url');
-  use.add('azure_core', bodyFormat, 'Result');
+  use.add('azure_core::http', 'Method', 'Request', 'Url');
+  use.add('azure_core::http::pager', 'PagerResult', 'PagerState');
+  use.add('azure_core', 'Result');
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));
 
   const paramGroups = getMethodParamGroup(method);
-  const urlVar = 'first_url';
+  const urlVar = method.strategy ? 'first_url' : 'url';
 
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default().into_owned();\n';
@@ -1161,143 +1211,168 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n`;
   }
 
-  switch (method.strategy.kind) {
-    case 'continuationToken': {
-      const reqTokenParam = method.strategy.requestToken.name;
-      body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: PagerState<String>| {\n`;
-      body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ' : ''}url = first_url.clone();\n`;
-      if (method.strategy.requestToken.kind === 'queryScalar') {
-        // if the url already contains the token query param,
-        // e.g. we started on some page, then we need to remove
-        // it before appending the token for the next page.
-        const reqTokenValue = method.strategy.requestToken.key;
-        body += `${indent.get()}${helpers.buildIfBlock(indent, {
-          condition: `let PagerState::More(${reqTokenParam}) = ${reqTokenParam}`,
-          body: (indent) => {
-            let body = indent.get() + helpers.buildIfBlock(indent, {
-              condition: `url.query_pairs().any(|(name, _)| name.eq("${reqTokenValue}"))`,
-              body: (indent) => {
-                let body = `${indent.get()}let mut new_url = url.clone();\n`;
-                body += `${indent.get()}new_url.query_pairs_mut().clear().extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("${reqTokenValue}")));\n`;
-                body += `${indent.get()}url = new_url;\n`;
-                return body;
-              },
-            });
-            body += `${indent.get()}url.query_pairs_mut().append_pair("${reqTokenValue}", &${reqTokenParam});\n`;
-            return body;
-          }
-        })}`
-      }
-      break;
-    }
-    case 'nextLink': {
-      const nextLinkName = method.strategy.nextLink.name;
-      body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>| {\n`;
-      body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
-        pattern: `PagerState::More(${nextLinkName})`,
-        body: (indent) => {
-          if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'queryScalar') {
-            const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
-            // there are no APIs to set/update an existing query parameter.
-            // so, we filter the existing query params to remove the api-version
-            // query param. we then add back the filtered set and then add the
-            // api-version as specified on the client.
-            let setApiVerBody = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
-            setApiVerBody += `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
-            setApiVerBody += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
-            setApiVerBody += `${indent.get()}${nextLinkName}\n`;
-            return setApiVerBody;
-          }
-          return `${indent.get()} ${nextLinkName}\n`;
+  // passed to constructRequest. we only need to
+  // clone it for the non-continuation case.
+  let cloneUrl = false;
+
+  if (method.strategy) {
+    switch (method.strategy.kind) {
+      case 'continuationToken': {
+        const reqTokenParam = method.strategy.requestToken.name;
+        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: PagerState<String>| {\n`;
+        body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ' : ''}url = first_url.clone();\n`;
+        if (method.strategy.requestToken.kind === 'queryScalar') {
+          // if the url already contains the token query param,
+          // e.g. we started on some page, then we need to remove
+          // it before appending the token for the next page.
+          const reqTokenValue = method.strategy.requestToken.key;
+          body += `${indent.get()}${helpers.buildIfBlock(indent, {
+            condition: `let PagerState::More(${reqTokenParam}) = ${reqTokenParam}`,
+            body: (indent) => {
+              let body = indent.get() + helpers.buildIfBlock(indent, {
+                condition: `url.query_pairs().any(|(name, _)| name.eq("${reqTokenValue}"))`,
+                body: (indent) => {
+                  let body = `${indent.get()}let mut new_url = url.clone();\n`;
+                  body += `${indent.get()}new_url.query_pairs_mut().clear().extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("${reqTokenValue}")));\n`;
+                  body += `${indent.get()}url = new_url;\n`;
+                  return body;
+                },
+              }) + '\n';
+              body += `${indent.get()}url.query_pairs_mut().append_pair("${reqTokenValue}", &${reqTokenParam});\n`;
+              return body;
+            }
+          })}\n`
         }
-      }, {
-        pattern: 'PagerState::Initial',
-        body: (indent) => `${indent.get()}${urlVar}.clone()\n`
-      }]);
-      body += ';\n';
-      break;
+        break;
+      }
+      case 'nextLink': {
+        const nextLinkName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
+        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>| {\n`;
+        body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
+          pattern: `PagerState::More(${nextLinkName})`,
+          body: (indent) => {
+            if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'queryScalar') {
+              const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
+              // there are no APIs to set/update an existing query parameter.
+              // so, we filter the existing query params to remove the api-version
+              // query param. we then add back the filtered set and then add the
+              // api-version as specified on the client.
+              let setApiVerBody = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
+              setApiVerBody += `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
+              setApiVerBody += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
+              setApiVerBody += `${indent.get()}${nextLinkName}\n`;
+              return setApiVerBody;
+            }
+            return `${indent.get()} ${nextLinkName}\n`;
+          }
+        }, {
+          pattern: 'PagerState::Initial',
+          body: (indent) => `${indent.get()}${urlVar}.clone()\n`
+        }]);
+        body += ';\n';
+        break;
+      }
     }
+  } else {
+    // no next link when there's no strategy
+    body += `${indent.get()}Ok(Pager::from_callback(move |_: PagerState<Url>| {\n`;
+    cloneUrl = true;
   }
 
-  let rspType: string;
-  let rspInto: string;
-  if (method.strategy.kind === 'continuationToken' && method.strategy.responseToken.kind === 'responseHeaderScalar') {
+  // Pipeline::send() returns a RawResponse, so no reason to declare the type if not something else.
+  let rspType = '';
+  let rspInto = '';
+  if (method.strategy && method.strategy.kind === 'continuationToken' && method.strategy.responseToken.kind === 'responseHeaderScalar') {
     // the continuation token comes from a response header. therefore,
     // we need a Response<T> so we have access to the header trait.
     use.addForType(method.returns.type.type);
-    rspType = helpers.getTypeDeclaration(method.returns.type.type);
+    const rspTypeDecl = helpers.getTypeDeclaration(method.returns.type.type);
+    rspType = `: ${rspTypeDecl}`;
     rspInto = '.into()';
-  } else {
-    // continuation token comes from the response body.
-    // we'll deconstruct the raw response and parse it later.
-    use.add('azure_core', 'http::RawResponse');
-    rspType = 'RawResponse';
-    rspInto = '';
   }
 
-  body += constructRequest(indent, use, method, paramGroups, true);
+  body += constructRequest(indent, use, method, paramGroups, true, cloneUrl);
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
-  body += `${indent.push().get()}let rsp: ${rspType} = pipeline.send(&ctx, &mut request).await?${rspInto};\n`;
-  if (rspType === 'RawResponse') {
-    body += errIfNotSuccessResponse(use, indent);
-  }
+  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut request, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
 
   // check if we need to extract the next link field from the response model
-  if (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'modelField') {
-    use.add('azure_core', 'http::RawResponse');
+  if (method.strategy && (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'nextLink')) {
+    const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
+    use.add('azure_core', bodyFormat, 'http::RawResponse');
     body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
-    body += `${indent.get()}let bytes = body.collect().await?;\n`;
     const deserialize = bodyFormat === 'json' ? 'json::from_json' : 'xml::read_xml';
-    body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&bytes)?;\n`;
-    body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, bytes).into();\n`;
+    body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
+    body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`;
   }
 
-  let srcNextPage: string;
-  let nextPageValue: string;
-  let continuation: string;
-  switch (method.strategy.kind) {
-    case 'continuationToken':
-      nextPageValue = method.strategy.responseToken.name;
-      continuation = nextPageValue;
-      switch (method.strategy.responseToken.kind) {
-        case 'modelField':
-          srcNextPage = `res.${nextPageValue}`;
-          break;
-        case 'responseHeaderScalar':
-          if (!method.responseHeaders) {
-            throw new CodegenError('InternalError', `missing response headers trait for method ${method.name}`);
-          }
-          use.addForType(method.responseHeaders);
-          srcNextPage = `rsp.${method.strategy.responseToken.name}()?`;
-          break;
+  if (method.strategy) {
+    /** provides access to the next link field, handling nested fields as required */
+    const buildNextLinkPath = function (nextLinkPath: Array<rust.ModelField>): string {
+      let fullPath = nextLinkPath[0].name;
+      if (nextLinkPath.length > 1) {
+        for (let i = 1; i < nextLinkPath.length; ++i) {
+          const prev = nextLinkPath[i - 1];
+          const cur = nextLinkPath[i];
+          fullPath += `.and_then(|${prev.name}| ${prev.name}.${cur.name})`;
+        }
       }
-      break;
-    case 'nextLink':
-      nextPageValue = method.strategy.nextLink.name;
-      srcNextPage = `res.${nextPageValue}`;
-      continuation = `${nextPageValue}.parse()?`;
-      break;
+      return fullPath;
+    };
+
+    let srcNextPage: string;
+    let nextPageValue: string;
+    let continuation: string;
+    switch (method.strategy.kind) {
+      case 'continuationToken':
+        switch (method.strategy.responseToken.kind) {
+          case 'nextLink':
+            nextPageValue = method.strategy.responseToken.nextLinkPath[method.strategy.responseToken.nextLinkPath.length - 1].name;
+            srcNextPage = `res.${buildNextLinkPath(method.strategy.responseToken.nextLinkPath)}`;
+            break;
+          case 'responseHeaderScalar':
+            if (!method.responseHeaders) {
+              throw new CodegenError('InternalError', `missing response headers trait for method ${method.name}`);
+            }
+            nextPageValue = method.strategy.responseToken.name;
+            use.addForType(method.responseHeaders);
+            srcNextPage = `rsp.${method.strategy.responseToken.name}()?`;
+            break;
+        }
+        continuation = nextPageValue;
+        break;
+      case 'nextLink': {
+        const lastFieldName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
+        nextPageValue = lastFieldName;
+        srcNextPage = `res.${buildNextLinkPath(method.strategy.nextLinkPath)}`;
+        continuation = `${lastFieldName}.parse()?`;
+        break;
+      }
+    }
+
+    // we need to handle the case where the next page value is the empty string,
+    // so checking strictly for None(theNextLink) is insufficient.
+    // the most common case for this is XML, e.g. an empty tag like <NextLink />
+    body += `${indent.get()}Ok(${helpers.buildMatch(indent, srcNextPage, [{
+      pattern: `Some(${nextPageValue}) if !${nextPageValue}.is_empty()`,
+      body: (indent) => {
+        return `${indent.get()}response: rsp, continuation: ${continuation}\n`;
+      },
+      returns: 'PagerResult::More',
+    }, {
+      pattern: '_',
+      body: (indent) => {
+        return `${indent.get()}response: rsp\n`;
+      },
+      returns: 'PagerResult::Done',
+    }])}`;
+    body += ')\n'; // end Ok
+  } else {
+    // non-continuation case, so we don't need to worry about next links, continuation tokens, etc...
+    body += `${indent.get()}Ok(PagerResult::Done { response: rsp.into() })\n`;
   }
 
-  // we need to handle the case where the next page value is the empty string,
-  // so checking strictly for None(theNextLink) is insufficient.
-  // the most common case for this is XML, e.g. an empty tag like <NextLink />
-  body += `${indent.get()}Ok(${helpers.buildMatch(indent, srcNextPage, [{
-    pattern: `Some(${nextPageValue}) if !${nextPageValue}.is_empty()`,
-    body: (indent) => {
-      return `${indent.get()}response: rsp, continuation: ${continuation}`;
-    },
-    returns: 'PagerResult::More',
-  }, {
-    pattern: '_',
-    body: (indent) => {
-      return `${indent.get()}response: rsp`;
-    },
-    returns: 'PagerResult::Done',
-  }])}`;
-  body += ')\n'; // end Ok
   body += `${indent.pop().get()}}\n`; // end async move
   body += `${indent.pop().get()}}))`; // end Ok/Pager::from_callback
 
@@ -1318,6 +1393,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
   use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
+  use.add('azure_core::http::headers', 'RETRY_AFTER', 'X_MS_RETRY_AFTER_MS', 'RETRY_AFTER_MS');
   use.add('azure_core::http::poller', 'get_retry_after', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor as _');
   if (hasOperationLocationHeader) {
     use.add('azure_core::http::headers', 'HeaderName');
@@ -1332,9 +1408,9 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
-  body += `${constructUrl(indent, use, method, paramGroups, urlVar)}\n\n`;
+  body += constructUrl(indent, use, method, paramGroups, urlVar);
   if (paramGroups.apiVersion) {
-    body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n\n`;
+    body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n`;
   }
 
   body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(\n`
@@ -1343,17 +1419,14 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     pattern: `PollerState::More(next_link)`,
     body: (indent) => {
       let body = '';
-      if (paramGroups.apiVersion) {
-        body += `${indent.get()}let qp = next_link.query_pairs().filter(|(name, _)| name.ne("api-version"));\n`;
+      if (paramGroups.apiVersion?.kind === 'queryScalar') {
+        body += `${indent.get()}let qp = next_link.query_pairs().filter(|(name, _)| name.ne("${paramGroups.apiVersion.key}"));\n`;
+        body += `${indent.get()}let mut next_link = next_link.clone();\n`;
+        body += `${indent.get()}next_link.query_pairs_mut().clear().extend_pairs(qp).append_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`;
       }
 
-      body += `${indent.get()}let mut next_link = next_link.clone();\n`;
-
-      if (paramGroups.apiVersion) {
-        body += `${indent.get()}next_link.query_pairs_mut().clear().extend_pairs(qp).append_pair("api-version", &${paramGroups.apiVersion.name});\n\n`;
-      }
-      body += `${indent.get()}let ${paramGroups.header.length > 0 ? 'mut ' : ''}request = Request::new(next_link.clone(), Method::Get);`;
-      body += `\n${applyHeaderParams(indent, use, method, paramGroups, true)}\n\n`
+      body += `${indent.get()}let ${paramGroups.header.length > 0 ? 'mut ' : ''}request = Request::new(next_link.clone(), Method::Get);\n`;
+      body += applyHeaderParams(indent, use, method, paramGroups, true);
       body += `${indent.get()}(request, next_link)\n`;
 
       return body;
@@ -1361,16 +1434,16 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   }, {
     pattern: 'PollerState::Initial',
     body: (indent) => {
-      let body = `${constructRequest(indent, use, method, paramGroups, true, true, false)}\n`;
+      let body = constructRequest(indent, use, method, paramGroups, true, true, false);
       body += `${indent.get()}(request, url.clone())\n`;
 
       return body;
     },
-  }])};\n\n`;
+  }])};\n`;
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`
   body += `${indent.get()}let pipeline = pipeline.clone();\n`
   body += `${indent.get()}async move {\n`
-  body += `${indent.push().get()}let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;\n`
+  body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut request, ${getPipelineOptions(indent, use, method)}).await?;\n`
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
 
   if (hasOperationLocationHeader) {
@@ -1387,8 +1460,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     }])};\n`
   }
 
-  body += `${indent.get()}let retry_after = get_retry_after(&headers, &options.poller_options);\n`
-  body += `${indent.get()}let bytes = body.collect().await?;\n`
+  body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &options.poller_options);\n`
 
   let deserialize = '';
   if (bodyFormat === 'json') {
@@ -1397,8 +1469,8 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   } else {
     deserialize = 'xml::read_xml';
   }
-  body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&bytes)?;\n`
-  body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, bytes).into();\n`
+  body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`
+  body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`
 
   body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', [{
     pattern: `PollerStatus::InProgress`,
@@ -1427,7 +1499,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
  * @param param the param for which to get the value
  * @returns the code to use for the param's value
  */
-function getClientEndpointParamValue(param: rust.ClientEndpointParameter): string {
+function getClientSupplementalEndpointParamValue(param: rust.ClientSupplementalEndpointParameter): string {
   let paramName = param.name;
   if (param.optional) {
     paramName = 'options.' + paramName;
@@ -1583,8 +1655,36 @@ function isClientMethodOptions(type: rust.Type): boolean {
   return type.kind === 'external' && type.name === 'ClientMethodOptions';
 }
 
-/** returns true if the type is a credential */
-function isCredential(type: rust.Type): boolean {
-  const unwrappedType = helpers.unwrapType(type);
-  return unwrappedType.kind === 'tokenCredential';
+/**
+ * returns an instantiation of pipeline options or None
+ * if no options are required.
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param use the use statement builder currently in scope
+ * @param method the method for which to construct the pipeline options
+ * @returns the pipeline options text
+ */
+function getPipelineOptions(indent: helpers.indentation, use: Use, method: ClientMethod): string {
+  let options = '';
+  if (method.statusCodes.length != 0) {
+    let pipelineOptions: string;
+    switch (method.returns.type.kind) {
+      case 'asyncResponse':
+        pipelineOptions = 'PipelineStreamOptions';
+        break;
+      default:
+        pipelineOptions = 'PipelineSendOptions';
+        break;
+    }
+    use.add("azure_core::http", pipelineOptions);
+    use.add("azure_core::error", "CheckSuccessOptions");
+    options += `Some(${pipelineOptions} {\n`;
+    indent.push();
+    options += `${indent.get()}check_success: CheckSuccessOptions{ success_codes: &[${method.statusCodes.join(', ')}]},\n`;
+    options += `${indent.get()}..Default::default()\n`;
+    options += `${indent.pop().get()}})`;
+    return options;
+  } else {
+    return 'None';
+  }
 }

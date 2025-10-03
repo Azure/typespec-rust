@@ -8,6 +8,7 @@
         "**/test-resources-post.ps1",
         "**/assets.json",
         ".config",
+        "packages/*/test/other/**/*.rs",
         "packages/*/test/spector/**/*.rs",
         "packages/*/test/sdk/**/*.rs",
         "packages/*/test/spector/**/*.toml",
@@ -31,11 +32,13 @@
         "rust-toolchain.toml"
     ],
     "words": [
+        "INVLD",
         "appconfiguration",
         "clientaccessor",
         "clippy",
         "codegen",
         "codemodel",
+        "docsrs",
         "entra",
         "enumvalue",
         "impls",

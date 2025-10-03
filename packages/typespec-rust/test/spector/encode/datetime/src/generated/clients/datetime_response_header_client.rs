@@ -11,9 +11,9 @@ use crate::generated::models::{
     DatetimeResponseHeaderClientUnixTimestampResult,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
-    http::{Method, NoFormat, Pipeline, Request, Response, Url},
-    tracing, Error, Result,
+    error::CheckSuccessOptions,
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    tracing, Result,
 };
 
 #[tracing::client]
@@ -32,6 +32,29 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`DatetimeResponseHeaderClientDefaultResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_datetime::models::{DatetimeResponseHeaderClientDefaultResult, DatetimeResponseHeaderClientDefaultResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<DatetimeResponseHeaderClientDefaultResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(value) = response.value()? {
+    ///         println!("value: {:?}", value);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`value`()](crate::generated::models::DatetimeResponseHeaderClientDefaultResultHeaders::value) - value
+    ///
+    /// [`DatetimeResponseHeaderClientDefaultResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientDefaultResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.default")]
     pub async fn default(
         &self,
@@ -42,16 +65,19 @@ impl DatetimeResponseHeaderClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/responseheader/default")?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -59,6 +85,29 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`DatetimeResponseHeaderClientRfc3339ResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_datetime::models::{DatetimeResponseHeaderClientRfc3339Result, DatetimeResponseHeaderClientRfc3339ResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<DatetimeResponseHeaderClientRfc3339Result, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(value) = response.value()? {
+    ///         println!("value: {:?}", value);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`value`()](crate::generated::models::DatetimeResponseHeaderClientRfc3339ResultHeaders::value) - value
+    ///
+    /// [`DatetimeResponseHeaderClientRfc3339ResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientRfc3339ResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.rfc3339")]
     pub async fn rfc3339(
         &self,
@@ -69,16 +118,19 @@ impl DatetimeResponseHeaderClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/responseheader/rfc3339")?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -86,6 +138,29 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`DatetimeResponseHeaderClientRfc7231ResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_datetime::models::{DatetimeResponseHeaderClientRfc7231Result, DatetimeResponseHeaderClientRfc7231ResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<DatetimeResponseHeaderClientRfc7231Result, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(value) = response.value()? {
+    ///         println!("value: {:?}", value);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`value`()](crate::generated::models::DatetimeResponseHeaderClientRfc7231ResultHeaders::value) - value
+    ///
+    /// [`DatetimeResponseHeaderClientRfc7231ResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientRfc7231ResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.rfc7231")]
     pub async fn rfc7231(
         &self,
@@ -96,16 +171,19 @@ impl DatetimeResponseHeaderClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/responseheader/rfc7231")?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -113,6 +191,29 @@ impl DatetimeResponseHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    ///
+    /// ## Response Headers
+    ///
+    /// The returned [`Response`](azure_core::http::Response) implements the [`DatetimeResponseHeaderClientUnixTimestampResultHeaders`] trait, which provides
+    /// access to response headers. For example:
+    ///
+    /// ```no_run
+    /// use azure_core::{Result, http::{Response, NoFormat}};
+    /// use spector_datetime::models::{DatetimeResponseHeaderClientUnixTimestampResult, DatetimeResponseHeaderClientUnixTimestampResultHeaders};
+    /// async fn example() -> Result<()> {
+    ///     let response: Response<DatetimeResponseHeaderClientUnixTimestampResult, NoFormat> = unimplemented!();
+    ///     // Access response headers
+    ///     if let Some(value) = response.value()? {
+    ///         println!("value: {:?}", value);
+    ///     }
+    ///     Ok(())
+    /// }
+    /// ```
+    ///
+    /// ### Available headers
+    /// * [`value`()](crate::generated::models::DatetimeResponseHeaderClientUnixTimestampResultHeaders::value) - value
+    ///
+    /// [`DatetimeResponseHeaderClientUnixTimestampResultHeaders`]: crate::generated::models::DatetimeResponseHeaderClientUnixTimestampResultHeaders
     #[tracing::function("Encode.Datetime.ResponseHeader.unixTimestamp")]
     pub async fn unix_timestamp(
         &self,
@@ -123,16 +224,19 @@ impl DatetimeResponseHeaderClient {
         let mut url = self.endpoint.clone();
         url = url.join("encode/datetime/responseheader/unix-timestamp")?;
         let mut request = Request::new(url, Method::Get);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

@@ -40,7 +40,7 @@ async fn list_first_item_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: PagedFirstItem = page.into_body().await.unwrap();
+        let page: PagedFirstItem = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_value = page.value;
@@ -85,7 +85,7 @@ async fn list_second_item_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: PagedSecondItem = page.into_body().await.unwrap();
+        let page: PagedSecondItem = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_value = page.value;

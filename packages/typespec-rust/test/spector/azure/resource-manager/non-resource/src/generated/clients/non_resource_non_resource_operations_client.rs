@@ -8,9 +8,9 @@ use crate::generated::models::{
     NonResourceNonResourceOperationsClientGetOptions,
 };
 use azure_core::{
-    error::{ErrorKind, HttpError},
-    http::{Method, Pipeline, Request, RequestContent, Response, Url},
-    tracing, Error, Result,
+    error::CheckSuccessOptions,
+    http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
+    tracing, Result,
 };
 
 /// Operations on non resource model should not be marked as `@armResourceOperations`.
@@ -44,13 +44,13 @@ impl NonResourceNonResourceOperationsClient {
         options: Option<NonResourceNonResourceOperationsClientCreateOptions<'_>>,
     ) -> Result<Response<NonResource>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
         }
         if parameter.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter parameter cannot be empty",
             ));
@@ -69,16 +69,19 @@ impl NonResourceNonResourceOperationsClient {
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
         request.set_body(body);
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 
@@ -96,13 +99,13 @@ impl NonResourceNonResourceOperationsClient {
         options: Option<NonResourceNonResourceOperationsClientGetOptions<'_>>,
     ) -> Result<Response<NonResource>> {
         if location.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter location cannot be empty",
             ));
         }
         if parameter.is_empty() {
-            return Err(azure_core::Error::message(
+            return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
                 "parameter parameter cannot be empty",
             ));
@@ -119,16 +122,19 @@ impl NonResourceNonResourceOperationsClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        let rsp = self.pipeline.send(&ctx, &mut request).await?;
-        if !rsp.status().is_success() {
-            let status = rsp.status();
-            let http_error = HttpError::new(rsp).await;
-            let error_kind = ErrorKind::http_response(
-                status,
-                http_error.error_code().map(std::borrow::ToOwned::to_owned),
-            );
-            return Err(Error::new(error_kind, http_error));
-        }
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
         Ok(rsp.into())
     }
 }

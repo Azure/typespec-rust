@@ -5,16 +5,16 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`ClientModelClient::client()`](crate::generated::clients::ClientModelClient::client())
+/// Options to be passed to [`ModelClient::client()`](crate::generated::clients::ModelClient::client())
 #[derive(Clone, Default, SafeDebug)]
-pub struct ClientModelClientClientOptions<'a> {
+pub struct ModelClientClientOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-/// Options to be passed to [`ClientModelClient::language()`](crate::generated::clients::ClientModelClient::language())
+/// Options to be passed to [`ModelClient::language()`](crate::generated::clients::ModelClient::language())
 #[derive(Clone, Default, SafeDebug)]
-pub struct ClientModelClientLanguageOptions<'a> {
+pub struct ModelClientLanguageOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

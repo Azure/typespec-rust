@@ -5,8 +5,10 @@
 use futures::StreamExt;
 use spector_corepageable::{
     models::{
+        PageableServerDrivenPaginationContinuationTokenClientListHeaderNestedResponseBodyOptions,
         PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseBodyOptions,
         PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseHeaderOptions,
+        PageableServerDrivenPaginationContinuationTokenClientListQueryNestedResponseBodyOptions,
         PageableServerDrivenPaginationContinuationTokenClientListQueryResponseBodyOptions,
         PageableServerDrivenPaginationContinuationTokenClientListQueryResponseHeaderOptions,
         RequestHeaderResponseBodyResponse, RequestHeaderResponseHeaderResponse,
@@ -15,6 +17,49 @@ use spector_corepageable::{
     },
     PageableClient,
 };
+
+#[tokio::test]
+async fn list_header_nested_response_body() {
+    let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut iter = client
+        .get_pageable_server_driven_pagination_client()
+        .get_pageable_server_driven_pagination_continuation_token_client()
+        .list_header_nested_response_body(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListHeaderNestedResponseBodyOptions {
+                bar: Some("bar".to_string()),
+                foo: Some("foo".to_string()),
+                ..Default::default()
+            },
+        ))
+        .unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                assert_eq!(item.id, Some("1".to_string()));
+                assert_eq!(item.name, Some("dog".to_string()));
+            }
+            2 => {
+                assert_eq!(item.id, Some("2".to_string()));
+                assert_eq!(item.name, Some("cat".to_string()));
+            }
+            3 => {
+                assert_eq!(item.id, Some("3".to_string()));
+                assert_eq!(item.name, Some("bird".to_string()));
+            }
+            4 => {
+                assert_eq!(item.id, Some("4".to_string()));
+                assert_eq!(item.name, Some("fish".to_string()));
+            }
+            _ => {
+                panic!("unexpected item number");
+            }
+        }
+    }
+    assert_eq!(item_count, 4);
+}
 
 #[tokio::test]
 async fn list_header_response_body() {
@@ -78,7 +123,7 @@ async fn list_header_response_body_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: RequestHeaderResponseBodyResponse = page.into_body().await.unwrap();
+        let page: RequestHeaderResponseBodyResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -122,7 +167,7 @@ async fn list_header_response_body_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: RequestHeaderResponseBodyResponse = page.into_body().await.unwrap();
+        let page: RequestHeaderResponseBodyResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -203,7 +248,7 @@ async fn list_header_response_header_pages() {
         page_count += 1;
         let page = page.unwrap();
         let next_token = page.next_token().unwrap();
-        let page: RequestHeaderResponseHeaderResponse = page.into_body().await.unwrap();
+        let page: RequestHeaderResponseHeaderResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -248,7 +293,7 @@ async fn list_header_response_header_pages() {
         page_count += 1;
         let page = page.unwrap();
         let next_token = page.next_token().unwrap();
-        let page: RequestHeaderResponseHeaderResponse = page.into_body().await.unwrap();
+        let page: RequestHeaderResponseHeaderResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -264,6 +309,49 @@ async fn list_header_response_header_pages() {
             }
         }
     }
+}
+
+#[tokio::test]
+async fn list_query_nested_response_body() {
+    let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let mut iter = client
+        .get_pageable_server_driven_pagination_client()
+        .get_pageable_server_driven_pagination_continuation_token_client()
+        .list_query_nested_response_body(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListQueryNestedResponseBodyOptions {
+                bar: Some("bar".to_string()),
+                foo: Some("foo".to_string()),
+                ..Default::default()
+            },
+        ))
+        .unwrap();
+    let mut item_count = 0;
+    while let Some(item) = iter.next().await {
+        item_count += 1;
+        let item = item.unwrap();
+        match item_count {
+            1 => {
+                assert_eq!(item.id, Some("1".to_string()));
+                assert_eq!(item.name, Some("dog".to_string()));
+            }
+            2 => {
+                assert_eq!(item.id, Some("2".to_string()));
+                assert_eq!(item.name, Some("cat".to_string()));
+            }
+            3 => {
+                assert_eq!(item.id, Some("3".to_string()));
+                assert_eq!(item.name, Some("bird".to_string()));
+            }
+            4 => {
+                assert_eq!(item.id, Some("4".to_string()));
+                assert_eq!(item.name, Some("fish".to_string()));
+            }
+            _ => {
+                panic!("unexpected item number");
+            }
+        }
+    }
+    assert_eq!(item_count, 4);
 }
 
 #[tokio::test]
@@ -328,7 +416,7 @@ async fn list_query_response_body_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: RequestQueryResponseBodyResponse = page.into_body().await.unwrap();
+        let page: RequestQueryResponseBodyResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -372,7 +460,7 @@ async fn list_query_response_body_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: RequestQueryResponseBodyResponse = page.into_body().await.unwrap();
+        let page: RequestQueryResponseBodyResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -453,7 +541,7 @@ async fn list_query_response_header_pages() {
         page_count += 1;
         let page = page.unwrap();
         let next_token = page.next_token().unwrap();
-        let page: RequestQueryResponseHeaderResponse = page.into_body().await.unwrap();
+        let page: RequestQueryResponseHeaderResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;
@@ -498,7 +586,7 @@ async fn list_query_response_header_pages() {
         page_count += 1;
         let page = page.unwrap();
         let next_token = page.next_token().unwrap();
-        let page: RequestQueryResponseHeaderResponse = page.into_body().await.unwrap();
+        let page: RequestQueryResponseHeaderResponse = page.into_body().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;

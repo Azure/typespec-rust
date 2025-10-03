@@ -12,7 +12,7 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<ClientModel> for RequestContent<ClientModel> {
     type Error = azure_core::Error;
     fn try_from(value: ClientModel) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
@@ -21,27 +21,27 @@ impl TryFrom<ClientNameAndJsonEncodedNameModel>
 {
     type Error = azure_core::Error;
     fn try_from(value: ClientNameAndJsonEncodedNameModel) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<ClientNameModel> for RequestContent<ClientNameModel> {
     type Error = azure_core::Error;
     fn try_from(value: ClientNameModel) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<LanguageClientNameModel> for RequestContent<LanguageClientNameModel> {
     type Error = azure_core::Error;
     fn try_from(value: LanguageClientNameModel) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<RustName> for RequestContent<RustName> {
     type Error = azure_core::Error;
     fn try_from(value: RustName) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

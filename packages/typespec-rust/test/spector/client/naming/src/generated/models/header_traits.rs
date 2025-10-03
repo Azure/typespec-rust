@@ -15,6 +15,21 @@ use azure_core::{
 const DEFAULT_NAME: HeaderName = HeaderName::from_static("default-name");
 
 /// Provides access to typed response headers for [`NamingClient::response()`](crate::generated::clients::NamingClient::response())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::{Response, NoFormat}};
+/// use spector_naming::models::{NamingClientResponseResult, NamingClientResponseResultHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<NamingClientResponseResult, NoFormat> = unimplemented!();
+///     // Access response headers
+///     if let Some(client_name) = response.client_name()? {
+///         println!("default-name: {:?}", client_name);
+///     }
+///     Ok(())
+/// }
+/// ```
 pub trait NamingClientResponseResultHeaders: private::Sealed {
     fn client_name(&self) -> Result<Option<String>>;
 }

@@ -6,6 +6,6 @@
 mod method_options;
 mod models_impl;
 mod pub_models;
+mod xml_helpers;
 pub use method_options::*;
 pub use pub_models::*;
-pub(crate) mod xml_helpers;

@@ -12,6 +12,8 @@ import * as helpers from './helpers.js';
  */
 export function emitLibRs(): string {
   let content = helpers.contentPreamble(false);
+  content += '#![cfg_attr(docsrs, feature(doc_auto_cfg))]\n';
+  content += '\n';
   content += 'mod generated;\n';
   content += 'pub use generated::*;\n';
   return content;

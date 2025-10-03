@@ -9,20 +9,20 @@ use azure_core::{http::RequestContent, json::to_json, Result};
 impl TryFrom<SafeintAsStringProperty> for RequestContent<SafeintAsStringProperty> {
     type Error = azure_core::Error;
     fn try_from(value: SafeintAsStringProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<Uint32AsStringProperty> for RequestContent<Uint32AsStringProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Uint32AsStringProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }
 
 impl TryFrom<Uint8AsStringProperty> for RequestContent<Uint8AsStringProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Uint8AsStringProperty) -> Result<Self> {
-        RequestContent::try_from(to_json(&value)?)
+        Ok(to_json(&value)?.into())
     }
 }

@@ -22,7 +22,7 @@ export class Context {
 
   /**
    * instantiates a new Context for the provided crate
-   * 
+   *
    * @param crate the crate for which the context will be constructed
    */
   constructor(crate: rust.Crate) {
@@ -70,7 +70,7 @@ export class Context {
               // no body format to propagate
               continue;
             }
-            if (param.type.content.type.kind === 'enum' || param.type.content.type.kind === 'model') {
+            if (param.type.content.type.kind === 'enum' || param.type.content.type.kind === 'model' || param.type.content.type.kind === 'union') {
               this.tryFromForRequestTypes.set(helpers.getTypeDeclaration(param.type.content.type), param.type.content.format);
             }
             recursiveAddBodyFormat(param.type.content.type, param.type.content.format);
@@ -97,17 +97,17 @@ export class Context {
   /**
    * returns the impl TryFrom<T> for RequestContent<T> where T is type.
    * if no impl is required, it returns undefined.
-   * 
+   *
    * @param model the model for which to implement TryFrom
    * @param use the use statement builder currently in scope
    * @returns the impl TryFrom<T> block for type or undefined
    */
-  getTryFromForRequestContent(model: rust.Enum | rust.Model, use: Use): string | undefined {
+  getTryFromForRequestContent(model: rust.Union | rust.Enum | rust.Model, use: Use): string | undefined {
     const format = this.tryFromForRequestTypes.get(helpers.getTypeDeclaration(model));
     if (!format) {
       return undefined;
     }
-    
+
     const formatType = getPayloadFormatType(format);
     if (formatType != 'JsonFormat') {
       use.add('azure_core::http', formatType);
@@ -121,7 +121,7 @@ export class Context {
     let content = `impl TryFrom<${helpers.getTypeDeclaration(model)}> for RequestContent<${helpers.getTypeDeclaration(model)}${formatTypeDeclaration}> {\n`;
     content += `${indent.get()}type Error = azure_core::Error;\n`;
     content += `${indent.get()}fn try_from(value: ${helpers.getTypeDeclaration(model)}) -> Result<Self> {\n`;
-    content += `${indent.push().get()}RequestContent::try_from(to_${format}(&value)?)\n`;
+    content += `${indent.push().get()}Ok(to_${format}(&value)?.into())\n`;
     content += `${indent.pop().get()}}\n`;
     content += '}\n\n';
     return content;
@@ -158,15 +158,35 @@ export class Context {
       return undefined;
     }
 
-    // find the page items field in the model
-    let pageItemsField: rust.ModelField | undefined;
-    for (const field of model.fields) {
-      if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.PageItems) === rust.ModelFieldFlags.PageItems) {
-        pageItemsField = field;
-        break;
-      }
-    }
+    // find the page items field in the model.
+    // since the items can be nested, we need to
+    // traverse through the models.
 
+    const fieldPaths = new Array<string>();
+    const recursiveFindPageItemsField = function(model: rust.Model): rust.ModelField | undefined {
+      for (const field of model.fields) {
+        if (field.kind === 'additionalProperties') {
+          continue;
+        }
+        if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.PageItems) === rust.ModelFieldFlags.PageItems) {
+          fieldPaths.push(field.name);
+          let pageItemsField: rust.ModelField | undefined;
+          if (field.type.kind === 'model') {
+            pageItemsField = recursiveFindPageItemsField(field.type);
+          }
+
+          // if the child type has a paged items field then favor that (nested case)
+          if (pageItemsField) {
+            return pageItemsField;
+          } else {
+            return field;
+          }
+        }
+      }
+      return undefined;
+    };
+
+    const pageItemsField = recursiveFindPageItemsField(model);
     if (!pageItemsField) {
       throw new CodegenError('InternalError', `didn't find page items field in model ${model.name}`);
     }
@@ -174,7 +194,8 @@ export class Context {
     use.addForType(model);
     use.addForType(pageItemsField.type);
     use.add('async_trait', 'async_trait');
-    use.add('azure_core', 'http::Page', 'Result');
+    use.add('azure_core', 'Result');
+    use.add('azure_core::http::pager', 'Page');
 
     const indent = new helpers.indentation();
 
@@ -184,7 +205,7 @@ export class Context {
     content += `${indent.get()}type Item = ${helpers.getTypeDeclaration(helpers.unwrapType(pageItemsField.type))};\n`;
     content += `${indent.get()}type IntoIter = <${helpers.getTypeDeclaration(pageItemsField.type)} as IntoIterator>::IntoIter;\n`;
     content += `${indent.get()}async fn into_items(self) -> Result<Self::IntoIter> {\n`;
-    content += `${indent.push().get()}Ok(self.${pageItemsField.name}.into_iter())\n`;
+    content += `${indent.push().get()}Ok(self.${fieldPaths.join('.')}.into_iter())\n`;
     content += `${indent.pop().get()}}\n`; // end fn
     content += '}\n\n'; // end impl
 
