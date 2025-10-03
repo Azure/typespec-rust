@@ -18,7 +18,7 @@ export class Context {
   private readonly bodyFormatForModels = new Map<rust.Model, helpers.ModelFormat>();
   private readonly tryFromForRequestTypes = new Map<string, rust.PayloadFormat>();
   private readonly pagedResponseTypes = new Set<rust.Model>();
-  private readonly lroTypes = new Set<rust.Model>();
+  private readonly lroStatusTypes = new Set<rust.Model>();
 
   /**
    * instantiates a new Context for the provided crate
@@ -57,7 +57,7 @@ export class Context {
           // impls are for pagers only (not page iterators)
           this.pagedResponseTypes.add(method.returns.type.type.content);
         } else if (method.kind === 'lro' && method.returns.type.kind === 'poller') {
-          this.lroTypes.add(method.returns.type.type.content);
+          this.lroStatusTypes.add(method.returns.type.type.content);
         }
 
         // TODO: this doesn't handle the case where a method sends/receives a HashMap<T>
@@ -200,7 +200,7 @@ export class Context {
    * @returns the StatusMonitor impl or undefined
    */
   getStatusMonitorImplForType(model: rust.Model, use: Use): string | undefined {
-    if (!this.lroTypes.has(model)) {
+    if (!this.lroStatusTypes.has(model)) {
       return undefined;
     }
 

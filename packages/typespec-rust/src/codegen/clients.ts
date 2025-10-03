@@ -1314,10 +1314,15 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
  * @returns the contents of the method body
  */
 function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroMethod): string {
+  const hasOperationLocationHeader = method.responseHeaders?.headers.some(h => h.header.toLowerCase() === 'operation-location') === true;
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
   use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
   use.add('azure_core::http::poller', 'get_retry_after', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor as _');
+  if (hasOperationLocationHeader) {
+    use.add('azure_core::http::headers', 'HeaderName');
+  }
+
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));
 
@@ -1367,6 +1372,21 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}async move {\n`
   body += `${indent.push().get()}let rsp: RawResponse = pipeline.send(&ctx, &mut request).await?;\n`
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
+
+  if (hasOperationLocationHeader) {
+    body += `${indent.get()}let next_link = ${helpers.buildMatch(indent, 'headers.get_optional_string(&HeaderName::from_static("retry-after"))', [{
+      pattern: `Some(operation_location)`,
+      body: (indent) => {
+        return `${indent.get()}Url::parse(&operation_location).unwrap()\n`;
+      }
+    }, {
+      pattern: 'None',
+      body: (indent) => {
+        return `${indent.get()}next_link`;
+      }
+    }])};\n`
+  }
+
   body += `${indent.get()}let retry_after = get_retry_after(&headers, &options.poller_options);\n`
   body += `${indent.get()}let bytes = body.collect().await?;\n`
 

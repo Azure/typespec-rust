@@ -1357,7 +1357,12 @@ export class Adapter {
       const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
       const responseType = this.typeToWireType(this.getModel(method.lroMetadata.logicalResult));
       if (responseType.kind !== 'model') {
-        throw new AdapterError('InternalError', `envelope result for ${method.name} is not a model`, method.__raw?.node);
+        throw new AdapterError('InternalError', `logical result type for an LRO method '${method.name} 'is not a model`, method.__raw?.node);
+      }
+
+      const statusType = this.typeToWireType(this.getModel(method.lroMetadata.pollingInfo.responseModel));
+      if (statusType.kind !== 'model') {
+        throw new AdapterError('InternalError', `status result type for an LRO method '${method.name} 'is not a model`, method.__raw?.node);
       }
 
       const pushModels = (model: rust.Model, crate: rust.Crate): void => {
@@ -1376,8 +1381,9 @@ export class Adapter {
         }
       }
       pushModels(responseType, this.crate);
+      pushModels(statusType, this.crate);
 
-      rustMethod.returns = new rust.Result(this.crate, new rust.Poller(this.crate, new rust.Response(this.crate, responseType, format)));
+      rustMethod.returns = new rust.Result(this.crate, new rust.Poller(this.crate, new rust.Response(this.crate, responseType, format), new rust.Response(this.crate, statusType, format)));
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
       const response = new rust.Response(this.crate, this.typeToWireType(this.getType(method.response.type)), responseFormat);
       rustMethod.returns = new rust.Result(this.crate, response);
