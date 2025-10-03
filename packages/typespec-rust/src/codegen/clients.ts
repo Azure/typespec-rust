@@ -498,7 +498,18 @@ function getHeaderTraitDocComment(indent: helpers.indentation, crate: rust.Crate
   let headerDocs = `${indent.get()}///\n`;
   headerDocs += `${indent.get()}/// ## Response Headers\n`;
   headerDocs += `${indent.get()}///\n`;
-  headerDocs += `${indent.get()}/// The returned [${helpers.wrapInBackTicks('Response')}](azure_core::http::Response) implements the [${helpers.wrapInBackTicks(traitName)}] trait, which provides\n`;
+  let returnType: string;
+  switch (method.returns.type.kind) {
+    case 'asyncResponse':
+    case 'response':
+      returnType = method.returns.type.name;
+      break;
+    default:
+      // for pagers/pollers we want their generic type argument type name
+      returnType = method.returns.type.type.name;
+      break;
+  }
+  headerDocs += `${indent.get()}/// The returned [${helpers.wrapInBackTicks(returnType)}](azure_core::http::${returnType}) implements the [${helpers.wrapInBackTicks(traitName)}] trait, which provides\n`;
   headerDocs += `${indent.get()}/// access to response headers. For example:\n`;
   headerDocs += `${indent.get()}///\n`;
   headerDocs += emitHeaderTraitDocExample(crate.name, method.responseHeaders, indent);

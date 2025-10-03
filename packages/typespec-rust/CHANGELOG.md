@@ -1,5 +1,11 @@
 # Release History
 
+## 0.24.1 (unreleased)
+
+### Bugs Fixed
+
+* Fixed incorrect header trait doc comment.
+
 ## 0.24.0 (2025-10-02)
 
 ### Breaking Changes

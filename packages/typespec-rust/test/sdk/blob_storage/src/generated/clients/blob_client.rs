@@ -927,7 +927,7 @@ impl BlobClient {
     ///
     /// ## Response Headers
     ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`BlobClientDownloadResultHeaders`] trait, which provides
+    /// The returned [`AsyncResponse`](azure_core::http::AsyncResponse) implements the [`BlobClientDownloadResultHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
     /// ```no_run

@@ -561,7 +561,7 @@ impl BlockBlobClient {
     ///
     /// ## Response Headers
     ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`BlockBlobClientQueryResultHeaders`] trait, which provides
+    /// The returned [`AsyncResponse`](azure_core::http::AsyncResponse) implements the [`BlockBlobClientQueryResultHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
     /// ```no_run
