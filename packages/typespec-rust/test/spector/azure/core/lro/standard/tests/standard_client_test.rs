@@ -24,18 +24,25 @@ async fn create_or_replace() {
     assert!(first_result.is_some());
     let first_response = first_result.unwrap().unwrap();
     assert_eq!(first_response.status(), StatusCode::Created);
-    let _first_body = first_response.into_body().unwrap();
-    //assert_eq!(first_body.status(), PollerStatus::InProgress);
+    let first_body = first_response.into_body().unwrap();
+    assert_eq!(first_body.status(), PollerStatus::InProgress);
 
-    //let second_result = poller.next().await;
-    //assert!(second_result.is_some());
-    //let second_response = second_result.unwrap().unwrap();
-    //assert_eq!(second_response.status(), StatusCode::Ok);
-    //let second_body = second_response.into_body().unwrap();
-    //assert_eq!(second_body.status(), PollerStatus::Succeeded);
+    let second_result = poller.next().await;
+    assert!(second_result.is_some());
+    let second_response = second_result.unwrap().unwrap();
+    assert_eq!(second_response.status(), StatusCode::Ok);
+    let second_body = second_response.into_body().unwrap();
+    assert_eq!(second_body.status(), PollerStatus::InProgress);
 
-    //let third_result = poller.next().await;
-    //assert!(third_result.is_none());
+    let third_result = poller.next().await;
+    assert!(third_result.is_some());
+    let third_response = third_result.unwrap().unwrap();
+    assert_eq!(third_response.status(), StatusCode::Ok);
+    let third_body = third_response.into_body().unwrap();
+    assert_eq!(third_body.status(), PollerStatus::Succeeded);
+
+    let fourth_result = poller.next().await;
+    assert!(fourth_result.is_none());
 }
 
 #[tokio::test]
@@ -54,9 +61,16 @@ async fn delete() {
     assert!(second_result.is_some());
     let second_response = second_result.unwrap().unwrap();
     assert_eq!(second_response.status(), StatusCode::Ok);
-    let _second_body = second_response.into_body().unwrap();
-    //assert_eq!(second_body.status(), PollerStatus::Succeeded);
+    let second_body = second_response.into_body().unwrap();
+    assert_eq!(second_body.status(), PollerStatus::InProgress);
 
-    //let third_result = poller.next().await;
-    //assert!(third_result.is_none());
+    let third_result = poller.next().await;
+    assert!(third_result.is_some());
+    let third_response = third_result.unwrap().unwrap();
+    assert_eq!(third_response.status(), StatusCode::Ok);
+    let third_body = third_response.into_body().unwrap();
+    assert_eq!(third_body.status(), PollerStatus::Succeeded);
+
+    let fourth_result = poller.next().await;
+    assert!(fourth_result.is_none());
 }

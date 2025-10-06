@@ -166,7 +166,7 @@ impl StandardClient {
                         .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let next_link = match headers
-                        .get_optional_string(&HeaderName::from_static("retry-after"))
+                        .get_optional_string(&HeaderName::from_static("operation-location"))
                     {
                         Some(operation_location) => Url::parse(&operation_location).unwrap(),
                         None => next_link,
@@ -278,7 +278,7 @@ impl StandardClient {
                         .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let next_link = match headers
-                        .get_optional_string(&HeaderName::from_static("retry-after"))
+                        .get_optional_string(&HeaderName::from_static("operation-location"))
                     {
                         Some(operation_location) => Url::parse(&operation_location).unwrap(),
                         None => next_link,
@@ -393,7 +393,7 @@ impl StandardClient {
                         .await?;
                     let (status, headers, body) = rsp.deconstruct();
                     let next_link = match headers
-                        .get_optional_string(&HeaderName::from_static("retry-after"))
+                        .get_optional_string(&HeaderName::from_static("operation-location"))
                     {
                         Some(operation_location) => Url::parse(&operation_location).unwrap(),
                         None => next_link,
