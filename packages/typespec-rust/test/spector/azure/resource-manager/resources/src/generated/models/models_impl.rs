@@ -80,34 +80,6 @@ impl StatusMonitor for ArmOperationStatusResourceProvisioningState {
     }
 }
 
-impl StatusMonitor for ExtensionsResource {
-    type Output = ExtensionsResource;
-    fn status(&self) -> PollerStatus {
-        PollerStatus::Succeeded
-    }
-}
-
-impl StatusMonitor for NestedProxyResource {
-    type Output = NestedProxyResource;
-    fn status(&self) -> PollerStatus {
-        PollerStatus::Succeeded
-    }
-}
-
-impl StatusMonitor for SingletonTrackedResource {
-    type Output = SingletonTrackedResource;
-    fn status(&self) -> PollerStatus {
-        PollerStatus::Succeeded
-    }
-}
-
-impl StatusMonitor for TopLevelTrackedResource {
-    type Output = TopLevelTrackedResource;
-    fn status(&self) -> PollerStatus {
-        PollerStatus::Succeeded
-    }
-}
-
 impl TryFrom<ExtensionsResource> for RequestContent<ExtensionsResource> {
     type Error = azure_core::Error;
     fn try_from(value: ExtensionsResource) -> Result<Self> {

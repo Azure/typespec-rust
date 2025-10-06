@@ -108,14 +108,14 @@ impl ResourcesTopLevelClient {
     ///
     /// ## Response Headers
     ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`TopLevelTrackedResourceHeaders`] trait, which provides
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ArmOperationStatusResourceProvisioningStateHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
     /// ```no_run
     /// use azure_core::{Result, http::Response};
-    /// use spector_armresources::models::{TopLevelTrackedResource, TopLevelTrackedResourceHeaders};
+    /// use spector_armresources::models::{ArmOperationStatusResourceProvisioningState, ArmOperationStatusResourceProvisioningStateHeaders};
     /// async fn example() -> Result<()> {
-    ///     let response: Response<TopLevelTrackedResource> = unimplemented!();
+    ///     let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
     ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
@@ -128,10 +128,10 @@ impl ResourcesTopLevelClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](crate::generated::models::TopLevelTrackedResourceHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`retry_after`()](crate::generated::models::TopLevelTrackedResourceHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
     ///
-    /// [`TopLevelTrackedResourceHeaders`]: crate::generated::models::TopLevelTrackedResourceHeaders
+    /// [`ArmOperationStatusResourceProvisioningStateHeaders`]: crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.createOrReplace")]
     pub fn create_or_replace(
         &self,
@@ -139,7 +139,7 @@ impl ResourcesTopLevelClient {
         top_level_tracked_resource_name: &str,
         resource: RequestContent<TopLevelTrackedResource>,
         options: Option<ResourcesTopLevelClientCreateOrReplaceOptions<'_>>,
-    ) -> Result<Poller<TopLevelTrackedResource>> {
+    ) -> Result<Poller<ArmOperationStatusResourceProvisioningState>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
@@ -201,7 +201,7 @@ impl ResourcesTopLevelClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &options.poller_options,
                     );
-                    let res: TopLevelTrackedResource = json::from_json(&body)?;
+                    let res: ArmOperationStatusResourceProvisioningState = json::from_json(&body)?;
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
@@ -541,14 +541,14 @@ impl ResourcesTopLevelClient {
     ///
     /// ## Response Headers
     ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`TopLevelTrackedResourceHeaders`] trait, which provides
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ArmOperationStatusResourceProvisioningStateHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
     /// ```no_run
     /// use azure_core::{Result, http::Response};
-    /// use spector_armresources::models::{TopLevelTrackedResource, TopLevelTrackedResourceHeaders};
+    /// use spector_armresources::models::{ArmOperationStatusResourceProvisioningState, ArmOperationStatusResourceProvisioningStateHeaders};
     /// async fn example() -> Result<()> {
-    ///     let response: Response<TopLevelTrackedResource> = unimplemented!();
+    ///     let response: Response<ArmOperationStatusResourceProvisioningState> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(location) = response.location()? {
     ///         println!("Location: {:?}", location);
@@ -561,10 +561,10 @@ impl ResourcesTopLevelClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`location`()](crate::generated::models::TopLevelTrackedResourceHeaders::location) - Location
-    /// * [`retry_after`()](crate::generated::models::TopLevelTrackedResourceHeaders::retry_after) - Retry-After
+    /// * [`location`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::location) - Location
+    /// * [`retry_after`()](crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders::retry_after) - Retry-After
     ///
-    /// [`TopLevelTrackedResourceHeaders`]: crate::generated::models::TopLevelTrackedResourceHeaders
+    /// [`ArmOperationStatusResourceProvisioningStateHeaders`]: crate::generated::models::ArmOperationStatusResourceProvisioningStateHeaders
     #[tracing::function("Azure.ResourceManager.Resources.TopLevel.update")]
     pub fn update(
         &self,
@@ -572,7 +572,7 @@ impl ResourcesTopLevelClient {
         top_level_tracked_resource_name: &str,
         properties: RequestContent<TopLevelTrackedResource>,
         options: Option<ResourcesTopLevelClientUpdateOptions<'_>>,
-    ) -> Result<Poller<TopLevelTrackedResource>> {
+    ) -> Result<Poller<ArmOperationStatusResourceProvisioningState>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
@@ -634,7 +634,7 @@ impl ResourcesTopLevelClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &options.poller_options,
                     );
-                    let res: TopLevelTrackedResource = json::from_json(&body)?;
+                    let res: ArmOperationStatusResourceProvisioningState = json::from_json(&body)?;
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {

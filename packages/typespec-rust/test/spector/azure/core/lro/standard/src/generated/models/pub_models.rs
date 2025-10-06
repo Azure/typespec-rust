@@ -72,6 +72,26 @@ pub struct OperationStatusError {
     pub status: Option<OperationState>,
 }
 
+/// Provides status details for long running operations.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct OperationStatusExportedUserError {
+    /// Error object that describes the error when status is "Failed".
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<Error>,
+
+    /// The unique ID of the operation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The result of the operation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub result: Option<ExportedUser>,
+
+    /// The status of the operation
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<OperationState>,
+}
+
 /// Details about a user.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct User {
