@@ -756,6 +756,24 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
 }
 
 /**
+ * emits the code for joining URL path while preserving query parameters.
+ *
+ * @param indent the indentation helper currently in scope
+ * @param use the use statement builder currently in scope
+ * @param urlVarName the name of the var that contains the azure_core::Url.
+ * @param path the path to join.
+ * @returns the URL construction code
+ */
+function joinUrlPathPreservingQueryParams(indent: helpers.indentation, use: Use, urlVarName: string, path: string): string {
+  use.add('std::collections', 'HashMap');
+  return `${indent.push().get()}{`
+    +`${indent.get()}let qps = ${urlVarName}.query_pairs().into_owned().collect::<HashMap<_, _>>();`
+    +`${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;`
+    +`${indent.get()}${urlVarName}.query_pairs_mut().extend_pairs(qps);`
+    + `}${indent.pop().get()}\n`;
+}
+
+/**
  * emits the code for building the request URL.
  * 
  * @param indent the indentation helper currently in scope
@@ -791,21 +809,11 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
     let path = `"${pathChunks[0]}"`;
     if (paramGroups.path.length === 0) {
       // no path params, just a static path
-      use.add('std::collections', 'HashMap');
-      body += `${indent.push().get()}{`
-        +`${indent.get()}let qps = ${urlVarName}.query_pairs().into_owned().collect::<HashMap<_, _>>();`
-        +`${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;`
-        +`${indent.get()}${urlVarName}.query_pairs_mut().extend_pairs(qps);`
-        + `}${indent.pop().get()}\n`;
+      body += joinUrlPathPreservingQueryParams(indent, use, urlVarName, path);
     } else if (paramGroups.path.length === 1 && pathChunks[0] === `{${paramGroups.path[0].segment}}`) {
       // for a single path param (i.e. "{foo}") we can directly join the path param's value
       const pathParam = paramGroups.path[0];
-      use.add('std::collections', 'HashMap');
-      body += `${indent.push().get()}{`
-        +`${indent.get()}let qps = ${urlVarName}.query_pairs().into_owned().collect::<HashMap<_, _>>();`
-        +`${indent.get()}${urlVarName} = ${urlVarName}.join(${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)})?;`
-        +`${indent.get()}${urlVarName}.query_pairs_mut().extend_pairs(qps);`
-        + `}${indent.pop().get()}\n`;
+      body += joinUrlPathPreservingQueryParams(indent, use, urlVarName, `${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)}`);
     } else {
       // we have path params that need to have their segments replaced with the param values
       body += `${indent.get()}let mut path = String::from(${path});\n`;
@@ -892,12 +900,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         }
       }
       path = '&path';
-      use.add('std::collections', 'HashMap');
-      body += `${indent.push().get()}{`
-        +`${indent.get()}let qps = ${urlVarName}.query_pairs().into_owned().collect::<HashMap<_, _>>();`
-        +`${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;`
-        +`${indent.get()}${urlVarName}.query_pairs_mut().extend_pairs(qps);`
-        + `}${indent.pop().get()}\n`;
+      body += joinUrlPathPreservingQueryParams(indent, use, urlVarName, path);
     }
   }
 
