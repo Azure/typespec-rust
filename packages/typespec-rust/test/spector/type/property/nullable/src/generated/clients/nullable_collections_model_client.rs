@@ -16,6 +16,7 @@ use azure_core::{
     },
     tracing, Result,
 };
+use std::collections::HashMap;
 
 #[tracing::client]
 pub struct NullableCollectionsModelClient {
@@ -42,7 +43,11 @@ impl NullableCollectionsModelClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/property/nullable/collections/model/non-null")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("type/property/nullable/collections/model/non-null")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -74,7 +79,11 @@ impl NullableCollectionsModelClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/property/nullable/collections/model/null")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("type/property/nullable/collections/model/null")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -107,7 +116,11 @@ impl NullableCollectionsModelClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/property/nullable/collections/model/non-null")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("type/property/nullable/collections/model/non-null")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);
@@ -141,7 +154,11 @@ impl NullableCollectionsModelClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/property/nullable/collections/model/null")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("type/property/nullable/collections/model/null")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);

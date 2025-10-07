@@ -13,6 +13,7 @@ use azure_core::{
     },
     tracing, Result,
 };
+use std::collections::HashMap;
 
 /// Test for azure related encode decorator.
 #[tracing::client]
@@ -80,7 +81,11 @@ impl DurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/encode/duration/duration-constant")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("azure/encode/duration/duration-constant")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

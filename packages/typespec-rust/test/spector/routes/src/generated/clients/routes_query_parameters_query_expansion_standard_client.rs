@@ -40,7 +40,11 @@ impl RoutesQueryParametersQueryExpansionStandardClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/query-expansion/standard/array")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("routes/query/query-expansion/standard/array")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut().append_pair("param", &param.join(","));
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -72,7 +76,11 @@ impl RoutesQueryParametersQueryExpansionStandardClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/query-expansion/standard/primitive")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("routes/query/query-expansion/standard/primitive")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -104,7 +112,11 @@ impl RoutesQueryParametersQueryExpansionStandardClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/query-expansion/standard/record")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("routes/query/query-expansion/standard/record")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.0);

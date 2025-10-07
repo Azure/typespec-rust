@@ -20,6 +20,7 @@ use azure_core::{
     },
     json, tracing, Result,
 };
+use std::collections::HashMap;
 
 #[tracing::client]
 pub struct PageableServerDrivenPaginationClient {
@@ -56,7 +57,14 @@ impl PageableServerDrivenPaginationClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url = first_url.join("payload/pageable/server-driven-pagination/link")?;
+        {
+            let qps = first_url
+                .query_pairs()
+                .into_owned()
+                .collect::<HashMap<_, _>>();
+            first_url = first_url.join("payload/pageable/server-driven-pagination/link")?;
+            first_url.query_pairs_mut().extend_pairs(qps);
+        }
         Ok(Pager::from_callback(move |next: PagerState<Url>| {
             let url = match next {
                 PagerState::More(next) => next,
@@ -105,7 +113,14 @@ impl PageableServerDrivenPaginationClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url = first_url.join("payload/pageable/server-driven-pagination/nested-link")?;
+        {
+            let qps = first_url
+                .query_pairs()
+                .into_owned()
+                .collect::<HashMap<_, _>>();
+            first_url = first_url.join("payload/pageable/server-driven-pagination/nested-link")?;
+            first_url.query_pairs_mut().extend_pairs(qps);
+        }
         Ok(Pager::from_callback(move |next: PagerState<Url>| {
             let url = match next {
                 PagerState::More(next) => next,
@@ -156,7 +171,14 @@ impl PageableServerDrivenPaginationClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url = first_url.join("payload/pageable/server-driven-pagination/link-string")?;
+        {
+            let qps = first_url
+                .query_pairs()
+                .into_owned()
+                .collect::<HashMap<_, _>>();
+            first_url = first_url.join("payload/pageable/server-driven-pagination/link-string")?;
+            first_url.query_pairs_mut().extend_pairs(qps);
+        }
         Ok(Pager::from_callback(move |next: PagerState<Url>| {
             let url = match next {
                 PagerState::More(next) => next,

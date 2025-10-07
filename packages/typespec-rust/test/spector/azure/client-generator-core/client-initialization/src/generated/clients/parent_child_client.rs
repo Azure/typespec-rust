@@ -15,6 +15,7 @@ use azure_core::{
     },
     tracing, Result,
 };
+use std::collections::HashMap;
 
 #[tracing::client]
 pub struct ParentChildClient {
@@ -89,7 +90,11 @@ impl ParentChildClient {
             "azure/client-generator-core/client-initialization/child-client/{blobName}",
         );
         path = path.replace("{blobName}", &self.blob_name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Delete);
         let rsp = self
             .pipeline
@@ -121,7 +126,11 @@ impl ParentChildClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/client-generator-core/client-initialization/child-client/{blobName}/get-standalone");
         path = path.replace("{blobName}", &self.blob_name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -158,7 +167,11 @@ impl ParentChildClient {
             "azure/client-generator-core/client-initialization/child-client/{blobName}/with-query",
         );
         path = path.replace("{blobName}", &self.blob_name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         if let Some(format) = options.format {
             url.query_pairs_mut().append_pair("format", &format);
         }

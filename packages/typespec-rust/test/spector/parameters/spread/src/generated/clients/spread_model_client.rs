@@ -17,6 +17,7 @@ use azure_core::{
     },
     tracing, Result,
 };
+use std::collections::HashMap;
 
 #[tracing::client]
 pub struct SpreadModelClient {
@@ -43,7 +44,11 @@ impl SpreadModelClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("parameters/spread/model/request-body")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("parameters/spread/model/request-body")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         let body: RequestContent<BodyParameter> = BodyParameter { name: Some(name) }.try_into()?;
@@ -87,7 +92,11 @@ impl SpreadModelClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/model/composite-request/{name}");
         path = path.replace("{name}", name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.insert_header("test-header", test_header);
@@ -131,7 +140,11 @@ impl SpreadModelClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/model/composite-request-mix/{name}");
         path = path.replace("{name}", name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.insert_header("test-header", test_header);
@@ -167,7 +180,11 @@ impl SpreadModelClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("parameters/spread/model/composite-request-only-with-body")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("parameters/spread/model/composite-request-only-with-body")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -210,7 +227,11 @@ impl SpreadModelClient {
         let mut path =
             String::from("parameters/spread/model/composite-request-without-body/{name}");
         path = path.replace("{name}", name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("test-header", test_header);
         let rsp = self

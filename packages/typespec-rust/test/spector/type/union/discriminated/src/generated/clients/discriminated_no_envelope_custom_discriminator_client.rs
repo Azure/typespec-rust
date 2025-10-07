@@ -12,6 +12,7 @@ use azure_core::{
     http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
     tracing, Result,
 };
+use std::collections::HashMap;
 
 #[tracing::client]
 pub struct DiscriminatedNoEnvelopeCustomDiscriminatorClient {
@@ -37,7 +38,11 @@ impl DiscriminatedNoEnvelopeCustomDiscriminatorClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/union/discriminated/no-envelope/custom-discriminator")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("type/union/discriminated/no-envelope/custom-discriminator")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         if let Some(type_param) = options.type_param {
             url.query_pairs_mut().append_pair("type", &type_param);
         }
@@ -72,7 +77,11 @@ impl DiscriminatedNoEnvelopeCustomDiscriminatorClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/union/discriminated/no-envelope/custom-discriminator")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("type/union/discriminated/no-envelope/custom-discriminator")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

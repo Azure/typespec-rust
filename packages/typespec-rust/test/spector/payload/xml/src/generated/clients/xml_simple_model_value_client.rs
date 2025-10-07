@@ -14,6 +14,7 @@ use azure_core::{
     },
     tracing, Result,
 };
+use std::collections::HashMap;
 
 /// Operations for the SimpleModel type.
 #[tracing::client]
@@ -40,7 +41,11 @@ impl XmlSimpleModelValueClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("payload/xml/simpleModel")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("payload/xml/simpleModel")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
         let rsp = self
@@ -72,7 +77,11 @@ impl XmlSimpleModelValueClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("payload/xml/simpleModel")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("payload/xml/simpleModel")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.set_body(input);

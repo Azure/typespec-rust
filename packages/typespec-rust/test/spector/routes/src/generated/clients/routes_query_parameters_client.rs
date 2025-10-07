@@ -17,6 +17,7 @@ use azure_core::{
     http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
+use std::collections::HashMap;
 
 #[tracing::client]
 pub struct RoutesQueryParametersClient {
@@ -43,7 +44,11 @@ impl RoutesQueryParametersClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/annotation-only")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("routes/query/annotation-only")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -75,7 +80,11 @@ impl RoutesQueryParametersClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/explicit")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("routes/query/explicit")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -129,7 +138,11 @@ impl RoutesQueryParametersClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/template-only")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("routes/query/template-only")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
         let rsp = self

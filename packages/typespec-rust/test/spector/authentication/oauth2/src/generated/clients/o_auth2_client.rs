@@ -14,7 +14,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 
 /// Illustrates clients generated with OAuth2 authentication.
 #[tracing::client]
@@ -88,7 +88,11 @@ impl OAuth2Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("authentication/oauth2/invalid")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("authentication/oauth2/invalid")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -119,7 +123,11 @@ impl OAuth2Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("authentication/oauth2/valid")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("authentication/oauth2/valid")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

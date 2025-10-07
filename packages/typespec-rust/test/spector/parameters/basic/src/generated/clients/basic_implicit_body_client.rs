@@ -11,6 +11,7 @@ use azure_core::{
     },
     tracing, Result,
 };
+use std::collections::HashMap;
 
 #[tracing::client]
 pub struct BasicImplicitBodyClient {
@@ -37,7 +38,11 @@ impl BasicImplicitBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("parameters/basic/implicit-body/simple")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("parameters/basic/implicit-body/simple")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         let body: RequestContent<SimpleRequest> = SimpleRequest { name }.try_into()?;

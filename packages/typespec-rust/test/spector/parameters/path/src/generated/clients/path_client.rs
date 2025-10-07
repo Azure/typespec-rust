@@ -12,6 +12,7 @@ use azure_core::{
     },
     tracing, Result,
 };
+use std::collections::HashMap;
 
 /// Test for path parameters cases.
 #[tracing::client]
@@ -83,7 +84,11 @@ impl PathClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/path/normal/{name}");
         path = path.replace("{name}", name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -118,7 +123,11 @@ impl PathClient {
             Some(name) => path.replace("{name}", &format!("/{name}")),
             None => path.replace("{name}", ""),
         };
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

@@ -21,6 +21,7 @@ use azure_core::{
     },
     json, tracing, Result,
 };
+use std::collections::HashMap;
 
 /// The interface of extensions resources,
 /// it contains 4 kinds of scopes (resource, resource group, subscription and tenant)
@@ -86,7 +87,11 @@ impl ResourcesExtensionsResourcesClient {
         let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
         path = path.replace("{resourceUri}", resource_uri);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
@@ -185,7 +190,11 @@ impl ResourcesExtensionsResourcesClient {
         let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
         path = path.replace("{resourceUri}", resource_uri);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
@@ -237,7 +246,11 @@ impl ResourcesExtensionsResourcesClient {
         let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
         path = path.replace("{resourceUri}", resource_uri);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -283,7 +296,14 @@ impl ResourcesExtensionsResourcesClient {
             "{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources",
         );
         path = path.replace("{resourceUri}", resource_uri);
-        first_url = first_url.join(&path)?;
+        {
+            let qps = first_url
+                .query_pairs()
+                .into_owned()
+                .collect::<HashMap<_, _>>();
+            first_url = first_url.join(&path)?;
+            first_url.query_pairs_mut().extend_pairs(qps);
+        }
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -369,7 +389,11 @@ impl ResourcesExtensionsResourcesClient {
         let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
         path = path.replace("{resourceUri}", resource_uri);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Patch);

@@ -16,6 +16,7 @@ use azure_core::{
     },
     tracing, Result,
 };
+use std::collections::HashMap;
 
 /// Test that we can grow up a service spec and service deployment into a multi-versioned service with full client support.
 ///
@@ -104,7 +105,11 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("add-operation")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("add-operation")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Delete);
         let rsp = self
             .pipeline
@@ -135,7 +140,11 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("add-optional-param/from-none")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("add-optional-param/from-none")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         if let Some(new_parameter) = options.new_parameter {
             url.query_pairs_mut()
                 .append_pair("new-parameter", &new_parameter);
@@ -170,7 +179,11 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("add-optional-param/from-one-optional")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("add-optional-param/from-one-optional")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         if let Some(new_parameter) = options.new_parameter {
             url.query_pairs_mut()
                 .append_pair("new-parameter", &new_parameter);
@@ -210,7 +223,11 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("add-optional-param/from-one-required")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("add-optional-param/from-one-required")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         if let Some(new_parameter) = options.new_parameter {
             url.query_pairs_mut()
                 .append_pair("new-parameter", &new_parameter);

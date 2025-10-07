@@ -42,7 +42,11 @@ impl RoutesPathParametersMatrixExpansionStandardClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/matrix/standard/array{param}");
         path = path.replace("{param}", &format!(";param={}", param.join(",")));
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -81,7 +85,11 @@ impl RoutesPathParametersMatrixExpansionStandardClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/matrix/standard/primitive{param}");
         path = path.replace("{param}", &format!(";param={param}"));
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -128,7 +136,11 @@ impl RoutesPathParametersMatrixExpansionStandardClient {
                 ),
             );
         }
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

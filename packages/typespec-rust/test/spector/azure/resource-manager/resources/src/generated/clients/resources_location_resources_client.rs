@@ -19,6 +19,7 @@ use azure_core::{
     },
     json, tracing, Result,
 };
+use std::collections::HashMap;
 
 #[tracing::client]
 pub struct ResourcesLocationResourcesClient {
@@ -69,7 +70,11 @@ impl ResourcesLocationResourcesClient {
         path = path.replace("{location}", location);
         path = path.replace("{locationResourceName}", location_resource_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Put);
@@ -125,7 +130,11 @@ impl ResourcesLocationResourcesClient {
         path = path.replace("{location}", location);
         path = path.replace("{locationResourceName}", location_resource_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
@@ -178,7 +187,11 @@ impl ResourcesLocationResourcesClient {
         path = path.replace("{location}", location);
         path = path.replace("{locationResourceName}", location_resource_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -223,7 +236,14 @@ impl ResourcesLocationResourcesClient {
         let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources");
         path = path.replace("{location}", location);
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        first_url = first_url.join(&path)?;
+        {
+            let qps = first_url
+                .query_pairs()
+                .into_owned()
+                .collect::<HashMap<_, _>>();
+            first_url = first_url.join(&path)?;
+            first_url.query_pairs_mut().extend_pairs(qps);
+        }
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -310,7 +330,11 @@ impl ResourcesLocationResourcesClient {
         path = path.replace("{location}", location);
         path = path.replace("{locationResourceName}", location_resource_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Patch);

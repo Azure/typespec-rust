@@ -15,6 +15,7 @@ use azure_core::{
     },
     tracing, Result,
 };
+use std::collections::HashMap;
 
 /// Illustrates versioned server.
 #[tracing::client]
@@ -85,7 +86,11 @@ impl VersionedClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("server/versions/versioned/with-path-api-version/{apiVersion}");
         path = path.replace("{apiVersion}", &self.api_version);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline
@@ -115,7 +120,11 @@ impl VersionedClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("server/versions/versioned/with-query-api-version")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("server/versions/versioned/with-query-api-version")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Head);
@@ -147,7 +156,11 @@ impl VersionedClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("server/versions/versioned/with-query-old-api-version")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("server/versions/versioned/with-query-old-api-version")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Head);
@@ -179,7 +192,11 @@ impl VersionedClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("server/versions/versioned/without-api-version")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("server/versions/versioned/without-api-version")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline

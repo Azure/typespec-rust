@@ -25,7 +25,7 @@ use azure_core::{
     },
     json, tracing, Result,
 };
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 
 /// The key vault client performs cryptographic key operations and vault operations against the Key Vault service.
 #[tracing::client]
@@ -116,7 +116,11 @@ impl SecretClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}/backup");
         path = path.replace("{secret-name}", secret_name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Post);
@@ -163,7 +167,11 @@ impl SecretClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}");
         path = path.replace("{secret-name}", secret_name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
@@ -210,7 +218,11 @@ impl SecretClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("deletedsecrets/{secret-name}");
         path = path.replace("{secret-name}", secret_name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -260,7 +272,11 @@ impl SecretClient {
             Some(secret_version) => path.replace("{secret-version}", &secret_version),
             None => path.replace("{secret-version}", ""),
         };
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -297,7 +313,14 @@ impl SecretClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url = first_url.join("deletedsecrets")?;
+        {
+            let qps = first_url
+                .query_pairs()
+                .into_owned()
+                .collect::<HashMap<_, _>>();
+            first_url = first_url.join("deletedsecrets")?;
+            first_url.query_pairs_mut().extend_pairs(qps);
+        }
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -371,7 +394,14 @@ impl SecretClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url = first_url.join("secrets")?;
+        {
+            let qps = first_url
+                .query_pairs()
+                .into_owned()
+                .collect::<HashMap<_, _>>();
+            first_url = first_url.join("secrets")?;
+            first_url.query_pairs_mut().extend_pairs(qps);
+        }
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -454,7 +484,14 @@ impl SecretClient {
         let mut first_url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}/versions");
         path = path.replace("{secret-name}", secret_name);
-        first_url = first_url.join(&path)?;
+        {
+            let qps = first_url
+                .query_pairs()
+                .into_owned()
+                .collect::<HashMap<_, _>>();
+            first_url = first_url.join(&path)?;
+            first_url.query_pairs_mut().extend_pairs(qps);
+        }
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -537,7 +574,11 @@ impl SecretClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("deletedsecrets/{secret-name}");
         path = path.replace("{secret-name}", secret_name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
@@ -583,7 +624,11 @@ impl SecretClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("deletedsecrets/{secret-name}/recover");
         path = path.replace("{secret-name}", secret_name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Post);
@@ -621,7 +666,11 @@ impl SecretClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("secrets/restore")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("secrets/restore")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Post);
@@ -673,7 +722,11 @@ impl SecretClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("secrets/{secret-name}");
         path = path.replace("{secret-name}", secret_name);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Put);
@@ -728,7 +781,11 @@ impl SecretClient {
             Some(secret_version) => path.replace("{secret-version}", &secret_version),
             None => path.replace("{secret-version}", ""),
         };
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Patch);

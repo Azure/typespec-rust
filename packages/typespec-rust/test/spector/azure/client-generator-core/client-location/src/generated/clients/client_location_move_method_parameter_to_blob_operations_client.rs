@@ -11,6 +11,7 @@ use azure_core::{
     http::{Method, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
+use std::collections::HashMap;
 
 #[tracing::client]
 pub struct ClientLocationMoveMethodParameterToBlobOperationsClient {
@@ -39,7 +40,11 @@ impl ClientLocationMoveMethodParameterToBlobOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/client-generator-core/client-location/blob")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("azure/client-generator-core/client-location/blob")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut().append_pair("blob", blob);
         url.query_pairs_mut().append_pair("container", container);
         url.query_pairs_mut()

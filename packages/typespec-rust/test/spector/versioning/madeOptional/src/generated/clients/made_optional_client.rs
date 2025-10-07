@@ -13,6 +13,7 @@ use azure_core::{
     },
     tracing, Result,
 };
+use std::collections::HashMap;
 
 /// Test for the `@madeOptional` decorator.
 #[tracing::client]
@@ -84,7 +85,11 @@ impl MadeOptionalClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("test")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("test")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         if let Some(param) = options.param {
             url.query_pairs_mut().append_pair("param", &param);
         }

@@ -15,6 +15,7 @@ use azure_core::{
     tracing, Result,
 };
 use rust_decimal::Decimal;
+use std::collections::HashMap;
 
 /// Decimal type
 #[tracing::client]
@@ -42,7 +43,11 @@ impl ScalarDecimalTypeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/scalar/decimal/resquest_body")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("type/scalar/decimal/resquest_body")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -75,7 +80,11 @@ impl ScalarDecimalTypeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/scalar/decimal/request_parameter")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("type/scalar/decimal/request_parameter")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         url.query_pairs_mut()
             .append_pair("value", &value.to_string());
         let mut request = Request::new(url, Method::Get);
@@ -107,7 +116,11 @@ impl ScalarDecimalTypeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/scalar/decimal/response_body")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("type/scalar/decimal/response_body")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self

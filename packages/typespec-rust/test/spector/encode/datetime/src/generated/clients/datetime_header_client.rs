@@ -14,6 +14,7 @@ use azure_core::{
     time::{to_rfc3339, to_rfc7231, OffsetDateTime},
     tracing, Result,
 };
+use std::collections::HashMap;
 
 #[tracing::client]
 pub struct DatetimeHeaderClient {
@@ -40,7 +41,11 @@ impl DatetimeHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/header/default")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("encode/datetime/header/default")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", to_rfc7231(&value));
         let rsp = self
@@ -72,7 +77,11 @@ impl DatetimeHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/header/rfc3339")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("encode/datetime/header/rfc3339")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", to_rfc3339(&value));
         let rsp = self
@@ -104,7 +113,11 @@ impl DatetimeHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/header/rfc7231")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("encode/datetime/header/rfc7231")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", to_rfc7231(&value));
         let rsp = self
@@ -136,7 +149,11 @@ impl DatetimeHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/header/unix-timestamp")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("encode/datetime/header/unix-timestamp")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", value.unix_timestamp().to_string());
         let rsp = self
@@ -168,7 +185,11 @@ impl DatetimeHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/header/unix-timestamp-array")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("encode/datetime/header/unix-timestamp-array")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         request.insert_header(
             "value",

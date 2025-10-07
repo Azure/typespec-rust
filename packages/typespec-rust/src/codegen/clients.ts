@@ -791,11 +791,21 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
     let path = `"${pathChunks[0]}"`;
     if (paramGroups.path.length === 0) {
       // no path params, just a static path
-      body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
+      use.add('std::collections', 'HashMap');
+      body += `${indent.push().get()}{`
+        +`${indent.get()}let qps = ${urlVarName}.query_pairs().into_owned().collect::<HashMap<_, _>>();`
+        +`${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;`
+        +`${indent.get()}${urlVarName}.query_pairs_mut().extend_pairs(qps);`
+        + `}${indent.pop().get()}\n`;
     } else if (paramGroups.path.length === 1 && pathChunks[0] === `{${paramGroups.path[0].segment}}`) {
       // for a single path param (i.e. "{foo}") we can directly join the path param's value
       const pathParam = paramGroups.path[0];
-      body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)})?;\n`;
+      use.add('std::collections', 'HashMap');
+      body += `${indent.push().get()}{`
+        +`${indent.get()}let qps = ${urlVarName}.query_pairs().into_owned().collect::<HashMap<_, _>>();`
+        +`${indent.get()}${urlVarName} = ${urlVarName}.join(${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)})?;`
+        +`${indent.get()}${urlVarName}.query_pairs_mut().extend_pairs(qps);`
+        + `}${indent.pop().get()}\n`;
     } else {
       // we have path params that need to have their segments replaced with the param values
       body += `${indent.get()}let mut path = String::from(${path});\n`;
@@ -882,7 +892,12 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         }
       }
       path = '&path';
-      body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
+      use.add('std::collections', 'HashMap');
+      body += `${indent.push().get()}{`
+        +`${indent.get()}let qps = ${urlVarName}.query_pairs().into_owned().collect::<HashMap<_, _>>();`
+        +`${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;`
+        +`${indent.get()}${urlVarName}.query_pairs_mut().extend_pairs(qps);`
+        + `}${indent.pop().get()}\n`;
     }
   }
 

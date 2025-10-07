@@ -12,6 +12,7 @@ use azure_core::{
     http::{ClientOptions, Method, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
+use std::collections::HashMap;
 
 /// Test for overload operation in .NET.
 #[tracing::client]
@@ -77,7 +78,11 @@ impl OverloadClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("client/overload/resources")?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join("client/overload/resources")?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -117,7 +122,11 @@ impl OverloadClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("client/overload/resources/{scope}");
         path = path.replace("{scope}", scope);
-        url = url.join(&path)?;
+        {
+            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+            url = url.join(&path)?;
+            url.query_pairs_mut().extend_pairs(qps);
+        }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self

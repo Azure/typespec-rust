@@ -13,6 +13,7 @@ use azure_core::{
     },
     json, tracing, Result,
 };
+use std::collections::HashMap;
 
 /// Test describing pageable.
 #[tracing::client]
@@ -76,7 +77,14 @@ impl PageableClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url = first_url.join("azure/payload/pageable")?;
+        {
+            let qps = first_url
+                .query_pairs()
+                .into_owned()
+                .collect::<HashMap<_, _>>();
+            first_url = first_url.join("azure/payload/pageable")?;
+            first_url.query_pairs_mut().extend_pairs(qps);
+        }
         if let Some(maxpagesize) = options.maxpagesize {
             first_url
                 .query_pairs_mut()
