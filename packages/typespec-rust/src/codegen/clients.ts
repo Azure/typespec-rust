@@ -200,7 +200,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         body += `${indent.get()}pub fn endpoint_url(&self) -> Result<Url> {\n`;
         body += `${indent.push().get()}let mut ${endpointUrlName} = self.${endpointFieldName}.clone();\n`;
         body += constructUrl(indent, use, commonParameterizedPath, clientParamGroups, endpointUrlName);
-        body += `${indent.get()}Ok(${endpointUrlName});\n`;
+        body += `${indent.get()}Ok(${endpointUrlName})\n`;
         body += `${indent.pop().get()}}\n\n`;
       }
     }

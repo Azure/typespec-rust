@@ -111,7 +111,7 @@ impl PageBlobClient {
             .collect::<HashMap<_, _>>();
         endpoint_url = endpoint_url.join(&path)?;
         endpoint_url.query_pairs_mut().extend_pairs(qps);
-        Ok(endpoint_url);
+        Ok(endpoint_url)
     }
 
     /// The Clear Pages operation clears a range of pages from a page blob

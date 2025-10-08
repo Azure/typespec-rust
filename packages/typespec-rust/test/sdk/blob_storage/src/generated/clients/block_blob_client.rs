@@ -109,7 +109,7 @@ impl BlockBlobClient {
             .collect::<HashMap<_, _>>();
         endpoint_url = endpoint_url.join(&path)?;
         endpoint_url.query_pairs_mut().extend_pairs(qps);
-        Ok(endpoint_url);
+        Ok(endpoint_url)
     }
 
     /// The Commit Block List operation writes a blob by specifying the list of block IDs that make up the blob. In order to be

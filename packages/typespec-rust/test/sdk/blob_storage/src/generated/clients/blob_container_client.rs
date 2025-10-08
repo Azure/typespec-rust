@@ -114,7 +114,7 @@ impl BlobContainerClient {
             .collect::<HashMap<_, _>>();
         endpoint_url = endpoint_url.join(&self.container_name)?;
         endpoint_url.query_pairs_mut().extend_pairs(qps);
-        Ok(endpoint_url);
+        Ok(endpoint_url)
     }
 
     /// The Acquire Lease operation requests a new lease on a container. The lease lock duration can be 15 to 60 seconds, or can
