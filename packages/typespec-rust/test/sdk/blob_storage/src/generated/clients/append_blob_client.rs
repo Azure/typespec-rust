@@ -106,7 +106,7 @@ impl AppendBlobClient {
             .collect::<HashMap<_, _>>();
         endpoint_url = endpoint_url.join(&path)?;
         endpoint_url.query_pairs_mut().extend_pairs(qps);
-        return Ok(endpoint_url);
+        Ok(endpoint_url);
     }
 
     /// The Append Block operation commits a new block of data to the end of an append blob.

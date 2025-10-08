@@ -122,7 +122,7 @@ impl BlobClient {
             .collect::<HashMap<_, _>>();
         endpoint_url = endpoint_url.join(&path)?;
         endpoint_url.query_pairs_mut().extend_pairs(qps);
-        return Ok(endpoint_url);
+        Ok(endpoint_url);
     }
 
     /// The Abort Copy From URL operation aborts a pending Copy From URL operation, and leaves a destination blob with zero length
