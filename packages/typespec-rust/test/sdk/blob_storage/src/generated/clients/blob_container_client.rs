@@ -105,6 +105,20 @@ impl BlobContainerClient {
         &self.endpoint
     }
 
+    /// Returns the Url associated with this client and its construction parameters.
+    pub fn endpoint_url(&self) -> Result<Url> {
+        let mut endpoint_url = self.endpoint.clone();
+        {
+            let qps = endpoint_url
+                .query_pairs()
+                .into_owned()
+                .collect::<HashMap<_, _>>();
+            endpoint_url = endpoint_url.join(&self.container_name)?;
+            endpoint_url.query_pairs_mut().extend_pairs(qps);
+        }
+        return Ok(endpoint_url);
+    }
+
     /// The Acquire Lease operation requests a new lease on a container. The lease lock duration can be 15 to 60 seconds, or can
     /// be infinite.
     ///

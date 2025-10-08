@@ -103,6 +103,7 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         // by convention, the endpoint param is always the first ctor param
         const endpointParamName = constructor.params[0].name;
         body += `${indent.push().get()}let ${client.constructable.endpoint ? 'mut ' : ''}${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
+
         body += `${indent.get()}${helpers.buildIfBlock(indent, {
           condition: `!${endpointParamName}.scheme().starts_with("http")`,
           body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
@@ -188,6 +189,21 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
     body += `${indent.get()}pub fn endpoint(&self) -> &Url {\n`;
     body += `${indent.push().get()}&self.${getEndpointFieldName(client)}\n`;
     body += `${indent.pop().get()}}\n\n`;
+
+    {
+      const endpointFieldName = getEndpointFieldName(client);
+      const endpointUrlName = `${endpointFieldName}_url`;
+      const clientParamGroups = getParamGroup(client);
+      const commonParameterizedPath = getCommonParameterizedPath(client, clientParamGroups);
+      if (commonParameterizedPath !== '') {
+        body += `${indent.get()}/// Returns the Url associated with this client and its construction parameters.\n`;
+        body += `${indent.get()}pub fn endpoint_url(&self) -> Result<Url> {\n`;
+        body += `${indent.push().get()}let mut ${endpointUrlName} = self.${endpointFieldName}.clone();\n`;
+        body += constructUrl(indent, use, commonParameterizedPath, clientParamGroups, endpointUrlName);
+        body += `${indent.get()}return Ok(${endpointUrlName});\n`;
+        body += `${indent.pop().get()}}\n\n`;
+      }
+    }
 
     for (let i = 0; i < client.methods.length; ++i) {
       const method = client.methods[i];
@@ -667,12 +683,12 @@ interface MethodParamGroups {
 }
 
 /**
- * enumerates method parameters and returns them based on groups
+ * enumerates method or client parameters and returns them based on groups
  * 
- * @param method the method containing the parameters to group
+ * @param methodOrClient the method containing the parameters to group
  * @returns the groups parameters
  */
-function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
+function getParamGroup(methodOrClient: ClientMethod | rust.Client): MethodParamGroups {
   // collect and sort all the header/path/query params
   let apiVersionParam: ApiVersionParamType | undefined;
   const headerParams = new Array<HeaderParamType>();
@@ -680,7 +696,22 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
   const queryParams = new Array<QueryParamType>();
   const partialBodyParams = new Array<rust.PartialBodyParameter>();
 
-  for (const param of method.params) {
+  let params: rust.MethodParameter[] = [];
+  if (methodOrClient.kind !== 'client') {
+    params = methodOrClient.params;
+  } else {
+    for (const param of methodOrClient.methods
+      .filter(m => m.kind !== 'clientaccessor')
+      .flatMap(m => m.params)
+      .filter(p => p.location === 'client')
+    ) {
+      if (!params.some(p => p.name === param.name)) {
+        params.push(param);
+      }
+    }
+  }
+
+  for (const param of params) {
     switch (param.kind) {
       case 'headerScalar':
       case 'headerCollection':
@@ -711,10 +742,12 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
   queryParams.sort((a: QueryParamType, b: QueryParamType) => { return helpers.sortAscending(a.key, b.key); });
 
   let bodyParam: rust.BodyParameter | undefined;
-  for (const param of method.params) {
+  for (const param of params) {
     if (param.kind === 'body') {
       if (bodyParam) {
-        throw new CodegenError('InternalError', `method ${method.name} has multiple body parameters`);
+        throw new CodegenError(
+          'InternalError',
+          `${methodOrClient.kind === 'client' ? 'client' : 'method'} ${methodOrClient.name} has multiple body parameters`);
       }
       bodyParam = param;
     }
@@ -774,19 +807,73 @@ function joinUrlPathPreservingQueryParams(indent: helpers.indentation, use: Use,
 }
 
 /**
+ * returns client path that is common for all its methods and includes at least one path parameter.
+ *
+ * @param client client
+ * @param paramGroups client parameter groups
+ */
+function getCommonParameterizedPath(client: rust.Client, paramGroups: MethodParamGroups): string {
+  let commonPathElements: string[] = [];
+
+  let firstMethod = true;
+  for (const httpPath of client.methods.filter(m => m.kind === 'async').map(m => m.httpPath)) {
+    const pathChunks = httpPath.split('?');
+    if (pathChunks.length <= 0 || pathChunks[0] === '') {
+      commonPathElements = [];
+      break;
+    }
+
+    if (firstMethod) {
+      commonPathElements = pathChunks[0].split('/');
+      firstMethod = false;
+      continue;
+    }
+
+    const methodPathElements = pathChunks[0].split('/');
+    if (methodPathElements.length <= commonPathElements.length) {
+      commonPathElements = commonPathElements.slice(0, methodPathElements.length);
+    }
+
+    for (let i = 0; i < commonPathElements.length; ++i) {
+      if (methodPathElements[i] !== commonPathElements[i]) {
+        commonPathElements = commonPathElements.slice(0, i);
+      }
+    }
+
+    if (commonPathElements.length <= 0) {
+      break;
+    }
+  }
+
+  for (let i = commonPathElements.length - 1; i >= 0; --i) {
+    if (commonPathElements[i].startsWith('{') && commonPathElements[i].endsWith('}')) {
+      const paramName = commonPathElements[i].slice(1, commonPathElements[i].length - 1);
+      if (paramGroups.path.some(p => p.segment === paramName))
+      {
+        continue;
+      }
+    }
+
+    commonPathElements = commonPathElements.slice(0, i);
+  }
+
+  return commonPathElements.join('/');
+}
+
+/**
  * emits the code for building the request URL.
  * 
  * @param indent the indentation helper currently in scope
  * @param use the use statement builder currently in scope
- * @param method the method for which we're building the body
+ * @param methodOrHttpPath the method or httpPath for which we're building the body
  * @param paramGroups the param groups for the provided method
  * @param urlVarName the name of the var that contains the azure_core::Url. defaults to 'url'
  * @returns the URL construction code
  */
-function constructUrl(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, urlVarName: string = 'url'): string {
+function constructUrl(indent: helpers.indentation, use: Use, methodOrHttpPath: ClientMethod | string, paramGroups: MethodParamGroups, urlVarName: string = 'url'): string {
   // for paths that contain query parameters, we must set the query params separately.
   // including them in the call to set_path() causes the chars to be path-escaped.
-  const pathChunks = method.httpPath.split('?');
+  const pathChunks = typeof methodOrHttpPath !== 'string' ? methodOrHttpPath.httpPath.split('?') : [methodOrHttpPath];
   if (pathChunks.length > 2) {
     throw new CodegenError('InternalError', 'too many HTTP path chunks');
   }
@@ -1105,8 +1192,8 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
  * @param method the method associated with the Url being constructed.
  * @returns 'mut ' or the empty string
  */
-function urlVarNeedsMut(paramGroups: MethodParamGroups, method: ClientMethod): string {
-  if (paramGroups.path.length > 0 || paramGroups.query.length > 0 || method.httpPath !== '/') {
+function urlVarNeedsMut(paramGroups: MethodParamGroups, method?: ClientMethod): string {
+  if (paramGroups.path.length > 0 || paramGroups.query.length > 0 || (method !== undefined && method.httpPath !== '/')) {
     return 'mut ';
   }
   return '';
@@ -1178,7 +1265,7 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
 function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
   use.add('azure_core::http', 'Method', 'Request');
 
-  const paramGroups = getMethodParamGroup(method);
+  const paramGroups = getParamGroup(method);
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default();\n';
   body += `${indent.get()}let ctx = options.method_options.context.to_borrowed();\n`;
@@ -1217,7 +1304,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));
 
-  const paramGroups = getMethodParamGroup(method);
+  const paramGroups = getParamGroup(method);
   const urlVar = method.strategy ? 'first_url' : 'url';
 
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
@@ -1415,7 +1502,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   use.addForType(method.returns.type);
   use.addForType(helpers.unwrapType(method.returns.type));
 
-  const paramGroups = getMethodParamGroup(method);
+  const paramGroups = getParamGroup(method);
   const urlVar = 'url';
 
   let body = 'let options = options.unwrap_or_default().into_owned();\n';

@@ -99,6 +99,23 @@ impl PageBlobClient {
         &self.endpoint
     }
 
+    /// Returns the Url associated with this client and its construction parameters.
+    pub fn endpoint_url(&self) -> Result<Url> {
+        let mut endpoint_url = self.endpoint.clone();
+        let mut path = String::from("{containerName}/{blobName}");
+        path = path.replace("{blobName}", &self.blob_name);
+        path = path.replace("{containerName}", &self.container_name);
+        {
+            let qps = endpoint_url
+                .query_pairs()
+                .into_owned()
+                .collect::<HashMap<_, _>>();
+            endpoint_url = endpoint_url.join(&path)?;
+            endpoint_url.query_pairs_mut().extend_pairs(qps);
+        }
+        return Ok(endpoint_url);
+    }
+
     /// The Clear Pages operation clears a range of pages from a page blob
     ///
     /// # Arguments
