@@ -38,11 +38,9 @@ impl ClientLocationMoveToExistingSubAdminOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("azure/client-generator-core/client-location/user")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("azure/client-generator-core/client-location/user")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Delete);
         let rsp = self
             .pipeline
@@ -74,11 +72,9 @@ impl ClientLocationMoveToExistingSubAdminOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("azure/client-generator-core/client-location/admin")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("azure/client-generator-core/client-location/admin")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

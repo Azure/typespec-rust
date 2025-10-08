@@ -105,11 +105,9 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("add-operation")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("add-operation")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Delete);
         let rsp = self
             .pipeline
@@ -140,11 +138,9 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("add-optional-param/from-none")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("add-optional-param/from-none")?;
+        url.query_pairs_mut().extend_pairs(qps);
         if let Some(new_parameter) = options.new_parameter {
             url.query_pairs_mut()
                 .append_pair("new-parameter", &new_parameter);
@@ -179,11 +175,9 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("add-optional-param/from-one-optional")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("add-optional-param/from-one-optional")?;
+        url.query_pairs_mut().extend_pairs(qps);
         if let Some(new_parameter) = options.new_parameter {
             url.query_pairs_mut()
                 .append_pair("new-parameter", &new_parameter);
@@ -223,11 +217,9 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("add-optional-param/from-one-required")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("add-optional-param/from-one-required")?;
+        url.query_pairs_mut().extend_pairs(qps);
         if let Some(new_parameter) = options.new_parameter {
             url.query_pairs_mut()
                 .append_pair("new-parameter", &new_parameter);

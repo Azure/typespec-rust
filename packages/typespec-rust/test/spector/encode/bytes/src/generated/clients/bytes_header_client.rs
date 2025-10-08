@@ -40,11 +40,9 @@ impl BytesHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/bytes/header/base64")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/bytes/header/base64")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", encode(value));
         let rsp = self
@@ -76,11 +74,9 @@ impl BytesHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/bytes/header/base64url")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/bytes/header/base64url")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", encode_url_safe(value));
         let rsp = self
@@ -112,11 +108,9 @@ impl BytesHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/bytes/header/base64url-array")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/bytes/header/base64url-array")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         request.insert_header(
             "value",
@@ -155,11 +149,9 @@ impl BytesHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/bytes/header/default")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/bytes/header/default")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", encode(value));
         let rsp = self

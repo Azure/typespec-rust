@@ -40,11 +40,9 @@ impl NumericPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/numeric/property/safeint")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/numeric/property/safeint")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -78,11 +76,9 @@ impl NumericPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/numeric/property/uint32")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/numeric/property/uint32")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -116,11 +112,9 @@ impl NumericPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/numeric/property/uint8")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/numeric/property/uint8")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

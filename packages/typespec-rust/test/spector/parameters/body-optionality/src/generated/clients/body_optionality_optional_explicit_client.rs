@@ -38,11 +38,9 @@ impl BodyOptionalityOptionalExplicitClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("parameters/body-optionality/optional-explicit/omit")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("parameters/body-optionality/optional-explicit/omit")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Post);
         if let Some(body) = options.body {
             request.insert_header("content-type", "application/json");
@@ -76,11 +74,9 @@ impl BodyOptionalityOptionalExplicitClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("parameters/body-optionality/optional-explicit/set")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("parameters/body-optionality/optional-explicit/set")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Post);
         if let Some(body) = options.body {
             request.insert_header("content-type", "application/json");

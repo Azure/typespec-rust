@@ -63,11 +63,9 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementSubscriptionResourceOperation
         let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResources/{subscriptionResourceName}");
         path = path.replace("{subscriptionId}", subscription_id);
         path = path.replace("{subscriptionResourceName}", subscription_resource_name);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
@@ -119,11 +117,9 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementSubscriptionResourceOperation
         let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResources/{subscriptionResourceName}");
         path = path.replace("{subscriptionId}", subscription_id);
         path = path.replace("{subscriptionResourceName}", subscription_resource_name);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -178,11 +174,9 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementSubscriptionResourceOperation
         let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResources/{subscriptionResourceName}");
         path = path.replace("{subscriptionId}", subscription_id);
         path = path.replace("{subscriptionResourceName}", subscription_resource_name);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Put);

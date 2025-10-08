@@ -40,11 +40,9 @@ impl DurationQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/duration/query/default")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/duration/query/default")?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut().append_pair("input", input);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -76,11 +74,9 @@ impl DurationQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/duration/query/float64-seconds")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/duration/query/float64-seconds")?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut()
             .append_pair("input", &input.to_string());
         let mut request = Request::new(url, Method::Get);
@@ -113,11 +109,9 @@ impl DurationQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/duration/query/float-seconds")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/duration/query/float-seconds")?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut()
             .append_pair("input", &input.to_string());
         let mut request = Request::new(url, Method::Get);
@@ -150,11 +144,9 @@ impl DurationQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/duration/query/int32-seconds")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/duration/query/int32-seconds")?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut()
             .append_pair("input", &input.to_string());
         let mut request = Request::new(url, Method::Get);
@@ -187,11 +179,9 @@ impl DurationQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/duration/query/int32-seconds-array")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/duration/query/int32-seconds-array")?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut().append_pair(
             "input",
             &input
@@ -230,11 +220,9 @@ impl DurationQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("encode/duration/query/iso8601")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("encode/duration/query/iso8601")?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut().append_pair("input", input);
         let mut request = Request::new(url, Method::Get);
         let rsp = self

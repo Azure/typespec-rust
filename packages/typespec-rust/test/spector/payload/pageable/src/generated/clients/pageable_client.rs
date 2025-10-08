@@ -93,11 +93,9 @@ impl PageableClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("payload/pageable/simple")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("payload/pageable/simple")?;
+        url.query_pairs_mut().extend_pairs(qps);
         Ok(Pager::from_callback(move |_: PagerState<Url>| {
             let mut request = Request::new(url.clone(), Method::Get);
             request.insert_header("accept", "application/json");

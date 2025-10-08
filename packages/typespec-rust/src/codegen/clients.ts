@@ -799,11 +799,9 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
  */
 function joinUrlPathPreservingQueryParams(indent: helpers.indentation, use: Use, urlVarName: string, path: string): string {
   use.add('std::collections', 'HashMap');
-  return `${indent.push().get()}{`
-    +`${indent.get()}let qps = ${urlVarName}.query_pairs().into_owned().collect::<HashMap<_, _>>();`
-    +`${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;`
-    +`${indent.get()}${urlVarName}.query_pairs_mut().extend_pairs(qps);`
-    + `}${indent.pop().get()}\n`;
+  return `${indent.get()}let qps = ${urlVarName}.query_pairs().into_owned().collect::<HashMap<_, _>>();\n`
+    +`${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`
+    +`${indent.get()}${urlVarName}.query_pairs_mut().extend_pairs(qps);\n`;
 }
 
 /**

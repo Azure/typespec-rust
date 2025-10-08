@@ -48,11 +48,9 @@ impl SpreadAliasClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("parameters/spread/alias/request-body")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("parameters/spread/alias/request-body")?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         let body: RequestContent<SpreadAsRequestBodyRequest> =
@@ -97,11 +95,9 @@ impl SpreadAliasClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/alias/request-parameter/{id}");
         path = path.replace("{id}", id);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.insert_header("x-ms-test-header", x_ms_test_header);
@@ -151,11 +147,9 @@ impl SpreadAliasClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/alias/inner-alias-parameter/{id}");
         path = path.replace("{id}", id);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.insert_header("x-ms-test-header", x_ms_test_header);
@@ -201,11 +195,9 @@ impl SpreadAliasClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/alias/inner-model-parameter/{id}");
         path = path.replace("{id}", id);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.insert_header("x-ms-test-header", x_ms_test_header);
@@ -254,11 +246,9 @@ impl SpreadAliasClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/spread/alias/multiple-parameters/{id}");
         path = path.replace("{id}", id);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.insert_header("x-ms-test-header", x_ms_test_header);

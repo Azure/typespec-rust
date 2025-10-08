@@ -84,11 +84,9 @@ impl PathClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("parameters/path/normal/{name}");
         path = path.replace("{name}", name);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -123,11 +121,9 @@ impl PathClient {
             Some(name) => path.replace("{name}", &format!("/{name}")),
             None => path.replace("{name}", ""),
         };
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

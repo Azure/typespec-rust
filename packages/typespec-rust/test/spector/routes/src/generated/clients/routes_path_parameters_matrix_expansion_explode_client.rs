@@ -42,11 +42,9 @@ impl RoutesPathParametersMatrixExpansionExplodeClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/matrix/explode/array{param}");
         path = path.replace("{param}", &format!(";param={}", param.join(";param=")));
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -85,11 +83,9 @@ impl RoutesPathParametersMatrixExpansionExplodeClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/matrix/explode/primitive{param}");
         path = path.replace("{param}", &format!(";param={param}"));
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -136,11 +132,9 @@ impl RoutesPathParametersMatrixExpansionExplodeClient {
                 ),
             );
         }
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

@@ -54,11 +54,9 @@ impl RoutesPathParametersClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/annotation-only/{param}");
         path = path.replace("{param}", param);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -97,11 +95,9 @@ impl RoutesPathParametersClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/explicit/{param}");
         path = path.replace("{param}", param);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -195,11 +191,9 @@ impl RoutesPathParametersClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/template-only/{param}");
         path = path.replace("{param}", param);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

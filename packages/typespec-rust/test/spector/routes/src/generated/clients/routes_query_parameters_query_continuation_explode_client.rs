@@ -40,11 +40,9 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("routes/query/query-continuation/explode/array")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("routes/query/query-continuation/explode/array")?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut().append_pair("fixed", "true");
         for p in param.iter() {
             url.query_pairs_mut().append_pair("param", p);
@@ -79,11 +77,9 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("routes/query/query-continuation/explode/primitive")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("routes/query/query-continuation/explode/primitive")?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut().append_pair("fixed", "true");
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
@@ -116,11 +112,9 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("routes/query/query-continuation/explode/record")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("routes/query/query-continuation/explode/record")?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut().append_pair("fixed", "true");
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();

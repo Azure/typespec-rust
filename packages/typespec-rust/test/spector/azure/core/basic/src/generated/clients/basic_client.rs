@@ -94,11 +94,9 @@ impl BasicClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Put);
@@ -142,11 +140,9 @@ impl BasicClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Patch);
@@ -188,11 +184,9 @@ impl BasicClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
@@ -233,11 +227,9 @@ impl BasicClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/basic/users/{id}:export");
         path = path.replace("{id}", &id.to_string());
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         url.query_pairs_mut().append_pair("format", format);
@@ -276,11 +268,9 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join("azure/core/basic/users:exportallusers")?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join("azure/core/basic/users:exportallusers")?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         url.query_pairs_mut().append_pair("format", format);
@@ -321,11 +311,9 @@ impl BasicClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -358,14 +346,12 @@ impl BasicClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        {
-            let qps = first_url
-                .query_pairs()
-                .into_owned()
-                .collect::<HashMap<_, _>>();
-            first_url = first_url.join("azure/core/basic/users")?;
-            first_url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = first_url
+            .query_pairs()
+            .into_owned()
+            .collect::<HashMap<_, _>>();
+        first_url = first_url.join("azure/core/basic/users")?;
+        first_url.query_pairs_mut().extend_pairs(qps);
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);

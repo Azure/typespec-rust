@@ -87,11 +87,9 @@ impl ParamAliasClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/client-generator-core/client-initialization/param-alias/{blob}/with-aliased-name");
         path = path.replace("{blob}", &self.blob_name);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -125,11 +123,9 @@ impl ParamAliasClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/client-generator-core/client-initialization/param-alias/{blobName}/with-original-name");
         path = path.replace("{blobName}", &self.blob_name);
-        {
-            let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-            url = url.join(&path)?;
-            url.query_pairs_mut().extend_pairs(qps);
-        }
+        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        url = url.join(&path)?;
+        url.query_pairs_mut().extend_pairs(qps);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
