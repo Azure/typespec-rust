@@ -834,7 +834,7 @@ impl AzureAppConfigurationClient {
                     let next_link = match headers
                         .get_optional_string(&HeaderName::from_static("operation-location"))
                     {
-                        Some(operation_location) => Url::parse(&operation_location).unwrap(),
+                        Some(operation_location) => Url::parse(&operation_location)?,
                         None => next_link,
                     };
                     let retry_after = get_retry_after(

@@ -344,7 +344,7 @@ export interface Poller extends External {
   /** the model containing the result of a long-running-operation */
   resultType: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
 
-  /** the model containing the result of a long-running-operation */
+  /** the model containing the status of a long-running-operation */
   type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
 }
 

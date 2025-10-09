@@ -1450,7 +1450,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     body += `${indent.get()}let next_link = ${helpers.buildMatch(indent, 'headers.get_optional_string(&HeaderName::from_static("operation-location"))', [{
       pattern: `Some(operation_location)`,
       body: (indent) => {
-        return `${indent.get()}Url::parse(&operation_location).unwrap()\n`;
+        return `${indent.get()}Url::parse(&operation_location)?\n`;
       }
     }, {
       pattern: 'None',
