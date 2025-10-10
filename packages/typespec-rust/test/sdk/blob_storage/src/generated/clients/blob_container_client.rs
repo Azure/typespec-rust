@@ -38,7 +38,7 @@ use azure_core::{
     tracing, xml, Result,
 };
 use std::sync::Arc;
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct BlobContainerClient {

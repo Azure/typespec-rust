@@ -16,7 +16,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Illustrates usage of empty model used in operation's parameters and responses.
 #[tracing::client]

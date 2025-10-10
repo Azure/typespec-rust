@@ -15,7 +15,7 @@ use azure_core::{
     tracing, Result,
 };
 use std::sync::Arc;
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Illustrates clients generated with ApiKey and OAuth2 authentication.
 #[tracing::client]

@@ -21,7 +21,7 @@ use azure_core::{
     },
     json, tracing, Result,
 };
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// The interface of extensions resources,
 /// it contains 4 kinds of scopes (resource, resource group, subscription and tenant)

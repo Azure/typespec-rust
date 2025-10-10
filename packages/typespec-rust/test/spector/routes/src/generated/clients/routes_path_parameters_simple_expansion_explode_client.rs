@@ -14,7 +14,7 @@ use azure_core::{
     tracing, Result,
 };
 use std::collections::HashMap;
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct RoutesPathParametersSimpleExpansionExplodeClient {

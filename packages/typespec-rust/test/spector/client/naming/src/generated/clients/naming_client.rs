@@ -22,7 +22,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Describe changing names of types in a client with `@clientName`
 #[tracing::client]

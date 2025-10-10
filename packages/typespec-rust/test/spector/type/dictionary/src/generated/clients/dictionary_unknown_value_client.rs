@@ -15,7 +15,7 @@ use azure_core::{
 };
 use serde_json::Value;
 use std::collections::HashMap;
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Dictionary of unknown values
 #[tracing::client]

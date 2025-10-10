@@ -18,7 +18,7 @@ use azure_core::{
     },
     json, tracing, Result,
 };
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Illustrates bodies templated with Azure Core
 #[tracing::client]

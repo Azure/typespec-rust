@@ -12,7 +12,7 @@ use azure_core::{
     http::{AsyncResponse, Method, Pipeline, PipelineStreamOptions, Request, Url},
     tracing, Result,
 };
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct ContentNegotiationSameBodyClient {

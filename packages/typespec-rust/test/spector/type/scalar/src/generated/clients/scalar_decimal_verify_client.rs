@@ -14,7 +14,7 @@ use azure_core::{
     tracing, Result,
 };
 use rust_decimal::Decimal;
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Decimal type verification
 #[tracing::client]

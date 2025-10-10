@@ -43,7 +43,7 @@ use azure_core::{
     json, tracing, Result,
 };
 use std::sync::Arc;
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Azure App Configuration REST API
 #[tracing::client]

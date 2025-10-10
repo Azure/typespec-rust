@@ -876,11 +876,11 @@ function constructUrl(indent: helpers.indentation, use: Use, methodOrHttpPath: C
   if (pathChunks[0] !== '/') {
     let path = `"${pathChunks[0]}"`;
     if (paramGroups.path.length === 0) {
-      use.add('typespec_client_core::url', 'UrlOperations');
+      use.add('typespec_client_core::http', 'UrlExt');
       // no path params, just a static path
       body += `${indent.get()}${urlVarName}.append_path(${path});\n`;
     } else if (paramGroups.path.length === 1 && pathChunks[0] === `{${paramGroups.path[0].segment}}`) {
-      use.add('typespec_client_core::url', 'UrlOperations');
+      use.add('typespec_client_core::http', 'UrlExt');
       // for a single path param (i.e. "{foo}") we can directly join the path param's value
       const pathParam = paramGroups.path[0];
       body += `${indent.get()}${urlVarName}.append_path(${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)});\n`;
@@ -969,7 +969,7 @@ function constructUrl(indent: helpers.indentation, use: Use, methodOrHttpPath: C
           body += wrapSortedVec(`${indent.get()}path = path.replace("{${pathParam.segment}}", ${paramExpression});\n`);
         }
       }
-      use.add('typespec_client_core::url', 'UrlOperations');
+      use.add('typespec_client_core::http', 'UrlExt');
       path = '&path';
       body += `${urlVarName}.append_path(${path});\n`;
     }

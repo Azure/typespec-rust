@@ -12,7 +12,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Illustrates server doesn't define endpoint. Client should automatically add an endpoint to let user pass in.
 #[tracing::client]

@@ -14,7 +14,7 @@ use azure_core::{
     time::{to_rfc3339, to_rfc7231, OffsetDateTime},
     tracing, Result,
 };
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct DatetimeQueryClient {

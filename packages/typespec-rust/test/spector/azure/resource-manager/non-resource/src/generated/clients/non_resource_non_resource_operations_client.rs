@@ -12,7 +12,7 @@ use azure_core::{
     http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
     tracing, Result,
 };
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Operations on non resource model should not be marked as `@armResourceOperations`.
 #[tracing::client]

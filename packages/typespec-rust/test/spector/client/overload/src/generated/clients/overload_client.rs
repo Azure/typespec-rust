@@ -12,7 +12,7 @@ use azure_core::{
     http::{ClientOptions, Method, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Test for overload operation in .NET.
 #[tracing::client]

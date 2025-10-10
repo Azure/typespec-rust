@@ -16,7 +16,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Test that we can grow up a service spec and service deployment into a multi-versioned service with full client support.
 ///

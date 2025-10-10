@@ -15,7 +15,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Test that we can use @client and @operationGroup decorators to customize client side code structure, such as:
 /// 1. have everything as default.

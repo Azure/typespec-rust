@@ -26,7 +26,7 @@ use azure_core::{
     json, tracing, Result,
 };
 use std::sync::Arc;
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// The key vault client performs cryptographic key operations and vault operations against the Key Vault service.
 #[tracing::client]

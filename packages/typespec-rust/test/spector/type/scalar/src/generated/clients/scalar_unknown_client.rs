@@ -12,7 +12,7 @@ use azure_core::{
     tracing, Result,
 };
 use serde_json::Value;
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct ScalarUnknownClient {

@@ -15,7 +15,7 @@ use azure_core::{
     tracing, Result,
 };
 use std::collections::HashMap;
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Dictionary of datetime values
 #[tracing::client]

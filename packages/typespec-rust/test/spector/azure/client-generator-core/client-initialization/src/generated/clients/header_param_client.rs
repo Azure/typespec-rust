@@ -15,7 +15,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use typespec_client_core::url::UrlOperations;
+use typespec_client_core::http::UrlExt;
 
 /// Client for testing header parameter moved to client level.
 #[tracing::client]
