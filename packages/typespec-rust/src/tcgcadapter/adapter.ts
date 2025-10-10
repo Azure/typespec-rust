@@ -1550,12 +1550,13 @@ export class Adapter {
     } else if (method.kind === 'lro') {
       const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
       const responseType = this.typeToWireType(this.getModel(method.lroMetadata.logicalResult));
+      if (responseType.kind !== 'model') {
         throw new AdapterError('InternalError', `logical result type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
-}
+      }
 
-const statusType = this.typeToWireType(this.getModel(method.lroMetadata.pollingInfo.responseModel));
-if (statusType.kind !== 'model') {
-        throw new AdapterError('InternalError', `status result type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
+      const statusType = this.typeToWireType(this.getModel(method.lroMetadata.pollingInfo.responseModel));
+      if (statusType.kind !== 'model') {
+          throw new AdapterError('InternalError', `status type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
       }
 
       const pushModels = (model: rust.Model, crate: rust.Crate): void => {
