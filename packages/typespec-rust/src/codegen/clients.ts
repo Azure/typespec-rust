@@ -191,15 +191,14 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
 
     {
       const endpointFieldName = getEndpointFieldName(client);
-      const endpointUrlName = `${endpointFieldName}_url`;
       const clientParamGroups = getParamGroup(client);
       const commonParameterizedPath = getCommonParameterizedPath(client, clientParamGroups);
       if (commonParameterizedPath !== '') {
         body += `${indent.get()}/// Returns the Url associated with this client and its construction parameters.\n`;
         body += `${indent.get()}pub fn service_url(&self) -> Result<Url> {\n`;
-        body += `${indent.push().get()}let mut ${endpointUrlName} = self.${endpointFieldName}.clone();\n`;
-        body += constructUrl(indent, use, commonParameterizedPath, clientParamGroups, endpointUrlName);
-        body += `${indent.get()}Ok(${endpointUrlName})\n`;
+        body += `${indent.push().get()}let mut service_url = self.${endpointFieldName}.clone();\n`;
+        body += constructUrl(indent, use, commonParameterizedPath, clientParamGroups, 'service_url');
+        body += `${indent.get()}Ok(service_url)\n`;
         body += `${indent.pop().get()}}\n\n`;
       }
     }

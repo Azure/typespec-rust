@@ -100,12 +100,12 @@ impl BlockBlobClient {
 
     /// Returns the Url associated with this client and its construction parameters.
     pub fn service_url(&self) -> Result<Url> {
-        let mut endpoint_url = self.endpoint.clone();
+        let mut service_url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        endpoint_url.append_path(&path);
-        Ok(endpoint_url)
+        service_url.append_path(&path);
+        Ok(service_url)
     }
 
     /// The Commit Block List operation writes a blob by specifying the list of block IDs that make up the blob. In order to be

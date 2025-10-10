@@ -108,9 +108,9 @@ impl BlobContainerClient {
 
     /// Returns the Url associated with this client and its construction parameters.
     pub fn service_url(&self) -> Result<Url> {
-        let mut endpoint_url = self.endpoint.clone();
-        endpoint_url.append_path(&self.container_name);
-        Ok(endpoint_url)
+        let mut service_url = self.endpoint.clone();
+        service_url.append_path(&self.container_name);
+        Ok(service_url)
     }
 
     /// The Acquire Lease operation requests a new lease on a container. The lease lock duration can be 15 to 60 seconds, or can
