@@ -2,11 +2,15 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-use azure_core::http::poller::{PollerStatus, StatusMonitor};
+use azure_core::http::poller::{PollerOptions, PollerStatus, StatusMonitor};
 use azure_core::http::StatusCode;
+use azure_core::time::Duration;
 use futures::StreamExt;
 
-use spector_lrostd::{models::User, StandardClient};
+use spector_lrostd::{
+    models::{StandardClientCreateOrReplaceOptions, StandardClientDeleteOptions, User},
+    StandardClient,
+};
 
 #[tokio::test]
 async fn create_or_replace() {
@@ -17,60 +21,81 @@ async fn create_or_replace() {
     };
 
     let mut poller = client
-        .create_or_replace("madge", user.try_into().unwrap(), None)
+        .create_or_replace(
+            "madge",
+            user.try_into().unwrap(),
+            Some(StandardClientCreateOrReplaceOptions {
+                poller_options: PollerOptions {
+                    frequency: Some(Duration::seconds(1)),
+                },
+                ..Default::default()
+            }),
+        )
         .unwrap();
 
-    let first_result = poller.next().await;
-    assert!(first_result.is_some());
-    let first_response = first_result.unwrap().unwrap();
-    assert_eq!(first_response.status(), StatusCode::Created);
-    let first_body = first_response.into_body().unwrap();
-    assert_eq!(first_body.status(), PollerStatus::InProgress);
-
-    let second_result = poller.next().await;
-    assert!(second_result.is_some());
-    let second_response = second_result.unwrap().unwrap();
-    assert_eq!(second_response.status(), StatusCode::Ok);
-    let second_body = second_response.into_body().unwrap();
-    assert_eq!(second_body.status(), PollerStatus::InProgress);
-
-    let third_result = poller.next().await;
-    assert!(third_result.is_some());
-    let third_response = third_result.unwrap().unwrap();
-    assert_eq!(third_response.status(), StatusCode::Ok);
-    let third_body = third_response.into_body().unwrap();
-    assert_eq!(third_body.status(), PollerStatus::Succeeded);
-
-    let fourth_result = poller.next().await;
-    assert!(fourth_result.is_none());
+    let mut poll_count = 0;
+    while let Some(result) = poller.next().await {
+        poll_count += 1;
+        let result = result.unwrap();
+        let status = result.status();
+        let result = result.into_body().unwrap();
+        match poll_count {
+            1 => {
+                assert_eq!(status, StatusCode::Created);
+                assert_eq!(result.status(), PollerStatus::InProgress);
+            }
+            2 => {
+                assert_eq!(status, StatusCode::Ok);
+                assert_eq!(result.status(), PollerStatus::InProgress);
+            }
+            3 => {
+                assert_eq!(status, StatusCode::Ok);
+                assert_eq!(result.status(), PollerStatus::Succeeded);
+            }
+            _ => {
+                panic!("unexpected poll count");
+            }
+        }
+    }
 }
 
 #[tokio::test]
 async fn delete() {
     let client = StandardClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut poller = client.delete("madge", None).unwrap();
+    let mut poller = client
+        .delete(
+            "madge",
+            Some(StandardClientDeleteOptions {
+                poller_options: PollerOptions {
+                    frequency: Some(Duration::seconds(1)),
+                },
+                ..Default::default()
+            }),
+        )
+        .unwrap();
 
-    let first_result = poller.next().await;
-    assert!(first_result.is_some());
-    let first_response = first_result.unwrap().unwrap();
-    assert_eq!(first_response.status(), StatusCode::Accepted);
-    let first_body = first_response.into_body().unwrap();
-    assert_eq!(first_body.status(), PollerStatus::InProgress);
-
-    let second_result = poller.next().await;
-    assert!(second_result.is_some());
-    let second_response = second_result.unwrap().unwrap();
-    assert_eq!(second_response.status(), StatusCode::Ok);
-    let second_body = second_response.into_body().unwrap();
-    assert_eq!(second_body.status(), PollerStatus::InProgress);
-
-    let third_result = poller.next().await;
-    assert!(third_result.is_some());
-    let third_response = third_result.unwrap().unwrap();
-    assert_eq!(third_response.status(), StatusCode::Ok);
-    let third_body = third_response.into_body().unwrap();
-    assert_eq!(third_body.status(), PollerStatus::Succeeded);
-
-    let fourth_result = poller.next().await;
-    assert!(fourth_result.is_none());
+    let mut poll_count = 0;
+    while let Some(result) = poller.next().await {
+        poll_count += 1;
+        let result = result.unwrap();
+        let status = result.status();
+        let result = result.into_body().unwrap();
+        match poll_count {
+            1 => {
+                assert_eq!(status, StatusCode::Accepted);
+                assert_eq!(result.status(), PollerStatus::InProgress);
+            }
+            2 => {
+                assert_eq!(status, StatusCode::Ok);
+                assert_eq!(result.status(), PollerStatus::InProgress);
+            }
+            3 => {
+                assert_eq!(status, StatusCode::Ok);
+                assert_eq!(result.status(), PollerStatus::Succeeded);
+            }
+            _ => {
+                panic!("unexpected poll count");
+            }
+        }
+    }
 }
