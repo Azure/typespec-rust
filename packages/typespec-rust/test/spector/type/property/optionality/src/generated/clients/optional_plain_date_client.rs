@@ -15,7 +15,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct OptionalPlainDateClient {
@@ -42,9 +42,7 @@ impl OptionalPlainDateClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("type/property/optional/plainDate/all")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("type/property/optional/plainDate/all");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -76,9 +74,7 @@ impl OptionalPlainDateClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("type/property/optional/plainDate/default")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("type/property/optional/plainDate/default");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -111,9 +107,7 @@ impl OptionalPlainDateClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("type/property/optional/plainDate/all")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("type/property/optional/plainDate/all");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -147,9 +141,7 @@ impl OptionalPlainDateClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("type/property/optional/plainDate/default")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("type/property/optional/plainDate/default");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

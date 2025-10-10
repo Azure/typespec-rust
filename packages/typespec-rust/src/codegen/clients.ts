@@ -103,7 +103,6 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         // by convention, the endpoint param is always the first ctor param
         const endpointParamName = constructor.params[0].name;
         body += `${indent.push().get()}let ${client.constructable.endpoint ? 'mut ' : ''}${endpointParamName} = Url::parse(${endpointParamName})?;\n`;
-
         body += `${indent.get()}${helpers.buildIfBlock(indent, {
           condition: `!${endpointParamName}.scheme().starts_with("http")`,
           body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, format!("{${endpointParamName}} must use http(s)")));\n`,
@@ -789,22 +788,6 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
 }
 
 /**
- * emits the code for joining URL path while preserving query parameters.
- *
- * @param indent the indentation helper currently in scope
- * @param use the use statement builder currently in scope
- * @param urlVarName the name of the var that contains the azure_core::Url.
- * @param path the path to join.
- * @returns the URL construction code
- */
-function joinUrlPathPreservingQueryParams(indent: helpers.indentation, use: Use, urlVarName: string, path: string): string {
-  use.add('std::collections', 'HashMap');
-  return `${indent.get()}let qps = ${urlVarName}.query_pairs().into_owned().collect::<HashMap<_, _>>();\n`
-    +`${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`
-    +`${indent.get()}${urlVarName}.query_pairs_mut().extend_pairs(qps);\n`;
-}
-
-/**
  * returns client path that is common for all its methods and includes at least one path parameter.
  *
  * @param client client
@@ -893,12 +876,14 @@ function constructUrl(indent: helpers.indentation, use: Use, methodOrHttpPath: C
   if (pathChunks[0] !== '/') {
     let path = `"${pathChunks[0]}"`;
     if (paramGroups.path.length === 0) {
+      use.add('typespec_client_core::url', 'UrlOperations');
       // no path params, just a static path
-      body += joinUrlPathPreservingQueryParams(indent, use, urlVarName, path);
+      body += `${indent.get()}${urlVarName}.append_path(${path});\n`;
     } else if (paramGroups.path.length === 1 && pathChunks[0] === `{${paramGroups.path[0].segment}}`) {
+      use.add('typespec_client_core::url', 'UrlOperations');
       // for a single path param (i.e. "{foo}") we can directly join the path param's value
       const pathParam = paramGroups.path[0];
-      body += joinUrlPathPreservingQueryParams(indent, use, urlVarName, `${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)}`);
+      body += `${indent.get()}${urlVarName}.append_path(${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)});\n`;
     } else {
       // we have path params that need to have their segments replaced with the param values
       body += `${indent.get()}let mut path = String::from(${path});\n`;
@@ -984,8 +969,9 @@ function constructUrl(indent: helpers.indentation, use: Use, methodOrHttpPath: C
           body += wrapSortedVec(`${indent.get()}path = path.replace("{${pathParam.segment}}", ${paramExpression});\n`);
         }
       }
+      use.add('typespec_client_core::url', 'UrlOperations');
       path = '&path';
-      body += joinUrlPathPreservingQueryParams(indent, use, urlVarName, path);
+      body += `${urlVarName}.append_path(${path});\n`;
     }
   }
 

@@ -16,7 +16,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 /// Test that we can grow up a service spec and service deployment into a multi-versioned service with full client support.
 #[tracing::client]
@@ -94,9 +94,7 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("add-optional-param/from-none")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("add-optional-param/from-none");
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline
@@ -128,9 +126,7 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("add-optional-param/from-one-optional")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("add-optional-param/from-one-optional");
         if let Some(parameter) = options.parameter {
             url.query_pairs_mut().append_pair("parameter", &parameter);
         }
@@ -167,9 +163,7 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("add-optional-param/from-one-required")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("add-optional-param/from-one-required");
         url.query_pairs_mut().append_pair("parameter", parameter);
         let mut request = Request::new(url, Method::Get);
         let rsp = self

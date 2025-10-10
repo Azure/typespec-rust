@@ -22,7 +22,7 @@ use azure_core::{
     },
     json, tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct ResourcesTopLevelClient {
@@ -76,9 +76,7 @@ impl ResourcesTopLevelClient {
             "{topLevelTrackedResourceName}",
             top_level_tracked_resource_name,
         );
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Post);
@@ -153,9 +151,7 @@ impl ResourcesTopLevelClient {
             "{topLevelTrackedResourceName}",
             top_level_tracked_resource_name,
         );
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
@@ -273,9 +269,7 @@ impl ResourcesTopLevelClient {
             "{topLevelTrackedResourceName}",
             top_level_tracked_resource_name,
         );
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
@@ -373,9 +367,7 @@ impl ResourcesTopLevelClient {
             "{topLevelTrackedResourceName}",
             top_level_tracked_resource_name,
         );
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -420,12 +412,7 @@ impl ResourcesTopLevelClient {
         let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources");
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        let qps = first_url
-            .query_pairs()
-            .into_owned()
-            .collect::<HashMap<_, _>>();
-        first_url = first_url.join(&path)?;
-        first_url.query_pairs_mut().extend_pairs(qps);
+        first_url.append_path(&path);
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -492,12 +479,7 @@ impl ResourcesTopLevelClient {
         let mut first_url = self.endpoint.clone();
         let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources");
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        let qps = first_url
-            .query_pairs()
-            .into_owned()
-            .collect::<HashMap<_, _>>();
-        first_url = first_url.join(&path)?;
-        first_url.query_pairs_mut().extend_pairs(qps);
+        first_url.append_path(&path);
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -602,9 +584,7 @@ impl ResourcesTopLevelClient {
             "{topLevelTrackedResourceName}",
             top_level_tracked_resource_name,
         );
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();

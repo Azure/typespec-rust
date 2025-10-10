@@ -9,7 +9,7 @@ use azure_core::{
     http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct RoutesInInterfaceClient {
@@ -35,9 +35,7 @@ impl RoutesInInterfaceClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("routes/in-interface/fixed")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("routes/in-interface/fixed");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

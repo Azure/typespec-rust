@@ -12,7 +12,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct QueryClient {
@@ -78,9 +78,7 @@ impl QueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("azure/client-generator-core/api-version/query")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("azure/client-generator-core/api-version/query");
         url.query_pairs_mut().append_pair("version", &self.version);
         let mut request = Request::new(url, Method::Post);
         let rsp = self

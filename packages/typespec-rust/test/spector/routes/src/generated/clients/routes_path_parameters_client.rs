@@ -19,7 +19,7 @@ use azure_core::{
     http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct RoutesPathParametersClient {
@@ -54,9 +54,7 @@ impl RoutesPathParametersClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/annotation-only/{param}");
         path = path.replace("{param}", param);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -95,9 +93,7 @@ impl RoutesPathParametersClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/explicit/{param}");
         path = path.replace("{param}", param);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -191,9 +187,7 @@ impl RoutesPathParametersClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/template-only/{param}");
         path = path.replace("{param}", param);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

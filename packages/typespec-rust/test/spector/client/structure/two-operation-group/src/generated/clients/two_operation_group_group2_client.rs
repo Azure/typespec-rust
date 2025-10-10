@@ -12,7 +12,7 @@ use azure_core::{
     http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct TwoOperationGroupGroup2Client {
@@ -38,9 +38,7 @@ impl TwoOperationGroupGroup2Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("five")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("five");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -70,9 +68,7 @@ impl TwoOperationGroupGroup2Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("six")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("six");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -102,9 +98,7 @@ impl TwoOperationGroupGroup2Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("two")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("two");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

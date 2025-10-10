@@ -15,7 +15,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct NullableCollectionsByteClient {
@@ -42,9 +42,7 @@ impl NullableCollectionsByteClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("type/property/nullable/collections/bytes/non-null")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("type/property/nullable/collections/bytes/non-null");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -76,9 +74,7 @@ impl NullableCollectionsByteClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("type/property/nullable/collections/bytes/null")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("type/property/nullable/collections/bytes/null");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -111,9 +107,7 @@ impl NullableCollectionsByteClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("type/property/nullable/collections/bytes/non-null")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("type/property/nullable/collections/bytes/non-null");
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);
@@ -147,9 +141,7 @@ impl NullableCollectionsByteClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("type/property/nullable/collections/bytes/null")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("type/property/nullable/collections/bytes/null");
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);

@@ -27,7 +27,8 @@ use azure_core::{
     time::to_rfc7231,
     tracing, Bytes, Result,
 };
-use std::{collections::HashMap, sync::Arc};
+use std::sync::Arc;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct PageBlobClient {
@@ -105,12 +106,7 @@ impl PageBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = endpoint_url
-            .query_pairs()
-            .into_owned()
-            .collect::<HashMap<_, _>>();
-        endpoint_url = endpoint_url.join(&path)?;
-        endpoint_url.query_pairs_mut().extend_pairs(qps);
+        endpoint_url.append_path(&path);
         Ok(endpoint_url)
     }
 
@@ -166,9 +162,7 @@ impl PageBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_key_only("clear")
             .append_pair("comp", "page");
@@ -310,9 +304,7 @@ impl PageBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "incrementalcopy");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -413,9 +405,7 @@ impl PageBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut().append_key_only("PageBlob");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -576,9 +566,7 @@ impl PageBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "pagelist");
         if let Some(marker) = options.marker {
             url.query_pairs_mut().append_pair("marker", &marker);
@@ -686,9 +674,7 @@ impl PageBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("comp", "pagelist")
             .append_key_only("diff");
@@ -808,9 +794,7 @@ impl PageBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_key_only("Resize")
             .append_pair("comp", "properties");
@@ -926,9 +910,7 @@ impl PageBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_key_only("UpdateSequenceNumber")
             .append_pair("comp", "properties");
@@ -1044,9 +1026,7 @@ impl PageBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("comp", "page")
             .append_key_only("update");
@@ -1212,9 +1192,7 @@ impl PageBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("comp", "page")
             .append_key_only("fromUrl")

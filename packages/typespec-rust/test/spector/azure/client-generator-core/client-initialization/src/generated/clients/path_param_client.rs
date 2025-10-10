@@ -15,7 +15,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct PathParamClient {
@@ -89,9 +89,7 @@ impl PathParamClient {
         let mut path =
             String::from("azure/client-generator-core/client-initialization/path/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Delete);
         let rsp = self
             .pipeline
@@ -127,9 +125,7 @@ impl PathParamClient {
             "azure/client-generator-core/client-initialization/path/{blobName}/get-standalone",
         );
         path = path.replace("{blobName}", &self.blob_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -166,9 +162,7 @@ impl PathParamClient {
             "azure/client-generator-core/client-initialization/path/{blobName}/with-query",
         );
         path = path.replace("{blobName}", &self.blob_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         if let Some(format) = options.format {
             url.query_pairs_mut().append_pair("format", &format);
         }

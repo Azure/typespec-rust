@@ -14,6 +14,7 @@ use azure_core::{
     tracing, Result,
 };
 use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct RoutesQueryParametersQueryExpansionExplodeClient {
@@ -40,9 +41,7 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("routes/query/query-expansion/explode/array")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("routes/query/query-expansion/explode/array");
         for p in param.iter() {
             url.query_pairs_mut().append_pair("param", p);
         }
@@ -76,9 +75,7 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("routes/query/query-expansion/explode/primitive")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("routes/query/query-expansion/explode/primitive");
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -110,9 +107,7 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("routes/query/query-expansion/explode/record")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("routes/query/query-expansion/explode/record");
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.0);

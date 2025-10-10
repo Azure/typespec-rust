@@ -15,7 +15,7 @@ use azure_core::{
     http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct DatetimeResponseHeaderClient {
@@ -64,9 +64,7 @@ impl DatetimeResponseHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/datetime/responseheader/default")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/datetime/responseheader/default");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -119,9 +117,7 @@ impl DatetimeResponseHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/datetime/responseheader/rfc3339")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/datetime/responseheader/rfc3339");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -174,9 +170,7 @@ impl DatetimeResponseHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/datetime/responseheader/rfc7231")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/datetime/responseheader/rfc7231");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -229,9 +223,7 @@ impl DatetimeResponseHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/datetime/responseheader/unix-timestamp")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/datetime/responseheader/unix-timestamp");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

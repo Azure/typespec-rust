@@ -15,7 +15,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct MixedParamsClient {
@@ -88,10 +88,7 @@ impl MixedParamsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url =
-            url.join("azure/client-generator-core/client-initialization/mixed-params/with-body")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("azure/client-generator-core/client-initialization/mixed-params/with-body");
         url.query_pairs_mut().append_pair("region", region);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
@@ -129,10 +126,9 @@ impl MixedParamsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url =
-            url.join("azure/client-generator-core/client-initialization/mixed-params/with-query")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(
+            "azure/client-generator-core/client-initialization/mixed-params/with-query",
+        );
         url.query_pairs_mut().append_pair("id", id);
         url.query_pairs_mut().append_pair("region", region);
         let mut request = Request::new(url, Method::Get);

@@ -14,7 +14,8 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::{collections::HashMap, sync::Arc};
+use std::sync::Arc;
+use typespec_client_core::url::UrlOperations;
 
 /// Illustrates clients generated with ApiKey and OAuth2 authentication.
 #[tracing::client]
@@ -88,9 +89,7 @@ impl UnionClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("authentication/union/validkey")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("authentication/union/validkey");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -121,9 +120,7 @@ impl UnionClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("authentication/union/validtoken")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("authentication/union/validtoken");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

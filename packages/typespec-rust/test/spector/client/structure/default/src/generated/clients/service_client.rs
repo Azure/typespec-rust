@@ -15,7 +15,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 /// Test that we can use @client and @operationGroup decorators to customize client side code structure, such as:
 /// 1. have everything as default.
@@ -128,9 +128,7 @@ impl ServiceClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("one")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("one");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -160,9 +158,7 @@ impl ServiceClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("two")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("two");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

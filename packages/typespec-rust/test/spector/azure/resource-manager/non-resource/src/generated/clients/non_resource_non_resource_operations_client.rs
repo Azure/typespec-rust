@@ -12,7 +12,7 @@ use azure_core::{
     http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 /// Operations on non resource model should not be marked as `@armResourceOperations`.
 #[tracing::client]
@@ -63,9 +63,7 @@ impl NonResourceNonResourceOperationsClient {
         path = path.replace("{location}", location);
         path = path.replace("{parameter}", parameter);
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Put);
@@ -120,9 +118,7 @@ impl NonResourceNonResourceOperationsClient {
         path = path.replace("{location}", location);
         path = path.replace("{parameter}", parameter);
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);

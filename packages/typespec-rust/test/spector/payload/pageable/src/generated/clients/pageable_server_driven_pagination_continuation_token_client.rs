@@ -23,7 +23,7 @@ use azure_core::{
     },
     json, tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct PageableServerDrivenPaginationContinuationTokenClient {
@@ -51,12 +51,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        let qps = first_url
-            .query_pairs()
-            .into_owned()
-            .collect::<HashMap<_, _>>();
-        first_url = first_url.join("payload/pageable/server-driven-pagination/continuationtoken/request-header-nested-response-body")?;
-        first_url.query_pairs_mut().extend_pairs(qps);
+        first_url.append_path("payload/pageable/server-driven-pagination/continuationtoken/request-header-nested-response-body");
         if let Some(bar) = options.bar {
             first_url.query_pairs_mut().append_pair("bar", &bar);
         }
@@ -124,12 +119,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        let qps = first_url
-            .query_pairs()
-            .into_owned()
-            .collect::<HashMap<_, _>>();
-        first_url = first_url.join("payload/pageable/server-driven-pagination/continuationtoken/request-header-response-body")?;
-        first_url.query_pairs_mut().extend_pairs(qps);
+        first_url.append_path("payload/pageable/server-driven-pagination/continuationtoken/request-header-response-body");
         if let Some(bar) = options.bar {
             first_url.query_pairs_mut().append_pair("bar", &bar);
         }
@@ -217,12 +207,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        let qps = first_url
-            .query_pairs()
-            .into_owned()
-            .collect::<HashMap<_, _>>();
-        first_url = first_url.join("payload/pageable/server-driven-pagination/continuationtoken/request-header-response-header")?;
-        first_url.query_pairs_mut().extend_pairs(qps);
+        first_url.append_path("payload/pageable/server-driven-pagination/continuationtoken/request-header-response-header");
         if let Some(bar) = options.bar {
             first_url.query_pairs_mut().append_pair("bar", &bar);
         }
@@ -285,12 +270,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        let qps = first_url
-            .query_pairs()
-            .into_owned()
-            .collect::<HashMap<_, _>>();
-        first_url = first_url.join("payload/pageable/server-driven-pagination/continuationtoken/request-query-nested-response-body")?;
-        first_url.query_pairs_mut().extend_pairs(qps);
+        first_url.append_path("payload/pageable/server-driven-pagination/continuationtoken/request-query-nested-response-body");
         if let Some(bar) = options.bar {
             first_url.query_pairs_mut().append_pair("bar", &bar);
         }
@@ -365,12 +345,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        let qps = first_url
-            .query_pairs()
-            .into_owned()
-            .collect::<HashMap<_, _>>();
-        first_url = first_url.join("payload/pageable/server-driven-pagination/continuationtoken/request-query-response-body")?;
-        first_url.query_pairs_mut().extend_pairs(qps);
+        first_url.append_path("payload/pageable/server-driven-pagination/continuationtoken/request-query-response-body");
         if let Some(bar) = options.bar {
             first_url.query_pairs_mut().append_pair("bar", &bar);
         }
@@ -463,12 +438,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        let qps = first_url
-            .query_pairs()
-            .into_owned()
-            .collect::<HashMap<_, _>>();
-        first_url = first_url.join("payload/pageable/server-driven-pagination/continuationtoken/request-query-response-header")?;
-        first_url.query_pairs_mut().extend_pairs(qps);
+        first_url.append_path("payload/pageable/server-driven-pagination/continuationtoken/request-query-response-header");
         if let Some(bar) = options.bar {
             first_url.query_pairs_mut().append_pair("bar", &bar);
         }

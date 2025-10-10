@@ -10,7 +10,7 @@ use azure_core::{
     http::{ClientOptions, Method, Pipeline, PipelineSendOptions, Request, Response, Url},
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct DocTestsClient {
@@ -107,9 +107,7 @@ impl DocTestsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(id)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(id);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self

@@ -16,7 +16,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperationsClient {
@@ -65,9 +65,7 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperatio
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{resourceGroupResourceName}", resource_group_resource_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
@@ -120,9 +118,7 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperatio
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{resourceGroupResourceName}", resource_group_resource_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -178,9 +174,7 @@ impl MethodSubscriptionIdMixedSubscriptionPlacementResourceGroupResourceOperatio
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{resourceGroupResourceName}", resource_group_resource_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Put);

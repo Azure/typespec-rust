@@ -14,7 +14,7 @@ use azure_core::{
     http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct DatetimePropertyClient {
@@ -41,9 +41,7 @@ impl DatetimePropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/datetime/property/default")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/datetime/property/default");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -77,9 +75,7 @@ impl DatetimePropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/datetime/property/rfc3339")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/datetime/property/rfc3339");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -113,9 +109,7 @@ impl DatetimePropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/datetime/property/rfc7231")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/datetime/property/rfc7231");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -149,9 +143,7 @@ impl DatetimePropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/datetime/property/unix-timestamp")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/datetime/property/unix-timestamp");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -185,9 +177,7 @@ impl DatetimePropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/datetime/property/unix-timestamp-array")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/datetime/property/unix-timestamp-array");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

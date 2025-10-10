@@ -15,7 +15,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 /// Define scenario in building the http route/uri
 #[tracing::client]
@@ -81,9 +81,7 @@ impl RoutesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("routes/fixed")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("routes/fixed");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

@@ -16,7 +16,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 /// Test for pageable payload.
 #[tracing::client]
@@ -93,9 +93,7 @@ impl PageableClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("payload/pageable/simple")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("payload/pageable/simple");
         Ok(Pager::from_callback(move |_: PagerState<Url>| {
             let mut request = Request::new(url.clone(), Method::Get);
             request.insert_header("accept", "application/json");

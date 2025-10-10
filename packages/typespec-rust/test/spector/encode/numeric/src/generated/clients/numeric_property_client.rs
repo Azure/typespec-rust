@@ -13,7 +13,7 @@ use azure_core::{
     http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct NumericPropertyClient {
@@ -40,9 +40,7 @@ impl NumericPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/numeric/property/safeint")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/numeric/property/safeint");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -76,9 +74,7 @@ impl NumericPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/numeric/property/uint32")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/numeric/property/uint32");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -112,9 +108,7 @@ impl NumericPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/numeric/property/uint8")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/numeric/property/uint8");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

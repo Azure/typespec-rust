@@ -15,7 +15,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 /// Operations for the ModelWithAttributes type.
 #[tracing::client]
@@ -42,9 +42,7 @@ impl XmlModelWithAttributesValueClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("payload/xml/modelWithAttributes")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("payload/xml/modelWithAttributes");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
         let rsp = self
@@ -76,9 +74,7 @@ impl XmlModelWithAttributesValueClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("payload/xml/modelWithAttributes")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("payload/xml/modelWithAttributes");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.set_body(input);

@@ -16,7 +16,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct BytesResponseBodyClient {
@@ -42,9 +42,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/bytes/body/response/base64")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/bytes/body/response/base64");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -75,9 +73,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/bytes/body/response/base64url")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/bytes/body/response/base64url");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -108,9 +104,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/bytes/body/response/custom-content-type")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/bytes/body/response/custom-content-type");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
         let rsp = self
@@ -141,9 +135,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/bytes/body/response/default")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/bytes/body/response/default");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/octet-stream");
         let rsp = self
@@ -174,9 +166,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/bytes/body/response/octet-stream")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/bytes/body/response/octet-stream");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/octet-stream");
         let rsp = self

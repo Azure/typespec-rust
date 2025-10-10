@@ -22,7 +22,8 @@ use azure_core::{
     time::to_rfc7231,
     tracing, Bytes, Result,
 };
-use std::{collections::HashMap, sync::Arc};
+use std::sync::Arc;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct AppendBlobClient {
@@ -100,12 +101,7 @@ impl AppendBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = endpoint_url
-            .query_pairs()
-            .into_owned()
-            .collect::<HashMap<_, _>>();
-        endpoint_url = endpoint_url.join(&path)?;
-        endpoint_url.query_pairs_mut().extend_pairs(qps);
+        endpoint_url.append_path(&path);
         Ok(endpoint_url)
     }
 
@@ -168,9 +164,7 @@ impl AppendBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "appendblock");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -313,9 +307,7 @@ impl AppendBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("comp", "appendblock")
             .append_key_only("fromUrl");
@@ -473,9 +465,7 @@ impl AppendBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut().append_key_only("AppendBlob");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -627,9 +617,7 @@ impl AppendBlobClient {
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "seal");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()

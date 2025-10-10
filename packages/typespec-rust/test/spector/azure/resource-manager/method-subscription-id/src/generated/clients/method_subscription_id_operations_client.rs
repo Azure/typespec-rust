@@ -14,7 +14,7 @@ use azure_core::{
     },
     json, tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct MethodSubscriptionIdOperationsClient {
@@ -42,13 +42,7 @@ impl MethodSubscriptionIdOperationsClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        let qps = first_url
-            .query_pairs()
-            .into_owned()
-            .collect::<HashMap<_, _>>();
-        first_url =
-            first_url.join("providers/Azure.ResourceManager.MethodSubscriptionId/operations")?;
-        first_url.query_pairs_mut().extend_pairs(qps);
+        first_url.append_path("providers/Azure.ResourceManager.MethodSubscriptionId/operations");
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);

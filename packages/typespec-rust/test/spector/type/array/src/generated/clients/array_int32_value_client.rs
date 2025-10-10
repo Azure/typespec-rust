@@ -11,7 +11,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 /// Array of int32 values
 #[tracing::client]
@@ -38,9 +38,7 @@ impl ArrayInt32ValueClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("type/array/int32")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("type/array/int32");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -72,9 +70,7 @@ impl ArrayInt32ValueClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("type/array/int32")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("type/array/int32");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

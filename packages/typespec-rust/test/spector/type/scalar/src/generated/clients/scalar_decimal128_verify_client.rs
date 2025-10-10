@@ -14,7 +14,7 @@ use azure_core::{
     tracing, Result,
 };
 use rust_decimal::Decimal;
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 /// Decimal128 type verification
 #[tracing::client]
@@ -41,9 +41,7 @@ impl ScalarDecimal128VerifyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("type/scalar/decimal128/prepare_verify")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("type/scalar/decimal128/prepare_verify");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -75,9 +73,7 @@ impl ScalarDecimal128VerifyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("type/scalar/decimal128/verify")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("type/scalar/decimal128/verify");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

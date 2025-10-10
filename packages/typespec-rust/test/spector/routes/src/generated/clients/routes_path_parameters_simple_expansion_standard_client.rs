@@ -14,6 +14,7 @@ use azure_core::{
     tracing, Result,
 };
 use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct RoutesPathParametersSimpleExpansionStandardClient {
@@ -42,9 +43,7 @@ impl RoutesPathParametersSimpleExpansionStandardClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/simple/standard/array{param}");
         path = path.replace("{param}", &param.join(","));
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -83,9 +82,7 @@ impl RoutesPathParametersSimpleExpansionStandardClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("routes/path/simple/standard/primitive{param}");
         path = path.replace("{param}", param);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -129,9 +126,7 @@ impl RoutesPathParametersSimpleExpansionStandardClient {
                     .join(","),
             );
         }
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

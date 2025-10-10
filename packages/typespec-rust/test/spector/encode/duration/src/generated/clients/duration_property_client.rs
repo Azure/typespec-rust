@@ -16,7 +16,7 @@ use azure_core::{
     http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct DurationPropertyClient {
@@ -43,9 +43,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/duration/property/default")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/duration/property/default");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -79,9 +77,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/duration/property/float64-seconds")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/duration/property/float64-seconds");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -115,9 +111,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/duration/property/float-seconds")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/duration/property/float-seconds");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -151,9 +145,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/duration/property/float-seconds-array")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/duration/property/float-seconds-array");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -187,9 +179,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/duration/property/int32-seconds")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/duration/property/int32-seconds");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -223,9 +213,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/duration/property/iso8601")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/duration/property/iso8601");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

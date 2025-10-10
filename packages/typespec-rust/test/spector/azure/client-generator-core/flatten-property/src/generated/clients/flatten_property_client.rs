@@ -16,7 +16,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 /// Illustrates the model flatten cases.
 #[tracing::client]
@@ -83,9 +83,7 @@ impl FlattenPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("azure/client-generator-core/flatten-property/flattenModel")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("azure/client-generator-core/flatten-property/flattenModel");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -119,9 +117,7 @@ impl FlattenPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("azure/client-generator-core/flatten-property/nestedFlattenModel")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("azure/client-generator-core/flatten-property/nestedFlattenModel");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

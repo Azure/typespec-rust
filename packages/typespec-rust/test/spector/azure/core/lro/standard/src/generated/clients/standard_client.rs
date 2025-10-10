@@ -18,7 +18,7 @@ use azure_core::{
     },
     json, tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 /// Illustrates bodies templated with Azure Core with long-running operation
 #[tracing::client]
@@ -120,9 +120,7 @@ impl StandardClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/lro/standard/users/{name}");
         path = path.replace("{name}", name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
@@ -231,9 +229,7 @@ impl StandardClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/lro/standard/users/{name}");
         path = path.replace("{name}", name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
@@ -341,9 +337,7 @@ impl StandardClient {
         let mut url = self.endpoint.clone();
         let mut path = String::from("azure/core/lro/standard/users/{name}:export");
         path = path.replace("{name}", name);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         url.query_pairs_mut().append_pair("format", format);

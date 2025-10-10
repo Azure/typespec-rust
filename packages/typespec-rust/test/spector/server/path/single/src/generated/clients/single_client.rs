@@ -12,7 +12,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 /// Illustrates server with a single path parameter @server
 #[tracing::client]
@@ -78,9 +78,7 @@ impl SingleClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("server/path/single/myOp")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("server/path/single/myOp");
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline

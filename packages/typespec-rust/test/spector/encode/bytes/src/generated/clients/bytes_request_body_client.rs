@@ -15,7 +15,7 @@ use azure_core::{
     },
     tracing, Bytes, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 #[tracing::client]
 pub struct BytesRequestBodyClient {
@@ -42,9 +42,7 @@ impl BytesRequestBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/bytes/body/request/base64")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/bytes/body/request/base64");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(value);
@@ -77,9 +75,7 @@ impl BytesRequestBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/bytes/body/request/base64url")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/bytes/body/request/base64url");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(value);
@@ -112,9 +108,7 @@ impl BytesRequestBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/bytes/body/request/custom-content-type")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/bytes/body/request/custom-content-type");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "image/png");
         request.set_body(value);
@@ -147,9 +141,7 @@ impl BytesRequestBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/bytes/body/request/default")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/bytes/body/request/default");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/octet-stream");
         request.set_body(value);
@@ -182,9 +174,7 @@ impl BytesRequestBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("encode/bytes/body/request/octet-stream")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("encode/bytes/body/request/octet-stream");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/octet-stream");
         request.set_body(value);

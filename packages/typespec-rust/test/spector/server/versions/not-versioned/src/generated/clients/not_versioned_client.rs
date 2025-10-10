@@ -15,7 +15,7 @@ use azure_core::{
     },
     tracing, Result,
 };
-use std::collections::HashMap;
+use typespec_client_core::url::UrlOperations;
 
 /// Illustrates not-versioned server.
 #[tracing::client]
@@ -91,9 +91,7 @@ impl NotVersionedClient {
         let mut path =
             String::from("server/versions/not-versioned/with-path-api-version/{apiVersion}");
         path = path.replace("{apiVersion}", api_version);
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join(&path)?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline
@@ -124,9 +122,7 @@ impl NotVersionedClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("server/versions/not-versioned/with-query-api-version")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("server/versions/not-versioned/with-query-api-version");
         url.query_pairs_mut()
             .append_pair("api-version", api_version);
         let mut request = Request::new(url, Method::Head);
@@ -158,9 +154,7 @@ impl NotVersionedClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let qps = url.query_pairs().into_owned().collect::<HashMap<_, _>>();
-        url = url.join("server/versions/not-versioned/without-api-version")?;
-        url.query_pairs_mut().extend_pairs(qps);
+        url.append_path("server/versions/not-versioned/without-api-version");
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline
