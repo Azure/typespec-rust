@@ -96,7 +96,7 @@ impl AppendBlobClient {
     }
 
     /// Returns the Url associated with this client and its construction parameters.
-    pub fn endpoint_url(&self) -> Result<Url> {
+    pub fn service_url(&self) -> Result<Url> {
         let mut endpoint_url = self.endpoint.clone();
         let mut path = String::from("{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
