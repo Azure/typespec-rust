@@ -5,17 +5,38 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`PageableClient::list_without_continuation()`](crate::generated::clients::PageableClient::list_without_continuation())
+/// Options to be passed to [`PageablePageSizeClient::list_with_page_size()`](crate::generated::clients::PageablePageSizeClient::list_with_page_size())
 #[derive(Clone, Default, SafeDebug)]
-pub struct PageableClientListWithoutContinuationOptions<'a> {
+pub struct PageablePageSizeClientListWithPageSizeOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub page_size: Option<i32>,
+}
+
+impl PageablePageSizeClientListWithPageSizeOptions<'_> {
+    /// Transforms this [`PageablePageSizeClientListWithPageSizeOptions`] into a new `PageablePageSizeClientListWithPageSizeOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageablePageSizeClientListWithPageSizeOptions<'static> {
+        PageablePageSizeClientListWithPageSizeOptions {
+            method_options: ClientMethodOptions {
+                context: self.method_options.context.into_owned(),
+            },
+            page_size: self.page_size,
+        }
+    }
+}
+
+/// Options to be passed to [`PageablePageSizeClient::list_without_continuation()`](crate::generated::clients::PageablePageSizeClient::list_without_continuation())
+#[derive(Clone, Default, SafeDebug)]
+pub struct PageablePageSizeClientListWithoutContinuationOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-impl PageableClientListWithoutContinuationOptions<'_> {
-    /// Transforms this [`PageableClientListWithoutContinuationOptions`] into a new `PageableClientListWithoutContinuationOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> PageableClientListWithoutContinuationOptions<'static> {
-        PageableClientListWithoutContinuationOptions {
+impl PageablePageSizeClientListWithoutContinuationOptions<'_> {
+    /// Transforms this [`PageablePageSizeClientListWithoutContinuationOptions`] into a new `PageablePageSizeClientListWithoutContinuationOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageablePageSizeClientListWithoutContinuationOptions<'static> {
+        PageablePageSizeClientListWithoutContinuationOptions {
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
             },

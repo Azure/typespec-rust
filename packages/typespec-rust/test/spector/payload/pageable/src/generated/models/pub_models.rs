@@ -28,6 +28,13 @@ pub struct LinkStringResponse {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
+pub struct ListWithPageSizeResponse {
+    #[serde(default)]
+    pub pets: Vec<Pet>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
 pub struct ListWithoutContinuationResponse {
     #[serde(default)]
     pub pets: Vec<Pet>,

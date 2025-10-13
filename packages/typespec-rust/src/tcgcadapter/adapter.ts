@@ -2305,7 +2305,12 @@ function hasClientNameDecorator(decorators: Array<tcgc.DecoratorInfo>): boolean 
   return decorators.find((decorator) => decorator.name === 'Azure.ClientGenerator.Core.@clientName') !== undefined;
 }
 
-
+/**
+ * narrows statusCode to a HttpStatusCodeRange within the conditional block
+ * 
+ * @param statusCode the type to test
+ * @returns statusCode as a HttpStatusCodeRange or false
+ */
 function isHttpStatusCodeRange(statusCode: http.HttpStatusCodeRange | number): statusCode is http.HttpStatusCodeRange {
   return (<http.HttpStatusCodeRange>statusCode).start !== undefined;
 }
