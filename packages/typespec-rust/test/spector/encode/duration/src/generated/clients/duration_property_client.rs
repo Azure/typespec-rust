@@ -81,7 +81,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/property/float64-milliseconds")?;
+        url.append_path("encode/duration/property/float64-milliseconds");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -149,7 +149,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/property/float-milliseconds")?;
+        url.append_path("encode/duration/property/float-milliseconds");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -183,7 +183,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/property/float-milliseconds-array")?;
+        url.append_path("encode/duration/property/float-milliseconds-array");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -285,7 +285,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/property/int32-milliseconds")?;
+        url.append_path("encode/duration/property/int32-milliseconds");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

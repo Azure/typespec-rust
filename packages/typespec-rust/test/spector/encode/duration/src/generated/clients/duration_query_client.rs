@@ -74,7 +74,7 @@ impl DurationQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/query/float64-milliseconds")?;
+        url.append_path("encode/duration/query/float64-milliseconds");
         url.query_pairs_mut()
             .append_pair("input", &input.to_string());
         let mut request = Request::new(url, Method::Get);
@@ -140,7 +140,7 @@ impl DurationQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/query/float-milliseconds")?;
+        url.append_path("encode/duration/query/float-milliseconds");
         url.query_pairs_mut()
             .append_pair("input", &input.to_string());
         let mut request = Request::new(url, Method::Get);
@@ -206,7 +206,7 @@ impl DurationQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/query/int32-milliseconds")?;
+        url.append_path("encode/duration/query/int32-milliseconds");
         url.query_pairs_mut()
             .append_pair("input", &input.to_string());
         let mut request = Request::new(url, Method::Get);
@@ -239,7 +239,7 @@ impl DurationQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/query/int32-milliseconds-array")?;
+        url.append_path("encode/duration/query/int32-milliseconds-array");
         url.query_pairs_mut().append_pair(
             "input",
             &input

@@ -9,7 +9,6 @@ use azure_core::{
     http::{ClientOptions, Pipeline, Url},
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Test for pageable payload.
 #[tracing::client]

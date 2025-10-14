@@ -74,7 +74,7 @@ impl DurationHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/header/float64-milliseconds")?;
+        url.append_path("encode/duration/header/float64-milliseconds");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
         let rsp = self
@@ -138,7 +138,7 @@ impl DurationHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/header/float-milliseconds")?;
+        url.append_path("encode/duration/header/float-milliseconds");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
         let rsp = self
@@ -202,7 +202,7 @@ impl DurationHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/header/int32-milliseconds")?;
+        url.append_path("encode/duration/header/int32-milliseconds");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
         let rsp = self
@@ -234,7 +234,7 @@ impl DurationHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/header/int32-milliseconds-array")?;
+        url.append_path("encode/duration/header/int32-milliseconds-array");
         let mut request = Request::new(url, Method::Get);
         request.insert_header(
             "duration",

@@ -95,7 +95,7 @@ serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.141"
 time = { version = "0.3.41", features = ["serde-well-known"] }
 tokio = { version = "1.46.1", default-features = false, features = ["macros"] }
-typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "e64f1ce79a0f6d0b5f85279ca9f44dc496862ac0", features = [
+typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "a891e06d827d97d159d8c6c8309ca001305eaadb", features = [
     "decimal",
     "reqwest",
 ] }
