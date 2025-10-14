@@ -1364,6 +1364,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   } else {
     // no next link when there's no strategy
     body += `${indent.get()}Ok(Pager::from_callback(move |_: PagerState<Url>| {\n`;
+    indent.push();
     cloneUrl = true;
   }
 

@@ -114,10 +114,9 @@ union LabelFields {
 }
 
 @doc("The result of a list request.")
-@pagedResult
 model KeyListResult {
   @doc("The collection value.")
-  @items
+  @pageItems
   items?: Key[];
 
   @doc("The URI that can be used to request the next set of paged results.")
@@ -154,10 +153,9 @@ model Error {
 }
 
 @doc("The result of a list request.")
-@pagedResult
 model KeyValueListResult {
   @doc("The collection value.")
-  @items
+  @pageItems
   items?: KeyValue[];
 
   @doc("An identifier representing the returned state of the resource.")
@@ -202,10 +200,9 @@ model KeyValue {
 }
 
 @doc("The result of a snapshot list request.")
-@pagedResult
 model SnapshotListResult {
   @doc("The collection value.")
-  @items
+  @pageItems
   items?: Snapshot[];
 
   @doc("The URI that can be used to request the next set of paged results.")
@@ -299,10 +296,9 @@ model SnapshotUpdateParameters {
 }
 
 @doc("The result of a list request.")
-@pagedResult
 model LabelListResult {
   @doc("The collection value.")
-  @items
+  @pageItems
   items?: Label[];
 
   @doc("The URI that can be used to request the next set of paged results.")
