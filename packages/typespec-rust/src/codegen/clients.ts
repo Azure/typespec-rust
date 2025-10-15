@@ -969,7 +969,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
  * @param inClosure indicates if the request is being constructed within a closure (e.g. pageable methods)
  * @returns the code which sets HTTP headers for the request
  */
-function applyHeaderParams(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean): string {
+function applyHeaderParams(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, requestVarName: string): string {
   let body = '';
 
   for (const headerParam of paramGroups.header) {
@@ -989,7 +989,7 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
       ]) + ';\n';
       body += indent.get() + helpers.buildIfBlock(indent, {
         condition: `let Some(${headerParam.name}) = ${headerParam.name}`,
-        body: (indent) => `${indent.get()}request.insert_header("${headerParam.header}", ${headerParam.name});\n`,
+        body: (indent) => `${indent.get()}${requestVarName}.insert_header("${headerParam.header}", ${headerParam.name});\n`,
       }) + '\n';
       continue;
     }
@@ -1004,14 +1004,14 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
     body += getParamValueHelper(indent, headerParam, inClosure, () => {
       if (headerParam.kind === 'headerHashMap') {
         let setter = `for (k, v) in &${headerParam.name} {\n`;
-        setter += `${indent.push().get()}request.insert_header(format!("${headerParam.header}-{k}"), v);\n`;
+        setter += `${indent.push().get()}${requestVarName}.insert_header(format!("${headerParam.header}-{k}"), v);\n`;
         setter += `${indent.pop().get()}}\n`;
         return setter;
       }
       // for non-copyable params (e.g. String), we need to borrow them if they're on the
       // client or we're in a closure and the param is required (header params are always owned)
       const borrow = nonCopyableType(headerParam.type) && (headerParam.location === 'client' || (inClosure && !headerParam.optional)) ? '&' : '';
-      return `${indent.get()}request.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, !inClosure)});\n`;
+      return `${indent.get()}${requestVarName}.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, !inClosure)});\n`;
     });
   }
 
@@ -1037,10 +1037,13 @@ function isOptionalContentTypeHeader(headerParam: HeaderParamType): headerParam 
  * @param forceMut indicates whether request should get declared as 'mut' regardless of whether there are any headers to set
  * @returns the request construction code
  */
-function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, cloneUrl: boolean = false, forceMut: boolean = true): string {
-  let body = `${indent.get()}let ${(forceMut || paramGroups.header.length > 0) ? 'mut ' : ''}request = Request::new(url${cloneUrl ? '.clone()' : ''}, Method::${codegen.capitalize(method.httpMethod)});\n`;
+function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, cloneUrl: boolean = false, forceMut: boolean = true): {requestVar: string, content: string} {
+  // when constructing the request var name we need to ensure
+  // that it doesn't collide with any parameter name.
+  const requestVarName = helpers.getUniqueVarName(method.params, ['request', 'core_req']);
+  let body = `${indent.get()}let ${(forceMut || paramGroups.header.length > 0) ? 'mut ' : ''}${requestVarName} = Request::new(url${cloneUrl ? '.clone()' : ''}, Method::${codegen.capitalize(method.httpMethod)});\n`;
 
-  body += applyHeaderParams(indent, use, method, paramGroups, inClosure);
+  body += applyHeaderParams(indent, use, method, paramGroups, inClosure, requestVarName);
 
   let optionalContentTypeParam: rust.HeaderScalarParameter | undefined;
   for (const headerParam of paramGroups.header) {
@@ -1055,9 +1058,9 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
     body += getParamValueHelper(indent, bodyParam, inClosure, () => {
       let bodyParamContent = '';
       if (optionalContentTypeParam) {
-        bodyParamContent = `${indent.get()}request.insert_header("${optionalContentTypeParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, optionalContentTypeParam, !inClosure)});\n`;
+        bodyParamContent = `${indent.get()}${requestVarName}.insert_header("${optionalContentTypeParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, optionalContentTypeParam, !inClosure)});\n`;
       }
-      bodyParamContent += `${indent.get()}request.set_body(${bodyParam.name}${inClosure ? '.clone()' : ''});\n`;
+      bodyParamContent += `${indent.get()}${requestVarName}.set_body(${bodyParam.name}${inClosure ? '.clone()' : ''});\n`;
       return bodyParamContent;
     });
   } else if (paramGroups.partialBody.length > 0) {
@@ -1090,10 +1093,13 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
       body += `${indent.get()}${initializer},\n`;
     }
     body += `${indent.pop().get()}}.try_into()?;\n`;
-    body += `${indent.get()}request.set_body(body);\n`;
+    body += `${indent.get()}${requestVarName}.set_body(body);\n`;
   }
 
-  return body;
+  return {
+    requestVar: requestVarName,
+    content: body
+  };
 }
 
 
@@ -1183,7 +1189,8 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}url = self.${getEndpointFieldName(client)}.clone();\n`;
 
   body += constructUrl(indent, use, method, paramGroups);
-  body += constructRequest(indent, use, method, paramGroups, false);
+  const requestResult = constructRequest(indent, use, method, paramGroups, false);
+  body += requestResult.content;
 
   let pipelineMethod: string;
   switch (method.returns.type.kind) {
@@ -1194,7 +1201,7 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
       pipelineMethod = 'send';
       break;
   }
-  body += `${indent.get()}let rsp = self.pipeline.${pipelineMethod}(&ctx, &mut request, ${getPipelineOptions(indent, use, method)}).await?;\n`;
+  body += `${indent.get()}let rsp = self.pipeline.${pipelineMethod}(&ctx, &mut ${requestResult.requestVar}, ${getPipelineOptions(indent, use, method)}).await?;\n`;
   body += `${indent.get()}Ok(rsp.into())\n`;
   return body;
 }
@@ -1309,11 +1316,12 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     rspInto = '.into()';
   }
 
-  body += constructRequest(indent, use, method, paramGroups, true, cloneUrl);
+  const requestResult = constructRequest(indent, use, method, paramGroups, true, cloneUrl);
+  body += requestResult.content;
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
-  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut request, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
+  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut ${requestResult.requestVar}, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
 
   // check if we need to extract the next link field from the response model
   if (method.strategy && (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'nextLink')) {
@@ -1426,9 +1434,12 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n`;
   }
 
+  // we call this eagerly so that we have access to the request var name
+  const initialRequestResult = constructRequest(indent, use, method, paramGroups, true, true, false);
+
   body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(\n`
   body += `${indent.push().get()}move |next_link: PollerState<Url>| {\n`;
-  body += `${indent.push().get()}let (mut request, next_link) = ${helpers.buildMatch(indent, 'next_link', [{
+  body += `${indent.push().get()}let (mut ${initialRequestResult.requestVar}, next_link) = ${helpers.buildMatch(indent, 'next_link', [{
     pattern: `PollerState::More(next_link)`,
     body: (indent) => {
       let body = '';
@@ -1445,17 +1456,17 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
         mutRequest = 'mut ';
       }
 
-      body += `${indent.get()}let ${mutRequest}request = Request::new(next_link.clone(), Method::Get);\n`;
-      body += applyHeaderParams(indent, use, method, paramGroups, true);
-      body += `${indent.get()}(request, next_link)\n`;
+      body += `${indent.get()}let ${mutRequest}${initialRequestResult.requestVar} = Request::new(next_link.clone(), Method::Get);\n`;
+      body += applyHeaderParams(indent, use, method, paramGroups, true, initialRequestResult.requestVar);
+      body += `${indent.get()}(${initialRequestResult.requestVar}, next_link)\n`;
 
       return body;
     },
   }, {
     pattern: 'PollerState::Initial',
     body: (indent) => {
-      let body = constructRequest(indent, use, method, paramGroups, true, true, false);
-      body += `${indent.get()}(request, url.clone())\n`;
+      let body = initialRequestResult.content;
+      body += `${indent.get()}(${initialRequestResult.requestVar}, url.clone())\n`;
 
       return body;
     },
@@ -1463,7 +1474,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`
   body += `${indent.get()}let pipeline = pipeline.clone();\n`
   body += `${indent.get()}async move {\n`
-  body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut request, ${getPipelineOptions(indent, use, method)}).await?;\n`
+  body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut ${initialRequestResult.requestVar}, ${getPipelineOptions(indent, use, method)}).await?;\n`
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
   body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &options.poller_options);\n`
 

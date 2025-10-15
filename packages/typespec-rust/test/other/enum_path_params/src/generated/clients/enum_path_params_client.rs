@@ -74,31 +74,31 @@ impl EnumPathParamsClient {
     #[tracing::function("EnumPathParams.optionalExtensible")]
     pub async fn optional_extensible(
         &self,
-        shape: ExtensibleShape,
+        request: ExtensibleShape,
         options: Option<EnumPathParamsClientOptionalExtensibleOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
-        if shape.as_ref().is_empty() {
+        if request.as_ref().is_empty() {
             return Err(azure_core::Error::with_message(
                 azure_core::error::ErrorKind::Other,
-                "parameter shape cannot be empty",
+                "parameter request cannot be empty",
             ));
         }
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.bogus_url.clone();
-        let mut path = String::from("optional/{shape}/{value}");
-        path = path.replace("{shape}", shape.as_ref());
+        let mut path = String::from("optional/{request}/{value}");
+        path = path.replace("{request}", request.as_ref());
         path = match options.value {
             Some(value) => path.replace("{value}", value.as_ref()),
             None => path.replace("{value}", ""),
         };
         url = url.join(&path)?;
-        let mut request = Request::new(url, Method::Get);
+        let mut core_req = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
             .send(
                 &ctx,
-                &mut request,
+                &mut core_req,
                 Some(PipelineSendOptions {
                     check_success: CheckSuccessOptions {
                         success_codes: &[204],
@@ -117,25 +117,25 @@ impl EnumPathParamsClient {
     #[tracing::function("EnumPathParams.optionalFixed")]
     pub async fn optional_fixed(
         &self,
-        shape: FixedShape,
+        request: FixedShape,
         options: Option<EnumPathParamsClientOptionalFixedOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.bogus_url.clone();
-        let mut path = String::from("fixed/{shape}/{value}");
-        path = path.replace("{shape}", shape.as_ref());
-        path = match options.value {
-            Some(value) => path.replace("{value}", value.as_ref()),
-            None => path.replace("{value}", ""),
+        let mut path = String::from("fixed/{request}/{coreReq}");
+        path = match options.core_req {
+            Some(core_req) => path.replace("{coreReq}", core_req.as_ref()),
+            None => path.replace("{coreReq}", ""),
         };
+        path = path.replace("{request}", request.as_ref());
         url = url.join(&path)?;
-        let mut request = Request::new(url, Method::Get);
+        let mut core_req = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
             .send(
                 &ctx,
-                &mut request,
+                &mut core_req,
                 Some(PipelineSendOptions {
                     check_success: CheckSuccessOptions {
                         success_codes: &[204],

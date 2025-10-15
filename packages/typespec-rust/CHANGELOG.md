@@ -6,6 +6,7 @@
 
 * Fixed an issue that could cause types to have duplicate names.
 * Fixed an issue that could cause enum types to have invalid names.
+* Ensure that the local variable name for the `http::Request` doesn't collide with an existing parameter name.
 
 ### Other Changes
 

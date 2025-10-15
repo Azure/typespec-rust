@@ -18,8 +18,8 @@ pub struct EnumPathParamsClientOptionalExtensibleOptions<'a> {
 /// Options to be passed to [`EnumPathParamsClient::optional_fixed()`](crate::generated::clients::EnumPathParamsClient::optional_fixed())
 #[derive(Clone, Default, SafeDebug)]
 pub struct EnumPathParamsClientOptionalFixedOptions<'a> {
+    pub core_req: Option<FixedValues>,
+
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
-
-    pub value: Option<FixedValues>,
 }
