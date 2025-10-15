@@ -232,16 +232,27 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
       if (paramsDocs) {
         body += paramsDocs;
       }
+
       // client accessors will never have response headers
       if (method.kind !== 'clientaccessor' && method.responseHeaders) {
         body += getHeaderTraitDocComment(indent, crate, method);
       }
+
+      const paramsInfo = getMethodParamsCountAndSig(method, use);
+      if (paramsInfo.count > 7) {
+        // clippy will by default warn on 7+ args in a method.
+        // note that this doesn't include self which is included
+        // in the count.
+        body += `${indent.get()}#[allow(clippy::too_many_arguments)]\n`;
+      }
+
       if (isPublicApi) {
         body += `${indent.get()}#[tracing::function("${method.languageIndependentName}")]\n`;
       } else if (isSubclientNew) {
         body += `${indent.get()}#[tracing::subclient]\n`;
       }
-      body += `${indent.get()}${helpers.emitVisibility(method.visibility)}${async}fn ${method.name}(${getMethodParamsSig(method, use)}) -> ${returnType} {\n`;
+
+      body += `${indent.get()}${helpers.emitVisibility(method.visibility)}${async}fn ${method.name}(${paramsInfo.sig}) -> ${returnType} {\n`;
       body += `${indent.push().get()}${methodBody(indent)}\n`;
       body += `${indent.pop().get()}}\n`; // end method
       if (i + 1 < client.methods.length) {
@@ -439,22 +450,25 @@ function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: r
 
 /**
  * creates the parameter signature for a client method
- * e.g. "foo: i32, bar: String, options: MethodOptions"
+ * e.g. "foo: i32, bar: String, options: MethodOptions".
+ * also returns the number of parameters in the sig.
  * 
  * @param method the Rust method for which to create the param sig
  * @param use the use statement builder currently in scope
- * @returns the method params sig
+ * @returns the method params count and sig
  */
-function getMethodParamsSig(method: rust.MethodType, use: Use): string {
+function getMethodParamsCountAndSig(method: rust.MethodType, use: Use): {count: number, sig: string} {
   const paramsSig = new Array<string>();
   paramsSig.push(formatParamTypeName(method.self));
 
+  let count = 1; // self
   if (method.kind === 'clientaccessor') {
     // client accessor params don't have a concept
     // of optionality nor do they contain literals
     for (const param of method.params) {
       use.addForType(param.type);
       paramsSig.push(`${param.name}: ${formatParamTypeName(param)}`);
+      ++count;
     }
   } else {
     for (const param of method.params) {
@@ -472,13 +486,15 @@ function getMethodParamsSig(method: rust.MethodType, use: Use): string {
       if (param.location === 'method' && !param.optional) {
         use.addForType(param.type);
         paramsSig.push(`${param.name}: ${formatParamTypeName(param)}`);
+        ++count;
       }
     }
 
     paramsSig.push(`options: ${helpers.getTypeDeclaration(method.options, 'anonymous')}`);
+    ++count;
   }
 
-  return paramsSig.join(', ');
+  return {count: count, sig: paramsSig.join(', ')};
 }
 
 /**

@@ -188,7 +188,7 @@ export class Adapter {
    * @returns a Rust enum
    */
   private getEnum(sdkEnum: tcgc.SdkEnumType): rust.Enum {
-    const enumName = codegen.capitalize(sdkEnum.name);
+    const enumName = codegen.deconstruct(sdkEnum.name).map((each) => codegen.capitalize(each)).join('');
     let rustEnum = this.types.get(enumName);
     if (rustEnum) {
       return <rust.Enum>rustEnum;
@@ -1267,7 +1267,7 @@ export class Adapter {
     const languageIndependentName = method.crossLanguageDefinitionId;
     const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
     const optionsLifetime = new rust.Lifetime('a');
-    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName)}Options`, 'pub');
+    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName, false)}Options`, 'pub');
     methodOptionsStruct.lifetime = optionsLifetime;
     methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
 
@@ -1579,7 +1579,7 @@ export class Adapter {
     } else if (responseHeaders.length > 0) {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
-      const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name)}Result`);
+      const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name, false)}Result`);
       markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
       this.crate.models.push(markerType);
       let resultType: rust.ResultTypes;

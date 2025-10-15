@@ -18,10 +18,10 @@ use crate::generated::models::{
     SpecialWordsModelsClientWithGlobalOptions, SpecialWordsModelsClientWithIfOptions,
     SpecialWordsModelsClientWithImportOptions, SpecialWordsModelsClientWithInOptions,
     SpecialWordsModelsClientWithIsOptions, SpecialWordsModelsClientWithLambdaOptions,
-    SpecialWordsModelsClientWithNotOptions, SpecialWordsModelsClientWithOptions,
-    SpecialWordsModelsClientWithOrOptions, SpecialWordsModelsClientWithPassOptions,
-    SpecialWordsModelsClientWithRaiseOptions, SpecialWordsModelsClientWithReturnOptions,
-    SpecialWordsModelsClientWithTryOptions, SpecialWordsModelsClientWithWhileOptions,
+    SpecialWordsModelsClientWithNotOptions, SpecialWordsModelsClientWithOrOptions,
+    SpecialWordsModelsClientWithPassOptions, SpecialWordsModelsClientWithRaiseOptions,
+    SpecialWordsModelsClientWithReturnOptions, SpecialWordsModelsClientWithTryOptions,
+    SpecialWordsModelsClientWithWhileOptions, SpecialWordsModelsClientWithWithOptions,
     SpecialWordsModelsClientWithYieldOptions, Try, While, With, Yield,
 };
 use azure_core::{
@@ -1076,7 +1076,7 @@ impl SpecialWordsModelsClient {
     pub async fn with_with(
         &self,
         body: RequestContent<With>,
-        options: Option<SpecialWordsModelsClientWithOptions<'_>>,
+        options: Option<SpecialWordsModelsClientWithWithOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();

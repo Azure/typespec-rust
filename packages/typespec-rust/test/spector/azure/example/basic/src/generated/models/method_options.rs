@@ -5,9 +5,9 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`BasicServiceOperationGroupClient::basic()`](crate::generated::clients::BasicServiceOperationGroupClient::basic())
+/// Options to be passed to [`AzureExampleClient::basic_action()`](crate::generated::clients::AzureExampleClient::basic_action())
 #[derive(Clone, Default, SafeDebug)]
-pub struct BasicServiceOperationGroupClientBasicOptions<'a> {
+pub struct AzureExampleClientBasicActionOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
