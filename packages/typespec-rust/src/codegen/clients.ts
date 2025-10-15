@@ -1207,15 +1207,16 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
-  if (paramGroups.apiVersion) {
-    body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n`;
-  }
 
   // passed to constructRequest. we only need to
   // clone it for the non-continuation case.
   let cloneUrl = false;
 
   if (method.strategy) {
+    if (paramGroups.apiVersion) {
+      body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n`;
+    }
+
     switch (method.strategy.kind) {
       case 'continuationToken': {
         const reqTokenParam = method.strategy.requestToken.name;
@@ -1421,7 +1422,14 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
         body += `${indent.get()}next_link.query_pairs_mut().clear().extend_pairs(qp).append_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`;
       }
 
-      body += `${indent.get()}let ${paramGroups.header.length > 0 ? 'mut ' : ''}request = Request::new(next_link.clone(), Method::Get);\n`;
+      let mutRequest = '';
+      // if the only header is optional Content-Type it will not be used
+      // by applyHeaderParams() in this case so don't make request mutable
+      if (paramGroups.header.length > 1 || (paramGroups.header.length === 1 && !isOptionalContentTypeHeader(paramGroups.header[0]))) {
+        mutRequest = 'mut ';
+      }
+
+      body += `${indent.get()}let ${mutRequest}request = Request::new(next_link.clone(), Method::Get);\n`;
       body += applyHeaderParams(indent, use, method, paramGroups, true);
       body += `${indent.get()}(request, next_link)\n`;
 

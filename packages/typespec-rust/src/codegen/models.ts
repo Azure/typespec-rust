@@ -818,7 +818,12 @@ function buildLiteralSerialize(indent: helpers.indentation, name: string, field:
 
   use.add('serde', 'Serializer');
   const fieldVar = field.optional ? 'value' : '_ignored';
-  let content = `pub(crate) fn ${name}<S>(${fieldVar}: &${helpers.getTypeDeclaration(field.type)}, serializer: S) -> std::result::Result<S::Ok, S::Error> where S: Serializer {\n`;
+  let content = '';
+  if (name.match(/[A-Z]/)) {
+    // disable per instance instead of for the entire file
+    content += '#[allow(non_snake_case)]\n';
+  }
+  content += `pub(crate) fn ${name}<S>(${fieldVar}: &${helpers.getTypeDeclaration(field.type)}, serializer: S) -> std::result::Result<S::Ok, S::Error> where S: Serializer {\n`;
 
   let serializeMethod: string;
   let serializeValue = literal.value;

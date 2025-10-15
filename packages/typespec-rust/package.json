@@ -53,7 +53,7 @@
     "@azure-tools/typespec-autorest": "~0.61.0",
     "@azure-tools/typespec-azure-core": "~0.61.0",
     "@azure-tools/typespec-azure-resource-manager": "~0.61.0",
-    "@azure-tools/typespec-client-generator-core": "~0.61.0",
+    "@azure-tools/typespec-client-generator-core": "~0.61.1",
     "@eslint/js": "^9.35.0",
     "@types/node": "^20.19.16",
     "@typespec/compiler": "^1.4.0",
@@ -73,7 +73,7 @@
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "@azure-tools/typespec-client-generator-core": ">=0.61.0 <1.0.0",
+    "@azure-tools/typespec-client-generator-core": ">=0.61.1 <1.0.0",
     "@typespec/compiler": "^1.4.0",
     "@typespec/http": "^1.4.0"
   },
