@@ -1,5 +1,16 @@
 # Release History
 
+## 0.24.2 (unreleased)
+
+### Bugs Fixed
+
+* Fixed an issue that could cause types to have duplicate names.
+* Fixed an issue that could cause enum types to have invalid names.
+
+### Other Changes
+
+* Emit `#[allow(clippy::too_many_arguments)]` on methods that contain seven or more arguments.
+
 ## 0.24.1 (2025-10-15)
 
 ### Bugs Fixed

@@ -691,7 +691,7 @@ function buildXmlAddlPropsDeserializeForModel(use: Use, model: rust.Model, addlP
   const indent = new helpers.indentation();
   body += `${indent.get()}fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: serde::Deserializer<'de> {\n`;
 
-  const visitorTypeName = `${codegen.pascalCase(addlProps.name)}Visitor`;
+  const visitorTypeName = `${codegen.pascalCase(addlProps.name, false)}Visitor`;
   body += `${indent.push().get()}struct ${visitorTypeName};\n`;
   body += `${indent.get()}impl<'de> serde::de::Visitor<'de> for ${visitorTypeName} {\n`;
   body += `${indent.push().get()}type Value = ${model.name};\n`;
