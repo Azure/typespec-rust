@@ -1,11 +1,15 @@
 # Release History
 
-## 0.24.1 (unreleased)
+## 0.24.1 (2025-10-15)
 
 ### Bugs Fixed
 
 * Changed `doc_auto_cfg` to `doc_cfg` ([Azure/azure-sdk-for-rust#3118](https://github.com/Azure/azure-sdk-for-rust/issues/3118))
 * Fixed incorrect header trait doc comment.
+
+### Other Changes
+
+* Updated to the latest tsp toolset.
 
 ## 0.24.0 (2025-10-02)
 
