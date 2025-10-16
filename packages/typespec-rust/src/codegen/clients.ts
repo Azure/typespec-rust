@@ -1037,7 +1037,7 @@ function isOptionalContentTypeHeader(headerParam: HeaderParamType): headerParam 
  * @param forceMut indicates whether request should get declared as 'mut' regardless of whether there are any headers to set
  * @returns the request construction code
  */
-function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, cloneUrl: boolean = false, forceMut: boolean = true): {requestVar: string, content: string} {
+function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, cloneUrl: boolean = false, forceMut: boolean = true): {requestVarName: string, content: string} {
   // when constructing the request var name we need to ensure
   // that it doesn't collide with any parameter name.
   const requestVarName = helpers.getUniqueVarName(method.params, ['request', 'core_req']);
@@ -1097,7 +1097,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
   }
 
   return {
-    requestVar: requestVarName,
+    requestVarName: requestVarName,
     content: body
   };
 }
@@ -1201,7 +1201,7 @@ function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.
       pipelineMethod = 'send';
       break;
   }
-  body += `${indent.get()}let rsp = self.pipeline.${pipelineMethod}(&ctx, &mut ${requestResult.requestVar}, ${getPipelineOptions(indent, use, method)}).await?;\n`;
+  body += `${indent.get()}let rsp = self.pipeline.${pipelineMethod}(&ctx, &mut ${requestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?;\n`;
   body += `${indent.get()}Ok(rsp.into())\n`;
   return body;
 }
@@ -1321,7 +1321,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
-  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut ${requestResult.requestVar}, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
+  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut ${requestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
 
   // check if we need to extract the next link field from the response model
   if (method.strategy && (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'nextLink')) {
@@ -1439,7 +1439,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
 
   body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(\n`
   body += `${indent.push().get()}move |next_link: PollerState<Url>| {\n`;
-  body += `${indent.push().get()}let (mut ${initialRequestResult.requestVar}, next_link) = ${helpers.buildMatch(indent, 'next_link', [{
+  body += `${indent.push().get()}let (mut ${initialRequestResult.requestVarName}, next_link) = ${helpers.buildMatch(indent, 'next_link', [{
     pattern: `PollerState::More(next_link)`,
     body: (indent) => {
       let body = '';
@@ -1456,9 +1456,9 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
         mutRequest = 'mut ';
       }
 
-      body += `${indent.get()}let ${mutRequest}${initialRequestResult.requestVar} = Request::new(next_link.clone(), Method::Get);\n`;
-      body += applyHeaderParams(indent, use, method, paramGroups, true, initialRequestResult.requestVar);
-      body += `${indent.get()}(${initialRequestResult.requestVar}, next_link)\n`;
+      body += `${indent.get()}let ${mutRequest}${initialRequestResult.requestVarName} = Request::new(next_link.clone(), Method::Get);\n`;
+      body += applyHeaderParams(indent, use, method, paramGroups, true, initialRequestResult.requestVarName);
+      body += `${indent.get()}(${initialRequestResult.requestVarName}, next_link)\n`;
 
       return body;
     },
@@ -1466,7 +1466,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     pattern: 'PollerState::Initial',
     body: (indent) => {
       let body = initialRequestResult.content;
-      body += `${indent.get()}(${initialRequestResult.requestVar}, url.clone())\n`;
+      body += `${indent.get()}(${initialRequestResult.requestVarName}, url.clone())\n`;
 
       return body;
     },
@@ -1474,7 +1474,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`
   body += `${indent.get()}let pipeline = pipeline.clone();\n`
   body += `${indent.get()}async move {\n`
-  body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut ${initialRequestResult.requestVar}, ${getPipelineOptions(indent, use, method)}).await?;\n`
+  body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?;\n`
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
   body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &options.poller_options);\n`
 
