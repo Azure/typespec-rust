@@ -778,10 +778,10 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
  * @param use the use statement builder currently in scope
  * @param method the method for which we're building the body
  * @param paramGroups the param groups for the provided method
- * @param urlVarName the name of the var that contains the azure_core::Url. defaults to 'url'
+ * @param urlVarName the name of the var that contains the azure_core::Url
  * @returns the URL construction code
  */
-function constructUrl(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, urlVarName: string = 'url'): string {
+function constructUrl(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, urlVarName: string): string {
   // for paths that contain query parameters, we must set the query params separately.
   // including them in the call to set_path() causes the chars to be path-escaped.
   const pathChunks = method.httpPath.split('?');
@@ -814,7 +814,8 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)})?;\n`;
     } else {
       // we have path params that need to have their segments replaced with the param values
-      body += `${indent.get()}let mut path = String::from(${path});\n`;
+      const pathVarName = helpers.getUniqueVarName(method.params, ['path', 'path_var']);
+      body += `${indent.get()}let mut ${pathVarName} = String::from(${path});\n`;
 
       for (const pathParam of paramGroups.path) {
         let wrapSortedVec: (s: string) => string = (s) => s;
@@ -886,18 +887,18 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         }
 
         if (pathParam.optional) {
-          body += `${indent.get()}path = ${helpers.buildMatch(indent, `options.${pathParam.name}`, [{
+          body += `${indent.get()}${pathVarName} = ${helpers.buildMatch(indent, `options.${pathParam.name}`, [{
             pattern: `Some(${pathParam.name})`,
-            body: (indent) => wrapSortedVec(`${indent.get()}path.replace("{${pathParam.segment}}", ${paramExpression})\n`),
+            body: (indent) => wrapSortedVec(`${indent.get()}${pathVarName}.replace("{${pathParam.segment}}", ${paramExpression})\n`),
           }, {
             pattern: `None`,
-            body: (indent) => `${indent.get()}path.replace("{${pathParam.segment}}", "")\n`,
+            body: (indent) => `${indent.get()}${pathVarName}.replace("{${pathParam.segment}}", "")\n`,
           }])};\n`;
         } else {
-          body += wrapSortedVec(`${indent.get()}path = path.replace("{${pathParam.segment}}", ${paramExpression});\n`);
+          body += wrapSortedVec(`${indent.get()}${pathVarName} = ${pathVarName}.replace("{${pathParam.segment}}", ${paramExpression});\n`);
         }
       }
-      path = '&path';
+      path = `&${pathVarName}`;
       body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${path})?;\n`;
     }
   }
@@ -1033,15 +1034,16 @@ function isOptionalContentTypeHeader(headerParam: HeaderParamType): headerParam 
  * @param method the method for which we're building the body
  * @param paramGroups the param groups for the provided method
  * @param inClosure indicates if the request is being constructed within a closure (e.g. pageable methods)
+ * @param urlVarName the name of var that contains the URL
  * @param cloneUrl indicates if url should be cloned when it is passed to initialize request
  * @param forceMut indicates whether request should get declared as 'mut' regardless of whether there are any headers to set
  * @returns the request construction code
  */
-function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, cloneUrl: boolean = false, forceMut: boolean = true): {requestVarName: string, content: string} {
+function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, urlVarName: string, cloneUrl: boolean = false, forceMut: boolean = true): {requestVarName: string, content: string} {
   // when constructing the request var name we need to ensure
   // that it doesn't collide with any parameter name.
   const requestVarName = helpers.getUniqueVarName(method.params, ['request', 'core_req']);
-  let body = `${indent.get()}let ${(forceMut || paramGroups.header.length > 0) ? 'mut ' : ''}${requestVarName} = Request::new(url${cloneUrl ? '.clone()' : ''}, Method::${codegen.capitalize(method.httpMethod)});\n`;
+  let body = `${indent.get()}let ${(forceMut || paramGroups.header.length > 0) ? 'mut ' : ''}${requestVarName} = Request::new(${urlVarName}${cloneUrl ? '.clone()' : ''}, Method::${codegen.capitalize(method.httpMethod)});\n`;
 
   body += applyHeaderParams(indent, use, method, paramGroups, inClosure, requestVarName);
 
@@ -1182,14 +1184,15 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
 function getAsyncMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.AsyncMethod): string {
   use.add('azure_core::http', 'Method', 'Request');
 
+  const urlVarName = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
   const paramGroups = getMethodParamGroup(method);
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default();\n';
   body += `${indent.get()}let ctx = options.method_options.context.to_borrowed();\n`;
-  body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}url = self.${getEndpointFieldName(client)}.clone();\n`;
+  body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVarName} = self.${getEndpointFieldName(client)}.clone();\n`;
 
-  body += constructUrl(indent, use, method, paramGroups);
-  const requestResult = constructRequest(indent, use, method, paramGroups, false);
+  body += constructUrl(indent, use, method, paramGroups, urlVarName);
+  const requestResult = constructRequest(indent, use, method, paramGroups, false, urlVarName);
   body += requestResult.content;
 
   let pipelineMethod: string;
@@ -1223,7 +1226,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   use.addForType(helpers.unwrapType(method.returns.type));
 
   const paramGroups = getMethodParamGroup(method);
-  const urlVar = method.strategy ? 'first_url' : 'url';
+  const urlVar = method.strategy ? 'first_url' : helpers.getUniqueVarName(method.params, ['url', 'url_var']);
 
   let body = checkEmptyRequiredPathParams(indent, paramGroups.path);
   body += 'let options = options.unwrap_or_default().into_owned();\n';
@@ -1234,6 +1237,11 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   // passed to constructRequest. we only need to
   // clone it for the non-continuation case.
   let cloneUrl = false;
+
+  // this will be either the inner URL var created
+  // during paging or the initial URL var when there's
+  // no paging strategy
+  let srcUrlVar: string;
 
   if (method.strategy) {
     if (paramGroups.apiVersion) {
@@ -1267,6 +1275,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
             }
           })}\n`
         }
+        srcUrlVar = 'url';
         break;
       }
       case 'nextLink': {
@@ -1294,6 +1303,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
           body: (indent) => `${indent.get()}${urlVar}.clone()\n`
         }]);
         body += ';\n';
+        srcUrlVar = 'url';
         break;
       }
     }
@@ -1302,6 +1312,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     body += `${indent.get()}Ok(Pager::from_callback(move |_: PagerState<Url>| {\n`;
     indent.push();
     cloneUrl = true;
+    srcUrlVar = urlVar;
   }
 
   // Pipeline::send() returns a RawResponse, so no reason to declare the type if not something else.
@@ -1316,7 +1327,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     rspInto = '.into()';
   }
 
-  const requestResult = constructRequest(indent, use, method, paramGroups, true, cloneUrl);
+  const requestResult = constructRequest(indent, use, method, paramGroups, true, srcUrlVar, cloneUrl);
   body += requestResult.content;
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
@@ -1424,7 +1435,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   use.addForType(helpers.unwrapType(method.returns.type));
 
   const paramGroups = getMethodParamGroup(method);
-  const urlVar = 'url';
+  const urlVar = helpers.getUniqueVarName(method.params, ['url', 'url_var']);
 
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
@@ -1435,7 +1446,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   }
 
   // we call this eagerly so that we have access to the request var name
-  const initialRequestResult = constructRequest(indent, use, method, paramGroups, true, true, false);
+  const initialRequestResult = constructRequest(indent, use, method, paramGroups, true, urlVar, true, false);
 
   body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(\n`
   body += `${indent.push().get()}move |next_link: PollerState<Url>| {\n`;

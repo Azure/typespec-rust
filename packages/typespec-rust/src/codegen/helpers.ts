@@ -579,8 +579,9 @@ export function getUniqueVarName(params: Array<rust.MethodParameter>, candidates
   let i = 0;
   while (true) {
     // if all the candidates have been exhausted
-    // then append the count to the last one
-    const candidate = i < candidates.length ? candidates[i] : `${candidates[candidates.length - 1]}_${i}`;
+    // then append the count to the last one.
+    // we substract the lenght to start at zero.
+    const candidate = i < candidates.length ? candidates[i] : `${candidates[candidates.length - 1]}_${i - candidates.length}`;
 
     let collides = false;
     for (const param of params) {

@@ -158,6 +158,9 @@ generate('doc_tests', doc_tests, 'test/other/doc_tests');
 const enum_path_params = pkgRoot + 'test/tsp/EnumPathParams';
 generate('enum_path_params', enum_path_params, 'test/other/enum_path_params');
 
+const colliding_locals = pkgRoot + 'test/tsp/CollidingLocals';
+generate('colliding_locals', colliding_locals, 'test/other/colliding_locals');
+
 loopSpec(httpSpecsGroup, httpSpecs)
 loopSpec(azureHttpSpecsGroup, azureHttpSpecs)
 
