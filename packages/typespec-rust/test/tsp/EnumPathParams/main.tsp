@@ -39,8 +39,8 @@ union ExtensibleValues {
     Two: "two",
 }
 
-@route("/optional/{request}/{value}")
-op optionalExtensible(@path request: ExtensibleShape, @path value?: ExtensibleValues): NoContentResponse;
+@route("/optional/{shape}/{value}")
+op optionalExtensible(@path shape: ExtensibleShape, @path value?: ExtensibleValues): NoContentResponse;
 
-@route("/fixed/{request}/{coreReq}")
-op optionalFixed(@path request: FixedShape, @path coreReq?: FixedValues): NoContentResponse;
+@route("/fixed/{shape}/{value}")
+op optionalFixed(@path shape: FixedShape, @path value?: FixedValues): NoContentResponse;
