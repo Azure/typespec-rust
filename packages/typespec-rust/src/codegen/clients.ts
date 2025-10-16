@@ -1339,7 +1339,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
     use.add('azure_core', bodyFormat, 'http::RawResponse');
     body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`;
-    const deserialize = bodyFormat === 'json' ? 'json::from_json' : 'xml::read_xml';
+    const deserialize = `${bodyFormat}::from_${bodyFormat}`;
     body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
     body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`;
   }
@@ -1489,13 +1489,9 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
   body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &options.poller_options);\n`
 
-  let deserialize = '';
-  if (bodyFormat === 'json') {
-    use.add('azure_core', 'json');
-    deserialize = 'json::from_json';
-  } else {
-    deserialize = 'xml::read_xml';
-  }
+  const deserialize = `${bodyFormat}::from_${bodyFormat}`;
+  use.add('azure_core', bodyFormat);
+
   body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`
   body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`
 
