@@ -6,10 +6,9 @@
 use crate::generated::{
     clients::PageTwoModelsAsPageItemClient,
     models::{
-        ListItemInputBody, PageClientListParameterizedNextLinkOptions,
-        PageClientListWithCustomPageModelOptions, PageClientListWithPageOptions,
-        PageClientListWithParametersOptions, PagedUser, ParameterizedNextLinkPagingResult,
-        UserListResults,
+        ListItemInputBody, PageClientListWithCustomPageModelOptions, PageClientListWithPageOptions,
+        PageClientListWithParameterizedNextLinkOptions, PageClientListWithParametersOptions,
+        PagedUser, ParameterizedNextLinkPagingResult, UserListResults,
     },
 };
 use azure_core::{
@@ -84,63 +83,6 @@ impl PageClient {
             endpoint: self.endpoint.clone(),
             pipeline: self.pipeline.clone(),
         }
-    }
-
-    /// List with parameterized next link that re-injects parameters.
-    ///
-    /// # Arguments
-    ///
-    /// * `options` - Optional parameters for the request.
-    #[tracing::function("_Specs_.Azure.Core.Page.withParameterizedNextLink")]
-    pub fn list_parameterized_next_link(
-        &self,
-        select: &str,
-        options: Option<PageClientListParameterizedNextLinkOptions<'_>>,
-    ) -> Result<Pager<ParameterizedNextLinkPagingResult>> {
-        let options = options.unwrap_or_default().into_owned();
-        let pipeline = self.pipeline.clone();
-        let mut first_url = self.endpoint.clone();
-        first_url = first_url.join("azure/core/page/with-parameterized-next-link")?;
-        if let Some(include_pending) = options.include_pending {
-            first_url
-                .query_pairs_mut()
-                .append_pair("includePending", &include_pending.to_string());
-        }
-        first_url.query_pairs_mut().append_pair("select", select);
-        Ok(Pager::from_callback(move |next_link: PagerState<Url>| {
-            let url = match next_link {
-                PagerState::More(next_link) => next_link,
-                PagerState::Initial => first_url.clone(),
-            };
-            let mut request = Request::new(url, Method::Get);
-            request.insert_header("accept", "application/json");
-            let ctx = options.method_options.context.clone();
-            let pipeline = pipeline.clone();
-            async move {
-                let rsp = pipeline
-                    .send(
-                        &ctx,
-                        &mut request,
-                        Some(PipelineSendOptions {
-                            check_success: CheckSuccessOptions {
-                                success_codes: &[200],
-                            },
-                            ..Default::default()
-                        }),
-                    )
-                    .await?;
-                let (status, headers, body) = rsp.deconstruct();
-                let res: ParameterizedNextLinkPagingResult = json::from_json(&body)?;
-                let rsp = RawResponse::from_bytes(status, headers, body).into();
-                Ok(match res.next_link {
-                    Some(next_link) if !next_link.is_empty() => PagerResult::More {
-                        response: rsp,
-                        continuation: next_link.parse()?,
-                    },
-                    _ => PagerResult::Done { response: rsp },
-                })
-            }
-        }))
     }
 
     /// List with custom page model.
@@ -261,6 +203,63 @@ impl PageClient {
                     .await?;
                 let (status, headers, body) = rsp.deconstruct();
                 let res: PagedUser = json::from_json(&body)?;
+                let rsp = RawResponse::from_bytes(status, headers, body).into();
+                Ok(match res.next_link {
+                    Some(next_link) if !next_link.is_empty() => PagerResult::More {
+                        response: rsp,
+                        continuation: next_link.parse()?,
+                    },
+                    _ => PagerResult::Done { response: rsp },
+                })
+            }
+        }))
+    }
+
+    /// List with parameterized next link that re-injects parameters.
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("_Specs_.Azure.Core.Page.withParameterizedNextLink")]
+    pub fn list_with_parameterized_next_link(
+        &self,
+        select: &str,
+        options: Option<PageClientListWithParameterizedNextLinkOptions<'_>>,
+    ) -> Result<Pager<ParameterizedNextLinkPagingResult>> {
+        let options = options.unwrap_or_default().into_owned();
+        let pipeline = self.pipeline.clone();
+        let mut first_url = self.endpoint.clone();
+        first_url = first_url.join("azure/core/page/with-parameterized-next-link")?;
+        if let Some(include_pending) = options.include_pending {
+            first_url
+                .query_pairs_mut()
+                .append_pair("includePending", &include_pending.to_string());
+        }
+        first_url.query_pairs_mut().append_pair("select", select);
+        Ok(Pager::from_callback(move |next_link: PagerState<Url>| {
+            let url = match next_link {
+                PagerState::More(next_link) => next_link,
+                PagerState::Initial => first_url.clone(),
+            };
+            let mut request = Request::new(url, Method::Get);
+            request.insert_header("accept", "application/json");
+            let ctx = options.method_options.context.clone();
+            let pipeline = pipeline.clone();
+            async move {
+                let rsp = pipeline
+                    .send(
+                        &ctx,
+                        &mut request,
+                        Some(PipelineSendOptions {
+                            check_success: CheckSuccessOptions {
+                                success_codes: &[200],
+                            },
+                            ..Default::default()
+                        }),
+                    )
+                    .await?;
+                let (status, headers, body) = rsp.deconstruct();
+                let res: ParameterizedNextLinkPagingResult = json::from_json(&body)?;
                 let rsp = RawResponse::from_bytes(status, headers, body).into();
                 Ok(match res.next_link {
                     Some(next_link) if !next_link.is_empty() => PagerResult::More {

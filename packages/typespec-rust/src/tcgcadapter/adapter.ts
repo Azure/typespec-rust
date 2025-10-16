@@ -96,16 +96,12 @@ export class Adapter {
   // cache of adapted client method params
   private readonly clientMethodParams: Map<string, rust.MethodParameter>;
 
-  // contains methods that have been renamed
-  private readonly renamedMethods: Set<string>;
-
   // maps a tcgc model field to the adapted struct field
   private readonly fieldsMap: Map<tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>;
 
   private constructor(ctx: tcgc.SdkContext, options: RustEmitterOptions) {
     this.types = new Map<string, rust.Type>();
     this.clientMethodParams = new Map<string, rust.MethodParameter>();
-    this.renamedMethods = new Set<string>();
     this.fieldsMap = new Map<tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>();
     this.ctx = ctx;
     this.options = options;
@@ -1251,21 +1247,30 @@ export class Adapter {
     let srcMethodName = method.name;
     if (method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
       const chunks = codegen.deconstruct(srcMethodName);
-      chunks[0] = 'list';
+      if (chunks[0] === 'get') {
+        chunks[0] = 'list';
+      } else {
+        chunks.unshift('list');
+      }
       srcMethodName = codegen.camelCase(chunks);
-      this.renamedMethods.add(srcMethodName);
       this.ctx.program.reportDiagnostic({
         code: 'PagingMethodRename',
         severity: 'warning',
         message: `renamed paging method from ${method.name} to ${srcMethodName}`,
         target: method.__raw?.node ?? NoTarget,
       });
-    } else if (this.renamedMethods.has(srcMethodName)) {
-      throw new AdapterError('NameCollision', `method name ${srcMethodName} collides with a renamed method`, method.__raw?.node);
     }
 
     const languageIndependentName = method.crossLanguageDefinitionId;
     const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
+    if (srcMethodName !== method.name) {
+      // if the method was renamed then ensure it doesn't collide
+      for (const existingMethod of rustClient.methods) {
+        if (existingMethod.name === methodName) {
+          throw new AdapterError('NameCollision', `renamed method ${srcMethodName} collides with an existing method`, method.__raw?.node);
+        }
+      }
+    }
     const optionsLifetime = new rust.Lifetime('a');
     const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName, false)}Options`, 'pub');
     methodOptionsStruct.lifetime = optionsLifetime;
