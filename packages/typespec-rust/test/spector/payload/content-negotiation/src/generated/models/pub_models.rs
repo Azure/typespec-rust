@@ -5,7 +5,7 @@
 
 use super::models_serde;
 use azure_core::{
-    base64::{deserialize, serialize},
+    base64::option::{deserialize, serialize},
     fmt::SafeDebug,
 };
 use serde::{Deserialize, Serialize};

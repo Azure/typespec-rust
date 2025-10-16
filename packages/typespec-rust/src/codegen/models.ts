@@ -557,14 +557,15 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
   };
 
   /** non-collection based impl */
-  const serdeEncodedBytes = function (encoding: rust.BytesEncoding): void {
+  const serdeEncodedBytes = function (encoding: rust.BytesEncoding, forOption: boolean): void {
     const format = encoding === 'url' ? '_url_safe' : '';
     const deserializer = `deserialize${format}`;
     const serializer = `serialize${format}`;
     serdeParams.add('default');
     serdeParams.add(`deserialize_with = "${deserializer}"`);
     serdeParams.add(`serialize_with = "${serializer}"`);
-    use.add('azure_core', `base64::${deserializer}`, `base64::${serializer}`);
+    const optionNamespace = forOption ? '::option' : '';
+    use.add('azure_core', `base64${optionNamespace}::${deserializer}`, `base64${optionNamespace}::${serializer}`);
   };
 
   /** non-collection based impl */
@@ -598,7 +599,7 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
   // the first two cases are for spread params where the internal model's field isn't Option<T>
   switch (field.type.kind) {
     case 'encodedBytes':
-      return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding);
+      return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding, false);
     case 'literal':
       return serdeLiteral(field.type);
     case 'offsetDateTime':
@@ -607,7 +608,7 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
       if (field.type.kind === 'option') {
         switch (field.type.type.kind) {
           case 'encodedBytes':
-            return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding);
+            return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding, true);
           case 'literal':
             return serdeLiteral(field.type.type);
           case 'offsetDateTime':
