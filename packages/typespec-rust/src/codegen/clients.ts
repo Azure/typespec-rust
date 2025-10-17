@@ -761,9 +761,10 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
  */
 function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, inClosure: boolean, setter: () => string): string {
   if (param.optional && param.type.kind !== 'literal') {
-    // optional params are in the unwrapped options local var
+    // optional params are either in the unwrapped options local var or on the client
+    const paramLoc = param.location === 'client' ? 'self' : 'options';
     const op = indent.get() + helpers.buildIfBlock(indent, {
-      condition: `let Some(${param.name}) = ${inClosure ? '&' : ''}options.${param.name}`,
+      condition: `let Some(${param.name}) = ${inClosure || param.location === 'client' ? '&' : ''}${paramLoc}.${param.name}`,
       body: setter,
     });
     return op + '\n';

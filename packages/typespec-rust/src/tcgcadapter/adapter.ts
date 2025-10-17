@@ -1182,6 +1182,11 @@ export class Adapter {
     // client-side default value makes the param optional
     if (param.optional || param.clientDefaultValue) {
       optional = true;
+      if (!param.clientDefaultValue) {
+        // if there's no client default value then the
+        // type must be wrapped in an Option<T>
+        paramType = new rust.Option(this.typeToWireType(paramType));
+      }
       const paramField = new rust.StructField(paramName, 'pub', paramType);
       paramField.docs = this.adaptDocs(param.summary, param.doc);
       constructable.options.type.fields.push(paramField);
@@ -1400,6 +1405,16 @@ export class Adapter {
     for (const opParam of allOpParams) {
       if (opParam.onClient) {
         const adaptedParam = this.adaptMethodParameter(opParam);
+        let found = false;
+        for (const field of rustClient.fields) {
+          if (field.name === adaptedParam.name) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          throw new AdapterError('InternalError', `method ${method.name} is missing client backing field for operation parameter ${opParam.name}`, method.__raw?.node);
+        }
         adaptedParam.docs = this.adaptDocs(opParam.summary, opParam.doc);
         rustMethod.params.push(adaptedParam);
       }
