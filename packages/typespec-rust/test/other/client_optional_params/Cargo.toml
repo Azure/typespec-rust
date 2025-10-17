@@ -1,0 +1,15 @@
+[package]
+name = "client_optional_params"
+version = "0.1.0"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[features]
+default = ["azure_core/default"]
+
+[dependencies]
+azure_core = { workspace = true }
+typespec_client_core = { workspace = true, features = ["derive"] }
