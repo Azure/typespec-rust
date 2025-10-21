@@ -1896,7 +1896,7 @@ export class Adapter {
           }
           adaptedParam = new rust.HeaderCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, format);
         } else if (param.serializedName === 'x-ms-meta') {
-          if (paramType.kind !== 'hashmap') {
+          if (paramType.kind !== 'hashmap' && !isRefHashMap(paramType)) {
             throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for header ${param.serializedName}`, param.__raw?.node);
           }
           adaptedParam = new rust.HeaderHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
@@ -1927,7 +1927,7 @@ export class Adapter {
 
         if (isRefSlice(paramType)) {
           adaptedParam = new rust.PathCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
-        } else if (paramType.kind === 'hashmap') {
+        } else if (paramType.kind === 'hashmap' || isRefHashMap(paramType)) {
           adaptedParam = new rust.PathHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
         } else {
           switch (paramType.kind) {
@@ -1951,7 +1951,7 @@ export class Adapter {
           }
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
           adaptedParam = new rust.QueryCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, format);
-        } else if (paramType.kind === 'hashmap') {
+        } else if (paramType.kind === 'hashmap' || isRefHashMap(paramType)) {
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
           adaptedParam = new rust.QueryHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, param.explode);
         } else {
@@ -2028,6 +2028,16 @@ export class Adapter {
       }
       case 'encodedBytes':
         return this.getRefType(this.getEncodedBytes(type.encoding, true));
+      case 'decimal':
+      case 'Etag':
+      case 'hashmap':
+      case 'jsonValue':
+      case 'offsetDateTime':
+      case 'safeint':
+      case 'Url':
+        // these types all require conversion
+        // to String so we don't need to own them
+        return this.getRefType(type);
     }
     return undefined;
   }
@@ -2141,6 +2151,11 @@ export class Adapter {
       return 'NoFormat';
     }
   }
+}
+
+/** type guard to determine if type is a Ref<HashMap> */
+function isRefHashMap(type: rust.Type): type is rust.Ref<rust.HashMap> {
+  return shared.asTypeOf<rust.Ref<rust.HashMap>>(type, 'hashmap', 'ref') !== undefined;
 }
 
 /** type guard to determine if type is a Ref<Slice> */

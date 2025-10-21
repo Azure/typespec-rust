@@ -102,7 +102,7 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
     #[tracing::function("Routes.QueryParameters.QueryContinuation.Explode.record")]
     pub async fn record(
         &self,
-        param: HashMap<String, i32>,
+        param: &HashMap<String, i32>,
         options: Option<RoutesQueryParametersQueryContinuationExplodeClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();

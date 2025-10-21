@@ -69,7 +69,7 @@ impl ScalarDecimalTypeClient {
     #[tracing::function("Type.Scalar.DecimalType.requestParameter")]
     pub async fn request_parameter(
         &self,
-        value: Decimal,
+        value: &Decimal,
         options: Option<ScalarDecimalTypeClientRequestParameterOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();

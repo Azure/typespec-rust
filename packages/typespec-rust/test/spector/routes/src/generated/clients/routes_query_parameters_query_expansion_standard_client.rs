@@ -98,7 +98,7 @@ impl RoutesQueryParametersQueryExpansionStandardClient {
     #[tracing::function("Routes.QueryParameters.QueryExpansion.Standard.record")]
     pub async fn record(
         &self,
-        param: HashMap<String, i32>,
+        param: &HashMap<String, i32>,
         options: Option<RoutesQueryParametersQueryExpansionStandardClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();

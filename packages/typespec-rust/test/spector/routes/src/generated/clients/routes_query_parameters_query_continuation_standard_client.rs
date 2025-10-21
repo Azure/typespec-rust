@@ -100,7 +100,7 @@ impl RoutesQueryParametersQueryContinuationStandardClient {
     #[tracing::function("Routes.QueryParameters.QueryContinuation.Standard.record")]
     pub async fn record(
         &self,
-        param: HashMap<String, i32>,
+        param: &HashMap<String, i32>,
         options: Option<RoutesQueryParametersQueryContinuationStandardClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();

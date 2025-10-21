@@ -106,7 +106,7 @@ impl RoutesPathParametersLabelExpansionExplodeClient {
     #[tracing::function("Routes.PathParameters.LabelExpansion.Explode.record")]
     pub async fn record(
         &self,
-        param: HashMap<String, i32>,
+        param: &HashMap<String, i32>,
         options: Option<RoutesPathParametersLabelExpansionExplodeClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();

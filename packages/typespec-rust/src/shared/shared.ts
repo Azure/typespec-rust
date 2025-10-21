@@ -41,6 +41,9 @@ export function asTypeOf<T extends rust.Type>(type: rust.Type, targetKind: rust.
       return undefined;
     } else if (current.kind === wrapper) {
       current = unwrap(current);
+    } else {
+      // sequence of types don't match so we're done
+      current = undefined;
     }
   }
 

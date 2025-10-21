@@ -286,7 +286,7 @@ export interface HeaderHashMapParameter extends HTTPParameterBase {
   header: string;
 
   /** contains key/value pairs of header names/values */
-  type: types.HashMap;
+  type: types.HashMap | types.Ref<types.HashMap>;
 }
 
 /** HeaderScalarParameterType defines the possible types for a HeaderScalarParameter */
@@ -332,7 +332,7 @@ export interface PartialBodyParameter extends HTTPParameterBase {
 }
 
 /** PathCollectionParameterType defines the possible types for a PathCollectionParameter */
-export type PathCollectionParameterType = types.HashMap | types.Ref<types.Slice>;
+export type PathCollectionParameterType = types.HashMap | types.Ref<types.HashMap> | types.Ref<types.Slice> | types.Vector;
 
 /** PathCollectionParameter is a param that goes in the HTTP path */
 export interface PathCollectionParameter extends HTTPParameterBase {
@@ -362,7 +362,7 @@ export interface PathHashMapParameter extends HTTPParameterBase {
   segment: string;
 
   /** contains key/value pairs */
-  type: types.HashMap;
+  type: types.HashMap | types.Ref<types.HashMap>;
 
   /** indicates if the path parameter should be URL encoded */
   encoded: boolean;
@@ -422,7 +422,7 @@ export interface QueryHashMapParameter extends HTTPParameterBase {
   key: string;
 
   /** contains key/value pairs */
-  type: types.HashMap;
+  type: types.HashMap | types.Ref<types.HashMap>;
 
   /** indicates if the query parameter should be URL encoded */
   encoded: boolean;
@@ -694,7 +694,7 @@ export class HeaderCollectionParameter extends HTTPParameterBase implements Head
 }
 
 export class HeaderHashMapParameter extends HTTPParameterBase implements HeaderHashMapParameter {
-  constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.HashMap) {
+  constructor(name: string, header: string, location: ParameterLocation, optional: boolean, type: types.HashMap | types.Ref<types.HashMap>) {
     super(name, location, optional, type);
     this.kind = 'headerHashMap';
     this.header = header;
@@ -770,7 +770,7 @@ export class PathCollectionParameter extends HTTPParameterBase implements PathCo
 }
 
 export class PathHashMapParameter extends HTTPParameterBase implements PathHashMapParameter {
-  constructor(name: string, segment: string, location: ParameterLocation, optional: boolean, type: types.HashMap, encoded: boolean, style: ParameterStyle, explode: boolean) {
+  constructor(name: string, segment: string, location: ParameterLocation, optional: boolean, type: types.HashMap | types.Ref<types.HashMap>, encoded: boolean, style: ParameterStyle, explode: boolean) {
     super(name, location, optional, type);
     this.kind = 'pathHashMap';
     this.segment = segment;
@@ -801,7 +801,7 @@ export class QueryCollectionParameter extends HTTPParameterBase implements Query
 }
 
 export class QueryHashMapParameter extends HTTPParameterBase implements QueryHashMapParameter {
-  constructor(name: string, key: string, location: ParameterLocation, optional: boolean, type: types.HashMap, encoded: boolean, explode: boolean) {
+  constructor(name: string, key: string, location: ParameterLocation, optional: boolean, type: types.HashMap | types.Ref<types.HashMap>, encoded: boolean, explode: boolean) {
     super(name, location, optional, type);
     this.kind = 'queryHashMap';
     this.key = key;

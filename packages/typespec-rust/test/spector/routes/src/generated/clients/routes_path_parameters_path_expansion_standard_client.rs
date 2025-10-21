@@ -106,7 +106,7 @@ impl RoutesPathParametersPathExpansionStandardClient {
     #[tracing::function("Routes.PathParameters.PathExpansion.Standard.record")]
     pub async fn record(
         &self,
-        param: HashMap<String, i32>,
+        param: &HashMap<String, i32>,
         options: Option<RoutesPathParametersPathExpansionStandardClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();

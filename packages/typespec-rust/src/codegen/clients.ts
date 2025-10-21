@@ -994,7 +994,7 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
 
     body += getParamValueHelper(indent, headerParam, inClosure, () => {
       if (headerParam.kind === 'headerHashMap') {
-        let setter = `for (k, v) in &${headerParam.name} {\n`;
+        let setter = `for (k, v) in ${headerParam.type.kind === 'ref' ? '' : '&'}${headerParam.name} {\n`;
         setter += `${indent.push().get()}${requestVarName}.insert_header(format!("${headerParam.header}-{k}"), v);\n`;
         setter += `${indent.pop().get()}}\n`;
         return setter;
