@@ -789,17 +789,6 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
     throw new CodegenError('InternalError', 'too many HTTP path chunks');
   }
 
-  /** returns & if the param needs to be borrowed (which is the majority of cases), else the empty string */
-  const borrowOrNot = function (param: rust.Parameter): string {
-    // for string-based enums we call .as_ref() which elides the need to borrow.
-    // for numeric-based enums the borrow will be necessary.
-    // TODO: https://github.com/Azure/typespec-rust/issues/25
-    if (param.type.kind !== 'enum' && (param.type.kind !== 'ref' || param.type.type.kind === 'encodedBytes' || param.type.type.kind === 'slice')) {
-      return '&';
-    }
-    return '';
-  };
-
   let body = '';
 
   // if path is just "/" no need to set it again, we're already there
@@ -811,7 +800,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
     } else if (paramGroups.path.length === 1 && pathChunks[0] === `{${paramGroups.path[0].segment}}`) {
       // for a single path param (i.e. "{foo}") we can directly join the path param's value
       const pathParam = paramGroups.path[0];
-      body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${borrowOrNot(pathParam)}${getHeaderPathQueryParamValue(use, pathParam, true)})?;\n`;
+      body += `${indent.get()}${urlVarName} = ${urlVarName}.join(${getHeaderPathQueryParamValue(use, pathParam, true, false)})?;\n`;
     } else {
       // we have path params that need to have their segments replaced with the param values
       const pathVarName = helpers.getUniqueVarName(method.params, ['path', 'path_var']);
@@ -819,7 +808,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
       for (const pathParam of paramGroups.path) {
         let wrapSortedVec: (s: string) => string = (s) => s;
-        let paramExpression = getHeaderPathQueryParamValue(use, pathParam, true);
+        let paramExpression: string;
         if (pathParam.kind === 'pathHashMap') {
           wrapSortedVec = (s) => `${indent.get()}{`
             + `${indent.push().get()}let mut ${pathParam.name}_vec = ${pathParam.name}.iter().collect::<Vec<_>>();\n`
@@ -871,6 +860,8 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
               break;
           }
         } else {
+          // skip borrowing by default as we borrow from format()
+          paramExpression = getHeaderPathQueryParamValue(use, pathParam, true, true);
           switch (pathParam.style) {
             case 'path':
               paramExpression = `&format!("/{${paramExpression}}")`;
@@ -882,7 +873,8 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
               paramExpression = `&format!(";${pathParam.name}={${paramExpression}}")`;
               break;
             default:
-              paramExpression = `${borrowOrNot(pathParam)}${paramExpression}`;
+              // use default borrowing calculation logic
+              paramExpression = getHeaderPathQueryParamValue(use, pathParam, true, false);
           }
         }
 
@@ -950,9 +942,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
       });
     } else {
       body += getParamValueHelper(indent, queryParam, false, () => {
-        // for enums we call .as_ref() which elides the need to borrow
-        const borrow = queryParam.type.kind === 'enum' ? '' : borrowOrNot(queryParam);
-        return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${borrow}${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional)});\n`;
+        return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional, false)});\n`;
       });
     }
   }
@@ -1009,10 +999,7 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
         setter += `${indent.pop().get()}}\n`;
         return setter;
       }
-      // for non-copyable params (e.g. String), we need to borrow them if they're on the
-      // client or we're in a closure and the param is required (header params are always owned)
-      const borrow = nonCopyableType(headerParam.type) && (headerParam.location === 'client' || (inClosure && !headerParam.optional)) ? '&' : '';
-      return `${indent.get()}${requestVarName}.insert_header("${headerParam.header.toLowerCase()}", ${borrow}${getHeaderPathQueryParamValue(use, headerParam, !inClosure)});\n`;
+      return `${indent.get()}${requestVarName}.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, headerParam, !inClosure, false)});\n`;
     });
   }
 
@@ -1060,7 +1047,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
     body += getParamValueHelper(indent, bodyParam, inClosure, () => {
       let bodyParamContent = '';
       if (optionalContentTypeParam) {
-        bodyParamContent = `${indent.get()}${requestVarName}.insert_header("${optionalContentTypeParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, optionalContentTypeParam, !inClosure)});\n`;
+        bodyParamContent = `${indent.get()}${requestVarName}.insert_header("${optionalContentTypeParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, optionalContentTypeParam, !inClosure, false)});\n`;
       }
       bodyParamContent += `${indent.get()}${requestVarName}.set_body(${bodyParam.name}${inClosure ? '.clone()' : ''});\n`;
       return bodyParamContent;
@@ -1245,7 +1232,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 
   if (method.strategy) {
     if (paramGroups.apiVersion) {
-      body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n`;
+      body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true, true)}.clone();\n`;
     }
 
     switch (method.strategy.kind) {
@@ -1442,7 +1429,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
   if (paramGroups.apiVersion) {
-    body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true)}.clone();\n`;
+    body += `${indent.get()}let ${paramGroups.apiVersion.name} = ${getHeaderPathQueryParamValue(use, paramGroups.apiVersion, true, true)}.clone();\n`;
   }
 
   // we call this eagerly so that we have access to the request var name
@@ -1546,8 +1533,9 @@ function getClientSupplementalEndpointParamValue(param: rust.ClientSupplementalE
 }
 
 /**
- * contains the code to use when populating a header/path/query value
- * from a parameter of that type.
+ * returns the code to use when populating a header/path/query value
+ * from a parameter of that type. this will include any borrowing of
+ * the parameter (or its calculated result) as required.
  * 
  * if the param's type is a String, then the return value is simply the
  * param's name. the non-String cases require some kind of conversion.
@@ -1557,9 +1545,10 @@ function getClientSupplementalEndpointParamValue(param: rust.ClientSupplementalE
  * @param use the use statement builder currently in scope
  * @param param the param for which to get the value
  * @param fromSelf applicable for client params. when true, the prefix "self." is included
+ * @param neverBorrow indicates that the borrowing calculation should be skipped
  * @returns the code to use for the param's value
  */
-function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathParamType | QueryParamType, fromSelf: boolean): string {
+function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathParamType | QueryParamType, fromSelf: boolean, neverBorrow: boolean): string {
   let paramName = param.name;
   // when fromSelf is false we assume that there's a local with the same name.
   // e.g. in pageable methods where we need to clone the params so they can be
@@ -1576,67 +1565,100 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
     return encoding;
   };
 
-  const encodeDateTime = function (type: rust.OffsetDateTime, param: string): string {
+  const encodeDateTime = function (type: rust.OffsetDateTime, paramName: string): string {
     const encoding = helpers.getDateTimeEncodingMethod(type.encoding, 'to', use);
     switch (type.encoding) {
       case 'rfc3339':
       case 'rfc7231': {
-        return `${encoding}(&${param})`;
+        return `${encoding}(${param.type.kind === 'ref' ? '' : '&'}${paramName})`;
       }
       case 'unix_time':
-        return `${param}.${encoding}.to_string()`;
+        return `${paramName}.${encoding}.to_string()`;
     }
   };
+
+  // this will contain the final text for
+  // retrieving the param value. this will include
+  // any required conversions and/or borrowing
+  let paramValue: string;
+
+  // contains the result from calculating if the
+  // param requires borrowing.
+  let mustBorrow = true;
 
   const paramType = helpers.unwrapType(param.type);
   if (param.kind === 'headerCollection' || param.kind === 'queryCollection') {
     if (param.format === 'multi') {
       throw new CodegenError('InternalError', 'multi should have been handled outside getHeaderPathQueryParamValue');
     } else if (paramType.kind === 'String' || paramType.kind === 'str') {
-      return `${paramName}.join("${getCollectionDelimiter(param.format)}")`;
-    }
+      paramValue = `${paramName}.join("${getCollectionDelimiter(param.format)}")`;
+    } else {
+      // convert the items to strings
+      let strConv: string;
+      switch (paramType.kind) {
+        case 'encodedBytes':
+          strConv = encodeBytes(paramType);
+          break;
+        case 'offsetDateTime':
+          strConv = `|i| ${encodeDateTime(paramType, 'i')}`;
+          break;
+        default:
+          strConv = '|i| i.to_string()';
+      }
 
-    // convert the items to strings
-    let strConv: string;
+      paramValue = `${param.name}.iter().map(${strConv}).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
+    }
+  } else {
     switch (paramType.kind) {
+      case 'String':
+      case 'str':
+        paramValue = paramName;
+        // if the param is on the client, or it's optional, then we must borrow
+        mustBorrow = (param.location === 'client' && fromSelf) || param.optional;
+        break;
+      case 'decimal':
+        paramValue = `${param.name}.to_string()`;
+        break;
       case 'encodedBytes':
-        strConv = encodeBytes(paramType);
+        paramValue = encodeBytes(paramType, paramName);
+        break;
+      case 'enum':
+      case 'scalar':
+        if (paramType.kind === 'enum' && (param.kind === 'pathScalar' || param.kind === 'queryScalar')) {
+          // append_pair and path.replace() want a reference to the string
+          // TODO: https://github.com/Azure/typespec-rust/issues/25
+          paramValue = `${paramName}.as_ref()`;
+          // as_ref() elides the need to borrow
+          mustBorrow = false;
+        } else {
+          paramValue = `${paramName}.to_string()`;
+        }
+        break;
+      case 'enumValue':
+        paramValue = `${paramType.type.name}::${paramType.name}.to_string()`;
+        break;
+      case 'literal':
+        paramValue = `"${paramType.value}"`;
         break;
       case 'offsetDateTime':
-        strConv = `|i| ${encodeDateTime(paramType, 'i')}`;
+        paramValue = encodeDateTime(paramType, param.name);
         break;
       default:
-        strConv = '|i| i.to_string()';
+        throw new CodegenError('InternalError', `unhandled ${param.kind} param type kind ${paramType.kind}`);
     }
-
-    return `${param.name}.iter().map(${strConv}).collect::<Vec<String>>().join("${getCollectionDelimiter(param.format)}")`;
   }
 
-  switch (paramType.kind) {
-    case 'String':
-    case 'str':
-      return paramName;
-    case 'decimal':
-      return `${param.name}.to_string()`;
-    case 'encodedBytes':
-      return encodeBytes(paramType, paramName);
-    case 'enum':
-    case 'scalar':
-      if (paramType.kind === 'enum' && (param.kind === 'pathScalar' || param.kind === 'queryScalar')) {
-        // append_pair and path.replace() want a reference to the string
-        // TODO: https://github.com/Azure/typespec-rust/issues/25
-        return `${paramName}.as_ref()`;
-      }
-      return `${paramName}.to_string()`;
-    case 'enumValue':
-      return `${paramType.type.name}::${paramType.name}.to_string()`;
-    case 'literal':
-      return `"${paramType.value}"`;
-    case 'offsetDateTime':
-      return encodeDateTime(paramType, param.name);
-    default:
-      throw new CodegenError('InternalError', `unhandled ${param.kind} param type kind ${paramType.kind}`);
+  switch (param.kind) {
+    case 'headerCollection':
+    case 'headerHashMap':
+    case 'headerScalar':
+      // for non-copyable params (e.g. String), we need to borrow them if they're on the
+      // client or we're in a closure and the param is required (header params are always owned)
+      mustBorrow = nonCopyableType(param.type) && (param.location === 'client' || (!fromSelf && !param.optional));
+      break;
   }
+
+  return `${mustBorrow && !neverBorrow ? '&' : ''}${paramValue}`;
 }
 
 /**
