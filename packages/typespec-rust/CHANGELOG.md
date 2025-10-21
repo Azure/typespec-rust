@@ -19,6 +19,7 @@
 ### Other Changes
 
 * Emit `#[allow(clippy::too_many_arguments)]` on methods that contain seven or more arguments.
+* Use `UrlExt::append_path()` from `azure_core`.
 
 ## 0.24.1 (2025-10-15)
 
