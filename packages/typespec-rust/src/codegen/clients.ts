@@ -1611,10 +1611,14 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
   } else {
     switch (paramType.kind) {
       case 'String':
-      case 'str':
         paramValue = paramName;
         // if the param is on the client, or it's optional, then we must borrow
         mustBorrow = (param.location === 'client' && fromSelf) || param.optional;
+        break;
+      case 'str':
+        paramValue = paramName;
+        // str is already borrowed
+        mustBorrow = false;
         break;
       case 'decimal':
         paramValue = `${param.name}.to_string()`;
