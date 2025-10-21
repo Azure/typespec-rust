@@ -8,10 +8,9 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct ClientLocationMoveMethodParameterToBlobOperationsClient {

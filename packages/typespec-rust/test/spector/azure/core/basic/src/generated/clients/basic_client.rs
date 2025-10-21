@@ -14,11 +14,10 @@ use azure_core::{
     http::{
         pager::{PagerResult, PagerState},
         ClientOptions, Method, NoFormat, Pager, Pipeline, PipelineSendOptions, RawResponse,
-        Request, RequestContent, Response, Url,
+        Request, RequestContent, Response, Url, UrlExt,
     },
     json, tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Illustrates bodies templated with Azure Core
 #[tracing::client]

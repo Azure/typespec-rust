@@ -9,10 +9,9 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
+    http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url, UrlExt},
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct CommonPropertiesErrorClient {

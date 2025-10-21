@@ -19,11 +19,10 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         pager::{PagerResult, PagerState},
-        Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Response, Url,
+        Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Response, Url, UrlExt,
     },
     json, tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct PageableServerDrivenPaginationContinuationTokenClient {

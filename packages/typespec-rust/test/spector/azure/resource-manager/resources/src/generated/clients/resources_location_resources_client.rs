@@ -15,11 +15,10 @@ use azure_core::{
     http::{
         pager::{PagerResult, PagerState},
         Method, NoFormat, Pager, Pipeline, PipelineSendOptions, RawResponse, Request,
-        RequestContent, Response, Url,
+        RequestContent, Response, Url, UrlExt,
     },
     json, tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct ResourcesLocationResourcesClient {

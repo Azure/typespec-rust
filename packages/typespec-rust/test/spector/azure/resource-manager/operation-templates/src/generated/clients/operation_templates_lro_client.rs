@@ -14,10 +14,10 @@ use azure_core::{
         headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, RequestContent, Url,
+        UrlExt,
     },
     json, tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct OperationTemplatesLroClient {

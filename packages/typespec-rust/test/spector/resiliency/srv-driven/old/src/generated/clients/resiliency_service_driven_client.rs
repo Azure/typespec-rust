@@ -13,10 +13,10 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Test that we can grow up a service spec and service deployment into a multi-versioned service with full client support.
 #[tracing::client]

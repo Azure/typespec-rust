@@ -12,11 +12,11 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
 use rust_decimal::Decimal;
-use typespec_client_core::http::UrlExt;
 
 /// Decimal128 type
 #[tracing::client]

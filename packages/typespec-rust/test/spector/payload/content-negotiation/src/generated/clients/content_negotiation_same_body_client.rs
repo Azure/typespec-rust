@@ -9,10 +9,9 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{AsyncResponse, Method, Pipeline, PipelineStreamOptions, Request, Url},
+    http::{AsyncResponse, Method, Pipeline, PipelineStreamOptions, Request, Url, UrlExt},
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct ContentNegotiationSameBodyClient {

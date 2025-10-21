@@ -10,11 +10,11 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
 use serde_json::Value;
-use typespec_client_core::http::UrlExt;
 
 /// Array of unknown values
 #[tracing::client]

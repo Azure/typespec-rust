@@ -21,12 +21,11 @@ use azure_core::{
         pager::{PagerResult, PagerState},
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Method, NoFormat, Pager, Pipeline, PipelineSendOptions, RawResponse,
-        Request, RequestContent, Response, Url,
+        Request, RequestContent, Response, Url, UrlExt,
     },
     json, tracing, Result,
 };
 use std::sync::Arc;
-use typespec_client_core::http::UrlExt;
 
 /// The key vault client performs cryptographic key operations and vault operations against the Key Vault service.
 #[tracing::client]

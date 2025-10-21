@@ -17,11 +17,10 @@ use azure_core::{
     http::{
         pager::{PagerResult, PagerState},
         ClientOptions, Method, NoFormat, Pager, Pipeline, PipelineSendOptions, RawResponse,
-        Request, Response, Url,
+        Request, Response, Url, UrlExt,
     },
     json, tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct CollidingLocalsClient {

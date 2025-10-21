@@ -9,10 +9,9 @@ use crate::generated::models::{
 use azure_core::{
     error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{ClientOptions, Method, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{ClientOptions, Method, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Test for overload operation in .NET.
 #[tracing::client]

@@ -11,11 +11,11 @@ use azure_core::{
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
 use std::sync::Arc;
-use typespec_client_core::http::UrlExt;
 
 /// Illustrates clients generated with ApiKey and OAuth2 authentication.
 #[tracing::client]

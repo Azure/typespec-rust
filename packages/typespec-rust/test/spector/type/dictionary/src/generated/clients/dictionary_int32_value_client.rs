@@ -10,11 +10,11 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
 use std::collections::HashMap;
-use typespec_client_core::http::UrlExt;
 
 /// Dictionary of int32 values
 #[tracing::client]

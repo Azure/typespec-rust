@@ -12,10 +12,10 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Define scenario in building the http route/uri
 #[tracing::client]

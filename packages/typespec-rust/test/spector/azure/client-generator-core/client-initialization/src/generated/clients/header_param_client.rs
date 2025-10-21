@@ -11,11 +11,10 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent,
-        Response, Url,
+        Response, Url, UrlExt,
     },
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Client for testing header parameter moved to client level.
 #[tracing::client]

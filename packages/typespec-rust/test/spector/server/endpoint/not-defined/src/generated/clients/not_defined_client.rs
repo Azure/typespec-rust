@@ -9,10 +9,10 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Illustrates server doesn't define endpoint. Client should automatically add an endpoint to let user pass in.
 #[tracing::client]

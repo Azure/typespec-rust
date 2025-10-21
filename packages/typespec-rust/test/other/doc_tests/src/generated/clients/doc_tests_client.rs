@@ -7,10 +7,9 @@ use crate::generated::models::{DocTestsClientGetMetadataOptions, Metadata};
 use azure_core::{
     error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{ClientOptions, Method, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{ClientOptions, Method, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct DocTestsClient {

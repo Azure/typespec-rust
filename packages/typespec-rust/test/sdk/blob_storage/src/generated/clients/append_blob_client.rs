@@ -17,13 +17,12 @@ use azure_core::{
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent,
-        Response, Url,
+        Response, Url, UrlExt,
     },
     time::to_rfc7231,
     tracing, Bytes, Result,
 };
 use std::sync::Arc;
-use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct AppendBlobClient {

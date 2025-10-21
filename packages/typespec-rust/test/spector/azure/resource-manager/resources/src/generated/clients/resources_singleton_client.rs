@@ -16,11 +16,10 @@ use azure_core::{
         pager::{PagerResult, PagerState},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         Method, Pager, Pipeline, PipelineSendOptions, Poller, RawResponse, Request, RequestContent,
-        Response, Url,
+        Response, Url, UrlExt,
     },
     json, tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct ResourcesSingletonClient {

@@ -12,11 +12,10 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response,
-        Url,
+        Url, UrlExt,
     },
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Test for merge-patch+json content-type
 #[tracing::client]

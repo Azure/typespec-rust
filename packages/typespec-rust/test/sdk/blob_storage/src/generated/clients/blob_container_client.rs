@@ -32,13 +32,12 @@ use azure_core::{
         pager::{PagerResult, PagerState},
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Method, NoFormat, PageIterator, Pipeline, PipelineSendOptions, RawResponse,
-        Request, RequestContent, Response, Url, XmlFormat,
+        Request, RequestContent, Response, Url, UrlExt, XmlFormat,
     },
     time::to_rfc7231,
     tracing, xml, Result,
 };
 use std::sync::Arc;
-use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct BlobContainerClient {

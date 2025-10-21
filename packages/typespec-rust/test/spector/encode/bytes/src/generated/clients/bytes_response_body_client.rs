@@ -12,11 +12,10 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         AsyncResponse, Method, Pipeline, PipelineSendOptions, PipelineStreamOptions, Request,
-        Response, Url,
+        Response, Url, UrlExt,
     },
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 #[tracing::client]
 pub struct BytesResponseBodyClient {

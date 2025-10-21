@@ -12,10 +12,10 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Test that we can use @client and @operationGroup decorators to customize client side code structure, such as:
 /// 1. have everything as default.

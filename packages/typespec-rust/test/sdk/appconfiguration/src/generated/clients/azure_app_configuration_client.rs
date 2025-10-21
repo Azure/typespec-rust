@@ -38,12 +38,11 @@ use azure_core::{
         policies::{BearerTokenCredentialPolicy, Policy},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         ClientOptions, Method, NoFormat, PageIterator, Pager, Pipeline, PipelineSendOptions,
-        Poller, RawResponse, Request, RequestContent, Response, Url,
+        Poller, RawResponse, Request, RequestContent, Response, Url, UrlExt,
     },
     json, tracing, Result,
 };
 use std::sync::Arc;
-use typespec_client_core::http::UrlExt;
 
 /// Azure App Configuration REST API
 #[tracing::client]

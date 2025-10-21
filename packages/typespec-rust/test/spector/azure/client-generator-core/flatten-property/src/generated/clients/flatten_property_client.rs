@@ -12,11 +12,10 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response,
-        Url,
+        Url, UrlExt,
     },
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Illustrates the model flatten cases.
 #[tracing::client]

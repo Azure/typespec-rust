@@ -10,11 +10,11 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     time::OffsetDateTime,
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Array of datetime values
 #[tracing::client]

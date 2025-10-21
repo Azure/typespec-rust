@@ -10,10 +10,10 @@ use azure_core::{
     http::{
         pager::{PagerResult, PagerState},
         ClientOptions, Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Url,
+        UrlExt,
     },
     json, tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Test describing pageable.
 #[tracing::client]

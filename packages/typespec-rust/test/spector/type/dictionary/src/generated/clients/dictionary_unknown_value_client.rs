@@ -10,12 +10,12 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
 use serde_json::Value;
 use std::collections::HashMap;
-use typespec_client_core::http::UrlExt;
 
 /// Dictionary of unknown values
 #[tracing::client]

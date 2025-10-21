@@ -11,11 +11,10 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
-        XmlFormat,
+        UrlExt, XmlFormat,
     },
     tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// Operations for the ModelWithOptionalField type.
 #[tracing::client]

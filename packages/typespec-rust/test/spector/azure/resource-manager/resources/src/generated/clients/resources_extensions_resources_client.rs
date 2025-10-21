@@ -17,11 +17,10 @@ use azure_core::{
         pager::{PagerResult, PagerState},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         Method, NoFormat, Pager, Pipeline, PipelineSendOptions, Poller, RawResponse, Request,
-        RequestContent, Response, Url,
+        RequestContent, Response, Url, UrlExt,
     },
     json, tracing, Result,
 };
-use typespec_client_core::http::UrlExt;
 
 /// The interface of extensions resources,
 /// it contains 4 kinds of scopes (resource, resource group, subscription and tenant)
