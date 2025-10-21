@@ -40,7 +40,7 @@ impl BytesPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/bytes/property/base64");
+        url.append_path("/encode/bytes/property/base64");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -74,7 +74,7 @@ impl BytesPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/bytes/property/base64url");
+        url.append_path("/encode/bytes/property/base64url");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -108,7 +108,7 @@ impl BytesPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/bytes/property/base64url-array");
+        url.append_path("/encode/bytes/property/base64url-array");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -142,7 +142,7 @@ impl BytesPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/bytes/property/default");
+        url.append_path("/encode/bytes/property/default");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

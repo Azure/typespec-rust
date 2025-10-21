@@ -45,7 +45,7 @@ impl RoutesPathParametersReservedExpansionClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/reserved-expansion/annotation/{param}");
+        let mut path = String::from("/routes/path/reserved-expansion/annotation/{param}");
         path = path.replace("{param}", param);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
@@ -84,7 +84,7 @@ impl RoutesPathParametersReservedExpansionClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/reserved-expansion/template/{param}");
+        let mut path = String::from("/routes/path/reserved-expansion/template/{param}");
         path = path.replace("{param}", param);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);

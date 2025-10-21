@@ -158,7 +158,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("kv/{key}");
+        let mut path = String::from("/kv/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
         if let Some(select) = options.select {
@@ -255,7 +255,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("kv");
+        url.append_path("/kv");
         if let Some(select) = options.select {
             url.query_pairs_mut().append_pair(
                 "$Select",
@@ -355,7 +355,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("keys");
+        url.append_path("/keys");
         if let Some(after) = options.after {
             url.query_pairs_mut().append_pair("After", &after);
         }
@@ -428,7 +428,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("labels");
+        url.append_path("/labels");
         if let Some(select) = options.select {
             url.query_pairs_mut().append_pair(
                 "$Select",
@@ -515,7 +515,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("revisions");
+        url.append_path("/revisions");
         if let Some(select) = options.select {
             url.query_pairs_mut().append_pair(
                 "$Select",
@@ -622,7 +622,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("snapshots/{name}");
+        let mut path = String::from("/snapshots/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
         url.query_pairs_mut()
@@ -694,7 +694,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("snapshots");
+        url.append_path("/snapshots");
         if let Some(after) = options.after {
             url.query_pairs_mut().append_pair("After", &after);
         }
@@ -778,7 +778,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("snapshots/{name}");
+        let mut path = String::from("/snapshots/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
         url.query_pairs_mut()
@@ -908,7 +908,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("kv/{key}");
+        let mut path = String::from("/kv/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
         url.query_pairs_mut()
@@ -998,7 +998,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("locks/{key}");
+        let mut path = String::from("/locks/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
         url.query_pairs_mut()
@@ -1092,7 +1092,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("kv/{key}");
+        let mut path = String::from("/kv/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
         if let Some(select) = options.select {
@@ -1165,7 +1165,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("operations");
+        url.append_path("/operations");
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         url.query_pairs_mut().append_pair("snapshot", snapshot);
@@ -1247,7 +1247,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("snapshots/{name}");
+        let mut path = String::from("/snapshots/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
         if let Some(select) = options.select {
@@ -1339,7 +1339,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url.append_path("kv");
+        first_url.append_path("/kv");
         if let Some(select) = options.select {
             first_url.query_pairs_mut().append_pair(
                 "$Select",
@@ -1477,7 +1477,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url.append_path("keys");
+        first_url.append_path("/keys");
         if let Some(after) = options.after {
             first_url.query_pairs_mut().append_pair("After", &after);
         }
@@ -1584,7 +1584,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url.append_path("labels");
+        first_url.append_path("/labels");
         if let Some(select) = options.select {
             first_url.query_pairs_mut().append_pair(
                 "$Select",
@@ -1708,7 +1708,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url.append_path("revisions");
+        first_url.append_path("/revisions");
         if let Some(select) = options.select {
             first_url.query_pairs_mut().append_pair(
                 "$Select",
@@ -1838,7 +1838,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url.append_path("snapshots");
+        first_url.append_path("/snapshots");
         if let Some(select) = options.select {
             first_url.query_pairs_mut().append_pair(
                 "$Select",
@@ -1976,7 +1976,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("kv/{key}");
+        let mut path = String::from("/kv/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
         url.query_pairs_mut()
@@ -2073,7 +2073,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("locks/{key}");
+        let mut path = String::from("/locks/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
         url.query_pairs_mut()
@@ -2171,7 +2171,7 @@ impl AzureAppConfigurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("snapshots/{name}");
+        let mut path = String::from("/snapshots/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
         url.query_pairs_mut()

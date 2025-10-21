@@ -78,7 +78,7 @@ impl NotDefinedClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("server/endpoint/not-defined/valid");
+        url.append_path("/server/endpoint/not-defined/valid");
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline

@@ -59,7 +59,7 @@ impl OperationTemplatesOptionalBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/widgets/{widgetName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/widgets/{widgetName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         path = path.replace("{widgetName}", widget_name);
@@ -113,7 +113,7 @@ impl OperationTemplatesOptionalBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/widgets/{widgetName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/widgets/{widgetName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         path = path.replace("{widgetName}", widget_name);
@@ -171,7 +171,7 @@ impl OperationTemplatesOptionalBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/widgets/{widgetName}/post");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/widgets/{widgetName}/post");
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         path = path.replace("{widgetName}", widget_name);
@@ -212,7 +212,7 @@ impl OperationTemplatesOptionalBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/providerPost");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/providerPost");
         path = path.replace("{subscriptionId}", &self.subscription_id);
         url.append_path(&path);
         url.query_pairs_mut()

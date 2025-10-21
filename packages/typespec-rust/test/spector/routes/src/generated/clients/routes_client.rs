@@ -81,7 +81,7 @@ impl RoutesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("routes/fixed");
+        url.append_path("/routes/fixed");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

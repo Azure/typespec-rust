@@ -52,7 +52,7 @@ impl RoutesPathParametersClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/annotation-only/{param}");
+        let mut path = String::from("/routes/path/annotation-only/{param}");
         path = path.replace("{param}", param);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
@@ -91,7 +91,7 @@ impl RoutesPathParametersClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/explicit/{param}");
+        let mut path = String::from("/routes/path/explicit/{param}");
         path = path.replace("{param}", param);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
@@ -185,7 +185,7 @@ impl RoutesPathParametersClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/template-only/{param}");
+        let mut path = String::from("/routes/path/template-only/{param}");
         path = path.replace("{param}", param);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);

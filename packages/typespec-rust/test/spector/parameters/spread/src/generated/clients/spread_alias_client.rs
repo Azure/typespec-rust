@@ -48,7 +48,7 @@ impl SpreadAliasClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("parameters/spread/alias/request-body");
+        url.append_path("/parameters/spread/alias/request-body");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         let body: RequestContent<SpreadAsRequestBodyRequest> =
@@ -91,7 +91,7 @@ impl SpreadAliasClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("parameters/spread/alias/request-parameter/{id}");
+        let mut path = String::from("/parameters/spread/alias/request-parameter/{id}");
         path = path.replace("{id}", id);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Put);
@@ -141,7 +141,7 @@ impl SpreadAliasClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("parameters/spread/alias/inner-alias-parameter/{id}");
+        let mut path = String::from("/parameters/spread/alias/inner-alias-parameter/{id}");
         path = path.replace("{id}", id);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Post);
@@ -187,7 +187,7 @@ impl SpreadAliasClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("parameters/spread/alias/inner-model-parameter/{id}");
+        let mut path = String::from("/parameters/spread/alias/inner-model-parameter/{id}");
         path = path.replace("{id}", id);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Post);
@@ -236,7 +236,7 @@ impl SpreadAliasClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("parameters/spread/alias/multiple-parameters/{id}");
+        let mut path = String::from("/parameters/spread/alias/multiple-parameters/{id}");
         path = path.replace("{id}", id);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Put);

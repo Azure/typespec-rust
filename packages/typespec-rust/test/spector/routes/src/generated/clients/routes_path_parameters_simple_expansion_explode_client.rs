@@ -41,7 +41,7 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/simple/explode/array{param}");
+        let mut path = String::from("/routes/path/simple/explode/array{param}");
         path = path.replace("{param}", &param.join(","));
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
@@ -80,7 +80,7 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/simple/explode/primitive{param}");
+        let mut path = String::from("/routes/path/simple/explode/primitive{param}");
         path = path.replace("{param}", param);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
@@ -113,7 +113,7 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/simple/explode/record{param}");
+        let mut path = String::from("/routes/path/simple/explode/record{param}");
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.0);

@@ -96,16 +96,12 @@ export class Adapter {
   // cache of adapted client method params
   private readonly clientMethodParams: Map<string, rust.MethodParameter>;
 
-  // contains methods that have been renamed
-  private readonly renamedMethods: Set<string>;
-
   // maps a tcgc model field to the adapted struct field
   private readonly fieldsMap: Map<tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>;
 
   private constructor(ctx: tcgc.SdkContext, options: RustEmitterOptions) {
     this.types = new Map<string, rust.Type>();
     this.clientMethodParams = new Map<string, rust.MethodParameter>();
-    this.renamedMethods = new Set<string>();
     this.fieldsMap = new Map<tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>();
     this.ctx = ctx;
     this.options = options;
@@ -188,7 +184,7 @@ export class Adapter {
    * @returns a Rust enum
    */
   private getEnum(sdkEnum: tcgc.SdkEnumType): rust.Enum {
-    const enumName = codegen.capitalize(sdkEnum.name);
+    const enumName = codegen.deconstruct(sdkEnum.name).map((each) => codegen.capitalize(each)).join('');
     let rustEnum = this.types.get(enumName);
     if (rustEnum) {
       return <rust.Enum>rustEnum;
@@ -1035,18 +1031,8 @@ export class Adapter {
                 // there's either a suffix on the endpoint param, more template arguments, or both.
                 // either way we need to create supplemental info on the constructable.
                 // NOTE: we remove the {endpoint} segment and trailing forward slash as we use
-                // Url::join to concatenate the two and not string replacement.
-                let serverUrl = endpointType.serverUrl.replace(`{${templateArg.serializedName}}/`, '');
-
-                // NOTE: the behavior of Url::join requires that the path ends with a forward slash.
-                // if there are any query params, splice it in as required else just append it.
-                if (serverUrl.includes('?')) {
-                  if (serverUrl[serverUrl.indexOf('?') - 1] !== '/') {
-                    serverUrl = serverUrl.replace('?', '/?');
-                  }
-                } else if (serverUrl[serverUrl.length - 1] !== '/') {
-                  serverUrl += '/';
-                }
+                // UrlExt::append_path() to concatenate the two and not string replacement.
+                const serverUrl = endpointType.serverUrl.replace(`{${templateArg.serializedName}}/`, '');
 
                 rustClient.constructable.endpoint = new rust.SupplementalEndpoint(serverUrl);
                 continue;
@@ -1251,23 +1237,32 @@ export class Adapter {
     let srcMethodName = method.name;
     if (method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
       const chunks = codegen.deconstruct(srcMethodName);
-      chunks[0] = 'list';
+      if (chunks[0] === 'get') {
+        chunks[0] = 'list';
+      } else {
+        chunks.unshift('list');
+      }
       srcMethodName = codegen.camelCase(chunks);
-      this.renamedMethods.add(srcMethodName);
       this.ctx.program.reportDiagnostic({
         code: 'PagingMethodRename',
         severity: 'warning',
         message: `renamed paging method from ${method.name} to ${srcMethodName}`,
         target: method.__raw?.node ?? NoTarget,
       });
-    } else if (this.renamedMethods.has(srcMethodName)) {
-      throw new AdapterError('NameCollision', `method name ${srcMethodName} collides with a renamed method`, method.__raw?.node);
     }
 
     const languageIndependentName = method.crossLanguageDefinitionId;
     const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
+    if (srcMethodName !== method.name) {
+      // if the method was renamed then ensure it doesn't collide
+      for (const existingMethod of rustClient.methods) {
+        if (existingMethod.name === methodName) {
+          throw new AdapterError('NameCollision', `renamed method ${srcMethodName} collides with an existing method`, method.__raw?.node);
+        }
+      }
+    }
     const optionsLifetime = new rust.Lifetime('a');
-    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName)}Options`, 'pub');
+    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName, false)}Options`, 'pub');
     methodOptionsStruct.lifetime = optionsLifetime;
     methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
 
@@ -1288,28 +1283,16 @@ export class Adapter {
     const methodOptions = new rust.MethodOptions(methodOptionsStruct);
     const httpMethod = method.operation.verb;
 
-    // if path is more than just "/" strip off any leading forward slash.
-    // this is because Url::join will treat the path as absolute, overwriting
-    // any existing path on the endpoint.
-    // e.g. if endpoint is https://contoso.com/foo/bar and httpPath is /some/sub/path
-    // then calling Url::join will provide result https://contoso.com/some/sub/path
-    // which is not what we want.
-    // the only exception is if this is the root before the query string
-    let httpPath = method.operation.path;
-    if (httpPath.length > 1 && httpPath[0] === '/' && !httpPath.startsWith('/?')) {
-      httpPath = httpPath.slice(1);
-    }
-
     let rustMethod: MethodType;
     switch (method.kind) {
       case 'basic':
-        rustMethod = new rust.AsyncMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.AsyncMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path);
         break;
       case 'paging':
-        rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path);
         break;
       case 'lro':
-        rustMethod = new rust.LroMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.LroMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path);
         break;
       default:
         throw new AdapterError('UnsupportedTsp', `method kind ${method.kind} NYI`, method.__raw?.node);
@@ -1579,7 +1562,7 @@ export class Adapter {
     } else if (responseHeaders.length > 0) {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
-      const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name)}Result`);
+      const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name, false)}Result`);
       markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
       this.crate.models.push(markerType);
       let resultType: rust.ResultTypes;

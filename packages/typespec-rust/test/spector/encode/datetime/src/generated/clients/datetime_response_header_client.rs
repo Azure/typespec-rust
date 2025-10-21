@@ -64,7 +64,7 @@ impl DatetimeResponseHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/datetime/responseheader/default");
+        url.append_path("/encode/datetime/responseheader/default");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -117,7 +117,7 @@ impl DatetimeResponseHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/datetime/responseheader/rfc3339");
+        url.append_path("/encode/datetime/responseheader/rfc3339");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -170,7 +170,7 @@ impl DatetimeResponseHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/datetime/responseheader/rfc7231");
+        url.append_path("/encode/datetime/responseheader/rfc7231");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -223,7 +223,7 @@ impl DatetimeResponseHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/datetime/responseheader/unix-timestamp");
+        url.append_path("/encode/datetime/responseheader/unix-timestamp");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

@@ -87,7 +87,7 @@ impl EnumPathParamsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.bogus_url.clone();
-        let mut path = String::from("optional/{shape}/{value}");
+        let mut path = String::from("/optional/{shape}/{value}");
         path = path.replace("{shape}", shape.as_ref());
         path = match options.value {
             Some(value) => path.replace("{value}", value.as_ref()),
@@ -124,7 +124,7 @@ impl EnumPathParamsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.bogus_url.clone();
-        let mut path = String::from("fixed/{shape}/{value}");
+        let mut path = String::from("/fixed/{shape}/{value}");
         path = path.replace("{shape}", shape.as_ref());
         path = match options.value {
             Some(value) => path.replace("{value}", value.as_ref()),

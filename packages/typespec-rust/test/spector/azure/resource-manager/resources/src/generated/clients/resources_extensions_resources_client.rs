@@ -84,7 +84,7 @@ impl ResourcesExtensionsResourcesClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
+        let mut path = String::from("/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
         path = path.replace("{resourceUri}", resource_uri);
         url.append_path(&path);
@@ -183,7 +183,7 @@ impl ResourcesExtensionsResourcesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
+        let mut path = String::from("/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
         path = path.replace("{resourceUri}", resource_uri);
         url.append_path(&path);
@@ -235,7 +235,7 @@ impl ResourcesExtensionsResourcesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
+        let mut path = String::from("/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
         path = path.replace("{resourceUri}", resource_uri);
         url.append_path(&path);
@@ -281,7 +281,7 @@ impl ResourcesExtensionsResourcesClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         let mut path = String::from(
-            "{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources",
+            "/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources",
         );
         path = path.replace("{resourceUri}", resource_uri);
         first_url.append_path(&path);
@@ -367,7 +367,7 @@ impl ResourcesExtensionsResourcesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
+        let mut path = String::from("/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
         path = path.replace("{resourceUri}", resource_uri);
         url.append_path(&path);

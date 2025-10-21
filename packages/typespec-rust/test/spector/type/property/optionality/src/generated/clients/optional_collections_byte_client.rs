@@ -42,7 +42,7 @@ impl OptionalCollectionsByteClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("type/property/optional/collections/bytes/all");
+        url.append_path("/type/property/optional/collections/bytes/all");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -74,7 +74,7 @@ impl OptionalCollectionsByteClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("type/property/optional/collections/bytes/default");
+        url.append_path("/type/property/optional/collections/bytes/default");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -107,7 +107,7 @@ impl OptionalCollectionsByteClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("type/property/optional/collections/bytes/all");
+        url.append_path("/type/property/optional/collections/bytes/all");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -141,7 +141,7 @@ impl OptionalCollectionsByteClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("type/property/optional/collections/bytes/default");
+        url.append_path("/type/property/optional/collections/bytes/default");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

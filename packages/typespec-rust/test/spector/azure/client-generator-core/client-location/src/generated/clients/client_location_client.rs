@@ -138,7 +138,7 @@ impl ClientLocationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("azure/client-generator-core/client-location/health");
+        url.append_path("/azure/client-generator-core/client-location/health");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

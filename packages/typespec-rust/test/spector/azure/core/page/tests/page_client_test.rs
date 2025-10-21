@@ -5,46 +5,44 @@
 use futures::StreamExt;
 use spector_corepage::{
     models::{
-        ListItemInputBody, ListItemInputExtensibleEnum, PageClientListWithParametersOptions,
+        ListItemInputBody, ListItemInputExtensibleEnum,
+        PageClientListWithParameterizedNextLinkOptions, PageClientListWithParametersOptions,
         PagedUser, UserListResults,
     },
     PageClient,
 };
 
-/*#[tokio::test]
-async fn list_parameterized_next_link() {
+#[tokio::test]
+#[should_panic]
+async fn list_with_parameterized_next_link() {
+    // TODO: https://github.com/Azure/typespec-rust/issues/420
     let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut pager = client
-        .list_parameterized_next_link(
+        .list_with_parameterized_next_link(
             "name",
-            Some(PageClientListParameterizedNextLinkOptions {
+            Some(PageClientListWithParameterizedNextLinkOptions {
                 include_pending: Some(true),
                 ..Default::default()
             }),
         )
         .unwrap();
-    let mut page_count = 0;
+    let mut item_count = 0;
     while let Some(page) = pager.next().await {
-        page_count += 1;
-        let page = page.unwrap();
-        let page: ParameterizedNextLinkPagingResult = page.into_body().unwrap();
-        match page_count {
+        item_count += 1;
+        let item = page.unwrap();
+        match item_count {
             1 => {
-                assert_eq!(page.values.len(), 1);
-                assert!(page.next_link.is_some());
-                assert_eq!(page.values[0].id, Some(1));
-                assert_eq!(page.values[0].name, Some("User1".to_string()));
+                assert_eq!(item.id, Some(1));
+                assert_eq!(item.name, Some("User1".to_string()));
             }
             2 => {
-                assert_eq!(page.values.len(), 1);
-                assert!(page.next_link.is_none());
-                assert_eq!(page.values[0].id, Some(2));
-                assert_eq!(page.values[0].name, Some("User2".to_string()));
+                assert_eq!(item.id, Some(2));
+                assert_eq!(item.name, Some("User2".to_string()));
             }
             _ => panic!("unexpected page number"),
         }
     }
-}*/
+}
 
 #[tokio::test]
 async fn list_with_custom_page_model() {

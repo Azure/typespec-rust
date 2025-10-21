@@ -78,7 +78,7 @@ impl SingleClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("server/path/single/myOp");
+        url.append_path("/server/path/single/myOp");
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline

@@ -231,7 +231,7 @@ pub struct SpecialWordsModelsClientWithWhileOptions<'a> {
 
 /// Options to be passed to [`SpecialWordsModelsClient::with_with()`](crate::generated::clients::SpecialWordsModelsClient::with_with())
 #[derive(Clone, Default, SafeDebug)]
-pub struct SpecialWordsModelsClientWithOptions<'a> {
+pub struct SpecialWordsModelsClientWithWithOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
@@ -700,7 +700,7 @@ pub struct SpecialWordsParametersClientWithWhileOptions<'a> {
 
 /// Options to be passed to [`SpecialWordsParametersClient::with_with()`](crate::generated::clients::SpecialWordsParametersClient::with_with())
 #[derive(Clone, Default, SafeDebug)]
-pub struct SpecialWordsParametersClientWithOptions<'a> {
+pub struct SpecialWordsParametersClientWithWithOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -40,7 +40,7 @@ impl NumericPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/numeric/property/safeint");
+        url.append_path("/encode/numeric/property/safeint");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -74,7 +74,7 @@ impl NumericPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/numeric/property/uint32");
+        url.append_path("/encode/numeric/property/uint32");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -108,7 +108,7 @@ impl NumericPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/numeric/property/uint8");
+        url.append_path("/encode/numeric/property/uint8");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

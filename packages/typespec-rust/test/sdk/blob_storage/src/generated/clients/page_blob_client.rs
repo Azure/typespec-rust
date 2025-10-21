@@ -100,16 +100,6 @@ impl PageBlobClient {
         &self.endpoint
     }
 
-    /// Returns the Url associated with this client and its construction parameters.
-    pub fn service_url(&self) -> Result<Url> {
-        let mut service_url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
-        path = path.replace("{blobName}", &self.blob_name);
-        path = path.replace("{containerName}", &self.container_name);
-        service_url.append_path(&path);
-        Ok(service_url)
-    }
-
     /// The Clear Pages operation clears a range of pages from a page blob
     ///
     /// # Arguments
@@ -159,7 +149,7 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
@@ -301,7 +291,7 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
@@ -402,7 +392,7 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
@@ -563,7 +553,7 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
@@ -671,7 +661,7 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
@@ -791,7 +781,7 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
@@ -907,7 +897,7 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
@@ -1023,7 +1013,7 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);
@@ -1189,7 +1179,7 @@ impl PageBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
         url.append_path(&path);

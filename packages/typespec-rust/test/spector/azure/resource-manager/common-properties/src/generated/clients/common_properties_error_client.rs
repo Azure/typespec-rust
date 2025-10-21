@@ -59,7 +59,7 @@ impl CommonPropertiesErrorClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/confidentialResources/{confidentialResourceName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/confidentialResources/{confidentialResourceName}");
         path = path.replace("{confidentialResourceName}", confidential_resource_name);
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
@@ -115,7 +115,7 @@ impl CommonPropertiesErrorClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/confidentialResources/{confidentialResourceName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.CommonProperties/confidentialResources/{confidentialResourceName}");
         path = path.replace("{confidentialResourceName}", confidential_resource_name);
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);

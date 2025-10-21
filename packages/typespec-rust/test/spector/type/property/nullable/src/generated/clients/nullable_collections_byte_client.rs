@@ -42,7 +42,7 @@ impl NullableCollectionsByteClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("type/property/nullable/collections/bytes/non-null");
+        url.append_path("/type/property/nullable/collections/bytes/non-null");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -74,7 +74,7 @@ impl NullableCollectionsByteClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("type/property/nullable/collections/bytes/null");
+        url.append_path("/type/property/nullable/collections/bytes/null");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -107,7 +107,7 @@ impl NullableCollectionsByteClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("type/property/nullable/collections/bytes/non-null");
+        url.append_path("/type/property/nullable/collections/bytes/non-null");
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);
@@ -141,7 +141,7 @@ impl NullableCollectionsByteClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("type/property/nullable/collections/bytes/null");
+        url.append_path("/type/property/nullable/collections/bytes/null");
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("content-type", "application/merge-patch+json");
         request.set_body(body);

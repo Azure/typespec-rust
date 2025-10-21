@@ -81,7 +81,7 @@ impl HeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("azure/client-generator-core/api-version/header");
+        url.append_path("/azure/client-generator-core/api-version/header");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("x-ms-version", &self.version);
         let rsp = self

@@ -41,7 +41,7 @@ impl ValueTypesUnknownStringClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("type/property/value-types/unknown/string");
+        url.append_path("/type/property/value-types/unknown/string");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -75,7 +75,7 @@ impl ValueTypesUnknownStringClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("type/property/value-types/unknown/string");
+        url.append_path("/type/property/value-types/unknown/string");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

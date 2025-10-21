@@ -54,7 +54,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/and");
+        url.append_path("/special-words/operations/and");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -84,7 +84,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/as");
+        url.append_path("/special-words/operations/as");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -114,7 +114,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/assert");
+        url.append_path("/special-words/operations/assert");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -144,7 +144,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/async");
+        url.append_path("/special-words/operations/async");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -174,7 +174,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/await");
+        url.append_path("/special-words/operations/await");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -204,7 +204,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/break");
+        url.append_path("/special-words/operations/break");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -234,7 +234,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/class");
+        url.append_path("/special-words/operations/class");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -264,7 +264,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/constructor");
+        url.append_path("/special-words/operations/constructor");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -294,7 +294,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/continue");
+        url.append_path("/special-words/operations/continue");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -324,7 +324,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/def");
+        url.append_path("/special-words/operations/def");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -354,7 +354,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/del");
+        url.append_path("/special-words/operations/del");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -384,7 +384,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/elif");
+        url.append_path("/special-words/operations/elif");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -414,7 +414,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/else");
+        url.append_path("/special-words/operations/else");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -444,7 +444,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/except");
+        url.append_path("/special-words/operations/except");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -474,7 +474,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/exec");
+        url.append_path("/special-words/operations/exec");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -504,7 +504,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/finally");
+        url.append_path("/special-words/operations/finally");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -534,7 +534,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/for");
+        url.append_path("/special-words/operations/for");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -564,7 +564,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/from");
+        url.append_path("/special-words/operations/from");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -594,7 +594,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/global");
+        url.append_path("/special-words/operations/global");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -624,7 +624,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/if");
+        url.append_path("/special-words/operations/if");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -654,7 +654,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/import");
+        url.append_path("/special-words/operations/import");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -684,7 +684,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/in");
+        url.append_path("/special-words/operations/in");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -714,7 +714,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/is");
+        url.append_path("/special-words/operations/is");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -744,7 +744,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/lambda");
+        url.append_path("/special-words/operations/lambda");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -774,7 +774,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/not");
+        url.append_path("/special-words/operations/not");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -804,7 +804,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/or");
+        url.append_path("/special-words/operations/or");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -834,7 +834,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/pass");
+        url.append_path("/special-words/operations/pass");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -864,7 +864,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/raise");
+        url.append_path("/special-words/operations/raise");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -894,7 +894,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/return");
+        url.append_path("/special-words/operations/return");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -924,7 +924,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/try");
+        url.append_path("/special-words/operations/try");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -954,7 +954,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/while");
+        url.append_path("/special-words/operations/while");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -984,7 +984,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/with");
+        url.append_path("/special-words/operations/with");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -1014,7 +1014,7 @@ impl SpecialWordsOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/operations/yield");
+        url.append_path("/special-words/operations/yield");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

@@ -66,7 +66,7 @@ impl ResourcesLocationResourcesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources/{locationResourceName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources/{locationResourceName}");
         path = path.replace("{location}", location);
         path = path.replace("{locationResourceName}", location_resource_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
@@ -122,7 +122,7 @@ impl ResourcesLocationResourcesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources/{locationResourceName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources/{locationResourceName}");
         path = path.replace("{location}", location);
         path = path.replace("{locationResourceName}", location_resource_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
@@ -175,7 +175,7 @@ impl ResourcesLocationResourcesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources/{locationResourceName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources/{locationResourceName}");
         path = path.replace("{location}", location);
         path = path.replace("{locationResourceName}", location_resource_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
@@ -221,7 +221,7 @@ impl ResourcesLocationResourcesClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources");
         path = path.replace("{location}", location);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         first_url.append_path(&path);
@@ -307,7 +307,7 @@ impl ResourcesLocationResourcesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources/{locationResourceName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/locations/{location}/locationResources/{locationResourceName}");
         path = path.replace("{location}", location);
         path = path.replace("{locationResourceName}", location_resource_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);

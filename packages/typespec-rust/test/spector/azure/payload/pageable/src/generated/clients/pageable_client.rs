@@ -77,7 +77,7 @@ impl PageableClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url.append_path("azure/payload/pageable");
+        first_url.append_path("/azure/payload/pageable");
         if let Some(maxpagesize) = options.maxpagesize {
             first_url
                 .query_pairs_mut()

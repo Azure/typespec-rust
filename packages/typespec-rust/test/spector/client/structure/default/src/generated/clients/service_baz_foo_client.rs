@@ -35,7 +35,7 @@ impl ServiceBazFooClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("seven");
+        url.append_path("/seven");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

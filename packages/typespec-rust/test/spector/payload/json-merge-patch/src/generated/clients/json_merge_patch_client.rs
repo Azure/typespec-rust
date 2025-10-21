@@ -84,7 +84,7 @@ impl JsonMergePatchClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("json-merge-patch/create/resource");
+        url.append_path("/json-merge-patch/create/resource");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -118,7 +118,7 @@ impl JsonMergePatchClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("json-merge-patch/update/resource/optional");
+        url.append_path("/json-merge-patch/update/resource/optional");
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");
@@ -155,7 +155,7 @@ impl JsonMergePatchClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("json-merge-patch/update/resource");
+        url.append_path("/json-merge-patch/update/resource");
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/merge-patch+json");

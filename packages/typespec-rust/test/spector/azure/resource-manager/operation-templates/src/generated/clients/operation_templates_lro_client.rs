@@ -79,7 +79,7 @@ impl OperationTemplatesLroClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}");
         path = path.replace("{orderName}", order_name);
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
@@ -194,7 +194,7 @@ impl OperationTemplatesLroClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}");
         path = path.replace("{orderName}", order_name);
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
@@ -310,7 +310,7 @@ impl OperationTemplatesLroClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}/export");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}/export");
         path = path.replace("{orderName}", order_name);
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);

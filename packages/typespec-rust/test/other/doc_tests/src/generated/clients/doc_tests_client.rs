@@ -107,7 +107,9 @@ impl DocTestsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path(id);
+        let mut path = String::from("/{id}");
+        path = path.replace("{id}", id);
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self

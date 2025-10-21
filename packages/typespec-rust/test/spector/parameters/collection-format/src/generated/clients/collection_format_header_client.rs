@@ -37,7 +37,7 @@ impl CollectionFormatHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("parameters/collection-format/header/csv");
+        url.append_path("/parameters/collection-format/header/csv");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("colors", colors.join(","));
         let rsp = self

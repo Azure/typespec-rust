@@ -118,7 +118,7 @@ impl StandardClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/core/lro/standard/users/{name}");
+        let mut path = String::from("/azure/core/lro/standard/users/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
         url.query_pairs_mut()
@@ -227,7 +227,7 @@ impl StandardClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/core/lro/standard/users/{name}");
+        let mut path = String::from("/azure/core/lro/standard/users/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
         url.query_pairs_mut()
@@ -335,7 +335,7 @@ impl StandardClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/core/lro/standard/users/{name}:export");
+        let mut path = String::from("/azure/core/lro/standard/users/{name}:export");
         path = path.replace("{name}", name);
         url.append_path(&path);
         url.query_pairs_mut()

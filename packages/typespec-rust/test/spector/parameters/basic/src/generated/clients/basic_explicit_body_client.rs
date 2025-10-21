@@ -38,7 +38,7 @@ impl BasicExplicitBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("parameters/basic/explicit-body/simple");
+        url.append_path("/parameters/basic/explicit-body/simple");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

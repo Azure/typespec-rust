@@ -38,7 +38,7 @@ impl TwoOperationGroupGroup1Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("four");
+        url.append_path("/four");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -68,7 +68,7 @@ impl TwoOperationGroupGroup1Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("one");
+        url.append_path("/one");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -98,7 +98,7 @@ impl TwoOperationGroupGroup1Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("three");
+        url.append_path("/three");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

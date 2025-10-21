@@ -55,7 +55,7 @@ impl RenamedOperationClient {
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        let mut host = String::from("client/structure/{client}/");
+        let mut host = String::from("client/structure/{client}");
         host = host.replace("{client}", client.as_ref());
         endpoint = endpoint.join(&host)?;
         Ok(Self {
@@ -97,7 +97,7 @@ impl RenamedOperationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("five");
+        url.append_path("/five");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -127,7 +127,7 @@ impl RenamedOperationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("one");
+        url.append_path("/one");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -157,7 +157,7 @@ impl RenamedOperationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("three");
+        url.append_path("/three");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

@@ -78,7 +78,7 @@ impl OverloadClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("client/overload/resources");
+        url.append_path("/client/overload/resources");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -116,7 +116,7 @@ impl OverloadClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("client/overload/resources/{scope}");
+        let mut path = String::from("/client/overload/resources/{scope}");
         path = path.replace("{scope}", scope);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);

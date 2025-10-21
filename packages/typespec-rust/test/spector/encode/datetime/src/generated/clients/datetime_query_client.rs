@@ -41,7 +41,7 @@ impl DatetimeQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/datetime/query/default");
+        url.append_path("/encode/datetime/query/default");
         url.query_pairs_mut()
             .append_pair("value", &to_rfc3339(&value));
         let mut request = Request::new(url, Method::Get);
@@ -74,7 +74,7 @@ impl DatetimeQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/datetime/query/rfc3339");
+        url.append_path("/encode/datetime/query/rfc3339");
         url.query_pairs_mut()
             .append_pair("value", &to_rfc3339(&value));
         let mut request = Request::new(url, Method::Get);
@@ -107,7 +107,7 @@ impl DatetimeQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/datetime/query/rfc7231");
+        url.append_path("/encode/datetime/query/rfc7231");
         url.query_pairs_mut()
             .append_pair("value", &to_rfc7231(&value));
         let mut request = Request::new(url, Method::Get);
@@ -140,7 +140,7 @@ impl DatetimeQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/datetime/query/unix-timestamp");
+        url.append_path("/encode/datetime/query/unix-timestamp");
         url.query_pairs_mut()
             .append_pair("value", &value.unix_timestamp().to_string());
         let mut request = Request::new(url, Method::Get);
@@ -173,7 +173,7 @@ impl DatetimeQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("encode/datetime/query/unix-timestamp-array");
+        url.append_path("/encode/datetime/query/unix-timestamp-array");
         url.query_pairs_mut().append_pair(
             "value",
             &value

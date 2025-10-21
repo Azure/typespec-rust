@@ -35,7 +35,7 @@ impl ClientLocationMoveToExistingSubUserOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("azure/client-generator-core/client-location/user");
+        url.append_path("/azure/client-generator-core/client-location/user");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

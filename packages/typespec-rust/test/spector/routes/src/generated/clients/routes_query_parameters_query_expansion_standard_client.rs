@@ -41,7 +41,7 @@ impl RoutesQueryParametersQueryExpansionStandardClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("routes/query/query-expansion/standard/array");
+        url.append_path("/routes/query/query-expansion/standard/array");
         url.query_pairs_mut().append_pair("param", &param.join(","));
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -73,7 +73,7 @@ impl RoutesQueryParametersQueryExpansionStandardClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("routes/query/query-expansion/standard/primitive");
+        url.append_path("/routes/query/query-expansion/standard/primitive");
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -105,7 +105,7 @@ impl RoutesQueryParametersQueryExpansionStandardClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("routes/query/query-expansion/standard/record");
+        url.append_path("/routes/query/query-expansion/standard/record");
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.0);

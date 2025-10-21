@@ -59,7 +59,7 @@ impl NonResourceNonResourceOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Microsoft.NonResource/locations/{location}/otherParameters/{parameter}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Microsoft.NonResource/locations/{location}/otherParameters/{parameter}");
         path = path.replace("{location}", location);
         path = path.replace("{parameter}", parameter);
         path = path.replace("{subscriptionId}", &self.subscription_id);
@@ -114,7 +114,7 @@ impl NonResourceNonResourceOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Microsoft.NonResource/locations/{location}/otherParameters/{parameter}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Microsoft.NonResource/locations/{location}/otherParameters/{parameter}");
         path = path.replace("{location}", location);
         path = path.replace("{parameter}", parameter);
         path = path.replace("{subscriptionId}", &self.subscription_id);

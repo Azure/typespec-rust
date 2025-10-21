@@ -51,7 +51,7 @@ impl MadeOptionalClient {
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        let mut host = String::from("versioning/made-optional/api-version:{version}/");
+        let mut host = String::from("versioning/made-optional/api-version:{version}");
         host = host.replace("{version}", &options.version);
         endpoint = endpoint.join(&host)?;
         Ok(Self {
@@ -85,7 +85,7 @@ impl MadeOptionalClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("test");
+        url.append_path("/test");
         if let Some(param) = options.param {
             url.query_pairs_mut().append_pair("param", &param);
         }

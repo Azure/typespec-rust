@@ -52,7 +52,7 @@ impl ClientBClient {
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        let mut host = String::from("client/structure/{client}/");
+        let mut host = String::from("client/structure/{client}");
         host = host.replace("{client}", client.as_ref());
         endpoint = endpoint.join(&host)?;
         Ok(Self {
@@ -85,7 +85,7 @@ impl ClientBClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("four");
+        url.append_path("/four");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -115,7 +115,7 @@ impl ClientBClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("six");
+        url.append_path("/six");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -145,7 +145,7 @@ impl ClientBClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("two");
+        url.append_path("/two");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

@@ -78,7 +78,7 @@ impl PathClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/client-generator-core/api-version/path/{version}");
+        let mut path = String::from("/azure/client-generator-core/api-version/path/{version}");
         path = path.replace("{version}", &self.version);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Post);

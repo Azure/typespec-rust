@@ -44,7 +44,7 @@ impl SpreadModelClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("parameters/spread/model/request-body");
+        url.append_path("/parameters/spread/model/request-body");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         let body: RequestContent<BodyParameter> = BodyParameter { name: Some(name) }.try_into()?;
@@ -86,7 +86,7 @@ impl SpreadModelClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("parameters/spread/model/composite-request/{name}");
+        let mut path = String::from("/parameters/spread/model/composite-request/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Put);
@@ -130,7 +130,7 @@ impl SpreadModelClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("parameters/spread/model/composite-request-mix/{name}");
+        let mut path = String::from("/parameters/spread/model/composite-request-mix/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Put);
@@ -168,7 +168,7 @@ impl SpreadModelClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("parameters/spread/model/composite-request-only-with-body");
+        url.append_path("/parameters/spread/model/composite-request-only-with-body");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -209,7 +209,7 @@ impl SpreadModelClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path =
-            String::from("parameters/spread/model/composite-request-without-body/{name}");
+            String::from("/parameters/spread/model/composite-request-without-body/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Put);

@@ -40,7 +40,7 @@ impl CollectionFormatQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("parameters/collection-format/query/csv");
+        url.append_path("/parameters/collection-format/query/csv");
         url.query_pairs_mut()
             .append_pair("colors", &colors.join(","));
         let mut request = Request::new(url, Method::Get);
@@ -74,7 +74,7 @@ impl CollectionFormatQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("parameters/collection-format/query/multi");
+        url.append_path("/parameters/collection-format/query/multi");
         for c in colors.iter() {
             url.query_pairs_mut().append_pair("colors", c);
         }
@@ -109,7 +109,7 @@ impl CollectionFormatQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("parameters/collection-format/query/pipes");
+        url.append_path("/parameters/collection-format/query/pipes");
         url.query_pairs_mut()
             .append_pair("colors", &colors.join("|"));
         let mut request = Request::new(url, Method::Get);
@@ -143,7 +143,7 @@ impl CollectionFormatQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("parameters/collection-format/query/ssv");
+        url.append_path("/parameters/collection-format/query/ssv");
         url.query_pairs_mut()
             .append_pair("colors", &colors.join(" "));
         let mut request = Request::new(url, Method::Get);

@@ -5,12 +5,12 @@
 use futures::StreamExt;
 use spector_corepageable::{
     models::{
-        PageableServerDrivenPaginationContinuationTokenClientListHeaderNestedResponseBodyOptions,
-        PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseBodyOptions,
-        PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseHeaderOptions,
-        PageableServerDrivenPaginationContinuationTokenClientListQueryNestedResponseBodyOptions,
-        PageableServerDrivenPaginationContinuationTokenClientListQueryResponseBodyOptions,
-        PageableServerDrivenPaginationContinuationTokenClientListQueryResponseHeaderOptions,
+        PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyOptions,
+        PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyOptions,
+        PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseHeaderOptions,
+        PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyOptions,
+        PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyOptions,
+        PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseHeaderOptions,
         RequestHeaderResponseBodyResponse, RequestHeaderResponseHeaderResponse,
         RequestHeaderResponseHeaderResponseHeaders, RequestQueryResponseBodyResponse,
         RequestQueryResponseHeaderResponse, RequestQueryResponseHeaderResponseHeaders,
@@ -19,13 +19,13 @@ use spector_corepageable::{
 };
 
 #[tokio::test]
-async fn list_header_nested_response_body() {
+async fn list_request_header_nested_response_body() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut iter = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_header_nested_response_body(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListHeaderNestedResponseBodyOptions {
+        .list_request_header_nested_response_body(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 ..Default::default()
@@ -62,13 +62,13 @@ async fn list_header_nested_response_body() {
 }
 
 #[tokio::test]
-async fn list_header_response_body() {
+async fn list_request_header_response_body() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut iter = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_header_response_body(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseBodyOptions {
+        .list_request_header_response_body(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 ..Default::default()
@@ -105,13 +105,13 @@ async fn list_header_response_body() {
 }
 
 #[tokio::test]
-async fn list_header_response_body_pages() {
+async fn list_request_header_response_body_pages() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut pager = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_header_response_body(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseBodyOptions {
+        .list_request_header_response_body(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 ..Default::default()
@@ -153,8 +153,8 @@ async fn list_header_response_body_pages() {
     pager = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_header_response_body(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseBodyOptions {
+        .list_request_header_response_body(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 token: Some("page2".to_string()),
@@ -186,13 +186,13 @@ async fn list_header_response_body_pages() {
 }
 
 #[tokio::test]
-async fn list_header_response_header() {
+async fn list_request_header_response_header() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut iter = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_header_response_header(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseHeaderOptions {
+        .list_request_header_response_header(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseHeaderOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 ..Default::default()
@@ -229,13 +229,13 @@ async fn list_header_response_header() {
 }
 
 #[tokio::test]
-async fn list_header_response_header_pages() {
+async fn list_request_header_response_header_pages() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut pager = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_header_response_header(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseHeaderOptions {
+        .list_request_header_response_header(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseHeaderOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 ..Default::default()
@@ -278,8 +278,8 @@ async fn list_header_response_header_pages() {
     pager = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_header_response_header(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseHeaderOptions {
+        .list_request_header_response_header(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseHeaderOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 token: Some("page2".to_string()),
@@ -312,13 +312,13 @@ async fn list_header_response_header_pages() {
 }
 
 #[tokio::test]
-async fn list_query_nested_response_body() {
+async fn list_request_query_nested_response_body() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut iter = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_query_nested_response_body(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListQueryNestedResponseBodyOptions {
+        .list_request_query_nested_response_body(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 ..Default::default()
@@ -355,13 +355,13 @@ async fn list_query_nested_response_body() {
 }
 
 #[tokio::test]
-async fn list_query_response_body() {
+async fn list_request_query_response_body() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut iter = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_query_response_body(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListQueryResponseBodyOptions {
+        .list_request_query_response_body(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 ..Default::default()
@@ -398,13 +398,13 @@ async fn list_query_response_body() {
 }
 
 #[tokio::test]
-async fn list_query_response_body_pages() {
+async fn list_request_query_response_body_pages() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut pager = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_query_response_body(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListQueryResponseBodyOptions {
+        .list_request_query_response_body(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 ..Default::default()
@@ -446,8 +446,8 @@ async fn list_query_response_body_pages() {
     pager = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_query_response_body(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListQueryResponseBodyOptions {
+        .list_request_query_response_body(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 token: Some("page2".to_string()),
@@ -479,13 +479,13 @@ async fn list_query_response_body_pages() {
 }
 
 #[tokio::test]
-async fn list_query_response_header() {
+async fn list_request_query_response_header() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut iter = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_query_response_header(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListQueryResponseHeaderOptions {
+        .list_request_query_response_header(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseHeaderOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 ..Default::default()
@@ -522,13 +522,13 @@ async fn list_query_response_header() {
 }
 
 #[tokio::test]
-async fn list_query_response_header_pages() {
+async fn list_request_query_response_header_pages() {
     let client = PageableClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut pager = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_query_response_header(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListQueryResponseHeaderOptions {
+        .list_request_query_response_header(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseHeaderOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 ..Default::default()
@@ -571,8 +571,8 @@ async fn list_query_response_header_pages() {
     pager = client
         .get_pageable_server_driven_pagination_client()
         .get_pageable_server_driven_pagination_continuation_token_client()
-        .list_query_response_header(Some(
-            PageableServerDrivenPaginationContinuationTokenClientListQueryResponseHeaderOptions {
+        .list_request_query_response_header(Some(
+            PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseHeaderOptions {
                 bar: Some("bar".to_string()),
                 foo: Some("foo".to_string()),
                 token: Some("page2".to_string()),

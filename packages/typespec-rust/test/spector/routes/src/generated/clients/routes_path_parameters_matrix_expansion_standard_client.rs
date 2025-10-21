@@ -41,7 +41,7 @@ impl RoutesPathParametersMatrixExpansionStandardClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/matrix/standard/array{param}");
+        let mut path = String::from("/routes/path/matrix/standard/array{param}");
         path = path.replace("{param}", &format!(";param={}", param.join(",")));
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
@@ -80,7 +80,7 @@ impl RoutesPathParametersMatrixExpansionStandardClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/matrix/standard/primitive{param}");
+        let mut path = String::from("/routes/path/matrix/standard/primitive{param}");
         path = path.replace("{param}", &format!(";param={param}"));
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
@@ -113,7 +113,7 @@ impl RoutesPathParametersMatrixExpansionStandardClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/matrix/standard/record{param}");
+        let mut path = String::from("/routes/path/matrix/standard/record{param}");
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.0);

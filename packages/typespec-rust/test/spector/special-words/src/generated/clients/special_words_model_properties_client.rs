@@ -39,7 +39,7 @@ impl SpecialWordsModelPropertiesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("special-words/model-properties/same-as-model");
+        url.append_path("/special-words/model-properties/same-as-model");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

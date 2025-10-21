@@ -88,7 +88,9 @@ impl MixedParamsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("azure/client-generator-core/client-initialization/mixed-params/with-body");
+        url.append_path(
+            "/azure/client-generator-core/client-initialization/mixed-params/with-body",
+        );
         url.query_pairs_mut().append_pair("region", region);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
@@ -127,7 +129,7 @@ impl MixedParamsClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path(
-            "azure/client-generator-core/client-initialization/mixed-params/with-query",
+            "/azure/client-generator-core/client-initialization/mixed-params/with-query",
         );
         url.query_pairs_mut().append_pair("id", id);
         url.query_pairs_mut().append_pair("region", region);

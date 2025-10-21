@@ -82,7 +82,7 @@ impl PathClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("parameters/path/normal/{name}");
+        let mut path = String::from("/parameters/path/normal/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
@@ -114,7 +114,7 @@ impl PathClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("parameters/path/optional{name}");
+        let mut path = String::from("/parameters/path/optional{name}");
         path = match options.name {
             Some(name) => path.replace("{name}", &format!("/{name}")),
             None => path.replace("{name}", ""),

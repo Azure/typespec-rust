@@ -61,7 +61,7 @@ impl MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResource2s/{subscriptionResource2Name}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResource2s/{subscriptionResource2Name}");
         path = path.replace("{subscriptionId}", subscription_id);
         path = path.replace("{subscriptionResource2Name}", subscription_resource2_name);
         url.append_path(&path);
@@ -113,7 +113,7 @@ impl MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResource2s/{subscriptionResource2Name}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResource2s/{subscriptionResource2Name}");
         path = path.replace("{subscriptionId}", subscription_id);
         path = path.replace("{subscriptionResource2Name}", subscription_resource2_name);
         url.append_path(&path);
@@ -168,7 +168,7 @@ impl MethodSubscriptionIdTwoSubscriptionResourcesMethodLevelSubscriptionResource
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResource2s/{subscriptionResource2Name}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResource2s/{subscriptionResource2Name}");
         path = path.replace("{subscriptionId}", subscription_id);
         path = path.replace("{subscriptionResource2Name}", subscription_resource2_name);
         url.append_path(&path);

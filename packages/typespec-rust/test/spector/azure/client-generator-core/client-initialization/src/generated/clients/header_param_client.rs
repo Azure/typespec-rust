@@ -88,7 +88,9 @@ impl HeaderParamClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("azure/client-generator-core/client-initialization/header-param/with-body");
+        url.append_path(
+            "/azure/client-generator-core/client-initialization/header-param/with-body",
+        );
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.insert_header("name", &self.name);
@@ -125,7 +127,7 @@ impl HeaderParamClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path(
-            "azure/client-generator-core/client-initialization/header-param/with-query",
+            "/azure/client-generator-core/client-initialization/header-param/with-query",
         );
         url.query_pairs_mut().append_pair("id", id);
         let mut request = Request::new(url, Method::Get);

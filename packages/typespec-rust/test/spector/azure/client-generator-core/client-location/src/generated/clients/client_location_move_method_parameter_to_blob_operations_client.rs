@@ -40,7 +40,7 @@ impl ClientLocationMoveMethodParameterToBlobOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("azure/client-generator-core/client-location/blob");
+        url.append_path("/azure/client-generator-core/client-location/blob");
         url.query_pairs_mut().append_pair("blob", blob);
         url.query_pairs_mut().append_pair("container", container);
         url.query_pairs_mut()

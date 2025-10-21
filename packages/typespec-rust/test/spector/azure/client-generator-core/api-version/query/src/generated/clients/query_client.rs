@@ -78,7 +78,7 @@ impl QueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("azure/client-generator-core/api-version/query");
+        url.append_path("/azure/client-generator-core/api-version/query");
         url.query_pairs_mut().append_pair("version", &self.version);
         let mut request = Request::new(url, Method::Post);
         let rsp = self

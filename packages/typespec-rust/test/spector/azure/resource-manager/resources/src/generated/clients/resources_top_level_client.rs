@@ -69,7 +69,7 @@ impl ResourcesTopLevelClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/actionSync");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/actionSync");
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         path = path.replace(
@@ -144,7 +144,7 @@ impl ResourcesTopLevelClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         path = path.replace(
@@ -262,7 +262,7 @@ impl ResourcesTopLevelClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         path = path.replace(
@@ -360,7 +360,7 @@ impl ResourcesTopLevelClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         path = path.replace(
@@ -409,7 +409,7 @@ impl ResourcesTopLevelClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources");
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         first_url.append_path(&path);
@@ -477,7 +477,7 @@ impl ResourcesTopLevelClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources");
         path = path.replace("{subscriptionId}", &self.subscription_id);
         first_url.append_path(&path);
         first_url
@@ -577,7 +577,7 @@ impl ResourcesTopLevelClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
+        let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}");
         path = path.replace("{resourceGroupName}", resource_group_name);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         path = path.replace(

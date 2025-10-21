@@ -46,7 +46,7 @@ impl OperationTemplatesCheckNameAvailabilityClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/checkNameAvailability");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/checkNameAvailability");
         path = path.replace("{subscriptionId}", &self.subscription_id);
         url.append_path(&path);
         url.query_pairs_mut()
@@ -96,7 +96,7 @@ impl OperationTemplatesCheckNameAvailabilityClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/locations/{location}/checkNameAvailability");
+        let mut path = String::from("/subscriptions/{subscriptionId}/providers/Azure.ResourceManager.OperationTemplates/locations/{location}/checkNameAvailability");
         path = path.replace("{location}", location);
         path = path.replace("{subscriptionId}", &self.subscription_id);
         url.append_path(&path);

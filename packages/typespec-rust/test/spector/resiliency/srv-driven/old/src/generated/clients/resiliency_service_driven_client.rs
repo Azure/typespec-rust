@@ -59,7 +59,7 @@ impl ResiliencyServiceDrivenClient {
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        let mut host = String::from("resiliency/service-driven/client:v1/service:{serviceDeploymentVersion}/api-version:{apiVersion}/");
+        let mut host = String::from("resiliency/service-driven/client:v1/service:{serviceDeploymentVersion}/api-version:{apiVersion}");
         host = host.replace("{serviceDeploymentVersion}", &service_deployment_version);
         host = host.replace("{apiVersion}", &options.api_version);
         endpoint = endpoint.join(&host)?;
@@ -94,7 +94,7 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("add-optional-param/from-none");
+        url.append_path("/add-optional-param/from-none");
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline
@@ -126,7 +126,7 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("add-optional-param/from-one-optional");
+        url.append_path("/add-optional-param/from-one-optional");
         if let Some(parameter) = options.parameter {
             url.query_pairs_mut().append_pair("parameter", &parameter);
         }
@@ -163,7 +163,7 @@ impl ResiliencyServiceDrivenClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("add-optional-param/from-one-required");
+        url.append_path("/add-optional-param/from-one-required");
         url.query_pairs_mut().append_pair("parameter", parameter);
         let mut request = Request::new(url, Method::Get);
         let rsp = self

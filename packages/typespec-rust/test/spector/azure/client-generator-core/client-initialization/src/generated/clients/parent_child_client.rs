@@ -87,7 +87,7 @@ impl ParentChildClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from(
-            "azure/client-generator-core/client-initialization/child-client/{blobName}",
+            "/azure/client-generator-core/client-initialization/child-client/{blobName}",
         );
         path = path.replace("{blobName}", &self.blob_name);
         url.append_path(&path);
@@ -120,7 +120,7 @@ impl ParentChildClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/client-generator-core/client-initialization/child-client/{blobName}/get-standalone");
+        let mut path = String::from("/azure/client-generator-core/client-initialization/child-client/{blobName}/get-standalone");
         path = path.replace("{blobName}", &self.blob_name);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
@@ -156,7 +156,7 @@ impl ParentChildClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from(
-            "azure/client-generator-core/client-initialization/child-client/{blobName}/with-query",
+            "/azure/client-generator-core/client-initialization/child-client/{blobName}/with-query",
         );
         path = path.replace("{blobName}", &self.blob_name);
         url.append_path(&path);

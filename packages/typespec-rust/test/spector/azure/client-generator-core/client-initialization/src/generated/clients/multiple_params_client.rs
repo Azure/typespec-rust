@@ -92,7 +92,7 @@ impl MultipleParamsClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path(
-            "azure/client-generator-core/client-initialization/multiple-params/with-body",
+            "/azure/client-generator-core/client-initialization/multiple-params/with-body",
         );
         url.query_pairs_mut().append_pair("region", &self.region);
         let mut request = Request::new(url, Method::Post);
@@ -131,7 +131,7 @@ impl MultipleParamsClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path(
-            "azure/client-generator-core/client-initialization/multiple-params/with-query",
+            "/azure/client-generator-core/client-initialization/multiple-params/with-query",
         );
         url.query_pairs_mut().append_pair("id", id);
         url.query_pairs_mut().append_pair("region", &self.region);

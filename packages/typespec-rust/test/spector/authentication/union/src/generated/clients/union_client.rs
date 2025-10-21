@@ -89,7 +89,7 @@ impl UnionClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("authentication/union/validkey");
+        url.append_path("/authentication/union/validkey");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -120,7 +120,7 @@ impl UnionClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url.append_path("authentication/union/validtoken");
+        url.append_path("/authentication/union/validtoken");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

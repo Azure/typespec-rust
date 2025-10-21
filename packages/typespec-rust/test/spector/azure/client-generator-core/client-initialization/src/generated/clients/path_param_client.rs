@@ -87,7 +87,7 @@ impl PathParamClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path =
-            String::from("azure/client-generator-core/client-initialization/path/{blobName}");
+            String::from("/azure/client-generator-core/client-initialization/path/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         url.append_path(&path);
         let mut request = Request::new(url, Method::Delete);
@@ -122,7 +122,7 @@ impl PathParamClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from(
-            "azure/client-generator-core/client-initialization/path/{blobName}/get-standalone",
+            "/azure/client-generator-core/client-initialization/path/{blobName}/get-standalone",
         );
         path = path.replace("{blobName}", &self.blob_name);
         url.append_path(&path);
@@ -159,7 +159,7 @@ impl PathParamClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from(
-            "azure/client-generator-core/client-initialization/path/{blobName}/with-query",
+            "/azure/client-generator-core/client-initialization/path/{blobName}/with-query",
         );
         path = path.replace("{blobName}", &self.blob_name);
         url.append_path(&path);

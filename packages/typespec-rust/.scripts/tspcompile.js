@@ -158,6 +158,9 @@ generate('doc_tests', doc_tests, 'test/other/doc_tests');
 const enum_path_params = pkgRoot + 'test/tsp/EnumPathParams';
 generate('enum_path_params', enum_path_params, 'test/other/enum_path_params');
 
+const colliding_locals = pkgRoot + 'test/tsp/CollidingLocals';
+generate('colliding_locals', colliding_locals, 'test/other/colliding_locals');
+
 loopSpec(httpSpecsGroup, httpSpecs)
 loopSpec(azureHttpSpecsGroup, azureHttpSpecs)
 
@@ -195,9 +198,15 @@ function generate(crate, input, outputDir, additionalArgs) {
     }
   }
   sem.take(function() {
-    // default to main.tsp if a .tsp file isn't specified in the input
+    // if a tsp file isn't specified, first check
+    // for a client.tsp file. if that doesn't exist
+    // then fall back to main.tsp.
     if (input.lastIndexOf('.tsp') === -1) {
-      input += '/main.tsp';
+      if (fs.existsSync(input + '/client.tsp')) {
+        input += '/client.tsp';
+      } else {
+        input += '/main.tsp';
+      }
     }
     console.log('generating ' + input);
     const fullOutputDir = pkgRoot + outputDir;
