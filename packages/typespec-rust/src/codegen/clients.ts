@@ -860,7 +860,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
               break;
           }
         } else {
-          // skip borrowing by default as we borrow from format()
+          // skip borrowing by default as we borrow from format!()
           paramExpression = getHeaderPathQueryParamValue(use, pathParam, true, true);
           switch (pathParam.style) {
             case 'path':
