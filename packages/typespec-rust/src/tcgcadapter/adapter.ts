@@ -1331,7 +1331,7 @@ export class Adapter {
     }
 
     // maps tcgc method header/query params to their Rust method params
-    const paramsMap = new Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | rust.QueryScalarParameter>();
+    const paramsMap = new Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | QueryParamType>();
 
     for (const param of method.parameters) {
       // we need to translate from the method param to its underlying operation param.
@@ -1618,7 +1618,9 @@ export class Adapter {
 
     if (method.kind === 'paging') {
       // can't do this until the method has been completely adapted
-      (<rust.PageableMethod>rustMethod).strategy = this.adaptPageableMethodStrategy(method, paramsMap, responseHeadersMap);
+      const pageableMethod = <rust.PageableMethod>rustMethod;
+      pageableMethod.strategy = this.adaptPageableMethodStrategy(method, paramsMap, responseHeadersMap);
+      pageableMethod.reinjectedParams = this.adaptPageableMethodReinjectionParams(method, paramsMap);
     }
   }
 
@@ -1737,7 +1739,7 @@ export class Adapter {
    * @param respHeadersMap maps tcgc response headers to Rust response headers (needed for continuation token strategy)
    * @returns the pageable strategy
    */
-  private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | rust.QueryScalarParameter>, respHeadersMap: Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>): rust.PageableStrategyKind | undefined {
+  private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | QueryParamType>, respHeadersMap: Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>): rust.PageableStrategyKind | undefined {
     const buildNextLinkPath = (segments: Array<tcgc.SdkServiceResponseHeader | tcgc.SdkModelPropertyType>): Array<rust.ModelField> => {
       // build the field path for the next link segments
       const nextLinkPath = new Array<rust.ModelField>();
@@ -1772,6 +1774,8 @@ export class Adapter {
           const tokenParam = paramsMap.get(tokenReq);
           if (!tokenParam) {
             throw new AdapterError('InternalError', `missing continuation token request parameter name ${tokenResp.name} for operation ${method.name}`, method.__raw?.node);
+          } else if (tokenParam.kind !== 'headerScalar' && tokenParam.kind !== 'queryScalar') {
+            throw new AdapterError('InternalError', `unexpected continuation token request parameter kind ${tokenParam.kind} for operation ${method.name}`, method.__raw?.node);
           }
           requestToken = tokenParam;
           break;
@@ -1806,6 +1810,40 @@ export class Adapter {
       // operation is pageable but doesn't yet support fetching subsequent pages
       return undefined;
     }
+  }
+
+  /**
+   * returns the array of pageable method parameters for reinjection.
+   * if no parameters require reinjection, the array is empty.
+   * 
+   * @param method the pageable method
+   * @param paramsMap maps tcgc method params to Rust params
+   * @returns an array containing the method parameters for reinjection
+   */
+  private adaptPageableMethodReinjectionParams(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | QueryParamType>): Array<QueryParamType> {
+    if (!method.pagingMetadata.nextLinkReInjectedParametersSegments) {
+      return [];
+    }
+
+    const paramsForReinjection = new Array<rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter>();
+    for (const reinjectedParamSegment of method.pagingMetadata.nextLinkReInjectedParametersSegments) {
+      for (const reinjectedParam of reinjectedParamSegment) {
+        if (reinjectedParam.kind !== 'method') {
+          throw new Error('unexpected param kind');
+        }
+        const rustParam = paramsMap.get(reinjectedParam);
+        if (!rustParam) {
+          throw new AdapterError('InternalError', `missing reinjection parameter name ${reinjectedParam.name} for operation ${method.name}`, method.__raw?.node);
+        } else if (rustParam.kind === 'headerScalar') {
+          // we only care about the query params here.
+          // any header parameters are handled elsewhere.
+          continue;
+        }
+        paramsForReinjection.push(rustParam);
+      }
+    }
+
+    return paramsForReinjection;
   }
 
   /**
@@ -2334,3 +2372,5 @@ function hasClientNameDecorator(decorators: Array<tcgc.DecoratorInfo>): boolean 
 function isHttpStatusCodeRange(statusCode: http.HttpStatusCodeRange | number): statusCode is http.HttpStatusCodeRange {
   return (<http.HttpStatusCodeRange>statusCode).start !== undefined;
 }
+
+type QueryParamType = rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter;

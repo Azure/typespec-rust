@@ -13,9 +13,7 @@ use spector_corepage::{
 };
 
 #[tokio::test]
-#[should_panic]
 async fn list_with_parameterized_next_link() {
-    // TODO: https://github.com/Azure/typespec-rust/issues/420
     let client = PageClient::with_no_credential("http://localhost:3000", None).unwrap();
     let mut pager = client
         .list_with_parameterized_next_link(

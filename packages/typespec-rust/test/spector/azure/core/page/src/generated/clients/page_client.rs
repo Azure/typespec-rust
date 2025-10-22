@@ -238,7 +238,15 @@ impl PageClient {
         first_url.query_pairs_mut().append_pair("select", select);
         Ok(Pager::from_callback(move |next_link: PagerState<Url>| {
             let url = match next_link {
-                PagerState::More(next_link) => next_link,
+                PagerState::More(next_link) => {
+                    let mut next_link = next_link.clone();
+                    if let Some(include_pending) = options.include_pending {
+                        next_link
+                            .query_pairs_mut()
+                            .append_pair("includePending", &include_pending.to_string());
+                    }
+                    next_link
+                }
                 PagerState::Initial => first_url.clone(),
             };
             let mut request = Request::new(url, Method::Get);

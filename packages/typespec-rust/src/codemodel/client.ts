@@ -155,6 +155,9 @@ export interface PageableMethod extends HTTPMethodBase {
   /** the params passed to the method (excluding self). can be empty */
   params: Array<MethodParameter>;
 
+  /** the query params to be reinjected when fetching pages. can be empty */
+  reinjectedParams: Array<QueryCollectionParameter | QueryHashMapParameter | QueryScalarParameter>;
+
   /** the paged result */
   returns: types.Result<types.PageIterator | types.Pager>;
 
@@ -721,6 +724,7 @@ export class PageableMethod extends HTTPMethodBase implements PageableMethod {
     super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'pageable';
     this.params = new Array<MethodParameter>();
+    this.reinjectedParams = new Array<QueryCollectionParameter | QueryHashMapParameter | QueryScalarParameter>();
     this.options = options;
   }
 }

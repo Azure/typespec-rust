@@ -763,7 +763,7 @@ function getParamValueHelper(indent: helpers.indentation, param: rust.MethodPara
   if (param.optional && param.type.kind !== 'literal') {
     // optional params are in the unwrapped options local var
     const op = indent.get() + helpers.buildIfBlock(indent, {
-      condition: `let Some(${param.name}) = ${inClosure ? '&' : ''}options.${param.name}`,
+      condition: `let Some(${param.name}) = ${inClosure && nonCopyableType(param.type) ? '&' : ''}options.${param.name}`,
       body: setter,
     });
     return op + '\n';
@@ -1271,19 +1271,30 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
         body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
           pattern: `PagerState::More(${nextLinkName})`,
           body: (indent) => {
+            const cloneNextLink = `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
+            let content = '';
             if (paramGroups.apiVersion && paramGroups.apiVersion.kind === 'queryScalar') {
               const apiVersionKey = `"${paramGroups.apiVersion.key}"`;
               // there are no APIs to set/update an existing query parameter.
               // so, we filter the existing query params to remove the api-version
               // query param. we then add back the filtered set and then add the
               // api-version as specified on the client.
-              let setApiVerBody = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
-              setApiVerBody += `${indent.get()}let mut ${nextLinkName} = ${nextLinkName}.clone();\n`;
-              setApiVerBody += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
-              setApiVerBody += `${indent.get()}${nextLinkName}\n`;
-              return setApiVerBody;
+              content = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
+              content += cloneNextLink;
+              content += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
+            } else if (method.reinjectedParams.length > 0) {
+              // if we didn't clone it above, we'll need to clone it for this case
+              content += cloneNextLink;
             }
-            return `${indent.get()} ${nextLinkName}\n`;
+            // add query params for reinjection
+            for (const reinjectedParam of method.reinjectedParams) {
+              content += getParamValueHelper(indent, reinjectedParam, true, () => {
+                return `${indent.get()}${nextLinkName}.query_pairs_mut().append_pair("${reinjectedParam.key}", ${getHeaderPathQueryParamValue(use, reinjectedParam, false, false)});\n`;
+              });
+              break;
+            }
+            content += `${indent.get()}${nextLinkName}\n`;
+            return content;
           }
         }, {
           pattern: 'PagerState::Initial',
@@ -1684,7 +1695,7 @@ function getCollectionDelimiter(format: rust.CollectionFormat): string {
   }
 }
 
-/** returns true if the type isn't copyable thus needs to be cloned */
+/** returns true if the type isn't copyable thus needs to be cloned or borrowed */
 function nonCopyableType(type: rust.Type): boolean {
   const unwrappedType = shared.unwrapOption(type);
   switch (unwrappedType.kind) {
