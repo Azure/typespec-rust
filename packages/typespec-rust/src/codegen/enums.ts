@@ -21,12 +21,12 @@ export interface Enums {
 }
 
 /**
- * returns the emitted enum types, or undefined if the
+ * returns the emitted enum types, or empty if the
  * crate contains no enum types.
  * 
  * @param crate the crate for which to emit enums
  * @param context the context for the provided crate
- * @returns the enum models or undefined
+ * @returns the enum models or empty
  */
 export function emitEnums(crate: rust.Crate, context: Context): Enums {
   if (crate.enums.length === 0) {
@@ -40,18 +40,21 @@ export function emitEnums(crate: rust.Crate, context: Context): Enums {
   };
 }
 
-function emitEnumsPublic(crate: rust.Crate): helpers.Module | undefined {
-
-  const use = new Use('models');
+/**
+ * emits the public definitions for enums
+ * 
+ * @param crate the crate for which to emit enums
+ * @returns the public enum definitions
+ */
+function emitEnumsPublic(crate: rust.Crate): helpers.Module {
   const indent = new helpers.indentation();
 
   let body = '';
   for (const rustEnum of crate.enums) {
-    body += emitEnumPublicDefinitions(use, rustEnum, indent);
+    body += emitEnumPublicDefinitions(indent, rustEnum);
   }
 
   let content = helpers.contentPreamble();
-  content += use.text();
   content += body;
 
   return {
@@ -60,14 +63,19 @@ function emitEnumsPublic(crate: rust.Crate): helpers.Module | undefined {
   };
 }
 
-function emitEnumsSerde(crate: rust.Crate): helpers.Module | undefined {
-
-  const use = new Use('models');
+/**
+ * emits the serde helpers for enums
+ * 
+ * @param crate the crate for which to emit serde helpers
+ * @returns the enum serde helpers
+ */
+function emitEnumsSerde(crate: rust.Crate): helpers.Module {
+  const use = new Use('modelsOther');
   const indent = new helpers.indentation();
 
   let body = '';
   for (const rustEnum of crate.enums) {
-    body += emitEnumSerdeDefinitions(use, rustEnum, indent);
+    body += emitEnumSerdeDefinitions(indent, use, rustEnum);
   }
 
   let content = helpers.contentPreamble();
@@ -80,14 +88,20 @@ function emitEnumsSerde(crate: rust.Crate): helpers.Module | undefined {
   };
 }
 
-function emitEnumsImpls(crate: rust.Crate, context: Context): helpers.Module | undefined {
-
-  const use = new Use('models');
+/**
+ * emits the trait impls for enums
+ * 
+ * @param crate the crate for which to emit trait impls
+ * @param context the context for the provided crate
+ * @returns the enum trait impls
+ */
+function emitEnumsImpls(crate: rust.Crate, context: Context): helpers.Module {
+  const use = new Use('modelsOther');
   const indent = new helpers.indentation();
 
   let body = '';
   for (const rustEnum of crate.enums) {
-    body += emitEnumImplDefinitions(use, rustEnum, indent);
+    body += emitEnumImplDefinitions(indent, use, rustEnum);
   }
 
   // emit impls as required
@@ -105,8 +119,14 @@ function emitEnumsImpls(crate: rust.Crate, context: Context): helpers.Module | u
   };
 }
 
-function emitEnumPublicDefinitions(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
-
+/**
+ * emits the public enum definitions
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param rustEnum the enum for which to emit the public definition
+ * @returns the public definition text
+ */
+function emitEnumPublicDefinitions(indent: helpers.indentation, rustEnum: rust.Enum): string {
   let body = '';
   // The formatDocComment function adds a trailing \n we don't want.
   const docs = helpers.formatDocComment(rustEnum.docs, false);
@@ -139,11 +159,16 @@ function emitEnumPublicDefinitions(use: Use, rustEnum: rust.Enum, indent: helper
   return body;
 }
 
-
-function emitEnumImplDefinitions(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
-  // Now add conversions to and from &str, Display, Serialize, Deserialize
-
-  use.add(`crate`, `models::${rustEnum.name}`);
+/**
+ * emits various trait impls for an enum
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param use the use statement builder currently in scope
+ * @param rustEnum the enum for which to emit trait impls
+ * @returns the trait impls text
+ */
+function emitEnumImplDefinitions(indent: helpers.indentation, use: Use, rustEnum: rust.Enum): string {
+  use.addForType(rustEnum);
 
   let body = '';
   if (rustEnum.extensible) {
@@ -172,7 +197,7 @@ function emitEnumImplDefinitions(use: Use, rustEnum: rust.Enum, indent: helpers.
     use.add('std', 'convert::Infallible');
     body += indent.get() + `type Err = Infallible;\n`;
   } else {
-    use.add('azure_core', 'error::Error', 'error::ErrorKind');
+    use.add('azure_core::error', 'Error', 'ErrorKind');
     body += indent.get() + `type Err = Error;\n`;
   }
   body += indent.get() + `fn from_str(s: &str) -> ::core::result::Result<Self, <Self as FromStr>::Err> {\n`;
@@ -215,7 +240,7 @@ function emitEnumImplDefinitions(use: Use, rustEnum: rust.Enum, indent: helpers.
   body += indent.pop().get() + `}\n`; // end fn
   body += indent.pop().get() + `}\n\n`; // end impl
 
-  use.add("std", "fmt::Display", "fmt::Formatter");
+  use.add("std::fmt", "Display", "Formatter");
   body += indent.get() + `impl Display for ${rustEnum.name} {\n`;
   indent.push();
   body += indent.get() + `fn fmt(&self, f: &mut Formatter<'_>) -> ::std::fmt::Result {\n`;
@@ -241,10 +266,18 @@ function emitEnumImplDefinitions(use: Use, rustEnum: rust.Enum, indent: helpers.
   return body;
 }
 
-function emitEnumSerdeDefinitions(use: Use, rustEnum: rust.Enum, indent: helpers.indentation): string {
-  use.add(`crate`, `models::${rustEnum.name}`);
-
+/**
+ * emits the serde helper definitions for an enum
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param use the use statement builder currently in scope
+ * @param rustEnum the enum for which to emit the serde helpers
+ * @returns the serde helpers text
+ */
+function emitEnumSerdeDefinitions(indent: helpers.indentation, use: Use, rustEnum: rust.Enum): string {
+  use.addForType(rustEnum);
   use.add('serde', 'Deserialize', 'Serialize', 'Serializer', 'Deserializer');
+
   let body = '';
   body += indent.get() + `impl<'de> Deserialize<'de> for ${rustEnum.name} {\n`;
   indent.push();
