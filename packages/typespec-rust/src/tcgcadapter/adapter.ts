@@ -1620,7 +1620,9 @@ export class Adapter {
       // can't do this until the method has been completely adapted
       const pageableMethod = <rust.PageableMethod>rustMethod;
       pageableMethod.strategy = this.adaptPageableMethodStrategy(method, paramsMap, responseHeadersMap);
-      pageableMethod.reinjectedParams = this.adaptPageableMethodReinjectionParams(method, paramsMap);
+      if (pageableMethod.strategy?.kind === 'nextLink') {
+        pageableMethod.strategy.reinjectedParams = this.adaptPageableMethodReinjectionParams(method, paramsMap);
+      }
     }
   }
 

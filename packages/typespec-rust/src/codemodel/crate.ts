@@ -114,8 +114,8 @@ export class Crate implements Crate {
       for (const method of client.methods) {
         if (method.kind === 'clientaccessor') {
           continue;
-        } else if (method.kind === 'pageable') {
-          method.reinjectedParams.sort((a: client.MethodParameter, b: client.MethodParameter) => sortAscending(a.name, b.name));
+        } else if (method.kind === 'pageable' && method.strategy?.kind === 'nextLink') {
+          method.strategy.reinjectedParams.sort((a: client.MethodParameter, b: client.MethodParameter) => sortAscending(a.name, b.name));
         }
         method.options.type.fields.sort((a: types.StructField, b: types.StructField) => { return sortAscending(a.name, b.name); });
         method.responseHeaders?.headers.sort((a: client.ResponseHeader, b: client.ResponseHeader) => sortAscending(a.header, b.header));

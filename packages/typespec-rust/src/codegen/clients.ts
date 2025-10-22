@@ -1267,6 +1267,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       }
       case 'nextLink': {
         const nextLinkName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
+        const reinjectedParams = method.strategy.reinjectedParams;
         body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>| {\n`;
         body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
           pattern: `PagerState::More(${nextLinkName})`,
@@ -1282,12 +1283,12 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
               content = `${indent.get()}let qp = ${nextLinkName}.query_pairs().filter(|(name, _)| name.ne(${apiVersionKey}));\n`;
               content += cloneNextLink;
               content += `${indent.get()}${nextLinkName}.query_pairs_mut().clear().extend_pairs(qp).append_pair(${apiVersionKey}, &${paramGroups.apiVersion.name});\n`;
-            } else if (method.reinjectedParams.length > 0) {
+            } else if (reinjectedParams.length > 0) {
               // if we didn't clone it above, we'll need to clone it for this case
               content += cloneNextLink;
             }
             // add query params for reinjection
-            for (const reinjectedParam of method.reinjectedParams) {
+            for (const reinjectedParam of reinjectedParams) {
               content += getParamValueHelper(indent, reinjectedParam, true, () => {
                 return `${indent.get()}${nextLinkName}.query_pairs_mut().append_pair("${reinjectedParam.key}", ${getHeaderPathQueryParamValue(use, reinjectedParam, false, false)});\n`;
               });
