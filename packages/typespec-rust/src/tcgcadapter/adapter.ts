@@ -1405,7 +1405,7 @@ export class Adapter {
     for (const opParam of allOpParams) {
       if (opParam.onClient) {
         const adaptedParam = this.adaptMethodParameter(opParam);
-        let found = false;
+        /*let found = false;
         for (const field of rustClient.fields) {
           if (field.name === adaptedParam.name) {
             found = true;
@@ -1414,7 +1414,7 @@ export class Adapter {
         }
         if (!found) {
           throw new AdapterError('InternalError', `method ${method.name} is missing client backing field for operation parameter ${opParam.name}`, method.__raw?.node);
-        }
+        }*/
         adaptedParam.docs = this.adaptDocs(opParam.summary, opParam.doc);
         rustMethod.params.push(adaptedParam);
       }

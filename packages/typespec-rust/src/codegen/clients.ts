@@ -1653,6 +1653,16 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
     }
   }
 
+  // borrowing truth table
+  //
+  // when param.location === 'client'
+  //    fromSelf && !optional: mustBorrow = true
+  //     fromSelf && optional: mustBorrow = false (already borrowed in "if let Some()")
+  //   !fromSelf && !optional: mustBorrow = ???
+  //    !fromSelf && optional: mustBorrow = ???
+  //
+  // when param.location === 'method'
+  //   
   switch (param.kind) {
     case 'headerCollection':
     case 'headerHashMap':
