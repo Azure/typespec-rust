@@ -1291,7 +1291,6 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
               content += getParamValueHelper(indent, reinjectedParam, true, () => {
                 return `${indent.get()}${nextLinkName}.query_pairs_mut().append_pair("${reinjectedParam.key}", ${getHeaderPathQueryParamValue(use, reinjectedParam, false, false)});\n`;
               });
-              break;
             }
             content += `${indent.get()}${nextLinkName}\n`;
             return content;
