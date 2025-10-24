@@ -10,7 +10,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
-        XmlFormat,
+        UrlExt, XmlFormat,
     },
     tracing, Result,
 };
@@ -40,7 +40,7 @@ impl XmlSimpleModelValueClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("payload/xml/simpleModel")?;
+        url.append_path("/payload/xml/simpleModel");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
         let rsp = self
@@ -72,7 +72,7 @@ impl XmlSimpleModelValueClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("payload/xml/simpleModel")?;
+        url.append_path("/payload/xml/simpleModel");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.set_body(input);

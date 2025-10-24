@@ -12,6 +12,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -80,7 +81,7 @@ impl RoutesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/fixed")?;
+        url.append_path("/routes/fixed");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

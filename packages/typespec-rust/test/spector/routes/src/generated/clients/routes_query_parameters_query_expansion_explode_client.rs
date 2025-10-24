@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 use std::collections::HashMap;
@@ -40,7 +40,7 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/query-expansion/explode/array")?;
+        url.append_path("/routes/query/query-expansion/explode/array");
         for p in param.iter() {
             url.query_pairs_mut().append_pair("param", p);
         }
@@ -74,7 +74,7 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/query-expansion/explode/primitive")?;
+        url.append_path("/routes/query/query-expansion/explode/primitive");
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -100,13 +100,13 @@ impl RoutesQueryParametersQueryExpansionExplodeClient {
     #[tracing::function("Routes.QueryParameters.QueryExpansion.Explode.record")]
     pub async fn record(
         &self,
-        param: HashMap<String, i32>,
+        param: &HashMap<String, i32>,
         options: Option<RoutesQueryParametersQueryExpansionExplodeClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/query-expansion/explode/record")?;
+        url.append_path("/routes/query/query-expansion/explode/record");
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.0);

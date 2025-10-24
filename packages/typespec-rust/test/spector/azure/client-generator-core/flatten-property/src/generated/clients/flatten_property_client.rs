@@ -12,7 +12,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response,
-        Url,
+        Url, UrlExt,
     },
     tracing, Result,
 };
@@ -82,7 +82,7 @@ impl FlattenPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/client-generator-core/flatten-property/flattenModel")?;
+        url.append_path("/azure/client-generator-core/flatten-property/flattenModel");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -116,7 +116,7 @@ impl FlattenPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/client-generator-core/flatten-property/nestedFlattenModel")?;
+        url.append_path("/azure/client-generator-core/flatten-property/nestedFlattenModel");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

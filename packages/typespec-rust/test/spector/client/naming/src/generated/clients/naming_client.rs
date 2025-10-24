@@ -18,7 +18,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent,
-        Response, Url,
+        Response, Url, UrlExt,
     },
     tracing, Result,
 };
@@ -88,7 +88,7 @@ impl NamingClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("client/naming/property/client")?;
+        url.append_path("/client/naming/property/client");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -120,7 +120,7 @@ impl NamingClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("client/naming/operation")?;
+        url.append_path("/client/naming/operation");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -151,7 +151,7 @@ impl NamingClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("client/naming/property/compatible-with-encoded-name")?;
+        url.append_path("/client/naming/property/compatible-with-encoded-name");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -202,7 +202,7 @@ impl NamingClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("client/naming/property/language")?;
+        url.append_path("/client/naming/property/language");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -235,7 +235,7 @@ impl NamingClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("client/naming/parameter")?;
+        url.append_path("/client/naming/parameter");
         url.query_pairs_mut()
             .append_pair("defaultName", client_name);
         let mut request = Request::new(url, Method::Post);
@@ -268,7 +268,7 @@ impl NamingClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("client/naming/header")?;
+        url.append_path("/client/naming/header");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("default-name", client_name);
         let rsp = self
@@ -322,7 +322,7 @@ impl NamingClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("client/naming/header")?;
+        url.append_path("/client/naming/header");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

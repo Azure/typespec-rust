@@ -9,7 +9,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent,
-        Response, Url,
+        Response, Url, UrlExt,
     },
     tracing, Result,
 };
@@ -80,7 +80,7 @@ impl DurationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/encode/duration/duration-constant")?;
+        url.append_path("/azure/encode/duration/duration-constant");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

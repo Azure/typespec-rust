@@ -12,6 +12,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -88,9 +89,9 @@ impl NotVersionedClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path =
-            String::from("server/versions/not-versioned/with-path-api-version/{apiVersion}");
+            String::from("/server/versions/not-versioned/with-path-api-version/{apiVersion}");
         path = path.replace("{apiVersion}", api_version);
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline
@@ -121,7 +122,7 @@ impl NotVersionedClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("server/versions/not-versioned/with-query-api-version")?;
+        url.append_path("/server/versions/not-versioned/with-query-api-version");
         url.query_pairs_mut()
             .append_pair("api-version", api_version);
         let mut request = Request::new(url, Method::Head);
@@ -153,7 +154,7 @@ impl NotVersionedClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("server/versions/not-versioned/without-api-version")?;
+        url.append_path("/server/versions/not-versioned/without-api-version");
         let mut request = Request::new(url, Method::Head);
         let rsp = self
             .pipeline

@@ -33,7 +33,7 @@ use azure_core::{
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
         AsyncResponse, ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions,
-        PipelineStreamOptions, Request, RequestContent, Response, Url, XmlFormat,
+        PipelineStreamOptions, Request, RequestContent, Response, Url, UrlExt, XmlFormat,
     },
     time::to_rfc7231,
     tracing, Result,
@@ -149,10 +149,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("comp", "copy")
             .append_key_only("copyid");
@@ -232,10 +232,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_key_only("acquire")
             .append_pair("comp", "lease");
@@ -332,10 +332,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_key_only("break")
             .append_pair("comp", "lease");
@@ -433,10 +433,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_key_only("change")
             .append_pair("comp", "lease");
@@ -538,10 +538,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("comp", "copy")
             .append_key_only("sync");
@@ -693,10 +693,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "snapshot");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -783,10 +783,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         if let Some(blob_delete_type) = options.blob_delete_type {
             url.query_pairs_mut()
                 .append_pair("deletetype", blob_delete_type.as_ref());
@@ -880,10 +880,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("comp", "immutabilityPolicies");
         if let Some(snapshot) = options.snapshot {
@@ -999,10 +999,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
         }
@@ -1128,10 +1128,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_key_only("blob")
             .append_pair("comp", "properties")
@@ -1283,10 +1283,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
         }
@@ -1384,10 +1384,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "tags");
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
@@ -1476,10 +1476,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("comp", "lease")
             .append_key_only("release");
@@ -1573,10 +1573,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("comp", "lease")
             .append_key_only("renew");
@@ -1668,10 +1668,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "expiry");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -1747,10 +1747,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("comp", "immutabilityPolicies");
         if let Some(snapshot) = options.snapshot {
@@ -1842,10 +1842,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "legalhold");
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
@@ -1893,10 +1893,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "metadata");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -1975,10 +1975,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_key_only("SetHTTPHeaders")
             .append_pair("comp", "properties");
@@ -2082,10 +2082,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "tags");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -2146,10 +2146,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "tier");
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
@@ -2244,10 +2244,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
@@ -2382,10 +2382,10 @@ impl BlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "undelete");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()

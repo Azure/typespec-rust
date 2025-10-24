@@ -11,7 +11,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent,
-        Response, Url,
+        Response, Url, UrlExt,
     },
     tracing, Result,
 };
@@ -90,8 +90,9 @@ impl MultipleParamsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url
-            .join("azure/client-generator-core/client-initialization/multiple-params/with-body")?;
+        url.append_path(
+            "/azure/client-generator-core/client-initialization/multiple-params/with-body",
+        );
         url.query_pairs_mut().append_pair("region", &self.region);
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
@@ -128,8 +129,9 @@ impl MultipleParamsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url
-            .join("azure/client-generator-core/client-initialization/multiple-params/with-query")?;
+        url.append_path(
+            "/azure/client-generator-core/client-initialization/multiple-params/with-query",
+        );
         url.query_pairs_mut().append_pair("id", id);
         url.query_pairs_mut().append_pair("region", &self.region);
         let mut request = Request::new(url, Method::Get);

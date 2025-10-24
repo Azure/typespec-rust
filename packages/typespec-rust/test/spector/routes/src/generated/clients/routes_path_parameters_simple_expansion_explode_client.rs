@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 use std::collections::HashMap;
@@ -40,9 +40,9 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/simple/explode/array{param}");
+        let mut path = String::from("/routes/path/simple/explode/array{param}");
         path = path.replace("{param}", &param.join(","));
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -79,9 +79,9 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/simple/explode/primitive{param}");
+        let mut path = String::from("/routes/path/simple/explode/primitive{param}");
         path = path.replace("{param}", param);
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -106,13 +106,13 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
     #[tracing::function("Routes.PathParameters.SimpleExpansion.Explode.record")]
     pub async fn record(
         &self,
-        param: HashMap<String, i32>,
+        param: &HashMap<String, i32>,
         options: Option<RoutesPathParametersSimpleExpansionExplodeClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/simple/explode/record{param}");
+        let mut path = String::from("/routes/path/simple/explode/record{param}");
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.0);
@@ -125,7 +125,7 @@ impl RoutesPathParametersSimpleExpansionExplodeClient {
                     .join(","),
             );
         }
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

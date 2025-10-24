@@ -14,7 +14,7 @@ use azure_core::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         ClientOptions, Method, Pipeline, PipelineSendOptions, Poller, RawResponse, Request,
-        RequestContent, Url,
+        RequestContent, Url, UrlExt,
     },
     json, tracing, Result,
 };
@@ -117,9 +117,9 @@ impl StandardClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/core/lro/standard/users/{name}");
+        let mut path = String::from("/azure/core/lro/standard/users/{name}");
         path = path.replace("{name}", name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
@@ -232,9 +232,9 @@ impl StandardClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/core/lro/standard/users/{name}");
+        let mut path = String::from("/azure/core/lro/standard/users/{name}");
         path = path.replace("{name}", name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
@@ -346,9 +346,9 @@ impl StandardClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/core/lro/standard/users/{name}:export");
+        let mut path = String::from("/azure/core/lro/standard/users/{name}:export");
         path = path.replace("{name}", name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         url.query_pairs_mut().append_pair("format", format);

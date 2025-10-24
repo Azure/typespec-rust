@@ -12,7 +12,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         AsyncResponse, Method, Pipeline, PipelineSendOptions, PipelineStreamOptions, Request,
-        Response, Url,
+        Response, Url, UrlExt,
     },
     tracing, Result,
 };
@@ -41,7 +41,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/bytes/body/response/base64")?;
+        url.append_path("/encode/bytes/body/response/base64");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -72,7 +72,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/bytes/body/response/base64url")?;
+        url.append_path("/encode/bytes/body/response/base64url");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -103,7 +103,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/bytes/body/response/custom-content-type")?;
+        url.append_path("/encode/bytes/body/response/custom-content-type");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
         let rsp = self
@@ -134,7 +134,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/bytes/body/response/default")?;
+        url.append_path("/encode/bytes/body/response/default");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/octet-stream");
         let rsp = self
@@ -165,7 +165,7 @@ impl BytesResponseBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/bytes/body/response/octet-stream")?;
+        url.append_path("/encode/bytes/body/response/octet-stream");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/octet-stream");
         let rsp = self

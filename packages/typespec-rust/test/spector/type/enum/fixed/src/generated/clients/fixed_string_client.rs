@@ -11,6 +11,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -40,7 +41,7 @@ impl FixedStringClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/enum/fixed/string/known-value")?;
+        url.append_path("/type/enum/fixed/string/known-value");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -74,7 +75,7 @@ impl FixedStringClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/enum/fixed/string/known-value")?;
+        url.append_path("/type/enum/fixed/string/known-value");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -109,7 +110,7 @@ impl FixedStringClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/enum/fixed/string/unknown-value")?;
+        url.append_path("/type/enum/fixed/string/unknown-value");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

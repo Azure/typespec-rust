@@ -8,6 +8,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -37,7 +38,7 @@ impl ArrayInt64ValueClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/array/int64")?;
+        url.append_path("/type/array/int64");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -69,7 +70,7 @@ impl ArrayInt64ValueClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/array/int64")?;
+        url.append_path("/type/array/int64");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

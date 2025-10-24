@@ -14,7 +14,7 @@ use crate::generated::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -43,7 +43,7 @@ impl RoutesQueryParametersClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/annotation-only")?;
+        url.append_path("/routes/query/annotation-only");
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -75,7 +75,7 @@ impl RoutesQueryParametersClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/explicit")?;
+        url.append_path("/routes/query/explicit");
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -129,7 +129,7 @@ impl RoutesQueryParametersClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/template-only")?;
+        url.append_path("/routes/query/template-only");
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
         let rsp = self

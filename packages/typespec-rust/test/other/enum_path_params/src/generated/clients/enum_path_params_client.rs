@@ -12,6 +12,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -86,13 +87,13 @@ impl EnumPathParamsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.bogus_url.clone();
-        let mut path = String::from("optional/{shape}/{value}");
+        let mut path = String::from("/optional/{shape}/{value}");
         path = path.replace("{shape}", shape.as_ref());
         path = match options.value {
             Some(value) => path.replace("{value}", value.as_ref()),
             None => path.replace("{value}", ""),
         };
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -123,13 +124,13 @@ impl EnumPathParamsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.bogus_url.clone();
-        let mut path = String::from("fixed/{shape}/{value}");
+        let mut path = String::from("/fixed/{shape}/{value}");
         path = path.replace("{shape}", shape.as_ref());
         path = match options.value {
             Some(value) => path.replace("{value}", value.as_ref()),
             None => path.replace("{value}", ""),
         };
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

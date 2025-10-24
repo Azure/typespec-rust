@@ -6,7 +6,7 @@
 use crate::generated::models::RoutesInInterfaceClientFixedOptions;
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -34,7 +34,7 @@ impl RoutesInInterfaceClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/in-interface/fixed")?;
+        url.append_path("/routes/in-interface/fixed");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

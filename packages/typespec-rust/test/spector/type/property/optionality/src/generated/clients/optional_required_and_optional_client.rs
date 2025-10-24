@@ -13,6 +13,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -43,7 +44,7 @@ impl OptionalRequiredAndOptionalClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/property/optional/requiredAndOptional/all")?;
+        url.append_path("/type/property/optional/requiredAndOptional/all");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -75,7 +76,7 @@ impl OptionalRequiredAndOptionalClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/property/optional/requiredAndOptional/requiredOnly")?;
+        url.append_path("/type/property/optional/requiredAndOptional/requiredOnly");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -108,7 +109,7 @@ impl OptionalRequiredAndOptionalClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/property/optional/requiredAndOptional/all")?;
+        url.append_path("/type/property/optional/requiredAndOptional/all");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -142,7 +143,7 @@ impl OptionalRequiredAndOptionalClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/property/optional/requiredAndOptional/requiredOnly")?;
+        url.append_path("/type/property/optional/requiredAndOptional/requiredOnly");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

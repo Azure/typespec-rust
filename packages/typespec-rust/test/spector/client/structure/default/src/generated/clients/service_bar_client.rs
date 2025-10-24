@@ -6,7 +6,7 @@
 use crate::generated::models::{ServiceBarClientFiveOptions, ServiceBarClientSixOptions};
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -34,7 +34,7 @@ impl ServiceBarClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("five")?;
+        url.append_path("/five");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -64,7 +64,7 @@ impl ServiceBarClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("six")?;
+        url.append_path("/six");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

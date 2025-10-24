@@ -10,6 +10,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -40,7 +41,7 @@ impl ScalarDecimal128VerifyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/scalar/decimal128/prepare_verify")?;
+        url.append_path("/type/scalar/decimal128/prepare_verify");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -72,7 +73,7 @@ impl ScalarDecimal128VerifyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/scalar/decimal128/verify")?;
+        url.append_path("/type/scalar/decimal128/verify");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

@@ -8,6 +8,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -37,7 +38,7 @@ impl BasicImplicitBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("parameters/basic/implicit-body/simple")?;
+        url.append_path("/parameters/basic/implicit-body/simple");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         let body: RequestContent<SimpleRequest> = SimpleRequest { name }.try_into()?;

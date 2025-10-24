@@ -15,7 +15,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent,
-        Response, Url,
+        Response, Url, UrlExt,
     },
     tracing, Result,
 };
@@ -96,7 +96,7 @@ impl BodyOptionalityClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("parameters/body-optionality/required-explicit")?;
+        url.append_path("/parameters/body-optionality/required-explicit");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -129,7 +129,7 @@ impl BodyOptionalityClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("parameters/body-optionality/required-implicit")?;
+        url.append_path("/parameters/body-optionality/required-implicit");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         let body: RequestContent<BodyModel> = BodyModel { name: Some(name) }.try_into()?;

@@ -48,7 +48,7 @@ impl TwoOperationGroupClient {
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        let mut host = String::from("client/structure/{client}/");
+        let mut host = String::from("client/structure/{client}");
         host = host.replace("{client}", client.as_ref());
         endpoint = endpoint.join(&host)?;
         Ok(Self {

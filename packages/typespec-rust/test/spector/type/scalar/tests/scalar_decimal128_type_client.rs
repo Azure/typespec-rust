@@ -10,7 +10,7 @@ async fn request_parameter() {
     let client = ScalarClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client
         .get_scalar_decimal128_type_client()
-        .request_parameter(Decimal::from_f32(0.33333).unwrap(), None)
+        .request_parameter(&Decimal::from_f32(0.33333).unwrap(), None)
         .await
         .unwrap();
 

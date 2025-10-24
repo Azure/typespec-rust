@@ -14,7 +14,7 @@ use azure_core::{
     http::{
         pager::{PagerResult, PagerState},
         ClientOptions, Method, NoFormat, Pager, Pipeline, PipelineSendOptions, RawResponse,
-        Request, RequestContent, Response, Url,
+        Request, RequestContent, Response, Url, UrlExt,
     },
     json, tracing, Result,
 };
@@ -91,9 +91,9 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/core/basic/users/{id}");
+        let mut path = String::from("/azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Put);
@@ -135,9 +135,9 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/core/basic/users/{id}");
+        let mut path = String::from("/azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Patch);
@@ -177,9 +177,9 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/core/basic/users/{id}");
+        let mut path = String::from("/azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
@@ -218,9 +218,9 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/core/basic/users/{id}:export");
+        let mut path = String::from("/azure/core/basic/users/{id}:export");
         path = path.replace("{id}", &id.to_string());
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         url.query_pairs_mut().append_pair("format", format);
@@ -259,7 +259,7 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/core/basic/users:exportallusers")?;
+        url.append_path("/azure/core/basic/users:exportallusers");
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         url.query_pairs_mut().append_pair("format", format);
@@ -298,9 +298,9 @@ impl BasicClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/core/basic/users/{id}");
+        let mut path = String::from("/azure/core/basic/users/{id}");
         path = path.replace("{id}", &id.to_string());
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -333,7 +333,7 @@ impl BasicClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url = first_url.join("azure/core/basic/users")?;
+        first_url.append_path("/azure/core/basic/users");
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);

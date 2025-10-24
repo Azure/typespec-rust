@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     time::{to_rfc3339, to_rfc7231, OffsetDateTime},
     tracing, Result,
 };
@@ -34,15 +34,15 @@ impl DatetimeQueryClient {
     #[tracing::function("Encode.Datetime.Query.default")]
     pub async fn default(
         &self,
-        value: OffsetDateTime,
+        value: &OffsetDateTime,
         options: Option<DatetimeQueryClientDefaultOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/query/default")?;
+        url.append_path("/encode/datetime/query/default");
         url.query_pairs_mut()
-            .append_pair("value", &to_rfc3339(&value));
+            .append_pair("value", &to_rfc3339(value));
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -67,15 +67,15 @@ impl DatetimeQueryClient {
     #[tracing::function("Encode.Datetime.Query.rfc3339")]
     pub async fn rfc3339(
         &self,
-        value: OffsetDateTime,
+        value: &OffsetDateTime,
         options: Option<DatetimeQueryClientRfc3339Options<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/query/rfc3339")?;
+        url.append_path("/encode/datetime/query/rfc3339");
         url.query_pairs_mut()
-            .append_pair("value", &to_rfc3339(&value));
+            .append_pair("value", &to_rfc3339(value));
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -100,15 +100,15 @@ impl DatetimeQueryClient {
     #[tracing::function("Encode.Datetime.Query.rfc7231")]
     pub async fn rfc7231(
         &self,
-        value: OffsetDateTime,
+        value: &OffsetDateTime,
         options: Option<DatetimeQueryClientRfc7231Options<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/query/rfc7231")?;
+        url.append_path("/encode/datetime/query/rfc7231");
         url.query_pairs_mut()
-            .append_pair("value", &to_rfc7231(&value));
+            .append_pair("value", &to_rfc7231(value));
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -133,13 +133,13 @@ impl DatetimeQueryClient {
     #[tracing::function("Encode.Datetime.Query.unixTimestamp")]
     pub async fn unix_timestamp(
         &self,
-        value: OffsetDateTime,
+        value: &OffsetDateTime,
         options: Option<DatetimeQueryClientUnixTimestampOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/query/unix-timestamp")?;
+        url.append_path("/encode/datetime/query/unix-timestamp");
         url.query_pairs_mut()
             .append_pair("value", &value.unix_timestamp().to_string());
         let mut request = Request::new(url, Method::Get);
@@ -172,7 +172,7 @@ impl DatetimeQueryClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/query/unix-timestamp-array")?;
+        url.append_path("/encode/datetime/query/unix-timestamp-array");
         url.query_pairs_mut().append_pair(
             "value",
             &value

@@ -18,16 +18,17 @@ use crate::generated::models::{
     SpecialWordsModelsClientWithGlobalOptions, SpecialWordsModelsClientWithIfOptions,
     SpecialWordsModelsClientWithImportOptions, SpecialWordsModelsClientWithInOptions,
     SpecialWordsModelsClientWithIsOptions, SpecialWordsModelsClientWithLambdaOptions,
-    SpecialWordsModelsClientWithNotOptions, SpecialWordsModelsClientWithOptions,
-    SpecialWordsModelsClientWithOrOptions, SpecialWordsModelsClientWithPassOptions,
-    SpecialWordsModelsClientWithRaiseOptions, SpecialWordsModelsClientWithReturnOptions,
-    SpecialWordsModelsClientWithTryOptions, SpecialWordsModelsClientWithWhileOptions,
+    SpecialWordsModelsClientWithNotOptions, SpecialWordsModelsClientWithOrOptions,
+    SpecialWordsModelsClientWithPassOptions, SpecialWordsModelsClientWithRaiseOptions,
+    SpecialWordsModelsClientWithReturnOptions, SpecialWordsModelsClientWithTryOptions,
+    SpecialWordsModelsClientWithWhileOptions, SpecialWordsModelsClientWithWithOptions,
     SpecialWordsModelsClientWithYieldOptions, Try, While, With, Yield,
 };
 use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -58,7 +59,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/and")?;
+        url.append_path("/special-words/models/and");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -91,7 +92,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/as")?;
+        url.append_path("/special-words/models/as");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -124,7 +125,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/assert")?;
+        url.append_path("/special-words/models/assert");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -157,7 +158,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/async")?;
+        url.append_path("/special-words/models/async");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -190,7 +191,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/await")?;
+        url.append_path("/special-words/models/await");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -223,7 +224,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/break")?;
+        url.append_path("/special-words/models/break");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -256,7 +257,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/class")?;
+        url.append_path("/special-words/models/class");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -289,7 +290,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/constructor")?;
+        url.append_path("/special-words/models/constructor");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -322,7 +323,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/continue")?;
+        url.append_path("/special-words/models/continue");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -355,7 +356,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/def")?;
+        url.append_path("/special-words/models/def");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -388,7 +389,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/del")?;
+        url.append_path("/special-words/models/del");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -421,7 +422,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/elif")?;
+        url.append_path("/special-words/models/elif");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -454,7 +455,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/else")?;
+        url.append_path("/special-words/models/else");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -487,7 +488,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/except")?;
+        url.append_path("/special-words/models/except");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -520,7 +521,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/exec")?;
+        url.append_path("/special-words/models/exec");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -553,7 +554,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/finally")?;
+        url.append_path("/special-words/models/finally");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -586,7 +587,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/for")?;
+        url.append_path("/special-words/models/for");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -619,7 +620,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/from")?;
+        url.append_path("/special-words/models/from");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -652,7 +653,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/global")?;
+        url.append_path("/special-words/models/global");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -685,7 +686,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/if")?;
+        url.append_path("/special-words/models/if");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -718,7 +719,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/import")?;
+        url.append_path("/special-words/models/import");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -751,7 +752,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/in")?;
+        url.append_path("/special-words/models/in");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -784,7 +785,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/is")?;
+        url.append_path("/special-words/models/is");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -817,7 +818,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/lambda")?;
+        url.append_path("/special-words/models/lambda");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -850,7 +851,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/not")?;
+        url.append_path("/special-words/models/not");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -883,7 +884,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/or")?;
+        url.append_path("/special-words/models/or");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -916,7 +917,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/pass")?;
+        url.append_path("/special-words/models/pass");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -949,7 +950,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/raise")?;
+        url.append_path("/special-words/models/raise");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -982,7 +983,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/return")?;
+        url.append_path("/special-words/models/return");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -1015,7 +1016,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/try")?;
+        url.append_path("/special-words/models/try");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -1048,7 +1049,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/while")?;
+        url.append_path("/special-words/models/while");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -1076,12 +1077,12 @@ impl SpecialWordsModelsClient {
     pub async fn with_with(
         &self,
         body: RequestContent<With>,
-        options: Option<SpecialWordsModelsClientWithOptions<'_>>,
+        options: Option<SpecialWordsModelsClientWithWithOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/with")?;
+        url.append_path("/special-words/models/with");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -1114,7 +1115,7 @@ impl SpecialWordsModelsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("special-words/models/yield")?;
+        url.append_path("/special-words/models/yield");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

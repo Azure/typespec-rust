@@ -11,7 +11,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         AsyncResponse, Method, Pipeline, PipelineSendOptions, PipelineStreamOptions, Request,
-        Response, Url,
+        Response, Url, UrlExt,
     },
     tracing, Result,
 };
@@ -40,7 +40,7 @@ impl ContentNegotiationDifferentBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("content-negotiation/different-body")?;
+        url.append_path("/content-negotiation/different-body");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -71,7 +71,7 @@ impl ContentNegotiationDifferentBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("content-negotiation/different-body")?;
+        url.append_path("/content-negotiation/different-body");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
         let rsp = self

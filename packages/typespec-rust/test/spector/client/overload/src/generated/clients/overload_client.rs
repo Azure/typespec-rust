@@ -9,7 +9,7 @@ use crate::generated::models::{
 use azure_core::{
     error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{ClientOptions, Method, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{ClientOptions, Method, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -77,7 +77,7 @@ impl OverloadClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("client/overload/resources")?;
+        url.append_path("/client/overload/resources");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -115,9 +115,9 @@ impl OverloadClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("client/overload/resources/{scope}");
+        let mut path = String::from("/client/overload/resources/{scope}");
         path = path.replace("{scope}", scope);
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self

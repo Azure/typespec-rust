@@ -14,7 +14,7 @@ use azure_core::{
 
 const NEXT_TOKEN: HeaderName = HeaderName::from_static("next-token");
 
-/// Provides access to typed response headers for [`PageableServerDrivenPaginationContinuationTokenClient::list_header_response_header()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_header_response_header())
+/// Provides access to typed response headers for [`PageableServerDrivenPaginationContinuationTokenClient::list_request_header_response_header()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_request_header_response_header())
 ///
 /// # Examples
 ///
@@ -40,7 +40,7 @@ impl RequestHeaderResponseHeaderResponseHeaders for Response<RequestHeaderRespon
     }
 }
 
-/// Provides access to typed response headers for [`PageableServerDrivenPaginationContinuationTokenClient::list_query_response_header()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_query_response_header())
+/// Provides access to typed response headers for [`PageableServerDrivenPaginationContinuationTokenClient::list_request_query_response_header()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_request_query_response_header())
 ///
 /// # Examples
 ///

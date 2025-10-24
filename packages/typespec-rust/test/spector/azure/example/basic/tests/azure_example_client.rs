@@ -6,12 +6,12 @@ use std::collections::HashMap;
 
 use spector_azurebasic::{
     models::{ActionRequest, ActionResponse, Model},
-    BasicClient,
+    AzureExampleClient,
 };
 
 #[tokio::test]
-async fn basic() {
-    let client = BasicClient::with_no_credential("http://localhost:3000", None).unwrap();
+async fn basic_action() {
+    let client = AzureExampleClient::with_no_credential("http://localhost:3000", None).unwrap();
     let body = ActionRequest {
         array_property: Some(vec!["item".to_string()]),
         model_property: Some(Model {
@@ -23,8 +23,7 @@ async fn basic() {
         string_property: Some("text".to_string()),
     };
     let resp = client
-        .get_basic_service_operation_group_client()
-        .basic(
+        .basic_action(
             "query",
             "header".to_string(),
             body.try_into().unwrap(),

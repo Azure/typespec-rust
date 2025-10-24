@@ -20,7 +20,7 @@ use azure_core::{
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
         AsyncResponse, ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions,
-        PipelineStreamOptions, Request, RequestContent, Response, Url, XmlFormat,
+        PipelineStreamOptions, Request, RequestContent, Response, Url, UrlExt, XmlFormat,
     },
     time::to_rfc7231,
     tracing, Bytes, Result,
@@ -153,10 +153,10 @@ impl BlockBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "blocklist");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -315,10 +315,10 @@ impl BlockBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "blocklist");
         url.query_pairs_mut()
             .append_pair("blocklisttype", list_type.as_ref());
@@ -416,10 +416,10 @@ impl BlockBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_key_only("BlockBlob")
             .append_key_only("fromUrl");
@@ -624,10 +624,10 @@ impl BlockBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "query");
         if let Some(snapshot) = options.snapshot {
             url.query_pairs_mut().append_pair("snapshot", &snapshot);
@@ -744,10 +744,10 @@ impl BlockBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "block");
         url.query_pairs_mut()
             .append_pair("blockid", &encode(block_id));
@@ -859,10 +859,10 @@ impl BlockBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("comp", "block")
             .append_key_only("fromURL");
@@ -999,10 +999,10 @@ impl BlockBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_key_only("BlockBlob");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()

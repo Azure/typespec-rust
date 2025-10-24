@@ -11,7 +11,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         pager::{PagerResult, PagerState},
-        Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Url,
+        Method, Pager, Pipeline, PipelineSendOptions, RawResponse, Request, Url, UrlExt,
     },
     json, tracing, Result,
 };
@@ -42,7 +42,7 @@ impl PageTwoModelsAsPageItemClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url = first_url.join("azure/core/page/first-item")?;
+        first_url.append_path("/azure/core/page/first-item");
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -107,7 +107,7 @@ impl PageTwoModelsAsPageItemClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
-        first_url = first_url.join("azure/core/page/second-item")?;
+        first_url.append_path("/azure/core/page/second-item");
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);

@@ -12,6 +12,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -58,7 +59,7 @@ impl ServiceClient {
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        let mut host = String::from("client/structure/{client}/");
+        let mut host = String::from("client/structure/{client}");
         host = host.replace("{client}", client.as_ref());
         endpoint = endpoint.join(&host)?;
         Ok(Self {
@@ -127,7 +128,7 @@ impl ServiceClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("one")?;
+        url.append_path("/one");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -157,7 +158,7 @@ impl ServiceClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("two")?;
+        url.append_path("/two");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

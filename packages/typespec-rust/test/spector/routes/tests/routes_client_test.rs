@@ -109,7 +109,7 @@ async fn path_simple_standard_record() {
 
     let resp = client
         .record(
-            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
             None,
         )
         .await
@@ -151,7 +151,7 @@ async fn path_simple_explode_record() {
 
     let resp = client
         .record(
-            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
             None,
         )
         .await
@@ -193,7 +193,7 @@ async fn path_path_standard_record() {
 
     let resp = client
         .record(
-            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
             None,
         )
         .await
@@ -235,7 +235,7 @@ async fn path_path_explode_record() {
 
     let resp = client
         .record(
-            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
             None,
         )
         .await
@@ -277,7 +277,7 @@ async fn path_label_standard_record() {
 
     let resp = client
         .record(
-            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
             None,
         )
         .await
@@ -319,7 +319,7 @@ async fn path_label_explode_record() {
 
     let resp = client
         .record(
-            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
             None,
         )
         .await
@@ -361,7 +361,7 @@ async fn path_matrix_standard_record() {
 
     let resp = client
         .record(
-            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
             None,
         )
         .await
@@ -403,7 +403,7 @@ async fn path_matrix_explode_record() {
 
     let resp = client
         .record(
-            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
             None,
         )
         .await
@@ -475,7 +475,7 @@ async fn query_query_expansion_standard_record() {
 
     let resp = client
         .record(
-            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
             None,
         )
         .await
@@ -517,7 +517,7 @@ async fn query_query_expansion_explode_record() {
 
     let resp = client
         .record(
-            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
             None,
         )
         .await
@@ -559,7 +559,7 @@ async fn query_query_continuation_standard_record() {
 
     let resp = client
         .record(
-            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
             None,
         )
         .await
@@ -601,7 +601,7 @@ async fn query_query_continuation_explode_record() {
 
     let resp = client
         .record(
-            HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
+            &HashMap::from([("a".to_string(), 1i32), ("b".to_string(), 2i32)]),
             None,
         )
         .await

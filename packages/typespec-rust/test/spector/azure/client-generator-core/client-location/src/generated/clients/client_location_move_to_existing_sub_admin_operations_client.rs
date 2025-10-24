@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -37,7 +37,7 @@ impl ClientLocationMoveToExistingSubAdminOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/client-generator-core/client-location/user")?;
+        url.append_path("/azure/client-generator-core/client-location/user");
         let mut request = Request::new(url, Method::Delete);
         let rsp = self
             .pipeline
@@ -69,7 +69,7 @@ impl ClientLocationMoveToExistingSubAdminOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/client-generator-core/client-location/admin")?;
+        url.append_path("/azure/client-generator-core/client-location/admin");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

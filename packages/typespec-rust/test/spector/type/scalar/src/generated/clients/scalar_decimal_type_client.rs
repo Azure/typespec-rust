@@ -11,6 +11,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -42,7 +43,7 @@ impl ScalarDecimalTypeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/scalar/decimal/resquest_body")?;
+        url.append_path("/type/scalar/decimal/resquest_body");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -69,13 +70,13 @@ impl ScalarDecimalTypeClient {
     #[tracing::function("Type.Scalar.DecimalType.requestParameter")]
     pub async fn request_parameter(
         &self,
-        value: Decimal,
+        value: &Decimal,
         options: Option<ScalarDecimalTypeClientRequestParameterOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/scalar/decimal/request_parameter")?;
+        url.append_path("/type/scalar/decimal/request_parameter");
         url.query_pairs_mut()
             .append_pair("value", &value.to_string());
         let mut request = Request::new(url, Method::Get);
@@ -107,7 +108,7 @@ impl ScalarDecimalTypeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("type/scalar/decimal/response_body")?;
+        url.append_path("/type/scalar/decimal/response_body");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self

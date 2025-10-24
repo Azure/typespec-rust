@@ -5,15 +5,19 @@
 
 use crate::generated::models::{
     DefaultDurationProperty, DurationPropertyClientDefaultOptions,
-    DurationPropertyClientFloat64SecondsOptions, DurationPropertyClientFloatSecondsArrayOptions,
-    DurationPropertyClientFloatSecondsOptions, DurationPropertyClientInt32SecondsOptions,
-    DurationPropertyClientIso8601Options, Float64SecondsDurationProperty,
+    DurationPropertyClientFloat64MillisecondsOptions, DurationPropertyClientFloat64SecondsOptions,
+    DurationPropertyClientFloatMillisecondsArrayOptions,
+    DurationPropertyClientFloatMillisecondsOptions, DurationPropertyClientFloatSecondsArrayOptions,
+    DurationPropertyClientFloatSecondsOptions, DurationPropertyClientInt32MillisecondsOptions,
+    DurationPropertyClientInt32SecondsOptions, DurationPropertyClientIso8601Options,
+    Float64MillisecondsDurationProperty, Float64SecondsDurationProperty,
+    FloatMillisecondsDurationArrayProperty, FloatMillisecondsDurationProperty,
     FloatSecondsDurationArrayProperty, FloatSecondsDurationProperty, ISO8601DurationProperty,
-    Int32SecondsDurationProperty,
+    Int32MillisecondsDurationProperty, Int32SecondsDurationProperty,
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
+    http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -42,7 +46,41 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/property/default")?;
+        url.append_path("/encode/duration/property/default");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Property.float64Milliseconds")]
+    pub async fn float64_milliseconds(
+        &self,
+        body: RequestContent<Float64MillisecondsDurationProperty>,
+        options: Option<DurationPropertyClientFloat64MillisecondsOptions<'_>>,
+    ) -> Result<Response<Float64MillisecondsDurationProperty>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/property/float64-milliseconds");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -76,7 +114,75 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/property/float64-seconds")?;
+        url.append_path("/encode/duration/property/float64-seconds");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Property.floatMilliseconds")]
+    pub async fn float_milliseconds(
+        &self,
+        body: RequestContent<FloatMillisecondsDurationProperty>,
+        options: Option<DurationPropertyClientFloatMillisecondsOptions<'_>>,
+    ) -> Result<Response<FloatMillisecondsDurationProperty>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/property/float-milliseconds");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Property.floatMillisecondsArray")]
+    pub async fn float_milliseconds_array(
+        &self,
+        body: RequestContent<FloatMillisecondsDurationArrayProperty>,
+        options: Option<DurationPropertyClientFloatMillisecondsArrayOptions<'_>>,
+    ) -> Result<Response<FloatMillisecondsDurationArrayProperty>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/property/float-milliseconds-array");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -110,7 +216,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/property/float-seconds")?;
+        url.append_path("/encode/duration/property/float-seconds");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -144,7 +250,41 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/property/float-seconds-array")?;
+        url.append_path("/encode/duration/property/float-seconds-array");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Property.int32Milliseconds")]
+    pub async fn int32_milliseconds(
+        &self,
+        body: RequestContent<Int32MillisecondsDurationProperty>,
+        options: Option<DurationPropertyClientInt32MillisecondsOptions<'_>>,
+    ) -> Result<Response<Int32MillisecondsDurationProperty>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/property/int32-milliseconds");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -178,7 +318,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/property/int32-seconds")?;
+        url.append_path("/encode/duration/property/int32-seconds");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -212,7 +352,7 @@ impl DurationPropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/duration/property/iso8601")?;
+        url.append_path("/encode/duration/property/iso8601");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

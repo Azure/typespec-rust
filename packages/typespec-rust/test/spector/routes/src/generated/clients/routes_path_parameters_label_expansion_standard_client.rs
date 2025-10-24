@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 use std::collections::HashMap;
@@ -40,9 +40,9 @@ impl RoutesPathParametersLabelExpansionStandardClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/label/standard/array{param}");
+        let mut path = String::from("/routes/path/label/standard/array{param}");
         path = path.replace("{param}", &format!(".{}", param.join(",")));
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -79,9 +79,9 @@ impl RoutesPathParametersLabelExpansionStandardClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/label/standard/primitive{param}");
+        let mut path = String::from("/routes/path/label/standard/primitive{param}");
         path = path.replace("{param}", &format!(".{param}"));
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -106,13 +106,13 @@ impl RoutesPathParametersLabelExpansionStandardClient {
     #[tracing::function("Routes.PathParameters.LabelExpansion.Standard.record")]
     pub async fn record(
         &self,
-        param: HashMap<String, i32>,
+        param: &HashMap<String, i32>,
         options: Option<RoutesPathParametersLabelExpansionStandardClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("routes/path/label/standard/record{param}");
+        let mut path = String::from("/routes/path/label/standard/record{param}");
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();
             param_vec.sort_by_key(|p| p.0);
@@ -128,7 +128,7 @@ impl RoutesPathParametersLabelExpansionStandardClient {
                 ),
             );
         }
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

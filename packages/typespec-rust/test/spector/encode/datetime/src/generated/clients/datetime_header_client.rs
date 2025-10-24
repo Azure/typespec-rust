@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     time::{to_rfc3339, to_rfc7231, OffsetDateTime},
     tracing, Result,
 };
@@ -34,15 +34,15 @@ impl DatetimeHeaderClient {
     #[tracing::function("Encode.Datetime.Header.default")]
     pub async fn default(
         &self,
-        value: OffsetDateTime,
+        value: &OffsetDateTime,
         options: Option<DatetimeHeaderClientDefaultOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/header/default")?;
+        url.append_path("/encode/datetime/header/default");
         let mut request = Request::new(url, Method::Get);
-        request.insert_header("value", to_rfc7231(&value));
+        request.insert_header("value", to_rfc7231(value));
         let rsp = self
             .pipeline
             .send(
@@ -66,15 +66,15 @@ impl DatetimeHeaderClient {
     #[tracing::function("Encode.Datetime.Header.rfc3339")]
     pub async fn rfc3339(
         &self,
-        value: OffsetDateTime,
+        value: &OffsetDateTime,
         options: Option<DatetimeHeaderClientRfc3339Options<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/header/rfc3339")?;
+        url.append_path("/encode/datetime/header/rfc3339");
         let mut request = Request::new(url, Method::Get);
-        request.insert_header("value", to_rfc3339(&value));
+        request.insert_header("value", to_rfc3339(value));
         let rsp = self
             .pipeline
             .send(
@@ -98,15 +98,15 @@ impl DatetimeHeaderClient {
     #[tracing::function("Encode.Datetime.Header.rfc7231")]
     pub async fn rfc7231(
         &self,
-        value: OffsetDateTime,
+        value: &OffsetDateTime,
         options: Option<DatetimeHeaderClientRfc7231Options<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/header/rfc7231")?;
+        url.append_path("/encode/datetime/header/rfc7231");
         let mut request = Request::new(url, Method::Get);
-        request.insert_header("value", to_rfc7231(&value));
+        request.insert_header("value", to_rfc7231(value));
         let rsp = self
             .pipeline
             .send(
@@ -130,13 +130,13 @@ impl DatetimeHeaderClient {
     #[tracing::function("Encode.Datetime.Header.unixTimestamp")]
     pub async fn unix_timestamp(
         &self,
-        value: OffsetDateTime,
+        value: &OffsetDateTime,
         options: Option<DatetimeHeaderClientUnixTimestampOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/header/unix-timestamp")?;
+        url.append_path("/encode/datetime/header/unix-timestamp");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", value.unix_timestamp().to_string());
         let rsp = self
@@ -168,7 +168,7 @@ impl DatetimeHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/header/unix-timestamp-array")?;
+        url.append_path("/encode/datetime/header/unix-timestamp-array");
         let mut request = Request::new(url, Method::Get);
         request.insert_header(
             "value",

@@ -12,6 +12,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -41,7 +42,7 @@ impl ScalarAzureLocationScalarClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/core/scalar/azureLocation")?;
+        url.append_path("/azure/core/scalar/azureLocation");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -75,7 +76,7 @@ impl ScalarAzureLocationScalarClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/core/scalar/azureLocation/header")?;
+        url.append_path("/azure/core/scalar/azureLocation/header");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("region", region);
         let rsp = self
@@ -109,7 +110,7 @@ impl ScalarAzureLocationScalarClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/core/scalar/azureLocation")?;
+        url.append_path("/azure/core/scalar/azureLocation");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -145,7 +146,7 @@ impl ScalarAzureLocationScalarClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/core/scalar/azureLocation")?;
+        url.append_path("/azure/core/scalar/azureLocation");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -180,7 +181,7 @@ impl ScalarAzureLocationScalarClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/core/scalar/azureLocation/query")?;
+        url.append_path("/azure/core/scalar/azureLocation/query");
         url.query_pairs_mut().append_pair("region", region);
         let mut request = Request::new(url, Method::Post);
         let rsp = self

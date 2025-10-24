@@ -11,6 +11,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -84,9 +85,9 @@ impl ParamAliasClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/client-generator-core/client-initialization/param-alias/{blob}/with-aliased-name");
+        let mut path = String::from("/azure/client-generator-core/client-initialization/param-alias/{blob}/with-aliased-name");
         path = path.replace("{blob}", &self.blob_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -118,9 +119,9 @@ impl ParamAliasClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("azure/client-generator-core/client-initialization/param-alias/{blobName}/with-original-name");
+        let mut path = String::from("/azure/client-generator-core/client-initialization/param-alias/{blobName}/with-original-name");
         path = path.replace("{blobName}", &self.blob_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

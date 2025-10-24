@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -37,7 +37,7 @@ impl TwoOperationGroupGroup1Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("four")?;
+        url.append_path("/four");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -67,7 +67,7 @@ impl TwoOperationGroupGroup1Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("one")?;
+        url.append_path("/one");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline
@@ -97,7 +97,7 @@ impl TwoOperationGroupGroup1Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("three")?;
+        url.append_path("/three");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

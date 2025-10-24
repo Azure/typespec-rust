@@ -12,6 +12,13 @@ pub struct DurationHeaderClientDefaultOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationHeaderClient::float64_milliseconds()`](crate::generated::clients::DurationHeaderClient::float64_milliseconds())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationHeaderClientFloat64MillisecondsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`DurationHeaderClient::float64_seconds()`](crate::generated::clients::DurationHeaderClient::float64_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationHeaderClientFloat64SecondsOptions<'a> {
@@ -19,9 +26,30 @@ pub struct DurationHeaderClientFloat64SecondsOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationHeaderClient::float_milliseconds()`](crate::generated::clients::DurationHeaderClient::float_milliseconds())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationHeaderClientFloatMillisecondsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`DurationHeaderClient::float_seconds()`](crate::generated::clients::DurationHeaderClient::float_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationHeaderClientFloatSecondsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`DurationHeaderClient::int32_milliseconds()`](crate::generated::clients::DurationHeaderClient::int32_milliseconds())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationHeaderClientInt32MillisecondsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`DurationHeaderClient::int32_milliseconds_array()`](crate::generated::clients::DurationHeaderClient::int32_milliseconds_array())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationHeaderClientInt32MillisecondsArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
@@ -54,9 +82,30 @@ pub struct DurationPropertyClientDefaultOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationPropertyClient::float64_milliseconds()`](crate::generated::clients::DurationPropertyClient::float64_milliseconds())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationPropertyClientFloat64MillisecondsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`DurationPropertyClient::float64_seconds()`](crate::generated::clients::DurationPropertyClient::float64_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationPropertyClientFloat64SecondsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`DurationPropertyClient::float_milliseconds()`](crate::generated::clients::DurationPropertyClient::float_milliseconds())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationPropertyClientFloatMillisecondsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`DurationPropertyClient::float_milliseconds_array()`](crate::generated::clients::DurationPropertyClient::float_milliseconds_array())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationPropertyClientFloatMillisecondsArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
@@ -71,6 +120,13 @@ pub struct DurationPropertyClientFloatSecondsOptions<'a> {
 /// Options to be passed to [`DurationPropertyClient::float_seconds_array()`](crate::generated::clients::DurationPropertyClient::float_seconds_array())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationPropertyClientFloatSecondsArrayOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`DurationPropertyClient::int32_milliseconds()`](crate::generated::clients::DurationPropertyClient::int32_milliseconds())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationPropertyClientInt32MillisecondsOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
@@ -96,6 +152,13 @@ pub struct DurationQueryClientDefaultOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationQueryClient::float64_milliseconds()`](crate::generated::clients::DurationQueryClient::float64_milliseconds())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationQueryClientFloat64MillisecondsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`DurationQueryClient::float64_seconds()`](crate::generated::clients::DurationQueryClient::float64_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationQueryClientFloat64SecondsOptions<'a> {
@@ -103,9 +166,30 @@ pub struct DurationQueryClientFloat64SecondsOptions<'a> {
     pub method_options: ClientMethodOptions<'a>,
 }
 
+/// Options to be passed to [`DurationQueryClient::float_milliseconds()`](crate::generated::clients::DurationQueryClient::float_milliseconds())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationQueryClientFloatMillisecondsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`DurationQueryClient::float_seconds()`](crate::generated::clients::DurationQueryClient::float_seconds())
 #[derive(Clone, Default, SafeDebug)]
 pub struct DurationQueryClientFloatSecondsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`DurationQueryClient::int32_milliseconds()`](crate::generated::clients::DurationQueryClient::int32_milliseconds())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationQueryClientInt32MillisecondsOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`DurationQueryClient::int32_milliseconds_array()`](crate::generated::clients::DurationQueryClient::int32_milliseconds_array())
+#[derive(Clone, Default, SafeDebug)]
+pub struct DurationQueryClientInt32MillisecondsArrayOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }

@@ -15,6 +15,16 @@ async fn default() {
 }
 
 #[tokio::test]
+async fn float64_milliseconds() {
+    let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    client
+        .get_duration_query_client()
+        .float64_milliseconds(35625.0, None)
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
 async fn float64_seconds() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
@@ -25,11 +35,41 @@ async fn float64_seconds() {
 }
 
 #[tokio::test]
+async fn float_milliseconds() {
+    let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    client
+        .get_duration_query_client()
+        .float_milliseconds(35625.0, None)
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
 async fn float_seconds() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
     client
         .get_duration_query_client()
         .float_seconds(35.625, None)
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+async fn int32_milliseconds() {
+    let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    client
+        .get_duration_query_client()
+        .int32_milliseconds(36000, None)
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+async fn int32_milliseconds_array() {
+    let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    client
+        .get_duration_query_client()
+        .int32_milliseconds_array(&[36000, 47000], None)
         .await
         .unwrap();
 }

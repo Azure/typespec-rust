@@ -12,7 +12,7 @@ async fn default() {
     client
         .get_datetime_query_client()
         .default(
-            OffsetDateTime::new_utc(
+            &OffsetDateTime::new_utc(
                 Date::from_calendar_date(2022, Month::August, 26).unwrap(),
                 Time::from_hms(18, 38, 0).unwrap(),
             ),
@@ -28,7 +28,7 @@ async fn rfc3339() {
     client
         .get_datetime_query_client()
         .rfc3339(
-            OffsetDateTime::new_utc(
+            &OffsetDateTime::new_utc(
                 Date::from_calendar_date(2022, Month::August, 26).unwrap(),
                 Time::from_hms(18, 38, 0).unwrap(),
             ),
@@ -44,7 +44,7 @@ async fn rfc7231() {
     client
         .get_datetime_query_client()
         .rfc7231(
-            OffsetDateTime::new_utc(
+            &OffsetDateTime::new_utc(
                 Date::from_calendar_date(2022, Month::August, 26).unwrap(),
                 Time::from_hms(14, 38, 0).unwrap(),
             ),
@@ -60,7 +60,7 @@ async fn unix_timestamp() {
     client
         .get_datetime_query_client()
         .unix_timestamp(
-            OffsetDateTime::new_utc(
+            &OffsetDateTime::new_utc(
                 Date::from_calendar_date(2023, Month::June, 12).unwrap(),
                 Time::from_hms(10, 47, 44).unwrap(),
             ),

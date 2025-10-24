@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{AsyncResponse, Method, Pipeline, PipelineStreamOptions, Request, Url},
+    http::{AsyncResponse, Method, Pipeline, PipelineStreamOptions, Request, Url, UrlExt},
     tracing, Result,
 };
 
@@ -37,7 +37,7 @@ impl ContentNegotiationSameBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("content-negotiation/same-body")?;
+        url.append_path("/content-negotiation/same-body");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/jpeg");
         let rsp = self
@@ -68,7 +68,7 @@ impl ContentNegotiationSameBodyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("content-negotiation/same-body")?;
+        url.append_path("/content-negotiation/same-body");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "image/png");
         let rsp = self

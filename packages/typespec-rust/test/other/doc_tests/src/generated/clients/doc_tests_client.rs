@@ -7,7 +7,7 @@ use crate::generated::models::{DocTestsClientGetMetadataOptions, Metadata};
 use azure_core::{
     error::CheckSuccessOptions,
     fmt::SafeDebug,
-    http::{ClientOptions, Method, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{ClientOptions, Method, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -106,7 +106,9 @@ impl DocTestsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join(id)?;
+        let mut path = String::from("/{id}");
+        path = path.replace("{id}", id);
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self

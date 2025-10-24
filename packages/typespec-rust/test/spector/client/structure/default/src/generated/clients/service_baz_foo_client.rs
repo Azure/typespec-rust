@@ -6,7 +6,7 @@
 use crate::generated::models::ServiceBazFooClientSevenOptions;
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -34,7 +34,7 @@ impl ServiceBazFooClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("seven")?;
+        url.append_path("/seven");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

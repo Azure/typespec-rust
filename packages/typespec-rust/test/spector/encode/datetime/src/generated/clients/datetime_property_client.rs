@@ -11,7 +11,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url},
+    http::{Method, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -40,7 +40,7 @@ impl DatetimePropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/property/default")?;
+        url.append_path("/encode/datetime/property/default");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -74,7 +74,7 @@ impl DatetimePropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/property/rfc3339")?;
+        url.append_path("/encode/datetime/property/rfc3339");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -108,7 +108,7 @@ impl DatetimePropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/property/rfc7231")?;
+        url.append_path("/encode/datetime/property/rfc7231");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -142,7 +142,7 @@ impl DatetimePropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/property/unix-timestamp")?;
+        url.append_path("/encode/datetime/property/unix-timestamp");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -176,7 +176,7 @@ impl DatetimePropertyClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/datetime/property/unix-timestamp-array")?;
+        url.append_path("/encode/datetime/property/unix-timestamp-array");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

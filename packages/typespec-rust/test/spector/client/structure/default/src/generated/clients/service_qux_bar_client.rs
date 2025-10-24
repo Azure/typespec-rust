@@ -6,7 +6,7 @@
 use crate::generated::models::ServiceQuxBarClientNineOptions;
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -34,7 +34,7 @@ impl ServiceQuxBarClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("nine")?;
+        url.append_path("/nine");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

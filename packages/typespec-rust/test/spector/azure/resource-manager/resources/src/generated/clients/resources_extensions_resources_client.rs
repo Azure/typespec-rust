@@ -17,7 +17,7 @@ use azure_core::{
         pager::{PagerResult, PagerState},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         Method, NoFormat, Pager, Pipeline, PipelineSendOptions, Poller, RawResponse, Request,
-        RequestContent, Response, Url,
+        RequestContent, Response, Url, UrlExt,
     },
     json, tracing, Result,
 };
@@ -83,10 +83,10 @@ impl ResourcesExtensionsResourcesClient {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
+        let mut path = String::from("/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
         path = path.replace("{resourceUri}", resource_uri);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
@@ -182,10 +182,10 @@ impl ResourcesExtensionsResourcesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
+        let mut path = String::from("/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
         path = path.replace("{resourceUri}", resource_uri);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Delete);
@@ -234,10 +234,10 @@ impl ResourcesExtensionsResourcesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
+        let mut path = String::from("/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
         path = path.replace("{resourceUri}", resource_uri);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
@@ -280,10 +280,10 @@ impl ResourcesExtensionsResourcesClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         let mut path = String::from(
-            "{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources",
+            "/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources",
         );
         path = path.replace("{resourceUri}", resource_uri);
-        first_url = first_url.join(&path)?;
+        first_url.append_path(&path);
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
@@ -366,10 +366,10 @@ impl ResourcesExtensionsResourcesClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
+        let mut path = String::from("/{resourceUri}/providers/Azure.ResourceManager.Resources/extensionsResources/{extensionsResourceName}");
         path = path.replace("{extensionsResourceName}", extensions_resource_name);
         path = path.replace("{resourceUri}", resource_uri);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Patch);

@@ -9,7 +9,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -37,7 +37,7 @@ impl BodyOptionalityOptionalExplicitClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("parameters/body-optionality/optional-explicit/omit")?;
+        url.append_path("/parameters/body-optionality/optional-explicit/omit");
         let mut request = Request::new(url, Method::Post);
         if let Some(body) = options.body {
             request.insert_header("content-type", "application/json");
@@ -71,7 +71,7 @@ impl BodyOptionalityOptionalExplicitClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("parameters/body-optionality/optional-explicit/set")?;
+        url.append_path("/parameters/body-optionality/optional-explicit/set");
         let mut request = Request::new(url, Method::Post);
         if let Some(body) = options.body {
             request.insert_header("content-type", "application/json");

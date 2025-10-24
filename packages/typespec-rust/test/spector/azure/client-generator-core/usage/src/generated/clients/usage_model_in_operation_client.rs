@@ -13,6 +13,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -51,7 +52,7 @@ impl UsageModelInOperationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/client-generator-core/usage/inputToInputOutput")?;
+        url.append_path("/azure/client-generator-core/usage/inputToInputOutput");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -102,7 +103,7 @@ impl UsageModelInOperationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/client-generator-core/usage/modelInReadOnlyProperty")?;
+        url.append_path("/azure/client-generator-core/usage/modelInReadOnlyProperty");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");
@@ -147,7 +148,7 @@ impl UsageModelInOperationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/client-generator-core/usage/orphanModelSerializable")?;
+        url.append_path("/azure/client-generator-core/usage/orphanModelSerializable");
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -187,7 +188,7 @@ impl UsageModelInOperationClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/client-generator-core/usage/outputToInputOutput")?;
+        url.append_path("/azure/client-generator-core/usage/outputToInputOutput");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self

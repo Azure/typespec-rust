@@ -12,6 +12,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -86,9 +87,9 @@ impl PathParamClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path =
-            String::from("azure/client-generator-core/client-initialization/path/{blobName}");
+            String::from("/azure/client-generator-core/client-initialization/path/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Delete);
         let rsp = self
             .pipeline
@@ -121,10 +122,10 @@ impl PathParamClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from(
-            "azure/client-generator-core/client-initialization/path/{blobName}/get-standalone",
+            "/azure/client-generator-core/client-initialization/path/{blobName}/get-standalone",
         );
         path = path.replace("{blobName}", &self.blob_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
         let rsp = self
@@ -158,10 +159,10 @@ impl PathParamClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from(
-            "azure/client-generator-core/client-initialization/path/{blobName}/with-query",
+            "/azure/client-generator-core/client-initialization/path/{blobName}/with-query",
         );
         path = path.replace("{blobName}", &self.blob_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         if let Some(format) = options.format {
             url.query_pairs_mut().append_pair("format", &format);
         }

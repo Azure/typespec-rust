@@ -6,7 +6,7 @@
 use crate::generated::models::ClientLocationMoveToRootResourceOperationsClientGetResourceOptions;
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -34,7 +34,7 @@ impl ClientLocationMoveToRootResourceOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/client-generator-core/client-location/resource")?;
+        url.append_path("/azure/client-generator-core/client-location/resource");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

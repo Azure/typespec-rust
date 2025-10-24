@@ -11,6 +11,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     http::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -40,7 +41,7 @@ impl NamingUnionEnumClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("client/naming/union-enum/union-enum-member-name")?;
+        url.append_path("/client/naming/union-enum/union-enum-member-name");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);
@@ -73,7 +74,7 @@ impl NamingUnionEnumClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("client/naming/union-enum/union-enum-name")?;
+        url.append_path("/client/naming/union-enum/union-enum-name");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("content-type", "application/json");
         request.set_body(body);

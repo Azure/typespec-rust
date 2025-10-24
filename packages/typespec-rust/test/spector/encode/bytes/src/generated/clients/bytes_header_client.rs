@@ -10,7 +10,7 @@ use crate::generated::models::{
 use azure_core::{
     base64::{encode, encode_url_safe},
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -39,7 +39,7 @@ impl BytesHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/bytes/header/base64")?;
+        url.append_path("/encode/bytes/header/base64");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", encode(value));
         let rsp = self
@@ -71,7 +71,7 @@ impl BytesHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/bytes/header/base64url")?;
+        url.append_path("/encode/bytes/header/base64url");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", encode_url_safe(value));
         let rsp = self
@@ -103,7 +103,7 @@ impl BytesHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/bytes/header/base64url-array")?;
+        url.append_path("/encode/bytes/header/base64url-array");
         let mut request = Request::new(url, Method::Get);
         request.insert_header(
             "value",
@@ -142,7 +142,7 @@ impl BytesHeaderClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("encode/bytes/header/default")?;
+        url.append_path("/encode/bytes/header/default");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("value", encode(value));
         let rsp = self

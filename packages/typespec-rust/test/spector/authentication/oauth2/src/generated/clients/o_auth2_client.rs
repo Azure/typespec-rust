@@ -11,6 +11,7 @@ use azure_core::{
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -88,7 +89,7 @@ impl OAuth2Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("authentication/oauth2/invalid")?;
+        url.append_path("/authentication/oauth2/invalid");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline
@@ -119,7 +120,7 @@ impl OAuth2Client {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("authentication/oauth2/valid")?;
+        url.append_path("/authentication/oauth2/valid");
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

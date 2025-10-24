@@ -10,7 +10,7 @@ use crate::generated::models::{
 };
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 use std::collections::HashMap;
@@ -40,7 +40,7 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/query-continuation/explode/array")?;
+        url.append_path("/routes/query/query-continuation/explode/array");
         url.query_pairs_mut().append_pair("fixed", "true");
         for p in param.iter() {
             url.query_pairs_mut().append_pair("param", p);
@@ -75,7 +75,7 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/query-continuation/explode/primitive")?;
+        url.append_path("/routes/query/query-continuation/explode/primitive");
         url.query_pairs_mut().append_pair("fixed", "true");
         url.query_pairs_mut().append_pair("param", param);
         let mut request = Request::new(url, Method::Get);
@@ -102,13 +102,13 @@ impl RoutesQueryParametersQueryContinuationExplodeClient {
     #[tracing::function("Routes.QueryParameters.QueryContinuation.Explode.record")]
     pub async fn record(
         &self,
-        param: HashMap<String, i32>,
+        param: &HashMap<String, i32>,
         options: Option<RoutesQueryParametersQueryContinuationExplodeClientRecordOptions<'_>>,
     ) -> Result<Response<(), NoFormat>> {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("routes/query/query-continuation/explode/record")?;
+        url.append_path("/routes/query/query-continuation/explode/record");
         url.query_pairs_mut().append_pair("fixed", "true");
         {
             let mut param_vec = param.iter().collect::<Vec<_>>();

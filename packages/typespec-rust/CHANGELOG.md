@@ -1,10 +1,38 @@
 # Release History
 
-## 0.24.1 (unreleased)
+## 0.25.0 (unreleased)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* The `serde` helpers for base64 data wrapped in an `Option<T>` are now in `azure_core::base64::option`.
+* The core XML helper `read_xml` has been renamed to `from_xml`.
+* The algorithm for renaming of pageable methods has changed which can cause some method names to change.
+* Some method parameters are now borrowed instead of owned.
+* Use helper `UrlExt::append_path()` from `azure_core` when constructing the request's `Url`.
 
 ### Bugs Fixed
 
+* Fixed an issue that could cause types to have duplicate names.
+* Fixed an issue that could cause enum types to have invalid names.
+* Ensure that the local variable name for the `http::Request` doesn't collide with an existing parameter name.
+* Added missing reinjectable query parameters when creating the `Url` for a pageable's `next_link`.
+
+### Other Changes
+
+* Emit `#[allow(clippy::too_many_arguments)]` on methods that contain seven or more arguments.
+
+## 0.24.1 (2025-10-15)
+
+### Bugs Fixed
+
+* Changed `doc_auto_cfg` to `doc_cfg` ([Azure/azure-sdk-for-rust#3118](https://github.com/Azure/azure-sdk-for-rust/issues/3118))
 * Fixed incorrect header trait doc comment.
+
+### Other Changes
+
+* Updated to the latest tsp toolset.
 
 ## 0.24.0 (2025-10-02)
 

@@ -6,7 +6,7 @@
 use crate::generated::models::ClientLocationArchiveOperationsClientArchiveProductOptions;
 use azure_core::{
     error::CheckSuccessOptions,
-    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url},
+    http::{Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url, UrlExt},
     tracing, Result,
 };
 
@@ -34,7 +34,7 @@ impl ClientLocationArchiveOperationsClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join("azure/client-generator-core/client-location/products/archive")?;
+        url.append_path("/azure/client-generator-core/client-location/products/archive");
         let mut request = Request::new(url, Method::Post);
         let rsp = self
             .pipeline

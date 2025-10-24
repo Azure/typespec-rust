@@ -11,6 +11,7 @@ use azure_core::{
     fmt::SafeDebug,
     http::{
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, Response, Url,
+        UrlExt,
     },
     tracing, Result,
 };
@@ -50,7 +51,7 @@ impl MultipleClient {
                 format!("{endpoint} must use http(s)"),
             ));
         }
-        let mut host = String::from("server/path/multiple/{apiVersion}/");
+        let mut host = String::from("server/path/multiple/{apiVersion}");
         host = host.replace("{apiVersion}", &options.api_version);
         endpoint = endpoint.join(&host)?;
         Ok(Self {
@@ -119,7 +120,9 @@ impl MultipleClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        url = url.join(keyword)?;
+        let mut path = String::from("/{keyword}");
+        path = path.replace("{keyword}", keyword);
+        url.append_path(&path);
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

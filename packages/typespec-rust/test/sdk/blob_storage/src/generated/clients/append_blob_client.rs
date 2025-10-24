@@ -17,7 +17,7 @@ use azure_core::{
     http::{
         policies::{BearerTokenCredentialPolicy, Policy},
         ClientOptions, Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent,
-        Response, Url,
+        Response, Url, UrlExt,
     },
     time::to_rfc7231,
     tracing, Bytes, Result,
@@ -150,10 +150,10 @@ impl AppendBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "appendblock");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -293,10 +293,10 @@ impl AppendBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("comp", "appendblock")
             .append_key_only("fromUrl");
@@ -451,10 +451,10 @@ impl AppendBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_key_only("AppendBlob");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()
@@ -603,10 +603,10 @@ impl AppendBlobClient {
         let options = options.unwrap_or_default();
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
-        let mut path = String::from("{containerName}/{blobName}");
+        let mut path = String::from("/{containerName}/{blobName}");
         path = path.replace("{blobName}", &self.blob_name);
         path = path.replace("{containerName}", &self.container_name);
-        url = url.join(&path)?;
+        url.append_path(&path);
         url.query_pairs_mut().append_pair("comp", "seal");
         if let Some(timeout) = options.timeout {
             url.query_pairs_mut()

@@ -96,16 +96,12 @@ export class Adapter {
   // cache of adapted client method params
   private readonly clientMethodParams: Map<string, rust.MethodParameter>;
 
-  // contains methods that have been renamed
-  private readonly renamedMethods: Set<string>;
-
   // maps a tcgc model field to the adapted struct field
   private readonly fieldsMap: Map<tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>;
 
   private constructor(ctx: tcgc.SdkContext, options: RustEmitterOptions) {
     this.types = new Map<string, rust.Type>();
     this.clientMethodParams = new Map<string, rust.MethodParameter>();
-    this.renamedMethods = new Set<string>();
     this.fieldsMap = new Map<tcgc.SdkModelPropertyType | tcgc.SdkPathParameter, rust.ModelField>();
     this.ctx = ctx;
     this.options = options;
@@ -188,7 +184,7 @@ export class Adapter {
    * @returns a Rust enum
    */
   private getEnum(sdkEnum: tcgc.SdkEnumType): rust.Enum {
-    const enumName = codegen.capitalize(sdkEnum.name);
+    const enumName = codegen.deconstruct(sdkEnum.name).map((each) => codegen.capitalize(each)).join('');
     let rustEnum = this.types.get(enumName);
     if (rustEnum) {
       return <rust.Enum>rustEnum;
@@ -1035,18 +1031,8 @@ export class Adapter {
                 // there's either a suffix on the endpoint param, more template arguments, or both.
                 // either way we need to create supplemental info on the constructable.
                 // NOTE: we remove the {endpoint} segment and trailing forward slash as we use
-                // Url::join to concatenate the two and not string replacement.
-                let serverUrl = endpointType.serverUrl.replace(`{${templateArg.serializedName}}/`, '');
-
-                // NOTE: the behavior of Url::join requires that the path ends with a forward slash.
-                // if there are any query params, splice it in as required else just append it.
-                if (serverUrl.includes('?')) {
-                  if (serverUrl[serverUrl.indexOf('?') - 1] !== '/') {
-                    serverUrl = serverUrl.replace('?', '/?');
-                  }
-                } else if (serverUrl[serverUrl.length - 1] !== '/') {
-                  serverUrl += '/';
-                }
+                // UrlExt::append_path() to concatenate the two and not string replacement.
+                const serverUrl = endpointType.serverUrl.replace(`{${templateArg.serializedName}}/`, '');
 
                 rustClient.constructable.endpoint = new rust.SupplementalEndpoint(serverUrl);
                 continue;
@@ -1251,23 +1237,32 @@ export class Adapter {
     let srcMethodName = method.name;
     if (method.kind === 'paging' && !srcMethodName.match(/^list/i)) {
       const chunks = codegen.deconstruct(srcMethodName);
-      chunks[0] = 'list';
+      if (chunks[0] === 'get') {
+        chunks[0] = 'list';
+      } else {
+        chunks.unshift('list');
+      }
       srcMethodName = codegen.camelCase(chunks);
-      this.renamedMethods.add(srcMethodName);
       this.ctx.program.reportDiagnostic({
         code: 'PagingMethodRename',
         severity: 'warning',
         message: `renamed paging method from ${method.name} to ${srcMethodName}`,
         target: method.__raw?.node ?? NoTarget,
       });
-    } else if (this.renamedMethods.has(srcMethodName)) {
-      throw new AdapterError('NameCollision', `method name ${srcMethodName} collides with a renamed method`, method.__raw?.node);
     }
 
     const languageIndependentName = method.crossLanguageDefinitionId;
     const methodName = naming.getEscapedReservedName(snakeCaseName(srcMethodName), 'fn');
+    if (srcMethodName !== method.name) {
+      // if the method was renamed then ensure it doesn't collide
+      for (const existingMethod of rustClient.methods) {
+        if (existingMethod.name === methodName) {
+          throw new AdapterError('NameCollision', `renamed method ${srcMethodName} collides with an existing method`, method.__raw?.node);
+        }
+      }
+    }
     const optionsLifetime = new rust.Lifetime('a');
-    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName)}Options`, 'pub');
+    const methodOptionsStruct = new rust.Struct(`${rustClient.name}${codegen.pascalCase(srcMethodName, false)}Options`, 'pub');
     methodOptionsStruct.lifetime = optionsLifetime;
     methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
 
@@ -1288,28 +1283,16 @@ export class Adapter {
     const methodOptions = new rust.MethodOptions(methodOptionsStruct);
     const httpMethod = method.operation.verb;
 
-    // if path is more than just "/" strip off any leading forward slash.
-    // this is because Url::join will treat the path as absolute, overwriting
-    // any existing path on the endpoint.
-    // e.g. if endpoint is https://contoso.com/foo/bar and httpPath is /some/sub/path
-    // then calling Url::join will provide result https://contoso.com/some/sub/path
-    // which is not what we want.
-    // the only exception is if this is the root before the query string
-    let httpPath = method.operation.path;
-    if (httpPath.length > 1 && httpPath[0] === '/' && !httpPath.startsWith('/?')) {
-      httpPath = httpPath.slice(1);
-    }
-
     let rustMethod: MethodType;
     switch (method.kind) {
       case 'basic':
-        rustMethod = new rust.AsyncMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.AsyncMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path);
         break;
       case 'paging':
-        rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path);
         break;
       case 'lro':
-        rustMethod = new rust.LroMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, httpPath);
+        rustMethod = new rust.LroMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path);
         break;
       default:
         throw new AdapterError('UnsupportedTsp', `method kind ${method.kind} NYI`, method.__raw?.node);
@@ -1326,7 +1309,7 @@ export class Adapter {
     }
 
     // maps tcgc method header/query params to their Rust method params
-    const paramsMap = new Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | rust.QueryScalarParameter>();
+    const paramsMap = new Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | QueryParamType>();
 
     for (const param of method.parameters) {
       // we need to translate from the method param to its underlying operation param.
@@ -1584,7 +1567,7 @@ export class Adapter {
     } else if (responseHeaders.length > 0) {
       // for methods that don't return a modeled type but return headers,
       // we need to return a marker type
-      const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name)}Result`);
+      const markerType = new rust.MarkerType(`${rustClient.name}${codegen.pascalCase(method.name, false)}Result`);
       markerType.docs.summary = `Contains results for ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
       this.crate.models.push(markerType);
       let resultType: rust.ResultTypes;
@@ -1618,7 +1601,11 @@ export class Adapter {
 
     if (method.kind === 'paging') {
       // can't do this until the method has been completely adapted
-      (<rust.PageableMethod>rustMethod).strategy = this.adaptPageableMethodStrategy(method, paramsMap, responseHeadersMap);
+      const pageableMethod = <rust.PageableMethod>rustMethod;
+      pageableMethod.strategy = this.adaptPageableMethodStrategy(method, paramsMap, responseHeadersMap);
+      if (pageableMethod.strategy?.kind === 'nextLink') {
+        pageableMethod.strategy.reinjectedParams = this.adaptPageableMethodReinjectionParams(method, paramsMap);
+      }
     }
   }
 
@@ -1737,7 +1724,7 @@ export class Adapter {
    * @param respHeadersMap maps tcgc response headers to Rust response headers (needed for continuation token strategy)
    * @returns the pageable strategy
    */
-  private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | rust.QueryScalarParameter>, respHeadersMap: Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>): rust.PageableStrategyKind | undefined {
+  private adaptPageableMethodStrategy(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | QueryParamType>, respHeadersMap: Map<tcgc.SdkServiceResponseHeader, rust.ResponseHeader>): rust.PageableStrategyKind | undefined {
     const buildNextLinkPath = (segments: Array<tcgc.SdkServiceResponseHeader | tcgc.SdkModelPropertyType>): Array<rust.ModelField> => {
       // build the field path for the next link segments
       const nextLinkPath = new Array<rust.ModelField>();
@@ -1772,6 +1759,8 @@ export class Adapter {
           const tokenParam = paramsMap.get(tokenReq);
           if (!tokenParam) {
             throw new AdapterError('InternalError', `missing continuation token request parameter name ${tokenResp.name} for operation ${method.name}`, method.__raw?.node);
+          } else if (tokenParam.kind !== 'headerScalar' && tokenParam.kind !== 'queryScalar') {
+            throw new AdapterError('InternalError', `unexpected continuation token request parameter kind ${tokenParam.kind} for operation ${method.name}`, method.__raw?.node);
           }
           requestToken = tokenParam;
           break;
@@ -1806,6 +1795,40 @@ export class Adapter {
       // operation is pageable but doesn't yet support fetching subsequent pages
       return undefined;
     }
+  }
+
+  /**
+   * returns the array of pageable method parameters for reinjection.
+   * if no parameters require reinjection, the array is empty.
+   * 
+   * @param method the pageable method
+   * @param paramsMap maps tcgc method params to Rust params
+   * @returns an array containing the method parameters for reinjection
+   */
+  private adaptPageableMethodReinjectionParams(method: tcgc.SdkPagingServiceMethod<tcgc.SdkHttpOperation>, paramsMap: Map<tcgc.SdkMethodParameter, rust.HeaderScalarParameter | QueryParamType>): Array<QueryParamType> {
+    if (!method.pagingMetadata.nextLinkReInjectedParametersSegments) {
+      return [];
+    }
+
+    const paramsForReinjection = new Array<rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter>();
+    for (const reinjectedParamSegment of method.pagingMetadata.nextLinkReInjectedParametersSegments) {
+      for (const reinjectedParam of reinjectedParamSegment) {
+        if (reinjectedParam.kind !== 'method') {
+          throw new Error('unexpected param kind');
+        }
+        const rustParam = paramsMap.get(reinjectedParam);
+        if (!rustParam) {
+          throw new AdapterError('InternalError', `missing reinjection parameter name ${reinjectedParam.name} for operation ${method.name}`, method.__raw?.node);
+        } else if (rustParam.kind === 'headerScalar') {
+          // we only care about the query params here.
+          // any header parameters are handled elsewhere.
+          continue;
+        }
+        paramsForReinjection.push(rustParam);
+      }
+    }
+
+    return paramsForReinjection;
   }
 
   /**
@@ -1896,7 +1919,7 @@ export class Adapter {
           }
           adaptedParam = new rust.HeaderCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, format);
         } else if (param.serializedName === 'x-ms-meta') {
-          if (paramType.kind !== 'hashmap') {
+          if (paramType.kind !== 'hashmap' && !isRefHashMap(paramType)) {
             throw new AdapterError('InternalError', `unexpected kind ${paramType.kind} for header ${param.serializedName}`, param.__raw?.node);
           }
           adaptedParam = new rust.HeaderHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType);
@@ -1927,7 +1950,7 @@ export class Adapter {
 
         if (isRefSlice(paramType)) {
           adaptedParam = new rust.PathCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
-        } else if (paramType.kind === 'hashmap') {
+        } else if (paramType.kind === 'hashmap' || isRefHashMap(paramType)) {
           adaptedParam = new rust.PathHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, param.allowReserved, style, param.explode);
         } else {
           switch (paramType.kind) {
@@ -1951,7 +1974,7 @@ export class Adapter {
           }
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
           adaptedParam = new rust.QueryCollectionParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, format);
-        } else if (paramType.kind === 'hashmap') {
+        } else if (paramType.kind === 'hashmap' || isRefHashMap(paramType)) {
           // TODO: hard-coded encoding setting, https://github.com/Azure/typespec-azure/issues/1314
           adaptedParam = new rust.QueryHashMapParameter(paramName, param.serializedName, paramLoc, param.optional, paramType, true, param.explode);
         } else {
@@ -2028,6 +2051,16 @@ export class Adapter {
       }
       case 'encodedBytes':
         return this.getRefType(this.getEncodedBytes(type.encoding, true));
+      case 'decimal':
+      case 'Etag':
+      case 'hashmap':
+      case 'jsonValue':
+      case 'offsetDateTime':
+      case 'safeint':
+      case 'Url':
+        // these types all require conversion
+        // to String so we don't need to own them
+        return this.getRefType(type);
     }
     return undefined;
   }
@@ -2141,6 +2174,11 @@ export class Adapter {
       return 'NoFormat';
     }
   }
+}
+
+/** type guard to determine if type is a Ref<HashMap> */
+function isRefHashMap(type: rust.Type): type is rust.Ref<rust.HashMap> {
+  return shared.asTypeOf<rust.Ref<rust.HashMap>>(type, 'hashmap', 'ref') !== undefined;
 }
 
 /** type guard to determine if type is a Ref<Slice> */
@@ -2310,7 +2348,14 @@ function hasClientNameDecorator(decorators: Array<tcgc.DecoratorInfo>): boolean 
   return decorators.find((decorator) => decorator.name === 'Azure.ClientGenerator.Core.@clientName') !== undefined;
 }
 
-
+/**
+ * narrows statusCode to a HttpStatusCodeRange within the conditional block
+ * 
+ * @param statusCode the type to test
+ * @returns statusCode as a HttpStatusCodeRange or false
+ */
 function isHttpStatusCodeRange(statusCode: http.HttpStatusCodeRange | number): statusCode is http.HttpStatusCodeRange {
   return (<http.HttpStatusCodeRange>statusCode).start !== undefined;
 }
+
+type QueryParamType = rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter;

@@ -5,41 +5,44 @@
 
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
-/// Options to be passed to [`PageableClient::list_without_continuation()`](crate::generated::clients::PageableClient::list_without_continuation())
+/// Options to be passed to [`PageablePageSizeClient::list_with_page_size()`](crate::generated::clients::PageablePageSizeClient::list_with_page_size())
 #[derive(Clone, Default, SafeDebug)]
-pub struct PageableClientListWithoutContinuationOptions<'a> {
+pub struct PageablePageSizeClientListWithPageSizeOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub page_size: Option<i32>,
+}
+
+impl PageablePageSizeClientListWithPageSizeOptions<'_> {
+    /// Transforms this [`PageablePageSizeClientListWithPageSizeOptions`] into a new `PageablePageSizeClientListWithPageSizeOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageablePageSizeClientListWithPageSizeOptions<'static> {
+        PageablePageSizeClientListWithPageSizeOptions {
+            method_options: ClientMethodOptions {
+                context: self.method_options.context.into_owned(),
+            },
+            page_size: self.page_size,
+        }
+    }
+}
+
+/// Options to be passed to [`PageablePageSizeClient::list_without_continuation()`](crate::generated::clients::PageablePageSizeClient::list_without_continuation())
+#[derive(Clone, Default, SafeDebug)]
+pub struct PageablePageSizeClientListWithoutContinuationOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-impl PageableClientListWithoutContinuationOptions<'_> {
-    /// Transforms this [`PageableClientListWithoutContinuationOptions`] into a new `PageableClientListWithoutContinuationOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> PageableClientListWithoutContinuationOptions<'static> {
-        PageableClientListWithoutContinuationOptions {
+impl PageablePageSizeClientListWithoutContinuationOptions<'_> {
+    /// Transforms this [`PageablePageSizeClientListWithoutContinuationOptions`] into a new `PageablePageSizeClientListWithoutContinuationOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageablePageSizeClientListWithoutContinuationOptions<'static> {
+        PageablePageSizeClientListWithoutContinuationOptions {
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
             },
         }
     }
 }
-/// Options to be passed to [`PageableServerDrivenPaginationClient::list()`](crate::generated::clients::PageableServerDrivenPaginationClient::list())
-#[derive(Clone, Default, SafeDebug)]
-pub struct PageableServerDrivenPaginationClientListOptions<'a> {
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-}
-
-impl PageableServerDrivenPaginationClientListOptions<'_> {
-    /// Transforms this [`PageableServerDrivenPaginationClientListOptions`] into a new `PageableServerDrivenPaginationClientListOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> PageableServerDrivenPaginationClientListOptions<'static> {
-        PageableServerDrivenPaginationClientListOptions {
-            method_options: ClientMethodOptions {
-                context: self.method_options.context.into_owned(),
-            },
-        }
-    }
-}
-
 /// Options to be passed to [`PageableServerDrivenPaginationClient::list_link()`](crate::generated::clients::PageableServerDrivenPaginationClient::list_link())
 #[derive(Clone, Default, SafeDebug)]
 pub struct PageableServerDrivenPaginationClientListLinkOptions<'a> {
@@ -58,26 +61,44 @@ impl PageableServerDrivenPaginationClientListLinkOptions<'_> {
     }
 }
 
-/// Options to be passed to [`PageableServerDrivenPaginationClient::list_string()`](crate::generated::clients::PageableServerDrivenPaginationClient::list_string())
+/// Options to be passed to [`PageableServerDrivenPaginationClient::list_link_string()`](crate::generated::clients::PageableServerDrivenPaginationClient::list_link_string())
 #[derive(Clone, Default, SafeDebug)]
-pub struct PageableServerDrivenPaginationClientListStringOptions<'a> {
+pub struct PageableServerDrivenPaginationClientListLinkStringOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
 
-impl PageableServerDrivenPaginationClientListStringOptions<'_> {
-    /// Transforms this [`PageableServerDrivenPaginationClientListStringOptions`] into a new `PageableServerDrivenPaginationClientListStringOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> PageableServerDrivenPaginationClientListStringOptions<'static> {
-        PageableServerDrivenPaginationClientListStringOptions {
+impl PageableServerDrivenPaginationClientListLinkStringOptions<'_> {
+    /// Transforms this [`PageableServerDrivenPaginationClientListLinkStringOptions`] into a new `PageableServerDrivenPaginationClientListLinkStringOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageableServerDrivenPaginationClientListLinkStringOptions<'static> {
+        PageableServerDrivenPaginationClientListLinkStringOptions {
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
             },
         }
     }
 }
-/// Options to be passed to [`PageableServerDrivenPaginationContinuationTokenClient::list_header_nested_response_body()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_header_nested_response_body())
+
+/// Options to be passed to [`PageableServerDrivenPaginationClient::list_nested_link()`](crate::generated::clients::PageableServerDrivenPaginationClient::list_nested_link())
 #[derive(Clone, Default, SafeDebug)]
-pub struct PageableServerDrivenPaginationContinuationTokenClientListHeaderNestedResponseBodyOptions<
+pub struct PageableServerDrivenPaginationClientListNestedLinkOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+impl PageableServerDrivenPaginationClientListNestedLinkOptions<'_> {
+    /// Transforms this [`PageableServerDrivenPaginationClientListNestedLinkOptions`] into a new `PageableServerDrivenPaginationClientListNestedLinkOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageableServerDrivenPaginationClientListNestedLinkOptions<'static> {
+        PageableServerDrivenPaginationClientListNestedLinkOptions {
+            method_options: ClientMethodOptions {
+                context: self.method_options.context.into_owned(),
+            },
+        }
+    }
+}
+/// Options to be passed to [`PageableServerDrivenPaginationContinuationTokenClient::list_request_header_nested_response_body()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_request_header_nested_response_body())
+#[derive(Clone, Default, SafeDebug)]
+pub struct PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyOptions<
     'a,
 > {
     pub bar: Option<String>,
@@ -90,71 +111,14 @@ pub struct PageableServerDrivenPaginationContinuationTokenClientListHeaderNested
     pub token: Option<String>,
 }
 
-impl PageableServerDrivenPaginationContinuationTokenClientListHeaderNestedResponseBodyOptions<'_> {
-    /// Transforms this [`PageableServerDrivenPaginationContinuationTokenClientListHeaderNestedResponseBodyOptions`] into a new `PageableServerDrivenPaginationContinuationTokenClientListHeaderNestedResponseBodyOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(self) -> PageableServerDrivenPaginationContinuationTokenClientListHeaderNestedResponseBodyOptions<'static>{
-        PageableServerDrivenPaginationContinuationTokenClientListHeaderNestedResponseBodyOptions {
-            bar: self.bar,
-            foo: self.foo,
-            method_options: ClientMethodOptions {
-                context: self.method_options.context.into_owned(),
-            },
-            token: self.token,
-        }
-    }
-}
-
-/// Options to be passed to [`PageableServerDrivenPaginationContinuationTokenClient::list_header_response_body()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_header_response_body())
-#[derive(Clone, Default, SafeDebug)]
-pub struct PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseBodyOptions<'a> {
-    pub bar: Option<String>,
-
-    pub foo: Option<String>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    pub token: Option<String>,
-}
-
-impl PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseBodyOptions<'_> {
-    /// Transforms this [`PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseBodyOptions`] into a new `PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseBodyOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(
-        self,
-    ) -> PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseBodyOptions<'static>
-    {
-        PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseBodyOptions {
-            bar: self.bar,
-            foo: self.foo,
-            method_options: ClientMethodOptions {
-                context: self.method_options.context.into_owned(),
-            },
-            token: self.token,
-        }
-    }
-}
-
-/// Options to be passed to [`PageableServerDrivenPaginationContinuationTokenClient::list_header_response_header()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_header_response_header())
-#[derive(Clone, Default, SafeDebug)]
-pub struct PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseHeaderOptions<'a>
+impl
+    PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyOptions<
+        '_,
+    >
 {
-    pub bar: Option<String>,
-
-    pub foo: Option<String>,
-
-    /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    pub token: Option<String>,
-}
-
-impl PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseHeaderOptions<'_> {
-    /// Transforms this [`PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseHeaderOptions`] into a new `PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseHeaderOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(
-        self,
-    ) -> PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseHeaderOptions<'static>
-    {
-        PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseHeaderOptions {
+    /// Transforms this [`PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyOptions`] into a new `PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyOptions<'static>{
+        PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderNestedResponseBodyOptions {
             bar: self.bar,
             foo: self.foo,
             method_options: ClientMethodOptions {
@@ -165,9 +129,9 @@ impl PageableServerDrivenPaginationContinuationTokenClientListHeaderResponseHead
     }
 }
 
-/// Options to be passed to [`PageableServerDrivenPaginationContinuationTokenClient::list_query_nested_response_body()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_query_nested_response_body())
+/// Options to be passed to [`PageableServerDrivenPaginationContinuationTokenClient::list_request_header_response_body()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_request_header_response_body())
 #[derive(Clone, Default, SafeDebug)]
-pub struct PageableServerDrivenPaginationContinuationTokenClientListQueryNestedResponseBodyOptions<
+pub struct PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyOptions<
     'a,
 > {
     pub bar: Option<String>,
@@ -180,14 +144,10 @@ pub struct PageableServerDrivenPaginationContinuationTokenClientListQueryNestedR
     pub token: Option<String>,
 }
 
-impl PageableServerDrivenPaginationContinuationTokenClientListQueryNestedResponseBodyOptions<'_> {
-    /// Transforms this [`PageableServerDrivenPaginationContinuationTokenClientListQueryNestedResponseBodyOptions`] into a new `PageableServerDrivenPaginationContinuationTokenClientListQueryNestedResponseBodyOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(
-        self,
-    ) -> PageableServerDrivenPaginationContinuationTokenClientListQueryNestedResponseBodyOptions<
-        'static,
-    > {
-        PageableServerDrivenPaginationContinuationTokenClientListQueryNestedResponseBodyOptions {
+impl PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyOptions<'_> {
+    /// Transforms this [`PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyOptions`] into a new `PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyOptions<'static>{
+        PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseBodyOptions {
             bar: self.bar,
             foo: self.foo,
             method_options: ClientMethodOptions {
@@ -198,9 +158,11 @@ impl PageableServerDrivenPaginationContinuationTokenClientListQueryNestedRespons
     }
 }
 
-/// Options to be passed to [`PageableServerDrivenPaginationContinuationTokenClient::list_query_response_body()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_query_response_body())
+/// Options to be passed to [`PageableServerDrivenPaginationContinuationTokenClient::list_request_header_response_header()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_request_header_response_header())
 #[derive(Clone, Default, SafeDebug)]
-pub struct PageableServerDrivenPaginationContinuationTokenClientListQueryResponseBodyOptions<'a> {
+pub struct PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseHeaderOptions<
+    'a,
+> {
     pub bar: Option<String>,
 
     pub foo: Option<String>,
@@ -211,13 +173,12 @@ pub struct PageableServerDrivenPaginationContinuationTokenClientListQueryRespons
     pub token: Option<String>,
 }
 
-impl PageableServerDrivenPaginationContinuationTokenClientListQueryResponseBodyOptions<'_> {
-    /// Transforms this [`PageableServerDrivenPaginationContinuationTokenClientListQueryResponseBodyOptions`] into a new `PageableServerDrivenPaginationContinuationTokenClientListQueryResponseBodyOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(
-        self,
-    ) -> PageableServerDrivenPaginationContinuationTokenClientListQueryResponseBodyOptions<'static>
-    {
-        PageableServerDrivenPaginationContinuationTokenClientListQueryResponseBodyOptions {
+impl
+    PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseHeaderOptions<'_>
+{
+    /// Transforms this [`PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseHeaderOptions`] into a new `PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseHeaderOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseHeaderOptions<'static>{
+        PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderResponseHeaderOptions {
             bar: self.bar,
             foo: self.foo,
             method_options: ClientMethodOptions {
@@ -228,9 +189,11 @@ impl PageableServerDrivenPaginationContinuationTokenClientListQueryResponseBodyO
     }
 }
 
-/// Options to be passed to [`PageableServerDrivenPaginationContinuationTokenClient::list_query_response_header()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_query_response_header())
+/// Options to be passed to [`PageableServerDrivenPaginationContinuationTokenClient::list_request_query_nested_response_body()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_request_query_nested_response_body())
 #[derive(Clone, Default, SafeDebug)]
-pub struct PageableServerDrivenPaginationContinuationTokenClientListQueryResponseHeaderOptions<'a> {
+pub struct PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyOptions<
+    'a,
+> {
     pub bar: Option<String>,
 
     pub foo: Option<String>,
@@ -241,13 +204,74 @@ pub struct PageableServerDrivenPaginationContinuationTokenClientListQueryRespons
     pub token: Option<String>,
 }
 
-impl PageableServerDrivenPaginationContinuationTokenClientListQueryResponseHeaderOptions<'_> {
-    /// Transforms this [`PageableServerDrivenPaginationContinuationTokenClientListQueryResponseHeaderOptions`] into a new `PageableServerDrivenPaginationContinuationTokenClientListQueryResponseHeaderOptions` that owns the underlying data, cloning it if necessary.
-    pub fn into_owned(
-        self,
-    ) -> PageableServerDrivenPaginationContinuationTokenClientListQueryResponseHeaderOptions<'static>
-    {
-        PageableServerDrivenPaginationContinuationTokenClientListQueryResponseHeaderOptions {
+impl
+    PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyOptions<
+        '_,
+    >
+{
+    /// Transforms this [`PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyOptions`] into a new `PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyOptions<'static>{
+        PageableServerDrivenPaginationContinuationTokenClientListRequestQueryNestedResponseBodyOptions {
+            bar: self.bar,
+            foo: self.foo,
+            method_options: ClientMethodOptions {
+                context: self.method_options.context.into_owned(),
+            },
+            token: self.token,
+        }
+    }
+}
+
+/// Options to be passed to [`PageableServerDrivenPaginationContinuationTokenClient::list_request_query_response_body()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_request_query_response_body())
+#[derive(Clone, Default, SafeDebug)]
+pub struct PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyOptions<
+    'a,
+> {
+    pub bar: Option<String>,
+
+    pub foo: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub token: Option<String>,
+}
+
+impl PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyOptions<'_> {
+    /// Transforms this [`PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyOptions`] into a new `PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyOptions<'static>{
+        PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseBodyOptions {
+            bar: self.bar,
+            foo: self.foo,
+            method_options: ClientMethodOptions {
+                context: self.method_options.context.into_owned(),
+            },
+            token: self.token,
+        }
+    }
+}
+
+/// Options to be passed to [`PageableServerDrivenPaginationContinuationTokenClient::list_request_query_response_header()`](crate::generated::clients::PageableServerDrivenPaginationContinuationTokenClient::list_request_query_response_header())
+#[derive(Clone, Default, SafeDebug)]
+pub struct PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseHeaderOptions<
+    'a,
+> {
+    pub bar: Option<String>,
+
+    pub foo: Option<String>,
+
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+
+    pub token: Option<String>,
+}
+
+impl
+    PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseHeaderOptions<'_>
+{
+    /// Transforms this [`PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseHeaderOptions`] into a new `PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseHeaderOptions` that owns the underlying data, cloning it if necessary.
+    pub fn into_owned(self) -> PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseHeaderOptions<'static>{
+        PageableServerDrivenPaginationContinuationTokenClientListRequestQueryResponseHeaderOptions {
             bar: self.bar,
             foo: self.foo,
             method_options: ClientMethodOptions {
