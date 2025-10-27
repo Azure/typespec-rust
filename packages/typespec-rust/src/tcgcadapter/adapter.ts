@@ -596,6 +596,11 @@ export class Adapter {
         return this.getStringType();
       }
       case 'nullable':
+        if (type.type.kind === 'model' && type.type.isGeneratedName) {
+          // if the nullable type's target type is a synthesized
+          // type we propagate the the docs to it
+          type.type.doc = type.doc;
+        }
         // TODO: workaround until https://github.com/Azure/typespec-rust/issues/42 is fixed
         return this.getType(type.type, stack);
       case 'offsetDateTime': {

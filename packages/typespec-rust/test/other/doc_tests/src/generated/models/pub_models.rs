@@ -11,6 +11,9 @@ use std::collections::HashMap;
 #[non_exhaustive]
 pub struct Metadata {
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<MetadataError>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -19,4 +22,29 @@ pub struct Metadata {
     /// An opaque, globally-unique, server-generated string identifier for the request.
     #[serde(rename = "requestId", skip_serializing_if = "Option::is_none")]
     pub request_id: Option<String>,
+}
+
+/// The outer error.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct MetadataError {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<MetadataErrorError>,
+}
+
+/// The inner error.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct MetadataErrorError {
+    /// The error code.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub code: Option<String>,
+
+    /// Nested error.
+    #[serde(rename = "innerError", skip_serializing_if = "Option::is_none")]
+    pub inner_error: Option<Box<MetadataErrorError>>,
+
+    /// The error message.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub message: Option<String>,
 }

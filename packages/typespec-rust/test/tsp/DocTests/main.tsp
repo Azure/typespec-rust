@@ -17,7 +17,41 @@ model Metadata {
     @header("x-ms-meta")
     metadata?: string;
 
+    error?: MetadataError;
+
     ...RequestIdResponseHeader
 };
 
 @get op getMetadata(@path id: Metadata.id): Metadata;
+
+/**
+ * The outer error.
+ */
+@error
+model MetadataError {
+  @visibility(Lifecycle.Read)
+  error?: Error;
+}
+
+/**
+ * The inner error.
+ */
+union Error {
+  null,
+  {
+    /**
+     * The error code.
+     */
+    code?: string,
+
+    /**
+     * The error message.
+     */
+    message?: string,
+
+    /**
+     * Nested error.
+     */
+    innerError?: Error,
+  },
+}
