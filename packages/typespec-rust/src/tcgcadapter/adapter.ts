@@ -951,12 +951,13 @@ export class Adapter {
       /**
        * processes a credential, potentially adding its supporting client constructor
        *
+       * @param rustClient the client for which the constructor will be added
+       * @param param the tsp parameter that contains cred
        * @param cred the credential type to process
        * @param constructable the constructable for the current Rust client
-       * @param throwOnDefault when true, throws an error on unsupported credential types
        * @returns the AuthTypes enum for the credential that was handled, or AuthTypes.Default if none were
        */
-      const processCredential = (rustClient: rust.Client, cred: http.HttpAuth, constructable: rust.ClientConstruction, throwOnDefault: boolean): AuthTypes => {
+      const processCredential = (rustClient: rust.Client, param: tcgc.SdkCredentialParameter, cred: http.HttpAuth, constructable: rust.ClientConstruction): AuthTypes => {
         switch (cred.type) {
           case 'noAuth':
             return AuthTypes.NoAuth;
@@ -965,10 +966,13 @@ export class Adapter {
             return AuthTypes.WithAut;
           }
           default:
-            if (throwOnDefault) {
-              throw new AdapterError('UnsupportedTsp', `credential scheme type ${cred.type} NYI`);
-            }
-            return AuthTypes.Default;
+            this.ctx.program.reportDiagnostic({
+              code: 'UnsupportedAuthenticationScheme',
+              severity: 'warning',
+              message: `authentication scheme ${cred.type} is not supported`,
+              target: param.__raw?.node ?? NoTarget,
+            });
+            return AuthTypes.WithAut;
         }
       };
 
@@ -978,7 +982,7 @@ export class Adapter {
           case 'credential':
             switch (param.type.kind) {
               case 'credential':
-                authType |= processCredential(rustClient, param.type.scheme, rustClient.constructable, true);
+                authType |= processCredential(rustClient, param, param.type.scheme, rustClient.constructable);
                 break;
               case 'union': {
                 const variantKinds = new Array<string>();
@@ -987,14 +991,8 @@ export class Adapter {
                   // if OAuth2 is specified then emit that and skip any unsupported ones.
                   // this prevents emitting the with_no_credential constructor in cases
                   // where it might not actually be supported.
-                  authType |= processCredential(rustClient, variantType.scheme, rustClient.constructable, false);
+                  authType |= processCredential(rustClient, param, variantType.scheme, rustClient.constructable);
                 }
-
-                // no supported credential types were specified
-                if (authType === AuthTypes.Default) {
-                  throw new AdapterError('UnsupportedTsp', `credential scheme types ${variantKinds.join()} NYI`, param.__raw?.node);
-                }
-                continue;
               }
             }
             break;

@@ -28,12 +28,12 @@ impl KeyCredential {
     }
 }
 
-impl UnionClient {
+impl ApiKeyClient {
     #[tracing::new("Authentication.Union")]
     pub fn with_key_credential(
         endpoint: &str,
         credential: KeyCredential,
-        options: Option<UnionClientOptions>,
+        options: Option<ApiKeyClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;

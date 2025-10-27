@@ -28,12 +28,12 @@ impl KeyCredential {
     }
 }
 
-impl UnionClient {
+impl CustomClient {
     #[tracing::new("Authentication.Union")]
     pub fn with_key_credential(
         endpoint: &str,
         credential: KeyCredential,
-        options: Option<UnionClientOptions>,
+        options: Option<CustomClientOptions>,
     ) -> Result<Self> {
         let options = options.unwrap_or_default();
         let endpoint = Url::parse(endpoint)?;
@@ -79,7 +79,7 @@ impl Policy for KeyCredentialPolicy {
         request: &mut azure_core::http::Request,
         next: &[Arc<dyn Policy>],
     ) -> PolicyResult {
-        request.insert_header("x-ms-api-key", &self.key);
+        request.insert_header("authorization", format!("SharedAccessKey {}", &self.key));
         next[0].send(ctx, request, &next[1..]).await
     }
 }
