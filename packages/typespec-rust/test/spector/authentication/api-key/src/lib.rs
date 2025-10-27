@@ -29,7 +29,7 @@ impl KeyCredential {
 }
 
 impl ApiKeyClient {
-    #[tracing::new("Authentication.ApiKeyClient")]
+    #[tracing::new("Authentication.ApiKey")]
     pub fn with_key_credential(
         endpoint: &str,
         credential: KeyCredential,
