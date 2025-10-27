@@ -24,7 +24,7 @@ pub struct KeyCredential {
 
 impl KeyCredential {
     pub fn new(key: String) -> Self {
-        Self { key: key }
+        Self { key }
     }
 }
 

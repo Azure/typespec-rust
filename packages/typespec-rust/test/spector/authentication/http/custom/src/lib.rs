@@ -24,12 +24,12 @@ pub struct KeyCredential {
 
 impl KeyCredential {
     pub fn new(key: String) -> Self {
-        Self { key: key }
+        Self { key }
     }
 }
 
 impl CustomClient {
-    #[tracing::new("Authentication.Union")]
+    #[tracing::new("Authentication.Http.Custom")]
     pub fn with_key_credential(
         endpoint: &str,
         credential: KeyCredential,
