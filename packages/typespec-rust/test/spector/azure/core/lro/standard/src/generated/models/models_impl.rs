@@ -7,7 +7,7 @@ use super::{OperationStatusError, OperationStatusExportedUserError, User};
 use azure_core::{
     http::{
         poller::{PollerStatus, StatusMonitor},
-        RequestContent,
+        JsonFormat, RequestContent,
     },
     json::to_json,
     Result,
@@ -15,6 +15,7 @@ use azure_core::{
 
 impl StatusMonitor for OperationStatusError {
     type Output = OperationStatusError;
+    type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         match &self.status {
             Some(v) => PollerStatus::from(v.as_ref()),
@@ -25,6 +26,7 @@ impl StatusMonitor for OperationStatusError {
 
 impl StatusMonitor for OperationStatusExportedUserError {
     type Output = OperationStatusExportedUserError;
+    type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         match &self.status {
             Some(v) => PollerStatus::from(v.as_ref()),
