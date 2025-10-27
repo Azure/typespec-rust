@@ -943,7 +943,7 @@ export class Adapter {
       enum AuthTypes {
         Default = 0, // unspecified
         NoAuth = 1, // explicit NoAuth
-        WithAut = 2, // explicit credential
+        WithAuth = 2, // explicit credential
       }
 
       let authType = AuthTypes.Default;
@@ -963,7 +963,7 @@ export class Adapter {
             return AuthTypes.NoAuth;
           case 'oauth2': {
             constructable.constructors.push(this.createTokenCredentialCtor(rustClient, cred));
-            return AuthTypes.WithAut;
+            return AuthTypes.WithAuth;
           }
           default:
             this.ctx.program.reportDiagnostic({
@@ -972,7 +972,7 @@ export class Adapter {
               message: `authentication scheme ${cred.type} is not supported`,
               target: param.__raw?.node ?? NoTarget,
             });
-            return AuthTypes.WithAut;
+            return AuthTypes.WithAuth;
         }
       };
 
