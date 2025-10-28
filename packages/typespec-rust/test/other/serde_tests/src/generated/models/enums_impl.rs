@@ -5,10 +5,13 @@
 
 use super::ExtensibleValues;
 use azure_core::error::Error;
-use std::fmt::{Display, Formatter};
+use std::{
+    convert::Infallible,
+    fmt::{Display, Formatter},
+};
 
 impl TryFrom<i32> for ExtensibleValues {
-    type Error = Error;
+    type Error = Infallible;
     fn try_from(value: i32) -> Result<Self, Self::Error> {
         match value {
             456 => Ok(ExtensibleValues::FourFiveSix),

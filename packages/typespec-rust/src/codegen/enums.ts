@@ -288,7 +288,13 @@ function emitStringEnumImplDefinitions(indent: helpers.indentation, use: Use, ru
 function emitNumericEnumImplDefinitions(indent: helpers.indentation, use: Use, rustEnum: rust.Enum): string {
   use.add('azure_core', 'error::Error');
   let body = `impl TryFrom<${rustEnum.type}> for ${rustEnum.name} {\n`;
-  body += `${indent.get()}type Error = Error;\n`;
+  if (rustEnum.extensible) {
+    use.add('std', 'convert::Infallible');
+    body += `${indent.get()}type Error = Infallible;\n`;
+  } else {
+    use.add('azure_core::error', 'Error', 'ErrorKind');
+    body += `${indent.get()}type Error = Error;\n`;
+  }
   body += `${indent.get()}fn try_from(value: ${rustEnum.type}) -> Result<Self, Self::Error> {\n`;
   body += `${indent.push().get()}${helpers.buildMatch(indent, 'value', (() => {
     const matchArms = new Array<helpers.matchArm>();
