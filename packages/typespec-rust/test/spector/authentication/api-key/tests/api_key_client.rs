@@ -2,18 +2,19 @@
 //
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+use azure_core::http::StatusCode;
 use spector_apikey::{ApiKeyClient, KeyCredential};
 
 #[tokio::test]
 async fn invalid() {
     let client = ApiKeyClient::with_key_credential(
         "http://localhost:3000",
-        KeyCredential::new("invalid".to_string()),
+        KeyCredential::new("invalid-key".to_string()),
         None,
     )
     .unwrap();
     let rsp = client.invalid(None).await;
-    assert!(rsp.is_err());
+    assert_eq!(rsp.err().unwrap().http_status(), Some(StatusCode::Forbidden));
 }
 
 #[tokio::test]
