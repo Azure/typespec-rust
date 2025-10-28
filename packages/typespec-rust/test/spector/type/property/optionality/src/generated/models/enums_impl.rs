@@ -14,26 +14,23 @@ use std::{
     str::FromStr,
 };
 
-impl FromStr for UnionFloatLiteralPropertyProperty {
-    type Err = Error;
-    fn from_str(s: &str) -> ::core::result::Result<Self, <Self as FromStr>::Err> {
-        Ok(match s {
-            "1.25" => UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_1_25,
-            "2.375" => UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_2_375,
+impl From<f32> for UnionFloatLiteralPropertyProperty {
+    fn from(value: f32) -> Self {
+        match value {
+            1.25 => UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_1_25,
+            2.375 => UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_2_375,
             _ => {
-                return Err(Error::with_message_fn(ErrorKind::DataConversion, || {
-                    format!("unknown variant of UnionFloatLiteralPropertyProperty found: \"{s}\"")
-                }))
+                panic!("unknown variant of UnionFloatLiteralPropertyProperty: {value}")
             }
-        })
+        }
     }
 }
 
-impl AsRef<str> for UnionFloatLiteralPropertyProperty {
-    fn as_ref(&self) -> &str {
-        match self {
-            UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_1_25 => "1.25",
-            UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_2_375 => "2.375",
+impl From<UnionFloatLiteralPropertyProperty> for f32 {
+    fn from(value: UnionFloatLiteralPropertyProperty) -> Self {
+        match value {
+            UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_1_25 => 1.25,
+            UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_2_375 => 2.375,
         }
     }
 }
@@ -41,32 +38,29 @@ impl AsRef<str> for UnionFloatLiteralPropertyProperty {
 impl Display for UnionFloatLiteralPropertyProperty {
     fn fmt(&self, f: &mut Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_1_25 => Display::fmt("1.25", f),
-            UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_2_375 => Display::fmt("2.375", f),
+            UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_1_25 => Display::fmt(&1.25, f),
+            UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_2_375 => Display::fmt(&2.375, f),
         }
     }
 }
 
-impl FromStr for UnionIntLiteralPropertyProperty {
-    type Err = Error;
-    fn from_str(s: &str) -> ::core::result::Result<Self, <Self as FromStr>::Err> {
-        Ok(match s {
-            "1" => UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_1,
-            "2" => UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_2,
+impl From<i32> for UnionIntLiteralPropertyProperty {
+    fn from(value: i32) -> Self {
+        match value {
+            1 => UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_1,
+            2 => UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_2,
             _ => {
-                return Err(Error::with_message_fn(ErrorKind::DataConversion, || {
-                    format!("unknown variant of UnionIntLiteralPropertyProperty found: \"{s}\"")
-                }))
+                panic!("unknown variant of UnionIntLiteralPropertyProperty: {value}")
             }
-        })
+        }
     }
 }
 
-impl AsRef<str> for UnionIntLiteralPropertyProperty {
-    fn as_ref(&self) -> &str {
-        match self {
-            UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_1 => "1",
-            UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_2 => "2",
+impl From<UnionIntLiteralPropertyProperty> for i32 {
+    fn from(value: UnionIntLiteralPropertyProperty) -> Self {
+        match value {
+            UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_1 => 1,
+            UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_2 => 2,
         }
     }
 }
@@ -74,8 +68,8 @@ impl AsRef<str> for UnionIntLiteralPropertyProperty {
 impl Display for UnionIntLiteralPropertyProperty {
     fn fmt(&self, f: &mut Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_1 => Display::fmt("1", f),
-            UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_2 => Display::fmt("2", f),
+            UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_1 => Display::fmt(&1, f),
+            UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_2 => Display::fmt(&2, f),
         }
     }
 }

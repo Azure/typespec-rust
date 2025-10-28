@@ -80,6 +80,9 @@ export interface EncodedBytes {
   slice: boolean;
 }
 
+/** EnumType defines the possible underlying types for an Enum */
+export type EnumType = 'f32' | 'f64' | 'i32' | 'i64' | 'String';
+
 /** Enum is a Rust enum type. */
 export interface Enum {
   kind: 'enum';
@@ -98,6 +101,9 @@ export interface Enum {
 
   /** indicates if the enum is extensible or not */
   extensible: boolean;
+
+  /** the underlying type of the enum */
+  type: EnumType;
 }
 
 /** EnumValue is an enum value for a specific Enum */
@@ -674,12 +680,13 @@ export class EncodedBytes implements EncodedBytes {
 }
 
 export class Enum implements Enum {
-  constructor(name: string, pub: boolean, extensible: boolean) {
+  constructor(name: string, pub: boolean, extensible: boolean, type: EnumType) {
     this.kind = 'enum';
     this.name = name;
     this.pub = pub;
     this.values = new Array<EnumValue>();
     this.extensible = extensible;
+    this.type = type;
     this.docs = {};
   }
 }

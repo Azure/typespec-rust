@@ -7,9 +7,6 @@ use spector_optionality::{
     OptionalClient,
 };
 
-// TODO: https://github.com/Azure/typespec-rust/issues/25
-
-#[should_panic]
 #[tokio::test]
 async fn get_all() {
     let client = OptionalClient::with_no_credential("http://localhost:3000", None).unwrap();
@@ -40,9 +37,6 @@ async fn get_default() {
     assert!(resp.property.is_none());
 }
 
-// TODO: https://github.com/Azure/typespec-rust/issues/25
-
-#[should_panic]
 #[tokio::test]
 async fn put_all() {
     let client = OptionalClient::with_no_credential("http://localhost:3000", None).unwrap();

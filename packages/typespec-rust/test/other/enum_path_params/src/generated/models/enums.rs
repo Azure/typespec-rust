@@ -40,3 +40,11 @@ pub enum FixedValues {
 
     Two,
 }
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[non_exhaustive]
+pub enum NumericValues {
+    OneTwo,
+
+    ThreeFour,
+}

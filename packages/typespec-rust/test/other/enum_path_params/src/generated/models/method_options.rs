@@ -6,6 +6,13 @@
 use super::{ExtensibleValues, FixedValues};
 use azure_core::{fmt::SafeDebug, http::ClientMethodOptions};
 
+/// Options to be passed to [`EnumPathParamsClient::numeric()`](crate::generated::clients::EnumPathParamsClient::numeric())
+#[derive(Clone, Default, SafeDebug)]
+pub struct EnumPathParamsClientNumericOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
 /// Options to be passed to [`EnumPathParamsClient::optional_extensible()`](crate::generated::clients::EnumPathParamsClient::optional_extensible())
 #[derive(Clone, Default, SafeDebug)]
 pub struct EnumPathParamsClientOptionalExtensibleOptions<'a> {

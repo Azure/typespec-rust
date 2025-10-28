@@ -1640,9 +1640,8 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
         break;
       case 'enum':
       case 'scalar':
-        if (paramType.kind === 'enum' && (param.kind === 'pathScalar' || param.kind === 'queryScalar')) {
+        if (paramType.kind === 'enum' && (param.kind === 'pathScalar' || param.kind === 'queryScalar') && paramType.type === 'String') {
           // append_pair and path.replace() want a reference to the string
-          // TODO: https://github.com/Azure/typespec-rust/issues/25
           paramValue = `${paramName}.as_ref()`;
           // as_ref() elides the need to borrow
           mustBorrow = false;

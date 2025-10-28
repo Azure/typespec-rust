@@ -71,8 +71,7 @@ impl<'de> Deserialize<'de> for UnionFloatLiteralPropertyProperty {
     where
         D: Deserializer<'de>,
     {
-        let s = String::deserialize(deserializer)?;
-        s.parse().map_err(serde::de::Error::custom)
+        Ok(f32::deserialize(deserializer)?.into())
     }
 }
 
@@ -81,7 +80,7 @@ impl Serialize for UnionFloatLiteralPropertyProperty {
     where
         S: Serializer,
     {
-        s.serialize_str(self.as_ref())
+        s.serialize_f32(f32::from(*self))
     }
 }
 
@@ -90,8 +89,7 @@ impl<'de> Deserialize<'de> for UnionIntLiteralPropertyProperty {
     where
         D: Deserializer<'de>,
     {
-        let s = String::deserialize(deserializer)?;
-        s.parse().map_err(serde::de::Error::custom)
+        Ok(i32::deserialize(deserializer)?.into())
     }
 }
 
@@ -100,7 +98,7 @@ impl Serialize for UnionIntLiteralPropertyProperty {
     where
         S: Serializer,
     {
-        s.serialize_str(self.as_ref())
+        s.serialize_i32(i32::from(*self))
     }
 }
 

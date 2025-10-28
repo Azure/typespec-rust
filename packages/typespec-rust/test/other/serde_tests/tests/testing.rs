@@ -6,7 +6,9 @@ use azure_core::{
     http::{headers::Headers, RawResponse, Response, StatusCode},
     json::to_json,
 };
-use serde_tests::models::{AddlPropsInt, AddlPropsString, AddlPropsUnknown};
+use serde_tests::models::{
+    AddlPropsInt, AddlPropsString, AddlPropsUnknown, ExtensibleValues, WithNumericEnum,
+};
 use std::collections::HashMap;
 
 #[tokio::test]
@@ -79,4 +81,24 @@ async fn test_addl_props_unknown_se() {
     addl_props_unknown.name = Some("foo".to_string());
     let json_body = to_json(&addl_props_unknown).unwrap();
     assert_eq!(json_body, r#"{"other1":false,"count":123,"name":"foo"}"#);
+}
+
+#[tokio::test]
+async fn test_with_numeric_enum_de() {
+    let json_data = r#"{"value":789}"#;
+    let resp: Response<WithNumericEnum> =
+        RawResponse::from_bytes(StatusCode::Ok, Headers::new(), json_data).into();
+    let with_numeric_enum = resp.into_body().unwrap();
+    assert_eq!(
+        with_numeric_enum.value,
+        Some(ExtensibleValues::UnknownValue(789))
+    );
+}
+
+#[tokio::test]
+async fn test_with_numeric_enum_se() {
+    let mut with_numeric_enum = WithNumericEnum::default();
+    with_numeric_enum.value = Some(ExtensibleValues::UnknownValue(789));
+    let json_body = to_json(&with_numeric_enum).unwrap();
+    assert_eq!(json_body, r#"{"value":789}"#);
 }
