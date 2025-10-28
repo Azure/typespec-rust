@@ -14,7 +14,7 @@ async fn invalid() {
     )
     .unwrap();
     let rsp = client.invalid(None).await;
-    assert_eq!(rsp.err().unwrap().http_status(), Some(StatusCode::Forbidden));
+    assert_eq!(rsp.unwrap_err().http_status(), Some(StatusCode::Forbidden));
 }
 
 #[tokio::test]
