@@ -14,14 +14,15 @@ use std::{
     str::FromStr,
 };
 
-impl From<f32> for UnionFloatLiteralPropertyProperty {
-    fn from(value: f32) -> Self {
+impl TryFrom<f32> for UnionFloatLiteralPropertyProperty {
+    type Error = Error;
+    fn try_from(value: f32) -> Result<Self, Self::Error> {
         match value {
-            1.25 => UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_1_25,
-            2.375 => UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_2_375,
-            _ => {
-                panic!("unknown variant of UnionFloatLiteralPropertyProperty: {value}")
-            }
+            1.25 => Ok(UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_1_25),
+            2.375 => Ok(UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_2_375),
+            _ => Err(Error::with_message_fn(ErrorKind::DataConversion, || {
+                format!("unknown variant of UnionFloatLiteralPropertyProperty found: {value}")
+            })),
         }
     }
 }
@@ -44,14 +45,15 @@ impl Display for UnionFloatLiteralPropertyProperty {
     }
 }
 
-impl From<i32> for UnionIntLiteralPropertyProperty {
-    fn from(value: i32) -> Self {
+impl TryFrom<i32> for UnionIntLiteralPropertyProperty {
+    type Error = Error;
+    fn try_from(value: i32) -> Result<Self, Self::Error> {
         match value {
-            1 => UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_1,
-            2 => UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_2,
-            _ => {
-                panic!("unknown variant of UnionIntLiteralPropertyProperty: {value}")
-            }
+            1 => Ok(UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_1),
+            2 => Ok(UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_2),
+            _ => Err(Error::with_message_fn(ErrorKind::DataConversion, || {
+                format!("unknown variant of UnionIntLiteralPropertyProperty found: {value}")
+            })),
         }
     }
 }

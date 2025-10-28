@@ -11,7 +11,9 @@ impl<'de> Deserialize<'de> for ExtensibleValues {
     where
         D: Deserializer<'de>,
     {
-        Ok(i32::deserialize(deserializer)?.into())
+        i32::deserialize(deserializer)?
+            .try_into()
+            .map_err(serde::de::Error::custom)
     }
 }
 

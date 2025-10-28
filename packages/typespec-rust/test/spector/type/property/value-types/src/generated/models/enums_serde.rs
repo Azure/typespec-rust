@@ -71,7 +71,9 @@ impl<'de> Deserialize<'de> for UnionFloatLiteralPropertyProperty {
     where
         D: Deserializer<'de>,
     {
-        Ok(f32::deserialize(deserializer)?.into())
+        f32::deserialize(deserializer)?
+            .try_into()
+            .map_err(serde::de::Error::custom)
     }
 }
 
@@ -89,7 +91,9 @@ impl<'de> Deserialize<'de> for UnionIntLiteralPropertyProperty {
     where
         D: Deserializer<'de>,
     {
-        Ok(i32::deserialize(deserializer)?.into())
+        i32::deserialize(deserializer)?
+            .try_into()
+            .map_err(serde::de::Error::custom)
     }
 }
 

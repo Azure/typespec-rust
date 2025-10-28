@@ -159,14 +159,15 @@ impl Display for FixedValues {
     }
 }
 
-impl From<i32> for NumericValues {
-    fn from(value: i32) -> Self {
+impl TryFrom<i32> for NumericValues {
+    type Error = Error;
+    fn try_from(value: i32) -> Result<Self, Self::Error> {
         match value {
-            12 => NumericValues::OneTwo,
-            34 => NumericValues::ThreeFour,
-            _ => {
-                panic!("unknown variant of NumericValues: {value}")
-            }
+            12 => Ok(NumericValues::OneTwo),
+            34 => Ok(NumericValues::ThreeFour),
+            _ => Err(Error::with_message_fn(ErrorKind::DataConversion, || {
+                format!("unknown variant of NumericValues found: {value}")
+            })),
         }
     }
 }

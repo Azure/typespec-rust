@@ -125,14 +125,15 @@ impl Display for InnerEnum {
     }
 }
 
-impl From<f32> for UnionFloatLiteralPropertyProperty {
-    fn from(value: f32) -> Self {
+impl TryFrom<f32> for UnionFloatLiteralPropertyProperty {
+    type Error = Error;
+    fn try_from(value: f32) -> Result<Self, Self::Error> {
         match value {
-            43.125 => UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_43_125,
-            46.875 => UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_46_875,
-            _ => {
-                panic!("unknown variant of UnionFloatLiteralPropertyProperty: {value}")
-            }
+            43.125 => Ok(UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_43_125),
+            46.875 => Ok(UnionFloatLiteralPropertyProperty::INVLD_IDENTIFIER_46_875),
+            _ => Err(Error::with_message_fn(ErrorKind::DataConversion, || {
+                format!("unknown variant of UnionFloatLiteralPropertyProperty found: {value}")
+            })),
         }
     }
 }
@@ -155,14 +156,15 @@ impl Display for UnionFloatLiteralPropertyProperty {
     }
 }
 
-impl From<i32> for UnionIntLiteralPropertyProperty {
-    fn from(value: i32) -> Self {
+impl TryFrom<i32> for UnionIntLiteralPropertyProperty {
+    type Error = Error;
+    fn try_from(value: i32) -> Result<Self, Self::Error> {
         match value {
-            42 => UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_42,
-            43 => UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_43,
-            _ => {
-                panic!("unknown variant of UnionIntLiteralPropertyProperty: {value}")
-            }
+            42 => Ok(UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_42),
+            43 => Ok(UnionIntLiteralPropertyProperty::INVLD_IDENTIFIER_43),
+            _ => Err(Error::with_message_fn(ErrorKind::DataConversion, || {
+                format!("unknown variant of UnionIntLiteralPropertyProperty found: {value}")
+            })),
         }
     }
 }
