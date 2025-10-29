@@ -1425,13 +1425,18 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
  * @returns the contents of the method body
  */
 function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroMethod): string {
-  const hasOperationLocationHeader = method.responseHeaders?.headers.some(h => h.header.toLowerCase() === 'operation-location') === true;
+  const pollingStepHeader
+    = method.responseHeaders?.headers.some(h => h.header.toLowerCase() === 'operation-location')
+      ? 'operation-location'
+      : method.responseHeaders?.headers.some(h => h.header.toLowerCase() === 'azure-asyncoperation')
+        ? 'azure-asyncoperation' : '';
+
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
   use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
   use.add('azure_core::http::headers', 'RETRY_AFTER', 'X_MS_RETRY_AFTER_MS', 'RETRY_AFTER_MS');
   use.add('azure_core::http::poller', 'get_retry_after', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor as _');
-  if (hasOperationLocationHeader) {
+  if (pollingStepHeader !== '' || method.finalResultHeader !== '') {
     use.add('azure_core::http::headers', 'HeaderName');
   }
 
@@ -1452,30 +1457,38 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   // we call this eagerly so that we have access to the request var name
   const initialRequestResult = constructRequest(indent, use, method, paramGroups, true, urlVar, true, false);
 
+  const applyApiVersionParam: (indent: helpers.indentation, paramGroups: MethodParamGroups, linkVarName: string) => string
+    = (indent, paramGroups, linkVarName) => {
+      if (paramGroups.apiVersion?.kind === 'queryScalar') {
+        return `${indent.get()}let qp = ${linkVarName}.query_pairs().filter(|(name, _)| name.ne("${paramGroups.apiVersion.key}"));\n`
+         + `${indent.get()}let mut ${linkVarName} = ${linkVarName}.clone();\n`
+         + `${indent.get()}${linkVarName}.query_pairs_mut().clear().extend_pairs(qp).append_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`;
+      }
+
+      return '';
+    };
+
+  const declareRequest: (indent: helpers.indentation, use: Use, method: rust.LroMethod, paramGroups: MethodParamGroups, requestVarName: string, linkVarName: string, forceMut?: boolean) => string
+    = (indent, use, method, paramGroups, requestVarName, linkVarName, forceMut = false) => {
+      let mutRequest = '';
+      // if the only header is optional Content-Type it will not be used
+      // by applyHeaderParams() in this case so don't make request mutable
+      if (forceMut || paramGroups.header.length > 1 || (paramGroups.header.length === 1 && !isOptionalContentTypeHeader(paramGroups.header[0]))) {
+        mutRequest = 'mut ';
+      }
+
+      return `${indent.get()}let ${mutRequest}${requestVarName} = Request::new(${linkVarName}.clone(), Method::Get);\n`
+        + applyHeaderParams(indent, use, method, paramGroups, true, requestVarName);
+    };
+
   body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(\n`
   body += `${indent.push().get()}move |next_link: PollerState<Url>| {\n`;
   body += `${indent.push().get()}let (mut ${initialRequestResult.requestVarName}, next_link) = ${helpers.buildMatch(indent, 'next_link', [{
     pattern: `PollerState::More(next_link)`,
     body: (indent) => {
-      let body = '';
-      if (paramGroups.apiVersion?.kind === 'queryScalar') {
-        body += `${indent.get()}let qp = next_link.query_pairs().filter(|(name, _)| name.ne("${paramGroups.apiVersion.key}"));\n`;
-        body += `${indent.get()}let mut next_link = next_link.clone();\n`;
-        body += `${indent.get()}next_link.query_pairs_mut().clear().extend_pairs(qp).append_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`;
-      }
-
-      let mutRequest = '';
-      // if the only header is optional Content-Type it will not be used
-      // by applyHeaderParams() in this case so don't make request mutable
-      if (paramGroups.header.length > 1 || (paramGroups.header.length === 1 && !isOptionalContentTypeHeader(paramGroups.header[0]))) {
-        mutRequest = 'mut ';
-      }
-
-      body += `${indent.get()}let ${mutRequest}${initialRequestResult.requestVarName} = Request::new(next_link.clone(), Method::Get);\n`;
-      body += applyHeaderParams(indent, use, method, paramGroups, true, initialRequestResult.requestVarName);
-      body += `${indent.get()}(${initialRequestResult.requestVarName}, next_link)\n`;
-
-      return body;
+      return applyApiVersionParam(indent, paramGroups, 'next_link')
+        + declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'next_link')
+        + `${indent.get()}(${initialRequestResult.requestVarName}, next_link)\n`;
     },
   }, {
     pattern: 'PollerState::Initial',
@@ -1492,8 +1505,8 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?;\n`
   body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
 
-  if (hasOperationLocationHeader) {
-    body += `${indent.get()}let next_link = ${helpers.buildMatch(indent, 'headers.get_optional_string(&HeaderName::from_static("operation-location"))', [{
+  if (pollingStepHeader !== '') {
+    body += `${indent.get()}let next_link = ${helpers.buildMatch(indent, `headers.get_optional_string(&HeaderName::from_static("${pollingStepHeader}"))`, [{
       pattern: `Some(operation_location)`,
       body: (indent) => {
         return `${indent.get()}Url::parse(&operation_location)?\n`;
@@ -1504,6 +1517,13 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
         return `${indent.get()}next_link`;
       }
     }])};\n`
+
+    if (method.finalResultHeader === pollingStepHeader) {
+      body += 'let final_link = next_link.clone();\n';
+    }
+  }
+  if (method.finalResultHeader !== '' && method.finalResultHeader !== pollingStepHeader) {
+    body += `${indent.get()}let final_link = Url::parse(headers.get_str(&HeaderName::from_static("${pollingStepHeader}"))?)?;\n`;
   }
 
   body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &options.poller_options);\n`
@@ -1514,19 +1534,44 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`
   body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`
 
-  body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', [{
+  const arms: helpers.matchArm[] = [{
     pattern: `PollerStatus::InProgress`,
     body: (indent) => {
       return `${indent.get()}response: rsp, retry_after, next: next_link\n`;
     },
     returns: 'PollerResult::InProgress'
-  }, {
+  }];
+
+  if (method.finalResultHeader !== '') {
+    arms.push({
+      pattern: `PollerStatus::Succeeded`,
+      body: (indent) => {
+        return `{\n`
+          + `${indent.push().get()}PollerResult::Succeeded {\n`
+          + `${indent.push().get()}response: rsp,\n`
+          + `${indent.get()}target: Box::new(move || {\n`
+          + `${indent.push().get()}Box::pin( async move {\n`
+          + declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'final_link', true)
+          + `let rsp = pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, None).await?;\n`
+          + `let (status, headers, body) = rsp.deconstruct();\n`
+          + `Ok(RawResponse::from_bytes(status, headers, body).into())\n`
+          + `${indent.pop().get()}})\n`
+          + `${indent.get()}}),\n`
+          + `${indent.pop().get()}}`
+          + `${indent.pop().get()}}`;
+      }
+    });
+  }
+
+  arms.push({
     pattern: '_',
     body: (indent) => {
       return `${indent.get()}response: rsp`;
     },
     returns: 'PollerResult::Done'
-  }])})\n`;
+  });
+
+  body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', arms)})\n`;
   body += `${indent.pop().get()}}\n`; // end async move
   body += `${indent.pop().get()}},\n`; // end move
   body += `${indent.get()}None,\n`;

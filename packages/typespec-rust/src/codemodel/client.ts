@@ -175,6 +175,12 @@ export interface LroMethod extends HTTPMethodBase {
 
   /** the lro result */
   returns: types.Result<types.Poller>;
+
+  /** name of the header containing the operation result */
+  finalResultHeader: string;
+
+  /** name of the field containing the operation result */
+  finalResultProperty: string;
 }
 
 /** PageableStrategyContinuationToken indicates a pageable method uses the continuation token strategy */
@@ -729,11 +735,13 @@ export class PageableMethod extends HTTPMethodBase implements PageableMethod {
 }
 
 export class LroMethod extends HTTPMethodBase implements LroMethod {
-  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string) {
+  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string, finalResultHeader: string, finalResultProperty: string) {
     super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'lro';
     this.params = new Array<MethodParameter>();
     this.options = options;
+    this.finalResultHeader = finalResultHeader;
+    this.finalResultProperty = finalResultProperty;
   }
 }
 

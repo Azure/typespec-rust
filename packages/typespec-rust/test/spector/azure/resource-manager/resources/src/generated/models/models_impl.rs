@@ -71,7 +71,7 @@ impl Page for TopLevelTrackedResourceListResult {
 }
 
 impl StatusMonitor for ArmOperationStatusResourceProvisioningState {
-    type Output = ArmOperationStatusResourceProvisioningState;
+    type Output = TopLevelTrackedResource;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         match &self.status {

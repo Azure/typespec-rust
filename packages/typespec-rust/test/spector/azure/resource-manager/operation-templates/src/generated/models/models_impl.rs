@@ -5,7 +5,8 @@
 
 use super::{
     ActionRequest, ArmOperationStatusResourceProvisioningState, ChangeAllowanceRequest,
-    CheckNameAvailabilityRequest, ExportRequest, Operation, OperationListResult, Order, Widget,
+    CheckNameAvailabilityRequest, ExportRequest, ExportResult, Operation, OperationListResult,
+    Order, Widget,
 };
 use async_trait::async_trait;
 use azure_core::{
@@ -29,7 +30,7 @@ impl Page for OperationListResult {
 }
 
 impl StatusMonitor for ArmOperationStatusResourceProvisioningState {
-    type Output = ArmOperationStatusResourceProvisioningState;
+    type Output = ExportResult;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         match &self.status {

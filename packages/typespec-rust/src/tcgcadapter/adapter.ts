@@ -1291,9 +1291,36 @@ export class Adapter {
       case 'paging':
         rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path);
         break;
-      case 'lro':
-        rustMethod = new rust.LroMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path);
-        break;
+      case 'lro': {
+        let finalResultHeader = '';
+        switch (method.lroMetadata.finalStateVia as string) {
+          case 'original-uri':
+            break;
+          case 'operation-location':
+            finalResultHeader = 'operation-location';
+            break;
+          case 'location':
+            finalResultHeader = 'location';
+            break;
+          case 'azure-async-operation':
+            finalResultHeader = 'azure-asyncoperation';
+            break;
+          default:
+            throw new AdapterError('UnsupportedTsp', `lroMetadata.finalStateVia ${method.lroMetadata.finalStateVia} NYI`, method.__raw?.node);
+        }
+
+        rustMethod = new rust.LroMethod(
+          methodName,
+          languageIndependentName,
+          rustClient,
+          pub,
+          methodOptions,
+          httpMethod,
+          method.operation.path,
+          finalResultHeader,
+          method.lroMetadata.finalResultPath ?? '');
+      }
+      break;
       default:
         throw new AdapterError('UnsupportedTsp', `method kind ${method.kind} NYI`, method.__raw?.node);
     }

@@ -49,7 +49,7 @@ impl Page for SnapshotListResult {
 }
 
 impl StatusMonitor for OperationDetails {
-    type Output = OperationDetails;
+    type Output = Snapshot;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         match &self.status {
