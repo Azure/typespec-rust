@@ -34,6 +34,7 @@
     "words": [
         "INVLD",
         "appconfiguration",
+        "asyncoperation",
         "clientaccessor",
         "clippy",
         "codegen",
