@@ -1,5 +1,11 @@
 # Release History
 
+## 0.25.1 (unreleased)
+
+### Other Changes
+
+* Replace dependency on `typespec_client_core` with `azure_core`.
+
 ## 0.25.0 (2025-10-29)
 
 ### Breaking Changes
