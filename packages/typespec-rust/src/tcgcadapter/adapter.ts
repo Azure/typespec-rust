@@ -1526,13 +1526,8 @@ export class Adapter {
         throw new AdapterError('InternalError', `failed to unwrap paged items for method ${method.name}`, method.__raw?.node);
       }
 
-      // if the response contains more than the Vec<T> and next_link then use a PageIterator
-      if (synthesizedModel.fields.length > 2) {
-        rustMethod.returns = new rust.Result(this.crate, new rust.PageIterator(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
-      } else {
-        this.crate.addDependency(new rust.CrateDependency('async-trait'));
-        rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
-      }
+      this.crate.addDependency(new rust.CrateDependency('async-trait'));
+      rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
     } else if (method.kind === 'lro') {
       const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
       const responseType = this.typeToWireType(this.getModel(method.lroMetadata.logicalResult));
@@ -1689,7 +1684,6 @@ export class Adapter {
     // response header traits are only ever for marker types and payloads
     let implFor: rust.AsyncResponse<rust.MarkerType> | rust.Response<rust.MarkerType | rust.WireType>;
     switch (method.returns.type.kind) {
-      case 'pageIterator':
       case 'pager':
       case 'poller':
         implFor = method.returns.type.type;

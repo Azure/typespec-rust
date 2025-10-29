@@ -15,7 +15,7 @@ export interface Docs {
 }
 
 /** SdkType defines types used in generated code but do not directly participate in serde */
-export type SdkType =  Arc | AsyncResponse | Box | ExternalType | ImplTrait | MarkerType | Option | PageIterator | Pager | Poller | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
+export type SdkType =  Arc | AsyncResponse | Box | ExternalType | ImplTrait | MarkerType | Option | Pager | Poller | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
 export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Union | UnionMember | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
@@ -321,14 +321,6 @@ export interface Option<T extends OptionType = OptionType> {
   type: T;
 }
 
-/** PageIterator is a PageIterator<T> from azure_core */
-export interface PageIterator extends External {
-  kind: 'pageIterator';
-
-  /** the model containing the page of items */
-  type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
-}
-
 /** Pager is a Pager<T> from azure_core */
 export interface Pager extends External {
   kind: 'pager';
@@ -423,7 +415,7 @@ export interface Response<T extends ResponseTypes = ResponseTypes, Format extend
 }
 
 /** ResultTypes defines the type constraint when creating a Result<T> */
-export type ResultTypes = AsyncResponse | PageIterator | Pager | Poller | Response;
+export type ResultTypes = AsyncResponse | Pager | Poller | Response;
 
 /** Result is a Rust Result<T> from azure_core */
 export interface Result<T extends ResultTypes = ResultTypes> extends External {
@@ -810,14 +802,6 @@ export class OffsetDateTime extends External implements OffsetDateTime {
 export class Option<T> implements Option<T> {
   constructor(type: T) {
     this.kind = 'option';
-    this.type = type;
-  }
-}
-
-export class PageIterator extends External implements PageIterator {
-  constructor(crate: Crate, type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
-    super(crate, 'PageIterator', 'azure_core::http');
-    this.kind = 'pageIterator';
     this.type = type;
   }
 }

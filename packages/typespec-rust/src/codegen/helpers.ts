@@ -178,8 +178,6 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return getTypeDeclaration(type.valueKind);
     case 'option':
       return `Option<${getTypeDeclaration(type.type, withLifetime)}>`;
-    case 'pageIterator':
-      return `PageIterator<${getTypeDeclaration(type.type)}>`;
     case 'pager':
       // we explicitly omit the Response<T> from the type decl
       return `Pager<${getTypeDeclaration(type.type.content, withLifetime)}>`;
@@ -465,7 +463,6 @@ export function unwrapType(type: rust.Payload | rust.Type): rust.Type {
     case 'slice':
     case 'Vec':
       return unwrapType(type.type);
-    case 'pageIterator':
     case 'pager':
       return unwrapType(type.type.content);
     case 'poller':

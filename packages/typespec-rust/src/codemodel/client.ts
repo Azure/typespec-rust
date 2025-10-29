@@ -156,7 +156,7 @@ export interface PageableMethod extends HTTPMethodBase {
   params: Array<MethodParameter>;
 
   /** the paged result */
-  returns: types.Result<types.PageIterator | types.Pager>;
+  returns: types.Result<types.Pager>;
 
   /**
    * the strategy used to fetch the next page.

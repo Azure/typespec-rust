@@ -78,7 +78,6 @@ export class Context {
         }
 
         switch (method.returns.type.kind) {
-          case 'pageIterator':
           case 'pager': {
             recursiveAddBodyFormat(method.returns.type.type.content, helpers.convertResponseFormat(method.returns.type.type.format));
             break;
