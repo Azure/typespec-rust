@@ -133,11 +133,7 @@ function emitEnumPublicDefinitions(indent: helpers.indentation, rustEnum: rust.E
   if (docs.length > 0) {
     body += indent.get() + `${docs.substring(0, docs.length - 1)}\n`;
   }
-  body += indent.get() + `#[derive(Debug, PartialEq, Eq, Clone`
-  if (!rustEnum.extensible) {
-    body += ', Copy';
-  }
-  body += `)]\n`;
+  body += indent.get() + `#[derive(Clone, ${rustEnum.extensible ? '' : 'Copy, '}Debug, Eq, PartialEq)]\n`;
   body += indent.get() + `#[non_exhaustive]\n`;
   body += indent.get() + `pub enum ${rustEnum.name} {\n`;
   indent.push();

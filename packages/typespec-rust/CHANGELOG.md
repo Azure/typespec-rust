@@ -11,6 +11,7 @@
 * The algorithm for renaming of pageable methods has changed which can cause some method names to change.
 * Some method parameters are now borrowed instead of owned.
 * Use helper `UrlExt::append_path()` from `azure_core` when constructing the request's `Url`.
+* Pageable methods always return a `Pager<T>` instead of sometimes returning a `PageIterator<T>`.
 
 ### Bugs Fixed
 
@@ -22,6 +23,8 @@
 ### Other Changes
 
 * Emit `#[allow(clippy::too_many_arguments)]` on methods that contain seven or more arguments.
+* Emit doc comments for synthesized nullable types.
+* Unsupported authentication schemes will no longer prevent code generation. However, no constructors for unsupported authentication schemes will be emitted.
 
 ## 0.24.1 (2025-10-15)
 

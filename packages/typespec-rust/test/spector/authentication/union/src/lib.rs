@@ -7,3 +7,79 @@
 
 mod generated;
 pub use generated::*;
+
+use async_trait::async_trait;
+use azure_core::{
+    http::{
+        policies::{Policy, PolicyResult},
+        Context, Pipeline, Url,
+    },
+    tracing, Result,
+};
+use std::sync::Arc;
+
+pub struct KeyCredential {
+    key: String,
+}
+
+impl KeyCredential {
+    pub fn new(key: String) -> Self {
+        Self { key }
+    }
+}
+
+impl UnionClient {
+    #[tracing::new("Authentication.Union")]
+    pub fn with_key_credential(
+        endpoint: &str,
+        credential: KeyCredential,
+        options: Option<UnionClientOptions>,
+    ) -> Result<Self> {
+        let options = options.unwrap_or_default();
+        let endpoint = Url::parse(endpoint)?;
+        if !endpoint.scheme().starts_with("http") {
+            return Err(azure_core::Error::with_message(
+                azure_core::error::ErrorKind::Other,
+                format!("{endpoint} must use http(s)"),
+            ));
+        }
+        let auth_policy: Arc<dyn Policy> = Arc::new(KeyCredentialPolicy::new(credential));
+        Ok(Self {
+            endpoint,
+            pipeline: Pipeline::new(
+                option_env!("CARGO_PKG_NAME"),
+                option_env!("CARGO_PKG_VERSION"),
+                options.client_options,
+                Vec::default(),
+                vec![auth_policy],
+                None,
+            ),
+        })
+    }
+}
+
+#[derive(Debug, Clone)]
+struct KeyCredentialPolicy {
+    key: String,
+}
+
+impl KeyCredentialPolicy {
+    pub fn new(credential: KeyCredential) -> Self {
+        Self {
+            key: credential.key,
+        }
+    }
+}
+
+#[async_trait]
+impl Policy for KeyCredentialPolicy {
+    async fn send(
+        &self,
+        ctx: &Context,
+        request: &mut azure_core::http::Request,
+        next: &[Arc<dyn Policy>],
+    ) -> PolicyResult {
+        request.insert_header("x-ms-api-key", &self.key);
+        next[0].send(ctx, request, &next[1..]).await
+    }
+}

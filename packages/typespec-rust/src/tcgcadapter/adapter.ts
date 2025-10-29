@@ -596,6 +596,11 @@ export class Adapter {
         return this.getStringType();
       }
       case 'nullable':
+        if (type.type.kind === 'model' && type.type.isGeneratedName) {
+          // if the nullable type's target type is a synthesized
+          // type, we need to propagate the docs to it
+          type.type.doc = type.doc;
+        }
         // TODO: workaround until https://github.com/Azure/typespec-rust/issues/42 is fixed
         return this.getType(type.type, stack);
       case 'offsetDateTime': {
@@ -938,7 +943,7 @@ export class Adapter {
       enum AuthTypes {
         Default = 0, // unspecified
         NoAuth = 1, // explicit NoAuth
-        WithAut = 2, // explicit credential
+        WithAuth = 2, // explicit credential
       }
 
       let authType = AuthTypes.Default;
@@ -946,24 +951,28 @@ export class Adapter {
       /**
        * processes a credential, potentially adding its supporting client constructor
        *
+       * @param rustClient the client for which the constructor will be added
+       * @param param the tsp parameter that contains cred
        * @param cred the credential type to process
        * @param constructable the constructable for the current Rust client
-       * @param throwOnDefault when true, throws an error on unsupported credential types
        * @returns the AuthTypes enum for the credential that was handled, or AuthTypes.Default if none were
        */
-      const processCredential = (rustClient: rust.Client, cred: http.HttpAuth, constructable: rust.ClientConstruction, throwOnDefault: boolean): AuthTypes => {
+      const processCredential = (rustClient: rust.Client, param: tcgc.SdkCredentialParameter, cred: http.HttpAuth, constructable: rust.ClientConstruction): AuthTypes => {
         switch (cred.type) {
           case 'noAuth':
             return AuthTypes.NoAuth;
           case 'oauth2': {
             constructable.constructors.push(this.createTokenCredentialCtor(rustClient, cred));
-            return AuthTypes.WithAut;
+            return AuthTypes.WithAuth;
           }
           default:
-            if (throwOnDefault) {
-              throw new AdapterError('UnsupportedTsp', `credential scheme type ${cred.type} NYI`);
-            }
-            return AuthTypes.Default;
+            this.ctx.program.reportDiagnostic({
+              code: 'UnsupportedAuthenticationScheme',
+              severity: 'warning',
+              message: `authentication scheme ${cred.type} is not supported`,
+              target: param.__raw?.node ?? NoTarget,
+            });
+            return AuthTypes.WithAuth;
         }
       };
 
@@ -973,7 +982,7 @@ export class Adapter {
           case 'credential':
             switch (param.type.kind) {
               case 'credential':
-                authType |= processCredential(rustClient, param.type.scheme, rustClient.constructable, true);
+                authType |= processCredential(rustClient, param, param.type.scheme, rustClient.constructable);
                 break;
               case 'union': {
                 const variantKinds = new Array<string>();
@@ -982,14 +991,8 @@ export class Adapter {
                   // if OAuth2 is specified then emit that and skip any unsupported ones.
                   // this prevents emitting the with_no_credential constructor in cases
                   // where it might not actually be supported.
-                  authType |= processCredential(rustClient, variantType.scheme, rustClient.constructable, false);
+                  authType |= processCredential(rustClient, param, variantType.scheme, rustClient.constructable);
                 }
-
-                // no supported credential types were specified
-                if (authType === AuthTypes.Default) {
-                  throw new AdapterError('UnsupportedTsp', `credential scheme types ${variantKinds.join()} NYI`, param.__raw?.node);
-                }
-                continue;
               }
             }
             break;
@@ -1550,13 +1553,8 @@ export class Adapter {
         throw new AdapterError('InternalError', `failed to unwrap paged items for method ${method.name}`, method.__raw?.node);
       }
 
-      // if the response contains more than the Vec<T> and next_link then use a PageIterator
-      if (synthesizedModel.fields.length > 2) {
-        rustMethod.returns = new rust.Result(this.crate, new rust.PageIterator(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
-      } else {
-        this.crate.addDependency(new rust.CrateDependency('async-trait'));
-        rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
-      }
+      this.crate.addDependency(new rust.CrateDependency('async-trait'));
+      rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
     } else if (method.kind === 'lro') {
       const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
       const responseType = this.typeToWireType(this.getModel(method.lroMetadata.logicalResult));
@@ -1718,7 +1716,6 @@ export class Adapter {
     // response header traits are only ever for marker types and payloads
     let implFor: rust.AsyncResponse<rust.MarkerType> | rust.Response<rust.MarkerType | rust.WireType>;
     switch (method.returns.type.kind) {
-      case 'pageIterator':
       case 'pager':
       case 'poller':
         implFor = method.returns.type.type;

@@ -5,7 +5,7 @@
 use azure_core::credentials::{AccessToken, TokenCredential, TokenRequestOptions};
 use azure_core::time::OffsetDateTime;
 use azure_core::Result;
-use spector_unionauth::UnionClient;
+use spector_unionauth::{KeyCredential, UnionClient};
 use std::sync::Arc;
 
 #[derive(Debug)]
@@ -31,6 +31,17 @@ impl TokenCredential for FakeTokenCredential {
             OffsetDateTime::now_utc(),
         ))
     }
+}
+
+#[tokio::test]
+async fn valid_key() {
+    let client = UnionClient::with_key_credential(
+        "http://localhost:3000",
+        KeyCredential::new("valid-key".to_string()),
+        None,
+    )
+    .unwrap();
+    client.valid_key(None).await.unwrap();
 }
 
 #[tokio::test]

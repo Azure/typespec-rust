@@ -8,6 +8,8 @@ members = [
     "sdk/blob_storage",
     "sdk/keyvault_secrets",
     "spector/special-words",
+    "spector/authentication/api-key",
+    "spector/authentication/http/custom",
     "spector/authentication/oauth2",
     "spector/authentication/union",
     "spector/client/naming",

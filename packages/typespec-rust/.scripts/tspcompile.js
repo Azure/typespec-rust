@@ -19,8 +19,8 @@ const compiler = pkgRoot + 'node_modules/@typespec/compiler/cmd/tsp.js';
 // 'crateName': { input: 'input dir', output: 'optional output dir', args: [optional args] }
 // if no .tsp file is specified in input, it's assumed to be main.tsp
 const httpSpecsGroup = {
-  //'spector_apikey': {input: 'authentication/api-key'},
-  //'spector_custom': {input: 'authentication/http/custom'},
+  'spector_apikey': {input: 'authentication/api-key'},
+  'spector_customauth': {input: 'authentication/http/custom'},
   'spector_oauth2': {input: 'authentication/oauth2'},
   'spector_unionauth': {input: 'authentication/union'},
   'spector_bytes': {input: 'encode/bytes'}, // TODO: nested arrays and "raw" request/responses (i.e. the orphan problem)
