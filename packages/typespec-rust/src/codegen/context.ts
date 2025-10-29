@@ -224,12 +224,7 @@ export class Context {
       return undefined;
     }
 
-    const format = this.getModelBodyFormat(model);
-    if (!format) {
-      return undefined;
-    }
-
-    const formatType = getPayloadFormatType(format);
+    const formatType = getPayloadFormatType(this.getModelBodyFormat(model));
     use.add('azure_core::http', formatType);
 
     use.addForType(model);
