@@ -12,7 +12,7 @@ use azure_core::{
     http::{
         pager::Page,
         poller::{PollerStatus, StatusMonitor},
-        RequestContent,
+        JsonFormat, RequestContent,
     },
     json::to_json,
     Result,
@@ -60,6 +60,7 @@ impl Page for SnapshotListResult {
 
 impl StatusMonitor for Snapshot {
     type Output = Snapshot;
+    type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         match &self.status {
             Some(v) => PollerStatus::from(v.as_ref()),

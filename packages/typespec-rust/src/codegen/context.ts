@@ -224,6 +224,14 @@ export class Context {
       return undefined;
     }
 
+    const format = this.getModelBodyFormat(model);
+    if (!format) {
+      return undefined;
+    }
+
+    const formatType = getPayloadFormatType(format);
+    use.add('azure_core::http', formatType);
+
     use.addForType(model);
     use.add('azure_core::http::poller', 'StatusMonitor', 'PollerStatus');
 
@@ -231,6 +239,7 @@ export class Context {
 
     let content = `impl StatusMonitor for ${model.name} {\n`;
     content += `${indent.get()}type Output = ${helpers.getTypeDeclaration(helpers.unwrapType(model))};\n`;
+    content += `${indent.get()}type Format = ${formatType};\n`;
     content += `${indent.get()}fn status(&self) -> PollerStatus {\n`;
 
     const statusField = model.fields.find(f => f.name.toLowerCase() === 'status');

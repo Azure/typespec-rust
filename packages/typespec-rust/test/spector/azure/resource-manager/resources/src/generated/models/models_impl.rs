@@ -14,7 +14,7 @@ use azure_core::{
     http::{
         pager::Page,
         poller::{PollerStatus, StatusMonitor},
-        RequestContent,
+        JsonFormat, RequestContent,
     },
     json::to_json,
     Result,
@@ -72,6 +72,7 @@ impl Page for TopLevelTrackedResourceListResult {
 
 impl StatusMonitor for ArmOperationStatusResourceProvisioningState {
     type Output = ArmOperationStatusResourceProvisioningState;
+    type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         match &self.status {
             Some(v) => PollerStatus::from(v.as_ref()),
@@ -82,6 +83,7 @@ impl StatusMonitor for ArmOperationStatusResourceProvisioningState {
 
 impl StatusMonitor for ExtensionsResource {
     type Output = ExtensionsResource;
+    type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         PollerStatus::Succeeded
     }
@@ -89,6 +91,7 @@ impl StatusMonitor for ExtensionsResource {
 
 impl StatusMonitor for NestedProxyResource {
     type Output = NestedProxyResource;
+    type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         PollerStatus::Succeeded
     }
@@ -96,6 +99,7 @@ impl StatusMonitor for NestedProxyResource {
 
 impl StatusMonitor for SingletonTrackedResource {
     type Output = SingletonTrackedResource;
+    type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         PollerStatus::Succeeded
     }
@@ -103,6 +107,7 @@ impl StatusMonitor for SingletonTrackedResource {
 
 impl StatusMonitor for TopLevelTrackedResource {
     type Output = TopLevelTrackedResource;
+    type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         PollerStatus::Succeeded
     }

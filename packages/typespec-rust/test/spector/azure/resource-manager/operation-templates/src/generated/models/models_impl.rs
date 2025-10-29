@@ -13,7 +13,7 @@ use azure_core::{
     http::{
         pager::Page,
         poller::{PollerStatus, StatusMonitor},
-        RequestContent,
+        JsonFormat, RequestContent,
     },
     json::to_json,
     Result,
@@ -31,6 +31,7 @@ impl Page for OperationListResult {
 
 impl StatusMonitor for ArmOperationStatusResourceProvisioningState {
     type Output = ArmOperationStatusResourceProvisioningState;
+    type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         match &self.status {
             Some(v) => PollerStatus::from(v.as_ref()),
@@ -41,6 +42,7 @@ impl StatusMonitor for ArmOperationStatusResourceProvisioningState {
 
 impl StatusMonitor for ExportResult {
     type Output = ExportResult;
+    type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         PollerStatus::Succeeded
     }
@@ -48,6 +50,7 @@ impl StatusMonitor for ExportResult {
 
 impl StatusMonitor for Order {
     type Output = Order;
+    type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         PollerStatus::Succeeded
     }
