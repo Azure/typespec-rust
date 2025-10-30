@@ -1,6 +1,6 @@
 # Release History
 
-## 0.25.0 (unreleased)
+## 0.25.0 (2025-10-29)
 
 ### Breaking Changes
 
@@ -12,6 +12,7 @@
 * Some method parameters are now borrowed instead of owned.
 * Use helper `UrlExt::append_path()` from `azure_core` when constructing the request's `Url`.
 * Pageable methods always return a `Pager<T>` instead of sometimes returning a `PageIterator<T>`.
+* Define `Format` for types that implement traits for long-running operations.
 
 ### Bugs Fixed
 
