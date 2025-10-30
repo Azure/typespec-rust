@@ -12,7 +12,6 @@ default = ["azure_core/default"]
 
 [dependencies]
 azure_core = { workspace = true }
-typespec_client_core = { workspace = true, features = ["derive"] }
 
 [dev-dependencies]
 tokio = { workspace = true }

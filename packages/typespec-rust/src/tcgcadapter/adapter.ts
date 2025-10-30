@@ -125,7 +125,7 @@ export class Adapter {
     }
 
     if (this.crate.clients.length > 0 || this.crate.enums.length > 0 || this.crate.models.length > 0 || this.crate.unions.length > 0) {
-      this.crate.addDependency(new rust.CrateDependency('typespec_client_core', ['derive']));
+      this.crate.addDependency(new rust.CrateDependency('azure_core'));
     }
 
     this.crate.sortContent();
@@ -172,8 +172,6 @@ export class Adapter {
       }
       const rustModel = this.getModel(model);
       this.crate.models.push(rustModel);
-      // presence of models requires the derive feature
-      this.crate.addDependency(new rust.CrateDependency('typespec_client_core', ['derive']));
     }
   }
 
