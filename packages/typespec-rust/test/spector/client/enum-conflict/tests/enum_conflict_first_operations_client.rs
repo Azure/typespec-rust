@@ -10,9 +10,10 @@ use spector_enumconflict::{
 #[tokio::test]
 async fn first() {
     let client = EnumConflictClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let mut body = FirstModel::default();
-    body.name = Some("test".to_string());
-    body.status = Some(Status::Active);
+    let body = FirstModel {
+        name: Some("test".to_string()),
+        status: Some(Status::Active),
+    };
     let resp = client
         .get_enum_conflict_first_operations_client()
         .first(body.try_into().unwrap(), None)
