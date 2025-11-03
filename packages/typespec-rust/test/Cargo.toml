@@ -51,6 +51,7 @@ members = [
     "spector/azure/resource-manager/operation-templates",
     "spector/azure/resource-manager/resources",
     "spector/azure/special-headers/client-request-id",
+    "spector/azure/versioning/previewVersion",
     "spector/client/overload",
     "spector/client/structure/client-operation-group",
     "spector/client/structure/default",
