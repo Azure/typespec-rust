@@ -21,9 +21,6 @@ pub struct TraitsClientRepeatableActionOptions<'a> {
 /// Options to be passed to [`TraitsClient::smoke_test()`](crate::generated::clients::TraitsClient::smoke_test())
 #[derive(Clone, Default, SafeDebug)]
 pub struct TraitsClientSmokeTestOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
     /// The request should only proceed if an entity matches this string.
     pub if_match: Option<String>,
 

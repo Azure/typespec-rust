@@ -216,9 +216,6 @@ impl TraitsClient {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
         request.insert_header("foo", foo);
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
         let rsp = self
             .pipeline
             .send(

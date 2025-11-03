@@ -193,9 +193,6 @@ impl AzureAppConfigurationClient {
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
         }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
         let rsp = self
             .pipeline
             .send(
@@ -297,9 +294,6 @@ impl AzureAppConfigurationClient {
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
         }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
         let rsp = self
             .pipeline
             .send(
@@ -369,9 +363,6 @@ impl AzureAppConfigurationClient {
         }
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
-        }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self
             .pipeline
@@ -452,9 +443,6 @@ impl AzureAppConfigurationClient {
         }
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
-        }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self
             .pipeline
@@ -548,9 +536,6 @@ impl AzureAppConfigurationClient {
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
         }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
         let rsp = self
             .pipeline
             .send(
@@ -636,9 +621,6 @@ impl AzureAppConfigurationClient {
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
         }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
         let rsp = self
             .pipeline
             .send(
@@ -702,9 +684,6 @@ impl AzureAppConfigurationClient {
         let mut request = Request::new(url, Method::Head);
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
-        }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self
             .pipeline
@@ -923,9 +902,6 @@ impl AzureAppConfigurationClient {
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
         }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
         let rsp = self
             .pipeline
             .send(
@@ -1015,9 +991,6 @@ impl AzureAppConfigurationClient {
         }
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
-        }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self
             .pipeline
@@ -1128,9 +1101,6 @@ impl AzureAppConfigurationClient {
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
         }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
         let rsp = self
             .pipeline
             .send(
@@ -1170,9 +1140,6 @@ impl AzureAppConfigurationClient {
         url.query_pairs_mut().append_pair("snapshot", snapshot);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
         let rsp = self
             .pipeline
             .send(
@@ -1271,9 +1238,6 @@ impl AzureAppConfigurationClient {
         }
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
-        }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
         }
         let rsp = self
             .pipeline
@@ -1626,9 +1590,6 @@ impl AzureAppConfigurationClient {
             if let Some(sync_token) = &options.sync_token {
                 request.insert_header("sync-token", sync_token);
             }
-            if let Some(client_request_id) = &options.client_request_id {
-                request.insert_header("x-ms-client-request-id", client_request_id);
-            }
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
             async move {
@@ -1757,9 +1718,6 @@ impl AzureAppConfigurationClient {
             }
             if let Some(sync_token) = &options.sync_token {
                 request.insert_header("sync-token", sync_token);
-            }
-            if let Some(client_request_id) = &options.client_request_id {
-                request.insert_header("x-ms-client-request-id", client_request_id);
             }
             let ctx = options.method_options.context.clone();
             let pipeline = pipeline.clone();
@@ -1991,9 +1949,6 @@ impl AzureAppConfigurationClient {
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
         }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
         if let Some(entity) = options.entity {
             request.set_body(entity);
         }
@@ -2087,9 +2042,6 @@ impl AzureAppConfigurationClient {
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
         }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
-        }
         let rsp = self
             .pipeline
             .send(
@@ -2182,9 +2134,6 @@ impl AzureAppConfigurationClient {
         }
         if let Some(sync_token) = options.sync_token {
             request.insert_header("sync-token", sync_token);
-        }
-        if let Some(client_request_id) = options.client_request_id {
-            request.insert_header("x-ms-client-request-id", client_request_id);
         }
         request.set_body(entity);
         let rsp = self

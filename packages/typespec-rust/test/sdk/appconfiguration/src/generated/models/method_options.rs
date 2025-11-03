@@ -16,9 +16,6 @@ pub struct AzureAppConfigurationClientCheckKeyValueOptions<'a> {
     /// time.
     pub accept_datetime: Option<String>,
 
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
     /// Used to perform an operation only if the targeted resource's etag matches the
     /// value provided.
     pub if_match: Option<String>,
@@ -54,9 +51,6 @@ pub struct AzureAppConfigurationClientCheckKeyValuesOptions<'a> {
     /// Instructs the server to return elements that appear after the element referred
     /// to by the specified token.
     pub after: Option<String>,
-
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
 
     /// Used to perform an operation only if the targeted resource's etag matches the
     /// value provided.
@@ -103,9 +97,6 @@ pub struct AzureAppConfigurationClientCheckKeysOptions<'a> {
     /// to by the specified token.
     pub after: Option<String>,
 
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
@@ -126,9 +117,6 @@ pub struct AzureAppConfigurationClientCheckLabelsOptions<'a> {
     /// Instructs the server to return elements that appear after the element referred
     /// to by the specified token.
     pub after: Option<String>,
-
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
 
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
@@ -153,9 +141,6 @@ pub struct AzureAppConfigurationClientCheckRevisionsOptions<'a> {
     /// Instructs the server to return elements that appear after the element referred
     /// to by the specified token.
     pub after: Option<String>,
-
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
 
     /// A filter used to match keys. Syntax reference:
     /// <https://aka.ms/azconfig/docs/restapirevisions>
@@ -182,9 +167,6 @@ pub struct AzureAppConfigurationClientCheckRevisionsOptions<'a> {
 /// Options to be passed to [`AzureAppConfigurationClient::check_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::check_snapshot())
 #[derive(Clone, Default, SafeDebug)]
 pub struct AzureAppConfigurationClientCheckSnapshotOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
     /// Used to perform an operation only if the targeted resource's etag matches the
     /// value provided.
     pub if_match: Option<String>,
@@ -206,9 +188,6 @@ pub struct AzureAppConfigurationClientCheckSnapshotsOptions<'a> {
     /// Instructs the server to return elements that appear after the element referred
     /// to by the specified token.
     pub after: Option<String>,
-
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
 
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
@@ -246,9 +225,6 @@ impl AzureAppConfigurationClientCreateSnapshotOptions<'_> {
 /// Options to be passed to [`AzureAppConfigurationClient::delete_key_value()`](crate::generated::clients::AzureAppConfigurationClient::delete_key_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct AzureAppConfigurationClientDeleteKeyValueOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
     /// Used to perform an operation only if the targeted resource's etag matches the
     /// value provided.
     pub if_match: Option<String>,
@@ -266,9 +242,6 @@ pub struct AzureAppConfigurationClientDeleteKeyValueOptions<'a> {
 /// Options to be passed to [`AzureAppConfigurationClient::delete_lock()`](crate::generated::clients::AzureAppConfigurationClient::delete_lock())
 #[derive(Clone, Default, SafeDebug)]
 pub struct AzureAppConfigurationClientDeleteLockOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
     /// Used to perform an operation only if the targeted resource's etag matches the
     /// value provided.
     pub if_match: Option<String>,
@@ -293,9 +266,6 @@ pub struct AzureAppConfigurationClientGetKeyValueOptions<'a> {
     /// Requests the server to respond with the state of the resource at the specified
     /// time.
     pub accept_datetime: Option<String>,
-
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
 
     /// Used to perform an operation only if the targeted resource's etag matches the
     /// value provided.
@@ -325,9 +295,6 @@ pub struct AzureAppConfigurationClientGetKeyValueOptions<'a> {
 /// Options to be passed to [`AzureAppConfigurationClient::get_operation_details()`](crate::generated::clients::AzureAppConfigurationClient::get_operation_details())
 #[derive(Clone, Default, SafeDebug)]
 pub struct AzureAppConfigurationClientGetOperationDetailsOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
@@ -335,9 +302,6 @@ pub struct AzureAppConfigurationClientGetOperationDetailsOptions<'a> {
 /// Options to be passed to [`AzureAppConfigurationClient::get_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::get_snapshot())
 #[derive(Clone, Default, SafeDebug)]
 pub struct AzureAppConfigurationClientGetSnapshotOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
     /// Used to perform an operation only if the targeted resource's etag matches the
     /// value provided.
     pub if_match: Option<String>,
@@ -469,9 +433,6 @@ pub struct AzureAppConfigurationClientListLabelsOptions<'a> {
     /// to by the specified token.
     pub after: Option<String>,
 
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 
@@ -491,7 +452,6 @@ impl AzureAppConfigurationClientListLabelsOptions<'_> {
         AzureAppConfigurationClientListLabelsOptions {
             accept_datetime: self.accept_datetime,
             after: self.after,
-            client_request_id: self.client_request_id,
             method_options: ClientMethodOptions {
                 context: self.method_options.context.into_owned(),
             },
@@ -512,9 +472,6 @@ pub struct AzureAppConfigurationClientListRevisionsOptions<'a> {
     /// Instructs the server to return elements that appear after the element referred
     /// to by the specified token.
     pub after: Option<String>,
-
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
 
     /// A filter used to match keys. Syntax reference:
     /// <https://aka.ms/azconfig/docs/restapirevisions>
@@ -544,7 +501,6 @@ impl AzureAppConfigurationClientListRevisionsOptions<'_> {
         AzureAppConfigurationClientListRevisionsOptions {
             accept_datetime: self.accept_datetime,
             after: self.after,
-            client_request_id: self.client_request_id,
             key: self.key,
             label: self.label,
             method_options: ClientMethodOptions {
@@ -599,9 +555,6 @@ impl AzureAppConfigurationClientListSnapshotsOptions<'_> {
 /// Options to be passed to [`AzureAppConfigurationClient::put_key_value()`](crate::generated::clients::AzureAppConfigurationClient::put_key_value())
 #[derive(Clone, Default, SafeDebug)]
 pub struct AzureAppConfigurationClientPutKeyValueOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
     /// The key-value to create.
     pub entity: Option<RequestContent<KeyValue>>,
 
@@ -626,9 +579,6 @@ pub struct AzureAppConfigurationClientPutKeyValueOptions<'a> {
 /// Options to be passed to [`AzureAppConfigurationClient::put_lock()`](crate::generated::clients::AzureAppConfigurationClient::put_lock())
 #[derive(Clone, Default, SafeDebug)]
 pub struct AzureAppConfigurationClientPutLockOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
     /// Used to perform an operation only if the targeted resource's etag matches the
     /// value provided.
     pub if_match: Option<String>,
@@ -650,9 +600,6 @@ pub struct AzureAppConfigurationClientPutLockOptions<'a> {
 /// Options to be passed to [`AzureAppConfigurationClient::update_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::update_snapshot())
 #[derive(Clone, Default, SafeDebug)]
 pub struct AzureAppConfigurationClientUpdateSnapshotOptions<'a> {
-    /// An opaque, globally-unique, client-generated string identifier for the request.
-    pub client_request_id: Option<String>,
-
     /// Used to perform an operation only if the targeted resource's etag matches the
     /// value provided.
     pub if_match: Option<String>,

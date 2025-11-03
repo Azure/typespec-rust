@@ -1327,6 +1327,12 @@ export class Adapter {
         throw new AdapterError('InternalError', `didn't find operation parameter for method ${method.name} parameter ${param.name}`, param.__raw?.node);
       }
 
+      if (opParam.kind === 'header' && opParam.serializedName.toLowerCase() === 'x-ms-client-request-id') {
+        // x-ms-client-request-id is automatically inserted into requests via
+        // a pipeline policy. so we don't want to expose this as an actual param.
+        continue;
+      }
+
       let adaptedParam: rust.MethodParameter;
       // for spread params there are two cases we need to consider.
       // if the method param's type doesn't match the op param's type then it's a spread param

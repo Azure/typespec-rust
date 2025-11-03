@@ -51,7 +51,6 @@ async fn smoke_test() {
             1,
             "123".to_string(),
             Some(TraitsClientSmokeTestOptions {
-                client_request_id: Some("86aede1f-96fa-4e7f-b1e1-bf8a947cb804".to_string()),
                 if_match: Some("\"valid\"".to_string()),
                 if_modified_since: Some(modified_since),
                 if_none_match: Some("\"invalid\"".to_string()),
