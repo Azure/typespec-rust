@@ -99,6 +99,7 @@ const azureHttpSpecsGroup = {
   'spector_armnonresource': {input: 'azure/resource-manager/non-resource'},
   'spector_armoptemplates': {input: 'azure/resource-manager/operation-templates'},
   'spector_armresources': {input: 'azure/resource-manager/resources'},
+  'spector_requestidheader': {input: 'azure/special-headers/client-request-id'},
   'spector_naming': {input: 'client/naming'},
   'spector_enumconflict': {input: 'client/naming/enum-conflict', output: 'client/enum-conflict'},
   'spector_overload': {input: 'client/overload/client.tsp'},
