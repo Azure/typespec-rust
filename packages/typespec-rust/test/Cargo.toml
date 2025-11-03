@@ -41,6 +41,7 @@ members = [
     "spector/azure/core/model",
     "spector/azure/core/page",
     "spector/azure/core/scalar",
+    "spector/azure/core/traits",
     "spector/azure/encode/duration",
     "spector/azure/example/basic",
     "spector/azure/payload/pageable",

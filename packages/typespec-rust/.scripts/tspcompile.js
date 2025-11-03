@@ -90,7 +90,7 @@ const azureHttpSpecsGroup = {
   'spector_coremodel': {input: 'azure/core/model'},
   'spector_corepage': {input: 'azure/core/page'},
   'spector_corescalar': {input: 'azure/core/scalar'},
-  //'spector_traits': {input: 'azure/core/traits'},
+  'spector_coretraits': {input: 'azure/core/traits'},
   'spector_azureduration': {input: 'azure/encode/duration'},
   'spector_azurepageable': {input: 'azure/payload/pageable'},
   'spector_azurebasic': {input: 'azure/example/basic'},
