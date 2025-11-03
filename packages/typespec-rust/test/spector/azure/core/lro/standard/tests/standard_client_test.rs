@@ -39,27 +39,49 @@ async fn create_or_replace() {
     let mut poll_count = 0;
     while let Some(result) = poller.next().await {
         poll_count += 1;
-        let result = result.unwrap();
-        let status = result.status();
-        let result = result.into_body().unwrap();
+        let response = result.unwrap();
+        let http_status = response.status();
+        let status_monitor = response.into_body().unwrap();
+        let poller_status = status_monitor.status();
         match poll_count {
             1 => {
-                assert_eq!(status, StatusCode::Created);
-                assert_eq!(result.status(), PollerStatus::InProgress);
+                assert_eq!(http_status, StatusCode::Created);
+                assert_eq!(poller_status, PollerStatus::InProgress);
             }
             2 => {
-                assert_eq!(status, StatusCode::Ok);
-                assert_eq!(result.status(), PollerStatus::InProgress);
+                assert_eq!(http_status, StatusCode::Ok);
+                assert_eq!(poller_status, PollerStatus::InProgress);
             }
             3 => {
-                assert_eq!(status, StatusCode::Ok);
-                assert_eq!(result.status(), PollerStatus::Succeeded);
+                assert_eq!(http_status, StatusCode::Ok);
+                assert_eq!(poller_status, PollerStatus::Succeeded);
             }
             _ => {
                 panic!("unexpected poll count");
             }
         }
     }
+    assert_eq!(poll_count, 3);
+
+    let user = User {
+        role: Some("contributor".to_string()),
+        ..Default::default()
+    };
+    let poller = client
+        .create_or_replace(
+            "madge",
+            user.try_into().unwrap(),
+            Some(StandardClientCreateOrReplaceOptions {
+                poller_options: PollerOptions {
+                    frequency: Some(Duration::seconds(1)),
+                },
+                ..Default::default()
+            }),
+        )
+        .unwrap();
+    let final_result = poller.await.unwrap().into_body().unwrap();
+    assert_eq!(final_result.name, Some("madge".to_string()));
+    assert_eq!(final_result.role, Some("contributor".to_string()));
 }
 
 #[tokio::test]
@@ -80,27 +102,29 @@ async fn delete() {
     let mut poll_count = 0;
     while let Some(result) = poller.next().await {
         poll_count += 1;
-        let result = result.unwrap();
-        let status = result.status();
-        let result = result.into_body().unwrap();
+        let response = result.unwrap();
+        let http_status = response.status();
+        let status_monitor = response.into_body().unwrap();
+        let poller_status = status_monitor.status();
         match poll_count {
             1 => {
-                assert_eq!(status, StatusCode::Accepted);
-                assert_eq!(result.status(), PollerStatus::InProgress);
+                assert_eq!(http_status, StatusCode::Accepted);
+                assert_eq!(poller_status, PollerStatus::InProgress);
             }
             2 => {
-                assert_eq!(status, StatusCode::Ok);
-                assert_eq!(result.status(), PollerStatus::InProgress);
+                assert_eq!(http_status, StatusCode::Ok);
+                assert_eq!(poller_status, PollerStatus::InProgress);
             }
             3 => {
-                assert_eq!(status, StatusCode::Ok);
-                assert_eq!(result.status(), PollerStatus::Succeeded);
+                assert_eq!(http_status, StatusCode::Ok);
+                assert_eq!(poller_status, PollerStatus::Succeeded);
             }
             _ => {
                 panic!("unexpected poll count");
             }
         }
     }
+    assert_eq!(poll_count, 3);
 }
 
 #[tokio::test]
@@ -122,32 +146,44 @@ async fn export() {
     let mut poll_count = 0;
     while let Some(result) = poller.next().await {
         poll_count += 1;
-        let result = result.unwrap();
-        let status = result.status();
-        let result = result.into_body().unwrap();
+        let response = result.unwrap();
+        let http_status = response.status();
+        let status_monitor = response.into_body().unwrap();
+        let poller_status = status_monitor.status();
         match poll_count {
             1 => {
-                assert_eq!(status, StatusCode::Accepted);
-                assert_eq!(result.status(), PollerStatus::InProgress);
+                assert_eq!(http_status, StatusCode::Accepted);
+                assert_eq!(poller_status, PollerStatus::InProgress);
             }
             2 => {
-                assert_eq!(status, StatusCode::Ok);
-                assert_eq!(result.status(), PollerStatus::InProgress);
+                assert_eq!(http_status, StatusCode::Ok);
+                assert_eq!(poller_status, PollerStatus::InProgress);
             }
             3 => {
-                assert_eq!(status, StatusCode::Ok);
-                assert_eq!(result.status(), PollerStatus::Succeeded);
-                match result.result {
-                    Some(user) => {
-                        assert_eq!(user.name, Some("madge".to_string()));
-                        assert_eq!(user.resource_uri, Some("/users/madge".to_string()));
-                    }
-                    None => panic!("expected result"),
-                }
+                assert_eq!(http_status, StatusCode::Ok);
+                assert_eq!(poller_status, PollerStatus::Succeeded);
             }
             _ => {
                 panic!("unexpected poll count");
             }
         }
     }
+    assert_eq!(poll_count, 3);
+
+    let client = StandardClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let poller = client
+        .export(
+            "madge",
+            "json",
+            Some(StandardClientExportOptions {
+                poller_options: PollerOptions {
+                    frequency: Some(Duration::seconds(1)),
+                },
+                ..Default::default()
+            }),
+        )
+        .unwrap();
+    let final_result = poller.await.unwrap().into_body().unwrap();
+    assert_eq!(final_result.name, Some("madge".to_string()));
+    assert_eq!(final_result.resource_uri, Some("/users/madge".to_string()));
 }

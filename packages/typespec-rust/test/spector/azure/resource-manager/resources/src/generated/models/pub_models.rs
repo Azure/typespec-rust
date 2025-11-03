@@ -51,6 +51,132 @@ pub struct ArmOperationStatusResourceProvisioningState {
     pub status: Option<ResourceProvisioningState>,
 }
 
+/// Standard Azure Resource Manager operation status response
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct CreateOrReplaceOperationStatus {
+    /// Operation complete time
+    #[serde(
+        default,
+        rename = "endTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::time::rfc3339::option"
+    )]
+    pub end_time: Option<OffsetDateTime>,
+
+    /// Errors that occurred if the operation ended with Canceled or Failed status
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<ErrorDetail>,
+
+    /// The unique identifier for the operationStatus resource
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The name of the operationStatus resource
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// The progress made toward completing the operation
+    #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
+    pub percent_complete: Option<f64>,
+
+    /// Operation start time
+    #[serde(
+        default,
+        rename = "startTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::time::rfc3339::option"
+    )]
+    pub start_time: Option<OffsetDateTime>,
+
+    /// The operation status
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<ResourceProvisioningState>,
+}
+
+/// Standard Azure Resource Manager operation status response
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct CreateOrUpdateOperationStatus {
+    /// Operation complete time
+    #[serde(
+        default,
+        rename = "endTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::time::rfc3339::option"
+    )]
+    pub end_time: Option<OffsetDateTime>,
+
+    /// Errors that occurred if the operation ended with Canceled or Failed status
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<ErrorDetail>,
+
+    /// The unique identifier for the operationStatus resource
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The name of the operationStatus resource
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// The progress made toward completing the operation
+    #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
+    pub percent_complete: Option<f64>,
+
+    /// Operation start time
+    #[serde(
+        default,
+        rename = "startTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::time::rfc3339::option"
+    )]
+    pub start_time: Option<OffsetDateTime>,
+
+    /// The operation status
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<ResourceProvisioningState>,
+}
+
+/// Standard Azure Resource Manager operation status response
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct DeleteOperationStatus {
+    /// Operation complete time
+    #[serde(
+        default,
+        rename = "endTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::time::rfc3339::option"
+    )]
+    pub end_time: Option<OffsetDateTime>,
+
+    /// Errors that occurred if the operation ended with Canceled or Failed status
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<ErrorDetail>,
+
+    /// The unique identifier for the operationStatus resource
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The name of the operationStatus resource
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// The progress made toward completing the operation
+    #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
+    pub percent_complete: Option<f64>,
+
+    /// Operation start time
+    #[serde(
+        default,
+        rename = "startTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::time::rfc3339::option"
+    )]
+    pub start_time: Option<OffsetDateTime>,
+
+    /// The operation status
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<ResourceProvisioningState>,
+}
+
 /// The resource management error additional info.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ErrorAdditionalInfo {
@@ -397,4 +523,46 @@ pub struct TopLevelTrackedResourceProperties {
     /// The status of the last operation.
     #[serde(rename = "provisioningState", skip_serializing_if = "Option::is_none")]
     pub provisioning_state: Option<ProvisioningState>,
+}
+
+/// Standard Azure Resource Manager operation status response
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct UpdateOperationStatus {
+    /// Operation complete time
+    #[serde(
+        default,
+        rename = "endTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::time::rfc3339::option"
+    )]
+    pub end_time: Option<OffsetDateTime>,
+
+    /// Errors that occurred if the operation ended with Canceled or Failed status
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<ErrorDetail>,
+
+    /// The unique identifier for the operationStatus resource
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The name of the operationStatus resource
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    /// The progress made toward completing the operation
+    #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
+    pub percent_complete: Option<f64>,
+
+    /// Operation start time
+    #[serde(
+        default,
+        rename = "startTime",
+        skip_serializing_if = "Option::is_none",
+        with = "azure_core::time::rfc3339::option"
+    )]
+    pub start_time: Option<OffsetDateTime>,
+
+    /// The operation status
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<ResourceProvisioningState>,
 }

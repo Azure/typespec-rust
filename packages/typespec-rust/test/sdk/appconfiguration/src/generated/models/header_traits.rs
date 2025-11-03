@@ -8,10 +8,10 @@ use super::{
     AzureAppConfigurationClientCheckKeyValuesResult, AzureAppConfigurationClientCheckKeysResult,
     AzureAppConfigurationClientCheckLabelsResult, AzureAppConfigurationClientCheckRevisionsResult,
     AzureAppConfigurationClientCheckSnapshotResult,
-    AzureAppConfigurationClientCheckSnapshotsResult, GetKeyValueResponseContentType,
-    GetKeyValuesResponseContentType, GetKeysResponseContentType, GetLabelsResponseContentType,
-    GetSnapshotResponseContentType, GetSnapshotsResponseContentType, KeyListResult, KeyValue,
-    KeyValueListResult, LabelListResult, OperationDetails, Snapshot, SnapshotListResult,
+    AzureAppConfigurationClientCheckSnapshotsResult, CreateSnapshotOperationStatus,
+    GetKeyValueResponseContentType, GetKeyValuesResponseContentType, GetKeysResponseContentType,
+    GetLabelsResponseContentType, GetSnapshotResponseContentType, GetSnapshotsResponseContentType,
+    KeyListResult, KeyValue, KeyValueListResult, LabelListResult, Snapshot, SnapshotListResult,
 };
 use azure_core::{
     http::{
@@ -276,6 +276,63 @@ impl AzureAppConfigurationClientCheckSnapshotsResultHeaders
     }
 }
 
+/// Provides access to typed response headers for [`AzureAppConfigurationClient::create_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::create_snapshot())
+///
+/// # Examples
+///
+/// ```no_run
+/// use azure_core::{Result, http::Response};
+/// use appconfiguration::models::{CreateSnapshotOperationStatus, CreateSnapshotOperationStatusHeaders};
+/// async fn example() -> Result<()> {
+///     let response: Response<CreateSnapshotOperationStatus> = unimplemented!();
+///     // Access response headers
+///     if let Some(content_type) = response.content_type()? {
+///         println!("Content-Type: {:?}", content_type);
+///     }
+///     if let Some(link) = response.link()? {
+///         println!("Link: {:?}", link);
+///     }
+///     if let Some(operation_location) = response.operation_location()? {
+///         println!("Operation-Location: {:?}", operation_location);
+///     }
+///     Ok(())
+/// }
+/// ```
+pub trait CreateSnapshotOperationStatusHeaders: private::Sealed {
+    fn content_type(&self) -> Result<Option<GetSnapshotResponseContentType>>;
+    fn link(&self) -> Result<Option<String>>;
+    fn operation_location(&self) -> Result<Option<String>>;
+    fn sync_token(&self) -> Result<Option<String>>;
+    fn etag_header(&self) -> Result<Option<String>>;
+}
+
+impl CreateSnapshotOperationStatusHeaders for Response<CreateSnapshotOperationStatus> {
+    /// Content-Type header
+    fn content_type(&self) -> Result<Option<GetSnapshotResponseContentType>> {
+        Headers::get_optional_as(self.headers(), &CONTENT_TYPE)
+    }
+
+    /// Includes links to related resources.
+    fn link(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &LINK)
+    }
+
+    /// The location for monitoring the operation state.
+    fn operation_location(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &OPERATION_LOCATION)
+    }
+
+    /// Used to guarantee real-time consistency between requests.
+    fn sync_token(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
+    }
+
+    /// A value representing the current state of the resource.
+    fn etag_header(&self) -> Result<Option<String>> {
+        Headers::get_optional_as(self.headers(), &ETAG)
+    }
+}
+
 /// Provides access to typed response headers for [`AzureAppConfigurationClient::list_keys()`](crate::generated::clients::AzureAppConfigurationClient::list_keys())
 ///
 /// # Examples
@@ -409,63 +466,6 @@ impl LabelListResultHeaders for Response<LabelListResult> {
     }
 }
 
-/// Provides access to typed response headers for [`AzureAppConfigurationClient::create_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::create_snapshot())
-///
-/// # Examples
-///
-/// ```no_run
-/// use azure_core::{Result, http::Response};
-/// use appconfiguration::models::{OperationDetails, OperationDetailsHeaders};
-/// async fn example() -> Result<()> {
-///     let response: Response<OperationDetails> = unimplemented!();
-///     // Access response headers
-///     if let Some(content_type) = response.content_type()? {
-///         println!("Content-Type: {:?}", content_type);
-///     }
-///     if let Some(link) = response.link()? {
-///         println!("Link: {:?}", link);
-///     }
-///     if let Some(operation_location) = response.operation_location()? {
-///         println!("Operation-Location: {:?}", operation_location);
-///     }
-///     Ok(())
-/// }
-/// ```
-pub trait OperationDetailsHeaders: private::Sealed {
-    fn content_type(&self) -> Result<Option<GetSnapshotResponseContentType>>;
-    fn link(&self) -> Result<Option<String>>;
-    fn operation_location(&self) -> Result<Option<String>>;
-    fn sync_token(&self) -> Result<Option<String>>;
-    fn etag_header(&self) -> Result<Option<String>>;
-}
-
-impl OperationDetailsHeaders for Response<OperationDetails> {
-    /// Content-Type header
-    fn content_type(&self) -> Result<Option<GetSnapshotResponseContentType>> {
-        Headers::get_optional_as(self.headers(), &CONTENT_TYPE)
-    }
-
-    /// Includes links to related resources.
-    fn link(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &LINK)
-    }
-
-    /// The location for monitoring the operation state.
-    fn operation_location(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &OPERATION_LOCATION)
-    }
-
-    /// Used to guarantee real-time consistency between requests.
-    fn sync_token(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &SYNC_TOKEN)
-    }
-
-    /// A value representing the current state of the resource.
-    fn etag_header(&self) -> Result<Option<String>> {
-        Headers::get_optional_as(self.headers(), &ETAG)
-    }
-}
-
 /// Provides access to typed response headers for the following methods:
 /// * [`AzureAppConfigurationClient::get_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::get_snapshot())
 /// * [`AzureAppConfigurationClient::update_snapshot()`](crate::generated::clients::AzureAppConfigurationClient::update_snapshot())
@@ -547,8 +547,8 @@ mod private {
         AzureAppConfigurationClientCheckKeysResult, AzureAppConfigurationClientCheckLabelsResult,
         AzureAppConfigurationClientCheckRevisionsResult,
         AzureAppConfigurationClientCheckSnapshotResult,
-        AzureAppConfigurationClientCheckSnapshotsResult, KeyListResult, KeyValue,
-        KeyValueListResult, LabelListResult, OperationDetails, Snapshot, SnapshotListResult,
+        AzureAppConfigurationClientCheckSnapshotsResult, CreateSnapshotOperationStatus,
+        KeyListResult, KeyValue, KeyValueListResult, LabelListResult, Snapshot, SnapshotListResult,
     };
     use azure_core::http::{NoFormat, Response};
 
@@ -561,11 +561,11 @@ mod private {
     impl Sealed for Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat> {}
     impl Sealed for Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat> {}
     impl Sealed for Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat> {}
+    impl Sealed for Response<CreateSnapshotOperationStatus> {}
     impl Sealed for Response<KeyListResult> {}
     impl Sealed for Response<KeyValue> {}
     impl Sealed for Response<KeyValueListResult> {}
     impl Sealed for Response<LabelListResult> {}
-    impl Sealed for Response<OperationDetails> {}
     impl Sealed for Response<Snapshot> {}
     impl Sealed for Response<SnapshotListResult> {}
 }

@@ -7,6 +7,38 @@ use super::OperationState;
 use azure_core::fmt::SafeDebug;
 use serde::{Deserialize, Serialize};
 
+/// Provides status details for long running operations.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct CreateOrReplaceOperationStatus {
+    /// Error object that describes the error when status is "Failed".
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<Error>,
+
+    /// The unique ID of the operation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The status of the operation
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<OperationState>,
+}
+
+/// Provides status details for long running operations.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct DeleteOperationStatus {
+    /// Error object that describes the error when status is "Failed".
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<Error>,
+
+    /// The unique ID of the operation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The status of the operation
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<OperationState>,
+}
+
 /// The error object.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Error {
@@ -29,6 +61,26 @@ pub struct Error {
     /// The target of the error.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub target: Option<String>,
+}
+
+/// Provides status details for long running operations.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct ExportOperationStatus {
+    /// Error object that describes the error when status is "Failed".
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<Error>,
+
+    /// The unique ID of the operation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The result of the operation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub result: Option<ExportedUser>,
+
+    /// The status of the operation
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<OperationState>,
 }
 
 /// The exported user data.
@@ -66,26 +118,6 @@ pub struct OperationStatusError {
     /// The unique ID of the operation.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
-
-    /// The status of the operation
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub status: Option<OperationState>,
-}
-
-/// Provides status details for long running operations.
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-pub struct OperationStatusExportedUserError {
-    /// Error object that describes the error when status is "Failed".
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub error: Option<Error>,
-
-    /// The unique ID of the operation.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>,
-
-    /// The result of the operation.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub result: Option<ExportedUser>,
 
     /// The status of the operation
     #[serde(skip_serializing_if = "Option::is_none")]

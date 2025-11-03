@@ -233,13 +233,15 @@ export class Adapter {
    * 
    * @param model the tcgc model to convert
    * @param stack is a stack of model type names used to detect recursive type definitions
+   * @param modelName optional parameter to override model name
    * @returns a Rust model
    */
-  private getModel(model: tcgc.SdkModelType, stack?: Array<string>): rust.Model {
-    if (model.name.length === 0) {
+  private getModel(model: tcgc.SdkModelType, stack?: Array<string>, modelName?: string): rust.Model {
+    modelName = modelName ?? model.name;
+    if (modelName.length === 0) {
       throw new AdapterError('InternalError', 'unnamed model', model.__raw?.node); // TODO: this might no longer be an issue
     }
-    const modelName = codegen.capitalize(model.name);
+    modelName = codegen.capitalize(modelName);
     let rustModel = this.types.get(modelName);
     if (rustModel) {
       return <rust.Model>rustModel;
@@ -1557,16 +1559,21 @@ export class Adapter {
       rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
     } else if (method.kind === 'lro') {
       const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
-      const responseType = this.typeToWireType(this.getModel(method.lroMetadata.logicalResult));
+      const responseType = this.typeToWireType(this.getModel(
+        method.lroMetadata.finalStateVia as string === 'original-uri'
+          ? (method.response.type?.kind === "model" ? method.response.type : method.lroMetadata.logicalResult)
+          : method.lroMetadata.logicalResult
+      ));
       if (responseType.kind !== 'model') {
-        throw new AdapterError('InternalError', `logical result type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
+        throw new AdapterError('InternalError', `response type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
       }
 
-      const statusType = this.typeToWireType(this.getModel(method.lroMetadata.pollingInfo.responseModel));
+      const statusType = this.typeToWireType(
+        this.getModel(method.lroMetadata.pollingInfo.responseModel, undefined, `${codegen.pascalCase(rustMethod.name, false)}OperationStatus`));
+
       if (statusType.kind !== 'model') {
-          throw new AdapterError('InternalError', `status type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
+        throw new AdapterError('InternalError', `status type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
       }
-
       const pushModels = (model: rust.Model, crate: rust.Crate): void => {
         if (crate.models.some(m => m === model)) {
           return;

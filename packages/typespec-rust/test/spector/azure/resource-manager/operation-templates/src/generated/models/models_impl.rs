@@ -5,8 +5,9 @@
 
 use super::{
     ActionRequest, ArmOperationStatusResourceProvisioningState, ChangeAllowanceRequest,
-    CheckNameAvailabilityRequest, ExportRequest, ExportResult, Operation, OperationListResult,
-    Order, Widget,
+    CheckNameAvailabilityRequest, CreateOrReplaceOperationStatus, DeleteOperationStatus,
+    ExportOperationStatus, ExportRequest, ExportResult, Operation, OperationListResult, Order,
+    Widget,
 };
 use async_trait::async_trait;
 use azure_core::{
@@ -29,7 +30,29 @@ impl Page for OperationListResult {
     }
 }
 
-impl StatusMonitor for ArmOperationStatusResourceProvisioningState {
+impl StatusMonitor for CreateOrReplaceOperationStatus {
+    type Output = Order;
+    type Format = JsonFormat;
+    fn status(&self) -> PollerStatus {
+        match &self.status {
+            Some(v) => PollerStatus::from(v.as_ref()),
+            None => PollerStatus::InProgress,
+        }
+    }
+}
+
+impl StatusMonitor for DeleteOperationStatus {
+    type Output = ArmOperationStatusResourceProvisioningState;
+    type Format = JsonFormat;
+    fn status(&self) -> PollerStatus {
+        match &self.status {
+            Some(v) => PollerStatus::from(v.as_ref()),
+            None => PollerStatus::InProgress,
+        }
+    }
+}
+
+impl StatusMonitor for ExportOperationStatus {
     type Output = ExportResult;
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
