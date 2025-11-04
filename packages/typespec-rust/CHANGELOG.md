@@ -1,6 +1,15 @@
 # Release History
 
-## 0.25.1 (unreleased)
+## 0.26.0 (unreleased)
+
+### Breaking Changes
+
+* An explicit parameter for header `x-ms-client-request-id` is no longer emitted.
+
+### Bugs Fixed
+
+* Fixed incorrect code for enums that use numeric values instead of strings.
+* Fixed missed `XmlFormat` specifier on some `Pager` definitions.
 
 ### Other Changes
 
@@ -26,7 +35,6 @@
 * Fixed an issue that could cause enum types to have invalid names.
 * Ensure that the local variable name for the `http::Request` doesn't collide with an existing parameter name.
 * Added missing reinjectable query parameters when creating the `Url` for a pageable's `next_link`.
-* Fixed incorrect code for enums that use numeric values instead of strings.
 
 ### Other Changes
 
