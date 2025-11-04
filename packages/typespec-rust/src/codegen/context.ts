@@ -59,7 +59,10 @@ export class Context {
           this.pagedResponseTypes.add(method.returns.type.type.content);
         } else if (method.kind === 'lro' && method.returns.type.kind === 'poller') {
           this.lroStatusTypes.add(method.returns.type.type.content);
-          this.lroResultTypes.set(method.returns.type.type.content, method.returns.type.resultType.content);
+
+          if (method.returns.type.resultType !== undefined) {
+            this.lroResultTypes.set(method.returns.type.type.content, method.returns.type.resultType.content);
+          }
         }
 
         // TODO: this doesn't handle the case where a method sends/receives a HashMap<T>
@@ -230,14 +233,17 @@ export class Context {
     use.add('azure_core::http', formatType);
 
     use.addForType(model);
-    const resultType = this.lroResultTypes.get(model)!;
-    use.addForType(resultType);
-    use.add('azure_core::http::poller', 'StatusMonitor', 'PollerStatus');
+    const resultType = this.lroResultTypes.get(model);
+    if (resultType !== undefined) {
+      use.addForType(resultType);
+      use.add('azure_core::http::poller', 'StatusMonitor', 'PollerStatus');
+    }
 
     const indent = new helpers.indentation();
 
+    const outputType = resultType !== undefined ? helpers.getTypeDeclaration(helpers.unwrapType(resultType)) : '()';
     let content = `impl StatusMonitor for ${model.name} {\n`;
-    content += `${indent.get()}type Output = ${helpers.getTypeDeclaration(helpers.unwrapType(resultType))};\n`;
+    content += `${indent.get()}type Output = ${outputType};\n`;
     content += `${indent.get()}type Format = ${formatType};\n`;
     content += `${indent.get()}fn status(&self) -> PollerStatus {\n`;
 

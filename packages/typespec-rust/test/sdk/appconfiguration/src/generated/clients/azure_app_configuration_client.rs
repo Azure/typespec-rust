@@ -810,7 +810,7 @@ impl AzureAppConfigurationClient {
                         (
                             request,
                             Progress {
-                                next_link: next_link,
+                                next_link,
                                 first_rsp: progress.first_rsp,
                             },
                         )
@@ -857,7 +857,7 @@ impl AzureAppConfigurationClient {
                     let mut first_rsp = progress.first_rsp;
                     if first_rsp.is_none() {
                         first_rsp = Some(RawResponse::from_bytes(
-                            status.clone(),
+                            status,
                             headers.clone(),
                             body.clone(),
                         ));
@@ -874,8 +874,8 @@ impl AzureAppConfigurationClient {
                             response: rsp,
                             retry_after,
                             next: Progress {
-                                next_link: next_link,
-                                first_rsp: first_rsp,
+                                next_link,
+                                first_rsp,
                             },
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {

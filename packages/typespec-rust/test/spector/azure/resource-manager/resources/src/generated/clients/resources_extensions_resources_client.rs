@@ -147,7 +147,7 @@ impl ResourcesExtensionsResourcesClient {
                     let mut final_rsp = None;
                     if res.status() == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
-                            status.clone(),
+                            status,
                             headers.clone(),
                             body.clone(),
                         ));

@@ -166,6 +166,19 @@ export interface PageableMethod extends HTTPMethodBase {
   strategy?: PageableStrategyKind;
 }
 
+/** A type that describes how the final result from an LRO is available. */
+export type LroFinalResultStrategy = {
+  /** name of the header containing the URL to read the final result from.
+   * If empty, the result is available via the initial response.
+   */
+  headerName: string;
+
+  /** name of the field in the result response object to read the final result from.
+   * If empty, the entire object is the final result.
+   */
+  propertyName: string;
+}
+
 /** LroMethod is a method that returns a long-running operation. */
 export interface LroMethod extends HTTPMethodBase {
   kind: 'lro';
@@ -176,11 +189,8 @@ export interface LroMethod extends HTTPMethodBase {
   /** the lro result */
   returns: types.Result<types.Poller>;
 
-  /** name of the header containing the operation result */
-  finalResultHeader: string;
-
-  /** name of the field containing the operation result */
-  finalResultProperty: string;
+  /** A description of how the final result from the LRO is available. */
+  finalResultStrategy: LroFinalResultStrategy;
 }
 
 /** PageableStrategyContinuationToken indicates a pageable method uses the continuation token strategy */
@@ -735,13 +745,12 @@ export class PageableMethod extends HTTPMethodBase implements PageableMethod {
 }
 
 export class LroMethod extends HTTPMethodBase implements LroMethod {
-  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string, finalResultHeader: string, finalResultProperty: string) {
+  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string, finalResultStrategy: LroFinalResultStrategy) {
     super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'lro';
     this.params = new Array<MethodParameter>();
     this.options = options;
-    this.finalResultHeader = finalResultHeader;
-    this.finalResultProperty = finalResultProperty;
+    this.finalResultStrategy = finalResultStrategy;
   }
 }
 

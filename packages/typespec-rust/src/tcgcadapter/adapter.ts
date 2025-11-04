@@ -1297,18 +1297,18 @@ export class Adapter {
         rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path);
         break;
       case 'lro': {
-        let finalResultHeader = '';
+        let finalResultUrlHeaderName = '';
         switch (method.lroMetadata.finalStateVia as string) {
           case 'original-uri':
             break;
           case 'operation-location':
-            finalResultHeader = 'operation-location';
+            finalResultUrlHeaderName = 'operation-location';
             break;
           case 'location':
-            finalResultHeader = 'location';
+            finalResultUrlHeaderName = 'location';
             break;
           case 'azure-async-operation':
-            finalResultHeader = 'azure-asyncoperation';
+            finalResultUrlHeaderName = 'azure-asyncoperation';
             break;
           default:
             throw new AdapterError('UnsupportedTsp', `lroMetadata.finalStateVia ${method.lroMetadata.finalStateVia} NYI`, method.__raw?.node);
@@ -1322,10 +1322,10 @@ export class Adapter {
           methodOptions,
           httpMethod,
           method.operation.path,
-          finalResultHeader,
-          method.lroMetadata.finalResultPath ?? '');
+          { headerName: finalResultUrlHeaderName, propertyName: method.lroMetadata.finalResultPath ?? '' }
+        );
       }
-      break;
+        break;
       default:
         throw new AdapterError('UnsupportedTsp', `method kind ${method.kind} NYI`, method.__raw?.node);
     }
@@ -1559,12 +1559,9 @@ export class Adapter {
       rustMethod.returns = new rust.Result(this.crate, new rust.Pager(this.crate, new rust.Response(this.crate, synthesizedModel, responseFormat)));
     } else if (method.kind === 'lro') {
       const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
-      const responseType = this.typeToWireType(this.getModel(
-        method.lroMetadata.finalStateVia as string === 'original-uri'
-          ? (method.response.type?.kind === "model" ? method.response.type : method.lroMetadata.logicalResult)
-          : method.lroMetadata.logicalResult
-      ));
-      if (responseType.kind !== 'model') {
+
+      const responseType = (method.response.type?.kind === "model") ? this.typeToWireType(this.getModel(method.response.type)) : undefined;
+      if (responseType !== undefined && responseType.kind !== 'model') {
         throw new AdapterError('InternalError', `response type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
       }
 
@@ -1589,10 +1586,19 @@ export class Adapter {
           }
         }
       }
-      pushModels(responseType, this.crate);
-      pushModels(statusType, this.crate);
 
-      rustMethod.returns = new rust.Result(this.crate, new rust.Poller(this.crate, new rust.Response(this.crate, responseType, format), new rust.Response(this.crate, statusType, format)));
+      pushModels(statusType, this.crate);
+      if (responseType !== undefined) {
+        pushModels(responseType, this.crate)
+      }
+
+      rustMethod.returns = new rust.Result(
+        this.crate,
+        new rust.Poller(
+          this.crate,
+          new rust.Response(this.crate, statusType, format),
+          responseType !== undefined ? new rust.Response(this.crate, responseType, format) : undefined
+        ));
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
       const response = new rust.Response(this.crate, this.typeToWireType(this.getType(method.response.type)), responseFormat);
       rustMethod.returns = new rust.Result(this.crate, response);

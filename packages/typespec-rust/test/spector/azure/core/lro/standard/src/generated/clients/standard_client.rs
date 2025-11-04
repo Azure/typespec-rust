@@ -148,7 +148,7 @@ impl StandardClient {
                         (
                             request,
                             Progress {
-                                next_link: next_link,
+                                next_link,
                                 first_rsp: progress.first_rsp,
                             },
                         )
@@ -192,7 +192,7 @@ impl StandardClient {
                     let mut first_rsp = progress.first_rsp;
                     if first_rsp.is_none() {
                         first_rsp = Some(RawResponse::from_bytes(
-                            status.clone(),
+                            status,
                             headers.clone(),
                             body.clone(),
                         ));
@@ -209,8 +209,8 @@ impl StandardClient {
                             response: rsp,
                             retry_after,
                             next: Progress {
-                                next_link: next_link,
-                                first_rsp: first_rsp,
+                                next_link,
+                                first_rsp,
                             },
                         },
                         PollerStatus::Succeeded => PollerResult::Succeeded {
@@ -327,7 +327,7 @@ impl StandardClient {
                     let mut final_rsp = None;
                     if res.status() == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
-                            status.clone(),
+                            status,
                             headers.clone(),
                             body.clone(),
                         ));
@@ -461,11 +461,7 @@ impl StandardClient {
                             )?["result"]
                                 .to_string(),
                         );
-                        final_rsp = Some(RawResponse::from_bytes(
-                            status.clone(),
-                            headers.clone(),
-                            body,
-                        ));
+                        final_rsp = Some(RawResponse::from_bytes(status, headers.clone(), body));
                     }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {

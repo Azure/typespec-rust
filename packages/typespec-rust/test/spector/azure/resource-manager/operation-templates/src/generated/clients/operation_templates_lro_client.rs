@@ -144,7 +144,7 @@ impl OperationTemplatesLroClient {
                     let mut final_rsp = None;
                     if res.status() == PollerStatus::Succeeded {
                         final_rsp = Some(RawResponse::from_bytes(
-                            status.clone(),
+                            status,
                             headers.clone(),
                             body.clone(),
                         ));
@@ -279,9 +279,7 @@ impl OperationTemplatesLroClient {
                             target: Box::new(move || {
                                 Box::pin(async move {
                                     let mut request = Request::new(final_link.clone(), Method::Get);
-                                    let rsp = pipeline.send(&ctx, &mut request, None).await?;
-                                    let (status, headers, body) = rsp.deconstruct();
-                                    Ok(RawResponse::from_bytes(status, headers, body).into())
+                                    Ok(pipeline.send(&ctx, &mut request, None).await?.into())
                                 })
                             }),
                         },
@@ -421,9 +419,7 @@ impl OperationTemplatesLroClient {
                                     let mut request = Request::new(final_link.clone(), Method::Get);
                                     request.insert_header("accept", "application/json");
                                     request.insert_header("content-type", "application/json");
-                                    let rsp = pipeline.send(&ctx, &mut request, None).await?;
-                                    let (status, headers, body) = rsp.deconstruct();
-                                    Ok(RawResponse::from_bytes(status, headers, body).into())
+                                    Ok(pipeline.send(&ctx, &mut request, None).await?.into())
                                 })
                             }),
                         },

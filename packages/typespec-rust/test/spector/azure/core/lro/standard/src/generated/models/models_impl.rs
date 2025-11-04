@@ -5,7 +5,7 @@
 
 use super::{
     CreateOrReplaceOperationStatus, DeleteOperationStatus, ExportOperationStatus, ExportedUser,
-    OperationStatusError, User,
+    User,
 };
 use azure_core::{
     http::{
@@ -28,7 +28,7 @@ impl StatusMonitor for CreateOrReplaceOperationStatus {
 }
 
 impl StatusMonitor for DeleteOperationStatus {
-    type Output = OperationStatusError;
+    type Output = ();
     type Format = JsonFormat;
     fn status(&self) -> PollerStatus {
         match &self.status {

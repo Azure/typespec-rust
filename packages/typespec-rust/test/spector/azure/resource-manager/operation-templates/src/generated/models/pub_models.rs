@@ -30,48 +30,6 @@ pub struct ActionResult {
     pub result: Option<String>,
 }
 
-/// Standard Azure Resource Manager operation status response
-#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-pub struct ArmOperationStatusResourceProvisioningState {
-    /// Operation complete time
-    #[serde(
-        default,
-        rename = "endTime",
-        skip_serializing_if = "Option::is_none",
-        with = "azure_core::time::rfc3339::option"
-    )]
-    pub end_time: Option<OffsetDateTime>,
-
-    /// Errors that occurred if the operation ended with Canceled or Failed status
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub error: Option<ErrorDetail>,
-
-    /// The unique identifier for the operationStatus resource
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>,
-
-    /// The name of the operationStatus resource
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
-
-    /// The progress made toward completing the operation
-    #[serde(rename = "percentComplete", skip_serializing_if = "Option::is_none")]
-    pub percent_complete: Option<f64>,
-
-    /// Operation start time
-    #[serde(
-        default,
-        rename = "startTime",
-        skip_serializing_if = "Option::is_none",
-        with = "azure_core::time::rfc3339::option"
-    )]
-    pub start_time: Option<OffsetDateTime>,
-
-    /// The operation status
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub status: Option<ResourceProvisioningState>,
-}
-
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct ChangeAllowanceRequest {
     /// The reason for the change.
