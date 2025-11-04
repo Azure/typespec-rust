@@ -4,7 +4,10 @@
 
 ### Breaking Changes
 
+**Note this version is incompatible with earlier versions of `azure_core`**
+
 * An explicit parameter for header `x-ms-client-request-id` is no longer emitted.
+* Updated renamed bearer token authorization policy.
 
 ### Bugs Fixed
 
