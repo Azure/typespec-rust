@@ -180,7 +180,7 @@ export function getTypeDeclaration(type: rust.Client | rust.Payload | rust.Respo
       return `Option<${getTypeDeclaration(type.type, withLifetime)}>`;
     case 'pager':
       // we explicitly omit the Response<T> from the type decl
-      return `Pager<${getTypeDeclaration(type.type.content, withLifetime)}>`;
+      return `Pager<${getTypeDeclaration(type.type.content, withLifetime)}${type.type.format !== 'JsonFormat' ? `, ${type.type.format}` : ''}>`;
     case 'poller':
       // we explicitly omit the Response<T> from the type decl
       return `Poller<${getTypeDeclaration(type.type.content, withLifetime)}>`;
