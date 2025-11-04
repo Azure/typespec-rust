@@ -146,7 +146,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
         serdeParams.add(`serialize_with = "${xmlListWrapper.name}::wrap"`);
         use.add('super::xml_helpers', xmlListWrapper.name);
       } else if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.DeserializeEmptyStringAsNone) === rust.ModelFieldFlags.DeserializeEmptyStringAsNone) {
-        addEmptStringAsNoneDeserializer(serdeParams, use);
+        addEmptyStringAsNoneDeserializer(serdeParams, use);
       }
 
       // TODO: omit skip_serializing_if if we need to send explicit JSON null
@@ -645,7 +645,7 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
  * @param serdeParams the params that will be passed to the serde annotation
  * @param use the use statement builder currently in scope
  */
-function addEmptStringAsNoneDeserializer(serdeParams: Set<string>, use: Use): void {
+function addEmptyStringAsNoneDeserializer(serdeParams: Set<string>, use: Use): void {
   const helperName = 'empty_string_as_none';
   serdeParams.add(`deserialize_with = "models_serde::${helperName}"`);
   if (serdeHelpers.has(helperName)) {
