@@ -334,7 +334,7 @@ export interface Poller extends External {
   kind: 'poller';
 
   /** the model containing the result of a long-running-operation */
-  resultType: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>> | undefined;
+  resultType?: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
 
   /** the model containing the status of a long-running-operation */
   type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
@@ -818,7 +818,7 @@ export class Pager extends External implements Pager {
 }
 
 export class Poller extends External implements Poller {
-  constructor(crate: Crate, statusType: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>, resultType: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>> | undefined) {
+  constructor(crate: Crate, statusType: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>, resultType?: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
     super(crate, 'Poller', 'azure_core::http');
     this.kind = 'poller';
     this.type = statusType;

@@ -39,7 +39,7 @@ pub struct AzureAppConfigurationClientCheckSnapshotsResult;
 /// Details of a long running operation.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
-pub struct CreateSnapshotOperationStatus {
+pub struct AzureAppConfigurationClientCreateSnapshotOperationStatus {
     /// An error, available when the status is `Failed`, describing why the operation
     /// failed.
     #[serde(skip_serializing_if = "Option::is_none")]

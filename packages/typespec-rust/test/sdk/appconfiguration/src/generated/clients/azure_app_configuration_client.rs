@@ -15,6 +15,7 @@ use crate::generated::models::{
     AzureAppConfigurationClientCheckSnapshotResult,
     AzureAppConfigurationClientCheckSnapshotsOptions,
     AzureAppConfigurationClientCheckSnapshotsResult,
+    AzureAppConfigurationClientCreateSnapshotOperationStatus,
     AzureAppConfigurationClientCreateSnapshotOptions,
     AzureAppConfigurationClientDeleteKeyValueOptions, AzureAppConfigurationClientDeleteLockOptions,
     AzureAppConfigurationClientGetKeyValueOptions,
@@ -24,9 +25,9 @@ use crate::generated::models::{
     AzureAppConfigurationClientListRevisionsOptions,
     AzureAppConfigurationClientListSnapshotsOptions, AzureAppConfigurationClientPutKeyValueOptions,
     AzureAppConfigurationClientPutLockOptions, AzureAppConfigurationClientUpdateSnapshotOptions,
-    CreateSnapshotOperationStatus, CreateSnapshotRequestContentType, KeyListResult, KeyValue,
-    KeyValueListResult, LabelListResult, OperationDetails, PutKeyValueRequestContentType, Snapshot,
-    SnapshotListResult, SnapshotUpdateParameters, UpdateSnapshotRequestContentType,
+    CreateSnapshotRequestContentType, KeyListResult, KeyValue, KeyValueListResult, LabelListResult,
+    OperationDetails, PutKeyValueRequestContentType, Snapshot, SnapshotListResult,
+    SnapshotUpdateParameters, UpdateSnapshotRequestContentType,
 };
 use azure_core::{
     credentials::TokenCredential,
@@ -714,14 +715,14 @@ impl AzureAppConfigurationClient {
     ///
     /// ## Response Headers
     ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`CreateSnapshotOperationStatusHeaders`] trait, which provides
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
     /// ```no_run
     /// use azure_core::{Result, http::Response};
-    /// use appconfiguration::models::{CreateSnapshotOperationStatus, CreateSnapshotOperationStatusHeaders};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCreateSnapshotOperationStatus, AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders};
     /// async fn example() -> Result<()> {
-    ///     let response: Response<CreateSnapshotOperationStatus> = unimplemented!();
+    ///     let response: Response<AzureAppConfigurationClientCreateSnapshotOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
     ///         println!("Content-Type: {:?}", content_type);
@@ -737,13 +738,13 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::CreateSnapshotOperationStatusHeaders::content_type) - Content-Type
-    /// * [`link`()](crate::generated::models::CreateSnapshotOperationStatusHeaders::link) - Link
-    /// * [`operation_location`()](crate::generated::models::CreateSnapshotOperationStatusHeaders::operation_location) - Operation-Location
-    /// * [`sync_token`()](crate::generated::models::CreateSnapshotOperationStatusHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](crate::generated::models::CreateSnapshotOperationStatusHeaders::etag_header) - etag
+    /// * [`content_type`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::content_type) - Content-Type
+    /// * [`link`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::link) - Link
+    /// * [`operation_location`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::operation_location) - Operation-Location
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::etag_header) - etag
     ///
-    /// [`CreateSnapshotOperationStatusHeaders`]: crate::generated::models::CreateSnapshotOperationStatusHeaders
+    /// [`AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders`]: crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders
     #[tracing::function("AzureAppConfiguration.createSnapshot")]
     pub fn create_snapshot(
         &self,
@@ -752,7 +753,7 @@ impl AzureAppConfigurationClient {
         entity: RequestContent<Snapshot>,
         accept: String,
         options: Option<AzureAppConfigurationClientCreateSnapshotOptions<'_>>,
-    ) -> Result<Poller<CreateSnapshotOperationStatus>> {
+    ) -> Result<Poller<AzureAppConfigurationClientCreateSnapshotOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
@@ -846,7 +847,8 @@ impl AzureAppConfigurationClient {
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &options.poller_options,
                     );
-                    let res: CreateSnapshotOperationStatus = json::from_json(&body)?;
+                    let res: AzureAppConfigurationClientCreateSnapshotOperationStatus =
+                        json::from_json(&body)?;
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {

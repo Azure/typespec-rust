@@ -1570,7 +1570,7 @@ export class Adapter {
       }
 
       const statusType = this.typeToWireType(
-        this.getModel(method.lroMetadata.pollingInfo.responseModel, undefined, `${codegen.pascalCase(rustMethod.name, false)}OperationStatus`));
+        this.getModel(method.lroMetadata.pollingInfo.responseModel, undefined, `${rustClient.name}${codegen.pascalCase(rustMethod.name, false)}OperationStatus`));
 
       if (statusType.kind !== 'model') {
         throw new AdapterError('InternalError', `status type for an LRO method '${method.name}' is not a model`, method.__raw?.node);

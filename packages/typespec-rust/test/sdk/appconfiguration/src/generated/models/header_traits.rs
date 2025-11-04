@@ -8,10 +8,11 @@ use super::{
     AzureAppConfigurationClientCheckKeyValuesResult, AzureAppConfigurationClientCheckKeysResult,
     AzureAppConfigurationClientCheckLabelsResult, AzureAppConfigurationClientCheckRevisionsResult,
     AzureAppConfigurationClientCheckSnapshotResult,
-    AzureAppConfigurationClientCheckSnapshotsResult, CreateSnapshotOperationStatus,
-    GetKeyValueResponseContentType, GetKeyValuesResponseContentType, GetKeysResponseContentType,
-    GetLabelsResponseContentType, GetSnapshotResponseContentType, GetSnapshotsResponseContentType,
-    KeyListResult, KeyValue, KeyValueListResult, LabelListResult, Snapshot, SnapshotListResult,
+    AzureAppConfigurationClientCheckSnapshotsResult,
+    AzureAppConfigurationClientCreateSnapshotOperationStatus, GetKeyValueResponseContentType,
+    GetKeyValuesResponseContentType, GetKeysResponseContentType, GetLabelsResponseContentType,
+    GetSnapshotResponseContentType, GetSnapshotsResponseContentType, KeyListResult, KeyValue,
+    KeyValueListResult, LabelListResult, Snapshot, SnapshotListResult,
 };
 use azure_core::{
     http::{
@@ -282,9 +283,9 @@ impl AzureAppConfigurationClientCheckSnapshotsResultHeaders
 ///
 /// ```no_run
 /// use azure_core::{Result, http::Response};
-/// use appconfiguration::models::{CreateSnapshotOperationStatus, CreateSnapshotOperationStatusHeaders};
+/// use appconfiguration::models::{AzureAppConfigurationClientCreateSnapshotOperationStatus, AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders};
 /// async fn example() -> Result<()> {
-///     let response: Response<CreateSnapshotOperationStatus> = unimplemented!();
+///     let response: Response<AzureAppConfigurationClientCreateSnapshotOperationStatus> = unimplemented!();
 ///     // Access response headers
 ///     if let Some(content_type) = response.content_type()? {
 ///         println!("Content-Type: {:?}", content_type);
@@ -298,7 +299,7 @@ impl AzureAppConfigurationClientCheckSnapshotsResultHeaders
 ///     Ok(())
 /// }
 /// ```
-pub trait CreateSnapshotOperationStatusHeaders: private::Sealed {
+pub trait AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders: private::Sealed {
     fn content_type(&self) -> Result<Option<GetSnapshotResponseContentType>>;
     fn link(&self) -> Result<Option<String>>;
     fn operation_location(&self) -> Result<Option<String>>;
@@ -306,7 +307,9 @@ pub trait CreateSnapshotOperationStatusHeaders: private::Sealed {
     fn etag_header(&self) -> Result<Option<String>>;
 }
 
-impl CreateSnapshotOperationStatusHeaders for Response<CreateSnapshotOperationStatus> {
+impl AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders
+    for Response<AzureAppConfigurationClientCreateSnapshotOperationStatus>
+{
     /// Content-Type header
     fn content_type(&self) -> Result<Option<GetSnapshotResponseContentType>> {
         Headers::get_optional_as(self.headers(), &CONTENT_TYPE)
@@ -547,8 +550,9 @@ mod private {
         AzureAppConfigurationClientCheckKeysResult, AzureAppConfigurationClientCheckLabelsResult,
         AzureAppConfigurationClientCheckRevisionsResult,
         AzureAppConfigurationClientCheckSnapshotResult,
-        AzureAppConfigurationClientCheckSnapshotsResult, CreateSnapshotOperationStatus,
-        KeyListResult, KeyValue, KeyValueListResult, LabelListResult, Snapshot, SnapshotListResult,
+        AzureAppConfigurationClientCheckSnapshotsResult,
+        AzureAppConfigurationClientCreateSnapshotOperationStatus, KeyListResult, KeyValue,
+        KeyValueListResult, LabelListResult, Snapshot, SnapshotListResult,
     };
     use azure_core::http::{NoFormat, Response};
 
@@ -561,7 +565,7 @@ mod private {
     impl Sealed for Response<AzureAppConfigurationClientCheckRevisionsResult, NoFormat> {}
     impl Sealed for Response<AzureAppConfigurationClientCheckSnapshotResult, NoFormat> {}
     impl Sealed for Response<AzureAppConfigurationClientCheckSnapshotsResult, NoFormat> {}
-    impl Sealed for Response<CreateSnapshotOperationStatus> {}
+    impl Sealed for Response<AzureAppConfigurationClientCreateSnapshotOperationStatus> {}
     impl Sealed for Response<KeyListResult> {}
     impl Sealed for Response<KeyValue> {}
     impl Sealed for Response<KeyValueListResult> {}
