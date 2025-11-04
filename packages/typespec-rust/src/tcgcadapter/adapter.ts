@@ -188,7 +188,31 @@ export class Adapter {
       return <rust.Enum>rustEnum;
     }
 
-    rustEnum = new rust.Enum(enumName, sdkEnum.access === 'public', !sdkEnum.isFixed);
+    let enumType: rust.EnumType;
+    switch (sdkEnum.valueType.kind) {
+      case 'float':
+      case 'float32':
+        enumType = 'f32';
+        break;
+      case 'float64':
+        enumType = 'f64';
+        break;
+      case 'int8':
+      case 'int16':
+      case 'int32':
+        enumType = 'i32';
+        break;
+      case 'int64':
+        enumType = 'i64';
+        break;
+      case 'string':
+        enumType = 'String';
+        break;
+      default:
+        throw new AdapterError('UnsupportedTsp', `unsupported enum underlying type ${sdkEnum.valueType.kind}`, sdkEnum.__raw?.node);
+    }
+
+    rustEnum = new rust.Enum(enumName, sdkEnum.access === 'public', !sdkEnum.isFixed, enumType);
     rustEnum.docs = this.adaptDocs(sdkEnum.summary, sdkEnum.doc);
     this.types.set(enumName, rustEnum);
 

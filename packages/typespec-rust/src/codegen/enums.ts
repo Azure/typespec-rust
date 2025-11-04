@@ -133,7 +133,8 @@ function emitEnumPublicDefinitions(indent: helpers.indentation, rustEnum: rust.E
   if (docs.length > 0) {
     body += indent.get() + `${docs.substring(0, docs.length - 1)}\n`;
   }
-  body += indent.get() + `#[derive(Clone, ${rustEnum.extensible ? '' : 'Copy, '}Debug, Eq, PartialEq)]\n`;
+  // extensible enums that are numeric can derive Copy
+  body += indent.get() + `#[derive(Clone, ${rustEnum.extensible && rustEnum.type === 'String' ? '' : 'Copy, '}Debug, Eq, PartialEq)]\n`;
   body += indent.get() + `#[non_exhaustive]\n`;
   body += indent.get() + `pub enum ${rustEnum.name} {\n`;
   indent.push();
@@ -147,7 +148,7 @@ function emitEnumPublicDefinitions(indent: helpers.indentation, rustEnum: rust.E
     body += '\n';
     if (rustEnum.extensible && i + 1 === rustEnum.values.length) {
       body += indent.get() + `/// Any other value not defined in \`${rustEnum.name}\`.\n`;
-      body += indent.get() + `UnknownValue(String),\n`;
+      body += indent.get() + `UnknownValue(${rustEnum.type}),\n`;
     }
   }
   body += indent.pop().get() + '}\n\n';
@@ -165,7 +166,21 @@ function emitEnumPublicDefinitions(indent: helpers.indentation, rustEnum: rust.E
  */
 function emitEnumImplDefinitions(indent: helpers.indentation, use: Use, rustEnum: rust.Enum): string {
   use.addForType(rustEnum);
+  if (rustEnum.type === 'String') {
+    return emitStringEnumImplDefinitions(indent, use, rustEnum);
+  }
+  return emitNumericEnumImplDefinitions(indent, use, rustEnum);
+}
 
+/**
+ * emits various trait impls for a string based enum
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param use the use statement builder currently in scope
+ * @param rustEnum the enum for which to emit trait impls
+ * @returns the trait impls text
+ */
+function emitStringEnumImplDefinitions(indent: helpers.indentation, use: Use, rustEnum: rust.Enum): string {
   let body = '';
   if (rustEnum.extensible) {
     use.add("std", "convert::From");
@@ -263,6 +278,95 @@ function emitEnumImplDefinitions(indent: helpers.indentation, use: Use, rustEnum
 }
 
 /**
+ * emits various trait impls for a numeric based enum
+ * 
+ * @param indent the indentation helper currently in scope
+ * @param use the use statement builder currently in scope
+ * @param rustEnum the enum for which to emit trait impls
+ * @returns the trait impls text
+ */
+function emitNumericEnumImplDefinitions(indent: helpers.indentation, use: Use, rustEnum: rust.Enum): string {
+  use.add('azure_core', 'error::Error');
+  let body = `impl TryFrom<${rustEnum.type}> for ${rustEnum.name} {\n`;
+  if (rustEnum.extensible) {
+    use.add('std', 'convert::Infallible');
+    body += `${indent.get()}type Error = Infallible;\n`;
+  } else {
+    use.add('azure_core::error', 'Error', 'ErrorKind');
+    body += `${indent.get()}type Error = Error;\n`;
+  }
+  body += `${indent.get()}fn try_from(value: ${rustEnum.type}) -> Result<Self, Self::Error> {\n`;
+  body += `${indent.push().get()}${helpers.buildMatch(indent, 'value', (() => {
+    const matchArms = new Array<helpers.matchArm>();
+    for (const value of rustEnum.values) {
+      matchArms.push({
+        pattern: value.value.toString(),
+        body: (indent) => `${indent.get()}Ok(${rustEnum.name}::${value.name})\n`,
+      });
+    }
+    matchArms.push({
+      pattern: '_',
+      body: (indent) => {
+        if (rustEnum.extensible) {
+          return `${indent.get()}Ok(${rustEnum.name}::UnknownValue(value))\n`;
+        } else {
+          use.add('azure_core', 'error::ErrorKind');
+          return `${indent.get()}Err(Error::with_message_fn(ErrorKind::DataConversion, || {format!("unknown variant of ${rustEnum.name} found: {value}")}))\n`;
+        }
+      },
+    });
+    return matchArms;
+  })())}\n`;
+  body += `${indent.pop().get()}}\n`; // end try_from
+  body += '}\n\n'; // end impl TryFrom
+
+  body += `impl From<${rustEnum.name}> for ${rustEnum.type} {\n`;
+  body += `${indent.get()}fn from(value: ${rustEnum.name}) -> Self {\n`;
+  body += `${indent.push().get()}${helpers.buildMatch(indent, 'value', (() => {
+    const matchArms = new Array<helpers.matchArm>();
+    for (const value of rustEnum.values) {
+      matchArms.push({
+        pattern: `${rustEnum.name}::${value.name}`,
+        body: (indent) => `${indent.get()}${value.value}\n`,
+      });
+    }
+    if (rustEnum.extensible) {
+      matchArms.push({
+        pattern: `${rustEnum.name}::UnknownValue(value)`,
+        body: (indent) => `${indent.get()}value\n`,
+      });
+    }
+    return matchArms;
+  })())}\n`;
+  body += `${indent.pop().get()}}\n`; // end from
+  body += '}\n\n'; // end impl From
+
+  use.add("std::fmt", "Display", "Formatter");
+  body += `impl Display for ${rustEnum.name} {\n`;
+  body += `${indent.get()}fn fmt(&self, f: &mut Formatter<'_>) -> ::std::fmt::Result {\n`;
+  body += `${indent.push().get()}${helpers.buildMatch(indent, 'self', (() => {
+    const matchArms = new Array<helpers.matchArm>();
+    for (const value of rustEnum.values) {
+      matchArms.push({
+        pattern: `${rustEnum.name}::${value.name}`,
+        body: (indent) => `${indent.get()}Display::fmt(&${value.value}, f)\n`,
+      });
+    }
+    if (rustEnum.extensible) {
+      matchArms.push({
+        pattern: `${rustEnum.name}::UnknownValue(value)`,
+        body: (indent) => `${indent.get()}Display::fmt(&value, f)\n`,
+      });
+    }
+    return matchArms;
+  })())}\n`;
+  body += `${indent.pop().get()}}\n`; // end fmt
+  body += '}\n\n'; // end impl display
+
+  return body;
+}
+
+/**
  * emits the serde helper definitions for an enum
  * 
  * @param indent the indentation helper currently in scope
@@ -282,8 +386,12 @@ function emitEnumSerdeDefinitions(indent: helpers.indentation, use: Use, rustEnu
   body += indent.get() + `D: Deserializer<'de>,\n`;
   body += indent.get() + `{\n`;
   indent.push();
-  body += indent.get() + `let s = String::deserialize(deserializer)?;\n`;
-  body += indent.get() + `s.parse().map_err(serde::de::Error::custom)\n`;
+  if (rustEnum.type === 'String') {
+    body += indent.get() + `let s = String::deserialize(deserializer)?;\n`;
+    body += indent.get() + `s.parse().map_err(serde::de::Error::custom)\n`;
+  } else {
+    body += indent.get() + `${rustEnum.type}::deserialize(deserializer)?.try_into().map_err(serde::de::Error::custom)\n`;
+  }
   body += indent.pop().get() + `}\n`; // end fn
   body += indent.pop().get() + `}\n\n`; // end impl
 
@@ -294,7 +402,11 @@ function emitEnumSerdeDefinitions(indent: helpers.indentation, use: Use, rustEnu
   body += indent.get() + `S: Serializer,\n`;
   body += indent.get() + `{\n`;
   indent.push();
-  body += indent.get() + `s.serialize_str(self.as_ref())\n`;
+  if (rustEnum.type === 'String') {
+    body += indent.get() + `s.serialize_str(self.as_ref())\n`;
+  } else {
+    body += indent.get() + `s.serialize_${rustEnum.type}(${rustEnum.type}::from(*self))\n`;
+  }
   body += indent.pop().get() + `}\n`; // end fn
   body += indent.pop().get() + `}\n\n`; // end impl
   return body;

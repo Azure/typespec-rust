@@ -39,8 +39,16 @@ union ExtensibleValues {
     Two: "two",
 }
 
+union NumericValues {
+  OneTwo: 12,
+  ThreeFour: 34,
+}
+
 @route("/optional/{shape}/{value}")
 op optionalExtensible(@path shape: ExtensibleShape, @path value?: ExtensibleValues): NoContentResponse;
 
 @route("/fixed/{shape}/{value}")
 op optionalFixed(@path shape: FixedShape, @path value?: FixedValues): NoContentResponse;
+
+@route("/numeric/{value}")
+op numeric(@path value: NumericValues): NoContentResponse;

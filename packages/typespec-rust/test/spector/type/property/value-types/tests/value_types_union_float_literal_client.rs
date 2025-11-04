@@ -7,9 +7,6 @@ use spector_valuetypes::{
     ValueTypesClient,
 };
 
-// TODO: https://github.com/Azure/typespec-rust/issues/25
-
-#[should_panic]
 #[tokio::test]
 async fn get() {
     let client = ValueTypesClient::with_no_credential("http://localhost:3000", None).unwrap();
@@ -26,7 +23,6 @@ async fn get() {
     );
 }
 
-#[should_panic]
 #[tokio::test]
 async fn put() {
     let client = ValueTypesClient::with_no_credential("http://localhost:3000", None).unwrap();

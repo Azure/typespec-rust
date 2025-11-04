@@ -105,6 +105,16 @@ model AddlPropsUnknown extends Record<unknown> {
   name: string;
 }
 
+union ExtensibleValues {
+    int32,
+    OneTwoThree: 123,
+    FourFiveSix: 456,
+}
+
+model WithNumericEnum {
+  value: ExtensibleValues;
+}
+
 @@access(SerdeTests.BytesVectors, Access.public);
 @@usage(SerdeTests.BytesVectors, Usage.output);
 @@access(SerdeTests.BytesRecords, Access.public);
@@ -137,3 +147,6 @@ model AddlPropsUnknown extends Record<unknown> {
 @@usage(SerdeTests.AddlPropsString, Usage.output);
 @@access(SerdeTests.AddlPropsUnknown, Access.public);
 @@usage(SerdeTests.AddlPropsUnknown, Usage.output);
+
+@@access(SerdeTests.WithNumericEnum, Access.public);
+@@usage(SerdeTests.WithNumericEnum, Usage.output);
