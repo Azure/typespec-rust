@@ -1295,9 +1295,10 @@ export class Adapter {
         rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path);
         break;
       case 'lro': {
-        let finalResultUrlHeaderName = '';
+        let finalResultUrlHeaderName: string | undefined = '';
         switch (method.lroMetadata.finalStateVia as string) {
           case 'original-uri':
+            finalResultUrlHeaderName = undefined;
             break;
           case 'operation-location':
             finalResultUrlHeaderName = 'operation-location';
@@ -1320,7 +1321,7 @@ export class Adapter {
           methodOptions,
           httpMethod,
           method.operation.path,
-          { headerName: finalResultUrlHeaderName, propertyName: method.lroMetadata.finalResultPath ?? '' }
+          { headerName: finalResultUrlHeaderName, propertyName: method.lroMetadata.finalResultPath }
         );
       }
         break;
@@ -1564,11 +1565,6 @@ export class Adapter {
     } else if (method.kind === 'lro') {
       const format = responseFormat === 'NoFormat' ? 'JsonFormat' : responseFormat
 
-      const responseType = (method.response.type?.kind === "model") ? this.typeToWireType(this.getModel(method.response.type)) : undefined;
-      if (responseType !== undefined && responseType.kind !== 'model') {
-        throw new AdapterError('InternalError', `response type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
-      }
-
       const statusType = this.typeToWireType(
         this.getModel(method.lroMetadata.pollingInfo.responseModel, undefined, `${rustClient.name}${codegen.pascalCase(rustMethod.name, false)}OperationStatus`));
 
@@ -1592,17 +1588,18 @@ export class Adapter {
       }
 
       pushModels(statusType, this.crate);
-      if (responseType !== undefined) {
-        pushModels(responseType, this.crate)
+
+      const poller = new rust.Poller(this.crate, new rust.Response(this.crate, statusType, format));
+      if (method.response.type?.kind === "model") {
+        const responseType = this.typeToWireType(this.getModel(method.response.type));
+        if (responseType.kind !== 'model') {
+          throw new AdapterError('InternalError', `response type for an LRO method '${method.name}' is not a model`, method.__raw?.node);
+        }
+        pushModels(responseType, this.crate);
+        poller.resultType = new rust.Response(this.crate, responseType, format);
       }
 
-      rustMethod.returns = new rust.Result(
-        this.crate,
-        new rust.Poller(
-          this.crate,
-          new rust.Response(this.crate, statusType, format),
-          responseType !== undefined ? new rust.Response(this.crate, responseType, format) : undefined
-        ));
+      rustMethod.returns = new rust.Result(this.crate, poller);
     } else if (method.response.type && !(method.response.type.kind === 'bytes' && method.response.type.encode === 'bytes')) {
       const response = new rust.Response(this.crate, this.typeToWireType(this.getType(method.response.type)), responseFormat);
       rustMethod.returns = new rust.Result(this.crate, response);

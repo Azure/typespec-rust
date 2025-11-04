@@ -818,11 +818,10 @@ export class Pager extends External implements Pager {
 }
 
 export class Poller extends External implements Poller {
-  constructor(crate: Crate, statusType: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>, resultType?: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
+  constructor(crate: Crate, statusType: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
     super(crate, 'Poller', 'azure_core::http');
     this.kind = 'poller';
     this.type = statusType;
-    this.resultType = resultType;
   }
 }
 

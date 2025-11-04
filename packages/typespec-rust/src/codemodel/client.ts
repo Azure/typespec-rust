@@ -169,14 +169,14 @@ export interface PageableMethod extends HTTPMethodBase {
 /** A type that describes how the final result from an LRO is available. */
 export type LroFinalResultStrategy = {
   /** name of the header containing the URL to read the final result from.
-   * If empty, the result is available via the initial response.
+   * If undefined, the result is available via the initial response.
    */
-  headerName: string;
+  headerName?: string;
 
   /** name of the field in the result response object to read the final result from.
-   * If empty, the entire object is the final result.
+   * If undefined, the entire object is the final result.
    */
-  propertyName: string;
+  propertyName?: string;
 }
 
 /** LroMethod is a method that returns a long-running operation. */
