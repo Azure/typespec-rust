@@ -146,7 +146,8 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
         serdeParams.add(`serialize_with = "${xmlListWrapper.name}::wrap"`);
         use.add('super::xml_helpers', xmlListWrapper.name);
       } else if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.DeserializeEmptyStringAsNone) === rust.ModelFieldFlags.DeserializeEmptyStringAsNone) {
-        addEmptyStringAsNoneDeserializer(serdeParams, use);
+        use.add('azure_core::fmt', 'empty_as_null');
+        serdeParams.add(`deserialize_with = "empty_as_null::deserialize"`);
       }
 
       // TODO: omit skip_serializing_if if we need to send explicit JSON null
@@ -637,32 +638,6 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
       serdeParams.add(`with = "models_serde::${buildSerDeModName(field.type)}"`);
       break;
   }
-}
-
-/**
- * adds the helper for deserializing empty string values as None for Option<String>.
- * 
- * @param serdeParams the params that will be passed to the serde annotation
- * @param use the use statement builder currently in scope
- */
-function addEmptyStringAsNoneDeserializer(serdeParams: Set<string>, use: Use): void {
-  const helperName = 'empty_string_as_none';
-  serdeParams.add(`deserialize_with = "models_serde::${helperName}"`);
-  if (serdeHelpers.has(helperName)) {
-    return;
-  }
-
-  use.add('super', 'models_serde');
-
-  serdeHelpers.set(helperName, (indent: helpers.indentation, use: Use): string => {
-    use.add('serde', 'Deserialize', 'Deserializer');
-    use.add('std::result', 'Result');
-    let body = `pub fn empty_string_as_none<'de, D>(deserializer: D) -> Result<Option<String>, D::Error> where D: Deserializer<'de> {\n`;
-    body += `${indent.get()}let value = <Option<String>>::deserialize(deserializer)?;\n`;
-    body += `${indent.get()}Ok(value.filter(|s| !s.is_empty()))\n`;
-    body += '}\n\n';
-    return body;
-  });
 }
 
 /**
