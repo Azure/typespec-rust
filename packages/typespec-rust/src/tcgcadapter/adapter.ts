@@ -68,7 +68,7 @@ export class Adapter {
     // same as TypeSpec.Xml.@name. however, it's filtered out by default
     // so we need to add it to the allow list of decorators
     const ctx = await tcgc.createSdkContext(context, '@azure-tools/typespec-rust', {
-      additionalDecorators: ['TypeSpec\\.@encodedName', '@clientName'],
+      additionalDecorators: ['TypeSpec\\.@encodedName', '@clientName', 'Azure.ClientGenerator.Core.@deserializeEmptyStringAsNull'],
       disableUsageAccessPropagationToBase: true,
     });
 
@@ -522,6 +522,10 @@ export class Adapter {
     // it's possible for different models to reference the same property definition
     if (!this.fieldsMap.get(property)) {
       this.fieldsMap.set(property, modelField);
+    }
+
+    if (property.decorators.find((decorator) => decorator.name === 'Azure.ClientGenerator.Core.@deserializeEmptyStringAsNull') !== undefined) {
+      modelField.flags |= rust.ModelFieldFlags.DeserializeEmptyStringAsNone;
     }
 
     return modelField;

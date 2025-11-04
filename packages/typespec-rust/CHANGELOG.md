@@ -14,6 +14,14 @@
 * Fixed incorrect code for enums that use numeric values instead of strings.
 * Fixed missed `XmlFormat` specifier on some `Pager` definitions.
 
+### Features Added
+
+* Added support for decorator `@deserializeEmptyStringAsNull`.
+
+### Bugs Fixed
+
+* Fixed incorrect code for enums that use numeric values instead of strings.
+
 ### Other Changes
 
 * Replace dependency on `typespec_client_core` with `azure_core`.

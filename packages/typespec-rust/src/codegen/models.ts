@@ -137,7 +137,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
       // XML wrapped lists are mutually exclusive. it's not a real scenario at present.
       const unwrappedType = helpers.unwrapType(field.type);
       if (unwrappedType.kind === 'encodedBytes' || unwrappedType.kind === 'literal' || unwrappedType.kind === 'offsetDateTime' || encodeAsString(unwrappedType)) {
-        getSerDeHelper(field, serdeParams, use);
+        addSerDeHelper(field, serdeParams, use);
       } else if (bodyFormat === 'xml' && shared.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
@@ -145,6 +145,8 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
         serdeParams.add(`deserialize_with = "${xmlListWrapper.name}::unwrap"`);
         serdeParams.add(`serialize_with = "${xmlListWrapper.name}::wrap"`);
         use.add('super::xml_helpers', xmlListWrapper.name);
+      } else if (<rust.ModelFieldFlags>(field.flags & rust.ModelFieldFlags.DeserializeEmptyStringAsNone) === rust.ModelFieldFlags.DeserializeEmptyStringAsNone) {
+        addEmptStringAsNoneDeserializer(serdeParams, use);
       }
 
       // TODO: omit skip_serializing_if if we need to send explicit JSON null
@@ -494,7 +496,7 @@ function emitXMLListWrappers(): helpers.Module | undefined {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // used by getSerDeHelper and emitSerDeHelpers
-const serdeHelpers = new Map<string, rust.ModelField>();
+const serdeHelpers = new Map<string, (indent: helpers.indentation, use: Use) => string>();
 const serdeHelpersForXmlAddlProps = new Map<rust.Model, rust.ModelAdditionalProperties>();
 
 /**
@@ -505,7 +507,7 @@ const serdeHelpersForXmlAddlProps = new Map<rust.Model, rust.ModelAdditionalProp
  * @param serdeParams the params that will be passed to the serde annotation
  * @param use the use statement builder currently in scope
  */
-function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: Use): void {
+function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: Use): void {
   const unwrapped = helpers.unwrapType(field.type);
   switch (unwrapped.kind) {
     case 'encodedBytes':
@@ -551,7 +553,17 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
 
     // we can reuse identical helpers across model types
     if (!serdeHelpers.has(name)) {
-      serdeHelpers.set(name, field);
+      serdeHelpers.set(name, (indent: helpers.indentation): string => {
+        const modUse = new Use('modelsOther');
+        let modContent = `pub mod ${name} {\n`;
+        modContent += `${indent.get()}#![allow(clippy::type_complexity)]\n`;
+        const deserialize = buildDeserialize(indent, field.type, modUse);
+        const serialize = buildSerialize(indent, field.type, modUse);
+        modContent += modUse.text(indent);
+        modContent += `${deserialize}\n${serialize}`;
+        modContent += '}\n\n'; // end pub mod
+        return modContent;
+      });
     }
     return name;
   };
@@ -591,7 +603,9 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
 
     // we can reuse identical helpers
     if (!serdeHelpers.has(name)) {
-      serdeHelpers.set(name, field);
+      serdeHelpers.set(name, (indent: helpers.indentation, use: Use): string => {
+        return buildLiteralSerialize(indent, name, field, use);
+      });
       use.add('super', 'models_serde');
     }
   };
@@ -626,6 +640,32 @@ function getSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
 }
 
 /**
+ * adds the helper for deserializing empty string values as None for Option<String>.
+ * 
+ * @param serdeParams the params that will be passed to the serde annotation
+ * @param use the use statement builder currently in scope
+ */
+function addEmptStringAsNoneDeserializer(serdeParams: Set<string>, use: Use): void {
+  const helperName = 'empty_string_as_none';
+  serdeParams.add(`deserialize_with = "models_serde::${helperName}"`);
+  if (serdeHelpers.has(helperName)) {
+    return;
+  }
+
+  use.add('super', 'models_serde');
+
+  serdeHelpers.set(helperName, (indent: helpers.indentation, use: Use): string => {
+    use.add('serde', 'Deserialize', 'Deserializer');
+    use.add('std::result', 'Result');
+    let body = `pub fn empty_string_as_none<'de, D>(deserializer: D) -> Result<Option<String>, D::Error> where D: Deserializer<'de> {\n`;
+    body += `${indent.get()}let value = <Option<String>>::deserialize(deserializer)?;\n`;
+    body += `${indent.get()}Ok(value.filter(|s| !s.is_empty()))\n`;
+    body += '}\n\n';
+    return body;
+  });
+}
+
+/**
  * emits serde helper modules or returns undefined
  * if no serde helpers are required.
  * 
@@ -656,24 +696,8 @@ function emitSerDeHelpers(use: Use): string | undefined {
   const helperKeys = Array.from(serdeHelpers.keys()).sort();
   for (const helperKey of helperKeys) {
     const indent = new helpers.indentation();
-    const field = serdeHelpers.get(helperKey)!;
-
-    if (shared.unwrapOption(field.type).kind === 'literal') {
-      content += buildLiteralSerialize(indent, helperKey, field, use);
-      continue;
-    }
-
-    const modUse = new Use('modelsOther');
-
-    let modContent = `pub mod ${helperKey} {\n`;
-    modContent += `${indent.get()}#![allow(clippy::type_complexity)]\n`;
-    const deserialize = buildDeserialize(indent, field.type, modUse);
-    const serialize = buildSerialize(indent, field.type, modUse);
-    modContent += modUse.text(indent);
-    modContent += `${deserialize}\n${serialize}`;
-    modContent += '}\n\n'; // end pub mod
-
-    content += modContent;
+    const helperContent = serdeHelpers.get(helperKey)!;
+    content += helperContent(indent, use);
   }
 
   return content;

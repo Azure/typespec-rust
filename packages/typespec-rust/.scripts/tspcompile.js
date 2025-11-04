@@ -81,6 +81,7 @@ const azureHttpSpecsGroup = {
   'spector_apiverquery': {input: 'azure/client-generator-core/api-version/query/client.tsp'},
   'spector_clientinit': {input: 'azure/client-generator-core/client-initialization/client.tsp'},
   'spector_clientloc': {input: 'azure/client-generator-core/client-location'},
+  'spector_emptystringasnone': {input: 'azure/client-generator-core/deserialize-empty-string-as-null'},
   'spector_flattenproperty': {input: 'azure/client-generator-core/flatten-property'},
   //'spector_coreoverride': {input: 'azure/client-generator-core/override/client.tsp'},
   'spector_coreusage': {input: 'azure/client-generator-core/usage'},

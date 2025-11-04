@@ -287,6 +287,9 @@ export enum ModelFieldFlags {
 
   /** field contains the page of items in a paged response */
   PageItems = 1,
+
+  /** deserialize an empty string as None for Option<String> */
+  DeserializeEmptyStringAsNone = 2,
 }
 
 /** ModelFlags contains bit flags describing model usage */
