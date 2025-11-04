@@ -9,11 +9,6 @@
 * An explicit parameter for header `x-ms-client-request-id` is no longer emitted.
 * Updated renamed bearer token authorization policy.
 
-### Bugs Fixed
-
-* Fixed incorrect code for enums that use numeric values instead of strings.
-* Fixed missed `XmlFormat` specifier on some `Pager` definitions.
-
 ### Features Added
 
 * Added support for decorator `@deserializeEmptyStringAsNull`.
@@ -21,6 +16,7 @@
 ### Bugs Fixed
 
 * Fixed incorrect code for enums that use numeric values instead of strings.
+* Fixed missed `XmlFormat` specifier on some `Pager` definitions.
 
 ### Other Changes
 
