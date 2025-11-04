@@ -125,7 +125,7 @@ export class Adapter {
     }
 
     if (this.crate.clients.length > 0 || this.crate.enums.length > 0 || this.crate.models.length > 0 || this.crate.unions.length > 0) {
-      this.crate.addDependency(new rust.CrateDependency('typespec_client_core', ['derive']));
+      this.crate.addDependency(new rust.CrateDependency('azure_core'));
     }
 
     this.crate.sortContent();
@@ -172,8 +172,6 @@ export class Adapter {
       }
       const rustModel = this.getModel(model);
       this.crate.models.push(rustModel);
-      // presence of models requires the derive feature
-      this.crate.addDependency(new rust.CrateDependency('typespec_client_core', ['derive']));
     }
   }
 
@@ -1356,6 +1354,12 @@ export class Adapter {
 
       if (!opParam) {
         throw new AdapterError('InternalError', `didn't find operation parameter for method ${method.name} parameter ${param.name}`, param.__raw?.node);
+      }
+
+      if (opParam.kind === 'header' && opParam.serializedName.toLowerCase() === 'x-ms-client-request-id') {
+        // x-ms-client-request-id is automatically inserted into requests via
+        // a pipeline policy. so we don't want to expose this as an actual param.
+        continue;
       }
 
       let adaptedParam: rust.MethodParameter;

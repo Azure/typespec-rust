@@ -12,6 +12,7 @@ members = [
     "spector/authentication/http/custom",
     "spector/authentication/oauth2",
     "spector/authentication/union",
+    "spector/client/enum-conflict",
     "spector/client/naming",
     "spector/encode/bytes",
     "spector/encode/datetime",
@@ -40,6 +41,7 @@ members = [
     "spector/azure/core/model",
     "spector/azure/core/page",
     "spector/azure/core/scalar",
+    "spector/azure/core/traits",
     "spector/azure/encode/duration",
     "spector/azure/example/basic",
     "spector/azure/payload/pageable",
@@ -48,6 +50,7 @@ members = [
     "spector/azure/resource-manager/non-resource",
     "spector/azure/resource-manager/operation-templates",
     "spector/azure/resource-manager/resources",
+    "spector/azure/special-headers/client-request-id",
     "spector/client/overload",
     "spector/client/structure/client-operation-group",
     "spector/client/structure/default",
@@ -98,7 +101,3 @@ serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.141"
 time = { version = "0.3.41", features = ["serde-well-known"] }
 tokio = { version = "1.46.1", default-features = false, features = ["macros"] }
-typespec_client_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "3842bdc52394754ccfa50ec3604c5167536ee708", features = [
-    "decimal",
-    "reqwest",
-] }
