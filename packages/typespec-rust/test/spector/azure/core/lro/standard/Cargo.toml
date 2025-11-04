@@ -14,7 +14,6 @@ default = ["azure_core/default"]
 azure_core = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-typespec_client_core = { workspace = true, features = ["derive"] }
 
 [dev-dependencies]
 futures = { workspace = true }
