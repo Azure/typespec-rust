@@ -9,6 +9,10 @@
 * Pageable methods now use `PagerOptions` as the `method_options` type.
 * Updated pageable and long-running operation method bodies to handle new arguments to `from_callback()`.
 
+### Features Added
+
+* Added support for more LRO patterns.
+
 ## 0.26.0 (2025-11-04)
 
 ### Breaking Changes
