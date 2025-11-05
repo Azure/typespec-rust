@@ -18,7 +18,8 @@ export class Context {
   private readonly bodyFormatForModels = new Map<rust.Model, helpers.ModelFormat>();
   private readonly tryFromForRequestTypes = new Map<string, rust.PayloadFormat>();
   private readonly pagedResponseTypes = new Set<rust.Model>();
-  private readonly lroTypes = new Set<rust.Model>();
+  private readonly lroStatusTypes = new Set<rust.Model>();
+  private readonly lroResultTypes = new Map<rust.Model, rust.Model>();
 
   /**
    * instantiates a new Context for the provided crate
@@ -57,7 +58,11 @@ export class Context {
           // impls are for pagers only (not page iterators)
           this.pagedResponseTypes.add(method.returns.type.type.content);
         } else if (method.kind === 'lro' && method.returns.type.kind === 'poller') {
-          this.lroTypes.add(method.returns.type.type.content);
+          this.lroStatusTypes.add(method.returns.type.type.content);
+
+          if (method.returns.type.resultType !== undefined) {
+            this.lroResultTypes.set(method.returns.type.type.content, method.returns.type.resultType.content);
+          }
         }
 
         // TODO: this doesn't handle the case where a method sends/receives a HashMap<T>
@@ -220,7 +225,7 @@ export class Context {
    * @returns the StatusMonitor impl or undefined
    */
   getStatusMonitorImplForType(model: rust.Model, use: Use): string | undefined {
-    if (!this.lroTypes.has(model)) {
+    if (!this.lroStatusTypes.has(model)) {
       return undefined;
     }
 
@@ -228,12 +233,17 @@ export class Context {
     use.add('azure_core::http', formatType);
 
     use.addForType(model);
-    use.add('azure_core::http::poller', 'StatusMonitor', 'PollerStatus');
+    const resultType = this.lroResultTypes.get(model);
+    if (resultType !== undefined) {
+      use.addForType(resultType);
+      use.add('azure_core::http::poller', 'StatusMonitor', 'PollerStatus');
+    }
 
     const indent = new helpers.indentation();
 
+    const outputType = resultType !== undefined ? helpers.getTypeDeclaration(helpers.unwrapType(resultType)) : '()';
     let content = `impl StatusMonitor for ${model.name} {\n`;
-    content += `${indent.get()}type Output = ${helpers.getTypeDeclaration(helpers.unwrapType(model))};\n`;
+    content += `${indent.get()}type Output = ${outputType};\n`;
     content += `${indent.get()}type Format = ${formatType};\n`;
     content += `${indent.get()}fn status(&self) -> PollerStatus {\n`;
 

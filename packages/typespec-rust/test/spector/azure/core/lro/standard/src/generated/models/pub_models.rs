@@ -58,7 +58,7 @@ pub struct InnerError {
 
 /// Provides status details for long running operations.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
-pub struct OperationStatusError {
+pub struct StandardClientCreateOrReplaceOperationStatus {
     /// Error object that describes the error when status is "Failed".
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<Error>,
@@ -66,6 +66,42 @@ pub struct OperationStatusError {
     /// The unique ID of the operation.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
+
+    /// The status of the operation
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<OperationState>,
+}
+
+/// Provides status details for long running operations.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct StandardClientDeleteOperationStatus {
+    /// Error object that describes the error when status is "Failed".
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<Error>,
+
+    /// The unique ID of the operation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The status of the operation
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<OperationState>,
+}
+
+/// Provides status details for long running operations.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct StandardClientExportOperationStatus {
+    /// Error object that describes the error when status is "Failed".
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<Error>,
+
+    /// The unique ID of the operation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The result of the operation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub result: Option<ExportedUser>,
 
     /// The status of the operation
     #[serde(skip_serializing_if = "Option::is_none")]

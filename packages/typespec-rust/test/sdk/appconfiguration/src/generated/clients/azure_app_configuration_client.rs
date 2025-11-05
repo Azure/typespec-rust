@@ -15,6 +15,7 @@ use crate::generated::models::{
     AzureAppConfigurationClientCheckSnapshotResult,
     AzureAppConfigurationClientCheckSnapshotsOptions,
     AzureAppConfigurationClientCheckSnapshotsResult,
+    AzureAppConfigurationClientCreateSnapshotOperationStatus,
     AzureAppConfigurationClientCreateSnapshotOptions,
     AzureAppConfigurationClientDeleteKeyValueOptions, AzureAppConfigurationClientDeleteLockOptions,
     AzureAppConfigurationClientGetKeyValueOptions,
@@ -33,7 +34,7 @@ use azure_core::{
     error::CheckSuccessOptions,
     fmt::SafeDebug,
     http::{
-        headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
+        headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         pager::{PagerResult, PagerState},
         policies::{BearerTokenAuthorizationPolicy, Policy},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
@@ -714,14 +715,14 @@ impl AzureAppConfigurationClient {
     ///
     /// ## Response Headers
     ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`SnapshotHeaders`] trait, which provides
+    /// The returned [`Response`](azure_core::http::Response) implements the [`AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
     /// ```no_run
     /// use azure_core::{Result, http::Response};
-    /// use appconfiguration::models::{Snapshot, SnapshotHeaders};
+    /// use appconfiguration::models::{AzureAppConfigurationClientCreateSnapshotOperationStatus, AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders};
     /// async fn example() -> Result<()> {
-    ///     let response: Response<Snapshot> = unimplemented!();
+    ///     let response: Response<AzureAppConfigurationClientCreateSnapshotOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(content_type) = response.content_type()? {
     ///         println!("Content-Type: {:?}", content_type);
@@ -737,13 +738,13 @@ impl AzureAppConfigurationClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`content_type`()](crate::generated::models::SnapshotHeaders::content_type) - Content-Type
-    /// * [`link`()](crate::generated::models::SnapshotHeaders::link) - Link
-    /// * [`operation_location`()](crate::generated::models::SnapshotHeaders::operation_location) - Operation-Location
-    /// * [`sync_token`()](crate::generated::models::SnapshotHeaders::sync_token) - Sync-Token
-    /// * [`etag_header`()](crate::generated::models::SnapshotHeaders::etag_header) - etag
+    /// * [`content_type`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::content_type) - Content-Type
+    /// * [`link`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::link) - Link
+    /// * [`operation_location`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::operation_location) - Operation-Location
+    /// * [`sync_token`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::sync_token) - Sync-Token
+    /// * [`etag_header`()](crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders::etag_header) - etag
     ///
-    /// [`SnapshotHeaders`]: crate::generated::models::SnapshotHeaders
+    /// [`AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders`]: crate::generated::models::AzureAppConfigurationClientCreateSnapshotOperationStatusHeaders
     #[tracing::function("AzureAppConfiguration.createSnapshot")]
     pub fn create_snapshot(
         &self,
@@ -752,7 +753,7 @@ impl AzureAppConfigurationClient {
         entity: RequestContent<Snapshot>,
         accept: String,
         options: Option<AzureAppConfigurationClientCreateSnapshotOptions<'_>>,
-    ) -> Result<Poller<Snapshot>> {
+    ) -> Result<Poller<AzureAppConfigurationClientCreateSnapshotOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
@@ -762,14 +763,19 @@ impl AzureAppConfigurationClient {
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
+        struct Progress {
+            next_link: Url,
+            first_rsp: Option<RawResponse>,
+        }
         Ok(Poller::from_callback(
-            move |next_link: PollerState<Url>| {
-                let (mut request, next_link) = match next_link {
-                    PollerState::More(next_link) => {
-                        let qp = next_link
+            move |state: PollerState<Progress>| {
+                let (mut request, progress) = match state {
+                    PollerState::More(progress) => {
+                        let qp = progress
+                            .next_link
                             .query_pairs()
                             .filter(|(name, _)| name.ne("api-version"));
-                        let mut next_link = next_link.clone();
+                        let mut next_link = progress.next_link.clone();
                         next_link
                             .query_pairs_mut()
                             .clear()
@@ -781,7 +787,13 @@ impl AzureAppConfigurationClient {
                         if let Some(sync_token) = &options.sync_token {
                             request.insert_header("sync-token", sync_token);
                         }
-                        (request, next_link)
+                        (
+                            request,
+                            Progress {
+                                next_link,
+                                first_rsp: progress.first_rsp,
+                            },
+                        )
                     }
                     PollerState::Initial => {
                         let mut request = Request::new(url.clone(), Method::Put);
@@ -791,7 +803,13 @@ impl AzureAppConfigurationClient {
                             request.insert_header("sync-token", sync_token);
                         }
                         request.set_body(entity.clone());
-                        (request, url.clone())
+                        (
+                            request,
+                            Progress {
+                                next_link: url.clone(),
+                                first_rsp: None,
+                            },
+                        )
                     }
                 };
                 let ctx = options.method_options.context.clone();
@@ -810,18 +828,42 @@ impl AzureAppConfigurationClient {
                         )
                         .await?;
                     let (status, headers, body) = rsp.deconstruct();
+                    let next_link = match headers
+                        .get_optional_string(&HeaderName::from_static("operation-location"))
+                    {
+                        Some(operation_location) => Url::parse(&operation_location)?,
+                        None => progress.next_link,
+                    };
+                    let mut first_rsp = progress.first_rsp;
+                    if first_rsp.is_none() {
+                        first_rsp = Some(RawResponse::from_bytes(
+                            status,
+                            headers.clone(),
+                            body.clone(),
+                        ));
+                    }
                     let retry_after = get_retry_after(
                         &headers,
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &options.poller_options,
                     );
-                    let res: Snapshot = json::from_json(&body)?;
+                    let res: AzureAppConfigurationClientCreateSnapshotOperationStatus =
+                        json::from_json(&body)?;
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
-                            next: next_link,
+                            next: Progress {
+                                next_link,
+                                first_rsp,
+                            },
+                        },
+                        PollerStatus::Succeeded => PollerResult::Succeeded {
+                            response: rsp,
+                            target: Box::new(move || {
+                                Box::pin(async move { Ok(first_rsp.unwrap().into()) })
+                            }),
                         },
                         _ => PollerResult::Done { response: rsp },
                     })

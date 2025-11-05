@@ -5,6 +5,7 @@
 
 use crate::generated::models::{
     ExtensionsResource, ExtensionsResourceListResult,
+    ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus,
     ResourcesExtensionsResourcesClientCreateOrUpdateOptions,
     ResourcesExtensionsResourcesClientDeleteOptions, ResourcesExtensionsResourcesClientGetOptions,
     ResourcesExtensionsResourcesClientListByScopeOptions,
@@ -13,7 +14,7 @@ use crate::generated::models::{
 use azure_core::{
     error::CheckSuccessOptions,
     http::{
-        headers::{RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
+        headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         pager::{PagerResult, PagerState},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
         Method, NoFormat, Pager, Pipeline, PipelineSendOptions, Poller, RawResponse, Request,
@@ -48,14 +49,14 @@ impl ResourcesExtensionsResourcesClient {
     ///
     /// ## Response Headers
     ///
-    /// The returned [`Response`](azure_core::http::Response) implements the [`ExtensionsResourceHeaders`] trait, which provides
+    /// The returned [`Response`](azure_core::http::Response) implements the [`ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders`] trait, which provides
     /// access to response headers. For example:
     ///
     /// ```no_run
     /// use azure_core::{Result, http::Response};
-    /// use spector_armresources::models::{ExtensionsResource, ExtensionsResourceHeaders};
+    /// use spector_armresources::models::{ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus, ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders};
     /// async fn example() -> Result<()> {
-    ///     let response: Response<ExtensionsResource> = unimplemented!();
+    ///     let response: Response<ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus> = unimplemented!();
     ///     // Access response headers
     ///     if let Some(azure_async_operation) = response.azure_async_operation()? {
     ///         println!("Azure-AsyncOperation: {:?}", azure_async_operation);
@@ -68,10 +69,10 @@ impl ResourcesExtensionsResourcesClient {
     /// ```
     ///
     /// ### Available headers
-    /// * [`azure_async_operation`()](crate::generated::models::ExtensionsResourceHeaders::azure_async_operation) - Azure-AsyncOperation
-    /// * [`retry_after`()](crate::generated::models::ExtensionsResourceHeaders::retry_after) - Retry-After
+    /// * [`azure_async_operation`()](crate::generated::models::ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders::azure_async_operation) - Azure-AsyncOperation
+    /// * [`retry_after`()](crate::generated::models::ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders::retry_after) - Retry-After
     ///
-    /// [`ExtensionsResourceHeaders`]: crate::generated::models::ExtensionsResourceHeaders
+    /// [`ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders`]: crate::generated::models::ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatusHeaders
     #[tracing::function("Azure.ResourceManager.Resources.ExtensionsResources.createOrUpdate")]
     pub fn create_or_update(
         &self,
@@ -79,7 +80,7 @@ impl ResourcesExtensionsResourcesClient {
         extensions_resource_name: &str,
         resource: RequestContent<ExtensionsResource>,
         options: Option<ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'_>>,
-    ) -> Result<Poller<ExtensionsResource>> {
+    ) -> Result<Poller<ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
@@ -132,18 +133,39 @@ impl ResourcesExtensionsResourcesClient {
                         )
                         .await?;
                     let (status, headers, body) = rsp.deconstruct();
+                    let next_link = match headers
+                        .get_optional_string(&HeaderName::from_static("azure-asyncoperation"))
+                    {
+                        Some(operation_location) => Url::parse(&operation_location)?,
+                        None => next_link,
+                    };
                     let retry_after = get_retry_after(
                         &headers,
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
                         &options.poller_options,
                     );
-                    let res: ExtensionsResource = json::from_json(&body)?;
+                    let res: ResourcesExtensionsResourcesClientCreateOrUpdateOperationStatus =
+                        json::from_json(&body)?;
+                    let mut final_rsp = None;
+                    if res.status() == PollerStatus::Succeeded {
+                        final_rsp = Some(RawResponse::from_bytes(
+                            status,
+                            headers.clone(),
+                            body.clone(),
+                        ));
+                    }
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
                     Ok(match res.status() {
                         PollerStatus::InProgress => PollerResult::InProgress {
                             response: rsp,
                             retry_after,
                             next: next_link,
+                        },
+                        PollerStatus::Succeeded => PollerResult::Succeeded {
+                            response: rsp,
+                            target: Box::new(move || {
+                                Box::pin(async move { Ok(final_rsp.unwrap().into()) })
+                            }),
                         },
                         _ => PollerResult::Done { response: rsp },
                     })

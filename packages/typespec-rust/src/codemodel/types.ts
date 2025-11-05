@@ -338,11 +338,14 @@ export interface Pager extends External {
   type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
 }
 
-/** Pager is a Poller<T> from azure_core */
+/** Poller is a Poller<T> from azure_core */
 export interface Poller extends External {
   kind: 'poller';
 
-  /** the model containing the page of items */
+  /** the model containing the result of a long-running-operation */
+  resultType?: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
+
+  /** the model containing the status of a long-running-operation */
   type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>;
 }
 
@@ -825,10 +828,10 @@ export class Pager extends External implements Pager {
 }
 
 export class Poller extends External implements Poller {
-  constructor(crate: Crate, type: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
+  constructor(crate: Crate, statusType: Response<Model, Exclude<PayloadFormatType, 'NoFormat'>>) {
     super(crate, 'Poller', 'azure_core::http');
     this.kind = 'poller';
-    this.type = type;
+    this.type = statusType;
   }
 }
 

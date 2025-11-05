@@ -36,6 +36,24 @@ pub struct AzureAppConfigurationClientCheckSnapshotResult;
 #[derive(SafeDebug)]
 pub struct AzureAppConfigurationClientCheckSnapshotsResult;
 
+/// Details of a long running operation.
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+#[non_exhaustive]
+pub struct AzureAppConfigurationClientCreateSnapshotOperationStatus {
+    /// An error, available when the status is `Failed`, describing why the operation
+    /// failed.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<Error>,
+
+    /// The unique id of the operation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+
+    /// The current status of the operation
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<OperationState>,
+}
+
 /// The error object.
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 #[non_exhaustive]
