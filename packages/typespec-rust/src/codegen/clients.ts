@@ -344,8 +344,8 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
         body += `${indent.push().get()}${method.options.type.name} {\n`;
         indent.push();
         for (const field of method.options.type.fields) {
-          if (isClientMethodOptions(field.type)) {
-            body += `${indent.get()}${field.name}: ClientMethodOptions {\n`;
+          if (field.type.kind === 'external' && (field.type.name === 'ClientMethodOptions' || field.type.name === 'PagerOptions')) {
+            body += `${indent.get()}${field.name}: ${field.type.name} {\n`;
             body += `${indent.push().get()}context: self.${field.name}.context.into_owned(),\n`;
             body += `${indent.pop().get()}},\n`;
             continue;
@@ -1239,7 +1239,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     switch (method.strategy.kind) {
       case 'continuationToken': {
         const reqTokenParam = method.strategy.requestToken.name;
-        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: PagerState<String>| {\n`;
+        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: PagerState<String>, ctx| {\n`;
         body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ' : ''}url = first_url.clone();\n`;
         if (method.strategy.requestToken.kind === 'queryScalar') {
           // if the url already contains the token query param,
@@ -1269,7 +1269,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       case 'nextLink': {
         const nextLinkName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
         const reinjectedParams = method.strategy.reinjectedParams;
-        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>| {\n`;
+        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>, ctx| {\n`;
         body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
           pattern: `PagerState::More(${nextLinkName})`,
           body: (indent) => {
@@ -1308,7 +1308,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     }
   } else {
     // no next link when there's no strategy
-    body += `${indent.get()}Ok(Pager::from_callback(move |_: PagerState<Url>| {\n`;
+    body += `${indent.get()}Ok(Pager::from_callback(move |_: PagerState<Url>, ctx| {\n`;
     indent.push();
     cloneUrl = true;
     srcUrlVar = urlVar;
@@ -1328,7 +1328,6 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
 
   const requestResult = constructRequest(indent, use, method, paramGroups, true, srcUrlVar, cloneUrl);
   body += requestResult.content;
-  body += `${indent.get()}let ctx = options.method_options.context.clone();\n`;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
   body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut ${requestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
@@ -1410,7 +1409,8 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   }
 
   body += `${indent.pop().get()}}\n`; // end async move
-  body += `${indent.pop().get()}}))`; // end Ok/Pager::from_callback
+  body += `${indent.get()}},\n${indent.get()}Some(options.method_options),\n`; // end move
+  body += `${indent.pop().get()}))`; // end Ok/Pager::from_callback
 
   return body;
 }
@@ -1488,6 +1488,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   let pollerStatusInProgressReturn = 'next_link';
   if (method.finalResultStrategy.kind === 'originalUri') {
     body += `${indent.get()}struct Progress{ next_link: Url, first_rsp: Option<RawResponse>, }`;
+    body += `${indent.get()}impl AsRef<str> for Progress{ fn as_ref(&self) -> &str{ self.next_link.as_ref() }}\n`;
 
     stateVarName = 'state';
     stateVarType = 'Progress';
@@ -1809,11 +1810,6 @@ function nonCopyableType(type: rust.Type): boolean {
     default:
       return false;
   }
-}
-
-/** returns true if the type is the azure_core::ClientMethodOptions type */
-function isClientMethodOptions(type: rust.Type): boolean {
-  return type.kind === 'external' && type.name === 'ClientMethodOptions';
 }
 
 /**

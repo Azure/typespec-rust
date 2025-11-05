@@ -6,7 +6,7 @@
 use super::{KeyValue, KeyValueFields, LabelFields, SnapshotFields, SnapshotStatus};
 use azure_core::{
     fmt::SafeDebug,
-    http::{poller::PollerOptions, ClientMethodOptions, RequestContent},
+    http::{pager::PagerOptions, poller::PollerOptions, ClientMethodOptions, RequestContent},
 };
 
 /// Options to be passed to [`AzureAppConfigurationClient::check_key_value()`](crate::generated::clients::AzureAppConfigurationClient::check_key_value())
@@ -348,7 +348,7 @@ pub struct AzureAppConfigurationClientListKeyValuesOptions<'a> {
     pub label: Option<String>,
 
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub method_options: PagerOptions<'a>,
 
     /// Used to select what fields are present in the returned resource(s).
     pub select: Option<Vec<KeyValueFields>>,
@@ -375,7 +375,7 @@ impl AzureAppConfigurationClientListKeyValuesOptions<'_> {
             if_none_match: self.if_none_match,
             key: self.key,
             label: self.label,
-            method_options: ClientMethodOptions {
+            method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
             },
             select: self.select,
@@ -398,7 +398,7 @@ pub struct AzureAppConfigurationClientListKeysOptions<'a> {
     pub after: Option<String>,
 
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub method_options: PagerOptions<'a>,
 
     /// A filter for the name of the returned keys.
     pub name: Option<String>,
@@ -413,7 +413,7 @@ impl AzureAppConfigurationClientListKeysOptions<'_> {
         AzureAppConfigurationClientListKeysOptions {
             accept_datetime: self.accept_datetime,
             after: self.after,
-            method_options: ClientMethodOptions {
+            method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
             },
             name: self.name,
@@ -434,7 +434,7 @@ pub struct AzureAppConfigurationClientListLabelsOptions<'a> {
     pub after: Option<String>,
 
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub method_options: PagerOptions<'a>,
 
     /// A filter for the name of the returned labels.
     pub name: Option<String>,
@@ -452,7 +452,7 @@ impl AzureAppConfigurationClientListLabelsOptions<'_> {
         AzureAppConfigurationClientListLabelsOptions {
             accept_datetime: self.accept_datetime,
             after: self.after,
-            method_options: ClientMethodOptions {
+            method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
             },
             name: self.name,
@@ -482,7 +482,7 @@ pub struct AzureAppConfigurationClientListRevisionsOptions<'a> {
     pub label: Option<String>,
 
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub method_options: PagerOptions<'a>,
 
     /// Used to select what fields are present in the returned resource(s).
     pub select: Option<Vec<KeyValueFields>>,
@@ -503,7 +503,7 @@ impl AzureAppConfigurationClientListRevisionsOptions<'_> {
             after: self.after,
             key: self.key,
             label: self.label,
-            method_options: ClientMethodOptions {
+            method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
             },
             select: self.select,
@@ -521,7 +521,7 @@ pub struct AzureAppConfigurationClientListSnapshotsOptions<'a> {
     pub after: Option<String>,
 
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub method_options: PagerOptions<'a>,
 
     /// A filter for the name of the returned snapshots.
     pub name: Option<String>,
@@ -541,7 +541,7 @@ impl AzureAppConfigurationClientListSnapshotsOptions<'_> {
     pub fn into_owned(self) -> AzureAppConfigurationClientListSnapshotsOptions<'static> {
         AzureAppConfigurationClientListSnapshotsOptions {
             after: self.after,
-            method_options: ClientMethodOptions {
+            method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
             },
             name: self.name,

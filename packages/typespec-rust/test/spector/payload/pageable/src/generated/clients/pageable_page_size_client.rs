@@ -46,29 +46,31 @@ impl PageablePageSizeClient {
             url.query_pairs_mut()
                 .append_pair("pageSize", &page_size.to_string());
         }
-        Ok(Pager::from_callback(move |_: PagerState<Url>| {
-            let mut request = Request::new(url.clone(), Method::Get);
-            request.insert_header("accept", "application/json");
-            let ctx = options.method_options.context.clone();
-            let pipeline = pipeline.clone();
-            async move {
-                let rsp = pipeline
-                    .send(
-                        &ctx,
-                        &mut request,
-                        Some(PipelineSendOptions {
-                            check_success: CheckSuccessOptions {
-                                success_codes: &[200],
-                            },
-                            ..Default::default()
-                        }),
-                    )
-                    .await?;
-                Ok(PagerResult::Done {
-                    response: rsp.into(),
-                })
-            }
-        }))
+        Ok(Pager::from_callback(
+            move |_: PagerState<Url>, ctx| {
+                let mut request = Request::new(url.clone(), Method::Get);
+                request.insert_header("accept", "application/json");
+                let pipeline = pipeline.clone();
+                async move {
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
+                    Ok(PagerResult::Done {
+                        response: rsp.into(),
+                    })
+                }
+            },
+            Some(options.method_options),
+        ))
     }
 
     ///
@@ -84,28 +86,30 @@ impl PageablePageSizeClient {
         let pipeline = self.pipeline.clone();
         let mut url = self.endpoint.clone();
         url.append_path("/payload/pageable/pagesize/without-continuation");
-        Ok(Pager::from_callback(move |_: PagerState<Url>| {
-            let mut request = Request::new(url.clone(), Method::Get);
-            request.insert_header("accept", "application/json");
-            let ctx = options.method_options.context.clone();
-            let pipeline = pipeline.clone();
-            async move {
-                let rsp = pipeline
-                    .send(
-                        &ctx,
-                        &mut request,
-                        Some(PipelineSendOptions {
-                            check_success: CheckSuccessOptions {
-                                success_codes: &[200],
-                            },
-                            ..Default::default()
-                        }),
-                    )
-                    .await?;
-                Ok(PagerResult::Done {
-                    response: rsp.into(),
-                })
-            }
-        }))
+        Ok(Pager::from_callback(
+            move |_: PagerState<Url>, ctx| {
+                let mut request = Request::new(url.clone(), Method::Get);
+                request.insert_header("accept", "application/json");
+                let pipeline = pipeline.clone();
+                async move {
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
+                    Ok(PagerResult::Done {
+                        response: rsp.into(),
+                    })
+                }
+            },
+            Some(options.method_options),
+        ))
     }
 }

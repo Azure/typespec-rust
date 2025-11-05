@@ -1298,7 +1298,15 @@ export class Adapter {
     methodOptionsStruct.lifetime = optionsLifetime;
     methodOptionsStruct.docs.summary = `Options to be passed to ${this.asDocLink(`${rustClient.name}::${methodName}()`, `crate::generated::clients::${rustClient.name}::${methodName}()`)}`;
 
-    const clientMethodOptions = new rust.ExternalType(this.crate, 'ClientMethodOptions', 'azure_core::http');
+    let clientMethodOptions: rust.ExternalType;
+    switch (method.kind) {
+      case 'paging':
+        clientMethodOptions = new rust.ExternalType(this.crate, 'PagerOptions', 'azure_core::http::pager');
+        break;
+      default:
+        clientMethodOptions = new rust.ExternalType(this.crate, 'ClientMethodOptions', 'azure_core::http');
+    }
+
     clientMethodOptions.lifetime = optionsLifetime;
     const methodOptionsField = new rust.StructField('method_options', 'pub', clientMethodOptions);
     methodOptionsField.docs.summary = 'Allows customization of the method call.';
