@@ -1436,7 +1436,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   use.add('azure_core::http', 'Method', 'RawResponse', 'Request', 'Url');
   use.add('azure_core::http::headers', 'RETRY_AFTER', 'X_MS_RETRY_AFTER_MS', 'RETRY_AFTER_MS');
   use.add('azure_core::http::poller', 'get_retry_after', 'PollerResult', 'PollerState', 'PollerStatus', 'StatusMonitor as _');
-  if (pollingStepHeaderName !== undefined || method.finalResultStrategy.headerName !== undefined) {
+  if (pollingStepHeaderName !== undefined || method.finalResultStrategy.kind !== 'originalUri') {
     use.add('azure_core::http::headers', 'HeaderName');
   }
 
@@ -1486,7 +1486,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   let pollerStateMoreReturn = 'next_link';
   let pollerStateInitialReturn = 'url.clone()';
   let pollerStatusInProgressReturn = 'next_link';
-  if (method.finalResultStrategy.headerName === undefined) {
+  if (method.finalResultStrategy.kind === 'originalUri') {
     body += `${indent.get()}struct Progress{ next_link: Url, first_rsp: Option<RawResponse>, }`;
 
     stateVarName = 'state';
@@ -1537,9 +1537,9 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   }
 
   let resultRspVarName = 'first_rsp';
-  if (method.finalResultStrategy.headerName !== undefined && method.finalResultStrategy.headerName !== pollingStepHeaderName) { // separate link for picking up the result
+  if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName !== pollingStepHeaderName) { // separate link for picking up the result
     body += `${indent.get()}let final_link = Url::parse(headers.get_str(&HeaderName::from_static("${method.finalResultStrategy.headerName}"))?)?;\n`;
-  } else if (method.finalResultStrategy.headerName === undefined) { // result available via original request immediately
+  } else if (method.finalResultStrategy.kind === 'originalUri') { // result available via original request immediately
     resultRspVarName = 'first_rsp'
     body += `${indent.get()}let mut ${resultRspVarName} = progress.first_rsp;\n`;
     body += `${indent.get()}if first_rsp.is_none() { ${resultRspVarName} = Some(RawResponse::from_bytes(status, headers.clone(), body.clone())); }\n`
@@ -1551,7 +1551,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   use.add('azure_core', bodyFormat);
 
   body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`
-  if (pollingStepHeaderName !== undefined && method.finalResultStrategy.headerName === pollingStepHeaderName) { // result available at the poll step link when finished
+  if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName === pollingStepHeaderName) { // result available at the poll step link when finished
     resultRspVarName = 'final_rsp';
     body += `${indent.get()}let mut ${resultRspVarName} = None;\n`
     body += `${indent.get()}if res.status() == PollerStatus::Succeeded {\n`
@@ -1585,7 +1585,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
         + `${indent.get()}target: Box::new(move || {\n`
         + `${indent.push().get()}Box::pin(async move {\n`
         + (
-          (method.finalResultStrategy.headerName !== undefined && method.finalResultStrategy.headerName !== pollingStepHeaderName)
+          (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName !== pollingStepHeaderName)
             ? (
               declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'final_link', true)
               + `Ok(pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, None).await?.into())\n`

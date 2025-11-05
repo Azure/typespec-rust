@@ -166,18 +166,28 @@ export interface PageableMethod extends HTTPMethodBase {
   strategy?: PageableStrategyKind;
 }
 
-/** A type that describes how the final result from an LRO is available. */
-export type LroFinalResultStrategy = {
-  /** name of the header containing the URL to read the final result from.
-   * If undefined, the result is available via the initial response.
-   */
-  headerName?: string;
+/** LRO final result gets returned via the initial request made to the original URL */
+export interface LroFinalResultStrategyOriginalUri {
+  kind: 'originalUri';
+}
+
+export type LroFinalResultStrategyHeaderName = 'operation-location' | 'azure-asyncoperation' | 'location';
+
+/** LRO final result gets returned via the request sent to a URL that was returned in the first response, inside the  */
+export interface LroFinalResultStrategyHeader {
+  kind: 'header';
+
+  /** name of the header containing the URL to read the final result from */
+  headerName: LroFinalResultStrategyHeaderName;
 
   /** name of the field in the result response object to read the final result from.
    * If undefined, the entire object is the final result.
    */
   propertyName?: string;
 }
+
+/** A type that describes how the final result from an LRO is available. */
+export type LroFinalResultStrategyKind = LroFinalResultStrategyOriginalUri | LroFinalResultStrategyHeader;
 
 /** LroMethod is a method that returns a long-running operation. */
 export interface LroMethod extends HTTPMethodBase {
@@ -190,7 +200,7 @@ export interface LroMethod extends HTTPMethodBase {
   returns: types.Result<types.Poller>;
 
   /** A description of how the final result from the LRO is available. */
-  finalResultStrategy: LroFinalResultStrategy;
+  finalResultStrategy: LroFinalResultStrategyKind;
 }
 
 /** PageableStrategyContinuationToken indicates a pageable method uses the continuation token strategy */
@@ -744,8 +754,21 @@ export class PageableMethod extends HTTPMethodBase implements PageableMethod {
   }
 }
 
+export class LroFinalResultStrategyOriginalUri implements LroFinalResultStrategyOriginalUri {
+  constructor() {
+    this.kind = 'originalUri';
+  }
+}
+
+export class LroFinalResultStrategyHeader implements LroFinalResultStrategyHeader {
+  constructor(headerName: LroFinalResultStrategyHeaderName) {
+    this.kind = 'header';
+    this.headerName = headerName;
+  }
+}
+
 export class LroMethod extends HTTPMethodBase implements LroMethod {
-  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string, finalResultStrategy: LroFinalResultStrategy) {
+  constructor(name: string, languageIndependentName: string, client: Client, visibility: types.Visibility, options: MethodOptions, httpMethod: HTTPMethod, httpPath: string, finalResultStrategy: LroFinalResultStrategyKind) {
     super(name, languageIndependentName, httpMethod, httpPath, visibility, client.name, new method.Self(false, true));
     this.kind = 'lro';
     this.params = new Array<MethodParameter>();

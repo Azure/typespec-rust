@@ -6,15 +6,16 @@
 // cspell: ignore addl responseheader subclients lropaging
 
 import * as codegen from '@azure-tools/codegen';
-import { values } from '@azure-tools/linq';
-import { DateTimeKnownEncoding, DiagnosticTarget, EmitContext, NoTarget } from '@typespec/compiler';
+import {values} from '@azure-tools/linq';
+import {DateTimeKnownEncoding, DiagnosticTarget, EmitContext, NoTarget} from '@typespec/compiler';
 import * as http from '@typespec/http';
 import * as helpers from './helpers.js';
 import * as naming from './naming.js';
-import { RustEmitterOptions } from '../lib.js';
+import {RustEmitterOptions} from '../lib.js';
 import * as shared from '../shared/shared.js';
 import * as tcgc from '@azure-tools/typespec-client-generator-core';
 import * as rust from '../codemodel/index.js';
+import {FinalStateValue} from "@azure-tools/typespec-azure-core";
 
 /** ErrorCode defines the types of adapter errors */
 export type ErrorCode =
@@ -1295,34 +1296,25 @@ export class Adapter {
         rustMethod = new rust.PageableMethod(methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path);
         break;
       case 'lro': {
-        let finalResultUrlHeaderName: string | undefined = '';
-        switch (method.lroMetadata.finalStateVia as string) {
-          case 'original-uri':
-            finalResultUrlHeaderName = undefined;
-            break;
-          case 'operation-location':
-            finalResultUrlHeaderName = 'operation-location';
-            break;
-          case 'location':
-            finalResultUrlHeaderName = 'location';
-            break;
-          case 'azure-async-operation':
-            finalResultUrlHeaderName = 'azure-asyncoperation';
-            break;
-          default:
-            throw new AdapterError('UnsupportedTsp', `lroMetadata.finalStateVia ${method.lroMetadata.finalStateVia} NYI`, method.__raw?.node);
-        }
+        let lroFinalResultStrategy: rust.LroFinalResultStrategyKind = new rust.LroFinalResultStrategyOriginalUri();
+        if (method.lroMetadata.finalStateVia !== FinalStateValue.originalUri) {
+          switch (method.lroMetadata.finalStateVia) {
+            case FinalStateValue.operationLocation:
+              lroFinalResultStrategy = new rust.LroFinalResultStrategyHeader('operation-location');
+              break;
+            case FinalStateValue.location:
+              lroFinalResultStrategy = new rust.LroFinalResultStrategyHeader('location');
+              break;
+            case FinalStateValue.azureAsyncOperation:
+              lroFinalResultStrategy = new rust.LroFinalResultStrategyHeader('azure-asyncoperation');
+              break;
+            default:
+              throw new AdapterError('UnsupportedTsp', `lroMetadata.finalStateVia ${method.lroMetadata.finalStateVia} NYI`, method.__raw?.node);
+          }
 
-        rustMethod = new rust.LroMethod(
-          methodName,
-          languageIndependentName,
-          rustClient,
-          pub,
-          methodOptions,
-          httpMethod,
-          method.operation.path,
-          { headerName: finalResultUrlHeaderName, propertyName: method.lroMetadata.finalResultPath }
-        );
+          lroFinalResultStrategy.propertyName = method.lroMetadata.finalResultPath;
+        }
+        rustMethod = new rust.LroMethod( methodName, languageIndependentName, rustClient, pub, methodOptions, httpMethod, method.operation.path, lroFinalResultStrategy);
       }
         break;
       default:
