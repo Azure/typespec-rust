@@ -6,7 +6,7 @@
 use super::{ActionRequest, ChangeAllowanceRequest, Widget};
 use azure_core::{
     fmt::SafeDebug,
-    http::{poller::PollerOptions, ClientMethodOptions, RequestContent},
+    http::{pager::PagerOptions, poller::PollerOptions, ClientMethodOptions, RequestContent},
 };
 
 /// Options to be passed to [`OperationTemplatesCheckNameAvailabilityClient::check_global()`](crate::generated::clients::OperationTemplatesCheckNameAvailabilityClient::check_global())
@@ -92,14 +92,14 @@ impl OperationTemplatesLroClientExportOptions<'_> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct OperationTemplatesOperationsClientListOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub method_options: PagerOptions<'a>,
 }
 
 impl OperationTemplatesOperationsClientListOptions<'_> {
     /// Transforms this [`OperationTemplatesOperationsClientListOptions`] into a new `OperationTemplatesOperationsClientListOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> OperationTemplatesOperationsClientListOptions<'static> {
         OperationTemplatesOperationsClientListOptions {
-            method_options: ClientMethodOptions {
+            method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
             },
         }

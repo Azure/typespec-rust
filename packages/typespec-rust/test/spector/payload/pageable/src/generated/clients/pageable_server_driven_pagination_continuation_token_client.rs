@@ -54,52 +54,54 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         if let Some(bar) = options.bar {
             first_url.query_pairs_mut().append_pair("bar", &bar);
         }
-        Ok(Pager::from_callback(move |token: PagerState<String>| {
-            let url = first_url.clone();
-            let mut request = Request::new(url, Method::Get);
-            request.insert_header("accept", "application/json");
-            if let Some(foo) = &options.foo {
-                request.insert_header("foo", foo);
-            }
-            let token = match token {
-                PagerState::More(token) => &Some(token),
-                PagerState::Initial => &options.token,
-            };
-            if let Some(token) = token {
-                request.insert_header("token", token);
-            }
-            let ctx = options.method_options.context.clone();
-            let pipeline = pipeline.clone();
-            async move {
-                let rsp = pipeline
-                    .send(
-                        &ctx,
-                        &mut request,
-                        Some(PipelineSendOptions {
-                            check_success: CheckSuccessOptions {
-                                success_codes: &[200],
+        Ok(Pager::from_callback(
+            move |token: PagerState<String>, ctx| {
+                let url = first_url.clone();
+                let mut request = Request::new(url, Method::Get);
+                request.insert_header("accept", "application/json");
+                if let Some(foo) = &options.foo {
+                    request.insert_header("foo", foo);
+                }
+                let token = match token {
+                    PagerState::More(token) => &Some(token),
+                    PagerState::Initial => &options.token,
+                };
+                if let Some(token) = token {
+                    request.insert_header("token", token);
+                }
+                let pipeline = pipeline.clone();
+                async move {
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
+                    let (status, headers, body) = rsp.deconstruct();
+                    let res: RequestHeaderNestedResponseBodyResponse = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
+                    Ok(
+                        match res
+                            .nested_next
+                            .and_then(|nested_next| nested_next.next_token)
+                        {
+                            Some(next_token) if !next_token.is_empty() => PagerResult::More {
+                                response: rsp,
+                                continuation: next_token,
                             },
-                            ..Default::default()
-                        }),
-                    )
-                    .await?;
-                let (status, headers, body) = rsp.deconstruct();
-                let res: RequestHeaderNestedResponseBodyResponse = json::from_json(&body)?;
-                let rsp = RawResponse::from_bytes(status, headers, body).into();
-                Ok(
-                    match res
-                        .nested_next
-                        .and_then(|nested_next| nested_next.next_token)
-                    {
-                        Some(next_token) if !next_token.is_empty() => PagerResult::More {
-                            response: rsp,
-                            continuation: next_token,
+                            _ => PagerResult::Done { response: rsp },
                         },
-                        _ => PagerResult::Done { response: rsp },
-                    },
-                )
-            }
-        }))
+                    )
+                }
+            },
+            Some(options.method_options),
+        ))
     }
 
     ///
@@ -120,47 +122,49 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         if let Some(bar) = options.bar {
             first_url.query_pairs_mut().append_pair("bar", &bar);
         }
-        Ok(Pager::from_callback(move |token: PagerState<String>| {
-            let url = first_url.clone();
-            let mut request = Request::new(url, Method::Get);
-            request.insert_header("accept", "application/json");
-            if let Some(foo) = &options.foo {
-                request.insert_header("foo", foo);
-            }
-            let token = match token {
-                PagerState::More(token) => &Some(token),
-                PagerState::Initial => &options.token,
-            };
-            if let Some(token) = token {
-                request.insert_header("token", token);
-            }
-            let ctx = options.method_options.context.clone();
-            let pipeline = pipeline.clone();
-            async move {
-                let rsp = pipeline
-                    .send(
-                        &ctx,
-                        &mut request,
-                        Some(PipelineSendOptions {
-                            check_success: CheckSuccessOptions {
-                                success_codes: &[200],
-                            },
-                            ..Default::default()
-                        }),
-                    )
-                    .await?;
-                let (status, headers, body) = rsp.deconstruct();
-                let res: RequestHeaderResponseBodyResponse = json::from_json(&body)?;
-                let rsp = RawResponse::from_bytes(status, headers, body).into();
-                Ok(match res.next_token {
-                    Some(next_token) if !next_token.is_empty() => PagerResult::More {
-                        response: rsp,
-                        continuation: next_token,
-                    },
-                    _ => PagerResult::Done { response: rsp },
-                })
-            }
-        }))
+        Ok(Pager::from_callback(
+            move |token: PagerState<String>, ctx| {
+                let url = first_url.clone();
+                let mut request = Request::new(url, Method::Get);
+                request.insert_header("accept", "application/json");
+                if let Some(foo) = &options.foo {
+                    request.insert_header("foo", foo);
+                }
+                let token = match token {
+                    PagerState::More(token) => &Some(token),
+                    PagerState::Initial => &options.token,
+                };
+                if let Some(token) = token {
+                    request.insert_header("token", token);
+                }
+                let pipeline = pipeline.clone();
+                async move {
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
+                    let (status, headers, body) = rsp.deconstruct();
+                    let res: RequestHeaderResponseBodyResponse = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
+                    Ok(match res.next_token {
+                        Some(next_token) if !next_token.is_empty() => PagerResult::More {
+                            response: rsp,
+                            continuation: next_token,
+                        },
+                        _ => PagerResult::Done { response: rsp },
+                    })
+                }
+            },
+            Some(options.method_options),
+        ))
     }
 
     ///
@@ -204,45 +208,47 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         if let Some(bar) = options.bar {
             first_url.query_pairs_mut().append_pair("bar", &bar);
         }
-        Ok(Pager::from_callback(move |token: PagerState<String>| {
-            let url = first_url.clone();
-            let mut request = Request::new(url, Method::Get);
-            request.insert_header("accept", "application/json");
-            if let Some(foo) = &options.foo {
-                request.insert_header("foo", foo);
-            }
-            let token = match token {
-                PagerState::More(token) => &Some(token),
-                PagerState::Initial => &options.token,
-            };
-            if let Some(token) = token {
-                request.insert_header("token", token);
-            }
-            let ctx = options.method_options.context.clone();
-            let pipeline = pipeline.clone();
-            async move {
-                let rsp: Response<RequestHeaderResponseHeaderResponse> = pipeline
-                    .send(
-                        &ctx,
-                        &mut request,
-                        Some(PipelineSendOptions {
-                            check_success: CheckSuccessOptions {
-                                success_codes: &[200],
-                            },
-                            ..Default::default()
-                        }),
-                    )
-                    .await?
-                    .into();
-                Ok(match rsp.next_token()? {
-                    Some(next_token) if !next_token.is_empty() => PagerResult::More {
-                        response: rsp,
-                        continuation: next_token,
-                    },
-                    _ => PagerResult::Done { response: rsp },
-                })
-            }
-        }))
+        Ok(Pager::from_callback(
+            move |token: PagerState<String>, ctx| {
+                let url = first_url.clone();
+                let mut request = Request::new(url, Method::Get);
+                request.insert_header("accept", "application/json");
+                if let Some(foo) = &options.foo {
+                    request.insert_header("foo", foo);
+                }
+                let token = match token {
+                    PagerState::More(token) => &Some(token),
+                    PagerState::Initial => &options.token,
+                };
+                if let Some(token) = token {
+                    request.insert_header("token", token);
+                }
+                let pipeline = pipeline.clone();
+                async move {
+                    let rsp: Response<RequestHeaderResponseHeaderResponse> = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?
+                        .into();
+                    Ok(match rsp.next_token()? {
+                        Some(next_token) if !next_token.is_empty() => PagerResult::More {
+                            response: rsp,
+                            continuation: next_token,
+                        },
+                        _ => PagerResult::Done { response: rsp },
+                    })
+                }
+            },
+            Some(options.method_options),
+        ))
     }
 
     ///
@@ -266,56 +272,58 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         if let Some(token) = options.token {
             first_url.query_pairs_mut().append_pair("token", &token);
         }
-        Ok(Pager::from_callback(move |token: PagerState<String>| {
-            let mut url = first_url.clone();
-            if let PagerState::More(token) = token {
-                if url.query_pairs().any(|(name, _)| name.eq("token")) {
-                    let mut new_url = url.clone();
-                    new_url
-                        .query_pairs_mut()
-                        .clear()
-                        .extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("token")));
-                    url = new_url;
+        Ok(Pager::from_callback(
+            move |token: PagerState<String>, ctx| {
+                let mut url = first_url.clone();
+                if let PagerState::More(token) = token {
+                    if url.query_pairs().any(|(name, _)| name.eq("token")) {
+                        let mut new_url = url.clone();
+                        new_url
+                            .query_pairs_mut()
+                            .clear()
+                            .extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("token")));
+                        url = new_url;
+                    }
+                    url.query_pairs_mut().append_pair("token", &token);
                 }
-                url.query_pairs_mut().append_pair("token", &token);
-            }
-            let mut request = Request::new(url, Method::Get);
-            request.insert_header("accept", "application/json");
-            if let Some(foo) = &options.foo {
-                request.insert_header("foo", foo);
-            }
-            let ctx = options.method_options.context.clone();
-            let pipeline = pipeline.clone();
-            async move {
-                let rsp = pipeline
-                    .send(
-                        &ctx,
-                        &mut request,
-                        Some(PipelineSendOptions {
-                            check_success: CheckSuccessOptions {
-                                success_codes: &[200],
+                let mut request = Request::new(url, Method::Get);
+                request.insert_header("accept", "application/json");
+                if let Some(foo) = &options.foo {
+                    request.insert_header("foo", foo);
+                }
+                let pipeline = pipeline.clone();
+                async move {
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
+                    let (status, headers, body) = rsp.deconstruct();
+                    let res: RequestQueryNestedResponseBodyResponse = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
+                    Ok(
+                        match res
+                            .nested_next
+                            .and_then(|nested_next| nested_next.next_token)
+                        {
+                            Some(next_token) if !next_token.is_empty() => PagerResult::More {
+                                response: rsp,
+                                continuation: next_token,
                             },
-                            ..Default::default()
-                        }),
-                    )
-                    .await?;
-                let (status, headers, body) = rsp.deconstruct();
-                let res: RequestQueryNestedResponseBodyResponse = json::from_json(&body)?;
-                let rsp = RawResponse::from_bytes(status, headers, body).into();
-                Ok(
-                    match res
-                        .nested_next
-                        .and_then(|nested_next| nested_next.next_token)
-                    {
-                        Some(next_token) if !next_token.is_empty() => PagerResult::More {
-                            response: rsp,
-                            continuation: next_token,
+                            _ => PagerResult::Done { response: rsp },
                         },
-                        _ => PagerResult::Done { response: rsp },
-                    },
-                )
-            }
-        }))
+                    )
+                }
+            },
+            Some(options.method_options),
+        ))
     }
 
     ///
@@ -339,51 +347,53 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         if let Some(token) = options.token {
             first_url.query_pairs_mut().append_pair("token", &token);
         }
-        Ok(Pager::from_callback(move |token: PagerState<String>| {
-            let mut url = first_url.clone();
-            if let PagerState::More(token) = token {
-                if url.query_pairs().any(|(name, _)| name.eq("token")) {
-                    let mut new_url = url.clone();
-                    new_url
-                        .query_pairs_mut()
-                        .clear()
-                        .extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("token")));
-                    url = new_url;
+        Ok(Pager::from_callback(
+            move |token: PagerState<String>, ctx| {
+                let mut url = first_url.clone();
+                if let PagerState::More(token) = token {
+                    if url.query_pairs().any(|(name, _)| name.eq("token")) {
+                        let mut new_url = url.clone();
+                        new_url
+                            .query_pairs_mut()
+                            .clear()
+                            .extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("token")));
+                        url = new_url;
+                    }
+                    url.query_pairs_mut().append_pair("token", &token);
                 }
-                url.query_pairs_mut().append_pair("token", &token);
-            }
-            let mut request = Request::new(url, Method::Get);
-            request.insert_header("accept", "application/json");
-            if let Some(foo) = &options.foo {
-                request.insert_header("foo", foo);
-            }
-            let ctx = options.method_options.context.clone();
-            let pipeline = pipeline.clone();
-            async move {
-                let rsp = pipeline
-                    .send(
-                        &ctx,
-                        &mut request,
-                        Some(PipelineSendOptions {
-                            check_success: CheckSuccessOptions {
-                                success_codes: &[200],
-                            },
-                            ..Default::default()
-                        }),
-                    )
-                    .await?;
-                let (status, headers, body) = rsp.deconstruct();
-                let res: RequestQueryResponseBodyResponse = json::from_json(&body)?;
-                let rsp = RawResponse::from_bytes(status, headers, body).into();
-                Ok(match res.next_token {
-                    Some(next_token) if !next_token.is_empty() => PagerResult::More {
-                        response: rsp,
-                        continuation: next_token,
-                    },
-                    _ => PagerResult::Done { response: rsp },
-                })
-            }
-        }))
+                let mut request = Request::new(url, Method::Get);
+                request.insert_header("accept", "application/json");
+                if let Some(foo) = &options.foo {
+                    request.insert_header("foo", foo);
+                }
+                let pipeline = pipeline.clone();
+                async move {
+                    let rsp = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?;
+                    let (status, headers, body) = rsp.deconstruct();
+                    let res: RequestQueryResponseBodyResponse = json::from_json(&body)?;
+                    let rsp = RawResponse::from_bytes(status, headers, body).into();
+                    Ok(match res.next_token {
+                        Some(next_token) if !next_token.is_empty() => PagerResult::More {
+                            response: rsp,
+                            continuation: next_token,
+                        },
+                        _ => PagerResult::Done { response: rsp },
+                    })
+                }
+            },
+            Some(options.method_options),
+        ))
     }
 
     ///
@@ -430,48 +440,50 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
         if let Some(token) = options.token {
             first_url.query_pairs_mut().append_pair("token", &token);
         }
-        Ok(Pager::from_callback(move |token: PagerState<String>| {
-            let mut url = first_url.clone();
-            if let PagerState::More(token) = token {
-                if url.query_pairs().any(|(name, _)| name.eq("token")) {
-                    let mut new_url = url.clone();
-                    new_url
-                        .query_pairs_mut()
-                        .clear()
-                        .extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("token")));
-                    url = new_url;
+        Ok(Pager::from_callback(
+            move |token: PagerState<String>, ctx| {
+                let mut url = first_url.clone();
+                if let PagerState::More(token) = token {
+                    if url.query_pairs().any(|(name, _)| name.eq("token")) {
+                        let mut new_url = url.clone();
+                        new_url
+                            .query_pairs_mut()
+                            .clear()
+                            .extend_pairs(url.query_pairs().filter(|(name, _)| name.ne("token")));
+                        url = new_url;
+                    }
+                    url.query_pairs_mut().append_pair("token", &token);
                 }
-                url.query_pairs_mut().append_pair("token", &token);
-            }
-            let mut request = Request::new(url, Method::Get);
-            request.insert_header("accept", "application/json");
-            if let Some(foo) = &options.foo {
-                request.insert_header("foo", foo);
-            }
-            let ctx = options.method_options.context.clone();
-            let pipeline = pipeline.clone();
-            async move {
-                let rsp: Response<RequestQueryResponseHeaderResponse> = pipeline
-                    .send(
-                        &ctx,
-                        &mut request,
-                        Some(PipelineSendOptions {
-                            check_success: CheckSuccessOptions {
-                                success_codes: &[200],
-                            },
-                            ..Default::default()
-                        }),
-                    )
-                    .await?
-                    .into();
-                Ok(match rsp.next_token()? {
-                    Some(next_token) if !next_token.is_empty() => PagerResult::More {
-                        response: rsp,
-                        continuation: next_token,
-                    },
-                    _ => PagerResult::Done { response: rsp },
-                })
-            }
-        }))
+                let mut request = Request::new(url, Method::Get);
+                request.insert_header("accept", "application/json");
+                if let Some(foo) = &options.foo {
+                    request.insert_header("foo", foo);
+                }
+                let pipeline = pipeline.clone();
+                async move {
+                    let rsp: Response<RequestQueryResponseHeaderResponse> = pipeline
+                        .send(
+                            &ctx,
+                            &mut request,
+                            Some(PipelineSendOptions {
+                                check_success: CheckSuccessOptions {
+                                    success_codes: &[200],
+                                },
+                                ..Default::default()
+                            }),
+                        )
+                        .await?
+                        .into();
+                    Ok(match rsp.next_token()? {
+                        Some(next_token) if !next_token.is_empty() => PagerResult::More {
+                            response: rsp,
+                            continuation: next_token,
+                        },
+                        _ => PagerResult::Done { response: rsp },
+                    })
+                }
+            },
+            Some(options.method_options),
+        ))
     }
 }

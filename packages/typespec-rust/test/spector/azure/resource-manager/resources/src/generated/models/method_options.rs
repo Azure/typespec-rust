@@ -5,7 +5,7 @@
 
 use azure_core::{
     fmt::SafeDebug,
-    http::{poller::PollerOptions, ClientMethodOptions},
+    http::{pager::PagerOptions, poller::PollerOptions, ClientMethodOptions},
 };
 
 /// Options to be passed to [`ResourcesExtensionsResourcesClient::create_or_update()`](crate::generated::clients::ResourcesExtensionsResourcesClient::create_or_update())
@@ -48,14 +48,14 @@ pub struct ResourcesExtensionsResourcesClientGetOptions<'a> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesExtensionsResourcesClientListByScopeOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub method_options: PagerOptions<'a>,
 }
 
 impl ResourcesExtensionsResourcesClientListByScopeOptions<'_> {
     /// Transforms this [`ResourcesExtensionsResourcesClientListByScopeOptions`] into a new `ResourcesExtensionsResourcesClientListByScopeOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesExtensionsResourcesClientListByScopeOptions<'static> {
         ResourcesExtensionsResourcesClientListByScopeOptions {
-            method_options: ClientMethodOptions {
+            method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
             },
         }
@@ -94,14 +94,14 @@ pub struct ResourcesLocationResourcesClientGetOptions<'a> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesLocationResourcesClientListByLocationOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub method_options: PagerOptions<'a>,
 }
 
 impl ResourcesLocationResourcesClientListByLocationOptions<'_> {
     /// Transforms this [`ResourcesLocationResourcesClientListByLocationOptions`] into a new `ResourcesLocationResourcesClientListByLocationOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesLocationResourcesClientListByLocationOptions<'static> {
         ResourcesLocationResourcesClientListByLocationOptions {
-            method_options: ClientMethodOptions {
+            method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
             },
         }
@@ -170,14 +170,14 @@ pub struct ResourcesNestedClientGetOptions<'a> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesNestedClientListByTopLevelTrackedResourceOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub method_options: PagerOptions<'a>,
 }
 
 impl ResourcesNestedClientListByTopLevelTrackedResourceOptions<'_> {
     /// Transforms this [`ResourcesNestedClientListByTopLevelTrackedResourceOptions`] into a new `ResourcesNestedClientListByTopLevelTrackedResourceOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesNestedClientListByTopLevelTrackedResourceOptions<'static> {
         ResourcesNestedClientListByTopLevelTrackedResourceOptions {
-            method_options: ClientMethodOptions {
+            method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
             },
         }
@@ -238,14 +238,14 @@ pub struct ResourcesSingletonClientGetByResourceGroupOptions<'a> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesSingletonClientListByResourceGroupOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub method_options: PagerOptions<'a>,
 }
 
 impl ResourcesSingletonClientListByResourceGroupOptions<'_> {
     /// Transforms this [`ResourcesSingletonClientListByResourceGroupOptions`] into a new `ResourcesSingletonClientListByResourceGroupOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesSingletonClientListByResourceGroupOptions<'static> {
         ResourcesSingletonClientListByResourceGroupOptions {
-            method_options: ClientMethodOptions {
+            method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
             },
         }
@@ -321,14 +321,14 @@ pub struct ResourcesTopLevelClientGetOptions<'a> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesTopLevelClientListByResourceGroupOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub method_options: PagerOptions<'a>,
 }
 
 impl ResourcesTopLevelClientListByResourceGroupOptions<'_> {
     /// Transforms this [`ResourcesTopLevelClientListByResourceGroupOptions`] into a new `ResourcesTopLevelClientListByResourceGroupOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesTopLevelClientListByResourceGroupOptions<'static> {
         ResourcesTopLevelClientListByResourceGroupOptions {
-            method_options: ClientMethodOptions {
+            method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
             },
         }
@@ -339,14 +339,14 @@ impl ResourcesTopLevelClientListByResourceGroupOptions<'_> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesTopLevelClientListBySubscriptionOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
+    pub method_options: PagerOptions<'a>,
 }
 
 impl ResourcesTopLevelClientListBySubscriptionOptions<'_> {
     /// Transforms this [`ResourcesTopLevelClientListBySubscriptionOptions`] into a new `ResourcesTopLevelClientListBySubscriptionOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesTopLevelClientListBySubscriptionOptions<'static> {
         ResourcesTopLevelClientListBySubscriptionOptions {
-            method_options: ClientMethodOptions {
+            method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
             },
         }

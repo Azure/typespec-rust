@@ -128,6 +128,11 @@ impl StandardClient {
             next_link: Url,
             first_rsp: Option<RawResponse>,
         }
+        impl AsRef<str> for Progress {
+            fn as_ref(&self) -> &str {
+                self.next_link.as_ref()
+            }
+        }
         Ok(Poller::from_callback(
             move |state: PollerState<Progress>| {
                 let (mut request, progress) = match state {

@@ -1,5 +1,14 @@
 # Release History
 
+## 0.27.0 (2025-11-05)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Pageable methods now use `PagerOptions` as the `method_options` type.
+* Updated pageable and long-running operation method bodies to handle new arguments to `from_callback()`.
+
 ## 0.26.0 (2025-11-04)
 
 ### Breaking Changes
