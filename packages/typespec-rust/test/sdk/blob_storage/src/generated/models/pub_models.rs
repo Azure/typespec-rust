@@ -31,7 +31,7 @@ pub struct AccessPolicy {
         default,
         rename = "Expiry",
         skip_serializing_if = "Option::is_none",
-        with = "azure_core::time::rfc3339::option"
+        with = "models_serde::option_offset_date_time_rfc3339"
     )]
     pub expiry: Option<OffsetDateTime>,
 
@@ -44,7 +44,7 @@ pub struct AccessPolicy {
         default,
         rename = "Start",
         skip_serializing_if = "Option::is_none",
-        with = "azure_core::time::rfc3339::option"
+        with = "models_serde::option_offset_date_time_rfc3339"
     )]
     pub start: Option<OffsetDateTime>,
 }
@@ -1272,6 +1272,13 @@ pub struct SignedIdentifier {
     /// The unique ID for the signed identifier.
     #[serde(rename = "Id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
+}
+
+/// Represents an array of signed identifiers
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct SignedIdentifiers {
+    #[serde(rename = "SignedIdentifier", skip_serializing_if = "Option::is_none")]
+    pub items: Option<Vec<SignedIdentifier>>,
 }
 
 /// The properties that enable an account to host a static website
