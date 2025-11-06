@@ -414,9 +414,7 @@ async fn vec_signed_identifier_se() {
     };
     items.push(si7);
 
-    let signed_identifiers = SignedIdentifiers {
-        items: Some(items),
-    };
+    let signed_identifiers = SignedIdentifiers { items: Some(items) };
 
     let xml_body = to_xml(&signed_identifiers).unwrap();
     let xml_str = String::from_utf8(xml_body.to_vec()).unwrap();
