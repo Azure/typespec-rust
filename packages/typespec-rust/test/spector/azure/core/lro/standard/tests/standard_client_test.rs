@@ -28,8 +28,9 @@ async fn create_or_replace() {
             "madge",
             user.try_into().unwrap(),
             Some(StandardClientCreateOrReplaceOptions {
-                poller_options: PollerOptions {
-                    frequency: Some(Duration::seconds(1)),
+                method_options: PollerOptions {
+                    frequency: Duration::seconds(1),
+                    ..Default::default()
                 },
                 ..Default::default()
             }),
@@ -72,8 +73,9 @@ async fn create_or_replace() {
             "madge",
             user.try_into().unwrap(),
             Some(StandardClientCreateOrReplaceOptions {
-                poller_options: PollerOptions {
-                    frequency: Some(Duration::seconds(1)),
+                method_options: PollerOptions {
+                    frequency: Duration::seconds(1),
+                    ..Default::default()
                 },
                 ..Default::default()
             }),
@@ -91,8 +93,9 @@ async fn delete() {
         .delete(
             "madge",
             Some(StandardClientDeleteOptions {
-                poller_options: PollerOptions {
-                    frequency: Some(Duration::seconds(1)),
+                method_options: PollerOptions {
+                    frequency: Duration::seconds(1),
+                    ..Default::default()
                 },
                 ..Default::default()
             }),
@@ -135,8 +138,9 @@ async fn export() {
             "madge",
             "json",
             Some(StandardClientExportOptions {
-                poller_options: PollerOptions {
-                    frequency: Some(Duration::seconds(1)),
+                method_options: PollerOptions {
+                    frequency: Duration::seconds(1),
+                    ..Default::default()
                 },
                 ..Default::default()
             }),
@@ -176,8 +180,9 @@ async fn export() {
             "madge",
             "json",
             Some(StandardClientExportOptions {
-                poller_options: PollerOptions {
-                    frequency: Some(Duration::seconds(1)),
+                method_options: PollerOptions {
+                    frequency: Duration::seconds(1),
+                    ..Default::default()
                 },
                 ..Default::default()
             }),

@@ -200,10 +200,7 @@ pub struct AzureAppConfigurationClientCheckSnapshotsOptions<'a> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct AzureAppConfigurationClientCreateSnapshotOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
+    pub method_options: PollerOptions<'a>,
 
     /// Used to guarantee real-time consistency between requests.
     pub sync_token: Option<String>,
@@ -213,10 +210,10 @@ impl AzureAppConfigurationClientCreateSnapshotOptions<'_> {
     /// Transforms this [`AzureAppConfigurationClientCreateSnapshotOptions`] into a new `AzureAppConfigurationClientCreateSnapshotOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> AzureAppConfigurationClientCreateSnapshotOptions<'static> {
         AzureAppConfigurationClientCreateSnapshotOptions {
-            method_options: ClientMethodOptions {
+            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
+                frequency: self.method_options.frequency,
             },
-            poller_options: self.poller_options,
             sync_token: self.sync_token,
         }
     }

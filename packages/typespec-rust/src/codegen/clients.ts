@@ -344,9 +344,12 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
         body += `${indent.push().get()}${method.options.type.name} {\n`;
         indent.push();
         for (const field of method.options.type.fields) {
-          if (field.type.kind === 'external' && (field.type.name === 'ClientMethodOptions' || field.type.name === 'PagerOptions')) {
+          if (field.type.kind === 'external' && (field.type.name === 'ClientMethodOptions' || field.type.name === 'PagerOptions'|| field.type.name === 'PollerOptions')) {
             body += `${indent.get()}${field.name}: ${field.type.name} {\n`;
             body += `${indent.push().get()}context: self.${field.name}.context.into_owned(),\n`;
+            if (field.type.name === 'PollerOptions') {
+              body += `${indent.get()}frequency: self.${field.name}.frequency,\n`;
+            }
             body += `${indent.pop().get()}},\n`;
             continue;
           }
@@ -1448,6 +1451,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
 
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
+  body += `${indent.get()}let method_options = options.method_options.clone().into_owned();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
   if (paramGroups.apiVersion) {
@@ -1499,7 +1503,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     pollerStatusInProgressReturn = 'Progress{next_link, first_rsp}';
   }
   body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(\n`
-  body += `${indent.push().get()}move |${stateVarName}: PollerState<${stateVarType}>| {\n`;
+  body += `${indent.push().get()}move |${stateVarName}: PollerState<${stateVarType}>, poller_options| {\n`;
   body += `${indent.push().get()}let (mut ${initialRequestResult.requestVarName}, ${progressVarName}) = ${helpers.buildMatch(indent, stateVarName, [{
     pattern: `PollerState::More(${progressVarName})`,
     body: (indent) => {
@@ -1546,7 +1550,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     body += `${indent.get()}if first_rsp.is_none() { ${resultRspVarName} = Some(RawResponse::from_bytes(status, headers.clone(), body.clone())); }\n`
   }
 
-  body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &options.poller_options);\n`
+  body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &poller_options);\n`
 
   const deserialize = `${bodyFormat}::from_${bodyFormat}`;
   use.add('azure_core', bodyFormat);
@@ -1611,8 +1615,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', arms)})\n`;
   body += `${indent.pop().get()}}\n`; // end async move
   body += `${indent.pop().get()}},\n`; // end move
-  body += `${indent.get()}None,\n`;
-  body += `${indent.pop().get()}))`; // end Ok/Poller::from_callback
+  body += `${indent.pop().get()} Some(method_options),))`; // end Ok/Poller::from_callback
 
   return body;
 }

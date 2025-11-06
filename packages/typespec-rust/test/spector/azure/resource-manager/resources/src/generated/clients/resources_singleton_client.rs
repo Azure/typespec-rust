@@ -79,6 +79,7 @@ impl ResourcesSingletonClient {
     ) -> Result<Poller<ResourcesSingletonClientCreateOrUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
+        let method_options = options.method_options.clone().into_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/singletonTrackedResources/default");
         path = path.replace("{resourceGroupName}", resource_group_name);
@@ -88,7 +89,7 @@ impl ResourcesSingletonClient {
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
         Ok(Poller::from_callback(
-            move |next_link: PollerState<Url>| {
+            move |next_link: PollerState<Url>, poller_options| {
                 let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
                         let qp = next_link
@@ -138,7 +139,7 @@ impl ResourcesSingletonClient {
                     let retry_after = get_retry_after(
                         &headers,
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
-                        &options.poller_options,
+                        &poller_options,
                     );
                     let res: ResourcesSingletonClientCreateOrUpdateOperationStatus =
                         json::from_json(&body)?;
@@ -167,7 +168,7 @@ impl ResourcesSingletonClient {
                     })
                 }
             },
-            None,
+            Some(method_options),
         ))
     }
 
