@@ -117,7 +117,7 @@ impl StandardClient {
     ) -> Result<Poller<StandardClientCreateOrReplaceOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.clone().into_owned();
+        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/azure/core/lro/standard/users/{name}");
         path = path.replace("{name}", name);
@@ -272,7 +272,7 @@ impl StandardClient {
     ) -> Result<Poller<StandardClientDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.clone().into_owned();
+        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/azure/core/lro/standard/users/{name}");
         path = path.replace("{name}", name);
@@ -401,7 +401,7 @@ impl StandardClient {
     ) -> Result<Poller<StandardClientExportOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.clone().into_owned();
+        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/azure/core/lro/standard/users/{name}:export");
         path = path.replace("{name}", name);

@@ -756,7 +756,7 @@ impl AzureAppConfigurationClient {
     ) -> Result<Poller<AzureAppConfigurationClientCreateSnapshotOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.clone().into_owned();
+        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/snapshots/{name}");
         path = path.replace("{name}", name);

@@ -1451,7 +1451,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
 
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
-  body += `${indent.get()}let method_options = options.method_options.clone().into_owned();\n`;
+  body += `${indent.get()}let method_options = options.method_options.to_owned();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
   if (paramGroups.apiVersion) {

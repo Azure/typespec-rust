@@ -84,7 +84,7 @@ impl ResourcesNestedClient {
     ) -> Result<Poller<ResourcesNestedClientCreateOrReplaceOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.clone().into_owned();
+        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
         path = path.replace("{nextedProxyResourceName}", nexted_proxy_resource_name);
@@ -227,7 +227,7 @@ impl ResourcesNestedClient {
     ) -> Result<Poller<ResourcesNestedClientDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.clone().into_owned();
+        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
         path = path.replace("{nextedProxyResourceName}", nexted_proxy_resource_name);
@@ -513,7 +513,7 @@ impl ResourcesNestedClient {
     ) -> Result<Poller<ResourcesNestedClientUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.clone().into_owned();
+        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
         path = path.replace("{nextedProxyResourceName}", nexted_proxy_resource_name);
