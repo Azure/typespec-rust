@@ -88,7 +88,7 @@ async fn create_with_system_assigned() {
         .await
         .unwrap();
 
-    let mi_resource: ManagedIdentityTrackedResource = resp.into_body().unwrap();
+    let mi_resource: ManagedIdentityTrackedResource = resp.into_model().unwrap();
     let expected_resource = get_valid_mi_resource();
     assert_eq!(expected_resource.id, mi_resource.id);
 
@@ -118,7 +118,7 @@ async fn get() {
         .await
         .unwrap();
 
-    let mi_resource: ManagedIdentityTrackedResource = resp.into_body().unwrap();
+    let mi_resource: ManagedIdentityTrackedResource = resp.into_model().unwrap();
     let expected_resource = get_valid_mi_resource();
     assert_eq!(expected_resource.id, mi_resource.id);
 
@@ -165,7 +165,7 @@ async fn update_with_user_assigned_and_system_assigned() {
         .await
         .unwrap();
 
-    let mi_resource: ManagedIdentityTrackedResource = resp.into_body().unwrap();
+    let mi_resource: ManagedIdentityTrackedResource = resp.into_model().unwrap();
     let expected_resource = get_valid_mi_resource();
     assert_eq!(expected_resource.id, mi_resource.id);
 

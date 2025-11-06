@@ -77,7 +77,7 @@ async fn list_with_custom_page_model_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: UserListResults = page.into_body().unwrap();
+        let page: UserListResults = page.into_model().unwrap();
         match page_count {
             1 => {
                 let page_items = page.items;
@@ -129,7 +129,7 @@ async fn list_with_page_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: PagedUser = page.into_body().unwrap();
+        let page: PagedUser = page.into_model().unwrap();
         match page_count {
             1 => {
                 let page_value = page.value;
@@ -206,7 +206,7 @@ async fn list_with_parameters_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: PagedUser = page.into_body().unwrap();
+        let page: PagedUser = page.into_model().unwrap();
         match page_count {
             1 => {
                 let page_value = page.value;

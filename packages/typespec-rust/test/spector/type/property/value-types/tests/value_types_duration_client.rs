@@ -12,7 +12,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     assert_eq!(resp.property, Some("P123DT22H14M12.011S".to_string()));
 }

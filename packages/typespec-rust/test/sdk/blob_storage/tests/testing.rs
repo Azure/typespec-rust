@@ -60,7 +60,7 @@ async fn additional_properties_de() {
     let resp: Response<ListBlobsFlatSegmentResponse, XmlFormat> =
         RawResponse::from_bytes(StatusCode::Ok, Headers::new(), xml_data).into();
 
-    let body = resp.into_body().unwrap();
+    let body = resp.into_model().unwrap();
     assert_eq!(body.segment.blob_items.len(), 5);
 
     let blob0 = &body.segment.blob_items[0];
@@ -210,7 +210,7 @@ async fn vec_signed_identifier_de() {
     let resp: Response<SignedIdentifiers, XmlFormat> =
         RawResponse::from_bytes(StatusCode::Ok, Headers::new(), xml_data).into();
 
-    let signed_identifiers = resp.into_body().unwrap();
+    let signed_identifiers = resp.into_model().unwrap();
     let items = signed_identifiers.items.unwrap();
     assert_eq!(items.len(), 8);
 
@@ -451,7 +451,7 @@ async fn geo_replication_de() {
     let resp: Response<StorageServiceStats, XmlFormat> =
         RawResponse::from_bytes(StatusCode::Ok, Headers::new(), xml_data).into();
 
-    let body = resp.into_body().unwrap();
+    let body = resp.into_model().unwrap();
     let geo_replication = body.geo_replication.unwrap();
     assert_eq!(
         geo_replication.status.as_ref().unwrap(),

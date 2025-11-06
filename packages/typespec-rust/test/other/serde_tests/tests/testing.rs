@@ -16,7 +16,7 @@ async fn test_addl_props_int_de() {
     let json_data = r#"{"count":123,"other1":456,"other2":789}"#;
     let resp: Response<AddlPropsInt> =
         RawResponse::from_bytes(StatusCode::Ok, Headers::new(), json_data).into();
-    let addl_props_int = resp.into_body().unwrap();
+    let addl_props_int = resp.into_model().unwrap();
     let hm_i32 = addl_props_int.additional_properties.unwrap();
     assert_eq!(addl_props_int.count, Some(123));
     assert_eq!(hm_i32.len(), 2);
@@ -38,7 +38,7 @@ async fn test_addl_props_string_de() {
     let json_data = r#"{"name":"foo","other1":"bar","other2":"baz"}"#;
     let resp: Response<AddlPropsString> =
         RawResponse::from_bytes(StatusCode::Ok, Headers::new(), json_data).into();
-    let addl_props_string = resp.into_body().unwrap();
+    let addl_props_string = resp.into_model().unwrap();
     let hm_string = addl_props_string.additional_properties.unwrap();
     assert_eq!(addl_props_string.name, Some("foo".to_string()));
     assert_eq!(hm_string.len(), 2);
@@ -61,7 +61,7 @@ async fn test_addl_props_unknown_de() {
     let json_data = r#"{"count":123,"name":"foo","other1":false,"other2":7.89}"#;
     let resp: Response<AddlPropsUnknown> =
         RawResponse::from_bytes(StatusCode::Ok, Headers::new(), json_data).into();
-    let addl_props_unknown = resp.into_body().unwrap();
+    let addl_props_unknown = resp.into_model().unwrap();
     let hm_value = addl_props_unknown.additional_properties.unwrap();
     assert_eq!(addl_props_unknown.count, Some(123));
     assert_eq!(addl_props_unknown.name, Some("foo".to_string()));
@@ -88,7 +88,7 @@ async fn test_with_numeric_enum_de() {
     let json_data = r#"{"value":789}"#;
     let resp: Response<WithNumericEnum> =
         RawResponse::from_bytes(StatusCode::Ok, Headers::new(), json_data).into();
-    let with_numeric_enum = resp.into_body().unwrap();
+    let with_numeric_enum = resp.into_model().unwrap();
     assert_eq!(
         with_numeric_enum.value,
         Some(ExtensibleValues::UnknownValue(789))

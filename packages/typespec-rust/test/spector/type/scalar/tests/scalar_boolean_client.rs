@@ -10,7 +10,7 @@ async fn get() {
     let resp = client.get_scalar_boolean_client().get(None).await.unwrap();
 
     assert_eq!(resp.status(), 200);
-    assert!(resp.into_body().unwrap());
+    assert!(resp.into_model().unwrap());
 }
 
 #[tokio::test]

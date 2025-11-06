@@ -18,7 +18,7 @@ async fn get_by_resource_group() {
         .await
         .unwrap();
 
-    let resource: SingletonTrackedResource = resp.into_body().unwrap();
+    let resource: SingletonTrackedResource = resp.into_model().unwrap();
     let expected_resource = get_valid_singleton_resource();
 
     assert_eq!(expected_resource.id, resource.id);
@@ -113,7 +113,7 @@ async fn list_by_resource_group_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let resources = page.into_body().unwrap();
+        let resources = page.into_model().unwrap();
         match page_count {
             1 => {
                 assert_eq!(resources.value.len(), 1);
@@ -170,7 +170,7 @@ async fn update() {
         .await
         .unwrap();
 
-    let created_resource: SingletonTrackedResource = resp.into_body().unwrap();
+    let created_resource: SingletonTrackedResource = resp.into_model().unwrap();
     let expected_resource = get_valid_singleton_resource();
 
     assert_eq!(expected_resource.id, created_resource.id);

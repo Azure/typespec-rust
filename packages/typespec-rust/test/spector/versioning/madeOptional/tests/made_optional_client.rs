@@ -15,7 +15,7 @@ async fn test() {
         .test(body.try_into().unwrap(), None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     assert_eq!(resp.prop, Some("foo".to_string()));
 }

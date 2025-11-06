@@ -13,7 +13,7 @@ async fn get_known_value() {
         .get_known_value(None)
         .await
         .unwrap();
-    let value: DaysOfWeekExtensibleEnum = resp.into_body().unwrap();
+    let value: DaysOfWeekExtensibleEnum = resp.into_model().unwrap();
     assert_eq!(value, DaysOfWeekExtensibleEnum::Monday);
 }
 
@@ -25,7 +25,7 @@ async fn get_unknown_value() {
         .get_unknown_value(None)
         .await
         .unwrap();
-    let value: DaysOfWeekExtensibleEnum = resp.into_body().unwrap();
+    let value: DaysOfWeekExtensibleEnum = resp.into_model().unwrap();
     assert_eq!(
         value,
         DaysOfWeekExtensibleEnum::UnknownValue("Weekend".to_string())

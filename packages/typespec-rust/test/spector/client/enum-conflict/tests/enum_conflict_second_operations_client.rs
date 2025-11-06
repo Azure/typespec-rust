@@ -19,7 +19,7 @@ async fn first() {
         .second(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let resp = resp.into_body().unwrap();
+    let resp = resp.into_model().unwrap();
     assert_eq!(resp.description, Some("test description".to_string()));
     assert_eq!(resp.status, Some(SecondStatus::Running));
 }

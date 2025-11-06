@@ -54,7 +54,7 @@ async fn create() {
         .create("eastus", "hello", body.try_into().unwrap(), None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     assert_eq!(resp.id, Some("id".to_string()));
     assert_eq!(resp.name, Some("hello".to_string()));
@@ -75,7 +75,7 @@ async fn get() {
         .get("eastus", "hello", None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     assert_eq!(resp.id, Some("id".to_string()));
     assert_eq!(resp.name, Some("hello".to_string()));

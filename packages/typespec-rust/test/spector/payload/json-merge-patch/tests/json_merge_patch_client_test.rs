@@ -34,7 +34,7 @@ async fn create_resource() {
         .await
         .unwrap();
 
-    let value: Resource = resp.into_body().unwrap();
+    let value: Resource = resp.into_model().unwrap();
     assert_eq!(value.name, Some(String::from("Madge")));
     assert_eq!(value.description, Some(String::from("desc")));
 

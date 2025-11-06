@@ -12,7 +12,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap();
-    let value: ModelWithEmptyArray = resp.into_body().unwrap();
+    let value: ModelWithEmptyArray = resp.into_model().unwrap();
     assert!(value.items.is_none());
 }
 
