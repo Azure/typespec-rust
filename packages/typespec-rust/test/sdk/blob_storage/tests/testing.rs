@@ -8,9 +8,9 @@ use azure_core::{
     xml::to_xml,
 };
 use blob_storage::models::{
-    AccessPolicy, BlobItemInternal, BlobMetadata, GeoReplication, GeoReplicationStatusType,
-    ListBlobsFlatSegmentResponse, ObjectReplicationMetadata, SignedIdentifier, SignedIdentifiers,
-    StorageServiceStats,
+    AccessPolicy, BlobItemInternal, BlobMetadata, ContainerProperties, GeoReplication,
+    GeoReplicationStatusType, ListBlobsFlatSegmentResponse, ObjectReplicationMetadata,
+    SignedIdentifier, SignedIdentifiers, StorageServiceStats,
 };
 use std::collections::HashMap;
 use time::{Date, Month, Time};
@@ -456,15 +456,15 @@ async fn geo_replication_de() {
 #[tokio::test]
 async fn geo_replication_se() {
     let mut storage_service_stats = StorageServiceStats::default();
-    let mut geo_replilcation = GeoReplication::default();
+    let mut geo_replication = GeoReplication::default();
 
-    geo_replilcation.last_sync_time = Some(OffsetDateTime::new_utc(
+    geo_replication.last_sync_time = Some(OffsetDateTime::new_utc(
         Date::from_calendar_date(2013, Month::October, 23).unwrap(),
         Time::from_hms(22, 5, 54).unwrap(),
     ));
-    geo_replilcation.status = Some(GeoReplicationStatusType::Live);
+    geo_replication.status = Some(GeoReplicationStatusType::Live);
 
-    storage_service_stats.geo_replication = Some(geo_replilcation);
+    storage_service_stats.geo_replication = Some(geo_replication);
     let xml_body = to_xml(&storage_service_stats).unwrap();
     assert_eq!(
         xml_body,

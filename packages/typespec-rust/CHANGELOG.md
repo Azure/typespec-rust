@@ -10,7 +10,7 @@
 
 ### Bugs Fixed
 
-* Fixed `serde` implemenations for `OffsetDateTime` in XML payloads when the format is `RFC3339`.
+* Fixed `serde` implementations for `OffsetDateTime` in XML payloads when the format is `RFC3339`.
 
 ## 0.27.0 (2025-11-05)
 
