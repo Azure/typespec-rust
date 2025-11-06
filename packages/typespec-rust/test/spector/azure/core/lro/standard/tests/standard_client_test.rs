@@ -32,7 +32,6 @@ async fn create_or_replace() {
                     frequency: Duration::seconds(1),
                     ..Default::default()
                 },
-                ..Default::default()
             }),
         )
         .unwrap();
@@ -77,7 +76,6 @@ async fn create_or_replace() {
                     frequency: Duration::seconds(1),
                     ..Default::default()
                 },
-                ..Default::default()
             }),
         )
         .unwrap();
@@ -97,7 +95,6 @@ async fn delete() {
                     frequency: Duration::seconds(1),
                     ..Default::default()
                 },
-                ..Default::default()
             }),
         )
         .unwrap();
@@ -142,7 +139,6 @@ async fn export() {
                     frequency: Duration::seconds(1),
                     ..Default::default()
                 },
-                ..Default::default()
             }),
         )
         .unwrap();
@@ -184,7 +180,6 @@ async fn export() {
                     frequency: Duration::seconds(1),
                     ..Default::default()
                 },
-                ..Default::default()
             }),
         )
         .unwrap();
