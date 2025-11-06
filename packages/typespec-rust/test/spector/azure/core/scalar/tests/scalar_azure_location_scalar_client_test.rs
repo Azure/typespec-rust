@@ -13,7 +13,7 @@ async fn get_azure_location() {
         .get(None)
         .await
         .unwrap();
-    let location: String = resp.into_body().unwrap();
+    let location: String = resp.into_model().unwrap();
     assert_eq!(location, "eastus");
 }
 
@@ -40,7 +40,7 @@ async fn post_azure_location_model() {
         .post(body, None)
         .await
         .unwrap();
-    let response_model: AzureLocationModel = resp.into_body().unwrap();
+    let response_model: AzureLocationModel = resp.into_model().unwrap();
     assert_eq!(response_model.location, Some("eastus".to_string()));
 }
 

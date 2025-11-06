@@ -12,7 +12,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap();
-    let value: ModelWithText = resp.into_body().unwrap();
+    let value: ModelWithText = resp.into_model().unwrap();
     assert_eq!(value.content, Some("\n  This is some text.\n".to_string()));
     assert_eq!(value.language, Some("foo".to_string()));
 }

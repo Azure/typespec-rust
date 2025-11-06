@@ -23,7 +23,7 @@ async fn input_and_output() {
     };
     let req = io_record.try_into().unwrap();
     let resp = client.input_and_output(req, None).await.unwrap();
-    let value: InputOutputRecord = resp.into_body().unwrap();
+    let value: InputOutputRecord = resp.into_model().unwrap();
     assert_eq!(value.required_prop, Some(String::from("example-value")));
 }
 
@@ -31,6 +31,6 @@ async fn input_and_output() {
 async fn output() {
     let client = UsageClient::with_no_credential("http://localhost:3000", None).unwrap();
     let resp = client.output(None).await.unwrap();
-    let value: OutputRecord = resp.into_body().unwrap();
+    let value: OutputRecord = resp.into_model().unwrap();
     assert_eq!(value.required_prop, Some(String::from("example-value")));
 }

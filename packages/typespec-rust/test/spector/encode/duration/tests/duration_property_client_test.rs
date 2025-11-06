@@ -24,7 +24,7 @@ async fn default() {
         .default(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: DefaultDurationProperty = resp.into_body().unwrap();
+    let result: DefaultDurationProperty = resp.into_model().unwrap();
     assert_eq!(result.value, Some("P40D".to_string()));
 }
 
@@ -39,7 +39,7 @@ async fn float64_milliseconds() {
         .float64_milliseconds(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: Float64MillisecondsDurationProperty = resp.into_body().unwrap();
+    let result: Float64MillisecondsDurationProperty = resp.into_model().unwrap();
     assert_eq!(result.value, Some(35625.0));
 }
 
@@ -54,7 +54,7 @@ async fn float64_seconds() {
         .float64_seconds(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: Float64SecondsDurationProperty = resp.into_body().unwrap();
+    let result: Float64SecondsDurationProperty = resp.into_model().unwrap();
     assert_eq!(result.value, Some(35.625));
 }
 
@@ -69,7 +69,7 @@ async fn float_milliseconds() {
         .float_milliseconds(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: FloatMillisecondsDurationProperty = resp.into_body().unwrap();
+    let result: FloatMillisecondsDurationProperty = resp.into_model().unwrap();
     assert_eq!(result.value, Some(35625.0));
 }
 
@@ -84,7 +84,7 @@ async fn float_milliseconds_array() {
         .float_milliseconds_array(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: FloatMillisecondsDurationArrayProperty = resp.into_body().unwrap();
+    let result: FloatMillisecondsDurationArrayProperty = resp.into_model().unwrap();
     assert_eq!(result.value, Some(vec![35625.0, 46750.0]));
 }
 
@@ -99,7 +99,7 @@ async fn float_seconds() {
         .float_seconds(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: FloatSecondsDurationProperty = resp.into_body().unwrap();
+    let result: FloatSecondsDurationProperty = resp.into_model().unwrap();
     assert_eq!(result.value, Some(35.625));
 }
 
@@ -114,7 +114,7 @@ async fn float_seconds_array() {
         .float_seconds_array(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: FloatSecondsDurationArrayProperty = resp.into_body().unwrap();
+    let result: FloatSecondsDurationArrayProperty = resp.into_model().unwrap();
     assert_eq!(result.value, Some(vec![35.625, 46.75]));
 }
 
@@ -127,7 +127,7 @@ async fn int32_milliseconds() {
         .int32_milliseconds(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: Int32MillisecondsDurationProperty = resp.into_body().unwrap();
+    let result: Int32MillisecondsDurationProperty = resp.into_model().unwrap();
     assert_eq!(result.value, Some(36000));
 }
 
@@ -140,7 +140,7 @@ async fn int32_seconds() {
         .int32_seconds(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: Int32SecondsDurationProperty = resp.into_body().unwrap();
+    let result: Int32SecondsDurationProperty = resp.into_model().unwrap();
     assert_eq!(result.value, Some(36));
 }
 
@@ -155,6 +155,6 @@ async fn iso8601() {
         .iso8601(body.try_into().unwrap(), None)
         .await
         .unwrap();
-    let result: ISO8601DurationProperty = resp.into_body().unwrap();
+    let result: ISO8601DurationProperty = resp.into_model().unwrap();
     assert_eq!(result.value, Some("P40D".to_string()));
 }

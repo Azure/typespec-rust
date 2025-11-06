@@ -13,7 +13,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     assert!(resp.property.is_some());
     if let Some(val) = resp.property {

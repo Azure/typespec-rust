@@ -92,7 +92,7 @@ rust-version = "1.85"
 [workspace.dependencies]
 # Third-party dependencies should be kept up to date with https://github.com/Azure/azure-sdk-for-rust/blob/main/Cargo.lock
 async-trait = "0.1.88"
-azure_core = { git = "https://github.com/Azure/azure-sdk-for-rust.git", rev = "29e680afd7e4b3855f73d603153e7dc48064beb6", features = [
+azure_core = { git = "https://github.com/heaths/azure-sdk-for-rust.git", rev = "f42cdb41c613b9989f1f40e17c7283f025a6056c", features = [
     "decimal",
     "reqwest",
 ] }

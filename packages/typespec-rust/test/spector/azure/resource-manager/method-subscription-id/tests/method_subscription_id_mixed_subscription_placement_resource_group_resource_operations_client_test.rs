@@ -21,7 +21,7 @@ async fn resource_group_resource_get() {
         .await
         .unwrap();
 
-    let resource: ResourceGroupResource = resp.into_body().unwrap();
+    let resource: ResourceGroupResource = resp.into_model().unwrap();
     let expected_resource = get_valid_resource_group_resource();
 
     assert_eq!(expected_resource.id, resource.id);
@@ -55,7 +55,7 @@ async fn resource_group_resource_put() {
         .await
         .unwrap();
 
-    let created_resource: ResourceGroupResource = resp.into_body().unwrap();
+    let created_resource: ResourceGroupResource = resp.into_model().unwrap();
 
     assert_eq!(resource.location, created_resource.location);
 

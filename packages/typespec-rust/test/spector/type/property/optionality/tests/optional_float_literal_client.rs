@@ -12,7 +12,7 @@ async fn get_all() {
         .get_all(None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     // According to mockapi.ts, the all endpoint returns { property: 1.25 }
     assert_eq!(resp.property, Some(1.25));
@@ -26,7 +26,7 @@ async fn get_default() {
         .get_default(None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap(); // According to mockapi.ts, the default endpoint returns {}
     assert!(resp.property.is_none());
 }

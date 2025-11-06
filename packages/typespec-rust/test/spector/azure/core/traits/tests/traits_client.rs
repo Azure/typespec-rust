@@ -31,7 +31,7 @@ async fn repeatable_action() {
         )
         .await
         .unwrap();
-    let resp = resp.into_body().unwrap();
+    let resp = resp.into_model().unwrap();
     assert_eq!(resp.user_action_result, Some("test".to_string()));
 }
 
@@ -60,7 +60,7 @@ async fn smoke_test() {
         )
         .await
         .unwrap();
-    let resp = resp.into_body().unwrap();
+    let resp = resp.into_model().unwrap();
     assert_eq!(resp.id, Some(1));
     assert_eq!(resp.name, Some("Madge".to_string()));
 }

@@ -22,7 +22,7 @@ async fn test_safeint_as_string() {
         .safeint_as_string(property.try_into().unwrap(), None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
 
     // Verify the response
@@ -43,7 +43,7 @@ async fn test_uint32_as_string_optional() {
         .uint32_as_string_optional(property.try_into().unwrap(), None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
 
     // Verify the response
@@ -66,7 +66,7 @@ async fn test_uint8_as_string() {
         .uint8_as_string(property.try_into().unwrap(), None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
 
     // Verify the response

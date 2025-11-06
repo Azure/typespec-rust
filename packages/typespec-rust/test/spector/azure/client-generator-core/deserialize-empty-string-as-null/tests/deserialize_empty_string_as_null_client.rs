@@ -9,6 +9,6 @@ async fn get() {
     let client =
         DeserializeEmptyStringAsNullClient::with_no_credential("http://localhost:3000", None)
             .unwrap();
-    let resp = client.get(None).await.unwrap().into_body().unwrap();
+    let resp = client.get(None).await.unwrap().into_model().unwrap();
     assert!(resp.sample_url.is_none());
 }
