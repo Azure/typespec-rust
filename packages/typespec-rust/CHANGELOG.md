@@ -1,5 +1,13 @@
 # Release History
 
+## 0.28.0 (Unreleased)
+
+### Breaking Changes
+
+**Note this version is incompatible with earlier versions of `azure_core`**
+
+* Uses `azure_core::Value` instead of `serde_json::Value`.
+
 ## 0.27.0 (2025-11-05)
 
 ### Breaking Changes

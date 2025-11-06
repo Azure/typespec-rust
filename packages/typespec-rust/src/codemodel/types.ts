@@ -731,7 +731,7 @@ export class ImplTrait implements ImplTrait {
 
 export class JsonValue extends External implements JsonValue {
   constructor(crate: Crate) {
-    super(crate, 'Value', 'serde_json');
+    super(crate, 'Value', 'azure_core');
     this.kind = 'jsonValue';
   }
 }

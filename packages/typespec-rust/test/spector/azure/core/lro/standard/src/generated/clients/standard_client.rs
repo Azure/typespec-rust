@@ -464,7 +464,7 @@ impl StandardClient {
                     let mut final_rsp = None;
                     if res.status() == PollerStatus::Succeeded {
                         let body = azure_core::http::response::ResponseBody::from_bytes(
-                            serde_json::from_str::<serde_json::Value>(
+                            serde_json::from_str::<azure_core::Value>(
                                 body.clone().into_string()?.as_str(),
                             )?["result"]
                                 .to_string(),

@@ -12,9 +12,8 @@ use azure_core::{
         Method, NoFormat, Pipeline, PipelineSendOptions, Request, RequestContent, Response, Url,
         UrlExt,
     },
-    tracing, Result,
+    tracing, Result, Value,
 };
-use serde_json::Value;
 
 /// Array of unknown values
 #[tracing::client]
