@@ -344,7 +344,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
         body += `${indent.push().get()}${method.options.type.name} {\n`;
         indent.push();
         for (const field of method.options.type.fields) {
-          if (field.type.kind === 'external' && (field.type.name === 'ClientMethodOptions' || field.type.name === 'PagerOptions'|| field.type.name === 'PollerOptions')) {
+          if (field.type.kind === 'external' && (field.type.name === 'ClientMethodOptions' || field.type.name === 'PagerOptions' || field.type.name === 'PollerOptions')) {
             body += `${indent.get()}${field.name}: ${field.type.name} {\n`;
             body += `${indent.push().get()}context: self.${field.name}.context.into_owned(),\n`;
             if (field.type.name === 'PollerOptions') {
@@ -460,7 +460,7 @@ function getConstructorParamsSig(params: Array<rust.ClientParameter>, options: r
  * @param use the use statement builder currently in scope
  * @returns the method params count and sig
  */
-function getMethodParamsCountAndSig(method: rust.MethodType, use: Use): {count: number, sig: string} {
+function getMethodParamsCountAndSig(method: rust.MethodType, use: Use): { count: number, sig: string } {
   const paramsSig = new Array<string>();
   paramsSig.push(formatParamTypeName(method.self));
 
@@ -497,7 +497,7 @@ function getMethodParamsCountAndSig(method: rust.MethodType, use: Use): {count: 
     ++count;
   }
 
-  return {count: count, sig: paramsSig.join(', ')};
+  return { count: count, sig: paramsSig.join(', ') };
 }
 
 /**
@@ -1030,7 +1030,7 @@ function isOptionalContentTypeHeader(headerParam: HeaderParamType): headerParam 
  * @param forceMut indicates whether request should get declared as 'mut' regardless of whether there are any headers to set
  * @returns the request construction code
  */
-function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, urlVarName: string, cloneUrl: boolean = false, forceMut: boolean = true): {requestVarName: string, content: string} {
+function constructRequest(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, urlVarName: string, cloneUrl: boolean = false, forceMut: boolean = true): { requestVarName: string, content: string } {
   // when constructing the request var name we need to ensure
   // that it doesn't collide with any parameter name.
   const requestVarName = helpers.getUniqueVarName(method.params, ['request', 'core_req']);
@@ -1461,11 +1461,11 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   // we call this eagerly so that we have access to the request var name
   const initialRequestResult = constructRequest(indent, use, method, paramGroups, true, urlVar, true, false);
 
-  const applyApiVersionParam = function(indent: helpers.indentation, paramGroups: MethodParamGroups, newLinkVarName: string, existingLinkVarAccessor: string): string {
+  const applyApiVersionParam = function (indent: helpers.indentation, paramGroups: MethodParamGroups, newLinkVarName: string, existingLinkVarAccessor: string): string {
     if (paramGroups.apiVersion?.kind === 'queryScalar') {
       return `${indent.get()}let qp = ${existingLinkVarAccessor}.query_pairs().filter(|(name, _)| name.ne("${paramGroups.apiVersion.key}"));\n`
-       + `${indent.get()}let mut ${newLinkVarName} = ${existingLinkVarAccessor}.clone();\n`
-       + `${indent.get()}${newLinkVarName}.query_pairs_mut().clear().extend_pairs(qp).append_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`;
+        + `${indent.get()}let mut ${newLinkVarName} = ${existingLinkVarAccessor}.clone();\n`
+        + `${indent.get()}${newLinkVarName}.query_pairs_mut().clear().extend_pairs(qp).append_pair("${paramGroups.apiVersion.key}", &${paramGroups.apiVersion.name});\n`;
     }
 
     return '';
