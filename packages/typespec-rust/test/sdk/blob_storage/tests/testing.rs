@@ -8,9 +8,9 @@ use azure_core::{
     xml::to_xml,
 };
 use blob_storage::models::{
-    AccessPolicy, BlobItemInternal, BlobMetadata, ContainerProperties, GeoReplication,
-    GeoReplicationStatusType, ListBlobsFlatSegmentResponse, ObjectReplicationMetadata,
-    SignedIdentifier, SignedIdentifiers, StorageServiceStats,
+    AccessPolicy, BlobItemInternal, BlobMetadata, GeoReplication, GeoReplicationStatusType,
+    ListBlobsFlatSegmentResponse, ObjectReplicationMetadata, SignedIdentifier, SignedIdentifiers,
+    StorageServiceStats,
 };
 use std::collections::HashMap;
 use time::{Date, Month, Time};
@@ -217,8 +217,7 @@ async fn vec_signed_identifier_de() {
     let mut milliseconds = 0;
     let mut microseconds = 0;
     let mut nanoseconds = 0;
-    for i in 0..=7 {
-        let signed_identifier = &items[i];
+    for (i, signed_identifier) in items.iter().enumerate() {
         assert_eq!(signed_identifier.id, Some(format!("testid{i}")));
         let access_policy = signed_identifier.access_policy.as_ref().unwrap();
         let expiry = access_policy.expiry.as_ref().unwrap();
@@ -272,143 +271,152 @@ async fn vec_signed_identifier_se() {
     let mut items = Vec::new();
 
     // testid0: no fractional seconds
-    let mut si0 = SignedIdentifier::default();
-    si0.id = Some("testid0".to_string());
-    let mut ap0 = AccessPolicy::default();
-    ap0.start = Some(OffsetDateTime::new_utc(base_date, start_time));
-    ap0.expiry = Some(OffsetDateTime::new_utc(base_date, expiry_time));
-    ap0.permission = Some("rw".to_string());
-    si0.access_policy = Some(ap0);
+    let si0 = SignedIdentifier {
+        id: Some("testid0".to_string()),
+        access_policy: Some(AccessPolicy {
+            start: Some(OffsetDateTime::new_utc(base_date, start_time)),
+            expiry: Some(OffsetDateTime::new_utc(base_date, expiry_time)),
+            permission: Some("rw".to_string()),
+        }),
+    };
     items.push(si0);
 
     // testid1: .1 (100ms)
-    let mut si1 = SignedIdentifier::default();
-    si1.id = Some("testid1".to_string());
-    let mut ap1 = AccessPolicy::default();
-    ap1.start = Some(
-        OffsetDateTime::new_utc(base_date, start_time)
-            .replace_nanosecond(100_000_000)
-            .unwrap(),
-    );
-    ap1.expiry = Some(
-        OffsetDateTime::new_utc(base_date, expiry_time)
-            .replace_nanosecond(100_000_000)
-            .unwrap(),
-    );
-    ap1.permission = Some("rw".to_string());
-    si1.access_policy = Some(ap1);
+    let si1 = SignedIdentifier {
+        id: Some("testid1".to_string()),
+        access_policy: Some(AccessPolicy {
+            start: Some(
+                OffsetDateTime::new_utc(base_date, start_time)
+                    .replace_nanosecond(100_000_000)
+                    .unwrap(),
+            ),
+            expiry: Some(
+                OffsetDateTime::new_utc(base_date, expiry_time)
+                    .replace_nanosecond(100_000_000)
+                    .unwrap(),
+            ),
+            permission: Some("rw".to_string()),
+        }),
+    };
     items.push(si1);
 
     // testid2: .12 (120ms)
-    let mut si2 = SignedIdentifier::default();
-    si2.id = Some("testid2".to_string());
-    let mut ap2 = AccessPolicy::default();
-    ap2.start = Some(
-        OffsetDateTime::new_utc(base_date, start_time)
-            .replace_nanosecond(120_000_000)
-            .unwrap(),
-    );
-    ap2.expiry = Some(
-        OffsetDateTime::new_utc(base_date, expiry_time)
-            .replace_nanosecond(120_000_000)
-            .unwrap(),
-    );
-    ap2.permission = Some("rw".to_string());
-    si2.access_policy = Some(ap2);
+    let si2 = SignedIdentifier {
+        id: Some("testid2".to_string()),
+        access_policy: Some(AccessPolicy {
+            start: Some(
+                OffsetDateTime::new_utc(base_date, start_time)
+                    .replace_nanosecond(120_000_000)
+                    .unwrap(),
+            ),
+            expiry: Some(
+                OffsetDateTime::new_utc(base_date, expiry_time)
+                    .replace_nanosecond(120_000_000)
+                    .unwrap(),
+            ),
+            permission: Some("rw".to_string()),
+        }),
+    };
     items.push(si2);
 
     // testid3: .123 (123ms)
-    let mut si3 = SignedIdentifier::default();
-    si3.id = Some("testid3".to_string());
-    let mut ap3 = AccessPolicy::default();
-    ap3.start = Some(
-        OffsetDateTime::new_utc(base_date, start_time)
-            .replace_nanosecond(123_000_000)
-            .unwrap(),
-    );
-    ap3.expiry = Some(
-        OffsetDateTime::new_utc(base_date, expiry_time)
-            .replace_nanosecond(123_000_000)
-            .unwrap(),
-    );
-    ap3.permission = Some("rw".to_string());
-    si3.access_policy = Some(ap3);
+    let si3 = SignedIdentifier {
+        id: Some("testid3".to_string()),
+        access_policy: Some(AccessPolicy {
+            start: Some(
+                OffsetDateTime::new_utc(base_date, start_time)
+                    .replace_nanosecond(123_000_000)
+                    .unwrap(),
+            ),
+            expiry: Some(
+                OffsetDateTime::new_utc(base_date, expiry_time)
+                    .replace_nanosecond(123_000_000)
+                    .unwrap(),
+            ),
+            permission: Some("rw".to_string()),
+        }),
+    };
     items.push(si3);
 
     // testid4: .1234 (123.4ms)
-    let mut si4 = SignedIdentifier::default();
-    si4.id = Some("testid4".to_string());
-    let mut ap4 = AccessPolicy::default();
-    ap4.start = Some(
-        OffsetDateTime::new_utc(base_date, start_time)
-            .replace_nanosecond(123_400_000)
-            .unwrap(),
-    );
-    ap4.expiry = Some(
-        OffsetDateTime::new_utc(base_date, expiry_time)
-            .replace_nanosecond(123_400_000)
-            .unwrap(),
-    );
-    ap4.permission = Some("rw".to_string());
-    si4.access_policy = Some(ap4);
+    let si4 = SignedIdentifier {
+        id: Some("testid4".to_string()),
+        access_policy: Some(AccessPolicy {
+            start: Some(
+                OffsetDateTime::new_utc(base_date, start_time)
+                    .replace_nanosecond(123_400_000)
+                    .unwrap(),
+            ),
+            expiry: Some(
+                OffsetDateTime::new_utc(base_date, expiry_time)
+                    .replace_nanosecond(123_400_000)
+                    .unwrap(),
+            ),
+            permission: Some("rw".to_string()),
+        }),
+    };
     items.push(si4);
 
     // testid5: .12345 (123.45ms)
-    let mut si5 = SignedIdentifier::default();
-    si5.id = Some("testid5".to_string());
-    let mut ap5 = AccessPolicy::default();
-    ap5.start = Some(
-        OffsetDateTime::new_utc(base_date, start_time)
-            .replace_nanosecond(123_450_000)
-            .unwrap(),
-    );
-    ap5.expiry = Some(
-        OffsetDateTime::new_utc(base_date, expiry_time)
-            .replace_nanosecond(123_450_000)
-            .unwrap(),
-    );
-    ap5.permission = Some("rw".to_string());
-    si5.access_policy = Some(ap5);
+    let si5 = SignedIdentifier {
+        id: Some("testid5".to_string()),
+        access_policy: Some(AccessPolicy {
+            start: Some(
+                OffsetDateTime::new_utc(base_date, start_time)
+                    .replace_nanosecond(123_450_000)
+                    .unwrap(),
+            ),
+            expiry: Some(
+                OffsetDateTime::new_utc(base_date, expiry_time)
+                    .replace_nanosecond(123_450_000)
+                    .unwrap(),
+            ),
+            permission: Some("rw".to_string()),
+        }),
+    };
     items.push(si5);
 
     // testid6: .123456 (123.456ms)
-    let mut si6 = SignedIdentifier::default();
-    si6.id = Some("testid6".to_string());
-    let mut ap6 = AccessPolicy::default();
-    ap6.start = Some(
-        OffsetDateTime::new_utc(base_date, start_time)
-            .replace_nanosecond(123_456_000)
-            .unwrap(),
-    );
-    ap6.expiry = Some(
-        OffsetDateTime::new_utc(base_date, expiry_time)
-            .replace_nanosecond(123_456_000)
-            .unwrap(),
-    );
-    ap6.permission = Some("rw".to_string());
-    si6.access_policy = Some(ap6);
+    let si6 = SignedIdentifier {
+        id: Some("testid6".to_string()),
+        access_policy: Some(AccessPolicy {
+            start: Some(
+                OffsetDateTime::new_utc(base_date, start_time)
+                    .replace_nanosecond(123_456_000)
+                    .unwrap(),
+            ),
+            expiry: Some(
+                OffsetDateTime::new_utc(base_date, expiry_time)
+                    .replace_nanosecond(123_456_000)
+                    .unwrap(),
+            ),
+            permission: Some("rw".to_string()),
+        }),
+    };
     items.push(si6);
 
     // testid7: .1234567 (123.4567ms)
-    let mut si7 = SignedIdentifier::default();
-    si7.id = Some("testid7".to_string());
-    let mut ap7 = AccessPolicy::default();
-    ap7.start = Some(
-        OffsetDateTime::new_utc(base_date, start_time)
-            .replace_nanosecond(123_456_700)
-            .unwrap(),
-    );
-    ap7.expiry = Some(
-        OffsetDateTime::new_utc(base_date, expiry_time)
-            .replace_nanosecond(123_456_700)
-            .unwrap(),
-    );
-    ap7.permission = Some("rw".to_string());
-    si7.access_policy = Some(ap7);
+    let si7 = SignedIdentifier {
+        id: Some("testid7".to_string()),
+        access_policy: Some(AccessPolicy {
+            start: Some(
+                OffsetDateTime::new_utc(base_date, start_time)
+                    .replace_nanosecond(123_456_700)
+                    .unwrap(),
+            ),
+            expiry: Some(
+                OffsetDateTime::new_utc(base_date, expiry_time)
+                    .replace_nanosecond(123_456_700)
+                    .unwrap(),
+            ),
+            permission: Some("rw".to_string()),
+        }),
+    };
     items.push(si7);
 
-    let mut signed_identifiers = SignedIdentifiers::default();
-    signed_identifiers.items = Some(items);
+    let signed_identifiers = SignedIdentifiers {
+        items: Some(items),
+    };
 
     let xml_body = to_xml(&signed_identifiers).unwrap();
     let xml_str = String::from_utf8(xml_body.to_vec()).unwrap();
