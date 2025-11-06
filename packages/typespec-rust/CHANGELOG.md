@@ -8,6 +8,10 @@
 
 * Uses `azure_core::Value` instead of `serde_json::Value`.
 
+### Bugs Fixed
+
+* Fixed `serde` implemenations for `OffsetDateTime` in XML payloads when the format is `RFC3339`.
+
 ## 0.27.0 (2025-11-05)
 
 ### Breaking Changes
