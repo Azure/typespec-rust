@@ -1561,7 +1561,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     if (method.finalResultStrategy.propertyName !== undefined) {
       responseBodyExpr = 'body';
       body += `${indent.get()}let ${responseBodyExpr} = azure_core::http::response::ResponseBody::from_bytes(`
-        + `serde_json::from_str::<serde_json::Value>(body.clone().into_string()?.as_str())?["${method.finalResultStrategy.propertyName}"].to_string());\n`;
+        + `serde_json::from_str::<azure_core::Value>(body.clone().into_string()?.as_str())?["${method.finalResultStrategy.propertyName}"].to_string());\n`;
     }
     body += `${indent.get()}${resultRspVarName} = Some(RawResponse::from_bytes(status, headers.clone(), ${responseBodyExpr}));\n`
     body += `${indent.pop().get()}}\n`;

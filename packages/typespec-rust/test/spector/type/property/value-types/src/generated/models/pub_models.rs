@@ -11,10 +11,10 @@ use azure_core::{
     base64::option::{deserialize, serialize},
     fmt::SafeDebug,
     time::OffsetDateTime,
+    Value,
 };
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use std::collections::HashMap;
 
 /// Model with a boolean literal property.

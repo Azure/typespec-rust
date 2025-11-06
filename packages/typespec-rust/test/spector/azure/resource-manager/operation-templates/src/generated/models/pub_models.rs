@@ -6,9 +6,8 @@
 use super::{
     ActionType, CheckNameAvailabilityReason, CreatedByType, Origin, ResourceProvisioningState,
 };
-use azure_core::{fmt::SafeDebug, time::OffsetDateTime};
+use azure_core::{fmt::SafeDebug, time::OffsetDateTime, Value};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use std::collections::HashMap;
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
