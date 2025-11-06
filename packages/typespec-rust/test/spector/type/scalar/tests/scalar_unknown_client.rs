@@ -11,7 +11,10 @@ async fn get() {
     let resp = client.get_scalar_unknown_client().get(None).await.unwrap();
 
     assert_eq!(resp.status(), 200);
-    assert_eq!(resp.into_model().unwrap(), Value::String("test".to_string()));
+    assert_eq!(
+        resp.into_model().unwrap(),
+        Value::String("test".to_string())
+    );
 }
 
 #[tokio::test]
