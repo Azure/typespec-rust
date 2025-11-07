@@ -51,7 +51,7 @@ async fn list_link_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: LinkResponse = page.into_body().unwrap();
+        let page: LinkResponse = page.into_model().unwrap();
         match page_count {
             1 => {
                 let page_pets = page.pets;

@@ -8,7 +8,7 @@ use spector_overload::{models::Resource, OverloadClient};
 async fn list() {
     let client = OverloadClient::with_no_credential("http://localhost:3000", None).unwrap();
     let response = client.list(None).await.unwrap();
-    let resources: Vec<Resource> = response.into_body().unwrap();
+    let resources: Vec<Resource> = response.into_model().unwrap();
 
     assert_eq!(resources.len(), 2);
 
@@ -27,7 +27,7 @@ async fn list() {
 async fn list_by_scope() {
     let client = OverloadClient::with_no_credential("http://localhost:3000", None).unwrap();
     let response = client.list_by_scope("car", None).await.unwrap();
-    let resources: Vec<Resource> = response.into_body().unwrap();
+    let resources: Vec<Resource> = response.into_model().unwrap();
 
     assert_eq!(resources.len(), 1);
     assert_eq!(resources[0].id, Some("1".to_string()));

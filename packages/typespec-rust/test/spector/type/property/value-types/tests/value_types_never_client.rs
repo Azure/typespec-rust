@@ -12,7 +12,7 @@ async fn get() {
         .get(None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     // The NeverProperty struct should have no properties
 }

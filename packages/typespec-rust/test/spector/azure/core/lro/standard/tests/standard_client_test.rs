@@ -41,7 +41,7 @@ async fn create_or_replace() {
         poll_count += 1;
         let response = result.unwrap();
         let http_status = response.status();
-        let status_monitor = response.into_body().unwrap();
+        let status_monitor = response.into_model().unwrap();
         let poller_status = status_monitor.status();
         match poll_count {
             1 => {
@@ -79,7 +79,7 @@ async fn create_or_replace() {
             }),
         )
         .unwrap();
-    let final_result = poller.await.unwrap().into_body().unwrap();
+    let final_result = poller.await.unwrap().into_model().unwrap();
     assert_eq!(final_result.name, Some("madge".to_string()));
     assert_eq!(final_result.role, Some("contributor".to_string()));
 }
@@ -104,7 +104,7 @@ async fn delete() {
         poll_count += 1;
         let response = result.unwrap();
         let http_status = response.status();
-        let status_monitor = response.into_body().unwrap();
+        let status_monitor = response.into_model().unwrap();
         let poller_status = status_monitor.status();
         match poll_count {
             1 => {
@@ -148,7 +148,7 @@ async fn export() {
         poll_count += 1;
         let response = result.unwrap();
         let http_status = response.status();
-        let status_monitor = response.into_body().unwrap();
+        let status_monitor = response.into_model().unwrap();
         let poller_status = status_monitor.status();
         match poll_count {
             1 => {
@@ -183,7 +183,7 @@ async fn export() {
             }),
         )
         .unwrap();
-    let final_result = poller.await.unwrap().into_body().unwrap();
+    let final_result = poller.await.unwrap().into_model().unwrap();
     assert_eq!(final_result.name, Some("madge".to_string()));
     assert_eq!(final_result.resource_uri, Some("/users/madge".to_string()));
 }

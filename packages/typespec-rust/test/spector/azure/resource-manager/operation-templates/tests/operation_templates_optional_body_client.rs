@@ -21,7 +21,7 @@ async fn get() {
         .get("test-rg", "widget1", None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     assert_eq!(resp.id, Some("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.OperationTemplates/widgets/widget1".to_string()));
     assert_eq!(resp.location, Some("eastus".to_string()));
@@ -82,7 +82,7 @@ async fn patch_with_body() {
         )
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     assert_eq!(resp.id, Some("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.OperationTemplates/widgets/widget1".to_string()));
     assert_eq!(resp.location, Some("eastus".to_string()));
@@ -128,7 +128,7 @@ async fn patch_no_body() {
         .patch("test-rg", "widget1", None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     assert_eq!(resp.id, Some("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test-rg/providers/Azure.ResourceManager.OperationTemplates/widgets/widget1".to_string()));
     assert_eq!(resp.location, Some("eastus".to_string()));
@@ -185,7 +185,7 @@ async fn post_with_body() {
         )
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     assert_eq!(
         resp.result,
@@ -201,7 +201,7 @@ async fn post_no_body() {
         .post("test-rg", "widget1", None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     assert_eq!(
         resp.result,
@@ -229,7 +229,7 @@ async fn provider_post_with_body() {
         ))
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     assert_eq!(
         resp.status,
@@ -249,7 +249,7 @@ async fn provider_post_no_body() {
         ))
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     assert_eq!(
         resp.status,

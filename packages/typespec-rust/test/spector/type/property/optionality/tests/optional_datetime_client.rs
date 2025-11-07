@@ -13,7 +13,7 @@ async fn get_all() {
         .get_all(None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     // According to mockapi.ts, the all endpoint returns { property: "2022-08-26T18:38:00Z" }
     // Parse the expected datetime for comparison
@@ -37,7 +37,7 @@ async fn get_default() {
         .get_default(None)
         .await
         .unwrap()
-        .into_body()
+        .into_model()
         .unwrap();
     // According to mockapi.ts, the default endpoint returns {}
     assert!(resp.property.is_none());

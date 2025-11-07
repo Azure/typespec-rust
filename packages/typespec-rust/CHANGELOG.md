@@ -9,6 +9,10 @@
 * Uses `azure_core::Value` instead of `serde_json::Value`.
 * Updated `Poller` callback to accept a `poller_options` second parameter and use that 'poller_options' for the `ctx` and `get_retry_after` functionality.
 
+### Bugs Fixed
+
+* Fixed `serde` implementations for `OffsetDateTime` in XML payloads when the format is `RFC3339`.
+
 ## 0.27.0 (2025-11-05)
 
 ### Breaking Changes

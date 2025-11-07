@@ -137,7 +137,7 @@ function emitModelsInternal(crate: rust.Crate, context: Context, visibility: rus
       // XML wrapped lists are mutually exclusive. it's not a real scenario at present.
       const unwrappedType = helpers.unwrapType(field.type);
       if (unwrappedType.kind === 'encodedBytes' || unwrappedType.kind === 'literal' || unwrappedType.kind === 'offsetDateTime' || encodeAsString(unwrappedType)) {
-        addSerDeHelper(field, serdeParams, use);
+        addSerDeHelper(field, serdeParams, bodyFormat, use);
       } else if (bodyFormat === 'xml' && shared.unwrapOption(field.type).kind === 'Vec' && field.xmlKind !== 'unwrappedList') {
         // this is a wrapped list so we need a helper type for serde
         const xmlListWrapper = getXMLListWrapper(field);
@@ -506,9 +506,10 @@ const serdeHelpersForXmlAddlProps = new Map<rust.Model, rust.ModelAdditionalProp
  * 
  * @param field the model field for which to build serde helpers
  * @param serdeParams the params that will be passed to the serde annotation
+ * @param format the (de)serialization format of the data
  * @param use the use statement builder currently in scope
  */
-function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: Use): void {
+function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format: helpers.ModelFormat, use: Use): void {
   const unwrapped = helpers.unwrapType(field.type);
   switch (unwrapped.kind) {
     case 'encodedBytes':
@@ -581,7 +582,7 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
     use.add('azure_core', `base64${optionNamespace}::${deserializer}`, `base64${optionNamespace}::${serializer}`);
   };
 
-  /** non-collection based impl */
+  /** non-collection based impl. note that for XML, we don't use the in-box RFC3339 */
   const serdeOffsetDateTime = function (encoding: rust.DateTimeEncoding, optional: boolean): void {
     serdeParams.add('default');
     serdeParams.add(`with = "azure_core::time::${encoding}${optional ? '::option' : ''}"`);
@@ -611,14 +612,23 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
     }
   };
 
-  // the first two cases are for spread params where the internal model's field isn't Option<T>
+  const addSerDeHelper = function(): void {
+    use.add('super', 'models_serde');
+    serdeParams.add('default');
+    serdeParams.add(`with = "models_serde::${buildSerDeModName(field.type)}"`);
+  };
+
+  // the first three cases are for spread params where the internal model's field isn't Option<T>
   switch (field.type.kind) {
     case 'encodedBytes':
       return serdeEncodedBytes((<rust.EncodedBytes>unwrapped).encoding, false);
     case 'literal':
       return serdeLiteral(field.type);
     case 'offsetDateTime':
-      return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, false);
+      if (format === 'json' || (<rust.OffsetDateTime>unwrapped).encoding !== 'rfc3339') {
+        return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, false);
+      }
+      return addSerDeHelper();
     default:
       if (field.type.kind === 'option') {
         switch (field.type.type.kind) {
@@ -627,15 +637,16 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, use: U
           case 'literal':
             return serdeLiteral(field.type.type);
           case 'offsetDateTime':
-            return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, true);
+            if (format === 'json' || (<rust.OffsetDateTime>unwrapped).encoding !== 'rfc3339') {
+              return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, true);
+            }
+            // for XML we intentionally fall through
         }
       }
       // if we get here, it means we have one of the following cases
       //  - HashMap/Vec of encoded thing (spread params)
       //  - Option of HashMap/Vec of encoded thing
-      use.add('super', 'models_serde');
-      serdeParams.add('default');
-      serdeParams.add(`with = "models_serde::${buildSerDeModName(field.type)}"`);
+      addSerDeHelper();
       break;
   }
 }
@@ -1051,7 +1062,11 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
       // terminal case (NEVER the start case)
       const dateParse = helpers.getDateTimeEncodingMethod(ctx.type.encoding, 'parse', use);
       content = `${dateParse}(${ctx.type.encoding !== 'unix_time' ? '&' : ''}${ctx.srcVar}).map_err(serde::de::Error::custom)?`;
-      content = insertOrPush(content, true);
+      if (ctx.caller === 'option') {
+        content = `${indent.get()}let ${ctx.destVar.get()} = ${content};\n`;
+      } else {
+        content = insertOrPush(content, true);
+      }
       break;
     }
     case 'option':
@@ -1154,6 +1169,10 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
       switch (ctx.caller) {
         case 'hashmap':
           content = `${hashMapInsert(`${content}${ctx.type.encoding !== 'unix_time' ? `(${ctx.srcVar})` : ''}`)}`;
+          break;
+        case 'option':
+          content = ctx.type.encoding === 'unix_time' ? content : `${content}(${ctx.srcVar})`;
+          content = `${indent.get()}let ${ctx.destVar.get()} = ${content};\n`;
           break;
         case 'vec':
           if (ctx.type.encoding === 'unix_time') {

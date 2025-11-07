@@ -13,7 +13,7 @@ async fn get_embedding_vector() {
         .get(None)
         .await
         .unwrap();
-    let embedding_vector: Vec<i32> = resp.into_body().unwrap();
+    let embedding_vector: Vec<i32> = resp.into_model().unwrap();
     assert_eq!(embedding_vector, vec![0, 1, 2, 3, 4]);
 }
 
@@ -40,6 +40,6 @@ async fn post_azure_embedding_model() {
         .post(body, None)
         .await
         .unwrap();
-    let response_model: AzureEmbeddingModel = resp.into_body().unwrap();
+    let response_model: AzureEmbeddingModel = resp.into_model().unwrap();
     assert_eq!(response_model.embedding, Some(vec![5, 6, 7, 8, 9]));
 }

@@ -56,7 +56,7 @@ async fn list_pages() {
     while let Some(page) = pager.next().await {
         page_count += 1;
         let page = page.unwrap();
-        let page: PagedUser = page.into_body().unwrap();
+        let page: PagedUser = page.into_model().unwrap();
         let value = page.value;
         match page_count {
             1 => {

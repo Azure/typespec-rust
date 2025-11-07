@@ -176,6 +176,42 @@ impl Serialize for ParquetConfiguration {
     }
 }
 
+pub mod option_offset_date_time_rfc3339 {
+    #![allow(clippy::type_complexity)]
+    use azure_core::time::{parse_rfc3339, to_rfc3339, OffsetDateTime};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use std::result::Result;
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<OffsetDateTime>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let to_deserialize = <Option<String>>::deserialize(deserializer)?;
+        match to_deserialize {
+            Some(to_deserialize) => {
+                let decoded0 = parse_rfc3339(&to_deserialize).map_err(serde::de::Error::custom)?;
+                Ok(Some(decoded0))
+            }
+            None => Ok(None),
+        }
+    }
+
+    pub fn serialize<S>(
+        to_serialize: &Option<OffsetDateTime>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if let Some(to_serialize) = to_serialize {
+            let encoded0 = to_rfc3339(to_serialize);
+            <Option<String>>::serialize(&Some(encoded0), serializer)
+        } else {
+            serializer.serialize_none()
+        }
+    }
+}
+
 pub mod option_vec_encoded_bytes_std {
     #![allow(clippy::type_complexity)]
     use azure_core::base64::{decode, encode};
