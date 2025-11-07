@@ -1,12 +1,13 @@
 # Release History
 
-## 0.28.0 (Unreleased)
+## 0.28.0 (2025-11-06)
 
 ### Breaking Changes
 
 **Note this version is incompatible with earlier versions of `azure_core`**
 
 * Uses `azure_core::Value` instead of `serde_json::Value`.
+* Updated `Poller` callback to accept a `poller_options` second parameter and use that 'poller_options' for the `ctx` and `get_retry_after` functionality.
 
 ### Bugs Fixed
 

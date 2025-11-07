@@ -117,6 +117,7 @@ impl StandardClient {
     ) -> Result<Poller<StandardClientCreateOrReplaceOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
+        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/azure/core/lro/standard/users/{name}");
         path = path.replace("{name}", name);
@@ -134,7 +135,7 @@ impl StandardClient {
             }
         }
         Ok(Poller::from_callback(
-            move |state: PollerState<Progress>| {
+            move |state: PollerState<Progress>, poller_options| {
                 let (mut request, progress) = match state {
                     PollerState::More(progress) => {
                         let qp = progress
@@ -205,7 +206,7 @@ impl StandardClient {
                     let retry_after = get_retry_after(
                         &headers,
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
-                        &options.poller_options,
+                        &poller_options,
                     );
                     let res: StandardClientCreateOrReplaceOperationStatus = json::from_json(&body)?;
                     let rsp = RawResponse::from_bytes(status, headers, body).into();
@@ -228,7 +229,7 @@ impl StandardClient {
                     })
                 }
             },
-            None,
+            Some(method_options),
         ))
     }
 
@@ -271,6 +272,7 @@ impl StandardClient {
     ) -> Result<Poller<StandardClientDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
+        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/azure/core/lro/standard/users/{name}");
         path = path.replace("{name}", name);
@@ -279,7 +281,7 @@ impl StandardClient {
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
         Ok(Poller::from_callback(
-            move |next_link: PollerState<Url>| {
+            move |next_link: PollerState<Url>, poller_options| {
                 let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
                         let qp = next_link
@@ -326,7 +328,7 @@ impl StandardClient {
                     let retry_after = get_retry_after(
                         &headers,
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
-                        &options.poller_options,
+                        &poller_options,
                     );
                     let res: StandardClientDeleteOperationStatus = json::from_json(&body)?;
                     let mut final_rsp = None;
@@ -354,7 +356,7 @@ impl StandardClient {
                     })
                 }
             },
-            None,
+            Some(method_options),
         ))
     }
 
@@ -399,6 +401,7 @@ impl StandardClient {
     ) -> Result<Poller<StandardClientExportOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
+        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/azure/core/lro/standard/users/{name}:export");
         path = path.replace("{name}", name);
@@ -408,7 +411,7 @@ impl StandardClient {
         url.query_pairs_mut().append_pair("format", format);
         let api_version = self.api_version.clone();
         Ok(Poller::from_callback(
-            move |next_link: PollerState<Url>| {
+            move |next_link: PollerState<Url>, poller_options| {
                 let (mut request, next_link) = match next_link {
                     PollerState::More(next_link) => {
                         let qp = next_link
@@ -455,7 +458,7 @@ impl StandardClient {
                     let retry_after = get_retry_after(
                         &headers,
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
-                        &options.poller_options,
+                        &poller_options,
                     );
                     let res: StandardClientExportOperationStatus = json::from_json(&body)?;
                     let mut final_rsp = None;
@@ -485,7 +488,7 @@ impl StandardClient {
                     })
                 }
             },
-            None,
+            Some(method_options),
         ))
     }
 }

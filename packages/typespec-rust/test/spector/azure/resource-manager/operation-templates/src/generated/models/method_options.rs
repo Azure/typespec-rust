@@ -27,20 +27,17 @@ pub struct OperationTemplatesCheckNameAvailabilityClientCheckLocalOptions<'a> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct OperationTemplatesLroClientCreateOrReplaceOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
+    pub method_options: PollerOptions<'a>,
 }
 
 impl OperationTemplatesLroClientCreateOrReplaceOptions<'_> {
     /// Transforms this [`OperationTemplatesLroClientCreateOrReplaceOptions`] into a new `OperationTemplatesLroClientCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> OperationTemplatesLroClientCreateOrReplaceOptions<'static> {
         OperationTemplatesLroClientCreateOrReplaceOptions {
-            method_options: ClientMethodOptions {
+            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
+                frequency: self.method_options.frequency,
             },
-            poller_options: self.poller_options,
         }
     }
 }
@@ -49,20 +46,17 @@ impl OperationTemplatesLroClientCreateOrReplaceOptions<'_> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct OperationTemplatesLroClientDeleteOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
+    pub method_options: PollerOptions<'a>,
 }
 
 impl OperationTemplatesLroClientDeleteOptions<'_> {
     /// Transforms this [`OperationTemplatesLroClientDeleteOptions`] into a new `OperationTemplatesLroClientDeleteOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> OperationTemplatesLroClientDeleteOptions<'static> {
         OperationTemplatesLroClientDeleteOptions {
-            method_options: ClientMethodOptions {
+            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
+                frequency: self.method_options.frequency,
             },
-            poller_options: self.poller_options,
         }
     }
 }
@@ -71,20 +65,17 @@ impl OperationTemplatesLroClientDeleteOptions<'_> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct OperationTemplatesLroClientExportOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
+    pub method_options: PollerOptions<'a>,
 }
 
 impl OperationTemplatesLroClientExportOptions<'_> {
     /// Transforms this [`OperationTemplatesLroClientExportOptions`] into a new `OperationTemplatesLroClientExportOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> OperationTemplatesLroClientExportOptions<'static> {
         OperationTemplatesLroClientExportOptions {
-            method_options: ClientMethodOptions {
+            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
+                frequency: self.method_options.frequency,
             },
-            poller_options: self.poller_options,
         }
     }
 }

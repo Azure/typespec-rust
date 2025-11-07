@@ -12,20 +12,17 @@ use azure_core::{
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
+    pub method_options: PollerOptions<'a>,
 }
 
 impl ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'_> {
     /// Transforms this [`ResourcesExtensionsResourcesClientCreateOrUpdateOptions`] into a new `ResourcesExtensionsResourcesClientCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'static> {
         ResourcesExtensionsResourcesClientCreateOrUpdateOptions {
-            method_options: ClientMethodOptions {
+            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
+                frequency: self.method_options.frequency,
             },
-            poller_options: self.poller_options,
         }
     }
 }
@@ -119,20 +116,17 @@ pub struct ResourcesLocationResourcesClientUpdateOptions<'a> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesNestedClientCreateOrReplaceOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
+    pub method_options: PollerOptions<'a>,
 }
 
 impl ResourcesNestedClientCreateOrReplaceOptions<'_> {
     /// Transforms this [`ResourcesNestedClientCreateOrReplaceOptions`] into a new `ResourcesNestedClientCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesNestedClientCreateOrReplaceOptions<'static> {
         ResourcesNestedClientCreateOrReplaceOptions {
-            method_options: ClientMethodOptions {
+            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
+                frequency: self.method_options.frequency,
             },
-            poller_options: self.poller_options,
         }
     }
 }
@@ -141,20 +135,17 @@ impl ResourcesNestedClientCreateOrReplaceOptions<'_> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesNestedClientDeleteOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
+    pub method_options: PollerOptions<'a>,
 }
 
 impl ResourcesNestedClientDeleteOptions<'_> {
     /// Transforms this [`ResourcesNestedClientDeleteOptions`] into a new `ResourcesNestedClientDeleteOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesNestedClientDeleteOptions<'static> {
         ResourcesNestedClientDeleteOptions {
-            method_options: ClientMethodOptions {
+            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
+                frequency: self.method_options.frequency,
             },
-            poller_options: self.poller_options,
         }
     }
 }
@@ -188,20 +179,17 @@ impl ResourcesNestedClientListByTopLevelTrackedResourceOptions<'_> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesNestedClientUpdateOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
+    pub method_options: PollerOptions<'a>,
 }
 
 impl ResourcesNestedClientUpdateOptions<'_> {
     /// Transforms this [`ResourcesNestedClientUpdateOptions`] into a new `ResourcesNestedClientUpdateOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesNestedClientUpdateOptions<'static> {
         ResourcesNestedClientUpdateOptions {
-            method_options: ClientMethodOptions {
+            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
+                frequency: self.method_options.frequency,
             },
-            poller_options: self.poller_options,
         }
     }
 }
@@ -209,20 +197,17 @@ impl ResourcesNestedClientUpdateOptions<'_> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesSingletonClientCreateOrUpdateOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
+    pub method_options: PollerOptions<'a>,
 }
 
 impl ResourcesSingletonClientCreateOrUpdateOptions<'_> {
     /// Transforms this [`ResourcesSingletonClientCreateOrUpdateOptions`] into a new `ResourcesSingletonClientCreateOrUpdateOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesSingletonClientCreateOrUpdateOptions<'static> {
         ResourcesSingletonClientCreateOrUpdateOptions {
-            method_options: ClientMethodOptions {
+            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
+                frequency: self.method_options.frequency,
             },
-            poller_options: self.poller_options,
         }
     }
 }
@@ -270,20 +255,17 @@ pub struct ResourcesTopLevelClientActionSyncOptions<'a> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesTopLevelClientCreateOrReplaceOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
+    pub method_options: PollerOptions<'a>,
 }
 
 impl ResourcesTopLevelClientCreateOrReplaceOptions<'_> {
     /// Transforms this [`ResourcesTopLevelClientCreateOrReplaceOptions`] into a new `ResourcesTopLevelClientCreateOrReplaceOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesTopLevelClientCreateOrReplaceOptions<'static> {
         ResourcesTopLevelClientCreateOrReplaceOptions {
-            method_options: ClientMethodOptions {
+            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
+                frequency: self.method_options.frequency,
             },
-            poller_options: self.poller_options,
         }
     }
 }
@@ -292,20 +274,17 @@ impl ResourcesTopLevelClientCreateOrReplaceOptions<'_> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesTopLevelClientDeleteOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
+    pub method_options: PollerOptions<'a>,
 }
 
 impl ResourcesTopLevelClientDeleteOptions<'_> {
     /// Transforms this [`ResourcesTopLevelClientDeleteOptions`] into a new `ResourcesTopLevelClientDeleteOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesTopLevelClientDeleteOptions<'static> {
         ResourcesTopLevelClientDeleteOptions {
-            method_options: ClientMethodOptions {
+            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
+                frequency: self.method_options.frequency,
             },
-            poller_options: self.poller_options,
         }
     }
 }
@@ -357,20 +336,17 @@ impl ResourcesTopLevelClientListBySubscriptionOptions<'_> {
 #[derive(Clone, Default, SafeDebug)]
 pub struct ResourcesTopLevelClientUpdateOptions<'a> {
     /// Allows customization of the method call.
-    pub method_options: ClientMethodOptions<'a>,
-
-    /// Allows customization of the [`Poller`](azure_core::http::poller::Poller).
-    pub poller_options: PollerOptions,
+    pub method_options: PollerOptions<'a>,
 }
 
 impl ResourcesTopLevelClientUpdateOptions<'_> {
     /// Transforms this [`ResourcesTopLevelClientUpdateOptions`] into a new `ResourcesTopLevelClientUpdateOptions` that owns the underlying data, cloning it if necessary.
     pub fn into_owned(self) -> ResourcesTopLevelClientUpdateOptions<'static> {
         ResourcesTopLevelClientUpdateOptions {
-            method_options: ClientMethodOptions {
+            method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
+                frequency: self.method_options.frequency,
             },
-            poller_options: self.poller_options,
         }
     }
 }

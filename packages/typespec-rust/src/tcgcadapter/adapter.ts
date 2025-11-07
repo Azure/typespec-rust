@@ -1303,6 +1303,9 @@ export class Adapter {
       case 'paging':
         clientMethodOptions = new rust.ExternalType(this.crate, 'PagerOptions', 'azure_core::http::pager');
         break;
+      case 'lro':
+        clientMethodOptions = new rust.ExternalType(this.crate, 'PollerOptions', 'azure_core::http::poller');
+        break;
       default:
         clientMethodOptions = new rust.ExternalType(this.crate, 'ClientMethodOptions', 'azure_core::http');
     }
@@ -1312,12 +1315,6 @@ export class Adapter {
     methodOptionsField.docs.summary = 'Allows customization of the method call.';
     methodOptionsStruct.fields.push(methodOptionsField);
 
-    if (method.kind === 'lro') {
-      const pollerOptions = new rust.ExternalType(this.crate, 'PollerOptions', 'azure_core::http::poller');
-      const pollerOptionsField = new rust.StructField('poller_options', 'pub', pollerOptions);
-      pollerOptionsField.docs.summary = 'Allows customization of the [`Poller`](azure_core::http::poller::Poller).';
-      methodOptionsStruct.fields.push(pollerOptionsField);
-    }
 
     const pub: rust.Visibility = method.access === 'public' ? 'pub' : 'pubCrate';
     const methodOptions = new rust.MethodOptions(methodOptionsStruct);

@@ -756,6 +756,7 @@ impl AzureAppConfigurationClient {
     ) -> Result<Poller<AzureAppConfigurationClientCreateSnapshotOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
+        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/snapshots/{name}");
         path = path.replace("{name}", name);
@@ -773,7 +774,7 @@ impl AzureAppConfigurationClient {
             }
         }
         Ok(Poller::from_callback(
-            move |state: PollerState<Progress>| {
+            move |state: PollerState<Progress>, poller_options| {
                 let (mut request, progress) = match state {
                     PollerState::More(progress) => {
                         let qp = progress
@@ -850,7 +851,7 @@ impl AzureAppConfigurationClient {
                     let retry_after = get_retry_after(
                         &headers,
                         &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER],
-                        &options.poller_options,
+                        &poller_options,
                     );
                     let res: AzureAppConfigurationClientCreateSnapshotOperationStatus =
                         json::from_json(&body)?;
@@ -874,7 +875,7 @@ impl AzureAppConfigurationClient {
                     })
                 }
             },
-            None,
+            Some(method_options),
         ))
     }
 
