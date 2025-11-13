@@ -5,10 +5,14 @@
 
 use crate::generated::models::{
     DurationQueryClientDefaultOptions, DurationQueryClientFloat64MillisecondsOptions,
-    DurationQueryClientFloat64SecondsOptions, DurationQueryClientFloatMillisecondsOptions,
+    DurationQueryClientFloat64SecondsOptions,
+    DurationQueryClientFloatMillisecondsLargerUnitOptions,
+    DurationQueryClientFloatMillisecondsOptions, DurationQueryClientFloatSecondsLargerUnitOptions,
     DurationQueryClientFloatSecondsOptions, DurationQueryClientInt32MillisecondsArrayOptions,
+    DurationQueryClientInt32MillisecondsLargerUnitOptions,
     DurationQueryClientInt32MillisecondsOptions, DurationQueryClientInt32SecondsArrayOptions,
-    DurationQueryClientInt32SecondsOptions, DurationQueryClientIso8601Options,
+    DurationQueryClientInt32SecondsLargerUnitOptions, DurationQueryClientInt32SecondsOptions,
+    DurationQueryClientIso8601Options,
 };
 use azure_core::{
     error::CheckSuccessOptions,
@@ -163,6 +167,39 @@ impl DurationQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Query.floatMillisecondsLargerUnit")]
+    pub async fn float_milliseconds_larger_unit(
+        &self,
+        input: f32,
+        options: Option<DurationQueryClientFloatMillisecondsLargerUnitOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/query/float-milliseconds-larger-unit");
+        url.query_pairs_mut()
+            .append_pair("input", &input.to_string());
+        let mut request = Request::new(url, Method::Get);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     #[tracing::function("Encode.Duration.Query.floatSeconds")]
     pub async fn float_seconds(
         &self,
@@ -173,6 +210,39 @@ impl DurationQueryClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/query/float-seconds");
+        url.query_pairs_mut()
+            .append_pair("input", &input.to_string());
+        let mut request = Request::new(url, Method::Get);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Query.floatSecondsLargerUnit")]
+    pub async fn float_seconds_larger_unit(
+        &self,
+        input: f32,
+        options: Option<DurationQueryClientFloatSecondsLargerUnitOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/query/float-seconds-larger-unit");
         url.query_pairs_mut()
             .append_pair("input", &input.to_string());
         let mut request = Request::new(url, Method::Get);
@@ -268,6 +338,39 @@ impl DurationQueryClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Query.int32MillisecondsLargerUnit")]
+    pub async fn int32_milliseconds_larger_unit(
+        &self,
+        input: i32,
+        options: Option<DurationQueryClientInt32MillisecondsLargerUnitOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/query/int32-milliseconds-larger-unit");
+        url.query_pairs_mut()
+            .append_pair("input", &input.to_string());
+        let mut request = Request::new(url, Method::Get);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     #[tracing::function("Encode.Duration.Query.int32Seconds")]
     pub async fn int32_seconds(
         &self,
@@ -319,6 +422,39 @@ impl DurationQueryClient {
                 .collect::<Vec<String>>()
                 .join(","),
         );
+        let mut request = Request::new(url, Method::Get);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Query.int32SecondsLargerUnit")]
+    pub async fn int32_seconds_larger_unit(
+        &self,
+        input: i32,
+        options: Option<DurationQueryClientInt32SecondsLargerUnitOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/query/int32-seconds-larger-unit");
+        url.query_pairs_mut()
+            .append_pair("input", &input.to_string());
         let mut request = Request::new(url, Method::Get);
         let rsp = self
             .pipeline

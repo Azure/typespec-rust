@@ -6,8 +6,10 @@
 use super::{
     DefaultDurationProperty, Float64MillisecondsDurationProperty, Float64SecondsDurationProperty,
     FloatMillisecondsDurationArrayProperty, FloatMillisecondsDurationProperty,
-    FloatSecondsDurationArrayProperty, FloatSecondsDurationProperty, ISO8601DurationProperty,
-    Int32MillisecondsDurationProperty, Int32SecondsDurationProperty,
+    FloatMillisecondsLargerUnitDurationProperty, FloatSecondsDurationArrayProperty,
+    FloatSecondsDurationProperty, FloatSecondsLargerUnitDurationProperty, ISO8601DurationProperty,
+    Int32MillisecondsDurationProperty, Int32MillisecondsLargerUnitDurationProperty,
+    Int32SecondsDurationProperty, Int32SecondsLargerUnitDurationProperty,
 };
 use azure_core::{http::RequestContent, json::to_json, Result};
 
@@ -52,6 +54,15 @@ impl TryFrom<FloatMillisecondsDurationProperty>
     }
 }
 
+impl TryFrom<FloatMillisecondsLargerUnitDurationProperty>
+    for RequestContent<FloatMillisecondsLargerUnitDurationProperty>
+{
+    type Error = azure_core::Error;
+    fn try_from(value: FloatMillisecondsLargerUnitDurationProperty) -> Result<Self> {
+        Ok(to_json(&value)?.into())
+    }
+}
+
 impl TryFrom<FloatSecondsDurationArrayProperty>
     for RequestContent<FloatSecondsDurationArrayProperty>
 {
@@ -64,6 +75,15 @@ impl TryFrom<FloatSecondsDurationArrayProperty>
 impl TryFrom<FloatSecondsDurationProperty> for RequestContent<FloatSecondsDurationProperty> {
     type Error = azure_core::Error;
     fn try_from(value: FloatSecondsDurationProperty) -> Result<Self> {
+        Ok(to_json(&value)?.into())
+    }
+}
+
+impl TryFrom<FloatSecondsLargerUnitDurationProperty>
+    for RequestContent<FloatSecondsLargerUnitDurationProperty>
+{
+    type Error = azure_core::Error;
+    fn try_from(value: FloatSecondsLargerUnitDurationProperty) -> Result<Self> {
         Ok(to_json(&value)?.into())
     }
 }
@@ -84,9 +104,27 @@ impl TryFrom<Int32MillisecondsDurationProperty>
     }
 }
 
+impl TryFrom<Int32MillisecondsLargerUnitDurationProperty>
+    for RequestContent<Int32MillisecondsLargerUnitDurationProperty>
+{
+    type Error = azure_core::Error;
+    fn try_from(value: Int32MillisecondsLargerUnitDurationProperty) -> Result<Self> {
+        Ok(to_json(&value)?.into())
+    }
+}
+
 impl TryFrom<Int32SecondsDurationProperty> for RequestContent<Int32SecondsDurationProperty> {
     type Error = azure_core::Error;
     fn try_from(value: Int32SecondsDurationProperty) -> Result<Self> {
+        Ok(to_json(&value)?.into())
+    }
+}
+
+impl TryFrom<Int32SecondsLargerUnitDurationProperty>
+    for RequestContent<Int32SecondsLargerUnitDurationProperty>
+{
+    type Error = azure_core::Error;
+    fn try_from(value: Int32SecondsLargerUnitDurationProperty) -> Result<Self> {
         Ok(to_json(&value)?.into())
     }
 }

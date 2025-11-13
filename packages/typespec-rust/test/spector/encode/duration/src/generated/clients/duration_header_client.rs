@@ -5,9 +5,14 @@
 
 use crate::generated::models::{
     DurationHeaderClientDefaultOptions, DurationHeaderClientFloat64MillisecondsOptions,
-    DurationHeaderClientFloat64SecondsOptions, DurationHeaderClientFloatMillisecondsOptions,
-    DurationHeaderClientFloatSecondsOptions, DurationHeaderClientInt32MillisecondsArrayOptions,
-    DurationHeaderClientInt32MillisecondsOptions, DurationHeaderClientInt32SecondsOptions,
+    DurationHeaderClientFloat64SecondsOptions,
+    DurationHeaderClientFloatMillisecondsLargerUnitOptions,
+    DurationHeaderClientFloatMillisecondsOptions,
+    DurationHeaderClientFloatSecondsLargerUnitOptions, DurationHeaderClientFloatSecondsOptions,
+    DurationHeaderClientInt32MillisecondsArrayOptions,
+    DurationHeaderClientInt32MillisecondsLargerUnitOptions,
+    DurationHeaderClientInt32MillisecondsOptions,
+    DurationHeaderClientInt32SecondsLargerUnitOptions, DurationHeaderClientInt32SecondsOptions,
     DurationHeaderClientIso8601ArrayOptions, DurationHeaderClientIso8601Options,
 };
 use azure_core::{
@@ -160,6 +165,38 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Header.floatMillisecondsLargerUnit")]
+    pub async fn float_milliseconds_larger_unit(
+        &self,
+        duration: f32,
+        options: Option<DurationHeaderClientFloatMillisecondsLargerUnitOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/header/float-milliseconds-larger-unit");
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("duration", duration.to_string());
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     #[tracing::function("Encode.Duration.Header.floatSeconds")]
     pub async fn float_seconds(
         &self,
@@ -170,6 +207,38 @@ impl DurationHeaderClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/header/float-seconds");
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("duration", duration.to_string());
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Header.floatSecondsLargerUnit")]
+    pub async fn float_seconds_larger_unit(
+        &self,
+        duration: f32,
+        options: Option<DurationHeaderClientFloatSecondsLargerUnitOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/header/float-seconds-larger-unit");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
         let rsp = self
@@ -263,6 +332,38 @@ impl DurationHeaderClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Header.int32MillisecondsLargerUnit")]
+    pub async fn int32_milliseconds_larger_unit(
+        &self,
+        duration: i32,
+        options: Option<DurationHeaderClientInt32MillisecondsLargerUnitOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/header/int32-milliseconds-larger-unit");
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("duration", duration.to_string());
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     #[tracing::function("Encode.Duration.Header.int32Seconds")]
     pub async fn int32_seconds(
         &self,
@@ -273,6 +374,38 @@ impl DurationHeaderClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/header/int32-seconds");
+        let mut request = Request::new(url, Method::Get);
+        request.insert_header("duration", duration.to_string());
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[204],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Header.int32SecondsLargerUnit")]
+    pub async fn int32_seconds_larger_unit(
+        &self,
+        duration: i32,
+        options: Option<DurationHeaderClientInt32SecondsLargerUnitOptions<'_>>,
+    ) -> Result<Response<(), NoFormat>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/header/int32-seconds-larger-unit");
         let mut request = Request::new(url, Method::Get);
         request.insert_header("duration", duration.to_string());
         let rsp = self

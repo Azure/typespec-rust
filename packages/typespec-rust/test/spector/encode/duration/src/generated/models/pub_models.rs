@@ -37,6 +37,12 @@ pub struct FloatMillisecondsDurationProperty {
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct FloatMillisecondsLargerUnitDurationProperty {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<f32>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct FloatSecondsDurationArrayProperty {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<Vec<f32>>,
@@ -44,6 +50,12 @@ pub struct FloatSecondsDurationArrayProperty {
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct FloatSecondsDurationProperty {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<f32>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct FloatSecondsLargerUnitDurationProperty {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<f32>,
 }
@@ -61,7 +73,19 @@ pub struct Int32MillisecondsDurationProperty {
 }
 
 #[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct Int32MillisecondsLargerUnitDurationProperty {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<i32>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
 pub struct Int32SecondsDurationProperty {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub value: Option<i32>,
+}
+
+#[derive(Clone, Default, Deserialize, SafeDebug, Serialize)]
+pub struct Int32SecondsLargerUnitDurationProperty {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<i32>,
 }

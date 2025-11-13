@@ -32,3 +32,17 @@ pub struct FirstGroup4ClientFourOptions<'a> {
     /// Allows customization of the method call.
     pub method_options: ClientMethodOptions<'a>,
 }
+
+/// Options to be passed to [`SecondClient::five()`](crate::generated::clients::SecondClient::five())
+#[derive(Clone, Default, SafeDebug)]
+pub struct SecondClientFiveOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}
+
+/// Options to be passed to [`SecondGroup5Client::six()`](crate::generated::clients::SecondGroup5Client::six())
+#[derive(Clone, Default, SafeDebug)]
+pub struct SecondGroup5ClientSixOptions<'a> {
+    /// Allows customization of the method call.
+    pub method_options: ClientMethodOptions<'a>,
+}

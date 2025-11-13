@@ -103,3 +103,47 @@ async fn iso8601() {
         .await
         .unwrap();
 }
+
+#[tokio::test]
+async fn int32_seconds_larger_unit() {
+    let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    client
+        .get_duration_query_client()
+        .int32_seconds_larger_unit(120, None)
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+#[should_panic]
+async fn float_seconds_larger_unit() {
+    // TODO: https://github.com/microsoft/typespec/issues/8987
+    let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    client
+        .get_duration_query_client()
+        .float_seconds_larger_unit(150.0, None)
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+async fn int32_milliseconds_larger_unit() {
+    let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    client
+        .get_duration_query_client()
+        .int32_milliseconds_larger_unit(180000, None)
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+#[should_panic]
+async fn float_milliseconds_larger_unit() {
+    // TODO: https://github.com/microsoft/typespec/issues/8987
+    let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    client
+        .get_duration_query_client()
+        .float_milliseconds_larger_unit(210000.0, None)
+        .await
+        .unwrap();
+}

@@ -7,13 +7,19 @@ use crate::generated::models::{
     DefaultDurationProperty, DurationPropertyClientDefaultOptions,
     DurationPropertyClientFloat64MillisecondsOptions, DurationPropertyClientFloat64SecondsOptions,
     DurationPropertyClientFloatMillisecondsArrayOptions,
+    DurationPropertyClientFloatMillisecondsLargerUnitOptions,
     DurationPropertyClientFloatMillisecondsOptions, DurationPropertyClientFloatSecondsArrayOptions,
-    DurationPropertyClientFloatSecondsOptions, DurationPropertyClientInt32MillisecondsOptions,
-    DurationPropertyClientInt32SecondsOptions, DurationPropertyClientIso8601Options,
-    Float64MillisecondsDurationProperty, Float64SecondsDurationProperty,
-    FloatMillisecondsDurationArrayProperty, FloatMillisecondsDurationProperty,
-    FloatSecondsDurationArrayProperty, FloatSecondsDurationProperty, ISO8601DurationProperty,
-    Int32MillisecondsDurationProperty, Int32SecondsDurationProperty,
+    DurationPropertyClientFloatSecondsLargerUnitOptions, DurationPropertyClientFloatSecondsOptions,
+    DurationPropertyClientInt32MillisecondsLargerUnitOptions,
+    DurationPropertyClientInt32MillisecondsOptions,
+    DurationPropertyClientInt32SecondsLargerUnitOptions, DurationPropertyClientInt32SecondsOptions,
+    DurationPropertyClientIso8601Options, Float64MillisecondsDurationProperty,
+    Float64SecondsDurationProperty, FloatMillisecondsDurationArrayProperty,
+    FloatMillisecondsDurationProperty, FloatMillisecondsLargerUnitDurationProperty,
+    FloatSecondsDurationArrayProperty, FloatSecondsDurationProperty,
+    FloatSecondsLargerUnitDurationProperty, ISO8601DurationProperty,
+    Int32MillisecondsDurationProperty, Int32MillisecondsLargerUnitDurationProperty,
+    Int32SecondsDurationProperty, Int32SecondsLargerUnitDurationProperty,
 };
 use azure_core::{
     error::CheckSuccessOptions,
@@ -207,6 +213,40 @@ impl DurationPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Property.floatMillisecondsLargerUnit")]
+    pub async fn float_milliseconds_larger_unit(
+        &self,
+        body: RequestContent<FloatMillisecondsLargerUnitDurationProperty>,
+        options: Option<DurationPropertyClientFloatMillisecondsLargerUnitOptions<'_>>,
+    ) -> Result<Response<FloatMillisecondsLargerUnitDurationProperty>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/property/float-milliseconds-larger-unit");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     #[tracing::function("Encode.Duration.Property.floatSeconds")]
     pub async fn float_seconds(
         &self,
@@ -275,6 +315,40 @@ impl DurationPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Property.floatSecondsLargerUnit")]
+    pub async fn float_seconds_larger_unit(
+        &self,
+        body: RequestContent<FloatSecondsLargerUnitDurationProperty>,
+        options: Option<DurationPropertyClientFloatSecondsLargerUnitOptions<'_>>,
+    ) -> Result<Response<FloatSecondsLargerUnitDurationProperty>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/property/float-seconds-larger-unit");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     #[tracing::function("Encode.Duration.Property.int32Milliseconds")]
     pub async fn int32_milliseconds(
         &self,
@@ -309,6 +383,40 @@ impl DurationPropertyClient {
     /// # Arguments
     ///
     /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Property.int32MillisecondsLargerUnit")]
+    pub async fn int32_milliseconds_larger_unit(
+        &self,
+        body: RequestContent<Int32MillisecondsLargerUnitDurationProperty>,
+        options: Option<DurationPropertyClientInt32MillisecondsLargerUnitOptions<'_>>,
+    ) -> Result<Response<Int32MillisecondsLargerUnitDurationProperty>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/property/int32-milliseconds-larger-unit");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
     #[tracing::function("Encode.Duration.Property.int32Seconds")]
     pub async fn int32_seconds(
         &self,
@@ -319,6 +427,40 @@ impl DurationPropertyClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/encode/duration/property/int32-seconds");
+        let mut request = Request::new(url, Method::Post);
+        request.insert_header("accept", "application/json");
+        request.insert_header("content-type", "application/json");
+        request.set_body(body);
+        let rsp = self
+            .pipeline
+            .send(
+                &ctx,
+                &mut request,
+                Some(PipelineSendOptions {
+                    check_success: CheckSuccessOptions {
+                        success_codes: &[200],
+                    },
+                    ..Default::default()
+                }),
+            )
+            .await?;
+        Ok(rsp.into())
+    }
+
+    ///
+    /// # Arguments
+    ///
+    /// * `options` - Optional parameters for the request.
+    #[tracing::function("Encode.Duration.Property.int32SecondsLargerUnit")]
+    pub async fn int32_seconds_larger_unit(
+        &self,
+        body: RequestContent<Int32SecondsLargerUnitDurationProperty>,
+        options: Option<DurationPropertyClientInt32SecondsLargerUnitOptions<'_>>,
+    ) -> Result<Response<Int32SecondsLargerUnitDurationProperty>> {
+        let options = options.unwrap_or_default();
+        let ctx = options.method_options.context.to_borrowed();
+        let mut url = self.endpoint.clone();
+        url.append_path("/encode/duration/property/int32-seconds-larger-unit");
         let mut request = Request::new(url, Method::Post);
         request.insert_header("accept", "application/json");
         request.insert_header("content-type", "application/json");

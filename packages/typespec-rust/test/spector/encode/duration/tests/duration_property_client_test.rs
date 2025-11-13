@@ -6,9 +6,11 @@ use spector_duration::{
     models::{
         DefaultDurationProperty, Float64MillisecondsDurationProperty,
         Float64SecondsDurationProperty, FloatMillisecondsDurationArrayProperty,
-        FloatMillisecondsDurationProperty, FloatSecondsDurationArrayProperty,
-        FloatSecondsDurationProperty, ISO8601DurationProperty, Int32MillisecondsDurationProperty,
-        Int32SecondsDurationProperty,
+        FloatMillisecondsDurationProperty, FloatMillisecondsLargerUnitDurationProperty,
+        FloatSecondsDurationArrayProperty, FloatSecondsDurationProperty,
+        FloatSecondsLargerUnitDurationProperty, ISO8601DurationProperty,
+        Int32MillisecondsDurationProperty, Int32MillisecondsLargerUnitDurationProperty,
+        Int32SecondsDurationProperty, Int32SecondsLargerUnitDurationProperty,
     },
     DurationClient,
 };
@@ -157,4 +159,62 @@ async fn iso8601() {
         .unwrap();
     let result: ISO8601DurationProperty = resp.into_model().unwrap();
     assert_eq!(result.value, Some("P40D".to_string()));
+}
+
+#[tokio::test]
+async fn int32_seconds_larger_unit() {
+    let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let body = Int32SecondsLargerUnitDurationProperty { value: Some(120) };
+    let resp = client
+        .get_duration_property_client()
+        .int32_seconds_larger_unit(body.try_into().unwrap(), None)
+        .await
+        .unwrap();
+    let result: Int32SecondsLargerUnitDurationProperty = resp.into_model().unwrap();
+    assert_eq!(result.value, Some(120));
+}
+
+#[tokio::test]
+async fn float_seconds_larger_unit() {
+    let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let body = FloatSecondsLargerUnitDurationProperty {
+        value: Some(150.0),
+    };
+    let resp = client
+        .get_duration_property_client()
+        .float_seconds_larger_unit(body.try_into().unwrap(), None)
+        .await
+        .unwrap();
+    let result: FloatSecondsLargerUnitDurationProperty = resp.into_model().unwrap();
+    assert_eq!(result.value, Some(150.0));
+}
+
+#[tokio::test]
+async fn int32_milliseconds_larger_unit() {
+    let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let body = Int32MillisecondsLargerUnitDurationProperty {
+        value: Some(180000),
+    };
+    let resp = client
+        .get_duration_property_client()
+        .int32_milliseconds_larger_unit(body.try_into().unwrap(), None)
+        .await
+        .unwrap();
+    let result: Int32MillisecondsLargerUnitDurationProperty = resp.into_model().unwrap();
+    assert_eq!(result.value, Some(180000));
+}
+
+#[tokio::test]
+async fn float_milliseconds_larger_unit() {
+    let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
+    let body = FloatMillisecondsLargerUnitDurationProperty {
+        value: Some(210000.0),
+    };
+    let resp = client
+        .get_duration_property_client()
+        .float_milliseconds_larger_unit(body.try_into().unwrap(), None)
+        .await
+        .unwrap();
+    let result: FloatMillisecondsLargerUnitDurationProperty = resp.into_model().unwrap();
+    assert_eq!(result.value, Some(210000.0));
 }
