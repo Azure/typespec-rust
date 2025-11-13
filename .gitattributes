@@ -1,2 +1,2 @@
 * text=auto eol=lf
-packages/typespec-rust/test/**/src/**/*.rs linguist-generated=true
+packages/typespec-rust/test/**/src/generated/**/*.rs linguist-generated=true
