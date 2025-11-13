@@ -177,9 +177,7 @@ async fn int32_seconds_larger_unit() {
 #[tokio::test]
 async fn float_seconds_larger_unit() {
     let client = DurationClient::with_no_credential("http://localhost:3000", None).unwrap();
-    let body = FloatSecondsLargerUnitDurationProperty {
-        value: Some(150.0),
-    };
+    let body = FloatSecondsLargerUnitDurationProperty { value: Some(150.0) };
     let resp = client
         .get_duration_property_client()
         .float_seconds_larger_unit(body.try_into().unwrap(), None)
