@@ -228,7 +228,7 @@ function generate(crate, input, outputDir, additionalArgs) {
       const maxRmRetries = 4;
       for (let attempt = 0; attempt < maxRmRetries; ++attempt) {
         try {
-        fs.rmSync(path.join(fullOutputDir, 'src', 'generated'), { force: true, recursive: true });
+          fs.rmSync(path.join(fullOutputDir, 'src', 'generated'), { force: true, recursive: true });
         } catch (err) {
           if (attempt === maxRmRetries - 1) {
             throw err;
