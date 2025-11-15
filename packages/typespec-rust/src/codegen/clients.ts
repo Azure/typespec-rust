@@ -1428,11 +1428,13 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
  * @returns the contents of the method body
  */
 function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Client, method: rust.LroMethod): string {
-  const pollingStepHeaderName
-    = method.responseHeaders?.headers.some(h => h.header.toLowerCase() === 'operation-location')
-      ? 'operation-location'
-      : method.responseHeaders?.headers.some(h => h.header.toLowerCase() === 'azure-asyncoperation')
-        ? 'azure-asyncoperation' : undefined;
+  let pollingStepHeaderName = undefined;
+  for (const header of ['operation-location', 'azure-asyncoperation', 'location']) {
+    if (method.responseHeaders?.headers.some(h => h.header.toLowerCase() === header)) {
+      pollingStepHeaderName = header;
+      break;
+    }
+  }
 
   const bodyFormat = helpers.convertResponseFormat(method.returns.type.type.format);
 
@@ -1479,7 +1481,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
       mutRequest = 'mut ';
     }
 
-    return `${indent.get()}let ${mutRequest}${requestVarName} = Request::new(${linkVarName}.clone(), Method::Get);\n`
+    return `${indent.get()}let ${mutRequest}${requestVarName} = Request::new(${linkVarName}, Method::Get);\n`
       + applyHeaderParams(indent, use, method, paramGroups, true, requestVarName);
   };
 
@@ -1488,19 +1490,19 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   let progressVarName = 'next_link';
   let stateNextLinkAccessor = 'next_link';
   let pollerStateMoreReturn = 'next_link';
-  let pollerStateInitialReturn = 'url.clone()';
+  let pollerStateInitialReturn = `${urlVar}.clone()`;
   let pollerStatusInProgressReturn = 'next_link';
-  if (method.finalResultStrategy.kind === 'originalUri') {
-    body += `${indent.get()}struct Progress{ next_link: Url, first_rsp: Option<RawResponse>, }`;
+  if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName !== pollingStepHeaderName) {
+    body += `${indent.get()}struct Progress{ next_link: Url, final_link: Url, }`;
     body += `${indent.get()}impl AsRef<str> for Progress{ fn as_ref(&self) -> &str{ self.next_link.as_ref() }}\n`;
 
     stateVarName = 'state';
     stateVarType = 'Progress';
     progressVarName = 'progress';
     stateNextLinkAccessor = 'progress.next_link';
-    pollerStateMoreReturn = 'Progress{next_link, first_rsp: progress.first_rsp}';
-    pollerStateInitialReturn = 'Progress{next_link: url.clone(), first_rsp: None}';
-    pollerStatusInProgressReturn = 'Progress{next_link, first_rsp}';
+    pollerStateMoreReturn = 'Progress{next_link, final_link: progress.final_link}';
+    pollerStateInitialReturn = `Progress{next_link: ${urlVar}.clone(), final_link: ${urlVar}.clone()}`;
+    pollerStatusInProgressReturn = 'Progress{next_link, final_link}';
   }
   body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(\n`
   body += `${indent.push().get()}move |${stateVarName}: PollerState<${stateVarType}>, poller_options| {\n`;
@@ -1508,7 +1510,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     pattern: `PollerState::More(${progressVarName})`,
     body: (indent) => {
       return applyApiVersionParam(indent, paramGroups, 'next_link', stateNextLinkAccessor)
-        + declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'next_link')
+        + declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'next_link.clone()')
         + `${indent.get()}(${initialRequestResult.requestVarName}, ${pollerStateMoreReturn})\n`;
     },
   }, {
@@ -1523,13 +1525,87 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}let ctx = options.method_options.context.clone();\n`
   body += `${indent.get()}let pipeline = pipeline.clone();\n`
 
+  if (method.finalResultStrategy.kind === 'originalUri') {
+    body += `${indent.get()}let final_link = url.clone();\n`
+
+    let hasOptionalHeaderParams = false;
+    for (const headerParam of paramGroups.header.filter(h => h.type.kind !== 'literal' && !isOptionalContentTypeHeader(h))) {
+      if (!headerParam.optional && headerParam.type.kind !== 'enum') {
+        body += `${indent.get()}let ${headerParam.name} = ${headerParam.name}.clone();\n`
+      } else {
+        hasOptionalHeaderParams = true;
+      }
+    }
+
+    if (hasOptionalHeaderParams) {
+      body += 'let options = options.clone();\n';
+    }
+  }
+
+  // Match an ARM PUT operation ("create or update"), which may have immediate 200 OK response with no headers and no poller status
+  const isArmPutLro = bodyFormat === 'json'
+    && method.httpMethod === 'put'
+    && method.returns.type.resultType !== undefined
+    && method.finalResultStrategy.kind === 'header'
+    && method.finalResultStrategy.headerName === 'azure-asyncoperation'
+    && pollingStepHeaderName === 'azure-asyncoperation'
+    && method.statusCodes.some(sc => sc == 200)
+    && method.statusCodes.some(sc => sc == 201);
+
+  // Match an ARM PATCH operation ("update"), which may have immediate 200 OK response with no headers and no poller status
+  const isArmPatchLro = bodyFormat === 'json'
+    && method.httpMethod === 'patch'
+    && method.returns.type.resultType !== undefined
+    && method.finalResultStrategy.kind === 'header'
+    && method.finalResultStrategy.headerName === 'location'
+    && pollingStepHeaderName === 'location'
+    && method.statusCodes.some(sc => sc == 200)
+    && method.statusCodes.some(sc => sc == 202);
+
+  // Match an ARM POST operation ("export"), which may have empty initial response
+  const isArmPostLro = bodyFormat === 'json'
+    && method.httpMethod === 'post'
+    && method.returns.type.resultType !== undefined
+    && method.finalResultStrategy.kind === 'header'
+    && method.finalResultStrategy.headerName === 'location'
+    && pollingStepHeaderName === 'azure-asyncoperation'
+    && method.statusCodes.some(sc => sc == 200)
+    && method.statusCodes.some(sc => sc == 202);
+
+  // Match an ARM DELETE operation, which may have empty responses and only communicate via status codes
+  const isArmDeleteLro = bodyFormat === 'json'
+    && method.httpMethod === 'delete'
+    && method.returns.type.resultType === undefined
+    && method.finalResultStrategy.kind === 'header'
+    && method.finalResultStrategy.headerName === 'location'
+    && pollingStepHeaderName === 'location'
+    && method.statusCodes.some(sc => sc == 200)
+    && method.statusCodes.some(sc => sc == 202)
+    && method.statusCodes.some(sc => sc == 204);
+
+  if (isArmPutLro || isArmPatchLro) {
+    body += 'let original_url = url.clone();\n';
+  }
   body += `${indent.get()}async move {\n`
   body += `${indent.push().get()}let rsp = pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?;\n`
-  body += `${indent.get()}let (status, headers, body) = rsp.deconstruct();\n`
+
+  const needsMutBody = isArmPutLro || isArmPatchLro || isArmPostLro || isArmDeleteLro;
+  body += `${indent.get()}let (status, headers, ${needsMutBody ? 'mut' : '' } body) = rsp.deconstruct();\n`
+
+  if (isArmPostLro || isArmDeleteLro) {
+    body += `${indent.get()}if body.is_empty() {\n`
+    let emptyBodyExpr = '"{}"'
+    if (isArmDeleteLro) {
+      use.add('azure_core::http', 'StatusCode');
+      emptyBodyExpr = `if status == StatusCode::NoContent { "{\\"status\\":\\"Succeeded\\"}" } else { "{}" }`
+    }
+    body += `${indent.push().get()}body = azure_core::http::response::ResponseBody::from_bytes(${emptyBodyExpr});\n`;
+    body += `${indent.pop().get()}}\n`;
+  }
 
   if (pollingStepHeaderName !== undefined) {
     body += `${indent.get()}let next_link = ${helpers.buildMatch(indent, `headers.get_optional_string(&HeaderName::from_static("${pollingStepHeaderName}"))`, [{
-      pattern: `Some(operation_location)`,
+      pattern: 'Some(operation_location)',
       body: (indent) => {
         return `${indent.get()}Url::parse(&operation_location)?\n`;
       }
@@ -1541,13 +1617,27 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     }])};\n`
   }
 
-  let resultRspVarName = 'first_rsp';
+  if (isArmPutLro || isArmPatchLro) {
+    use.add('azure_core::http', 'StatusCode');
+    body += `${indent.get()}let mut final_body = None;\n`;
+    body += `${indent.get()}if status == StatusCode::Ok && next_link.as_str() == original_url.as_str() {\n`;
+    body += `${indent.push().get()}final_body = Some(body);\n`;
+    body += `${indent.get()}body = azure_core::http::response::ResponseBody::from_bytes("{\\"status\\":\\"Succeeded\\"}");\n`;
+    body += `${indent.pop().get()}}\n`;
+  }
+
   if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName !== pollingStepHeaderName) { // separate link for picking up the result
-    body += `${indent.get()}let final_link = Url::parse(headers.get_str(&HeaderName::from_static("${method.finalResultStrategy.headerName}"))?)?;\n`;
-  } else if (method.finalResultStrategy.kind === 'originalUri') { // result available via original request immediately
-    resultRspVarName = 'first_rsp'
-    body += `${indent.get()}let mut ${resultRspVarName} = progress.first_rsp;\n`;
-    body += `${indent.get()}if first_rsp.is_none() { ${resultRspVarName} = Some(RawResponse::from_bytes(status, headers.clone(), body.clone())); }\n`
+    body += `${indent.get()}let final_link = ${helpers.buildMatch(indent, `headers.get_optional_string(&HeaderName::from_static("${method.finalResultStrategy.headerName}"))`, [{
+      pattern: 'Some(final_link)',
+      body: (indent) => {
+        return `${indent.get()}Url::parse(&final_link)?\n`;
+      }
+    }, {
+      pattern: 'None',
+      body: (indent) => {
+        return `${indent.get()}progress.final_link`;
+      }
+    }])};\n`
   }
 
   body += `${indent.get()}let retry_after = get_retry_after(&headers, &[X_MS_RETRY_AFTER_MS, RETRY_AFTER_MS, RETRY_AFTER], &poller_options);\n`
@@ -1555,23 +1645,26 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   const deserialize = `${bodyFormat}::from_${bodyFormat}`;
   use.add('azure_core', bodyFormat);
 
-  body += `${indent.get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`
-  if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName === pollingStepHeaderName) { // result available at the poll step link when finished
-    resultRspVarName = 'final_rsp';
-    body += `${indent.get()}let mut ${resultRspVarName} = None;\n`
-    body += `${indent.get()}if res.status() == PollerStatus::Succeeded {\n`
-    indent.push();
-    let responseBodyExpr = 'body.clone()';
-    if (method.finalResultStrategy.propertyName !== undefined) {
-      responseBodyExpr = 'body';
-      body += `${indent.get()}let ${responseBodyExpr} = azure_core::http::response::ResponseBody::from_bytes(`
-        + `serde_json::from_str::<azure_core::Value>(body.clone().into_string()?.as_str())?["${method.finalResultStrategy.propertyName}"].to_string());\n`;
-    }
-    body += `${indent.get()}${resultRspVarName} = Some(RawResponse::from_bytes(status, headers.clone(), ${responseBodyExpr}));\n`
-    body += `${indent.pop().get()}}\n`;
-  }
-  body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`
+  body += `${indent.push().get()}let res: ${helpers.getTypeDeclaration(helpers.unwrapType(method.returns.type))} = ${deserialize}(&body)?;\n`;
 
+  if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName === pollingStepHeaderName) {
+    body += `${indent.get()}let mut final_rsp: Option<RawResponse> = None;\n`
+    body += `if res.status() == PollerStatus::Succeeded {\n`
+    let responseBodyExpr = 'body.clone()';
+    if (isArmPutLro || isArmPatchLro) {
+      responseBodyExpr = 'if let Some(final_body) = final_body { final_body } else { body.clone() }';
+    } else if (method.finalResultStrategy.propertyName !== undefined) {
+      responseBodyExpr = 'body';
+      if (bodyFormat === 'json') {
+        body += `${indent.get()}let body = azure_core::http::response::ResponseBody::from_bytes(`
+          + `serde_json::from_str::<azure_core::Value>(body.clone().into_string()?.as_str())?["${method.finalResultStrategy.propertyName}"].to_string());\n`;
+      }
+    }
+    body += `${indent.get()}final_rsp = Some(RawResponse::from_bytes(status, headers.clone(), ${responseBodyExpr}));\n`;
+    body += `}\n`;
+  }
+
+  body += `${indent.get()}let rsp = RawResponse::from_bytes(status, headers, body).into();\n`
 
   const arms: helpers.matchArm[] = [{
     pattern: `PollerStatus::InProgress`,
@@ -1584,23 +1677,24 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   arms.push({
     pattern: `PollerStatus::Succeeded`,
     body: (indent) => {
-      return `{\n`
+      let body = `{\n`
         + `${indent.push().get()}PollerResult::Succeeded {\n`
         + `${indent.push().get()}response: rsp,\n`
         + `${indent.get()}target: Box::new(move || {\n`
-        + `${indent.push().get()}Box::pin(async move {\n`
-        + (
-          (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName !== pollingStepHeaderName)
-            ? (
-              declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'final_link', true)
-              + `Ok(pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, None).await?.into())\n`
-            )
-            : `Ok(${resultRspVarName}.unwrap().into())\n`
-        )
-        + `${indent.pop().get()}})\n`
-        + `${indent.get()}}),\n`
-        + `${indent.pop().get()}}`
-        + `${indent.pop().get()}}`;
+        + `${indent.push().get()}Box::pin(async move {\n`;
+
+      if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName === pollingStepHeaderName) {
+        body += `Ok(final_rsp.unwrap().into())\n`
+      } else {
+        body += declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'final_link', true)
+          + `Ok(pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, None).await?.into())\n`
+      }
+      body += `${indent.pop().get()}})\n`
+      + `${indent.get()}}),\n`
+      + `${indent.pop().get()}}`
+      + `${indent.pop().get()}}`;
+
+      return body;
     }
   });
 

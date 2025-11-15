@@ -2,6 +2,11 @@
 
 ## 0.28.1 (unreleased)
 
+### Features Added
+
+* Added support for ARM LRO patterns.
+* Updated LROs that return result via original URL to GET the result after LRO has succeeded, instead of initial response.
+
 ### Other Changes
 
 * Updated to the latest tsp toolset.

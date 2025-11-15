@@ -82,7 +82,7 @@ async fn resource_group_resource_delete() {
 
 fn get_valid_resource_group_resource() -> ResourceGroupResource {
     ResourceGroupResource {
-        id: Some(format!("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/{}/providers/Azure.ResourceManager.MethodSubscriptionId/resourceGroupResources/{}", RESOURCE_GROUP_NAME, RESOURCE_GROUP_RESOURCE_NAME)),
+        id: Some(format!("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/{RESOURCE_GROUP_NAME}/providers/Azure.ResourceManager.MethodSubscriptionId/resourceGroupResources/{RESOURCE_GROUP_RESOURCE_NAME}")),
         name: Some(RESOURCE_GROUP_RESOURCE_NAME.to_string()),
         type_prop: Some("Azure.ResourceManager.MethodSubscriptionId/resourceGroupResources".to_string()),
         location: Some("eastus".to_string()),

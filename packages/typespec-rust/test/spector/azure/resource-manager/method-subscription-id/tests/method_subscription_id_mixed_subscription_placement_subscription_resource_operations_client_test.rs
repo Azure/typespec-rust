@@ -79,7 +79,7 @@ async fn subscription_resource_delete() {
 
 fn get_valid_subscription_resource() -> SubscriptionResource {
     SubscriptionResource {
-        id: Some(format!("/subscriptions/{}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResources/{}", SUBSCRIPTION_ID, SUBSCRIPTION_RESOURCE_NAME)),
+        id: Some(format!("/subscriptions/{SUBSCRIPTION_ID}/providers/Azure.ResourceManager.MethodSubscriptionId/subscriptionResources/{SUBSCRIPTION_RESOURCE_NAME}")),
         name: Some(SUBSCRIPTION_RESOURCE_NAME.to_string()),
         type_prop: Some("Azure.ResourceManager.MethodSubscriptionId/subscriptionResources".to_string()),
         properties: Some(SubscriptionResourceProperties {

@@ -225,7 +225,20 @@ function generate(crate, input, outputDir, additionalArgs) {
       }
       // delete all content before regenerating as it makes it
       // really easy to determine if something failed to generated
-      fs.rmSync(path.join(fullOutputDir, 'src', 'generated'), { force: true, recursive: true });
+      const maxRmRetries = 4;
+      for (let attempt = 0; attempt < maxRmRetries; ++attempt) {
+        try {
+        fs.rmSync(path.join(fullOutputDir, 'src', 'generated'), { force: true, recursive: true });
+        } catch (err) {
+          if (attempt === maxRmRetries - 1) {
+            throw err;
+          }
+          const retryTimeout = 1000 * (1 << attempt);
+          console.log('delete failed, will retry in ' + retryTimeout + 'ms, that will be retry attempt #' + (attempt + 1) + ' out of ' + (maxRmRetries - 1) + '.');
+          const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+          sleep(retryTimeout).await;
+        }
+      }
       exec(command, function(error, stdout, stderr) {
         // print any output or error from the tsp compile command
         logResult(error, stdout, stderr);
