@@ -228,8 +228,9 @@ function generate(crate, input, outputDir, additionalArgs) {
       const maxRmRetries = 4;
       const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
       for (let attempt = 0; attempt < maxRmRetries; ++attempt) {
+        const rmPath = path.join(fullOutputDir, 'src', 'generated')
         try {
-          fs.rmSync(path.join(fullOutputDir, 'src', 'generated'), { force: true, recursive: true });
+          fs.rmSync(rmPath, { force: true, recursive: true });
           break;
         } catch (err) {
           if (attempt === maxRmRetries - 1) {
@@ -237,7 +238,7 @@ function generate(crate, input, outputDir, additionalArgs) {
           }
           // Exponential backoff: 1s, 2s, 4s, 8s, etc. (1000ms * 2^attempt)
           const retryTimeout = 1000 * (1 << attempt);
-          console.log('delete failed, will retry in ' + retryTimeout + 'ms, that will be retry attempt #' + (attempt + 1) + ' out of ' + (maxRmRetries - 1) + '.');
+          console.warn('\x1b[96m%s\x1b[0m', 'delete \'' + rmPath + '\' failed, will retry in ' + retryTimeout/1000 + ' second(s), that will be retry attempt #' + (attempt + 1) + ' out of ' + (maxRmRetries - 1) + '.');
           await sleep(retryTimeout);
         }
       }
@@ -263,7 +264,12 @@ function logResult(error, stdout, stderr) {
     return;
   }
   if (stderr !== '') {
-    console.error('\x1b[91m%s\x1b[0m', 'stderr: ' + stderr);
+    if (stderr === 'Compiling...') {
+      // not really an error, not worth to highlight in red
+      console.log('stderr: ' + stdout);
+    } else {
+      console.log('stderr: ' + stderr);
+    }
   }
   if (error !== null) {
     console.error('\x1b[91m%s\x1b[0m', 'exec error: ' + error);
