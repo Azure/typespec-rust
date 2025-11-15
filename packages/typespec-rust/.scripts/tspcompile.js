@@ -264,11 +264,11 @@ function logResult(error, stdout, stderr) {
     return;
   }
   if (stderr !== '') {
-    if (stderr === 'Compiling...') {
-      // not really an error, not worth to highlight in red
+    if (stderr.startsWith('- Compiling...\n')) {
+      // not really an error, not worth highlighting in red
       console.log('stderr: ' + stderr);
     } else {
-      console.log('stderr: ' + stderr);
+      console.error('\x1b[91m%s\x1b[0m', 'stderr: ' + stderr);
     }
   }
   if (error !== null) {
