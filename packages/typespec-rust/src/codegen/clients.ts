@@ -1473,7 +1473,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     return '';
   };
 
-  const declareRequest = function (indent: helpers.indentation, use: Use, method: rust.LroMethod, paramGroups: MethodParamGroups, requestVarName: string, linkVarName: string, forceMut?: boolean): string {
+  const declareRequest = function (indent: helpers.indentation, use: Use, method: rust.LroMethod, paramGroups: MethodParamGroups, requestVarName: string, linkExpr: string, forceMut?: boolean): string {
     let mutRequest = '';
     // if the only header is optional Content-Type it will not be used
     // by applyHeaderParams() in this case so don't make request mutable
@@ -1481,7 +1481,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
       mutRequest = 'mut ';
     }
 
-    return `${indent.get()}let ${mutRequest}${requestVarName} = Request::new(${linkVarName}, Method::Get);\n`
+    return `${indent.get()}let ${mutRequest}${requestVarName} = Request::new(${linkExpr}, Method::Get);\n`
       + applyHeaderParams(indent, use, method, paramGroups, true, requestVarName);
   };
 
