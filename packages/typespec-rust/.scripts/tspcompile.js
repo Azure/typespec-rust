@@ -233,6 +233,7 @@ function generate(crate, input, outputDir, additionalArgs) {
           if (attempt === maxRmRetries - 1) {
             throw err;
           }
+          // Exponential backoff: 1s, 2s, 4s, 8s, etc. (1000ms * 2^attempt)
           const retryTimeout = 1000 * (1 << attempt);
           console.log('delete failed, will retry in ' + retryTimeout + 'ms, that will be retry attempt #' + (attempt + 1) + ' out of ' + (maxRmRetries - 1) + '.');
           const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
