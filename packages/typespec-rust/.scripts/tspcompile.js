@@ -266,7 +266,7 @@ function logResult(error, stdout, stderr) {
   if (stderr !== '') {
     if (stderr === 'Compiling...') {
       // not really an error, not worth to highlight in red
-      console.log('stderr: ' + stdout);
+      console.log('stderr: ' + stderr);
     } else {
       console.log('stderr: ' + stderr);
     }
