@@ -201,7 +201,7 @@ function generate(crate, input, outputDir, additionalArgs) {
       additionalArgs[i] = `--option="@azure-tools/typespec-rust.${additionalArgs[i]}"`;
     }
   }
-  sem.take(function() {
+  sem.take(async function() {
     // if a tsp file isn't specified, first check
     // for a client.tsp file. if that doesn't exist
     // then fall back to main.tsp.
@@ -236,7 +236,7 @@ function generate(crate, input, outputDir, additionalArgs) {
           const retryTimeout = 1000 * (1 << attempt);
           console.log('delete failed, will retry in ' + retryTimeout + 'ms, that will be retry attempt #' + (attempt + 1) + ' out of ' + (maxRmRetries - 1) + '.');
           const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-          sleep(retryTimeout).await;
+          await sleep(retryTimeout);
         }
       }
       exec(command, function(error, stdout, stderr) {
