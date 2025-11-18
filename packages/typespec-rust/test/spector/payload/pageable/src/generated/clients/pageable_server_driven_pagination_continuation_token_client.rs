@@ -55,7 +55,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             first_url.query_pairs_mut().append_pair("bar", &bar);
         }
         Ok(Pager::from_callback(
-            move |token: PagerState<String>, opt| {
+            move |token: PagerState<String>, pager_options| {
                 let url = first_url.clone();
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
@@ -73,7 +73,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &opt.context,
+                            &pager_options.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -123,7 +123,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             first_url.query_pairs_mut().append_pair("bar", &bar);
         }
         Ok(Pager::from_callback(
-            move |token: PagerState<String>, opt| {
+            move |token: PagerState<String>, pager_options| {
                 let url = first_url.clone();
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
@@ -141,7 +141,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &opt.context,
+                            &pager_options.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -209,7 +209,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             first_url.query_pairs_mut().append_pair("bar", &bar);
         }
         Ok(Pager::from_callback(
-            move |token: PagerState<String>, opt| {
+            move |token: PagerState<String>, pager_options| {
                 let url = first_url.clone();
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", "application/json");
@@ -227,7 +227,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 async move {
                     let rsp: Response<RequestHeaderResponseHeaderResponse> = pipeline
                         .send(
-                            &opt.context,
+                            &pager_options.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -273,7 +273,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             first_url.query_pairs_mut().append_pair("token", &token);
         }
         Ok(Pager::from_callback(
-            move |token: PagerState<String>, opt| {
+            move |token: PagerState<String>, pager_options| {
                 let mut url = first_url.clone();
                 if let PagerState::More(token) = token {
                     if url.query_pairs().any(|(name, _)| name.eq("token")) {
@@ -295,7 +295,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &opt.context,
+                            &pager_options.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -348,7 +348,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             first_url.query_pairs_mut().append_pair("token", &token);
         }
         Ok(Pager::from_callback(
-            move |token: PagerState<String>, opt| {
+            move |token: PagerState<String>, pager_options| {
                 let mut url = first_url.clone();
                 if let PagerState::More(token) = token {
                     if url.query_pairs().any(|(name, _)| name.eq("token")) {
@@ -370,7 +370,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &opt.context,
+                            &pager_options.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -441,7 +441,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
             first_url.query_pairs_mut().append_pair("token", &token);
         }
         Ok(Pager::from_callback(
-            move |token: PagerState<String>, opt| {
+            move |token: PagerState<String>, pager_options| {
                 let mut url = first_url.clone();
                 if let PagerState::More(token) = token {
                     if url.query_pairs().any(|(name, _)| name.eq("token")) {
@@ -463,7 +463,7 @@ impl PageableServerDrivenPaginationContinuationTokenClient {
                 async move {
                     let rsp: Response<RequestQueryResponseHeaderResponse> = pipeline
                         .send(
-                            &opt.context,
+                            &pager_options.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
