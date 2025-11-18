@@ -58,7 +58,7 @@ impl PageableServerDrivenPaginationClient {
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/link");
         Ok(Pager::from_callback(
-            move |next: PagerState<Url>, ctx| {
+            move |next: PagerState<Url>, opt| {
                 let url = match next {
                     PagerState::More(next) => next,
                     PagerState::Initial => first_url.clone(),
@@ -69,7 +69,7 @@ impl PageableServerDrivenPaginationClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &ctx,
+                            &opt.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -109,7 +109,7 @@ impl PageableServerDrivenPaginationClient {
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/link-string");
         Ok(Pager::from_callback(
-            move |next: PagerState<Url>, ctx| {
+            move |next: PagerState<Url>, opt| {
                 let url = match next {
                     PagerState::More(next) => next,
                     PagerState::Initial => first_url.clone(),
@@ -120,7 +120,7 @@ impl PageableServerDrivenPaginationClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &ctx,
+                            &opt.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -160,7 +160,7 @@ impl PageableServerDrivenPaginationClient {
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/payload/pageable/server-driven-pagination/nested-link");
         Ok(Pager::from_callback(
-            move |next: PagerState<Url>, ctx| {
+            move |next: PagerState<Url>, opt| {
                 let url = match next {
                     PagerState::More(next) => next,
                     PagerState::Initial => first_url.clone(),
@@ -171,7 +171,7 @@ impl PageableServerDrivenPaginationClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &ctx,
+                            &opt.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {

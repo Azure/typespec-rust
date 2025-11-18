@@ -1242,7 +1242,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     switch (method.strategy.kind) {
       case 'continuationToken': {
         const reqTokenParam = method.strategy.requestToken.name;
-        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: PagerState<String>, ctx| {\n`;
+        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: PagerState<String>, opt| {\n`;
         body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ' : ''}url = first_url.clone();\n`;
         if (method.strategy.requestToken.kind === 'queryScalar') {
           // if the url already contains the token query param,
@@ -1272,7 +1272,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       case 'nextLink': {
         const nextLinkName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
         const reinjectedParams = method.strategy.reinjectedParams;
-        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>, ctx| {\n`;
+        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>, opt| {\n`;
         body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
           pattern: `PagerState::More(${nextLinkName})`,
           body: (indent) => {
@@ -1311,7 +1311,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     }
   } else {
     // no next link when there's no strategy
-    body += `${indent.get()}Ok(Pager::from_callback(move |_: PagerState<Url>, ctx| {\n`;
+    body += `${indent.get()}Ok(Pager::from_callback(move |_: PagerState<Url>, opt| {\n`;
     indent.push();
     cloneUrl = true;
     srcUrlVar = urlVar;
@@ -1333,7 +1333,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += requestResult.content;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
-  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut ${requestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
+  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&opt.context, &mut ${requestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
 
   // check if we need to extract the next link field from the response model
   if (method.strategy && (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'nextLink')) {

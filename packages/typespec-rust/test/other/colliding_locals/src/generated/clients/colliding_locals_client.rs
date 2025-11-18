@@ -316,14 +316,14 @@ impl CollidingLocalsClient {
         path_var = path_var.replace("{url}", url);
         url_var.append_path(&path_var);
         Ok(Pager::from_callback(
-            move |_: PagerState<Url>, ctx| {
+            move |_: PagerState<Url>, opt| {
                 let mut core_req_0 = Request::new(url_var.clone(), Method::Get);
                 core_req_0.insert_header("accept", "application/json");
                 let pipeline = pipeline.clone();
                 async move {
                     let rsp = pipeline
                         .send(
-                            &ctx,
+                            &opt.context,
                             &mut core_req_0,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -389,7 +389,7 @@ impl CollidingLocalsClient {
         path_var = path_var.replace("{url}", url);
         first_url.append_path(&path_var);
         Ok(Pager::from_callback(
-            move |next_link: PagerState<Url>, ctx| {
+            move |next_link: PagerState<Url>, opt| {
                 let url = match next_link {
                     PagerState::More(next_link) => next_link,
                     PagerState::Initial => first_url.clone(),
@@ -400,7 +400,7 @@ impl CollidingLocalsClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &ctx,
+                            &opt.context,
                             &mut core_req_0,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {

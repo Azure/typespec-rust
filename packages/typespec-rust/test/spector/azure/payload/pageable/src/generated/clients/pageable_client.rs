@@ -84,7 +84,7 @@ impl PageableClient {
                 .append_pair("maxpagesize", &maxpagesize.to_string());
         }
         Ok(Pager::from_callback(
-            move |next_link: PagerState<Url>, ctx| {
+            move |next_link: PagerState<Url>, opt| {
                 let url = match next_link {
                     PagerState::More(next_link) => next_link,
                     PagerState::Initial => first_url.clone(),
@@ -95,7 +95,7 @@ impl PageableClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &ctx,
+                            &opt.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {

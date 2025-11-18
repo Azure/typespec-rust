@@ -1385,7 +1385,7 @@ impl AzureAppConfigurationClient {
         }
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
-            move |next_link: PagerState<Url>, ctx| {
+            move |next_link: PagerState<Url>, opt| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
                         let qp = next_link
@@ -1419,7 +1419,7 @@ impl AzureAppConfigurationClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &ctx,
+                            &opt.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -1500,7 +1500,7 @@ impl AzureAppConfigurationClient {
         }
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
-            move |next_link: PagerState<Url>, ctx| {
+            move |next_link: PagerState<Url>, opt| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
                         let qp = next_link
@@ -1528,7 +1528,7 @@ impl AzureAppConfigurationClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &ctx,
+                            &opt.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -1619,7 +1619,7 @@ impl AzureAppConfigurationClient {
         }
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
-            move |next_link: PagerState<Url>, ctx| {
+            move |next_link: PagerState<Url>, opt| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
                         let qp = next_link
@@ -1647,7 +1647,7 @@ impl AzureAppConfigurationClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &ctx,
+                            &opt.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -1750,7 +1750,7 @@ impl AzureAppConfigurationClient {
         }
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
-            move |next_link: PagerState<Url>, ctx| {
+            move |next_link: PagerState<Url>, opt| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
                         let qp = next_link
@@ -1778,7 +1778,7 @@ impl AzureAppConfigurationClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &ctx,
+                            &opt.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -1879,7 +1879,7 @@ impl AzureAppConfigurationClient {
         }
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
-            move |next_link: PagerState<Url>, ctx| {
+            move |next_link: PagerState<Url>, opt| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
                         let qp = next_link
@@ -1904,7 +1904,7 @@ impl AzureAppConfigurationClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &ctx,
+                            &opt.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
