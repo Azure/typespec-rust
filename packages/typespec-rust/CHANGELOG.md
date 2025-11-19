@@ -1,9 +1,14 @@
 # Release History
 
-## 0.28.1 (unreleased)
+## 0.29.0 (unreleased)
+
+### Breaking Changes
+
+* Changed pager 2nd parameter from `Context<'static>` to `PagerOptions<`static>`
 
 ### Other Changes
 
+* Reduced calls to `into_owned` for pollers
 * Updated to the latest tsp toolset.
 
 ## 0.28.0 (2025-11-06)
