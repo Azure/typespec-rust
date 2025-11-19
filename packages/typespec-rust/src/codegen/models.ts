@@ -595,7 +595,7 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
       // if the scalar is a float, replace the . as it's illegal in an identifier
       literalValueName = literalValueName.replace('.', 'point');
     } else if (literal.valueKind.kind === 'String') {
-      literalValueName = literalValueName.replace(/\W/, '_');
+      literalValueName = literalValueName.replace(/\W/g, '_');
     }
 
     const optional = field.optional ? 'optional_' : '';
