@@ -157,7 +157,7 @@ export interface UnionMember {
   docs: Docs;
 
   /** the type of the union member */
-  type: Type;
+  type: WireType;
 
   /** discriminator property value */
   discriminatorValue: string;
@@ -767,7 +767,7 @@ export class Union implements Union {
 }
 
 export class UnionMember implements UnionMember {
-  constructor(name: string, type: Type, discriminatorValue: string) {
+  constructor(name: string, type: WireType, discriminatorValue: string) {
     this.kind = 'unionMember';
     this.name = name;
     this.type = type;
