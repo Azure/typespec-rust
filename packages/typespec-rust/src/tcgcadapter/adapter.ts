@@ -7,7 +7,7 @@
 
 import * as codegen from '@azure-tools/codegen';
 import {values} from '@azure-tools/linq';
-import {DiagnosticTarget, EmitContext, NoTarget} from '@typespec/compiler';
+import * as tsp from '@typespec/compiler';
 import * as http from '@typespec/http';
 import * as helpers from './helpers.js';
 import * as naming from './naming.js';
@@ -41,12 +41,12 @@ export type ErrorCode =
  */
 export class AdapterError extends Error {
   readonly code: ErrorCode;
-  readonly target: DiagnosticTarget | typeof NoTarget;
+  readonly target: tsp.DiagnosticTarget | typeof tsp.NoTarget;
 
-  constructor(code: ErrorCode, message: string, target?: DiagnosticTarget) {
+  constructor(code: ErrorCode, message: string, target?: tsp.DiagnosticTarget) {
     super(message);
     this.code = code;
-    this.target = target ?? NoTarget;
+    this.target = target ?? tsp.NoTarget;
   }
 }
 
@@ -64,7 +64,7 @@ export class Adapter {
    * @param context the compiler context from which to create the Adapter
    * @returns 
    */
-  static async create(context: EmitContext<RustEmitterOptions>): Promise<Adapter> {
+  static async create(context: tsp.EmitContext<RustEmitterOptions>): Promise<Adapter> {
     // @encodedName can be used in XML scenarios, it is effectively the
     // same as TypeSpec.Xml.@name. however, it's filtered out by default
     // so we need to add it to the allow list of decorators
@@ -150,7 +150,10 @@ export class Adapter {
   /** converts all tcgc types to their Rust type equivalent */
   private adaptTypes(): void {
     for (const sdkUnion of this.ctx.sdkPackage.unions.filter(u => u.kind === 'union')) {
-      const rustUnion = this.getUnion(sdkUnion);
+      if (!sdkUnion.discriminatedOptions) {
+        throw new AdapterError('UnsupportedTsp', 'non-discriminated unions are not supported', sdkUnion.__raw?.node);
+      }
+      const rustUnion = this.getDiscriminatedUnion(sdkUnion);
       this.crate.unions.push(rustUnion);
     }
 
@@ -356,118 +359,62 @@ export class Adapter {
   }
 
   /**
-   * Gets properties of a TypeSpec union
-   *
-   * @param union tcgc union to convert
-   * @returns TypeSpec union properties
-   */
-  // TODO: Rewrite getting information from __raw?.node after https://github.com/microsoft/typespec/issues/8455 is implemented
-  private getUnionProperties(union: tcgc.SdkUnionType): {
-    // A map from union member name to its kind (kind gets sent over the wire)
-    discriminatorValues: Map<string, string>;
-
-    // Name of the virtual property to serialize the kind into.
-    discriminatorPropertyName: string;
-
-    // Name of the virtual property to serialize data into. If empty, no envelope is needed.
-    envelopePropertyName: string;
-  } {
-    const result = {
-      discriminatorValues: new Map<string, string>(),
-      discriminatorPropertyName: 'kind',
-      envelopePropertyName: 'value'
-    };
-
-    /*
-      eslint-disable
-        @typescript-eslint/no-explicit-any,
-        @typescript-eslint/no-unnecessary-type-assertion,
-        @typescript-eslint/no-unsafe-argument,
-        @typescript-eslint/no-unsafe-assignment,
-        @typescript-eslint/no-unsafe-member-access
-      */
-    const tspRawNode: any = union.__raw?.node;
-
-    if (tspRawNode) {
-      for (const unionMember of Array.from(tspRawNode.symbol.members) as any[]) {
-        const discriminatorValue = unionMember[0];
-        const discriminatorTypeName = unionMember[1].node.value.target.sv;
-        result.discriminatorValues.set(discriminatorTypeName, discriminatorValue);
-      }
-      for (const decorator of tspRawNode.decorators) {
-        if (decorator.target.sv === 'discriminated') {
-          const argument = decorator.arguments[0];
-          if (argument) {
-            for (const property of argument.properties) {
-              const propertyName = property.id.sv as string;
-              const propertyValue = property.value.value as string;
-              if (propertyName === 'envelope') {
-                if (propertyValue === 'none') {
-                  result.envelopePropertyName = '';
-                }
-              } else if (propertyName === 'discriminatorPropertyName') {
-                result.discriminatorPropertyName = propertyValue;
-              } else if (propertyName === 'envelopePropertyName') {
-                result.envelopePropertyName = propertyValue;
-              }
-            }
-          }
-        }
-      }
-    }
-    /* eslint-enable */
-
-    return result;
-  }
-
-  /**
    * converts a tcgc union to a Rust union
    *
    * @param union the tcgc union to convert
-   * @param stack is a stack of model type names used to detect recursive type definitions
    * @returns a Rust union
    */
-  private getUnion(union: tcgc.SdkUnionType, stack?: Array<string>): rust.Union {
+  private getDiscriminatedUnion(union: tcgc.SdkUnionType): rust.DiscriminatedUnion {
     if (union.name.length === 0) {
       throw new AdapterError('InternalError', 'unnamed union', union.__raw?.node);
     }
     const unionName = codegen.capitalize(union.name);
     let rustUnion = this.types.get(unionName);
     if (rustUnion) {
-      return <rust.Union>rustUnion;
+      return <rust.DiscriminatedUnion>rustUnion;
     }
 
-    // no stack means this is the first model in
-    // the chain of potentially recursive calls
-    if (!stack) {
-      stack = new Array<string>();
+    if (!union.discriminatedOptions) {
+      throw new Error('todo 1');
     }
-    stack.push(unionName);
 
-    const tspUnionProperties = this.getUnionProperties(union);
-    rustUnion = new rust.Union(unionName, adaptAccessFlags(union.access), tspUnionProperties.discriminatorPropertyName, tspUnionProperties.envelopePropertyName);
+    rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(union.access), union.discriminatedOptions.discriminatorPropertyName);
+    rustUnion.envelopeName = union.discriminatedOptions.envelopePropertyName;
 
     rustUnion.docs = this.adaptDocs(union.summary, union.doc);
     this.types.set(unionName, rustUnion);
 
+    // TODO: remove when https://github.com/microsoft/typespec/issues/8455 is complete
+    const discriminatorValues = new Map<string, string>();
+    const rawUnion = <tsp.Union | undefined>union.__raw;
+    if (rawUnion) {
+      for (const [variantKey, variant] of rawUnion.variants) {
+        const discriminatorValue = typeof variantKey === 'string' ? variantKey : variantKey.toString();
+        if (variant.type.kind === 'Model') {
+          discriminatorValues.set(variant.type.name, discriminatorValue);
+        } else {
+          throw new AdapterError('InternalError', `unexpected kind ${variant.type.kind} for discriminated union member`, rawUnion);
+        }
+      }
+    }
+    // END WORKAROUND
+
     for (const unionMember of union.variantTypes) {
-      const unionMemberType = this.getType(unionMember, stack);
-      if (unionMemberType.kind !== 'model' || unionMember.kind !== 'model') {
-        throw new AdapterError('UnsupportedTsp', `non-model union member`, unionMember.__raw?.node);
+      if (unionMember.kind !== 'model') {
+        throw new AdapterError('UnsupportedTsp', `non-model union member kind ${unionMember.kind}`, unionMember.__raw?.node);
       }
 
-      const discriminatorValue = tspUnionProperties.discriminatorValues.get(unionMember.name);
+      // TODO: use unionMember.discriminatorValue
+      const discriminatorValue = discriminatorValues.get(unionMember.name);
       if (!discriminatorValue) {
-        throw new AdapterError('InternalError', `unmatched discriminator`, union.__raw?.node);
+        throw new AdapterError('InternalError', `didn't find discriminant value for type ${unionMember.name}`, unionMember.__raw?.node);
       }
 
-      const unionMemberName = unionMemberType.name;
-      const rustUnionMember = new rust.UnionMember(unionMemberName, unionMemberType, discriminatorValue);
+      const unionMemberType = this.getModel(unionMember);
+      const rustUnionMember = new rust.DiscriminatedUnionMember(unionMemberType, discriminatorValue);
       rustUnionMember.docs = this.adaptDocs(unionMember.summary, unionMember.doc);
       rustUnion.members.push(rustUnionMember);
     }
-
-    stack.pop();
 
     return rustUnion;
   }
@@ -679,7 +626,10 @@ export class Adapter {
         return timeType;
       }
       case 'union': {
-        return this.getUnion(type);
+        if (!type.discriminatedOptions) {
+          throw new AdapterError('UnsupportedTsp', 'non-discriminated unions are not supported', type.__raw?.node);
+        }
+        return this.getDiscriminatedUnion(type);
       }
       default:
         throw new AdapterError('UnsupportedTsp', `unhandled tcgc type ${type.kind}`, type.__raw?.node);
@@ -1004,7 +954,7 @@ export class Adapter {
               code: 'UnsupportedAuthenticationScheme',
               severity: 'warning',
               message: `authentication scheme ${cred.type} is not supported`,
-              target: param.__raw?.node ?? NoTarget,
+              target: param.__raw?.node ?? tsp.NoTarget,
             });
             return AuthTypes.WithAuth;
         }
@@ -1141,7 +1091,7 @@ export class Adapter {
           code: 'LroPagingNotSupported',
           severity: 'warning',
           message: `skip emitting Paging LRO ${method.name}`,
-          target: method.__raw?.node ?? NoTarget,
+          target: method.__raw?.node ?? tsp.NoTarget,
         });
         continue;
       }
@@ -1284,7 +1234,7 @@ export class Adapter {
         code: 'PagingMethodRename',
         severity: 'warning',
         message: `renamed paging method from ${method.name} to ${srcMethodName}`,
-        target: method.__raw?.node ?? NoTarget,
+        target: method.__raw?.node ?? tsp.NoTarget,
       });
     }
 
@@ -2144,6 +2094,7 @@ export class Adapter {
     switch (type.kind) {
       case 'bytes':
       case 'decimal':
+      case 'discriminatedUnion':
       case 'encodedBytes':
       case 'enum':
       case 'enumValue':
@@ -2159,8 +2110,6 @@ export class Adapter {
       case 'slice':
       case 'str':
       case 'String':
-      case 'union':
-      case 'unionMember':
       case 'Url':
       case 'Vec':
         return type;

@@ -37,7 +37,7 @@ pub enum PetInlineWithCustomDiscriminator {
 The discriminated union should serialize with custom discriminator
 and envelope property names."#]
 #[derive(Deserialize, Serialize, SafeDebug, Clone)]
-#[serde(tag = "petType", content = "petData")]
+#[serde(content = "petData", tag = "petType")]
 pub enum PetWithCustomNames {
     #[serde(rename = "cat")]
     Cat(Cat),
@@ -50,7 +50,7 @@ pub enum PetWithCustomNames {
 The discriminated union should serialize with "kind" as discriminator
 and "value" as envelope property."#]
 #[derive(Deserialize, Serialize, SafeDebug, Clone)]
-#[serde(tag = "kind", content = "value")]
+#[serde(content = "value", tag = "kind")]
 pub enum PetWithEnvelope {
     #[serde(rename = "cat")]
     Cat(Cat),

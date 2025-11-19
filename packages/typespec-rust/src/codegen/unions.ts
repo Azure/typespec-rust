@@ -34,11 +34,8 @@ export function emitUnions(crate: rust.Crate, context: Context): helpers.Module 
     use.add('serde', 'Deserialize', 'Serialize');
     use.add('azure_core::fmt', 'SafeDebug');
     body += `#[derive(Deserialize, Serialize, SafeDebug, Clone)]\n`;
-    const tag = (rustUnion.discriminatorName !== '') ? `tag = "${rustUnion.discriminatorName}"` : '';
-    const content = (rustUnion.envelopeName !== '') ? `content = "${rustUnion.envelopeName}"` : '';
-    if (tag !== '' || content !== '') {
-      body += `#[serde(${[tag, content].filter(x => x !== '').join(', ')})]\n`;
-    }
+    const content = rustUnion.envelopeName ? `content = "${rustUnion.envelopeName}"` : '';
+    body += `#[serde(${[content, `tag = "${rustUnion.discriminant}"`].filter(x => x !== '').join(', ')})]\n`;
     body += `pub enum ${rustUnion.name} {\n`;
 
     for (let i = 0; i < rustUnion.members.length; ++i) {
@@ -51,10 +48,10 @@ export function emitUnions(crate: rust.Crate, context: Context): helpers.Module 
         body += `${indent.get()}#[doc = r#"${docs.substring(0, docs.length - 1)}"#]\n`;
       }
 
-      if (member.discriminatorValue !== member.name) {
-        body += `#[serde(rename = "${member.discriminatorValue}")]\n`;
+      if (member.discriminantValue !== member.type.name) {
+        body += `#[serde(rename = "${member.discriminantValue}")]\n`;
       }
-      body += `${indent.get()}${member.name}(${helpers.getTypeDeclaration(memberType)})`;
+      body += `${indent.get()}${member.type.name}(${helpers.getTypeDeclaration(memberType)})`;
       body += ',\n\n';
     }
 
