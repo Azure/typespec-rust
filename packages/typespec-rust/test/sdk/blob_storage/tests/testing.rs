@@ -421,19 +421,19 @@ async fn vec_signed_identifier_se() {
 
     // Verify the serialized XML contains all the test IDs and timestamps
     assert!(xml_str.contains("<Id>testid0</Id>"));
-    assert!(xml_str.contains("<Start>2025-11-05T21:14:02Z</Start>"));
+    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.0000000Z</Start>"));
     assert!(xml_str.contains("<Id>testid1</Id>"));
-    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.1Z</Start>"));
+    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.1000000Z</Start>"));
     assert!(xml_str.contains("<Id>testid2</Id>"));
-    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.12Z</Start>"));
+    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.1200000Z</Start>"));
     assert!(xml_str.contains("<Id>testid3</Id>"));
-    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.123Z</Start>"));
+    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.1230000Z</Start>"));
     assert!(xml_str.contains("<Id>testid4</Id>"));
-    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.1234Z</Start>"));
+    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.1234000Z</Start>"));
     assert!(xml_str.contains("<Id>testid5</Id>"));
-    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.12345Z</Start>"));
+    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.1234500Z</Start>"));
     assert!(xml_str.contains("<Id>testid6</Id>"));
-    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.123456Z</Start>"));
+    assert!(xml_str.contains("<Start>2025-11-05T21:14:02.1234560Z</Start>"));
     assert!(xml_str.contains("<Id>testid7</Id>"));
     assert!(xml_str.contains("<Start>2025-11-05T21:14:02.1234567Z</Start>"));
 }

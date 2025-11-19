@@ -7,7 +7,7 @@
 
 import * as codegen from '@azure-tools/codegen';
 import {values} from '@azure-tools/linq';
-import {DateTimeKnownEncoding, DiagnosticTarget, EmitContext, NoTarget} from '@typespec/compiler';
+import {DiagnosticTarget, EmitContext, NoTarget} from '@typespec/compiler';
 import * as http from '@typespec/http';
 import * as helpers from './helpers.js';
 import * as naming from './naming.js';
@@ -542,13 +542,18 @@ export class Adapter {
    * @returns the adapted Rust type
    */
   private getType(type: tcgc.SdkType, stack?: Array<string>): rust.Type {
-    const getDateTimeEncoding = (encoding: DateTimeKnownEncoding): rust.DateTimeEncoding => {
+    const getDateTimeEncoding = (encoding: string): rust.DateTimeEncoding => {
       switch (encoding) {
+        case 'rfc3339-fixed-width':
+          this.crate.addDependency(new rust.CrateDependency('time'));
+          return encoding;
         case 'rfc3339':
         case 'rfc7231':
           return encoding;
         case 'unixTimestamp':
           return 'unix_time';
+        default:
+          throw new AdapterError('UnsupportedTsp', `unhandled date-time encoding ${encoding}`, type.__raw?.node);
       }
     };
 
