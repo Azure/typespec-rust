@@ -2,6 +2,10 @@
 
 ## 0.28.1 (unreleased)
 
+### Bugs Fixed
+
+* Fixed invalid function name for literal value `serde` helpers.
+
 ### Other Changes
 
 * Updated to the latest tsp toolset.
