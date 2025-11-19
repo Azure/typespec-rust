@@ -213,7 +213,7 @@ export class Adapter {
         throw new AdapterError('UnsupportedTsp', `unsupported enum underlying type ${sdkEnum.valueType.kind}`, sdkEnum.__raw?.node);
     }
 
-    rustEnum = new rust.Enum(enumName, sdkEnum.access === 'public', !sdkEnum.isFixed, enumType);
+    rustEnum = new rust.Enum(enumName, adaptAccessFlags(sdkEnum.access), !sdkEnum.isFixed, enumType);
     rustEnum.docs = this.adaptDocs(sdkEnum.summary, sdkEnum.doc);
     this.types.set(enumName, rustEnum);
 
@@ -445,7 +445,7 @@ export class Adapter {
     stack.push(unionName);
 
     const tspUnionProperties = this.getUnionProperties(union);
-    rustUnion = new rust.Union(unionName, union.access === 'public', tspUnionProperties.discriminatorPropertyName, tspUnionProperties.envelopePropertyName);
+    rustUnion = new rust.Union(unionName, adaptAccessFlags(union.access), tspUnionProperties.discriminatorPropertyName, tspUnionProperties.envelopePropertyName);
 
     rustUnion.docs = this.adaptDocs(union.summary, union.doc);
     this.types.set(unionName, rustUnion);
@@ -1316,7 +1316,7 @@ export class Adapter {
     methodOptionsStruct.fields.push(methodOptionsField);
 
 
-    const pub: rust.Visibility = method.access === 'public' ? 'pub' : 'pubCrate';
+    const pub: rust.Visibility = adaptAccessFlags(method.access);
     const methodOptions = new rust.MethodOptions(methodOptionsStruct);
     const httpMethod = method.operation.verb;
 
@@ -2419,6 +2419,15 @@ function hasClientNameDecorator(decorators: Array<tcgc.DecoratorInfo>): boolean 
  */
 function isHttpStatusCodeRange(statusCode: http.HttpStatusCodeRange | number): statusCode is http.HttpStatusCodeRange {
   return (<http.HttpStatusCodeRange>statusCode).start !== undefined;
+}
+
+/**
+ * converts tcgc's access flags (which aren't really flags) to visibility
+ * @param access the access flag to convert
+ * @returns the flag converted to visibility
+ */
+function adaptAccessFlags(access: tcgc.AccessFlags): rust.Visibility {
+  return access === 'public' ? 'pub' : 'pubCrate';
 }
 
 type QueryParamType = rust.QueryCollectionParameter | rust.QueryHashMapParameter | rust.QueryScalarParameter;
