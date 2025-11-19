@@ -301,7 +301,7 @@ export enum ModelFlags {
 }
 
 /** DateTimeEncoding is the wire format of the date/time */
-export type DateTimeEncoding = 'rfc3339' | 'rfc7231' | 'unix_time';
+export type DateTimeEncoding = 'rfc3339' | 'rfc3339-fixed-width' | 'rfc7231' | 'unix_time';
 
 /** OffsetDateTime is a Rust time::OffsetDateTime type */
 export interface OffsetDateTime extends External {

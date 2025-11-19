@@ -1696,6 +1696,9 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
       }
       case 'unix_time':
         return `${paramName}.${encoding}.to_string()`;
+      default:
+        // rfc3339-fixed-width isn't applicable here (it has a very specific use case)
+        throw new CodegenError('InternalError', `unexpected date-time encoding ${type.encoding}`);
     }
   };
 
