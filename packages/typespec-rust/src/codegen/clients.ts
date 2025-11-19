@@ -111,11 +111,16 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         // construct the supplemental path and join it to the endpoint
         if (client.constructable.endpoint) {
           const supplementalEndpoint = client.constructable.endpoint;
-          body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
-          for (const param of supplementalEndpoint.parameters) {
-            body += `${indent.get()}host = host.replace("{${param.segment}}", ${getClientSupplementalEndpointParamValue(param)});\n`;
+          if (supplementalEndpoint.parameters.length > 0) {
+            body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
+            for (const param of supplementalEndpoint.parameters) {
+              body += `${indent.get()}host = host.replace("{${param.segment}}", ${getClientSupplementalEndpointParamValue(param)});\n`;
+            }
+            body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
+          } else {
+            // there are no params for the supplemental host, so just append it
+            body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join("${supplementalEndpoint.path}")?;\n`;
           }
-          body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
         }
 
         // if there's a credential param, create the necessary auth policy
@@ -1159,7 +1164,7 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
   }
   return helpers.buildIfBlock(indent, {
     condition: `${param.name}${toString}.is_empty()`,
-    body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, "parameter ${param.name} cannot be empty"));`,
+    body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, "parameter ${param.name} cannot be empty"));\n`,
   });
 }
 
