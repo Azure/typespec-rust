@@ -1071,7 +1071,7 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
       // for rfc3339-fixed-width we use the same deserializer as rfc3339
       const encoding = ctx.type.encoding === 'rfc3339-fixed-width' ? 'rfc3339' : ctx.type.encoding;
       const dateParse = helpers.getDateTimeEncodingMethod(encoding, 'parse', use);
-      content = `${dateParse}(${ctx.type.encoding !== 'unix_time' ? '&' : ''}${ctx.srcVar}).map_err(serde::de::Error::custom)?`;
+      content = `${dateParse}(${encoding !== 'unix_time' ? '&' : ''}${ctx.srcVar}).map_err(serde::de::Error::custom)?`;
       if (ctx.caller === 'option') {
         content = `${indent.get()}let ${ctx.destVar.get()} = ${content};\n`;
       } else {
@@ -1186,7 +1186,7 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
           content = `${indent.get()}let ${ctx.destVar.get()} = ${content};\n`;
           break;
         case 'vec':
-          if (ctx.type.encoding === 'unix_time') {
+          if (asMethodCall) {
             content = `|v|${content}`;
           }
           break;
