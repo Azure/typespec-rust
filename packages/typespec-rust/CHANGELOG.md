@@ -1,5 +1,11 @@
 # Release History
 
+## 0.29.1 (unreleased)
+
+### Other Changes
+
+* Moved `TryFrom` impls for union types into their own file.
+
 ## 0.29.0 (2025-11-20)
 
 ### Breaking Changes
