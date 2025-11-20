@@ -1,6 +1,6 @@
 # Release History
 
-## 0.28.1 (unreleased)
+## 0.29.1 (unreleased)
 
 ### Features Added
 
@@ -9,6 +9,26 @@
 
 ### Other Changes
 
+* Moved `TryFrom` impls for union types into their own file.
+
+## 0.29.0 (2025-11-20)
+
+### Breaking Changes
+
+* Changed pager 2nd parameter from `Context<'static>` to `PagerOptions<'static>`
+
+### Features Added
+
+* Added support for custom date-time encoding `rfc3339-fixed-width`.
+
+### Bugs Fixed
+
+* Fixed invalid function name for literal value `serde` helpers.
+
+### Other Changes
+
+* Use FRU (field record update) to make sure `ClientMethodOptions`, `PagerOptions`, and `PollerOptions` fields besides `Context` are all copied.
+* Reduced calls to `into_owned` for pollers
 * Updated to the latest tsp toolset.
 
 ## 0.28.0 (2025-11-06)

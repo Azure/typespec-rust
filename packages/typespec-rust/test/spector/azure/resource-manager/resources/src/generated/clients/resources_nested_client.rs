@@ -84,7 +84,6 @@ impl ResourcesNestedClient {
     ) -> Result<Poller<ResourcesNestedClientCreateOrReplaceOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
         path = path.replace("{nextedProxyResourceName}", nexted_proxy_resource_name);
@@ -124,7 +123,7 @@ impl ResourcesNestedClient {
                         (request, url.clone())
                     }
                 };
-                let ctx = options.method_options.context.clone();
+                let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
                 let original_url = url.clone();
                 async move {
@@ -190,7 +189,7 @@ impl ResourcesNestedClient {
                     })
                 }
             },
-            Some(method_options),
+            Some(options.method_options),
         ))
     }
 
@@ -239,7 +238,6 @@ impl ResourcesNestedClient {
     ) -> Result<Poller<ResourcesNestedClientDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
         path = path.replace("{nextedProxyResourceName}", nexted_proxy_resource_name);
@@ -274,7 +272,7 @@ impl ResourcesNestedClient {
                         (request, url.clone())
                     }
                 };
-                let ctx = options.method_options.context.clone();
+                let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
                     let rsp = pipeline
@@ -335,7 +333,7 @@ impl ResourcesNestedClient {
                     })
                 }
             },
-            Some(method_options),
+            Some(options.method_options),
         ))
     }
 
@@ -447,7 +445,7 @@ impl ResourcesNestedClient {
             .append_pair("api-version", &self.api_version);
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
-            move |next_link: PagerState<Url>, ctx| {
+            move |next_link: PagerState<Url>, pager_options| {
                 let url = match next_link {
                     PagerState::More(next_link) => {
                         let qp = next_link
@@ -469,7 +467,7 @@ impl ResourcesNestedClient {
                 async move {
                     let rsp = pipeline
                         .send(
-                            &ctx,
+                            &pager_options.context,
                             &mut request,
                             Some(PipelineSendOptions {
                                 check_success: CheckSuccessOptions {
@@ -542,7 +540,6 @@ impl ResourcesNestedClient {
     ) -> Result<Poller<ResourcesNestedClientUpdateOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.Resources/topLevelTrackedResources/{topLevelTrackedResourceName}/nestedProxyResources/{nextedProxyResourceName}");
         path = path.replace("{nextedProxyResourceName}", nexted_proxy_resource_name);
@@ -582,7 +579,7 @@ impl ResourcesNestedClient {
                         (request, url.clone())
                     }
                 };
-                let ctx = options.method_options.context.clone();
+                let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
                 let original_url = url.clone();
                 async move {
@@ -646,7 +643,7 @@ impl ResourcesNestedClient {
                     })
                 }
             },
-            Some(method_options),
+            Some(options.method_options),
         ))
     }
 }

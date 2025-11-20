@@ -24,7 +24,7 @@ export interface Crate {
   dependencies: Array<CrateDependency>;
 
   /** unions contains all of the unions for this crate. can be empty */
-  unions: Array<types.Union>;
+  unions: Array<types.DiscriminatedUnion>;
 
   /** enums contains all of the enums for this crate. can be empty */
   enums: Array<types.Enum>;
@@ -61,7 +61,7 @@ export class Crate implements Crate {
     this.version = version;
     this.type = type;
     this.dependencies = new Array<CrateDependency>();
-    this.unions = new Array<types.Union>();
+    this.unions = new Array<types.DiscriminatedUnion>();
     this.enums = new Array<types.Enum>();
     this.models = new Array<types.Model>();
     this.clients = new Array<client.Client>();
@@ -89,9 +89,9 @@ export class Crate implements Crate {
     };
 
     this.dependencies.sort((a: CrateDependency, b: CrateDependency) => { return sortAscending(a.name, b.name); });
-    this.unions.sort((a: types.Union, b: types.Union) => { return sortAscending(a.name, b.name); });
+    this.unions.sort((a: types.DiscriminatedUnion, b: types.DiscriminatedUnion) => { return sortAscending(a.name, b.name); });
     for (const rustUnion of this.unions) {
-      rustUnion.members.sort((a: types.UnionMember, b: types.UnionMember) => { return sortAscending(a.name, b.name); });
+      rustUnion.members.sort((a: types.DiscriminatedUnionMember, b: types.DiscriminatedUnionMember) => { return sortAscending(a.type.name, b.type.name); });
     }
     this.enums.sort((a: types.Enum, b: types.Enum) => { return sortAscending(a.name, b.name); });
     for (const rustEnum of this.enums) {

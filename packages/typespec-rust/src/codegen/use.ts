@@ -73,7 +73,7 @@ export class Use {
         this.add('crate::generated::clients', type.name);
         break;
       }
-      case 'union':
+      case 'discriminatedUnion':
       case 'enum':
         this.add(this.scope === 'clients' ? 'crate::generated::models' : 'super', type.name);
         break;

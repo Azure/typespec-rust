@@ -91,7 +91,9 @@ export class CodeGenerator {
     addModelsFile(enums.serde, 'internal');
     addModelsFile(enums.impls, 'internal');
 
-    addModelsFile(emitUnions(this.crate, this.context), 'pubUse');
+    const unions = emitUnions(this.crate, this.context);
+    addModelsFile(unions.public, 'pubUse');
+    addModelsFile(unions.impls, 'internal');
 
     const models = emitModels(this.crate, this.context);
     addModelsFile(models.public, 'pubUse');

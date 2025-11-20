@@ -19,6 +19,7 @@ impl PageClientListWithCustomPageModelOptions<'_> {
         PageClientListWithCustomPageModelOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -37,6 +38,7 @@ impl PageClientListWithPageOptions<'_> {
         PageClientListWithPageOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -58,6 +60,7 @@ impl PageClientListWithParameterizedNextLinkOptions<'_> {
             include_pending: self.include_pending,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -80,6 +83,7 @@ impl PageClientListWithParametersOptions<'_> {
             another: self.another,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -97,6 +101,7 @@ impl PageTwoModelsAsPageItemClientListFirstItemOptions<'_> {
         PageTwoModelsAsPageItemClientListFirstItemOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -115,6 +120,7 @@ impl PageTwoModelsAsPageItemClientListSecondItemOptions<'_> {
         PageTwoModelsAsPageItemClientListSecondItemOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }

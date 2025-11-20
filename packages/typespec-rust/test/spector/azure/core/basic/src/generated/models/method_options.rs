@@ -87,6 +87,7 @@ impl BasicClientListOptions<'_> {
             maxpagesize: self.maxpagesize,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             orderby: self.orderby,
             select: self.select,

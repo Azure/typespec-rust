@@ -80,7 +80,6 @@ impl OperationTemplatesLroClient {
     ) -> Result<Poller<OperationTemplatesLroClientCreateOrReplaceOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}");
         path = path.replace("{orderName}", order_name);
@@ -116,7 +115,7 @@ impl OperationTemplatesLroClient {
                         (request, url.clone())
                     }
                 };
-                let ctx = options.method_options.context.clone();
+                let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
                 let original_url = url.clone();
                 async move {
@@ -182,7 +181,7 @@ impl OperationTemplatesLroClient {
                     })
                 }
             },
-            Some(method_options),
+            Some(options.method_options),
         ))
     }
 
@@ -229,7 +228,6 @@ impl OperationTemplatesLroClient {
     ) -> Result<Poller<OperationTemplatesLroClientDeleteOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}");
         path = path.replace("{orderName}", order_name);
@@ -260,7 +258,7 @@ impl OperationTemplatesLroClient {
                         (request, url.clone())
                     }
                 };
-                let ctx = options.method_options.context.clone();
+                let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
                     let rsp = pipeline
@@ -322,7 +320,7 @@ impl OperationTemplatesLroClient {
                     })
                 }
             },
-            Some(method_options),
+            Some(options.method_options),
         ))
     }
 
@@ -375,7 +373,6 @@ impl OperationTemplatesLroClient {
     ) -> Result<Poller<OperationTemplatesLroClientExportOperationStatus>> {
         let options = options.unwrap_or_default().into_owned();
         let pipeline = self.pipeline.clone();
-        let method_options = options.method_options.to_owned();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Azure.ResourceManager.OperationTemplates/orders/{orderName}/export");
         path = path.replace("{orderName}", order_name);
@@ -433,7 +430,7 @@ impl OperationTemplatesLroClient {
                         )
                     }
                 };
-                let ctx = options.method_options.context.clone();
+                let ctx = poller_options.context.clone();
                 let pipeline = pipeline.clone();
                 async move {
                     let rsp = pipeline
@@ -495,7 +492,7 @@ impl OperationTemplatesLroClient {
                     })
                 }
             },
-            Some(method_options),
+            Some(options.method_options),
         ))
     }
 }

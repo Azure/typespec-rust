@@ -21,7 +21,7 @@ impl ResourcesExtensionsResourcesClientCreateOrUpdateOptions<'_> {
         ResourcesExtensionsResourcesClientCreateOrUpdateOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }
@@ -54,6 +54,7 @@ impl ResourcesExtensionsResourcesClientListByScopeOptions<'_> {
         ResourcesExtensionsResourcesClientListByScopeOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -100,6 +101,7 @@ impl ResourcesLocationResourcesClientListByLocationOptions<'_> {
         ResourcesLocationResourcesClientListByLocationOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -125,7 +127,7 @@ impl ResourcesNestedClientCreateOrReplaceOptions<'_> {
         ResourcesNestedClientCreateOrReplaceOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }
@@ -144,7 +146,7 @@ impl ResourcesNestedClientDeleteOptions<'_> {
         ResourcesNestedClientDeleteOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }
@@ -170,6 +172,7 @@ impl ResourcesNestedClientListByTopLevelTrackedResourceOptions<'_> {
         ResourcesNestedClientListByTopLevelTrackedResourceOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -188,7 +191,7 @@ impl ResourcesNestedClientUpdateOptions<'_> {
         ResourcesNestedClientUpdateOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }
@@ -206,7 +209,7 @@ impl ResourcesSingletonClientCreateOrUpdateOptions<'_> {
         ResourcesSingletonClientCreateOrUpdateOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }
@@ -232,6 +235,7 @@ impl ResourcesSingletonClientListByResourceGroupOptions<'_> {
         ResourcesSingletonClientListByResourceGroupOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -264,7 +268,7 @@ impl ResourcesTopLevelClientCreateOrReplaceOptions<'_> {
         ResourcesTopLevelClientCreateOrReplaceOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }
@@ -283,7 +287,7 @@ impl ResourcesTopLevelClientDeleteOptions<'_> {
         ResourcesTopLevelClientDeleteOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }
@@ -309,6 +313,7 @@ impl ResourcesTopLevelClientListByResourceGroupOptions<'_> {
         ResourcesTopLevelClientListByResourceGroupOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -327,6 +332,7 @@ impl ResourcesTopLevelClientListBySubscriptionOptions<'_> {
         ResourcesTopLevelClientListBySubscriptionOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -345,7 +351,7 @@ impl ResourcesTopLevelClientUpdateOptions<'_> {
         ResourcesTopLevelClientUpdateOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }

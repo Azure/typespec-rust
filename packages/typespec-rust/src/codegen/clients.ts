@@ -111,11 +111,16 @@ export function emitClients(crate: rust.Crate): ClientModules | undefined {
         // construct the supplemental path and join it to the endpoint
         if (client.constructable.endpoint) {
           const supplementalEndpoint = client.constructable.endpoint;
-          body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
-          for (const param of supplementalEndpoint.parameters) {
-            body += `${indent.get()}host = host.replace("{${param.segment}}", ${getClientSupplementalEndpointParamValue(param)});\n`;
+          if (supplementalEndpoint.parameters.length > 0) {
+            body += `${indent.get()}let mut host = String::from("${supplementalEndpoint.path}");\n`;
+            for (const param of supplementalEndpoint.parameters) {
+              body += `${indent.get()}host = host.replace("{${param.segment}}", ${getClientSupplementalEndpointParamValue(param)});\n`;
+            }
+            body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
+          } else {
+            // there are no params for the supplemental host, so just append it
+            body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join("${supplementalEndpoint.path}")?;\n`;
           }
-          body += `${indent.push().get()}${endpointParamName} = ${endpointParamName}.join(&host)?;\n`;
         }
 
         // if there's a credential param, create the necessary auth policy
@@ -347,9 +352,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
           if (field.type.kind === 'external' && (field.type.name === 'ClientMethodOptions' || field.type.name === 'PagerOptions' || field.type.name === 'PollerOptions')) {
             body += `${indent.get()}${field.name}: ${field.type.name} {\n`;
             body += `${indent.push().get()}context: self.${field.name}.context.into_owned(),\n`;
-            if (field.type.name === 'PollerOptions') {
-              body += `${indent.get()}frequency: self.${field.name}.frequency,\n`;
-            }
+            body += `${indent.get()}..self.${field.name}\n`;
             body += `${indent.pop().get()}},\n`;
             continue;
           }
@@ -1159,7 +1162,7 @@ function emitEmptyPathParamCheck(indent: helpers.indentation, param: PathParamTy
   }
   return helpers.buildIfBlock(indent, {
     condition: `${param.name}${toString}.is_empty()`,
-    body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, "parameter ${param.name} cannot be empty"));`,
+    body: (indent) => `${indent.get()}return Err(azure_core::Error::with_message(azure_core::error::ErrorKind::Other, "parameter ${param.name} cannot be empty"));\n`,
   });
 }
 
@@ -1242,7 +1245,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     switch (method.strategy.kind) {
       case 'continuationToken': {
         const reqTokenParam = method.strategy.requestToken.name;
-        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: PagerState<String>, ctx| {\n`;
+        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${reqTokenParam}: PagerState<String>, pager_options| {\n`;
         body += `${indent.push().get()}let ${method.strategy.requestToken.kind === 'queryScalar' ? 'mut ' : ''}url = first_url.clone();\n`;
         if (method.strategy.requestToken.kind === 'queryScalar') {
           // if the url already contains the token query param,
@@ -1272,7 +1275,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
       case 'nextLink': {
         const nextLinkName = method.strategy.nextLinkPath[method.strategy.nextLinkPath.length - 1].name;
         const reinjectedParams = method.strategy.reinjectedParams;
-        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>, ctx| {\n`;
+        body += `${indent.get()}Ok(${method.returns.type.name}::from_callback(move |${nextLinkName}: PagerState<Url>, pager_options| {\n`;
         body += `${indent.push().get()}let url = ` + helpers.buildMatch(indent, nextLinkName, [{
           pattern: `PagerState::More(${nextLinkName})`,
           body: (indent) => {
@@ -1311,7 +1314,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
     }
   } else {
     // no next link when there's no strategy
-    body += `${indent.get()}Ok(Pager::from_callback(move |_: PagerState<Url>, ctx| {\n`;
+    body += `${indent.get()}Ok(Pager::from_callback(move |_: PagerState<Url>, pager_options| {\n`;
     indent.push();
     cloneUrl = true;
     srcUrlVar = urlVar;
@@ -1333,7 +1336,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
   body += requestResult.content;
   body += `${indent.get()}let pipeline = pipeline.clone();\n`;
   body += `${indent.get()}async move {\n`;
-  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&ctx, &mut ${requestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
+  body += `${indent.push().get()}let rsp${rspType} = pipeline.send(&pager_options.context, &mut ${requestResult.requestVarName}, ${getPipelineOptions(indent, use, method)}).await?${rspInto};\n`;
 
   // check if we need to extract the next link field from the response model
   if (method.strategy && (method.strategy.kind === 'nextLink' || method.strategy.responseToken.kind === 'nextLink')) {
@@ -1453,7 +1456,6 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
 
   let body = 'let options = options.unwrap_or_default().into_owned();\n';
   body += `${indent.get()}let pipeline = self.pipeline.clone();\n`;
-  body += `${indent.get()}let method_options = options.method_options.to_owned();\n`;
   body += `${indent.get()}let ${urlVarNeedsMut(paramGroups, method)}${urlVar} = self.${getEndpointFieldName(client)}.clone();\n`;
   body += constructUrl(indent, use, method, paramGroups, urlVar);
   if (paramGroups.apiVersion) {
@@ -1522,7 +1524,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
       return body;
     },
   }])};\n`;
-  body += `${indent.get()}let ctx = options.method_options.context.clone();\n`
+  body += `${indent.get()}let ctx = poller_options.context.clone();\n`
   body += `${indent.get()}let pipeline = pipeline.clone();\n`
 
   if (method.finalResultStrategy.kind === 'originalUri') {
@@ -1709,7 +1711,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   body += `${indent.get()}Ok(${helpers.buildMatch(indent, 'res.status()', arms)})\n`;
   body += `${indent.pop().get()}}\n`; // end async move
   body += `${indent.pop().get()}},\n`; // end move
-  body += `${indent.pop().get()} Some(method_options),))`; // end Ok/Poller::from_callback
+  body += `${indent.pop().get()} Some(options.method_options),))`; // end Ok/Poller::from_callback
 
   return body;
 }
@@ -1785,6 +1787,9 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
       }
       case 'unix_time':
         return `${paramName}.${encoding}.to_string()`;
+      default:
+        // rfc3339-fixed-width isn't applicable here (it has a very specific use case)
+        throw new CodegenError('InternalError', `unexpected date-time encoding ${type.encoding}`);
     }
   };
 

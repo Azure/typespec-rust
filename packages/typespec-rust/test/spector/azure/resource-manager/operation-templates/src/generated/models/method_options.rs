@@ -36,7 +36,7 @@ impl OperationTemplatesLroClientCreateOrReplaceOptions<'_> {
         OperationTemplatesLroClientCreateOrReplaceOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }
@@ -55,7 +55,7 @@ impl OperationTemplatesLroClientDeleteOptions<'_> {
         OperationTemplatesLroClientDeleteOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }
@@ -74,7 +74,7 @@ impl OperationTemplatesLroClientExportOptions<'_> {
         OperationTemplatesLroClientExportOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }
@@ -92,6 +92,7 @@ impl OperationTemplatesOperationsClientListOptions<'_> {
         OperationTemplatesOperationsClientListOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }

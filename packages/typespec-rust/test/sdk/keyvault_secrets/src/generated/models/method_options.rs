@@ -56,6 +56,7 @@ impl SecretClientListDeletedSecretPropertiesOptions<'_> {
             maxresults: self.maxresults,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -78,6 +79,7 @@ impl SecretClientListSecretPropertiesOptions<'_> {
             maxresults: self.maxresults,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -100,6 +102,7 @@ impl SecretClientListSecretPropertiesVersionsOptions<'_> {
             maxresults: self.maxresults,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
