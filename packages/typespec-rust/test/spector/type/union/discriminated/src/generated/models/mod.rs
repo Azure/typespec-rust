@@ -6,6 +6,7 @@
 mod method_options;
 mod pub_models;
 mod unions;
+mod unions_impl;
 pub use method_options::*;
 pub use pub_models::*;
 pub use unions::*;
