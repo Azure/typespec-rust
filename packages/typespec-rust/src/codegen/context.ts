@@ -75,7 +75,7 @@ export class Context {
               // no body format to propagate
               continue;
             }
-            if (param.type.content.type.kind === 'enum' || param.type.content.type.kind === 'model' || param.type.content.type.kind === 'union') {
+            if (param.type.content.type.kind === 'enum' || param.type.content.type.kind === 'model' || param.type.content.type.kind === 'discriminatedUnion') {
               this.tryFromForRequestTypes.set(helpers.getTypeDeclaration(param.type.content.type), param.type.content.format);
             }
             recursiveAddBodyFormat(param.type.content.type, param.type.content.format);
@@ -106,7 +106,7 @@ export class Context {
    * @param use the use statement builder currently in scope
    * @returns the impl TryFrom<T> block for type or undefined
    */
-  getTryFromForRequestContent(model: rust.Union | rust.Enum | rust.Model, use: Use): string | undefined {
+  getTryFromForRequestContent(model: rust.DiscriminatedUnion | rust.Enum | rust.Model, use: Use): string | undefined {
     const format = this.tryFromForRequestTypes.get(helpers.getTypeDeclaration(model));
     if (!format) {
       return undefined;

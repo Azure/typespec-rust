@@ -18,7 +18,7 @@ export interface Docs {
 export type SdkType =  Arc | AsyncResponse | Box | ExternalType | ImplTrait | MarkerType | Option | Pager | Poller | RawResponse | RequestContent | Response | Result | Struct | TokenCredential | Unit;
 
 /** WireType defines types that go across the wire */
-export type WireType = Bytes | Decimal | EncodedBytes | Enum | EnumValue | Union | UnionMember | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
+export type WireType = Bytes | Decimal | DiscriminatedUnion | EncodedBytes | Enum | EnumValue | Etag | HashMap | JsonValue | Literal | Model | OffsetDateTime | RefBase | SafeInt | Scalar | Slice | StringSlice | StringType | Url | Vector;
 
 /** Type defines a type within the Rust type system */
 export type Type = SdkType | WireType;
@@ -123,44 +123,41 @@ export interface EnumValue {
   value: number | string;
 }
 
-/** Union is a Rust enum type with values of different types. */
-export interface Union {
-  kind: 'union';
+/** DiscriminatedUnion is a Rust tagged enum type */
+export interface DiscriminatedUnion {
+  kind: 'discriminatedUnion';
 
-  /** the name of the union type */
+  /** the name of the discriminated union */
   name: string;
 
   /** any docs for the type */
   docs: Docs;
 
-  /** indicates the visibility of the union */
+  /** indicates the visibility of the type */
   visibility: Visibility;
 
-  /** one or more members of the union */
-  members: Array<UnionMember>;
+  /** one or more members of the discriminated union */
+  members: Array<DiscriminatedUnionMember>;
 
   /** discriminator property name */
-  discriminatorName: string;
+  discriminant: string;
 
   /** data envelope property name */
-  envelopeName: string;
+  envelopeName?: string;
 }
 
-/** UnionMember is a union member for a specific Union */
-export interface UnionMember {
-  kind: 'unionMember';
-
-  /** the name of the union member */
-  name: string;
+/** DiscriminatedUnionMember is a tagged enum member for a specific DiscriminatedUnion */
+export interface DiscriminatedUnionMember {
+  kind: 'discriminatedUnionMember';
 
   /** any docs for the type */
   docs: Docs;
 
-  /** the type of the union member */
-  type: WireType;
+  /** the type of the discriminated union member */
+  type: Model;
 
   /** discriminator property value */
-  discriminatorValue: string;
+  discriminantValue: string;
 }
 
 /** Etag is an azure_core::Etag */
@@ -755,23 +752,21 @@ export class MarkerType implements MarkerType {
   }
 }
 
-export class Union implements Union {
-  constructor(name: string, visibility: Visibility, discriminatorName: string, envelopeName: string) {
-    this.kind = 'union';
+export class DiscriminatedUnion implements DiscriminatedUnion {
+  constructor(name: string, visibility: Visibility, discriminant: string) {
+    this.kind = 'discriminatedUnion';
     this.name = name;
     this.visibility = visibility;
-    this.members = new Array<UnionMember>();
-    this.discriminatorName = discriminatorName;
-    this.envelopeName = envelopeName;
+    this.members = new Array<DiscriminatedUnionMember>();
+    this.discriminant = discriminant;
   }
 }
 
-export class UnionMember implements UnionMember {
-  constructor(name: string, type: WireType, discriminatorValue: string) {
-    this.kind = 'unionMember';
-    this.name = name;
+export class DiscriminatedUnionMember implements DiscriminatedUnionMember {
+  constructor(type: Model, discriminantValue: string) {
+    this.kind = 'discriminatedUnionMember';
     this.type = type;
-    this.discriminatorValue = discriminatorValue;
+    this.discriminantValue = discriminantValue;
   }
 }
 
