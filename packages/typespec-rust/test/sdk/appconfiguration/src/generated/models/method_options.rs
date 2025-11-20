@@ -212,7 +212,7 @@ impl AzureAppConfigurationClientCreateSnapshotOptions<'_> {
         AzureAppConfigurationClientCreateSnapshotOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
             sync_token: self.sync_token,
         }
@@ -374,6 +374,7 @@ impl AzureAppConfigurationClientListKeyValuesOptions<'_> {
             label: self.label,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             select: self.select,
             snapshot: self.snapshot,
@@ -412,6 +413,7 @@ impl AzureAppConfigurationClientListKeysOptions<'_> {
             after: self.after,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             name: self.name,
             sync_token: self.sync_token,
@@ -451,6 +453,7 @@ impl AzureAppConfigurationClientListLabelsOptions<'_> {
             after: self.after,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             name: self.name,
             select: self.select,
@@ -502,6 +505,7 @@ impl AzureAppConfigurationClientListRevisionsOptions<'_> {
             label: self.label,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             select: self.select,
             sync_token: self.sync_token,
@@ -540,6 +544,7 @@ impl AzureAppConfigurationClientListSnapshotsOptions<'_> {
             after: self.after,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             name: self.name,
             select: self.select,

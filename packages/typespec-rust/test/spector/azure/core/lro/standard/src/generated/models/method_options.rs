@@ -18,7 +18,7 @@ impl StandardClientCreateOrReplaceOptions<'_> {
         StandardClientCreateOrReplaceOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }
@@ -37,7 +37,7 @@ impl StandardClientDeleteOptions<'_> {
         StandardClientDeleteOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }
@@ -56,7 +56,7 @@ impl StandardClientExportOptions<'_> {
         StandardClientExportOptions {
             method_options: PollerOptions {
                 context: self.method_options.context.into_owned(),
-                frequency: self.method_options.frequency,
+                ..self.method_options
             },
         }
     }

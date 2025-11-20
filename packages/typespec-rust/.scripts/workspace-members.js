@@ -8,6 +8,7 @@ const workspaceRoot = execSync('git rev-parse --show-toplevel').toString().trim(
 
 const entries = fs.readdirSync(workspaceRoot, { recursive: true, withFileTypes: true });
 
+entries.sort((a, b) => a.parentPath.localeCompare(b.parentPath));
 entries.forEach((entry) => {
     if (entry.isFile() && entry.name === 'Cargo.toml' && entry.parentPath !== workspaceRoot) {
         console.log(`    "${entry.parentPath.substring(workspaceRoot.length + 1).replaceAll('\\', '/')}",`);

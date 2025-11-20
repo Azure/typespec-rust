@@ -20,6 +20,7 @@ impl PageablePageSizeClientListWithPageSizeOptions<'_> {
         PageablePageSizeClientListWithPageSizeOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             page_size: self.page_size,
         }
@@ -39,6 +40,7 @@ impl PageablePageSizeClientListWithoutContinuationOptions<'_> {
         PageablePageSizeClientListWithoutContinuationOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -56,6 +58,7 @@ impl PageableServerDrivenPaginationClientListLinkOptions<'_> {
         PageableServerDrivenPaginationClientListLinkOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -74,6 +77,7 @@ impl PageableServerDrivenPaginationClientListLinkStringOptions<'_> {
         PageableServerDrivenPaginationClientListLinkStringOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -92,6 +96,7 @@ impl PageableServerDrivenPaginationClientListNestedLinkOptions<'_> {
         PageableServerDrivenPaginationClientListNestedLinkOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
@@ -123,6 +128,7 @@ impl
             foo: self.foo,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             token: self.token,
         }
@@ -152,6 +158,7 @@ impl PageableServerDrivenPaginationContinuationTokenClientListRequestHeaderRespo
             foo: self.foo,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             token: self.token,
         }
@@ -183,6 +190,7 @@ impl
             foo: self.foo,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             token: self.token,
         }
@@ -216,6 +224,7 @@ impl
             foo: self.foo,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             token: self.token,
         }
@@ -245,6 +254,7 @@ impl PageableServerDrivenPaginationContinuationTokenClientListRequestQueryRespon
             foo: self.foo,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             token: self.token,
         }
@@ -276,6 +286,7 @@ impl
             foo: self.foo,
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
             token: self.token,
         }

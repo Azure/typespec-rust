@@ -75,6 +75,7 @@ impl MethodSubscriptionIdOperationsClientListOptions<'_> {
         MethodSubscriptionIdOperationsClientListOptions {
             method_options: PagerOptions {
                 context: self.method_options.context.into_owned(),
+                ..self.method_options
             },
         }
     }
