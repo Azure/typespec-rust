@@ -1,10 +1,10 @@
 # Release History
 
-## 0.29.0 (unreleased)
+## 0.29.0 (2025-11-20)
 
 ### Breaking Changes
 
-* Changed pager 2nd parameter from `Context<'static>` to `PagerOptions<`static>`
+* Changed pager 2nd parameter from `Context<'static>` to `PagerOptions<'static>`
 
 ### Features Added
 
@@ -16,6 +16,7 @@
 
 ### Other Changes
 
+* Use FRU (field record update) to make sure `ClientMethodOptions`, `PagerOptions`, and `PollerOptions` fields besides `Context` are all copied.
 * Reduced calls to `into_owned` for pollers
 * Updated to the latest tsp toolset.
 
