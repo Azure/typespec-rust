@@ -352,7 +352,7 @@ function getMethodOptions(crate: rust.Crate): helpers.Module {
           if (field.type.kind === 'external' && (field.type.name === 'ClientMethodOptions' || field.type.name === 'PagerOptions' || field.type.name === 'PollerOptions')) {
             body += `${indent.get()}${field.name}: ${field.type.name} {\n`;
             body += `${indent.push().get()}context: self.${field.name}.context.into_owned(),\n`;
-            body += `${indent.get()}..self.${field.name}\n`
+            body += `${indent.get()}..self.${field.name}\n`;
             body += `${indent.pop().get()}},\n`;
             continue;
           }
