@@ -93,8 +93,8 @@ export interface Enum {
   /** any docs for the type */
   docs: Docs;
 
-  /** indicates if the enum and its values should be public */
-  pub: boolean;
+  /** indicates the visibility of the enum */
+  visibility: Visibility;
 
   /** one or more values for the enum */
   values: Array<EnumValue>;
@@ -136,9 +136,6 @@ export interface Union {
   /** indicates the visibility of the union */
   visibility: Visibility;
 
-  /** indicates if the union and its values should be public */
-  pub: boolean;
-
   /** one or more members of the union */
   members: Array<UnionMember>;
 
@@ -160,7 +157,7 @@ export interface UnionMember {
   docs: Docs;
 
   /** the type of the union member */
-  type: Type;
+  type: WireType;
 
   /** discriminator property value */
   discriminatorValue: string;
@@ -304,7 +301,7 @@ export enum ModelFlags {
 }
 
 /** DateTimeEncoding is the wire format of the date/time */
-export type DateTimeEncoding = 'rfc3339' | 'rfc7231' | 'unix_time';
+export type DateTimeEncoding = 'rfc3339' | 'rfc3339-fixed-width' | 'rfc7231' | 'unix_time';
 
 /** OffsetDateTime is a Rust time::OffsetDateTime type */
 export interface OffsetDateTime extends External {
@@ -678,10 +675,10 @@ export class EncodedBytes implements EncodedBytes {
 }
 
 export class Enum implements Enum {
-  constructor(name: string, pub: boolean, extensible: boolean, type: EnumType) {
+  constructor(name: string, visibility: Visibility, extensible: boolean, type: EnumType) {
     this.kind = 'enum';
     this.name = name;
-    this.pub = pub;
+    this.visibility = visibility;
     this.values = new Array<EnumValue>();
     this.extensible = extensible;
     this.type = type;
@@ -759,10 +756,10 @@ export class MarkerType implements MarkerType {
 }
 
 export class Union implements Union {
-  constructor(name: string, pub: boolean, discriminatorName: string, envelopeName: string) {
+  constructor(name: string, visibility: Visibility, discriminatorName: string, envelopeName: string) {
     this.kind = 'union';
     this.name = name;
-    this.pub = pub;
+    this.visibility = visibility;
     this.members = new Array<UnionMember>();
     this.discriminatorName = discriminatorName;
     this.envelopeName = envelopeName;
@@ -770,7 +767,7 @@ export class Union implements Union {
 }
 
 export class UnionMember implements UnionMember {
-  constructor(name: string, type: Type, discriminatorValue: string) {
+  constructor(name: string, type: WireType, discriminatorValue: string) {
     this.kind = 'unionMember';
     this.name = name;
     this.type = type;

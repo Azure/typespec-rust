@@ -1,5 +1,5 @@
 [package]
-name = "blob_storage"
+name = "misc_tests"
 version = "0.1.0"
 authors.workspace = true
 edition.workspace = true
@@ -11,11 +11,5 @@ rust-version.workspace = true
 default = ["azure_core/default"]
 
 [dependencies]
-async-trait = { workspace = true }
-azure_core = { workspace = true, features = ["xml"] }
+azure_core = { workspace = true }
 serde = { workspace = true }
-serde_json = { workspace = true }
-time = { workspace = true }
-
-[dev-dependencies]
-tokio = { workspace = true }

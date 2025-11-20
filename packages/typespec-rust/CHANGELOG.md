@@ -6,6 +6,14 @@
 
 * Changed pager 2nd parameter from `Context<'static>` to `PagerOptions<`static>`
 
+### Features Added
+
+* Added support for custom date-time encoding `rfc3339-fixed-width`.
+
+### Bugs Fixed
+
+* Fixed invalid function name for literal value `serde` helpers.
+
 ### Other Changes
 
 * Reduced calls to `into_owned` for pollers

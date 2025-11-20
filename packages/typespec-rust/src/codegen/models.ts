@@ -547,7 +547,7 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
     switch (unwrapped.kind) {
       case 'encodedBytes':
       case 'offsetDateTime':
-        name += `_${unwrapped.encoding}`;
+        name += `_${codegen.deconstruct(unwrapped.encoding).join('_')}`;
         break;
       default:
         throw new CodegenError('InternalError', `unexpected kind ${unwrapped.kind}`);
@@ -595,7 +595,7 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
       // if the scalar is a float, replace the . as it's illegal in an identifier
       literalValueName = literalValueName.replace('.', 'point');
     } else if (literal.valueKind.kind === 'String') {
-      literalValueName = literalValueName.replace('/', '_');
+      literalValueName = literalValueName.replace(/\W/g, '_');
     }
 
     const optional = field.optional ? 'optional_' : '';
@@ -637,7 +637,7 @@ function addSerDeHelper(field: rust.ModelField, serdeParams: Set<string>, format
           case 'literal':
             return serdeLiteral(field.type.type);
           case 'offsetDateTime':
-            if (format === 'json' || (<rust.OffsetDateTime>unwrapped).encoding !== 'rfc3339') {
+            if (format === 'json' || ((<rust.OffsetDateTime>unwrapped).encoding !== 'rfc3339' && (<rust.OffsetDateTime>unwrapped).encoding !== 'rfc3339-fixed-width')) {
               return serdeOffsetDateTime((<rust.OffsetDateTime>unwrapped).encoding, true);
             }
             // for XML we intentionally fall through
@@ -856,7 +856,7 @@ function buildLiteralSerialize(indent: helpers.indentation, name: string, field:
     }, {
       pattern: 'false',
       body: (indent) => `${indent.get()}serializer.serialize_none()\n`,
-    }])}`
+    }])}\n`;
   } else {
     content += `${indent.get()}${toSerialize}`;
   }
@@ -922,7 +922,15 @@ function buildSerialize(indent: helpers.indentation, type: rust.Type, use: Use):
 
   let content = `${indent.get()}pub fn serialize<S>(to_serialize: &${getTypeDeclaration(type)}, serializer: S) -> Result<S::Ok, S::Error>\n`;
   content += `${indent.get()}where S: Serializer\n${indent.get()}{\n`;
-  content += recursiveBuildSerializeBody(indent.push(), use, {
+  indent.push();
+  const unwrappedType = helpers.unwrapType(type);
+  if (unwrappedType.kind === 'offsetDateTime' && unwrappedType.encoding === 'rfc3339-fixed-width') {
+    // create the seven digit, fixed width format
+    use.add('std::num', 'NonZero');
+    use.add('time::format_description::well_known', 'iso8601', 'Iso8601');
+    content += `${indent.get()}let format = Iso8601::<{iso8601::Config::DEFAULT.set_time_precision(iso8601::TimePrecision::Second {decimal_digits: NonZero::new(7)}).encode()}>;\n`;
+  }
+  content += recursiveBuildSerializeBody(indent, use, {
     caller: 'start',
     type: type,
     srcVar: 'to_serialize',
@@ -1060,8 +1068,10 @@ function recursiveBuildDeserializeBody(indent: helpers.indentation, use: Use, ct
     }
     case 'offsetDateTime': {
       // terminal case (NEVER the start case)
-      const dateParse = helpers.getDateTimeEncodingMethod(ctx.type.encoding, 'parse', use);
-      content = `${dateParse}(${ctx.type.encoding !== 'unix_time' ? '&' : ''}${ctx.srcVar}).map_err(serde::de::Error::custom)?`;
+      // for rfc3339-fixed-width we use the same deserializer as rfc3339
+      const encoding = ctx.type.encoding === 'rfc3339-fixed-width' ? 'rfc3339' : ctx.type.encoding;
+      const dateParse = helpers.getDateTimeEncodingMethod(encoding, 'parse', use);
+      content = `${dateParse}(${encoding !== 'unix_time' ? '&' : ''}${ctx.srcVar}).map_err(serde::de::Error::custom)?`;
       if (ctx.caller === 'option') {
         content = `${indent.get()}let ${ctx.destVar.get()} = ${content};\n`;
       } else {
@@ -1164,18 +1174,19 @@ function recursiveBuildSerializeBody(indent: helpers.indentation, use: Use, ctx:
     }
     case 'offsetDateTime': {
       // terminal case (NEVER the start case)
-      const dateTo = helpers.getDateTimeEncodingMethod(ctx.type.encoding, 'to', use);
-      content = ctx.type.encoding === 'unix_time' ? `${ctx.srcVar}.${dateTo}` : dateTo;
+      const dateTo = ctx.type.encoding === 'rfc3339-fixed-width' ? 'format(&format).map_err(serde::ser::Error::custom)?' : helpers.getDateTimeEncodingMethod(ctx.type.encoding, 'to', use);
+      const asMethodCall = ctx.type.encoding === 'rfc3339-fixed-width' || ctx.type.encoding === 'unix_time';
+      content = asMethodCall ? `${ctx.srcVar}.${dateTo}` : dateTo;
       switch (ctx.caller) {
         case 'hashmap':
-          content = `${hashMapInsert(`${content}${ctx.type.encoding !== 'unix_time' ? `(${ctx.srcVar})` : ''}`)}`;
+          content = `${hashMapInsert(`${content}${!asMethodCall ? `(${ctx.srcVar})` : ''}`)}`;
           break;
         case 'option':
-          content = ctx.type.encoding === 'unix_time' ? content : `${content}(${ctx.srcVar})`;
+          content = asMethodCall ? content : `${content}(${ctx.srcVar})`;
           content = `${indent.get()}let ${ctx.destVar.get()} = ${content};\n`;
           break;
         case 'vec':
-          if (ctx.type.encoding === 'unix_time') {
+          if (asMethodCall) {
             content = `|v|${content}`;
           }
           break;

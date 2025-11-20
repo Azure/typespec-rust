@@ -3,6 +3,7 @@ members = [
     "other/colliding_locals",
     "other/doc_tests",
     "other/enum_path_params",
+    "other/misc_tests",
     "other/serde_tests",
     "sdk/appconfiguration",
     "sdk/blob_storage",
