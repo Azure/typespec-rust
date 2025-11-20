@@ -378,7 +378,7 @@ export class Adapter {
       // we should have verified this earlier.
       // having this check means the compiler won't bark
       // at us when accessing union.discriminatedOptions
-      throw new AdapterError('InternalError', 'getDiscriminatedUnion called for non-discrimianted union', union.__raw?.node);
+      throw new AdapterError('InternalError', 'getDiscriminatedUnion called for non-discriminated union', union.__raw?.node);
     }
 
     rustUnion = new rust.DiscriminatedUnion(unionName, adaptAccessFlags(union.access), union.discriminatedOptions.discriminatorPropertyName);
