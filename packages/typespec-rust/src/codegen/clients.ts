@@ -763,13 +763,14 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
  * @param param the parameter to which the contents of setter apply
  * @param setter the callback that emits the code to read from a param var
  * @param inClosure indicates if the value is being read from within a closure (e.g. pageable methods)
+ * @param optionsPrefix Syntax to access the options structure, including the dot
  * @returns 
  */
-function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, inClosure: boolean, setter: () => string): string {
+function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, inClosure: boolean, setter: () => string, optionsPrefix: string = 'options.'): string {
   if (param.optional && param.type.kind !== 'literal') {
     // optional params are in the unwrapped options local var
     const op = indent.get() + helpers.buildIfBlock(indent, {
-      condition: `let Some(${param.name}) = ${inClosure && nonCopyableType(param.type) ? '&' : ''}options.${param.name}`,
+      condition: `let Some(${param.name}) = ${inClosure && nonCopyableType(param.type) ? '&' : ''}${optionsPrefix}${param.name}`,
       body: setter,
     });
     return op + '\n';
@@ -965,9 +966,11 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
  * @param method the method for which we're building the body
  * @param paramGroups the param groups for the provided method
  * @param inClosure indicates if the request is being constructed within a closure (e.g. pageable methods)
+ * @param requestVarName name for the request variable
+ * @param optionsPrefix Syntax to access the options structure, including the dot
  * @returns the code which sets HTTP headers for the request
  */
-function applyHeaderParams(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, requestVarName: string): string {
+function applyHeaderParams(indent: helpers.indentation, use: Use, method: ClientMethod, paramGroups: MethodParamGroups, inClosure: boolean, requestVarName: string, optionsPrefix: string = 'options.'): string {
   let body = '';
 
   for (const headerParam of paramGroups.header) {
@@ -982,7 +985,7 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
         },
         {
           pattern: 'PagerState::Initial',
-          body: (indent) => `${indent.get()}&options.${headerParam.name}\n`,
+          body: (indent) => `${indent.get()}&${optionsPrefix}${headerParam.name}\n`,
         }
       ]) + ';\n';
       body += indent.get() + helpers.buildIfBlock(indent, {
@@ -1007,7 +1010,7 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
         return setter;
       }
       return `${indent.get()}${requestVarName}.insert_header("${headerParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, headerParam, !inClosure, false)});\n`;
-    });
+    }, optionsPrefix);
   }
 
   return body;
@@ -1475,7 +1478,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     return '';
   };
 
-  const declareRequest = function (indent: helpers.indentation, use: Use, method: rust.LroMethod, paramGroups: MethodParamGroups, requestVarName: string, linkExpr: string, forceMut?: boolean): string {
+  const declareRequest = function (indent: helpers.indentation, use: Use, method: rust.LroMethod, paramGroups: MethodParamGroups, requestVarName: string, linkExpr: string, forceMut?: boolean, optionsPrefix?: string): string {
     let mutRequest = '';
     // if the only header is optional Content-Type it will not be used
     // by applyHeaderParams() in this case so don't make request mutable
@@ -1484,7 +1487,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
     }
 
     return `${indent.get()}let ${mutRequest}${requestVarName} = Request::new(${linkExpr}, Method::Get);\n`
-      + applyHeaderParams(indent, use, method, paramGroups, true, requestVarName);
+      + applyHeaderParams(indent, use, method, paramGroups, true, requestVarName, optionsPrefix);
   };
 
   let stateVarName = 'next_link';
@@ -1530,17 +1533,11 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
   if (method.finalResultStrategy.kind === 'originalUri') {
     body += `${indent.get()}let final_link = url.clone();\n`
 
-    let hasOptionalHeaderParams = false;
     for (const headerParam of paramGroups.header.filter(h => h.type.kind !== 'literal' && !isOptionalContentTypeHeader(h))) {
-      if (!headerParam.optional && headerParam.type.kind !== 'enum') {
-        body += `${indent.get()}let ${headerParam.name} = ${headerParam.name}.clone();\n`
-      } else {
-        hasOptionalHeaderParams = true;
+      if (headerParam.type.kind !== 'enum') {
+        const optionsPrefix = headerParam.optional ? 'options.' : '';
+        body += `${indent.get()}let ${headerParam.name} = ${optionsPrefix}${headerParam.name}.clone();\n`
       }
-    }
-
-    if (hasOptionalHeaderParams) {
-      body += 'let options = options.clone();\n';
     }
   }
 
@@ -1688,7 +1685,7 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
       if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName === pollingStepHeaderName) {
         body += `Ok(final_rsp.unwrap().into())\n`
       } else {
-        body += declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'final_link', true)
+        body += declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'final_link', true, '')
           + `Ok(pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, None).await?.into())\n`
       }
       body += `${indent.pop().get()}})\n`

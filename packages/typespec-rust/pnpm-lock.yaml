@@ -31,8 +31,8 @@ importers:
         version: 7.2.2
     devDependencies:
       '@azure-tools/azure-http-specs':
-        specifier: 0.1.0-alpha.32
-        version: 0.1.0-alpha.32(77571dd8f57e6df4047424942755d239)
+        specifier: 0.1.0-alpha.33-dev.1
+        version: 0.1.0-alpha.33-dev.1(77571dd8f57e6df4047424942755d239)
       '@azure-tools/typespec-autorest':
         specifier: ~0.62.0
         version: 0.62.0(5ec7fb66b10ea7a6d3f4130881aae5d5)
@@ -103,16 +103,16 @@ packages:
     resolution: {integrity: sha512-X1C7XdyCuo50ch9FzKtTvmK18FgDxxf1Bbt3cSoknQqeDaRegHSSCO+zByq2YA4NvUzKXeZ1engh29IDxZXgpQ==}
     engines: {node: '>=10.12.0'}
 
-  '@azure-tools/azure-http-specs@0.1.0-alpha.32':
-    resolution: {integrity: sha512-TjPu0vZyGdAXHw1HHuExNdR2/m4JJZamrHl2TWsCOMGo1loxWVb/mTitVbi0SUkYqzKfCiKrQ+pMcHNxUvJ35Q==}
+  '@azure-tools/azure-http-specs@0.1.0-alpha.33-dev.1':
+    resolution: {integrity: sha512-Tw/SvjtjWvWA5ratSbiDWMgNvn3LDx9VYwXknKOhRe/XCIeYzBnJk68OLwBi2HVpFCunv1sFaVJAX82CNyuusg==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
-      '@azure-tools/typespec-azure-core': ^0.62.0
+      '@azure-tools/typespec-azure-core': ^0.62.0 || >=0.63.0-dev <0.63.0
       '@typespec/compiler': ^1.6.0
       '@typespec/http': ^1.6.0
-      '@typespec/rest': ^0.76.0
-      '@typespec/versioning': ^0.76.0
-      '@typespec/xml': ^0.76.0
+      '@typespec/rest': ^0.76.0 || >=0.77.0-dev <0.77.0
+      '@typespec/versioning': ^0.76.0 || >=0.77.0-dev <0.77.0
+      '@typespec/xml': ^0.76.0 || >=0.77.0-dev <0.77.0
 
   '@azure-tools/codegen@2.10.1':
     resolution: {integrity: sha512-fZfREKjQnBTscjObgK4LuyZNFaofoCNQDNz0jl1i8fYNwCM5EOF9BXwtEtobuEyCpPUNDxQ/KKO65eWzirqk4w==}
@@ -2523,7 +2523,7 @@ snapshots:
       '@azure-tools/tasks': 3.0.255
       proper-lockfile: 2.0.1
 
-  '@azure-tools/azure-http-specs@0.1.0-alpha.32(77571dd8f57e6df4047424942755d239)':
+  '@azure-tools/azure-http-specs@0.1.0-alpha.33-dev.1(77571dd8f57e6df4047424942755d239)':
     dependencies:
       '@azure-tools/typespec-azure-core': 0.62.0(@typespec/compiler@1.6.0(@types/node@20.19.25))(@typespec/http@1.6.0(@typespec/compiler@1.6.0(@types/node@20.19.25))(@typespec/streams@0.68.0(@typespec/compiler@1.6.0(@types/node@20.19.25))))(@typespec/rest@0.76.0(@typespec/compiler@1.6.0(@types/node@20.19.25))(@typespec/http@1.6.0(@typespec/compiler@1.6.0(@types/node@20.19.25))(@typespec/streams@0.68.0(@typespec/compiler@1.6.0(@types/node@20.19.25)))))
       '@typespec/compiler': 1.6.0(@types/node@20.19.25)

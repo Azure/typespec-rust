@@ -22,10 +22,6 @@ use spector_armoptemplates::models::{
     OrderProperties,
 };
 
-// Need to wait until https://github.com/Azure/typespec-azure/pull/3517 is merged and released,
-// then update the dependencies, drop the #[should_panic] attribute below, and this comment.
-// The test is verified to work correctly when using patched local dependencies according to PR#3517.
-#[should_panic = "called `Result::unwrap()` on an `Err` value"]
 #[tokio::test]
 async fn create_or_replace() {
     let client = common::create_client().get_operation_templates_lro_client();

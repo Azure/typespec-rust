@@ -799,7 +799,7 @@ impl AzureAppConfigurationClient {
                 let pipeline = pipeline.clone();
                 let final_link = url.clone();
                 let accept = accept.clone();
-                let options = options.clone();
+                let sync_token = options.sync_token.clone();
                 async move {
                     let rsp = pipeline
                         .send(
@@ -841,7 +841,7 @@ impl AzureAppConfigurationClient {
                                     let mut request = Request::new(final_link, Method::Get);
                                     request.insert_header("accept", &accept);
                                     request.insert_header("content-type", content_type.to_string());
-                                    if let Some(sync_token) = &options.sync_token {
+                                    if let Some(sync_token) = &sync_token {
                                         request.insert_header("sync-token", sync_token);
                                     }
                                     Ok(pipeline.send(&ctx, &mut request, None).await?.into())
