@@ -9,7 +9,7 @@ use crate::generated::models::{
     StandardClientExportOperationStatus, StandardClientExportOptions, User,
 };
 use azure_core::{
-    error::CheckSuccessOptions,
+    error::{CheckSuccessOptions, Error, ErrorKind},
     fmt::SafeDebug,
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
@@ -320,7 +320,13 @@ impl StandardClient {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
-                                Box::pin(async move { Ok(final_rsp.unwrap().into()) })
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
                             }),
                         },
                         _ => PollerResult::Done { response: rsp },
@@ -451,7 +457,13 @@ impl StandardClient {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
-                                Box::pin(async move { Ok(final_rsp.unwrap().into()) })
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
                             }),
                         },
                         _ => PollerResult::Done { response: rsp },

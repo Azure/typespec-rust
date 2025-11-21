@@ -1683,7 +1683,8 @@ function getLroMethodBody(indent: helpers.indentation, use: Use, client: rust.Cl
         + `${indent.push().get()}Box::pin(async move {\n`;
 
       if (method.finalResultStrategy.kind === 'header' && method.finalResultStrategy.headerName === pollingStepHeaderName) {
-        body += `Ok(final_rsp.unwrap().into())\n`
+        use.add('azure_core::error', 'Error', 'ErrorKind');
+        body += `Ok(final_rsp.ok_or_else(|| { Error::new(ErrorKind::Other, "missing final response")})?.into())\n`
       } else {
         body += declareRequest(indent, use, method, paramGroups, initialRequestResult.requestVarName, 'final_link', true, '')
           + `Ok(pipeline.send(&ctx, &mut ${initialRequestResult.requestVarName}, None).await?.into())\n`

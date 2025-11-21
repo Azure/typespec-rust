@@ -12,7 +12,7 @@ use crate::generated::models::{
     ResourcesNestedClientUpdateOperationStatus, ResourcesNestedClientUpdateOptions,
 };
 use azure_core::{
-    error::CheckSuccessOptions,
+    error::{CheckSuccessOptions, Error, ErrorKind},
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         pager::{PagerResult, PagerState},
@@ -182,7 +182,13 @@ impl ResourcesNestedClient {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
-                                Box::pin(async move { Ok(final_rsp.unwrap().into()) })
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
                             }),
                         },
                         _ => PollerResult::Done { response: rsp },
@@ -326,7 +332,13 @@ impl ResourcesNestedClient {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
-                                Box::pin(async move { Ok(final_rsp.unwrap().into()) })
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
                             }),
                         },
                         _ => PollerResult::Done { response: rsp },
@@ -636,7 +648,13 @@ impl ResourcesNestedClient {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
-                                Box::pin(async move { Ok(final_rsp.unwrap().into()) })
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
                             }),
                         },
                         _ => PollerResult::Done { response: rsp },

@@ -11,7 +11,7 @@ use crate::generated::models::{
     Order,
 };
 use azure_core::{
-    error::CheckSuccessOptions,
+    error::{CheckSuccessOptions, Error, ErrorKind},
     http::{
         headers::{HeaderName, RETRY_AFTER, RETRY_AFTER_MS, X_MS_RETRY_AFTER_MS},
         poller::{get_retry_after, PollerResult, PollerState, PollerStatus, StatusMonitor as _},
@@ -174,7 +174,13 @@ impl OperationTemplatesLroClient {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
-                                Box::pin(async move { Ok(final_rsp.unwrap().into()) })
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
                             }),
                         },
                         _ => PollerResult::Done { response: rsp },
@@ -313,7 +319,13 @@ impl OperationTemplatesLroClient {
                         PollerStatus::Succeeded => PollerResult::Succeeded {
                             response: rsp,
                             target: Box::new(move || {
-                                Box::pin(async move { Ok(final_rsp.unwrap().into()) })
+                                Box::pin(async move {
+                                    Ok(final_rsp
+                                        .ok_or_else(|| {
+                                            Error::new(ErrorKind::Other, "missing final response")
+                                        })?
+                                        .into())
+                                })
                             }),
                         },
                         _ => PollerResult::Done { response: rsp },
