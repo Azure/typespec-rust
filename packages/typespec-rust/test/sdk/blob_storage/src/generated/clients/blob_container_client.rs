@@ -173,7 +173,7 @@ impl BlobContainerClient {
         if let Some(duration) = options.duration {
             request.insert_header("x-ms-lease-duration", duration.to_string());
         }
-        if let Some(proposed_lease_id) = options.proposed_lease_id {
+        if let Some(proposed_lease_id) = options.proposed_lease_id.as_ref() {
             request.insert_header("x-ms-proposed-lease-id", proposed_lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -394,7 +394,7 @@ impl BlobContainerClient {
         if let Some(access) = options.access {
             request.insert_header("x-ms-blob-public-access", access.to_string());
         }
-        if let Some(default_encryption_scope) = options.default_encryption_scope {
+        if let Some(default_encryption_scope) = options.default_encryption_scope.as_ref() {
             request.insert_header("x-ms-default-encryption-scope", default_encryption_scope);
         }
         if let Some(prevent_encryption_scope_override) = options.prevent_encryption_scope_override {
@@ -403,8 +403,8 @@ impl BlobContainerClient {
                 prevent_encryption_scope_override.to_string(),
             );
         }
-        if let Some(metadata) = options.metadata {
-            for (k, v) in &metadata {
+        if let Some(metadata) = options.metadata.as_ref() {
+            for (k, v) in metadata {
                 request.insert_header(format!("x-ms-meta-{k}"), v);
             }
         }
@@ -455,7 +455,7 @@ impl BlobContainerClient {
         if let Some(if_unmodified_since) = options.if_unmodified_since {
             request.insert_header("if-unmodified-since", to_rfc7231(&if_unmodified_since));
         }
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -518,7 +518,7 @@ impl BlobContainerClient {
         url.query_pairs_mut()
             .append_pair("comp", "blobs")
             .append_pair("restype", "container");
-        if let Some(include) = options.include {
+        if let Some(include) = options.include.as_ref() {
             url.query_pairs_mut().append_pair(
                 "include",
                 &include
@@ -528,8 +528,8 @@ impl BlobContainerClient {
                     .join(","),
             );
         }
-        if let Some(marker) = options.marker {
-            url.query_pairs_mut().append_pair("marker", &marker);
+        if let Some(marker) = options.marker.as_ref() {
+            url.query_pairs_mut().append_pair("marker", marker);
         }
         if let Some(maxresults) = options.maxresults {
             url.query_pairs_mut()
@@ -539,8 +539,8 @@ impl BlobContainerClient {
             url.query_pairs_mut()
                 .append_pair("timeout", &timeout.to_string());
         }
-        if let Some(where_param) = options.where_param {
-            url.query_pairs_mut().append_pair("where", &where_param);
+        if let Some(where_param) = options.where_param.as_ref() {
+            url.query_pairs_mut().append_pair("where", where_param);
         }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
@@ -620,7 +620,7 @@ impl BlobContainerClient {
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/xml");
         request.insert_header("content-type", "application/xml");
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -794,7 +794,7 @@ impl BlobContainerClient {
         }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("content-type", "application/xml");
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -858,7 +858,7 @@ impl BlobContainerClient {
             .append_pair("comp", "list")
             .append_key_only("flat")
             .append_pair("restype", "container");
-        if let Some(include) = options.include {
+        if let Some(include) = options.include.as_ref() {
             first_url.query_pairs_mut().append_pair(
                 "include",
                 &include
@@ -868,16 +868,16 @@ impl BlobContainerClient {
                     .join(","),
             );
         }
-        if let Some(marker) = options.marker {
-            first_url.query_pairs_mut().append_pair("marker", &marker);
+        if let Some(marker) = options.marker.as_ref() {
+            first_url.query_pairs_mut().append_pair("marker", marker);
         }
         if let Some(maxresults) = options.maxresults {
             first_url
                 .query_pairs_mut()
                 .append_pair("maxresults", &maxresults.to_string());
         }
-        if let Some(prefix) = options.prefix {
-            first_url.query_pairs_mut().append_pair("prefix", &prefix);
+        if let Some(prefix) = options.prefix.as_ref() {
+            first_url.query_pairs_mut().append_pair("prefix", prefix);
         }
         if let Some(timeout) = options.timeout {
             first_url
@@ -985,7 +985,7 @@ impl BlobContainerClient {
         first_url
             .query_pairs_mut()
             .append_pair("delimiter", delimiter);
-        if let Some(include) = options.include {
+        if let Some(include) = options.include.as_ref() {
             first_url.query_pairs_mut().append_pair(
                 "include",
                 &include
@@ -995,16 +995,16 @@ impl BlobContainerClient {
                     .join(","),
             );
         }
-        if let Some(marker) = options.marker {
-            first_url.query_pairs_mut().append_pair("marker", &marker);
+        if let Some(marker) = options.marker.as_ref() {
+            first_url.query_pairs_mut().append_pair("marker", marker);
         }
         if let Some(maxresults) = options.maxresults {
             first_url
                 .query_pairs_mut()
                 .append_pair("maxresults", &maxresults.to_string());
         }
-        if let Some(prefix) = options.prefix {
-            first_url.query_pairs_mut().append_pair("prefix", &prefix);
+        if let Some(prefix) = options.prefix.as_ref() {
+            first_url.query_pairs_mut().append_pair("prefix", prefix);
         }
         if let Some(timeout) = options.timeout {
             first_url
@@ -1196,7 +1196,7 @@ impl BlobContainerClient {
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
         request.insert_header("x-ms-source-container-name", source_container_name);
-        if let Some(source_lease_id) = options.source_lease_id {
+        if let Some(source_lease_id) = options.source_lease_id.as_ref() {
             request.insert_header("x-ms-source-lease-id", source_lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -1349,10 +1349,10 @@ impl BlobContainerClient {
         }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("content-type", "application/xml");
-        if let Some(deleted_container_name) = options.deleted_container_name {
+        if let Some(deleted_container_name) = options.deleted_container_name.as_ref() {
             request.insert_header("x-ms-deleted-container-name", deleted_container_name);
         }
-        if let Some(deleted_container_version) = options.deleted_container_version {
+        if let Some(deleted_container_version) = options.deleted_container_version.as_ref() {
             request.insert_header("x-ms-deleted-container-version", deleted_container_version);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -1440,7 +1440,7 @@ impl BlobContainerClient {
         if let Some(access) = options.access {
             request.insert_header("x-ms-blob-public-access", access.to_string());
         }
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
         request.insert_header("x-ms-version", &self.version);
@@ -1489,11 +1489,11 @@ impl BlobContainerClient {
         if let Some(if_modified_since) = options.if_modified_since {
             request.insert_header("if-modified-since", to_rfc7231(&if_modified_since));
         }
-        if let Some(lease_id) = options.lease_id {
+        if let Some(lease_id) = options.lease_id.as_ref() {
             request.insert_header("x-ms-lease-id", lease_id);
         }
-        if let Some(metadata) = options.metadata {
-            for (k, v) in &metadata {
+        if let Some(metadata) = options.metadata.as_ref() {
+            for (k, v) in metadata {
                 request.insert_header(format!("x-ms-meta-{k}"), v);
             }
         }

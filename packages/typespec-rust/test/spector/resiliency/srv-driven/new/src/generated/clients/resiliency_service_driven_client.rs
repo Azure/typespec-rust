@@ -137,9 +137,9 @@ impl ResiliencyServiceDrivenClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/add-optional-param/from-none");
-        if let Some(new_parameter) = options.new_parameter {
+        if let Some(new_parameter) = options.new_parameter.as_ref() {
             url.query_pairs_mut()
-                .append_pair("new-parameter", &new_parameter);
+                .append_pair("new-parameter", new_parameter);
         }
         let mut request = Request::new(url, Method::Head);
         let rsp = self
@@ -172,12 +172,12 @@ impl ResiliencyServiceDrivenClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/add-optional-param/from-one-optional");
-        if let Some(new_parameter) = options.new_parameter {
+        if let Some(new_parameter) = options.new_parameter.as_ref() {
             url.query_pairs_mut()
-                .append_pair("new-parameter", &new_parameter);
+                .append_pair("new-parameter", new_parameter);
         }
-        if let Some(parameter) = options.parameter {
-            url.query_pairs_mut().append_pair("parameter", &parameter);
+        if let Some(parameter) = options.parameter.as_ref() {
+            url.query_pairs_mut().append_pair("parameter", parameter);
         }
         let mut request = Request::new(url, Method::Get);
         let rsp = self
@@ -212,9 +212,9 @@ impl ResiliencyServiceDrivenClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/add-optional-param/from-one-required");
-        if let Some(new_parameter) = options.new_parameter {
+        if let Some(new_parameter) = options.new_parameter.as_ref() {
             url.query_pairs_mut()
-                .append_pair("new-parameter", &new_parameter);
+                .append_pair("new-parameter", new_parameter);
         }
         url.query_pairs_mut().append_pair("parameter", parameter);
         let mut request = Request::new(url, Method::Get);

@@ -132,11 +132,11 @@ impl PreviewVersionClient {
         url.append_path("/azure/versioning/previewVersion/widgets");
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(color) = options.color {
-            url.query_pairs_mut().append_pair("color", &color);
+        if let Some(color) = options.color.as_ref() {
+            url.query_pairs_mut().append_pair("color", color);
         }
-        if let Some(name) = options.name {
-            url.query_pairs_mut().append_pair("name", &name);
+        if let Some(name) = options.name.as_ref() {
+            url.query_pairs_mut().append_pair("name", name);
         }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");

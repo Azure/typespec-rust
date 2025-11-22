@@ -161,7 +161,7 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/kv/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
-        if let Some(select) = options.select {
+        if let Some(select) = options.select.as_ref() {
             url.query_pairs_mut().append_pair(
                 "$Select",
                 &select
@@ -173,25 +173,25 @@ impl AzureAppConfigurationClient {
         }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(label) = options.label {
-            url.query_pairs_mut().append_pair("label", &label);
+        if let Some(label) = options.label.as_ref() {
+            url.query_pairs_mut().append_pair("label", label);
         }
-        if let Some(tags) = options.tags {
+        if let Some(tags) = options.tags.as_ref() {
             for t in tags.iter() {
                 url.query_pairs_mut().append_pair("tags", t);
             }
         }
         let mut request = Request::new(url, Method::Head);
-        if let Some(accept_datetime) = options.accept_datetime {
+        if let Some(accept_datetime) = options.accept_datetime.as_ref() {
             request.insert_header("accept-datetime", accept_datetime);
         }
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         let rsp = self
@@ -253,7 +253,7 @@ impl AzureAppConfigurationClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/kv");
-        if let Some(select) = options.select {
+        if let Some(select) = options.select.as_ref() {
             url.query_pairs_mut().append_pair(
                 "$Select",
                 &select
@@ -263,36 +263,36 @@ impl AzureAppConfigurationClient {
                     .join(","),
             );
         }
-        if let Some(after) = options.after {
-            url.query_pairs_mut().append_pair("After", &after);
+        if let Some(after) = options.after.as_ref() {
+            url.query_pairs_mut().append_pair("After", after);
         }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(key) = options.key {
-            url.query_pairs_mut().append_pair("key", &key);
+        if let Some(key) = options.key.as_ref() {
+            url.query_pairs_mut().append_pair("key", key);
         }
-        if let Some(label) = options.label {
-            url.query_pairs_mut().append_pair("label", &label);
+        if let Some(label) = options.label.as_ref() {
+            url.query_pairs_mut().append_pair("label", label);
         }
-        if let Some(snapshot) = options.snapshot {
-            url.query_pairs_mut().append_pair("snapshot", &snapshot);
+        if let Some(snapshot) = options.snapshot.as_ref() {
+            url.query_pairs_mut().append_pair("snapshot", snapshot);
         }
-        if let Some(tags) = options.tags {
+        if let Some(tags) = options.tags.as_ref() {
             for t in tags.iter() {
                 url.query_pairs_mut().append_pair("tags", t);
             }
         }
         let mut request = Request::new(url, Method::Head);
-        if let Some(accept_datetime) = options.accept_datetime {
+        if let Some(accept_datetime) = options.accept_datetime.as_ref() {
             request.insert_header("accept-datetime", accept_datetime);
         }
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         let rsp = self
@@ -350,19 +350,19 @@ impl AzureAppConfigurationClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/keys");
-        if let Some(after) = options.after {
-            url.query_pairs_mut().append_pair("After", &after);
+        if let Some(after) = options.after.as_ref() {
+            url.query_pairs_mut().append_pair("After", after);
         }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(name) = options.name {
-            url.query_pairs_mut().append_pair("name", &name);
+        if let Some(name) = options.name.as_ref() {
+            url.query_pairs_mut().append_pair("name", name);
         }
         let mut request = Request::new(url, Method::Head);
-        if let Some(accept_datetime) = options.accept_datetime {
+        if let Some(accept_datetime) = options.accept_datetime.as_ref() {
             request.insert_header("accept-datetime", accept_datetime);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         let rsp = self
@@ -420,7 +420,7 @@ impl AzureAppConfigurationClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/labels");
-        if let Some(select) = options.select {
+        if let Some(select) = options.select.as_ref() {
             url.query_pairs_mut().append_pair(
                 "$Select",
                 &select
@@ -430,19 +430,19 @@ impl AzureAppConfigurationClient {
                     .join(","),
             );
         }
-        if let Some(after) = options.after {
-            url.query_pairs_mut().append_pair("After", &after);
+        if let Some(after) = options.after.as_ref() {
+            url.query_pairs_mut().append_pair("After", after);
         }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(name) = options.name {
-            url.query_pairs_mut().append_pair("name", &name);
+        if let Some(name) = options.name.as_ref() {
+            url.query_pairs_mut().append_pair("name", name);
         }
         let mut request = Request::new(url, Method::Head);
-        if let Some(accept_datetime) = options.accept_datetime {
+        if let Some(accept_datetime) = options.accept_datetime.as_ref() {
             request.insert_header("accept-datetime", accept_datetime);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         let rsp = self
@@ -504,7 +504,7 @@ impl AzureAppConfigurationClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/revisions");
-        if let Some(select) = options.select {
+        if let Some(select) = options.select.as_ref() {
             url.query_pairs_mut().append_pair(
                 "$Select",
                 &select
@@ -514,27 +514,27 @@ impl AzureAppConfigurationClient {
                     .join(","),
             );
         }
-        if let Some(after) = options.after {
-            url.query_pairs_mut().append_pair("After", &after);
+        if let Some(after) = options.after.as_ref() {
+            url.query_pairs_mut().append_pair("After", after);
         }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(key) = options.key {
-            url.query_pairs_mut().append_pair("key", &key);
+        if let Some(key) = options.key.as_ref() {
+            url.query_pairs_mut().append_pair("key", key);
         }
-        if let Some(label) = options.label {
-            url.query_pairs_mut().append_pair("label", &label);
+        if let Some(label) = options.label.as_ref() {
+            url.query_pairs_mut().append_pair("label", label);
         }
-        if let Some(tags) = options.tags {
+        if let Some(tags) = options.tags.as_ref() {
             for t in tags.iter() {
                 url.query_pairs_mut().append_pair("tags", t);
             }
         }
         let mut request = Request::new(url, Method::Head);
-        if let Some(accept_datetime) = options.accept_datetime {
+        if let Some(accept_datetime) = options.accept_datetime.as_ref() {
             request.insert_header("accept-datetime", accept_datetime);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         let rsp = self
@@ -613,13 +613,13 @@ impl AzureAppConfigurationClient {
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Head);
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         let rsp = self
@@ -677,13 +677,13 @@ impl AzureAppConfigurationClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/snapshots");
-        if let Some(after) = options.after {
-            url.query_pairs_mut().append_pair("After", &after);
+        if let Some(after) = options.after.as_ref() {
+            url.query_pairs_mut().append_pair("After", after);
         }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Head);
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         let rsp = self
@@ -789,7 +789,7 @@ impl AzureAppConfigurationClient {
                         let mut request = Request::new(next_link.clone(), Method::Get);
                         request.insert_header("accept", &accept);
                         request.insert_header("content-type", content_type.to_string());
-                        if let Some(sync_token) = &options.sync_token {
+                        if let Some(sync_token) = options.sync_token.as_ref() {
                             request.insert_header("sync-token", sync_token);
                         }
                         (
@@ -804,7 +804,7 @@ impl AzureAppConfigurationClient {
                         let mut request = Request::new(url.clone(), Method::Put);
                         request.insert_header("accept", &accept);
                         request.insert_header("content-type", content_type.to_string());
-                        if let Some(sync_token) = &options.sync_token {
+                        if let Some(sync_token) = options.sync_token.as_ref() {
                             request.insert_header("sync-token", sync_token);
                         }
                         request.set_body(entity.clone());
@@ -938,15 +938,15 @@ impl AzureAppConfigurationClient {
         url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(label) = options.label {
-            url.query_pairs_mut().append_pair("label", &label);
+        if let Some(label) = options.label.as_ref() {
+            url.query_pairs_mut().append_pair("label", label);
         }
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("accept", accept);
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         let rsp = self
@@ -1025,18 +1025,18 @@ impl AzureAppConfigurationClient {
         url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(label) = options.label {
-            url.query_pairs_mut().append_pair("label", &label);
+        if let Some(label) = options.label.as_ref() {
+            url.query_pairs_mut().append_pair("label", label);
         }
         let mut request = Request::new(url, Method::Delete);
         request.insert_header("accept", accept);
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         let rsp = self
@@ -1114,7 +1114,7 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/kv/{key}");
         path = path.replace("{key}", key);
         url.append_path(&path);
-        if let Some(select) = options.select {
+        if let Some(select) = options.select.as_ref() {
             url.query_pairs_mut().append_pair(
                 "$Select",
                 &select
@@ -1126,26 +1126,26 @@ impl AzureAppConfigurationClient {
         }
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(label) = options.label {
-            url.query_pairs_mut().append_pair("label", &label);
+        if let Some(label) = options.label.as_ref() {
+            url.query_pairs_mut().append_pair("label", label);
         }
-        if let Some(tags) = options.tags {
+        if let Some(tags) = options.tags.as_ref() {
             for t in tags.iter() {
                 url.query_pairs_mut().append_pair("tags", t);
             }
         }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", accept);
-        if let Some(accept_datetime) = options.accept_datetime {
+        if let Some(accept_datetime) = options.accept_datetime.as_ref() {
             request.insert_header("accept-datetime", accept_datetime);
         }
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         let rsp = self
@@ -1263,7 +1263,7 @@ impl AzureAppConfigurationClient {
         let mut path = String::from("/snapshots/{name}");
         path = path.replace("{name}", name);
         url.append_path(&path);
-        if let Some(select) = options.select {
+        if let Some(select) = options.select.as_ref() {
             url.query_pairs_mut().append_pair(
                 "$Select",
                 &select
@@ -1277,13 +1277,13 @@ impl AzureAppConfigurationClient {
             .append_pair("api-version", &self.api_version);
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", accept);
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         let rsp = self
@@ -1350,7 +1350,7 @@ impl AzureAppConfigurationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/kv");
-        if let Some(select) = options.select {
+        if let Some(select) = options.select.as_ref() {
             first_url.query_pairs_mut().append_pair(
                 "$Select",
                 &select
@@ -1360,24 +1360,24 @@ impl AzureAppConfigurationClient {
                     .join(","),
             );
         }
-        if let Some(after) = options.after {
-            first_url.query_pairs_mut().append_pair("After", &after);
+        if let Some(after) = options.after.as_ref() {
+            first_url.query_pairs_mut().append_pair("After", after);
         }
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(key) = options.key {
-            first_url.query_pairs_mut().append_pair("key", &key);
+        if let Some(key) = options.key.as_ref() {
+            first_url.query_pairs_mut().append_pair("key", key);
         }
-        if let Some(label) = options.label {
-            first_url.query_pairs_mut().append_pair("label", &label);
+        if let Some(label) = options.label.as_ref() {
+            first_url.query_pairs_mut().append_pair("label", label);
         }
-        if let Some(snapshot) = options.snapshot {
+        if let Some(snapshot) = options.snapshot.as_ref() {
             first_url
                 .query_pairs_mut()
-                .append_pair("snapshot", &snapshot);
+                .append_pair("snapshot", snapshot);
         }
-        if let Some(tags) = options.tags {
+        if let Some(tags) = options.tags.as_ref() {
             for t in tags.iter() {
                 first_url.query_pairs_mut().append_pair("tags", t);
             }
@@ -1402,16 +1402,16 @@ impl AzureAppConfigurationClient {
                 };
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", &accept);
-                if let Some(accept_datetime) = &options.accept_datetime {
+                if let Some(accept_datetime) = options.accept_datetime.as_ref() {
                     request.insert_header("accept-datetime", accept_datetime);
                 }
-                if let Some(if_match) = &options.if_match {
+                if let Some(if_match) = options.if_match.as_ref() {
                     request.insert_header("if-match", if_match);
                 }
-                if let Some(if_none_match) = &options.if_none_match {
+                if let Some(if_none_match) = options.if_none_match.as_ref() {
                     request.insert_header("if-none-match", if_none_match);
                 }
-                if let Some(sync_token) = &options.sync_token {
+                if let Some(sync_token) = options.sync_token.as_ref() {
                     request.insert_header("sync-token", sync_token);
                 }
                 let pipeline = pipeline.clone();
@@ -1488,14 +1488,14 @@ impl AzureAppConfigurationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/keys");
-        if let Some(after) = options.after {
-            first_url.query_pairs_mut().append_pair("After", &after);
+        if let Some(after) = options.after.as_ref() {
+            first_url.query_pairs_mut().append_pair("After", after);
         }
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(name) = options.name {
-            first_url.query_pairs_mut().append_pair("name", &name);
+        if let Some(name) = options.name.as_ref() {
+            first_url.query_pairs_mut().append_pair("name", name);
         }
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
@@ -1517,10 +1517,10 @@ impl AzureAppConfigurationClient {
                 };
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", &accept);
-                if let Some(accept_datetime) = &options.accept_datetime {
+                if let Some(accept_datetime) = options.accept_datetime.as_ref() {
                     request.insert_header("accept-datetime", accept_datetime);
                 }
-                if let Some(sync_token) = &options.sync_token {
+                if let Some(sync_token) = options.sync_token.as_ref() {
                     request.insert_header("sync-token", sync_token);
                 }
                 let pipeline = pipeline.clone();
@@ -1597,7 +1597,7 @@ impl AzureAppConfigurationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/labels");
-        if let Some(select) = options.select {
+        if let Some(select) = options.select.as_ref() {
             first_url.query_pairs_mut().append_pair(
                 "$Select",
                 &select
@@ -1607,14 +1607,14 @@ impl AzureAppConfigurationClient {
                     .join(","),
             );
         }
-        if let Some(after) = options.after {
-            first_url.query_pairs_mut().append_pair("After", &after);
+        if let Some(after) = options.after.as_ref() {
+            first_url.query_pairs_mut().append_pair("After", after);
         }
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(name) = options.name {
-            first_url.query_pairs_mut().append_pair("name", &name);
+        if let Some(name) = options.name.as_ref() {
+            first_url.query_pairs_mut().append_pair("name", name);
         }
         let api_version = self.api_version.clone();
         Ok(Pager::from_callback(
@@ -1636,10 +1636,10 @@ impl AzureAppConfigurationClient {
                 };
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", &accept);
-                if let Some(accept_datetime) = &options.accept_datetime {
+                if let Some(accept_datetime) = options.accept_datetime.as_ref() {
                     request.insert_header("accept-datetime", accept_datetime);
                 }
-                if let Some(sync_token) = &options.sync_token {
+                if let Some(sync_token) = options.sync_token.as_ref() {
                     request.insert_header("sync-token", sync_token);
                 }
                 let pipeline = pipeline.clone();
@@ -1720,7 +1720,7 @@ impl AzureAppConfigurationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/revisions");
-        if let Some(select) = options.select {
+        if let Some(select) = options.select.as_ref() {
             first_url.query_pairs_mut().append_pair(
                 "$Select",
                 &select
@@ -1730,19 +1730,19 @@ impl AzureAppConfigurationClient {
                     .join(","),
             );
         }
-        if let Some(after) = options.after {
-            first_url.query_pairs_mut().append_pair("After", &after);
+        if let Some(after) = options.after.as_ref() {
+            first_url.query_pairs_mut().append_pair("After", after);
         }
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(key) = options.key {
-            first_url.query_pairs_mut().append_pair("key", &key);
+        if let Some(key) = options.key.as_ref() {
+            first_url.query_pairs_mut().append_pair("key", key);
         }
-        if let Some(label) = options.label {
-            first_url.query_pairs_mut().append_pair("label", &label);
+        if let Some(label) = options.label.as_ref() {
+            first_url.query_pairs_mut().append_pair("label", label);
         }
-        if let Some(tags) = options.tags {
+        if let Some(tags) = options.tags.as_ref() {
             for t in tags.iter() {
                 first_url.query_pairs_mut().append_pair("tags", t);
             }
@@ -1767,10 +1767,10 @@ impl AzureAppConfigurationClient {
                 };
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", &accept);
-                if let Some(accept_datetime) = &options.accept_datetime {
+                if let Some(accept_datetime) = options.accept_datetime.as_ref() {
                     request.insert_header("accept-datetime", accept_datetime);
                 }
-                if let Some(sync_token) = &options.sync_token {
+                if let Some(sync_token) = options.sync_token.as_ref() {
                     request.insert_header("sync-token", sync_token);
                 }
                 let pipeline = pipeline.clone();
@@ -1847,7 +1847,7 @@ impl AzureAppConfigurationClient {
         let pipeline = self.pipeline.clone();
         let mut first_url = self.endpoint.clone();
         first_url.append_path("/snapshots");
-        if let Some(select) = options.select {
+        if let Some(select) = options.select.as_ref() {
             first_url.query_pairs_mut().append_pair(
                 "$Select",
                 &select
@@ -1857,16 +1857,16 @@ impl AzureAppConfigurationClient {
                     .join(","),
             );
         }
-        if let Some(after) = options.after {
-            first_url.query_pairs_mut().append_pair("After", &after);
+        if let Some(after) = options.after.as_ref() {
+            first_url.query_pairs_mut().append_pair("After", after);
         }
         first_url
             .query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(name) = options.name {
-            first_url.query_pairs_mut().append_pair("name", &name);
+        if let Some(name) = options.name.as_ref() {
+            first_url.query_pairs_mut().append_pair("name", name);
         }
-        if let Some(status) = options.status {
+        if let Some(status) = options.status.as_ref() {
             first_url.query_pairs_mut().append_pair(
                 "status",
                 &status
@@ -1896,7 +1896,7 @@ impl AzureAppConfigurationClient {
                 };
                 let mut request = Request::new(url, Method::Get);
                 request.insert_header("accept", &accept);
-                if let Some(sync_token) = &options.sync_token {
+                if let Some(sync_token) = options.sync_token.as_ref() {
                     request.insert_header("sync-token", sync_token);
                 }
                 let pipeline = pipeline.clone();
@@ -1991,19 +1991,19 @@ impl AzureAppConfigurationClient {
         url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(label) = options.label {
-            url.query_pairs_mut().append_pair("label", &label);
+        if let Some(label) = options.label.as_ref() {
+            url.query_pairs_mut().append_pair("label", label);
         }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", accept);
         request.insert_header("content-type", content_type.to_string());
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         if let Some(entity) = options.entity {
@@ -2085,18 +2085,18 @@ impl AzureAppConfigurationClient {
         url.append_path(&path);
         url.query_pairs_mut()
             .append_pair("api-version", &self.api_version);
-        if let Some(label) = options.label {
-            url.query_pairs_mut().append_pair("label", &label);
+        if let Some(label) = options.label.as_ref() {
+            url.query_pairs_mut().append_pair("label", label);
         }
         let mut request = Request::new(url, Method::Put);
         request.insert_header("accept", accept);
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         let rsp = self
@@ -2183,13 +2183,13 @@ impl AzureAppConfigurationClient {
         let mut request = Request::new(url, Method::Patch);
         request.insert_header("accept", accept);
         request.insert_header("content-type", content_type.to_string());
-        if let Some(if_match) = options.if_match {
+        if let Some(if_match) = options.if_match.as_ref() {
             request.insert_header("if-match", if_match);
         }
-        if let Some(if_none_match) = options.if_none_match {
+        if let Some(if_none_match) = options.if_none_match.as_ref() {
             request.insert_header("if-none-match", if_none_match);
         }
-        if let Some(sync_token) = options.sync_token {
+        if let Some(sync_token) = options.sync_token.as_ref() {
             request.insert_header("sync-token", sync_token);
         }
         request.set_body(entity);

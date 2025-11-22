@@ -115,7 +115,7 @@ impl PathClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         let mut path = String::from("/parameters/path/optional{name}");
-        path = match options.name {
+        path = match options.name.as_ref() {
             Some(name) => path.replace("{name}", &format!("/{name}")),
             None => path.replace("{name}", ""),
         };

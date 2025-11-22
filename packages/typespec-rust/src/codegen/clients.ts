@@ -762,14 +762,14 @@ function getMethodParamGroup(method: ClientMethod): MethodParamGroups {
  * @param indent the indentation helper currently in scope
  * @param param the parameter to which the contents of setter apply
  * @param setter the callback that emits the code to read from a param var
- * @param inClosure indicates if the value is being read from within a closure (e.g. pageable methods)
  * @returns 
  */
-function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, inClosure: boolean, setter: () => string): string {
+function getParamValueHelper(indent: helpers.indentation, param: rust.MethodParameter, setter: () => string): string {
   if (param.optional && param.type.kind !== 'literal') {
+    const asRef = nonCopyableType(param.type) ? '.as_ref()' : '';
     // optional params are in the unwrapped options local var
     const op = indent.get() + helpers.buildIfBlock(indent, {
-      condition: `let Some(${param.name}) = ${inClosure && nonCopyableType(param.type) ? '&' : ''}options.${param.name}`,
+      condition: `let Some(${param.name}) = options.${param.name}${asRef}`,
       body: setter,
     });
     return op + '\n';
@@ -886,7 +886,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         }
 
         if (pathParam.optional) {
-          body += `${indent.get()}${pathVarName} = ${helpers.buildMatch(indent, `options.${pathParam.name}`, [{
+          body += `${indent.get()}${pathVarName} = ${helpers.buildMatch(indent, `options.${pathParam.name}${nonCopyableType(pathParam.type) ? '.as_ref()' : ''}`, [{
             pattern: `Some(${pathParam.name})`,
             body: (indent) => wrapSortedVec(`${indent.get()}${pathVarName}.replace("{${pathParam.segment}}", ${paramExpression})\n`),
           }, {
@@ -925,7 +925,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
 
   for (const queryParam of paramGroups.query) {
     if (queryParam.kind === 'queryCollection' && queryParam.format === 'multi') {
-      body += getParamValueHelper(indent, queryParam, false, () => {
+      body += getParamValueHelper(indent, queryParam, () => {
         const valueVar = queryParam.name[0];
         let text = `${indent.get()}for ${valueVar} in ${queryParam.name}.iter() {\n`;
         text += `${indent.push().get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${valueVar});\n`;
@@ -933,7 +933,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         return text;
       });
     } else if (queryParam.kind === 'queryHashMap') {
-      body += getParamValueHelper(indent, queryParam, false, () => {
+      body += getParamValueHelper(indent, queryParam, () => {
         let text = `${indent.get()}{\n`;
         text += `${indent.push().get()}let mut ${queryParam.name}_vec = ${queryParam.name}.iter().collect::<Vec<_>>();\n`;
         text += `${indent.get()}${queryParam.name}_vec.sort_by_key(|p| p.0);\n`;
@@ -948,7 +948,7 @@ function constructUrl(indent: helpers.indentation, use: Use, method: ClientMetho
         return text;
       });
     } else {
-      body += getParamValueHelper(indent, queryParam, false, () => {
+      body += getParamValueHelper(indent, queryParam, () => {
         return `${indent.get()}${urlVarName}.query_pairs_mut().append_pair("${queryParam.key}", ${getHeaderPathQueryParamValue(use, queryParam, !queryParam.optional, false)});\n`;
       });
     }
@@ -999,9 +999,9 @@ function applyHeaderParams(indent: helpers.indentation, use: Use, method: Client
       continue;
     }
 
-    body += getParamValueHelper(indent, headerParam, inClosure, () => {
+    body += getParamValueHelper(indent, headerParam, () => {
       if (headerParam.kind === 'headerHashMap') {
-        let setter = `for (k, v) in ${headerParam.type.kind === 'ref' ? '' : '&'}${headerParam.name} {\n`;
+        let setter = `for (k, v) in ${headerParam.name} {\n`;
         setter += `${indent.push().get()}${requestVarName}.insert_header(format!("${headerParam.header}-{k}"), v);\n`;
         setter += `${indent.pop().get()}}\n`;
         return setter;
@@ -1051,7 +1051,7 @@ function constructRequest(indent: helpers.indentation, use: Use, method: ClientM
 
   const bodyParam = paramGroups.body;
   if (bodyParam) {
-    body += getParamValueHelper(indent, bodyParam, inClosure, () => {
+    body += getParamValueHelper(indent, bodyParam, () => {
       let bodyParamContent = '';
       if (optionalContentTypeParam) {
         bodyParamContent = `${indent.get()}${requestVarName}.insert_header("${optionalContentTypeParam.header.toLowerCase()}", ${getHeaderPathQueryParamValue(use, optionalContentTypeParam, !inClosure, false)});\n`;
@@ -1296,7 +1296,7 @@ function getPageableMethodBody(indent: helpers.indentation, use: Use, client: ru
             }
             // add query params for reinjection
             for (const reinjectedParam of reinjectedParams) {
-              content += getParamValueHelper(indent, reinjectedParam, true, () => {
+              content += getParamValueHelper(indent, reinjectedParam, () => {
                 return `${indent.get()}${nextLinkName}.query_pairs_mut().append_pair("${reinjectedParam.key}", ${getHeaderPathQueryParamValue(use, reinjectedParam, false, false)});\n`;
               });
             }
@@ -1734,8 +1734,8 @@ function getHeaderPathQueryParamValue(use: Use, param: HeaderParamType | PathPar
     switch (paramType.kind) {
       case 'String':
         paramValue = paramName;
-        // if the param is on the client, or it's optional, then we must borrow
-        mustBorrow = (param.location === 'client' && fromSelf) || param.optional;
+        // if the param is on the client, then we must borrow
+        mustBorrow = param.location === 'client' && fromSelf;
         break;
       case 'str':
         paramValue = paramName;

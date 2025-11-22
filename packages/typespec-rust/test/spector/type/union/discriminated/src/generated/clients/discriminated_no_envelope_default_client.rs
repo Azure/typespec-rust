@@ -38,8 +38,8 @@ impl DiscriminatedNoEnvelopeDefaultClient {
         let ctx = options.method_options.context.to_borrowed();
         let mut url = self.endpoint.clone();
         url.append_path("/type/union/discriminated/no-envelope/default");
-        if let Some(kind) = options.kind {
-            url.query_pairs_mut().append_pair("kind", &kind);
+        if let Some(kind) = options.kind.as_ref() {
+            url.query_pairs_mut().append_pair("kind", kind);
         }
         let mut request = Request::new(url, Method::Get);
         request.insert_header("accept", "application/json");
